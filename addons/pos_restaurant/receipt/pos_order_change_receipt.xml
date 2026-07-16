@@ -2,11 +2,31 @@
 <odoo>
     <data>
         <template id="pos_restaurant.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
+<<<<<<< 6fd9d2bb434bf96f19d2444d3e6a118df9e879ec
             <div name="receipt-header" position="inside">
                 <div class="pos-customer-info text-bold" t-if="order.get('customer_count') or extra_data.get('order_label')">
                     <span class="text-large" t-if="extra_data.get('floor_name')"><t t-out="extra_data['floor_name']"/> -</span>
                     <span class="text-huge" t-if="extra_data.get('order_label')"><t t-out="extra_data['order_label']" /></span>
                     <span t-if="order.get('customer_count')"><br/>Guest <t t-out="order['customer_count']"/></span>
+||||||| 892efe11ffd04e2c9af8ab5baf2d1917970cf1c7
+            <div name="order-label" position="after">
+                <div t-if="extra_data.get('table_number')" name="table-info" class="text-large">
+                    <span t-if="extra_data.get('floor_name')">
+                        <span t-esc="extra_data['floor_name'] + ' - '"/>
+                        <span class="text-bold">T </span>
+                    </span>
+                    <span t-else="" class="text-bold">Table </span>
+                    <span class="text-bold" t-esc="extra_data['table_number']"/>
+=======
+            <div name="order-label" position="after">
+                <div t-if="extra_data.get('table_name')" name="table-info" class="text-large">
+                    <span t-if="extra_data.get('floor_name')">
+                        <span t-esc="extra_data['floor_name'] + ' - '"/>
+                        <span class="text-bold">T </span>
+                    </span>
+                    <span t-else="" class="text-bold">Table </span>
+                    <span class="text-bold" t-esc="extra_data['table_name']"/>
+>>>>>>> 1c19dc637ec68b359f204dd10f87e7e5b5117b53
                 </div>
             </div>
         </template>

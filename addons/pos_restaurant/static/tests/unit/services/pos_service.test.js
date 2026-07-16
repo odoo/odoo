@@ -575,6 +575,14 @@ describe("restaurant pos_store.js", () => {
         const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
         const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
         expect(orderChange[0].extra_data.order_label).toBe(partner.name);
+<<<<<<< 6fd9d2bb434bf96f19d2444d3e6a118df9e879ec
+||||||| 892efe11ffd04e2c9af8ab5baf2d1917970cf1c7
+        expect(orderChange[0].extra_data.table_number).toBeEmpty();
+        expect(orderChange[0].extra_data.floor_name).toBeEmpty();
+=======
+        expect(orderChange[0].extra_data.table_name).toBeEmpty();
+        expect(orderChange[0].extra_data.floor_name).toBeEmpty();
+>>>>>>> 1c19dc637ec68b359f204dd10f87e7e5b5117b53
 
         const table = store.models["restaurant.table"].get(2);
         const tableOrder = await getFilledOrder(store, { table_id: table });
@@ -587,6 +595,16 @@ describe("restaurant pos_store.js", () => {
             new Set([...pos_categories]),
             {}
         );
+<<<<<<< 6fd9d2bb434bf96f19d2444d3e6a118df9e879ec
         expect(tableOrderChange[0].extra_data.order_label).toBe(`T ${table.table_number}`);
+||||||| 892efe11ffd04e2c9af8ab5baf2d1917970cf1c7
+        expect(tableOrderChange[0].extra_data.order_label).toBe(false);
+        expect(tableOrderChange[0].extra_data.table_number).toBe(table.table_number);
+        expect(tableOrderChange[0].extra_data.floor_name).toBe(table.floor_id.name);
+=======
+        expect(tableOrderChange[0].extra_data.order_label).toBe(false);
+        expect(tableOrderChange[0].extra_data.table_name).toBe(table.table_number);
+        expect(tableOrderChange[0].extra_data.floor_name).toBe(table.floor_id.name);
+>>>>>>> 1c19dc637ec68b359f204dd10f87e7e5b5117b53
     });
 });
