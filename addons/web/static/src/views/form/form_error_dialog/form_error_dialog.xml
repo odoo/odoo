@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormErrorDialog">
-        <Dialog size="'sm'" title.translate="'Oh snap!'" contentClass="'o_error_dialog o_form_error_dialog'">
+        <Dialog size="'sm'" title.translate="Oh snap!" contentClass="'o_error_dialog o_form_error_dialog'">
             <p t-out="this.message" class="text-prewrap"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this.stay">Stay here</button>
