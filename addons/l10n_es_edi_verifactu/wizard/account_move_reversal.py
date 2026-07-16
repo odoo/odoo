@@ -29,16 +29,24 @@ class AccountMoveReversal(models.TransientModel):
     @api.depends('move_ids.l10n_es_edi_verifactu_required')
     def _compute_l10n_es_edi_verifactu_refund_reason(self):
         for wizard in self:
-            refund_reason = False
-            if wizard.l10n_es_edi_verifactu_required:
-                refund_reason = 'R4'
-            wizard.l10n_es_edi_verifactu_refund_reason = refund_reason
+            if not wizard.l10n_es_edi_verifactu_required:
+                wizard.l10n_es_edi_verifactu_refund_reason = False
+                continue
+            simplified_values = set(wizard.move_ids.mapped('l10n_es_is_simplified'))
+            if simplified_values == {True}:
+                wizard.l10n_es_edi_verifactu_refund_reason = 'R5'
+            elif simplified_values == {False}:
+                wizard.l10n_es_edi_verifactu_refund_reason = 'R4'
+            else:
+                wizard.l10n_es_edi_verifactu_refund_reason = False
 
     def _prepare_default_reversal(self, move):
         # EXTEND 'account'
         values = super()._prepare_default_reversal(move)
-        if refund_reason := self.l10n_es_edi_verifactu_refund_reason:
-            values['l10n_es_edi_verifactu_refund_reason'] = refund_reason
+        if move.l10n_es_edi_verifactu_required:
+            values['l10n_es_edi_verifactu_refund_reason'] = (
+                self.l10n_es_edi_verifactu_refund_reason or ('R5' if move.l10n_es_is_simplified else 'R4')
+            )
         return values
 
     def _modify_default_reverse_values(self, origin_move):
