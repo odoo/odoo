@@ -3333,6 +3333,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line')
 
+    def test_paid_order_payment_method_drilldown(self):
+        """ Opening the payment method form from a paid order's payment inside
+        the PoS UI must not crash on backend-only view widgets. """
+        # group_system: the payment method form reads payment.provider
+        # records (pos_online_payment) that only system users can access
+        self.pos_admin.group_ids = [Command.link(self.env.ref('base.group_system').id)]
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_paid_order_payment_method_drilldown', login='pos_admin')
+
     def test_order_invoice_search(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.pos_user.group_ids = [Command.link(self.env.ref('account.group_account_invoice').id)]

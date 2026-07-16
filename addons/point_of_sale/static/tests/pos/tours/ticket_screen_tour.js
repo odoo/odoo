@@ -7,7 +7,8 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import { inLeftSide, selectButton } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
@@ -660,5 +661,30 @@ registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_paid_order_payment_method_drilldown", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("Paid"),
+            ProductScreen.clickReview(),
+            selectButton("Details"),
+            BackendUtils.clickNotebookTab("Payments"),
+            BackendUtils.openListRowFormView("payment_ids"),
+            BackendUtils.followMany2oneLink("payment_method_id"),
+            {
+                content: "The payment method form is displayed without crashing",
+                trigger: ".o_form_view .o_field_widget[name=payment_method_type]",
+            },
         ].flat(),
 });
