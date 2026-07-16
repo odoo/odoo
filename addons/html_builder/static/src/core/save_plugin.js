@@ -4,6 +4,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -40,24 +41,21 @@ export class SavePlugin extends Plugin {
         on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
         on_editor_started_handlers: this.startObserving.bind(this),
         // Resource definitions:
-        clean_for_save_processors: [
-            // (root) => {
-            //     clean DOM before save (leaving edit mode)
-            //     root is the clone of a node that was o_dirty
-            // }
-        ],
+        clean_for_save_processors: (rootEl) => {
+            this.removeZWSPFromEmbeddedFields(rootEl);
+            return rootEl;
+        },
         dirty_els_providers: () => this.editable.querySelectorAll(".o_dirty"),
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
         on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
-        on_will_save_handlers: this.removeZWSPFromEmbeddedFields.bind(this),
     };
 
-    removeZWSPFromEmbeddedFields(editableEl) {
+    removeZWSPFromEmbeddedFields(rootEl) {
         // Remove zero-width spaces left by DeletePlugin.fillEmptyInlines on
         // embedded fields to prevent saving blank model fields.
         const selector = '[data-oe-model]:not([data-oe-model="ir.ui.view"])';
-        for (const el of editableEl.querySelectorAll(selector)) {
+        for (const el of selectElements(rootEl, selector)) {
             if (isZWS(el)) {
                 el.innerHTML = "";
             }
