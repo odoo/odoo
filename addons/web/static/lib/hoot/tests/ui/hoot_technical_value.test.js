@@ -1,12 +1,15 @@
 /** @odoo-module */
 
 import { after, animationFrame, click, describe, expect, test } from "@odoo/hoot";
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, t, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
 import { logger } from "../../core/logger";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
+/**
+ * @param {any} defaultValue
+ */
 async function mountTechnicalValue(defaultValue) {
     function updateValue(newValue) {
         value.set(newValue);
@@ -14,8 +17,8 @@ async function mountTechnicalValue(defaultValue) {
         return animationFrame();
     }
 
-    const value = signal(defaultValue);
-    const keyCounter = signal(0);
+    const value = signal(defaultValue, { type: t.any() });
+    const keyCounter = signal(0, { type: t.number() });
 
     class TechnicalValueParent extends Component {
         static components = { HootTechnicalValue };

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, computed, plugin, props, signal, types as t, xml } from "@odoo/owl";
+import { Component, computed, signal, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { isFirefox } from "../../hoot-dom/hoot_dom_utils";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
@@ -294,7 +294,7 @@ export class HootTestResult extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         open: t.or([t.boolean(), t.literal("always")]),
         slots: t.object(["default"]),
         test: t.instanceOf(Test),
@@ -302,7 +302,7 @@ export class HootTestResult extends Component {
 
     config = getConfigPlugin();
     runner = getRunnerPlugin();
-    ui = plugin(UiPlugin);
+    ui = usePlugin(UiPlugin);
 
     // Reactive values
     filteredEvents = computed(() => filterEvents(this.filteredResults(), this.config.events()));

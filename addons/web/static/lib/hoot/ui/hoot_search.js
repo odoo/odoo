@@ -1,15 +1,6 @@
 /** @odoo-module */
 
-import {
-    Component,
-    computed,
-    onPatched,
-    onWillPatch,
-    plugin,
-    signal,
-    types as t,
-    xml,
-} from "@odoo/owl";
+import { Component, computed, onPatched, onWillPatch, signal, t, usePlugin, xml } from "@odoo/owl";
 import { getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { R_REGEX, REGEX_MARKER } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
@@ -287,7 +278,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                 </span>
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
-                <t t-foreach="this.getTop(this.runner.rootSuites)" t-as="job" t-key="job.id">
+                <t t-foreach="this.getTop(this.runner.rootSuites())" t-as="job" t-key="job.id">
                     <t t-set="category" t-value="'suite'" />
                     ${templateIncludeWidget("li")}
                 </t>
@@ -413,18 +404,42 @@ export class HootSearch extends Component {
     // Props & plugins
     config = getConfigPlugin();
     runner = getRunnerPlugin();
-    ui = plugin(UiPlugin);
+    ui = usePlugin(UiPlugin);
 
     // Reactive values
-    rootRef = signal(null, { type: t.ref(HTMLElement) });
-    searchInputRef = signal(null, { type: t.ref(HTMLInputElement) });
+    rootRef = signal.ref(HTMLElement);
+    searchInputRef = signal.ref(HTMLInputElement);
     categories = {
-        suite: signal.Array([], { type: t.instanceOf(Suite) }),
-        tag: signal.Array([], { type: t.instanceOf(Tag) }),
-        test: signal.Array([], { type: t.instanceOf(Test) }),
+        suite: signal(
+            { items: [], count: 0 },
+            {
+                type: t.object({
+                    items: t.array(t.instanceOf(Suite)),
+                    count: t.number(),
+                }),
+            }
+        ),
+        tag: signal(
+            { items: [], count: 0 },
+            {
+                type: t.object({
+                    items: t.array(t.instanceOf(Tag)),
+                    count: t.number(),
+                }),
+            }
+        ),
+        test: signal(
+            { items: [], count: 0 },
+            {
+                type: t.object({
+                    items: t.array(t.instanceOf(Test)),
+                    count: t.number(),
+                }),
+            }
+        ),
     };
     query = signal(this.config.filter() || "", { type: t.string() });
-    isEmpty = signal(!this.query().trim(), { type: t.string() });
+    isEmpty = signal(!this.query().trim(), { type: t.boolean() });
     showDropdown = signal(false, { type: t.boolean() });
     trimmedQuery = computed(() => this.query().trim());
 
@@ -489,21 +504,24 @@ export class HootSearch extends Component {
     filterItems(parsedQuery, items, category) {
         const checked = this.runner.includeSpecs[category];
 
-        const result = [];
+        const filteredItems = [];
         const remaining = [];
         for (const item of items.values()) {
             const value = $abs(checked[item.id]);
             if (value === INCLUDE_LEVEL.url) {
-                result.push(item);
+                filteredItems.push(item);
             } else {
                 remaining.push(item);
             }
         }
 
         const matching = lookup(parsedQuery, remaining);
-        result.push(...matching.slice(0, RESULT_LIMIT));
+        filteredItems.push(...matching.slice(0, RESULT_LIMIT));
 
-        return [result, matching.length - RESULT_LIMIT];
+        return {
+            items: filteredItems,
+            count: matching.length - RESULT_LIMIT,
+        };
     }
 
     updateSuggestedCategories() {

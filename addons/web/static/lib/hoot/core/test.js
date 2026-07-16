@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markup, signal, types as t } from "@odoo/owl";
+import { markup, signal, t } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
