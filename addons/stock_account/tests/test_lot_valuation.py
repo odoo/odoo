@@ -680,6 +680,55 @@ class TestLotValuation(TestStockValuationCommon):
         # product's standard price should be 4150 / 55 = 75.45
         self.assertAlmostEqual(self.product.standard_price, 75.45, places=2)
 
+    def test_fifo_lot_valuated_with_consignment_lot(self):
+        """ Regression test for the FIFO by-lot valuation.
+
+        For a FIFO lot-valuated product, when a lot is received with an owner on
+        the moves (consignment => non valued) while another lot is received
+        without owner (valued), the valuation must remain correct.
+
+        Previously, ``_run_fifo_get_stack`` filtered on ``is_in`` for internal
+        locations, so it returned no move for the consignment lot. ``_run_fifo``
+        then fell back on extrapolation and wrongly valued the consignment lot
+        with the product's standard price (here the consignment lot ended up
+        valued while it should not, inflating the product value).
+        """
+        self.product.categ_id = self.category_fifo
+        # lot1: regular receipt (no owner) => valued
+        in_valued = self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        # lot2: consignment receipt (owner set) => not valued
+        in_consignment = self._make_in_move(
+            self.product, 10, 7, lot_ids=[self.lot2], owner_id=self.owner.id)
+
+        # Both lots are physically on hand.
+        self.assertEqual(self.lot1.product_qty, 10)
+        self.assertEqual(self.lot2.product_qty, 10)
+
+        # The consignment receipt is not a valued move.
+        self.assertFalse(in_consignment.is_in)
+        self.assertTrue(in_valued.is_in)
+
+        # lot1 is valued at its receipt cost.
+        self.assertEqual(self.lot1.standard_price, 5)
+        self.assertEqual(self.lot1.total_value, 50)
+
+        # lot2 is a consignment lot: it must NOT be valued, and in particular it
+        # must not be valued with the product standard price by extrapolation.
+        self.assertEqual(self.lot2.total_value, 0)
+
+        # Only the valued move has a remaining quantity/value.
+        self.assertEqual(in_valued.remaining_qty, 10)
+        self.assertEqual(in_valued.remaining_value, 50)
+        self.assertEqual(in_consignment.remaining_qty, 0)
+        self.assertEqual(in_consignment.remaining_value, 0)
+
+        # The product value must only reflect the valued lot.
+        self.assertEqual(self.product.total_value, 50)
+
+        # The periodic valuation close must post the valued amount only.
+        closing_move = self._close()
+        self.assertEqual(closing_move.amount_total, 50)
+
     def test_fifo_remaining_qty_by_lot(self):
         """
         Test that for lot-valuated products, each receipt's remaining_qty must
