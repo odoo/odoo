@@ -199,6 +199,7 @@ def init_logger():
     for module in [
         'babel.util', # deprecated parser module, no release yet
         'zeep.loader',# zeep using defusedxml.lxml
+        'zeep.utils',# zeep importing deprecated cgi module
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'ofxparse',# ofxparse importing ABC from collections
         'astroid',  # deprecated imp module (fixed in 2.5.1)
