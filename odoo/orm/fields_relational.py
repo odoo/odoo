@@ -1595,33 +1595,21 @@ class Many2many(_RelationalMulti):
         if is_real and self.store:
             if add_pairs:
                 cr.execute(SQL(
-                    "INSERT INTO %s (%s, %s) VALUES %s ON CONFLICT DO NOTHING",
+                    "INSERT INTO %s (%s, %s) SELECT * FROM UNNEST(%s, %s) ON CONFLICT DO NOTHING",
                     SQL.identifier(self.relation),
                     SQL.identifier(self.column1),
                     SQL.identifier(self.column2),
-                    SQL(", ").join(add_pairs),
+                    [x for x, y in add_pairs],
+                    [y for x, y in add_pairs],
                 ))
             if remove_pairs:
-                # express pairs as the union of cartesian products:
-                #    pairs = [(1, 11), (1, 12), (1, 13), (2, 11), (2, 12), (2, 14)]
-                # -> y_to_xs = {11: {1, 2}, 12: {1, 2}, 13: {1}, 14: {2}}
-                # -> xs_to_ys = {{1, 2}: {11, 12}, {2}: {14}, {1}: {13}}
-                y_to_xs = defaultdict(OrderedSet)
-                for x, y in remove_pairs:
-                    y_to_xs[y].add(x)
-                xs_to_ys = defaultdict(OrderedSet)
-                for y, xs in y_to_xs.items():
-                    xs_to_ys[frozenset(xs)].add(y)
-                # delete the rows where (id1 IN xs AND id2 IN ys) OR ...
                 cr.execute(SQL(
-                    "DELETE FROM %s WHERE %s",
+                    "DELETE FROM %s WHERE (%s, %s) IN (SELECT * FROM UNNEST(%s, %s))",
                     SQL.identifier(self.relation),
-                    SQL(" OR ").join(
-                        SQL("%s IN %s AND %s IN %s",
-                            SQL.identifier(self.column1), tuple(xs),
-                            SQL.identifier(self.column2), tuple(ys))
-                        for xs, ys in xs_to_ys.items()
-                    ),
+                    SQL.identifier(self.column1),
+                    SQL.identifier(self.column2),
+                    [x for x, y in remove_pairs],
+                    [y for x, y in remove_pairs],
                 ))
 
         # update relation cache
