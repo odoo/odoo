@@ -55,13 +55,6 @@ class ResPartner(models.Model):
             return {p_id: list(meetings.get(p_id, set())) for p_id in self.ids}
         return {}
 
-    def _compute_application_statistics_hook(self):
-        data_list = super()._compute_application_statistics_hook()
-        for partner in self.filtered('meeting_count'):
-            stat_info = {'icon': 'calendar_today', 'iconClass': 'oi-filled', 'value': partner.meeting_count, 'label': _('Meetings')}
-            data_list[partner.id].append(stat_info)
-        return data_list
-
     def get_attendee_detail(self, meeting_ids):
         """ Return a list of dict of the given meetings with the attendees details
             Used by:
