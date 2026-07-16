@@ -116,11 +116,17 @@ class ProductTemplate(models.Model):
         products = product_tmpls.product_variant_ids
 
         # product.pricelist_item & product.pricelist loading
-        pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
-            product_tmpls.ids,
-            products.ids,
-            config.id
-        )
+        if config.current_session_id:
+            pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
+                product_tmpls.ids,
+                products.ids,
+                config.id,
+            )
+        else:
+            pricelists = {
+                'product.pricelist.item': [],
+                'product.pricelist': [],
+            }
 
         # product.template.attribute.value & product.template.attribute.line loading
         product_tmpl_attr_line = product_tmpls.attribute_line_ids

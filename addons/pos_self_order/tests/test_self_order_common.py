@@ -132,3 +132,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         for mode in ('mobile', 'kiosk', 'consultation'):
             self.pos_config.write({'self_ordering_mode': mode})
             self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_products_sorting_order')
+
+    def test_self_order_available_on_product(self):
+        self.cola.write({'self_order_available': False})
+        self.assertFalse(self.cola.self_order_available)
