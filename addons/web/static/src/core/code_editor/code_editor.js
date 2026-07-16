@@ -1,9 +1,18 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, markRaw, props, signal, status, t, proxy } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    markRaw,
+    useProps,
+    status,
+    t,
+    proxy,
+    signal,
+    useEffect,
+    untrack,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
 import { Reactive } from "../utils/reactive";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 class CodeEditorState extends Reactive {
     /**@protected*/
@@ -61,27 +70,28 @@ export class CodeEditor extends Component {
     static MODES = ["javascript", "xml", "qweb", "scss", "python", "json", "bash"];
     static THEMES = ["", "monokai"];
 
-    props = props({
-        mode: t.selection(CodeEditor.MODES).optional(),
-        modeOptions: t.object().optional(),
-        value: t
-            .customValidator(t.string(), (v) => !isMarkup(v), "value is not a string")
-            .optional(""),
-        readonly: t.boolean().optional(false),
-        onChange: t.function().optional(() => () => {}),
-        onBlur: t.function().optional(),
-        class: t.string().optional(""),
-        theme: t.selection(CodeEditor.THEMES).optional(""),
-        maxLines: t.number().optional(),
-        sessionId: t.or([t.number(), t.string()]).optional(1),
-        showLineNumbers: t.boolean().optional(true),
-        lineWrapping: t.boolean().optional(),
-        editorState: t.instanceOf(CodeEditorState).optional(),
-    });
-
-    editorRef = signal(null);
+    editorRef = signal.ref();
+    _aceEditor = signal(null);
 
     setup() {
+        this.props = useProps({
+            mode: t.selection(CodeEditor.MODES).optional(),
+            modeOptions: t.object().optional(),
+            value: t
+                .customValidator(t.string(), (v) => !isMarkup(v), "value is not a string")
+                .optional(""),
+            readonly: t.boolean().optional(false),
+            onChange: t.function().optional(() => () => {}),
+            onBlur: t.function().optional(),
+            class: t.string().optional(""),
+            theme: t.selection(CodeEditor.THEMES).optional(""),
+            maxLines: t.number().optional(),
+            sessionId: t.or([t.number(), t.string()]).optional(1),
+            showLineNumbers: t.boolean().optional(true),
+            lineWrapping: t.boolean().optional(),
+            editorState: t.instanceOf(CodeEditorState).optional(),
+        });
+
         this.state = proxy({
             activeMode: undefined,
         });
@@ -113,15 +123,16 @@ export class CodeEditor extends Component {
             });
         };
 
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
+        useEffect(() => {
+            const el = this.editorRef();
+            if (!el) {
+                return;
+            }
 
+            return untrack(() => {
                 // keep in closure
                 const aceEditor = window.ace.edit(el);
-                this.aceEditor = aceEditor;
+                this._aceEditor.set(aceEditor);
 
                 this.aceEditor.setOptions({
                     maxLines: this.props.maxLines,
@@ -166,63 +177,72 @@ export class CodeEditor extends Component {
                         this.props.editorState._canRedo = false;
                     }
                     aceEditor.destroy();
+                    this._aceEditor.set(null);
                 };
-            },
-            () => [resolveRefEl(this.editorRef)]
-        );
+            });
+        });
 
-        useLayoutEffect(
-            (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : ""),
-            () => [this.props.theme]
-        );
+        useEffect(() => {
+            if (!this.aceEditor) {
+                return;
+            }
+            this.aceEditor.setTheme(this.props.theme ? `ace/theme/${this.props.theme}` : "");
+        });
 
-        useLayoutEffect(
-            (readonly, showLineNumbers) => {
-                this.aceEditor.setOptions({
-                    readOnly: readonly,
-                    highlightActiveLine: !readonly,
-                    highlightGutterLine: !readonly,
-                });
+        useEffect(() => {
+            if (!this.aceEditor) {
+                return;
+            }
+            const readonly = this.props.readonly;
+            this.aceEditor.setOptions({
+                readOnly: readonly,
+                highlightActiveLine: !readonly,
+                highlightGutterLine: !readonly,
+            });
 
-                this.aceEditor.renderer.setOptions({
-                    displayIndentGuides: !readonly,
-                    showGutter: !readonly && showLineNumbers,
-                });
+            this.aceEditor.renderer.setOptions({
+                displayIndentGuides: !readonly,
+                showGutter: !readonly && this.props.showLineNumbers,
+            });
 
-                this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
-                    ? "none"
-                    : "block";
-            },
-            () => [this.props.readonly, this.props.showLineNumbers]
-        );
+            this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
+                ? "none"
+                : "block";
+        });
 
-        useLayoutEffect(
-            (sessionId, mode, value) => {
-                let session = sessions[sessionId];
-                if (session) {
-                    if (session.getValue() !== value) {
-                        ignoredAceChange = true;
-                        session.setValue(value);
-                        ignoredAceChange = false;
-                    }
-                } else {
-                    session = new window.ace.EditSession(value);
-                    session.setUndoManager(new window.ace.UndoManager());
-                    session.setOptions({
-                        useWorker: false,
-                        tabSize: 2,
-                        useSoftTabs: true,
-                    });
-                    session.on("change", onChange);
-                    sessions[sessionId] = session;
+        useEffect(() => {
+            if (!this.aceEditor) {
+                return;
+            }
+            const sessionId = this.props.sessionId;
+            const value = this.props.value;
+            let session = sessions[sessionId];
+            if (session) {
+                if (session.getValue() !== value) {
+                    ignoredAceChange = true;
+                    session.setValue(value);
+                    ignoredAceChange = false;
                 }
+            } else {
+                session = new window.ace.EditSession(value);
+                session.setUndoManager(new window.ace.UndoManager());
+                session.setOptions({
+                    useWorker: false,
+                    tabSize: 2,
+                    useSoftTabs: true,
+                });
+                session.on("change", onChange);
+                sessions[sessionId] = session;
+            }
 
-                session.setMode(this.aceMode);
-                this.aceEditor.setSession(session);
-                this.setCursorPosition(cursorPositions[sessionId]);
-            },
-            () => [this.props.sessionId, this.props.mode, this.props.value]
-        );
+            session.setMode(this.aceMode);
+            this.aceEditor.setSession(session);
+            this.setCursorPosition(cursorPositions[sessionId]);
+        });
+    }
+
+    get aceEditor() {
+        return this._aceEditor();
     }
 
     get aceMode() {
