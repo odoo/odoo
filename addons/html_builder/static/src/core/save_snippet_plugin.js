@@ -1,9 +1,9 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
+import { prepareElementForSave } from "./save_plugin";
 
 /**
  * @typedef {CSSSelector[]} submit_button_selectors
@@ -65,12 +65,9 @@ export class SaveSnippetPlugin extends Plugin {
         }
         const savedName = await this.config.saveSnippet(el, async (el) => {
             await Promise.all(this.trigger("on_will_save_handlers", el));
-            const cleanedEl = this.processThrough("clean_for_save_processors", el.cloneNode(true), {
-                saveSnippet: true,
-            });
-            escapeTextNodes(cleanedEl);
+            const preparedEl = prepareElementForSave(this, el, { saveSnippet: true });
             this.trigger("on_saved_handlers", el);
-            return cleanedEl;
+            return preparedEl;
         });
         this.dependencies.disableSnippets.disableUndroppableSnippets();
         if (savedName) {

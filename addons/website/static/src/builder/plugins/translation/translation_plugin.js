@@ -24,10 +24,10 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef {Object} TranslationShared
  * @property {TranslationPlugin["hasTranslatedAttribute"]} hasTranslatedAttribute
+ * @property {TranslationPlugin["getDirtyTranslationsInfo"]} getDirtyTranslationsInfo
  */
 
 /**
- * @typedef {((translateEl: HTMLElement, spanEl: HTMLElement, attr: string) => void)[]} on_get_dirty_translations_handlers
  * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
  */
 
@@ -78,12 +78,11 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["builderActions"];
-    static shared = ["hasTranslatedAttribute"];
+    static shared = ["hasTranslatedAttribute", "getDirtyTranslationsInfo"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
-        dirty_els_providers: this.getDirtyTranslations.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
             targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
         },
@@ -362,29 +361,22 @@ export class TranslationPlugin extends Plugin {
     }
 
     /**
-     * Gets the modified translations
-     * @returns {HTMLElement[]}
+     * Gets the modified translations info
+     * @returns {AttributeTranslationInfo[]}
      */
-    getDirtyTranslations() {
-        const dirtyEls = [];
+    getDirtyTranslationsInfo() {
+        const dirtyInfo = [];
         for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
             for (const [attr, data] of Object.entries(translationInfo)) {
                 const translation = this.dependencies.builderActions
                     .getAction("translateAttribute")
                     .getValue({ editingElement: translateEl, params: { mainParam: attr } });
                 if (data.translation !== translation) {
-                    const spanEl = document.createElement("span");
-                    for (const [name, value] of Object.entries(data)) {
-                        spanEl.dataset[name] = value;
-                    }
-                    delete spanEl.dataset.translation;
-                    spanEl.innerHTML = translation;
-                    this.trigger("on_get_dirty_translations_handlers", translateEl, spanEl, attr);
-                    dirtyEls.push(spanEl);
+                    dirtyInfo.push({ ...data, translation });
                 }
             }
         }
-        return dirtyEls;
+        return dirtyInfo;
     }
 
     cleanForSave(root) {
