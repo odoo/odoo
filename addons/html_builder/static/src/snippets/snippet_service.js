@@ -448,6 +448,208 @@ export class SnippetModel extends Reactive {
     }
 
     /**
+<<<<<<< 3218cc2d11f9d1d60968818767f3dc3b6618e460
+||||||| 6f637b8695766cb99111ec31b5ccf7233de5b26a
+     * Applies a callback function to all snippets in a given category.
+     *
+     * @param {String} category the category of snippets to update.
+     * @param {Function} callback the function to apply to each
+     * snippet's content.
+     */
+    updateContent(category, callback) {
+        const snippets = this.snippetsByCategory[category] || [];
+        for (const snippet of snippets) {
+            callback(snippet.content);
+        }
+    }
+
+    /**
+     * Saves the given snippet as a custom one and reloads all the snippets
+     * to have access to it directly.
+     *
+     * @param {HTMLElement} snippetEl the snippet we want to save
+     * @param {Array<Function>} cleanForSaveHandlers all the hanlders of the
+     *     `clean_for_save_handlers` resources
+     * @param {Function} wrapWithSaveSnippetHandlers a function that processes the snippet
+     * before and/or after the cloning. E.g. stopping the interactions before
+     * cloning and restarting them after cloning.
+     * @returns
+     */
+    saveSnippet(
+        snippetEl,
+        cleanForSaveHandlers,
+        wrapWithSaveSnippetHandlers = (_, callback) => callback()
+    ) {
+        return new Promise((resolve) => {
+            this.dialog.add(
+                ConfirmationDialog,
+                {
+                    title: _t("Create a custom snippet"),
+                    body: _t("Do you want to save this snippet as a custom one?"),
+                    confirmLabel: _t("Save"),
+                    cancel: () => resolve(false),
+                    confirm: async () => {
+                        const isButton = snippetEl.matches("a.btn");
+                        const snippetKey = isButton ? "s_button" : snippetEl.dataset.snippet;
+                        const thumbnailURL = this.getSnippetThumbnailURL(snippetKey);
+
+                        const snippetCopyEl = await wrapWithSaveSnippetHandlers(snippetEl, () =>
+                            snippetEl.cloneNode(true)
+                        );
+
+                        // "CleanForSave" the snippet copy (only its children in
+                        // the case of a popup, or it will be saved as invisible
+                        // and will not be visible in the "add snippet" dialog).
+                        const rootEl = snippetEl.matches(".s_popup")
+                            ? snippetCopyEl.firstElementChild
+                            : snippetCopyEl;
+                        cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
+
+                        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
+
+                        const defaultSnippetName = isButton
+                            ? _t("Custom Button")
+                            : _t("Custom %s", snippetEl.dataset.name);
+                        snippetCopyEl.classList.add("s_custom_snippet");
+                        delete snippetCopyEl.dataset.name;
+                        if (isButton) {
+                            snippetCopyEl.classList.remove("mb-2");
+                            snippetCopyEl.classList.add(
+                                "o_snippet_drop_in_only",
+                                "s_custom_button"
+                            );
+                        }
+
+                        const editableParentEl = snippetEl.closest(
+                            "[data-oe-model][data-oe-field][data-oe-id]"
+                        );
+                        const context = {
+                            ...this.context,
+                            model: editableParentEl.dataset.oeModel,
+                            field: editableParentEl.dataset.oeField,
+                            resId: editableParentEl.dataset.oeId,
+                        };
+                        const savedName = await this.orm.call("ir.ui.view", "save_snippet", [], {
+                            name: defaultSnippetName,
+                            arch: snippetCopyEl.outerHTML,
+                            template_key: this.snippetsName,
+                            snippet_key: snippetKey,
+                            thumbnail_url: thumbnailURL,
+                            context,
+                        });
+
+                        // Reload the snippets so the sidebar is up to date.
+                        await this.reload();
+                        resolve(savedName);
+                    },
+                },
+                { onClose: () => resolve(false) }
+            );
+        });
+    }
+
+    /**
+=======
+     * Applies a callback function to all snippets in a given category.
+     *
+     * @param {String} category the category of snippets to update.
+     * @param {Function} callback the function to apply to each
+     * snippet's content.
+     */
+    async updateContent(category, callback) {
+        const snippets = this.snippetsByCategory[category] || [];
+        for (const snippet of snippets) {
+            await callback(snippet.content);
+        }
+    }
+
+    /**
+     * Saves the given snippet as a custom one and reloads all the snippets
+     * to have access to it directly.
+     *
+     * @param {HTMLElement} snippetEl the snippet we want to save
+     * @param {Array<Function>} cleanForSaveHandlers all the hanlders of the
+     *     `clean_for_save_handlers` resources
+     * @param {Function} wrapWithSaveSnippetHandlers a function that processes the snippet
+     * before and/or after the cloning. E.g. stopping the interactions before
+     * cloning and restarting them after cloning.
+     * @returns
+     */
+    saveSnippet(
+        snippetEl,
+        cleanForSaveHandlers,
+        wrapWithSaveSnippetHandlers = (_, callback) => callback()
+    ) {
+        return new Promise((resolve) => {
+            this.dialog.add(
+                ConfirmationDialog,
+                {
+                    title: _t("Create a custom snippet"),
+                    body: _t("Do you want to save this snippet as a custom one?"),
+                    confirmLabel: _t("Save"),
+                    cancel: () => resolve(false),
+                    confirm: async () => {
+                        const isButton = snippetEl.matches("a.btn");
+                        const snippetKey = isButton ? "s_button" : snippetEl.dataset.snippet;
+                        const thumbnailURL = this.getSnippetThumbnailURL(snippetKey);
+
+                        const snippetCopyEl = await wrapWithSaveSnippetHandlers(snippetEl, () =>
+                            snippetEl.cloneNode(true)
+                        );
+
+                        // "CleanForSave" the snippet copy (only its children in
+                        // the case of a popup, or it will be saved as invisible
+                        // and will not be visible in the "add snippet" dialog).
+                        const rootEl = snippetEl.matches(".s_popup")
+                            ? snippetCopyEl.firstElementChild
+                            : snippetCopyEl;
+                        cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
+
+                        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
+
+                        const defaultSnippetName = isButton
+                            ? _t("Custom Button")
+                            : _t("Custom %s", snippetEl.dataset.name);
+                        snippetCopyEl.classList.add("s_custom_snippet");
+                        delete snippetCopyEl.dataset.name;
+                        if (isButton) {
+                            snippetCopyEl.classList.remove("mb-2");
+                            snippetCopyEl.classList.add(
+                                "o_snippet_drop_in_only",
+                                "s_custom_button"
+                            );
+                        }
+
+                        const editableParentEl = snippetEl.closest(
+                            "[data-oe-model][data-oe-field][data-oe-id]"
+                        );
+                        const context = {
+                            ...this.context,
+                            model: editableParentEl.dataset.oeModel,
+                            field: editableParentEl.dataset.oeField,
+                            resId: editableParentEl.dataset.oeId,
+                        };
+                        const savedName = await this.orm.call("ir.ui.view", "save_snippet", [], {
+                            name: defaultSnippetName,
+                            arch: snippetCopyEl.outerHTML,
+                            template_key: this.snippetsName,
+                            snippet_key: snippetKey,
+                            thumbnail_url: thumbnailURL,
+                            context,
+                        });
+
+                        // Reload the snippets so the sidebar is up to date.
+                        await this.reload();
+                        resolve(savedName);
+                    },
+                },
+                { onClose: () => resolve(false) }
+            );
+        });
+    }
+
+    /**
+>>>>>>> d0a999f11003b7f7eef9d61b6b7f9eed5d0c9430
      * Gets the label of the snippet.
      *
      * @param {HTMLElement} snippetEl
