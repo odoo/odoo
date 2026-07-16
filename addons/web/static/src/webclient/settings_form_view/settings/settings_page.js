@@ -1,10 +1,9 @@
-import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { location } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTabsKeyboardNavigation } from "@web/core/navigation/navigation";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
@@ -53,18 +52,17 @@ export class SettingsPage extends Component {
         }
 
         this.scrollMap = Object.create(null);
-        useLayoutEffect(
-            (settingsEl, currentTab) => {
-                if (!settingsEl) {
-                    return;
-                }
-
-                const { scrollTop } = this.scrollMap[currentTab] || 0;
-                settingsEl.scrollTop = scrollTop;
-                this.tabChangeProm?.resolve();
-            },
-            () => [this.settingsRef(), this.state.selectedTab]
-        );
+        let scrolledTab;
+        const restoreTabScroll = () => {
+            const settingsEl = this.settingsRef();
+            if (!settingsEl || this.state.selectedTab === scrolledTab) {
+                return;
+            }
+            scrolledTab = this.state.selectedTab;
+            settingsEl.scrollTop = this.scrollMap[scrolledTab]?.scrollTop ?? 0;
+        };
+        onMounted(restoreTabScroll);
+        onPatched(restoreTabScroll);
     }
 
     selectedModule = computed(() =>
