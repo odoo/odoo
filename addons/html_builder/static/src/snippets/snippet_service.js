@@ -360,10 +360,10 @@ export class SnippetModel extends Reactive {
      * @param {Function} callback the function to apply to each
      * snippet's content.
      */
-    updateContent(category, callback) {
+    async updateContent(category, callback) {
         const snippets = this.snippetsByCategory[category] || [];
         for (const snippet of snippets) {
-            callback(snippet.content);
+            await callback(snippet.content);
         }
     }
 
