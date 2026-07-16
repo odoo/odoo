@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessageInReply">
         <div class="o-mail-MessageInReply" t-attf-class="{{ this.class() }}">
-            <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-start-0 o-rounded-end-bubble d-inline-flex" t-att-class="{
+            <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-start-0 o-rounded-end-bubble d-inline-flex w-100" t-att-class="{
                 'o-blue': this.message().parent_id.bubbleColor === 'blue',
                 'o-green': this.message().parent_id.bubbleColor === 'green',
                 'o-orange': this.message().parent_id.bubbleColor === 'orange',
