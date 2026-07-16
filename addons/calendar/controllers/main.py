@@ -3,6 +3,8 @@
 import odoo.http as http
 
 from odoo.http import request
+from odoo.http.stream import content_disposition
+from odoo.tools import consteq
 from odoo.tools.misc import get_lang
 
 
@@ -81,6 +83,22 @@ class CalendarController(http.Controller):
                 'attendee': attendee,
             })
         return request.make_response(response_content, headers=[('Content-Type', 'text/html')])
+
+    @http.route(['/calendar/ics/<int:calendar_event_id>/<string:access_token>'], type='http', auth="public", website=True)
+    def calendar_get_ics_file(self, calendar_event_id, access_token, **kwargs):
+        """ Route generating an ics file for users to manually add the calendar event
+        in their iCal/Outlook/Apple calendar.
+        """
+        event = request.env['calendar.event'].sudo().browse(calendar_event_id)
+        if not event.exists() or not event.attendee_ids or not consteq(event.access_token, access_token):
+            return request.not_found()
+        files = event._get_ics_file()
+        content = files[event.id]
+        return request.make_response(content, [
+            ('Content-Type', 'application/octet-stream'),
+            ('Content-Length', len(content)),
+            ('Content-Disposition', content_disposition(event._get_customer_summary() + '.ics')),
+        ])
 
     @http.route('/calendar/meeting/join', type='http', auth="user", website=True)
     def calendar_join_meeting(self, token, **kwargs):
