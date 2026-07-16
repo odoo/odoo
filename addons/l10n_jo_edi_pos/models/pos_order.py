@@ -165,7 +165,7 @@ class PosOrder(models.Model):
     @api.depends('country_code', 'l10n_jo_edi_pos_error')
     def _compute_l10n_jo_edi_pos_computed_xml(self):
         for order in self:
-            if order.country_code == 'JO' and not order.l10n_jo_edi_pos_error:
+            if order.country_code == 'JO' and order.l10n_jo_edi_pos_error:
                 xml_content = order.env['pos.edi.xml.ubl_21.jo']._export_pos_order(order)[0]
                 order.l10n_jo_edi_pos_computed_xml = base64.b64encode(xml_content)
             else:
