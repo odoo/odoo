@@ -463,14 +463,14 @@ class StockMove(models.Model):
                     continue
                 if move.uom_id.is_zero(quantity):
                     break
-                qty_ml_dec = min(ml.quantity, ml.uom_id._compute_quantity(quantity, ml.uom_id, round=False))
+                qty_ml_dec = min(ml.quantity, move.uom_id._compute_quantity(quantity, ml.uom_id, round=False))
                 if ml.uom_id.is_zero(qty_ml_dec):
                     continue
                 if ml.uom_id.compare(ml.quantity, qty_ml_dec) == 0 and ml.state not in ['done', 'cancel']:
                     mls_to_unlink.add(ml.id)
                 else:
                     ml.quantity -= qty_ml_dec
-                quantity -= move.uom_id._compute_quantity(qty_ml_dec, move.uom_id, round=False)
+                quantity -= ml.uom_id._compute_quantity(qty_ml_dec, move.uom_id, round=False)
             self.env['stock.move.line'].browse(mls_to_unlink).unlink()
 
         def _process_increase(move, quantity):
