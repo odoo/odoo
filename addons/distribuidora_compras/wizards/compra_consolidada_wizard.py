@@ -1,37 +1,33 @@
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from odoo import api, fields, models
-
-DELIVERY_WEEKDAYS = {0, 2, 4}  # lunes, miercoles, viernes (Python: lunes=0)
+from odoo import fields, models
 
 
 class CompraConsolidadaWizard(models.TransientModel):
     _name = 'distribuidora.compra.consolidada.wizard'
-    _description = "Consolidacion de compra por fecha de entrega"
+    _description = "Consolidacion de compra por fecha de pedido"
 
-    fecha_entrega = fields.Date(
-        string="Fecha de entrega",
+    fecha_pedido = fields.Date(
+        string="Fecha de pedidos",
         required=True,
-        default=lambda self: self._default_fecha_entrega(),
+        default=lambda self: fields.Date.context_today(self),
     )
-
-    @api.model
-    def _default_fecha_entrega(self):
-        today = fields.Date.context_today(self)
-        offset = 0
-        while (today + timedelta(days=offset)).weekday() not in DELIVERY_WEEKDAYS:
-            offset += 1
-        return today + timedelta(days=offset)
 
     def _get_consolidated_lines(self):
         self.ensure_one()
+        # Ventana amplia en UTC (superconjunto de cualquier zona horaria real)
+        # para acotar la busqueda; el filtro exacto por dia local sigue siendo
+        # el .filtered() de abajo, sin cambios.
+        window_start = datetime.combine(self.fecha_pedido - timedelta(days=1), datetime.min.time())
+        window_end = datetime.combine(self.fecha_pedido + timedelta(days=2), datetime.min.time())
         orders = self.env['sale.order'].search([
             ('state', '=', 'sale'),
-            ('commitment_date', '!=', False),
+            ('date_order', '>=', window_start),
+            ('date_order', '<', window_end),
         ])
         matching_orders = orders.filtered(
-            lambda o: fields.Datetime.context_timestamp(o, o.commitment_date).date() == self.fecha_entrega
+            lambda o: fields.Datetime.context_timestamp(o, o.date_order).date() == self.fecha_pedido
         )
         totals = defaultdict(float)
         uom_by_product = {}
