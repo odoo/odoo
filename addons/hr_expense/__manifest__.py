@@ -38,12 +38,12 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'wizard/hr_expense_refuse_reason_views.xml',
         'wizard/hr_expense_approve_duplicate_views.xml',
         'wizard/hr_expense_split_wizard_views.xml',
-        'wizard/hr_expense_post_wizard_views.xml',
         'views/product_product_views.xml',
         'views/hr_expense_views.xml',
         'views/hr_expense_split_views.xml',
         'views/mail_activity_views.xml',
         'report/hr_expense_report.xml',
+        'views/account_journal_dashboard_view.xml',
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/hr_department_views.xml',
@@ -70,9 +70,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         ],
         'web.report_assets_common': [
             'hr_expense/static/src/scss/hr_expense.scss',
-        ],
-        'web.assets_unit_tests': [
-            'hr_expense/static/tests/expense_list_view.test.js',
         ],
     },
     'author': 'Odoo S.A.',

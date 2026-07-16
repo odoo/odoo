@@ -32,6 +32,11 @@ class AccountMove(models.Model):
             if 'company_account' in expense_payment_modes and len(move.expense_ids) > 1 :
                 raise ValidationError(_("Each expense paid by the company must have a distinct and dedicated journal entry."))
 
+    @api.ondelete(at_uninstall=False)
+    def _reset_linked_expense_to_submitted(self):
+        if self.expense_ids:
+            self.expense_ids.approval_state = 'submitted'
+
     def action_open_expense(self):
         self.ensure_one()
         linked_expenses = self.expense_ids
