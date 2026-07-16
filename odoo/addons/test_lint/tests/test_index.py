@@ -39,7 +39,6 @@ BTREE_INDEX_IGNORE_MODELS = {  # model._name
     'event.type.ticket',
     'hr.departure.reason',
     'hr.employee.type',
-    'hr.payroll.structure.type',
     'hr.work.entry.type',
     'iap.account',
     'ir.actions.server',
