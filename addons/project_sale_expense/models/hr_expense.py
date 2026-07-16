@@ -36,7 +36,7 @@ class HrExpense(models.Model):
                         # If not we keep the most prioritized one -> project
                         expense.analytic_distribution = expense.sale_order_id.project_id._get_analytic_distribution() or expense.analytic_distribution or {}
 
-    def action_post(self):
+    def _create_move(self):
         """ When creating the move of the expense, if the AA is given in the project of the SO, we take it as reference in the distribution.
             Otherwise, we create a AA for the project of the SO and set the distribution to it.
         """
@@ -47,4 +47,4 @@ class HrExpense(models.Model):
             if not project.account_id:
                 project._create_analytic_account()
             expense.analytic_distribution = project._get_analytic_distribution()
-        return super().action_post()
+        return super()._create_move()

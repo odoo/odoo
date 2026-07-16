@@ -93,30 +93,25 @@ class TestExpenses(TestExpenseCommon):
         ])
 
         # Approving properly change states & create moves & payments
-        all_expenses.action_approve()
-        self.assertRecordValues(all_expenses, [
-            {'state': 'approved', 'account_move_id': False},
-            {'state': 'approved', 'account_move_id': False},
-            {'state': 'approved', 'account_move_id': False},
-            {'state': 'approved', 'account_move_id': False},
-        ])
-        # Post a payment for 'company_account' (and its move(s)) and a receipt  for 'own_account'
-        expenses_by_company.action_post()
-        self.post_expenses_with_wizard(expenses_by_employee[0], date=date(2021, 10, 10))
-        self.post_expenses_with_wizard(expenses_by_employee[1], date=date(2021, 10, 31))
+        expenses_by_company.action_approve()
+        # Approve separately expenses by employee to have a dedicated move for each expense
+        expenses_by_employee[0].action_approve()
+        expenses_by_employee[1].action_approve()
         self.assertRecordValues(all_expenses, [
             # As the payment is not done yet those are still in "posted"
-            {'payment_mode': 'own_account',     'state': 'posted'},
-            {'payment_mode': 'own_account',     'state': 'posted'},
-            # Expenses paid by company don't use accounting date since they are already paid and posted directly
+            {'payment_mode': 'own_account',     'state': 'approved'},
+            {'payment_mode': 'own_account',     'state': 'approved'},
             {'payment_mode': 'company_account', 'state': 'paid'},
             {'payment_mode': 'company_account', 'state': 'paid'},
         ])
+        self.assertRecordValues(all_expenses.account_move_id, [{'state': 'draft'}] * 4)
 
+        self.post_expenses(all_expenses)
         employee_partner_id = self.expense_user_employee.partner_id.id
+        today = date.today()
         self.assertRecordValues(expenses_by_employee.account_move_id, [
-            {'amount_total': 1600.00, 'ref': 'Employee PA 2*800 + 15%', 'state': 'posted', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10), 'partner_id': employee_partner_id},
-            {'amount_total':  160.00, 'ref': 'Employee PB 160 + 2*15%', 'state': 'posted', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31), 'partner_id': employee_partner_id},
+            {'amount_total': 1600.00, 'ref': 'Employee PA 2*800 + 15%', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
+            {'amount_total':  160.00, 'ref': 'Employee PB 160 + 2*15%', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
         ])
 
         self.assertRecordValues(expenses_by_company.account_move_id, [
@@ -132,15 +127,15 @@ class TestExpenses(TestExpenseCommon):
         # One payment per expense
         self.assertRecordValues(all_expenses.account_move_id.line_ids.sorted(lambda line: (line.move_id, line)), [
             # own_account expense 1 move
-            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800 + 15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
-            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
-            {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 10)},
+            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800 + 15%', 'date': today, 'invoice_date': today},
+            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                       'date': today, 'invoice_date': today},
+            {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': today, 'invoice_date': today},
 
             # own_account expense 2 move
-            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (copy)',                                'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
-            {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
+            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': today, 'invoice_date': today},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                       'date': today, 'invoice_date': today},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (copy)',                                'date': today, 'invoice_date': today},
+            {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': today, 'invoice_date': today},
 
             # company_account expense 1 move
             {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: Company PC 1000 + 15%',   'date': date(2021, 10, 12), 'invoice_date': False},
@@ -394,7 +389,6 @@ class TestExpenses(TestExpenseCommon):
         # Move creation should not touch the rates anymore
         all_expenses.action_submit()
         all_expenses._do_approve()  # Skip duplicate wizard
-        self.post_expenses_with_wizard(all_expenses, journal=foreign_sale_journal)
         self.assertRecordValues(all_expenses.account_move_id.sorted('id'), [
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 1000.00, 'currency_id': foreign_currency_1.id},
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 2000.00, 'currency_id': foreign_currency_2.id},
@@ -432,7 +426,6 @@ class TestExpenses(TestExpenseCommon):
 
         expenses.action_submit()
         expenses.action_approve()
-        expenses.action_post()
 
         move_twelve_january, move_first_january = expenses.account_move_id.sorted() # By date desc
 
@@ -499,7 +492,6 @@ class TestExpenses(TestExpenseCommon):
 
         expenses.action_submit()
         expenses._do_approve()  # Skip duplicate wizard
-        self.post_expenses_with_wizard(expenses)
 
         self.assertRecordValues(expenses.account_move_id.attachment_ids.sorted('name'), [
             {
@@ -545,7 +537,6 @@ class TestExpenses(TestExpenseCommon):
 
         expenses.action_submit()
         expenses._do_approve()  # Skip duplicate wizard
-        expenses.action_post()
 
         expense_move = expense.account_move_id
         expense_2_move = expense_2.account_move_id
@@ -578,7 +569,6 @@ class TestExpenses(TestExpenseCommon):
 
         expense.action_submit()
         expense._do_approve()  # Skip duplicate wizard
-        expense.action_post()
 
         self.assertEqual(len(expense.account_move_id.attachment_ids), 2)
 
@@ -606,7 +596,6 @@ class TestExpenses(TestExpenseCommon):
 
         expense.action_submit()
         expense.action_approve()
-        expense.action_post()
         self.assertRecordValues(expense.account_move_id.origin_payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
 
     @freeze_time('2024-01-01')
@@ -619,7 +608,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        expense.action_post()
 
         self.assertEqual(vendor_a.id, expense.account_move_id.line_ids.partner_id.id)
 
@@ -631,7 +619,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        expense.action_post()
         payment = expense.account_move_id.origin_payment_id
 
         with self.assertRaises(UserError, msg="Cannot edit payment amount after linking to an expense"):
@@ -666,7 +653,7 @@ class TestExpenses(TestExpenseCommon):
             expense.total_amount = 0.0
 
         # CASE 4: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense is posted and the account move created
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
         with self.assertRaises(UserError):
             expense.total_amount_currency = 0.0
         with self.assertRaises(UserError):
@@ -812,11 +799,11 @@ class TestExpenses(TestExpenseCommon):
         # An expense manager having accounting access rights is not able to post the journal entry without access
         # to company_2.
         with self.assertRaises(UserError):
-            self.post_expenses_with_wizard(expense_approve.with_user(self.env.user).with_context(allowed_company_ids=main_company.ids))
+            self.post_expenses(expense_approve.with_user(self.env.user).with_context(allowed_company_ids=main_company.ids))
 
         # An expense manager having accounting access rights is able to post the journal entry with access to
         # company_2.
-        self.post_expenses_with_wizard(expense_approve.with_user(self.env.user).with_context(allowed_company_ids=other_company.ids))
+        self.post_expenses(expense_approve.with_user(self.env.user).with_context(allowed_company_ids=other_company.ids))
 
     def test_tax_is_used_when_in_transactions(self):
         """ Ensures that a tax is set to used when it is part of some transactions """
@@ -866,7 +853,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        expense.action_post()
         moves = expense.account_move_id
         tax_lines = moves.line_ids.filtered(lambda line: line.tax_line_id == caba_tax)
         self.assertNotEqual(tax_lines.account_id, caba_transition_account, "The tax should not be on the transition account")
@@ -891,11 +877,10 @@ class TestExpenses(TestExpenseCommon):
         })
 
         expense.action_submit()
-        expense.action_approve()
         with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
-            expense.action_post()
+            expense.action_approve()
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
-        expense.action_post()
+        expense.action_approve()
 
     def test_expense_no_stealing_from_employees(self):
         """
@@ -908,7 +893,6 @@ class TestExpenses(TestExpenseCommon):
         expense = self.create_expenses({'employee_id': self.expense_employee.id})
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
         move = expense.account_move_id
 
         self.assertNotEqual(move.commercial_partner_id, self.env.company.partner_id)
@@ -943,7 +927,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
         self.assertRecordValues(
             expense.account_move_id,
             [{'amount_total': 500.0, 'currency_id': expense.account_move_id.company_currency_id.id}],
@@ -977,9 +960,8 @@ class TestExpenses(TestExpenseCommon):
         })
 
         expense.action_submit()
-        expense.action_approve()
         # Should not raise trust validation error despite missing recipient partner bank
-        expense.action_post()
+        expense.action_approve()
 
     def test_expense_analytic_vendor_bill_count(self):
         """
@@ -993,7 +975,6 @@ class TestExpenses(TestExpenseCommon):
             }])
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
 
         self.assertEqual('in_receipt', expense.account_move_id.move_type)
 
@@ -1016,9 +997,8 @@ class TestExpenses(TestExpenseCommon):
             })
 
         expense.action_submit()
-        expense.action_approve()
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
-        expense.action_post()
+        expense.action_approve()
 
         # Check that there is no fourth autobalancing line on the account move
         self.assertEqual(expense.account_move_id.line_ids.mapped('balance'), [86.96, 13.04, -100.0])
@@ -1064,7 +1044,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense_paid_by_company.action_submit()
         expense_paid_by_company.action_approve()
-        expense_paid_by_company.action_post()
 
         payment_move_company = expense_paid_by_company.account_move_id
         self.assertEqual(payment_move_company.company_id, branch_company)
@@ -1083,7 +1062,6 @@ class TestExpenses(TestExpenseCommon):
         })
         expense_paid_by_employee.action_submit()
         expense_paid_by_employee.action_approve()
-        self.post_expenses_with_wizard(expense_paid_by_employee)
         self.assertEqual(expense_paid_by_employee.account_move_id.company_id, branch_company)
 
     def test_attachments_on_multiple_posting_from_own_expense(self):
@@ -1107,7 +1085,6 @@ class TestExpenses(TestExpenseCommon):
 
         expenses.action_submit()
         expenses.action_approve()
-        self.post_expenses_with_wizard(expenses)
 
         self.assertRecordValues(
             expense_1.account_move_id.attachment_ids.sorted('name'),
@@ -1158,7 +1135,6 @@ class TestExpenses(TestExpenseCommon):
 
         expense.action_submit()
         expense.action_approve()
-        expense.action_post()
 
         payment_entry = expense.account_move_id
         outstanding_payment_account = self.env['account.account'].with_company(self.env.company).search([('name', '=', 'Outstanding Payments')], limit=1)

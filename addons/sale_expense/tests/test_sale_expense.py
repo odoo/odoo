@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -40,7 +41,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
 
         # expense should now be in sales order
         self.assertEqual(so.expense_count, 1, "Changing the state of the expense shouldn't change the expense count on the SO")
@@ -74,7 +75,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         expense_2.action_submit()
         expense_2.action_approve()
-        self.post_expenses_with_wizard(expense_2)
+        self.post_expenses(expense_2)
 
         # expense should now be in sales order
         self.assertEqual(so.expense_count, 2, "Changing the state of the expense shouldn't change the expense count on the SO")
@@ -126,7 +127,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
 
         self.assertTrue(self.env['account.move'].search([('expense_ids', '=', expense.id)], limit=1))
 
@@ -151,19 +152,24 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             expense._do_approve()
             return expense
 
-        def get_post_wizard(expense):
-            action = expense.action_post()
-            return self.env['hr.expense.post.wizard'].with_context(action['context']).browse(action['res_id'])
+        def create_attachments(vals):
+            return self.env['ir.attachment'].sudo().create([{
+                'name': f"{val['name']}.txt",
+                'raw': bytes(val['name'], 'utf-8'),
+                'res_model': 'hr.expense',
+                'res_id': val['expense_id'],
+            } for val in vals])
 
-        sales_price_product = self.env['product.product'].create({
-            'name': 'Sales Price Expense',
-            'reinvoice_policy': 'sales_price',
-            'type': 'service',
-            'can_be_expensed': True,
-            'invoice_policy': 'delivery',
-            'list_price': 50.0,
-            'standard_price': 10.0,
-        })
+        def get_attachments_linked_to_sale_order(sale_order_id):
+            return self.env['ir.attachment'].search([
+                ('res_model', '=', 'sale.order'),
+                ('res_id', '=', sale_order_id),
+            ])
+
+        def select(attachments, selected):
+            return [{
+                'id': attachment.id, 'name': attachment.name, 'selected': is_selected
+            } for (attachment, is_selected) in zip(attachments, selected)]
 
         # At cost: receipts are attached to the customer invoice by default.
         sale_order = create_confirmed_sale_order()
@@ -172,79 +178,71 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'quantity': 1,
             'sale_order_id': sale_order.id,
         }))
-        self.env['ir.attachment'].sudo().create([
-            {
-                'name': 'receipt_1.txt',
-                'raw': b'receipt 1',
-                'res_model': 'hr.expense',
-                'res_id': expense.id,
-            },
-            {
-                'name': 'receipt_2.txt',
-                'raw': b'receipt 2',
-                'res_model': 'hr.expense',
-                'res_id': expense.id,
-            },
+        attachments = create_attachments([
+            {'name': 'receipt_1', 'expense_id': expense.id},
+            {'name': 'receipt_2', 'expense_id': expense.id},
         ])
 
-        wizard = get_post_wizard(expense)
-        self.assertTrue(wizard.attach_receipts_to_invoice)
-        wizard.action_post_entry()
+        # The button to fetch attachments on sale order from expenses is visible
+        self.assertTrue(sale_order.is_linked_to_expense_with_attachment)
+        action = sale_order.action_copy_reinvoiced_expense_receipts()
+        wizard = self.env['expense.attachment.selection.wizard'].browse(action['res_id'])
+        # sort to ease tests
+        wizard.selected_attachments = sorted(wizard.selected_attachments, key=lambda att: att['name'])
+        self.assertListEqual(wizard.selected_attachments, select(attachments, [True, True]))
 
-        invoice = sale_order._create_invoices()
-        copied_receipts = invoice.attachment_ids.filtered(
-            lambda attachment: attachment.name in {'receipt_1.txt', 'receipt_2.txt'}
-        )
+        # import only 1 attachment
+        wizard.selected_attachments = select(attachments, [True, False])
+        wizard.action_import_attachments()
+        attachment_linked_to_sale_order = get_attachments_linked_to_sale_order(sale_order.id)
+        self.assertRecordValues(attachment_linked_to_sale_order, [{'name': attachments[0].name, 'checksum': attachments[0].checksum}])
+        self.assertNotEqual(attachments[0].id, attachment_linked_to_sale_order.id)
 
-        self.assertEqual(len(copied_receipts), 2)
-        self.assertTrue(any(
-            '2 expense receipts attached from reinvoiced expenses.' in message.body
-            for message in invoice.message_ids
-        ))
+        # create a new wizard, should show only the attachment not imported yet
+        self.assertTrue(sale_order.is_linked_to_expense_with_attachment)
+        action = sale_order.action_copy_reinvoiced_expense_receipts()
+        wizard = self.env['expense.attachment.selection.wizard'].browse(action['res_id'])
+        self.assertListEqual(wizard.selected_attachments, select(attachments[1], [True]))
+        wizard.action_import_attachments()
+        attachments_linked_to_sale_order = get_attachments_linked_to_sale_order(sale_order.id)
 
-        # At sales price: receipts are not attached unless the accountant enables it.
-        sale_order = create_confirmed_sale_order()
-        expense = approve_expense(self.create_expenses({
-            'product_id': sales_price_product.id,
-            'quantity': 1,
-            'sale_order_id': sale_order.id,
-        }))
-        self.env['ir.attachment'].sudo().create({
-            'name': 'sales_price_receipt.txt',
-            'raw': b'sales price receipt',
-            'res_model': 'hr.expense',
-            'res_id': expense.id,
-        })
+        self.assertRecordValues(attachments_linked_to_sale_order.sorted('name'), [
+            {'name': attachments[0].name, 'checksum': attachments[0].checksum},
+            {'name': attachments[1].name, 'checksum': attachments[1].checksum},
+        ])
+        self.assertFalse(set(attachments.ids) & set(attachments_linked_to_sale_order.ids))
+        # No more attachments to import (need to invalidate cache to make sure the field is computed again)
+        self.env['sale.order']._invalidate_cache(fnames=['is_linked_to_expense_with_attachment'])
+        self.assertFalse(sale_order.is_linked_to_expense_with_attachment)
 
-        wizard = get_post_wizard(expense)
-        self.assertFalse(wizard.attach_receipts_to_invoice)
-        wizard.action_post_entry()
+        new_attachments = create_attachments([
+            {'name': 'receipt_4', 'expense_id': expense.id},
+            {'name': 'receipt_5', 'expense_id': expense.id},
+        ])
+        # create an attachment on another sale to inject it in the wizard -> should be refused
+        so = create_confirmed_sale_order()
+        injected_attachment = self.env['ir.attachment'].create([{
+            'name': 'receipt_3.txt',
+            'raw': b'receipt_3',
+            'res_model': 'sale.order',
+            'res_id': so.id,
+        }])
+        action = sale_order.action_copy_reinvoiced_expense_receipts()
+        wizard = self.env['expense.attachment.selection.wizard'].browse(action['res_id'])
+        wizard.selected_attachments = sorted(wizard.selected_attachments, key=lambda att: att['name'])
+        self.assertListEqual(wizard.selected_attachments, select(new_attachments, [True, True]))
+        wizard.selected_attachments = select(new_attachments, [False, False])
+        with self.assertRaises(UserError):
+            wizard.action_import_attachments()
 
-        invoice = sale_order._create_invoices()
-        self.assertFalse(invoice.attachment_ids.filtered(
-            lambda attachment: attachment.name == 'sales_price_receipt.txt'
-        ))
+        wizard.selected_attachments = select((new_attachments + injected_attachment), [True, True, True])
 
-        # At sales price with manual opt-in: receipts are attached.
-        sale_order = create_confirmed_sale_order()
-        expense = approve_expense(self.create_expenses({
-            'product_id': sales_price_product.id,
-            'quantity': 1,
-            'sale_order_id': sale_order.id,
-        }))
-        self.env['ir.attachment'].sudo().create({
-            'name': 'manual_sales_price_receipt.txt',
-            'raw': b'manual sales price receipt',
-            'res_model': 'hr.expense',
-            'res_id': expense.id,
-        })
-
-        wizard = get_post_wizard(expense)
-        self.assertFalse(wizard.attach_receipts_to_invoice)
-        wizard.attach_receipts_to_invoice = True
-        wizard.action_post_entry()
-
-        invoice = sale_order._create_invoices()
-        self.assertTrue(invoice.attachment_ids.filtered(
-            lambda attachment: attachment.name == 'manual_sales_price_receipt.txt'
-        ))
+        wizard.action_import_attachments()
+        linked_attachments = get_attachments_linked_to_sale_order(sale_order.id)
+        self.assertRecordValues(linked_attachments.sorted('name'), [
+            {'name': attachments[0].name, 'checksum': attachments[0].checksum},
+            {'name': attachments[1].name, 'checksum': attachments[1].checksum},
+            {'name': new_attachments[0].name, 'checksum': new_attachments[0].checksum},
+            {'name': new_attachments[1].name, 'checksum': new_attachments[1].checksum},
+        ])
+        self.assertFalse((attachments + new_attachments) & linked_attachments)

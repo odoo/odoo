@@ -48,12 +48,15 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.expenses_all.action_approve()
         self.assertRecordValues(self.expenses_all, [
             {'payment_mode': 'own_account',     'state': 'approved'},
-            {'payment_mode': 'company_account', 'state': 'approved'},
+            {'payment_mode': 'company_account', 'state': 'paid'},
         ])
-        self.assertFalse(self.expenses_all.account_move_id)
+        self.assertRecordValues(self.expenses_all.account_move_id, [
+            {'state': 'draft', 'payment_state': 'not_paid'},
+            {'state': 'draft', 'payment_state': 'not_paid'},
+        ])
 
-        # STEP 4: Post (create moves)
-        self.post_expenses_with_wizard(self.expenses_all)
+        # STEP 4: Post draft move from employee expense
+        self.post_expenses(self.expenses_all)
         self.assertRecordValues(self.expenses_all, [
             {'payment_mode': 'own_account',     'state': 'posted'},
             {'payment_mode': 'company_account', 'state': 'paid'},
@@ -70,7 +73,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Posted -> Cancel move (Back to approved) """
         self.expenses_all.action_submit()
         self.expenses_all.action_approve()
-        self.post_expenses_with_wizard(self.expenses_all)
+        self.post_expenses(self.expenses_all)
 
         self.expenses_all.account_move_id.button_draft()
         self.expenses_all.account_move_id.button_cancel()
@@ -84,7 +87,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Posted -> Unlink move/payment (Back to approved) """
         self.expenses_all.action_submit()
         self.expenses_all.action_approve()
-        self.post_expenses_with_wizard(self.expenses_all)
+        self.post_expenses(self.expenses_all)
 
         self.expenses_all.account_move_id.button_draft()
         self.expenses_all.account_move_id.origin_payment_id.unlink()
@@ -98,7 +101,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Posted -> Reverse move (Back to approved) """
         self.expenses_all.action_submit()
         self.expenses_all.action_approve()
-        self.post_expenses_with_wizard(self.expenses_all)
+        self.post_expenses(self.expenses_all)
 
         self.expenses_all.account_move_id._reverse_moves(
             default_values_list=[{'invoice_date': fields.Date.context_today(self.expenses_all)}],
@@ -110,13 +113,13 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         ])
 
     def test_expense_state_synchro_2_employee_specific_flow_1(self):
-        """ Posted -> Reset move to draft (No change)"""
+        """ Posted -> Reset move to draft (Set state back to approved)"""
         self.expenses_employee.action_submit()
         self.expenses_employee.action_approve()
-        self.post_expenses_with_wizard(self.expenses_employee)
+        self.post_expenses(self.expenses_employee)
 
         self.expenses_employee.account_move_id.button_draft()
-        self.assertEqual(self.expenses_employee.state, 'posted')
+        self.assertEqual(self.expenses_employee.state, 'approved')
         self.assertRecordValues(self.expenses_employee.account_move_id, [
             {'state': 'draft', 'payment_state': 'not_paid'},
         ])
@@ -125,7 +128,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Posted -> Paid in one payment (Set to paid) """
         self.expenses_employee.action_submit()
         self.expenses_employee.action_approve()
-        self.post_expenses_with_wizard(self.expenses_employee)
+        self.post_expenses(self.expenses_employee)
 
         self.get_new_payment(self.expenses_employee, self.expenses_employee.total_amount)
 
@@ -138,7 +141,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Posted -> Paid in several payment (Set to paid, even when partially)"""
         self.expenses_employee.action_submit()
         self.expenses_employee.action_approve()
-        self.post_expenses_with_wizard(self.expenses_employee)
+        self.post_expenses(self.expenses_employee)
 
         self.get_new_payment(self.expenses_employee, 1)
 
@@ -155,16 +158,16 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         ])
 
     def test_expense_state_synchro_2_employee_specific_flow_4(self):
-        """ (Partially/) Paid -> Reset move to draft (Back to posted) """
+        """ (Partially/) Paid -> Reset move to draft (Back to approved) """
         self.expenses_employee.action_submit()
         self.expenses_employee.action_approve()
-        self.post_expenses_with_wizard(self.expenses_employee)
+        self.post_expenses(self.expenses_employee)
 
         self.get_new_payment(self.expenses_employee, self.expenses_employee.total_amount)
 
         self.expenses_employee.account_move_id.button_draft()
         self.expenses_employee.account_move_id.line_ids.remove_move_reconcile()
-        self.assertEqual(self.expenses_employee.state, 'posted')
+        self.assertEqual(self.expenses_employee.state, 'approved')
         self.assertRecordValues(self.expenses_employee.account_move_id, [
             {'state': 'draft', 'payment_state': 'not_paid'},
         ])
@@ -173,7 +176,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         """ Paid -> Reset move or payment to draft (Stay paid) """
         self.expenses_company.action_submit()
         self.expenses_company.action_approve()
-        self.expenses_company.action_post()
+        self.post_expenses(self.expenses_company)
 
         self.expenses_company.account_move_id.button_draft()
         self.assertEqual(self.expenses_company.state, 'paid')
@@ -181,7 +184,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
             {'state': 'draft', 'payment_state': 'not_paid'},
         ])
 
-        self.expenses_company.account_move_id.action_post()
+        self.post_expenses(self.expenses_company)
         self.assertEqual(self.expenses_company.state, 'paid')
 
         self.expenses_company.account_move_id.origin_payment_id.action_draft()
@@ -195,7 +198,9 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.expense_employee.sudo().expense_manager_id = False
         self.expenses_all.sudo().manager_id = False
         self.expenses_all.action_submit()
-        self.assertSequenceEqual(['approved', 'approved'], self.expenses_all.mapped('state'))
+        self.assertSequenceEqual(['approved', 'paid'], self.expenses_all.mapped('state'))
+        self.post_expenses(self.expenses_all)
+        self.assertSequenceEqual(['posted', 'paid'], self.expenses_all.mapped('state'))
 
     def test_expense_next_activity(self):
         """ Test next activity is assigned to the right manager, no notification is sent, but validation email is sent"""

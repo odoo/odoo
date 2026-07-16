@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale_expense.AttachmentSelector">
+        <div>
+            <t t-foreach="this.items" t-as="item" t-key="item.id">
+                <div>
+                    <CheckBox
+                        value="item.selected"
+                        onChange="(ev) => this.onChange(item.id, ev)">
+                        <t t-out="item.name"/>
+                    </CheckBox>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

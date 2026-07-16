@@ -17,6 +17,14 @@
                     <field name="expense_count" widget="statinfo" string="Expenses"/>
                 </button>
             </button>
+            <button name="action_cancel" position="before">
+                <button
+                    name="action_copy_reinvoiced_expense_receipts"
+                    type="object"
+                    class="btn btn-secondary"
+                    string="Import Expense Attachments"
+                    invisible="not is_linked_to_expense_with_attachment"/>
+            </button>
         </field>
     </record>
 

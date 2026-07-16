@@ -796,17 +796,8 @@ class AccountJournal(models.Model):
         sale_purchase_journals = self.filtered(lambda journal: journal.type in ('sale', 'purchase'))
         if not sale_purchase_journals:
             return
-        bills_field_list = [
-            SQL("account_move.journal_id"),
-            SQL("(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total"),
-            SQL("(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company"),
-            SQL("account_move.currency_id AS currency"),
-            SQL("account_move.move_type"),
-            SQL("account_move.invoice_date"),
-            SQL("account_move.company_id"),
-        ]
         # DRAFTS
-        sql = sale_purchase_journals._get_draft_sales_purchases_query().select(*bills_field_list)
+        sql = sale_purchase_journals._get_draft_sales_purchases_query().select(*self._get_bills_field_list())
         query_results_drafts = group_by_journal(self.env.execute_query_dict(sql))
 
         # WAITING AND LATE BILLS AND PAYMENTS
@@ -948,6 +939,18 @@ class AccountJournal(models.Model):
             ]
         for journal in self:
             dashboard_data[journal.id]['onboarding'] = onboarding_data[journal.company_id].get(journal_onboarding_map.get(journal.type))
+
+    @api.model
+    def _get_bills_field_list(self):
+        return [
+            SQL("account_move.journal_id"),
+            SQL("(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total"),
+            SQL("(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company"),
+            SQL("account_move.currency_id AS currency"),
+            SQL("account_move.move_type"),
+            SQL("account_move.invoice_date"),
+            SQL("account_move.company_id"),
+        ]
 
     def _get_draft_sales_purchases_query(self):
         return self.env['account.move']._search([

@@ -8,11 +8,8 @@
             <button t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve')">
                 Approve
             </button>
-            <button t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_refuse')">
+            <button title="Refuse" t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_refuse')">
                 Refuse
-            </button>
-            <button t-if="this.displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_post')">
-                Post Entries
             </button>
         </xpath>
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">

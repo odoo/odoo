@@ -18,6 +18,21 @@
             </field>
         </record>
 
+        <record id="view_account_invoice_filter_inherit_expense" model="ir.ui.view">
+            <field name="name">account.invoice.select.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='late']" position="after">
+                    <filter name="expenses_to_post" string="Expenses to post" domain="[
+                        ('expense_ids', '!=', False),
+                        ('state', '=', 'draft')
+                    ]" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"
+                    help="Invoices from an expense, approved but not posted yet"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_move_list_expense" model="ir.ui.view">
             <field name="name">account.move.hr.expense.list</field>
             <field name="model">account.move</field>
