@@ -257,6 +257,7 @@ class HrEmployee(models.Model):
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_user")
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_user")
     structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
+    has_multiple_possible_structure_types = fields.Boolean(compute='_compute_has_multiple_possible_structure_types', groups="hr.group_hr_manager")
     employee_type_id = fields.Many2one(readonly=False, related='version_id.employee_type_id', inherited=True, groups="hr.group_hr_manager")
     hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
     nationality_country_code = fields.Char(
@@ -568,6 +569,14 @@ class HrEmployee(models.Model):
     def _compute_birthday_month(self):
         for employee in self:
             employee.birthday_month = str(employee.birthday.month) if employee.birthday else '0'
+
+    def _compute_has_multiple_possible_structure_types(self):
+        structure_types_per_country = dict(self.env['hr.payroll.structure.type'].read_group(
+            domain=[('country_id', 'in', self.company_country_id.ids)],
+            groupby=['country_id'],
+            aggregates=['id:recordset']))
+        for employee in self:
+            employee.has_multiple_possible_structure_types = len(structure_types_per_country[employee.company_country_id.id]) > 1
 
     @api.model
     def _get_certificate_selection(self):
