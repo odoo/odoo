@@ -69,7 +69,11 @@ export class Call extends Component {
             hasOverlay: t.boolean().optional(true),
             isPip: t.boolean().optional(),
         });
-        this.callActions = useCallActions({ channel: () => this.channel });
+        this.callActions = useCallActions({
+            channel: () => this.channel,
+            inMeetingView: () => this.env.inMeetingView,
+            pipWindow: () => this.env.pipWindow,
+        });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             const gridEl = this.gridRef();

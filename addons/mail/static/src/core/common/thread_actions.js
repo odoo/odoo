@@ -31,11 +31,12 @@ export function registerThreadAction(id, definition) {
 
 registerThreadAction("fold-chat-window", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ chatWindow, isDiscussSidebarChannelActions }) =>
+        chatWindow && !isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-minus",
-    name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
-    onSelected: ({ owner }) => owner.toggleFold(),
-    displayActive: ({ owner }) => !owner.props.chatWindow?.isOpen,
+    name: ({ chatWindow }) => (!chatWindow?.isOpen ? _t("Open") : _t("Fold")),
+    onSelected: ({ toggleFold }) => toggleFold(),
+    displayActive: ({ chatWindow }) => !chatWindow?.isOpen,
     sequence: 99,
     sequenceQuick: 20,
 });
@@ -50,10 +51,11 @@ registerThreadAction("rename-thread", {
 });
 registerThreadAction("close", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ chatWindow, isDiscussSidebarChannelActions }) =>
+        chatWindow && !isDiscussSidebarChannelActions,
     icon: "oi fa-fw oi-close",
     name: _t("Close Chat Window (ESC)"),
-    onSelected: ({ owner }) => owner.close(),
+    onSelected: ({ close }) => close(),
     sequence: 100,
     sequenceQuick: 10,
 });
@@ -61,10 +63,8 @@ registerThreadAction("search-messages", {
     actionPanelComponent: SearchMessagesPanel,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
-    condition: ({ owner, channel }) =>
-        channel &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, chatWindow, isDiscussSidebarChannelActions }) =>
+        channel && (!chatWindow || chatWindow.isOpen) && !isDiscussSidebarChannelActions,
     hotkey: "f",
     icon: "oi oi-fw oi-search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
@@ -89,7 +89,7 @@ registerThreadAction("meeting-chat", {
     badgeIcon: ({ channel }) => !channel.importantCounter && "fa fa-circle o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.env.inMeetingView,
+    condition: ({ inMeetingView }) => inMeetingView,
     icon: "fa fa-fw fa-comments",
     name: _t("Chat"),
     sequence: 30,
@@ -103,21 +103,67 @@ registerThreadAction("meeting-chat", {
 });
 
 export class ThreadAction extends Action {
+    /** @type {() => import("models").ChatWindow} */
+    chatWindowFn;
+    /** @type {() => string} */
+    discussDropdownMenuClass;
+    /** @type {() => boolean} */
+    inDiscussApp;
+    /** @type {() => boolean} */
+    isDiscussSidebarChannelActions;
     /** @type {() => Thread} */
     threadFn;
+
+    /** @type {() => void} */
+    toggleFold;
 
     /**
      * @param {Object} param0
      * @param {Thread|() => Thread} thread
      */
-    constructor({ thread }) {
+    constructor({
+        chatWindow,
+        close,
+        discussDropdownMenuClass,
+        homeMenuHasHomeMenu,
+        inDiscussApp,
+        inMeetingView,
+        isDiscussContent,
+        isDiscussSidebarChannelActions,
+        pipWindow,
+        thread,
+        toggleFold,
+    }) {
         super(...arguments);
+        this.chatWindowFn = typeof chatWindow === "function" ? chatWindow : () => chatWindow;
+        this.close = close;
+        this.discussDropdownMenuClass = discussDropdownMenuClass;
+        this.homeMenuHasHomeMenu = homeMenuHasHomeMenu;
+        this.inDiscussApp = inDiscussApp;
+        this.inMeetingView = inMeetingView;
+        this.isDiscussContent = isDiscussContent;
+        this.isDiscussSidebarChannelActions = isDiscussSidebarChannelActions;
+        this.pipWindowFn = typeof pipWindow === "function" ? pipWindow : () => pipWindow;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
+        this.toggleFold = toggleFold;
     }
 
     get params() {
         const thread = this.threadFn();
-        return Object.assign(super.params, { channel: thread?.channel, thread });
+        return Object.assign(super.params, {
+            channel: thread?.channel,
+            chatWindow: this.chatWindowFn(),
+            close: this.close,
+            discussDropdownMenuClass: this.discussDropdownMenuClass?.(),
+            homeMenuHasHomeMenu: this.homeMenuHasHomeMenu,
+            inDiscussApp: this.inDiscussApp?.() ?? false,
+            inMeetingView: this.inMeetingView?.(),
+            isDiscussContent: this.isDiscussContent,
+            isDiscussSidebarChannelActions: this.isDiscussSidebarChannelActions,
+            pipWindow: this.pipWindowFn(),
+            thread,
+            toggleFold: this.toggleFold,
+        });
     }
 }
 
@@ -130,6 +176,32 @@ export class UseThreadActions extends UseActions {
  * @param {import("@mail/core/common/action").ActionRootRefParam & {thread?: Thread|() => Thread}} [params0={}]
  * @returns {UseThreadActions_Def}
  */
-export function useThreadActions({ thread, rootRef } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
+export function useThreadActions({
+    chatWindow,
+    close,
+    discussDropdownMenuClass,
+    homeMenuHasHomeMenu,
+    inDiscussApp,
+    inMeetingView,
+    isDiscussContent,
+    isDiscussSidebarChannelActions,
+    pipWindow,
+    rootRef,
+    thread,
+    toggleFold,
+} = {}) {
+    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, {
+        chatWindow,
+        close,
+        discussDropdownMenuClass,
+        homeMenuHasHomeMenu,
+        inDiscussApp,
+        inMeetingView,
+        isDiscussContent,
+        isDiscussSidebarChannelActions,
+        pipWindow,
+        rootRef,
+        thread,
+        toggleFold,
+    });
 }

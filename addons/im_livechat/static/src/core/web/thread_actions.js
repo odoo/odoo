@@ -9,10 +9,10 @@ registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    condition: ({ channel, owner, store }) =>
+    condition: ({ channel, isDiscussSidebarChannelActions, store }) =>
         channel?.channel_type === "livechat" &&
         store.self_user?.share === false &&
-        !owner.isDiscussSidebarChannelActions,
+        !isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
     actionPanelOpen: ({ store }) => {
@@ -30,11 +30,11 @@ registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    condition: ({ channel, store, owner }) =>
+    condition: ({ channel, isDiscussContent, store }) =>
         channel?.channel_type === "livechat" &&
         store.has_access_livechat &&
         !channel.livechat_end_dt &&
-        !owner.isDiscussContent,
+        !isDiscussContent,
     dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",
@@ -53,8 +53,8 @@ registerThreadAction("livechat-status", {
     },
     name: ({ channel }) => channel.livechatStatusLabel,
     nameClass: "fst-italic small",
-    sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 10 : 5),
-    sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
+    sequence: ({ isDiscussSidebarChannelActions }) => (isDiscussSidebarChannelActions ? 10 : 5),
+    sequenceGroup: ({ isDiscussSidebarChannelActions }) => (isDiscussSidebarChannelActions ? 5 : 7),
 });
 
 patch(joinChannelAction, {

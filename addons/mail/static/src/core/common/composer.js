@@ -141,6 +141,7 @@ export class Composer extends Component {
             type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
         });
         this.composer = propComputed("composer", t.instanceOf(this.store["Composer"].Class));
+        this.fileUploaderRef = useRef("file-uploader");
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
@@ -389,7 +390,34 @@ export class Composer extends Component {
     }
 
     get composerActionsParams() {
-        return { composer: () => this.props.composer };
+        return {
+            active: () => this.state.active,
+            addEmoji: (emoji) => this.addEmoji(emoji),
+            allowUpload: () => this.allowUpload,
+            areAllActionsDisabled: () => this.areAllActionsDisabled,
+            composer: () => this.props.composer,
+            dialogService: this.dialogService,
+            extraActionsRef: this.extraActionsRef,
+            fileUploaderRef: this.fileUploaderRef,
+            inChatter: () => this.env.inChatter,
+            inFrontendPortalChatter: () => this.env.inFrontendPortalChatter,
+            inDiscussApp: () => this.env.inDiscussApp,
+            inKnowledge: () => this.env.inKnowledge,
+            isFullComposerOpen: () => this.state.isFullComposerOpen,
+            isSendButtonDisabled: () => this.isSendButtonDisabled,
+            isSmall: () => this.ui.isSmall,
+            moreActionsRef: this.moreActionsRef,
+            onClickFullComposer: () => this.onClickFullComposer(),
+            onClickInsertCannedResponse: (ev) => this.onClickInsertCannedResponse(ev),
+            quickActionsRef: this.quickActionsRef,
+            replyToMessageId: () => this.props.composer.replyToMessage?.id,
+            sendGifMessage: (body, postData) => this._sendMessage(body, postData),
+            sendMessage: () => this.sendMessage(),
+            showFullComposer: () => this.props.showFullComposer,
+            type: () => this.props.type,
+            voiceRecorder: () => this.voiceRecorder,
+            voiceTranscription: () => this.voiceTranscription,
+        };
     }
 
     /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
@@ -939,7 +967,7 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.props.composer.message.showDeleteConfirm(this, this.rootRef);
+            this.props.composer.message.showDeleteConfirm(this.env, this.rootRef);
         }
         this.suggestion?.clearRawMentions();
     }

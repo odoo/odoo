@@ -71,7 +71,6 @@ export class ChatHub extends Component {
             if (this.store.self_user?.share === false) {
                 actions.push(
                     new Action({
-                        owner: this,
                         id: "hide-all",
                         definition: {
                             name: _t("Hide all conversations"),
@@ -81,7 +80,6 @@ export class ChatHub extends Component {
                         store: this.store,
                     }),
                     new Action({
-                        owner: this,
                         id: "close-all",
                         definition: {
                             name: _t("Close all conversations"),
@@ -96,7 +94,6 @@ export class ChatHub extends Component {
         if (this.position.dragged) {
             actions.push(
                 new Action({
-                    owner: this,
                     id: "reset-position",
                     definition: {
                         name: _t("Reset initial position"),

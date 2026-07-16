@@ -494,7 +494,7 @@ export class Rtc extends Record {
             const transformedActions = registry
                 .category("discuss.call/actions")
                 .getEntries()
-                .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
+                .map(([id, definition]) => new CallAction({ store: this.store, id, definition }));
             for (const action of transformedActions) {
                 action.setup();
                 void action.isActive;

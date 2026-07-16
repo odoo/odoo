@@ -31,13 +31,13 @@ export const callPipService = {
          * @param {Object} [param0] native pip options
          * @param {Component} [param0.context]
          */
-        async function openPip({ context }) {
+        async function openPip({ root }) {
             const rtc = env.services["discuss.rtc"];
             if (!rtc?.channel) {
                 return;
             }
             state.active = true;
-            const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
+            const isShadowRoot = root?.el?.getRootNode() instanceof ShadowRoot;
             pipWindow = await popout.pip(Meeting, {
                 props: { isPip: true },
                 options: { useAlternativeAssets: isShadowRoot },
