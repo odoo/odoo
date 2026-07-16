@@ -39,5 +39,8 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         'apt': {
             'asn1crypto': 'python3-asn1crypto',
         },
+        'dnf': {
+            'asn1crypto': 'python3-asn1crypto',
+        },
     },
 }

@@ -15,6 +15,9 @@
         'apt': {
             'python-ldap': 'python3-ldap',
         },
+        'dnf': {
+            'python-ldap': 'python3-ldap',
+        },
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
