@@ -20,6 +20,7 @@ from operator import attrgetter
 import psycopg2.sql
 
 from odoo import sql_db
+from odoo.exceptions import ConcurrencyError
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -164,6 +165,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Make it available in the registries dictionary then remove it
         # if an exception is raised.
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+        logger_level = logging.ERROR
         try:
             registry.setup_signaling()
             if upgrade_modules or install_modules or reinit_modules:
@@ -180,11 +182,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # acquire the exclusive or shared lock at the session level; this enables to guard
                 # several transactions under the lock until the cursor is closed
                 if not update_module:
+                    logger_level = logging.WARNING
                     cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading'))", log_exceptions=False)
+                    logger_level = logging.ERROR
                     if db.is_initialized(cr):
                         # check whether we have a partially upgraded database that needs updating;
                         # PostgreSQL will detect deadlocks if several processes have the shared
                         # lock and try to acquire the exclusive lock
+                        cr.commit()  # commit after acquiring the lock to re-start the transaction
                         cr.execute("""
                             SELECT FROM ir_module_module
                             WHERE state IN ('to upgrade', 'to install', 'to remove')
@@ -194,9 +199,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
-                    cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
-                # commit after acquiring the lock to re-start the transaction
-                cr.commit()
+                    try:
+                        logger_level = logging.WARNING
+                        cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
+                        logger_level = logging.ERROR
+                    except psycopg2.errors.DeadlockDetected:
+                        # multiple workers were loading the database and try to upgrade it, only one will succeed
+                        raise ConcurrencyError("Deadlock when waiting for lock to update the registry") from None
+                    cr.commit()  # commit after acquiring the lock to re-start the transaction
 
                 # now load modules
                 if new_db_demo is None:
@@ -233,8 +243,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 else:
                     raise Exception(f'Failed to load registry after {retries} attempts')  # noqa: TRY301
         except Exception:
-            _logger.error('Failed to load registry')
-            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+            del cls.registries[db_name]
+            _logger.log(logger_level, 'Failed to load registry')
             raise
 
         del registry.loaded_xmlids
