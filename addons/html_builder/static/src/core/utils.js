@@ -1323,3 +1323,7 @@ export function convertParamToObject(param) {
     }
     return param;
 }
+export function resolveBuilderLevel(env, level = false) {
+    const parentLevel = env.builderLevel ?? 0;
+    return parentLevel + Number(level);
+}

@@ -7,7 +7,6 @@ export class CardImagePositionOption extends BaseOptionComponent {
     static template = "website.CardImagePositionOption";
     props = props({
         label: t.string(),
-        level: t.number().optional(0),
     });
 
     setup() {

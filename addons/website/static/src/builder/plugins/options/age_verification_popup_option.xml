@@ -17,12 +17,14 @@
                 classAction="'d-none'" inverseAction="true" applyTo="'#verification_error'"
                 preview="false"/>
         </BuilderRow>
-        <BuilderRow label.translate="Minimum Age" t-if="this.isActiveItem('birth_year_verification') || this.isActiveItem('birth_date_verification')" level="1">
-            <BuilderNumberInput dataAttributeAction="'minAge'" default="18" unit.translate="years" saveUnit="''" min="1"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('birth_year_verification') || this.isActiveItem('birth_date_verification')" level="1">
-            <BuilderTextInput attributeAction="'placeholder'" applyTo="'input[name^=&quot;age_verification_birth_&quot;]'"/>
-        </BuilderRow>
+        <BuilderContext t-if="this.isActiveItem('birth_year_verification') || this.isActiveItem('birth_date_verification')" level="true">
+            <BuilderRow label.translate="Minimum Age">
+                <BuilderNumberInput dataAttributeAction="'minAge'" default="18" unit.translate="years" saveUnit="''" min="1"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Placeholder">
+                <BuilderTextInput attributeAction="'placeholder'" applyTo="'input[name^=&quot;age_verification_birth_&quot;]'"/>
+            </BuilderRow>
+        </BuilderContext>
         <BuilderRow label.translate="Background blur">
             <BuilderCheckbox dataAttributeAction="'blurBackground'" dataAttributeActionValue="'true'"/>
         </BuilderRow>

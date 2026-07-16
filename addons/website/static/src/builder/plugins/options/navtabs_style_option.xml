@@ -9,14 +9,14 @@
             <BuilderSelectItem actionValue="'nav-pills'" classAction="'s_tabs_pills_template'" id="'pills_opt'">Pills</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <t t-if="this.isActiveItem('tabs_opt') or this.isActiveItem('buttons_opt')">
-        <BuilderRow label.translate="Background" level="1">
+    <BuilderContext t-if="this.isActiveItem('tabs_opt') or this.isActiveItem('buttons_opt')" level="true">
+        <BuilderRow label.translate="Background">
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" />
         </BuilderRow>
-        <BuilderRow label.translate="Links Color" level="1">
+        <BuilderRow label.translate="Links Color">
             <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
     <BuilderRow t-if="this.isActiveItem('pills_opt') or this.isActiveItem('underline_opt')"
             label.translate="Direction">
         <BuilderSelect action="'setDirection'">
@@ -32,7 +32,7 @@
                 <BuilderSelectItem classAction="'nav-justified'">Equal Widths</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow t-if="this.isActiveItem('regular_opt')" label.translate="Alignment" level="1">
+        <BuilderRow t-if="this.isActiveItem('regular_opt')" label.translate="Alignment" level="true">
             <BuilderSelect applyTo="'.s_tabs_nav .nav'">
                 <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="''">Left</BuilderSelectItem>
                 <BuilderSelectItem classAction="'justify-content-center mx-auto'">Center</BuilderSelectItem>

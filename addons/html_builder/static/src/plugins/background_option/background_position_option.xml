@@ -2,23 +2,23 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BackgroundPositionOption">
-    <t t-if="this.isActiveItem('toggle_bg_image_id')">
-        <BuilderRow label.translate="Position" level="2">
+    <BuilderContext t-if="this.isActiveItem('toggle_bg_image_id')">
+        <BuilderRow label.translate="Position">
             <BuilderSelect action="'backgroundType'" preview="false">
                 <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'repeat-pattern'" id="'background_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
             <BuilderButton icon="'fa-arrows-alt'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
-            <BuilderRow label.translate="Width" level="3">
+        <BuilderContext t-if="this.isActiveItem('background_repeat_opt')" action="'setBackgroundSize'" level="true">
+            <BuilderRow label.translate="Width">
                 <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
-            <BuilderRow label.translate="Height" level="3">
+            <BuilderRow label.translate="Height">
                 <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
         </BuilderContext>
-    </t>
+    </BuilderContext>
 </t>
 
 </templates>

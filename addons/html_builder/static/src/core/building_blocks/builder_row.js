@@ -2,7 +2,12 @@ import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
-import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
+import {
+    useApplyVisibility,
+    resolveBuilderLevel,
+    useBuilderComponent,
+    useVisibilityObserver,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderRow extends Component {
@@ -27,7 +32,7 @@ export class BuilderRow extends Component {
         label: t.string().optional(),
         tooltip: t.string().optional(),
         slots: t.object().optional(),
-        level: t.number().optional(),
+        level: t.boolean().optional(),
         expand: t.boolean().optional(false),
         initialExpandAnim: t.boolean().optional(),
         extraLabelClass: t.string().optional(),
@@ -56,6 +61,8 @@ export class BuilderRow extends Component {
         this.labelRef = useRef("label");
         this.rootRef = useRef("root");
         let isMounted = false;
+
+        this.level = resolveBuilderLevel(this.env, this.props.level);
 
         onMounted(() => {
             if (this.props.initialExpandAnim) {
@@ -132,7 +139,7 @@ export class BuilderRow extends Component {
     }
 
     getLevelClass() {
-        return this.props.level ? `hb-row-sublevel hb-row-sublevel-${this.props.level}` : "";
+        return this.level ? `hb-row-sublevel hb-row-sublevel-${this.level}` : "";
     }
 
     onRowContentClick() {

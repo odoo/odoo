@@ -49,9 +49,9 @@
         </t>
     </BuilderRow>
 
-    <t t-if="this.state.hasCoverImage">
+    <BuilderContext t-if="this.state.hasCoverImage" level="true">
         <!-- Ratio  -->
-        <BuilderRow label.translate="Ratio" level="1">
+        <BuilderRow label.translate="Ratio">
             <BuilderSelect applyTo="':scope > .o_card_img_wrapper'">
                 <BuilderSelectItem id="'card_img_default_ratio_option'" classAction="''">Image default</BuilderSelectItem>
                 <BuilderSelectItem classAction="'ratio ratio-1x1'">Square</BuilderSelectItem>
@@ -69,7 +69,7 @@
         </BuilderRow>
 
         <!-- Custom ratio control -->
-        <BuilderRow t-if="this.isActiveItem('image_ratio_custom_opt')" label.translate="Custom Ratio" level="2">
+        <BuilderRow t-if="this.isActiveItem('image_ratio_custom_opt')" label.translate="Custom Ratio" level="true">
             <BuilderRange
                 styleAction="'--card-img-aspect-ratio'"
                 min="8"
@@ -81,7 +81,7 @@
         </BuilderRow>
 
         <!-- Width -->
-        <BuilderRow t-if="!this.isActiveItem('card_img_top_opt') and !this.isActiveItem('card_img_bottom_opt')" label.translate="Width" level="1">
+        <BuilderRow t-if="!this.isActiveItem('card_img_top_opt') and !this.isActiveItem('card_img_bottom_opt')" label.translate="Width">
             <!-- Bootstrap default column size -->
             <t t-set="colSize" t-value="8.33333333"/>
             <BuilderRange
@@ -94,8 +94,8 @@
         </BuilderRow>
 
         <!-- Alignment -->
-        <CardImagePositionOption label.translate="Position" level="1"/>
-    </t>
+        <CardImagePositionOption label.translate="Position"/>
+    </BuilderContext>
 </t>
 
 <t t-name="website.s_card.imageWrapper">

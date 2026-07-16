@@ -6,7 +6,7 @@ export class VerticalAlignmentOption extends BaseOptionComponent {
     static id = "vertical_alignment_option";
     static template = "html_builder.VerticalAlignmentOption";
     props = props({
-        level: t.number().optional(1),
+        level: t.boolean().optional(true),
         justify: t.boolean().optional(true),
     });
 }

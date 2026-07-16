@@ -71,26 +71,24 @@
                     classAction="'s_dynamic_category_clickable_items'"
                 />
             </BuilderRow>
-            <BuilderRow
-                t-if="this.isActiveItem('clickable_items_opt')"
-                label.translate="Arrows"
-                level="1"
-            >
-                <BuilderCheckbox
-                    classAction="'s_dynamic_category_no_arrows'"
-                    inverseAction="true"
-                />
-            </BuilderRow>
-            <BuilderRow
-                t-if="this.isActiveItem('clickable_items_opt')"
-                label.translate="Darken overlay"
-                level="1"
-            >
-                <BuilderCheckbox
-                    classAction="'s_dynamic_category_no_overlay'"
-                    inverseAction="true"
-                />
-            </BuilderRow>
+            <BuilderContext t-if="this.isActiveItem('clickable_items_opt')" level="true">
+                <BuilderRow
+                    label.translate="Arrows"
+                >
+                    <BuilderCheckbox
+                        classAction="'s_dynamic_category_no_arrows'"
+                        inverseAction="true"
+                    />
+                </BuilderRow>
+                <BuilderRow
+                    label.translate="Darken overlay"
+                >
+                    <BuilderCheckbox
+                        classAction="'s_dynamic_category_no_overlay'"
+                        inverseAction="true"
+                    />
+                </BuilderRow>
+            </BuilderContext>
             <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
                 <BuilderTextInput dataAttributeAction="'button'"/>
             </BuilderRow>
