@@ -39,7 +39,7 @@ export const WORKER_STATE = Object.freeze({
     IDLE: "IDLE",
     CONNECTING: "CONNECTING",
 });
-const MAXIMUM_RECONNECT_DELAY = 60000;
+const MAXIMUM_RECONNECT_DELAY = 120000;
 
 /**
  * This class regroups the logic necessary in order for the
@@ -50,7 +50,7 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
  */
 export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
-    RECONNECT_JITTER = 1000;
+    RECONNECT_JITTER = 30000;
     CONNECTION_CHECK_DELAY = 60_000;
 
     constructor() {
@@ -437,12 +437,12 @@ export class WebsocketWorker {
     }
 
     /**
-     * Try to reconnect to the server, an exponential back off is
-     * applied to the reconnect attempts.
+     * Try to reconnect to the server, add a random jitter to avoid thundering
+     * herd problem.
      */
     _retryConnectionWithDelay() {
         this.connectRetryDelay =
-            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) +
+            Math.min(this.connectRetryDelay, MAXIMUM_RECONNECT_DELAY) +
             this.RECONNECT_JITTER * Math.random();
         this._logDebug("_retryConnectionWithDelay", this.connectRetryDelay);
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
