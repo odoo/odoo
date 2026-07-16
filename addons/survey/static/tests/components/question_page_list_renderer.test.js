@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitFor } from "@odoo/hoot";
 import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
@@ -82,6 +82,34 @@ test("normal list view", async () => {
 
     await contains(SELECTORS.section).click();
     expect(SELECTORS.section + " div.input-group").toHaveCount(1);
+});
+
+test("editing a question keeps the pager on the current page", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+                <form>
+                    <field name="lines" widget="question_page_one2many">
+                        <list limit="1">
+                            <field name="sequence" widget="handle"/>
+                            <field name="title" widget="survey_description_page"/>
+                            <field name="question_type" />
+                            <field name="is_page" column_invisible="1"/>
+                        </list>
+                    </field>
+                </form>
+            `,
+    });
+    await waitFor(".o_data_cell:contains(firstSectionTitle)"); // on first page
+    expect(".o_data_cell:contains(recordTitle)").toHaveCount(0); // on second page
+    await contains(".o_x2m_control_panel .o_pager_next").click();
+    await contains(".o_data_cell:contains(recordTitle)").click();
+    await contains(".modal [name='title'] input").edit("recordTitleModified");
+    await contains(".modal .o_form_button_save").click();
+    await waitFor(".o_data_cell:contains(recordTitleModified)");
+    expect(".o_data_cell:contains(firstSectionTitle)").toHaveCount(0);
 });
 
 test("list view with random count", async () => {
