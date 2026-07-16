@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, types as t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 
 export class HootLogCounters extends Component {
     static template = xml`
@@ -25,7 +25,7 @@ export class HootLogCounters extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         logs: t.object({
             error: t.number(),
             warn: t.number(),

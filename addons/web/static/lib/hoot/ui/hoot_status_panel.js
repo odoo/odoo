@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, plugin, signal, types as t, useEffect, xml } from "@odoo/owl";
+import { Component, signal, t, useEffect, usePlugin, xml } from "@odoo/owl";
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { formatTime } from "../hoot_utils";
@@ -208,10 +208,10 @@ export class HootStatusPanel extends Component {
     // Props & plugins
     config = getConfigPlugin();
     runner = getRunnerPlugin();
-    ui = plugin(UiPlugin);
+    ui = usePlugin(UiPlugin);
 
     // Reactive values
-    canvasRef = signal(null, { type: t.ref(HTMLCanvasElement) });
+    canvasRef = signal.ref(HTMLCanvasElement);
     timer = signal(0, { type: t.number() });
     progressBarIndex = signal(0, { type: t.number() });
     isDebugging = signal(false, { type: t.boolean() });

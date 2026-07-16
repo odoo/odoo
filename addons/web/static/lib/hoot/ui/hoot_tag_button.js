@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { Tag } from "../core/tag";
 import { HootLink } from "./hoot_link";
 
@@ -30,7 +30,7 @@ export class HootTagButton extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         inert: t.boolean().optional(),
         tag: t.instanceOf(Tag),
     });

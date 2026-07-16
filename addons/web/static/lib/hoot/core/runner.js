@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, setFrameRate } from "@odoo/hoot-dom";
-import { proxy, signal, types as t, untrack } from "@odoo/owl";
+import { proxy, signal, t, untrack } from "@odoo/owl";
 import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
@@ -327,7 +327,7 @@ export class Runner {
     });
     reporting = new TestReporting();
     /** @type {Suite[]} */
-    rootSuites = [];
+    rootSuites = signal.Array([], { type: t.instanceOf(Suite) });
     /** @type {Map<string, Suite>} */
     suites = new Map();
     /** @type {Suite[]} */
@@ -539,7 +539,7 @@ export class Runner {
                 parentSuite.addJob(suite);
                 suite.reporting = new TestReporting(parentSuite.reporting);
             } else {
-                this.rootSuites.push(suite);
+                this.rootSuites().push(suite);
                 suite.reporting = new TestReporting(this.reporting);
             }
             if (!this.headless) {
@@ -1842,7 +1842,7 @@ export class Runner {
         }
 
         this._populateState = true;
-        this._currentJobs = this._prepareJobs(this.rootSuites);
+        this._currentJobs = this._prepareJobs(this.rootSuites());
         this._populateState = false;
 
         if (!this.filteredTests().length) {
@@ -1872,7 +1872,7 @@ export class Runner {
         }
 
         if (this.headless) {
-            this.rootSuites.length = 0;
+            this.rootSuites().length = 0;
             this.filteredSuites().length = 0;
             this.filteredTests().length = 0;
         }

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Plugin, config, plugin, types as t } from "@odoo/owl";
+import { Plugin, t, useConfig, usePlugin } from "@odoo/owl";
 import { Runner } from "../core/runner";
 
 //-----------------------------------------------------------------------------
@@ -8,13 +8,13 @@ import { Runner } from "../core/runner";
 //-----------------------------------------------------------------------------
 
 export function getConfigPlugin() {
-    return plugin(RunnerPlugin).instance.config;
+    return usePlugin(RunnerPlugin).instance.config;
 }
 
 export function getRunnerPlugin() {
-    return plugin(RunnerPlugin).instance;
+    return usePlugin(RunnerPlugin).instance;
 }
 
 export class RunnerPlugin extends Plugin {
-    instance = config("runner", t.instanceOf(Runner));
+    instance = useConfig("runner", t.instanceOf(Runner));
 }

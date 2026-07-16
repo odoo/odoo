@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, signal, t, xml } from "@odoo/owl";
+import { Component, signal, t, useProps, xml } from "@odoo/owl";
 import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ export class HootDropdown extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         buttonClassName: t.string().optional(),
         className: t.string().optional(),
         slots: t.object(["toggler", "menu"]),
@@ -42,8 +42,8 @@ export class HootDropdown extends Component {
 
     // Reactive values
     isOpen = signal(false, { type: t.boolean() });
-    rootRef = signal(null, { type: t.ref(HTMLDivElement) });
-    togglerRef = signal(null, { type: t.ref(HTMLButtonElement) });
+    rootRef = signal.ref(HTMLDivElement);
+    togglerRef = signal.ref(HTMLButtonElement);
 
     setup() {
         useAutofocus(this.rootRef);
