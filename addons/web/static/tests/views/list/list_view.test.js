@@ -28,7 +28,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
+import { Component, markup, onPatched, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -85,7 +85,6 @@ import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { onRendered } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
 import { many2XAutocompleteProps } from "@web/views/fields/relational_utils";
@@ -4220,10 +4219,9 @@ test.tags("desktop");
 test(`selection changes are triggered correctly on desktop`, async () => {
     patchWithCleanup(ListController.prototype, {
         setup() {
-            super.setup(...arguments);
-            onRendered(() => {
-                expect.step("onRendered ListController");
-            });
+            super.setup();
+
+            onPatched(() => expect.step("patched"));
         },
     });
 
@@ -4235,43 +4233,42 @@ test(`selection changes are triggered correctly on desktop`, async () => {
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController", "onRendered ListController"]);
+    expect.verifySteps([]);
 
     // tbody checkbox click
     await contains(`tbody .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1, {
         message: "only 1 record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 
     await contains(`tbody .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 
     // head checkbox click
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(4, {
         message: "all records should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no records should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 });
 
 test.tags("mobile");
 test(`selection changes are triggered correctly on mobile`, async () => {
     patchWithCleanup(ListController.prototype, {
         setup() {
-            super.setup(...arguments);
-            onRendered(() => {
-                expect.step("onRendered ListController");
-            });
+            super.setup();
+
+            onPatched(() => expect.step("patched"));
         },
     });
 
@@ -4283,20 +4280,20 @@ test(`selection changes are triggered correctly on mobile`, async () => {
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController", "onRendered ListController"]);
+    expect.verifySteps([]);
 
     // tbody checkbox click
     await clickRecordSelector();
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(1, {
         message: "only 1 record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 
     await clickRecordSelector();
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(0, {
         message: "no record should be selected",
     });
-    expect.verifySteps(["onRendered ListController"]);
+    expect.verifySteps(["patched"]);
 });
 
 test.tags("desktop");

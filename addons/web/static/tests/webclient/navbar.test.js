@@ -10,6 +10,7 @@ import {
     runAllTimers,
     test,
 } from "@odoo/hoot";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -17,18 +18,16 @@ import {
     destroyApp,
     getService,
     makeTestApp,
+    mockOffline,
     mockService,
     mountWithCleanup,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { onRendered } from "@web/owl2/utils";
 
-import { Component, useProps, xml } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { mockOffline } from "../web_test_helpers";
 
 const systrayRegistry = registry.category("systray");
 
@@ -36,7 +35,6 @@ const systrayRegistry = registry.category("systray");
 const waitNavbarAdaptation = () => advanceTime(500);
 
 class MySystrayItem extends Component {
-    props = useProps();
     static template = xml`<li class="my-item">my item</li>`;
 }
 
@@ -188,6 +186,7 @@ test("navbar can display current active app", async () => {
     // Activate an app
     getService("menu").setCurrentMenu(1);
     await animationFrame();
+
     expect(".o-dropdown--menu .dropdown-item.focus").toHaveCount(1, {
         message: "should show the current active app",
     });
@@ -200,22 +199,18 @@ test("navbar can display systray items", async () => {
 
 test("navbar can display systray items ordered based on their sequence", async () => {
     class MyItem1 extends Component {
-        props = useProps();
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
 
     class MyItem2 extends Component {
-        props = useProps();
         static template = xml`<li class="my-item-2">my item 2</li>`;
     }
 
     class MyItem3 extends Component {
-        props = useProps();
         static template = xml`<li class="my-item-3">my item 3</li>`;
     }
 
     class MyItem4 extends Component {
-        props = useProps();
         static template = xml`<li class="my-item-4">my item 4</li>`;
     }
 
@@ -241,7 +236,6 @@ test("navbar can display systray items ordered based on their sequence", async (
 
 test("navbar updates after adding a systray item", async () => {
     class MyItem1 extends Component {
-        props = useProps();
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
 
@@ -252,16 +246,14 @@ test("navbar updates after adding a systray item", async () => {
 
     patchWithCleanup(NavBar.prototype, {
         setup() {
-            onRendered(() => {
-                if (!systrayRegistry.contains("addon.myitem2")) {
-                    class MyItem2 extends Component {
-                        props = useProps();
-                        static template = xml`<li class="my-item-2">my item 2</li>`;
-                    }
-                    systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
-                }
-            });
             super.setup();
+
+            onWillStart(() => {
+                class MyItem2 extends Component {
+                    static template = xml`<li class="my-item-2">my item 2</li>`;
+                }
+                systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
+            });
         },
     });
     await mountWithCleanup(NavBar);

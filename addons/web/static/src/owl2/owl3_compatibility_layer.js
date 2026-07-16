@@ -80,19 +80,6 @@ owl.onWillRender = function onWillRender(cb) {
 };
 
 /**
- * @param {() => void} cb
- */
-owl.onRendered = function onRendered(cb) {
-    const node = owl.useScope();
-    const renderFn = node.renderFn;
-    node.renderFn = () => {
-        const result = renderFn();
-        cb.call(node.component);
-        return result;
-    };
-};
-
-/**
  */
 owl.useComponent = function useComponent() {
     return owl.useScope().component;

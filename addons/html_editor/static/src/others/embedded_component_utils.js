@@ -1,5 +1,16 @@
-import { onRendered, useComponent } from "@web/owl2/utils";
-import { effect, onMounted, onPatched, onWillDestroy, signal, toRaw, proxy } from "@odoo/owl";
+import {
+    effect,
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    onWillPatch,
+    proxy,
+    signal,
+    t,
+    toRaw,
+    useProps,
+} from "@odoo/owl";
+import { useEnv } from "@web/owl2/utils";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
@@ -101,29 +112,63 @@ export function getEditableDescendants(host) {
  * component. EditableDescendants are shared in collaboration and are saved
  * between edition sessions.
  *
- * A signal ref is created for each editableDescendant and exposed on the
- * component as `editableDescendantRefs[name]`. The template must bind each of
- * them with `t-ref="this.editableDescendantRefs.<name>"`, available at all
- * times no matter the component state to guarantee that the editor can save
- * their values at any given time, synchronously.
+ * A signal ref is created for each editable descendant and made available from
+ * the returned {@link refs} dictionary. The template must bind each of them with
+ * `t-ref="this.<variable_containing_refs>.<name>"`, available at all times no matter
+ * the state of the component to guarantee that the editor can save their values
+ * at any given time (synchronously).
  *
- * @param {HostElement} host
- * @returns {EditableDescendants} (HTMLElement) by the value of their
- *          `data-embedded-editable` attribute.
+ * @returns
+ *  - a dictionary containing editable descentant elements: { [data-embedded-editable]: element }
+ *  - a (lazy) dictionary containing ref signals: { [ref name]: signal }
  */
-export function useEditableDescendants(host) {
-    const component = useComponent();
-    if (!component.env.getEditableDescendants) {
+export function useEditableDescendants() {
+    const env = useEnv();
+    if (typeof env.getEditableDescendants !== "function") {
         throw new Error(
             "Missing `getEditableDescendants` function in the `embedding` provided to the `EmbeddedComponentPlugin`."
         );
     }
-    const editableDescendants = Object.freeze(component.env.getEditableDescendants(host));
-    // Map of signal refs, created on demand: reading `editableDescendantRefs[name]`
-    // (from the template through `t-ref="this.editableDescendantRefs.<name>"`, or
-    // from the loop below) creates the signal the first time that name is asked
-    // for, and returns the same one on every later read.
-    const refs = (component.editableDescendantRefs ||= new Proxy(
+    const selectionManager = env.selectionManager;
+
+    /**
+     * @param {boolean} checkHost
+     */
+    function applyRestoreSelection(checkHost) {
+        for (const name in refs) {
+            // Handle partial patch
+            if (!checkHost || !props.host.contains(editableDescendants[name])) {
+                refs[name]().replaceChildren(editableDescendants[name]);
+            }
+        }
+        if (selectionManager) {
+            selectionManager.restoreSelection?.();
+            selectionManager.restoreSelection = null;
+        }
+    }
+
+    function saveSelection() {
+        if (!selectionManager) {
+            return;
+        }
+        selectionManager.restoreSelection =
+            env.editorShared?.selection?.preserveSelection().restore || null;
+    }
+
+    const props = useProps({
+        // cannot use HTMLElement because of cross-realm compatibility
+        host: t.customValidator(t.object(), (value) => value.nodeType === Node.ELEMENT_NODE),
+    });
+    /** @type {EditableDescendants} */
+    const editableDescendants = Object.freeze(env.getEditableDescendants(props.host));
+    /**
+     * Map of signal refs, created on demand: reading `editableDescendantRefs[name]`
+     * (from the template through `t-ref="this.editableDescendantRefs.<name>"`, or
+     * from the loop below) creates the signal the first time that name is asked
+     * for, and returns the same one on every later read.
+     * @type {Record<string, import("@odoo/owl").Signal<HTMLElement>>}
+     */
+    const refs = new Proxy(
         {},
         {
             get(target, name) {
@@ -133,39 +178,16 @@ export function useEditableDescendants(host) {
                 return target[name];
             },
         }
-    ));
-    const renders = {};
-    for (const name of Object.keys(editableDescendants)) {
-        renders[name] = () => refs[name]().replaceChildren(editableDescendants[name]);
-    }
-    let _restoreSelection;
-    const restoreSelection = () => {
-        if (_restoreSelection) {
-            _restoreSelection();
-            _restoreSelection = undefined;
-        }
+    );
+
+    onWillPatch(saveSelection);
+    onMounted(() => applyRestoreSelection(false));
+    onPatched(() => applyRestoreSelection(true));
+
+    return {
+        descendants: editableDescendants,
+        refs,
     };
-    if (component.env.editorShared?.selection) {
-        onRendered(() => {
-            _restoreSelection = component.env.editorShared.selection.preserveSelection().restore;
-        });
-    }
-    onMounted(() => {
-        for (const render of Object.values(renders)) {
-            render();
-        }
-        restoreSelection();
-    });
-    onPatched(() => {
-        for (const [name, render] of Object.entries(renders)) {
-            // Handle partial patch
-            if (!host.contains(editableDescendants[name])) {
-                render();
-            }
-        }
-        restoreSelection();
-    });
-    return editableDescendants;
 }
 
 /**
@@ -650,13 +672,13 @@ export class StateChangeManager {
  *                  JSON serializable values.
  */
 export function useEmbeddedState(host) {
-    const component = useComponent();
-    if (!component.env.getStateChangeManager) {
+    const env = useEnv();
+    if (!env.getStateChangeManager) {
         throw new Error(
             "Missing `getStateChangeManager` function in the `embedding` provided to the `EmbeddedComponentPlugin`."
         );
     }
-    const stateChangeManager = component.env.getStateChangeManager(host);
+    const stateChangeManager = env.getStateChangeManager(host);
     onWillDestroy(() => stateChangeManager.setupUnmounted());
     const state = proxy(stateChangeManager.getEmbeddedState());
     return stateChangeManager.constructEmbeddedState(state);

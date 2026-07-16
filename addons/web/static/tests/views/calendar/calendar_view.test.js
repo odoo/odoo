@@ -38,7 +38,6 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { range } from "@web/core/utils/numbers";
-import { onRendered } from "@web/owl2/utils";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
@@ -4773,10 +4772,10 @@ test(`correctly display year view`, async () => {
 test(`toggle filters in year view`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
-            const props = super.actionSwiperProps;
-            props.onLeftSwipe = undefined;
-            props.onRightSwipe = undefined;
-            return props;
+            return {
+                animationType: "forwards",
+                enabledDuration: 0,
+            };
         },
     });
     await mountView({
@@ -6004,9 +6003,9 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
 
 test(`calendar renderer is rendered once after event drag and drop`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
-        setup() {
-            super.setup();
-            onRendered(() => expect.step("rendered"));
+        get calendarKey() {
+            expect.step("rendered");
+            return super.calendarKey;
         },
     });
     patchWithCleanup(CalendarModel.prototype, {
@@ -6038,9 +6037,9 @@ test(`calendar renderer is rendered once after event drag and drop`, async () =>
 test.tags("desktop");
 test(`calendar renderer is rendered twice after date change`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
-        setup() {
-            super.setup();
-            onRendered(() => expect.step("rendered"));
+        get calendarKey() {
+            expect.step("rendered");
+            return super.calendarKey;
         },
     });
     patchWithCleanup(CalendarModel.prototype, {

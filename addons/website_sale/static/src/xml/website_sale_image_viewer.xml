@@ -30,7 +30,7 @@
                         <!-- Footer -->
                         <div
                             class="o_wsale_image_viewer_carousel position-absolute bottom-0 d-flex"
-                            t-attf-class="o_wsale_image_viewer_ratio_#{this.props.imageRatio} o_wsale_image_viewer_ratio_mobile_#{this.props.imageRatioMobile}"
+                            t-attf-class="o_wsale_image_viewer_ratio_{{ this.viewerProps.imageRatio }} o_wsale_image_viewer_ratio_mobile_{{ this.viewerProps.imageRatioMobile }}"
                             t-on-touchstart="this._onTouchstartCarousel"
                             t-on-touchmove="this._onTouchmoveCarousel"
                             role="toolbar"

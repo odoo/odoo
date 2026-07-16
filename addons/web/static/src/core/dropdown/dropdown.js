@@ -1,18 +1,16 @@
-import { onRendered, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
     onMounted,
     onWillDestroy,
-    proxy,
     signal,
-    useProps,
     status,
     t,
-    untrack,
     useEffect,
+    useProps,
     xml,
 } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
@@ -22,7 +20,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export function getFirstElementOfNode(node) {
     if (!node) {
@@ -102,7 +100,7 @@ export const dropdownProps = {
 
 export class Dropdown extends Component {
     static template = xml`<t t-call-slot="default"/>`;
-    static components = {};
+
     props = useProps(dropdownProps);
 
     // The menu element lives in the popover/bottom sheet, which fills this ref.
@@ -165,12 +163,6 @@ export class Dropdown extends Component {
             });
         }
         this.popover = usePopover(DropdownPopover, options);
-
-        // As the popover is in another context we need to force
-        // its re-rendering when the dropdown re-renders
-        onRendered(() =>
-            untrack(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null))
-        );
 
         let mounted = false;
         onMounted(() => {
@@ -358,12 +350,10 @@ export class Dropdown extends Component {
             return;
         }
 
-        this.popoverRefresher = proxy({ token: 0 });
         const props = {
             beforeOpen: () => this.props.beforeOpen?.(),
             onOpened: () => this.onOpened(),
             onClosed: () => this.onClosed(),
-            refresher: this.popoverRefresher,
             items: this.props.items,
             slots: this.props.slots,
         };

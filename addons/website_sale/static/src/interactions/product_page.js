@@ -320,6 +320,7 @@ export class ProductPage extends Interaction {
                         images,
                         imageRatio,
                         imageRatioMobile,
+                        slots: { default: {} }, // required by Dialog
                     });
                 image.addEventListener("click", handler);
                 this.zoomCleanup.push(() => image.removeEventListener("click", handler));
