@@ -312,6 +312,75 @@ class TestUsers(UsersCommonCase):
         non_existing_user = User.browse(last_user_id.id + 1)
         self.assertFalse(non_existing_user._compute_session_token('session_id'))
 
+    def test_create(self):
+        """ creating a user should automatically create a new partner """
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+
+        self.assertNotIn(user_foo.partner_id, partners_before)
+
+    def test_create_with_ancestor(self):
+        """ creating a user with a specific 'partner_id' should not create a new partner """
+        partner_foo = self.env['res.partner'].create({'name': 'Foo'})
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'partner_id': partner_foo.id, 'login': 'foo'})
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(partners_before, partners_after)
+        self.assertEqual(user_foo.name, 'Foo')
+        self.assertEqual(user_foo.partner_id, partner_foo)
+
+    @mute_logger('odoo.models')
+    def test_copy(self):
+        """ copying a user should automatically copy its partner, too """
+        user_foo = self.env['res.users'].create({
+            'name': 'Foo',
+            'login': 'foo',
+            'employee': True,
+        })
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        user_bar = user_foo.copy({'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        self.assertEqual(foo_before, foo_after)
+
+        self.assertEqual(user_bar.name, 'Foo (copy)')
+        self.assertEqual(user_bar.login, 'bar')
+        self.assertEqual(user_foo.employee, user_bar.employee)
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertNotEqual(user_foo.partner_id.id, user_bar.partner_id.id)
+
+    @mute_logger('odoo.models')
+    def test_copy_with_ancestor(self):
+        """ copying a user with 'parent_id' in defaults should not duplicate the partner """
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
+        partner_bar = self.env['res.partner'].create({'name': 'Bar'})
+
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        del foo_before['login_date']
+        partners_before = self.env['res.partner'].search([])
+        user_bar = user_foo.copy({'partner_id': partner_bar.id, 'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        del foo_after['login_date']
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(foo_before, foo_after)
+        self.assertEqual(partners_before, partners_after)
+
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertEqual(user_bar.partner_id.id, partner_bar.id)
+        self.assertEqual(user_bar.login, 'bar', "login is given from copy parameters")
+        self.assertFalse(user_bar.password, "password should not be copied from original record")
+        self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
+        self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
+
 
 @tagged('post_install', '-at_install', 'groups')
 class TestUsers2(UsersCommonCase):

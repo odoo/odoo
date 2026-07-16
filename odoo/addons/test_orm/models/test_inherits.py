@@ -2,6 +2,23 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
+class TestOrmInheritsPartner(models.Model):
+    _name = 'test_orm.inherits.partner'
+    _description = 'Test ORM Inherits Partner'
+
+    name = fields.Char()
+    email = fields.Char()
+
+
+class TestOrmInheritsUsers(models.Model):
+    _name = 'test_orm.inherits.users'
+    _description = 'Test ORM Inherits Users'
+    _inherits = {'test_orm.inherits.partner': 'partner_id'}
+
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
+    partner_id = fields.Many2one('test_orm.inherits.partner', required=True, ondelete='restrict')
+
+
 # We just create a new model
 class TestUnit(models.Model):
     _name = 'test.unit'
