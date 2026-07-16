@@ -5,6 +5,7 @@ from unittest.mock import patch
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale_collect.controllers.delivery import InStoreDelivery
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 from odoo.addons.website_sale_stock.models.delivery_carrier import DeliveryCarrier
@@ -49,3 +50,19 @@ class TestInStoreDeliveryController(PaymentHttpCommon, ClickAndCollectCommon):
                 product_id=self.storable_product.id
             )
         self.assertEqual(self.cart.carrier_id, self.in_store_dm)
+
+    def test_no_need_to_edit_the_pickup_location_address(self):
+        """Ensure checkout proceeds when the shipping address is a pickup location
+        with incomplete mandatory fields (e.g., empty ZIP code).
+        """
+        partner_pickup = self.env["res.partner"].create({
+            **self.dummy_partner_address_values,
+            "name": "Pickup Point Address",
+            "parent_id": self.partner.id,
+            "zip": "",
+            "pickup_delivery_method_id": self.in_store_dm.id,
+        })
+        self.sale_order.partner_id = self.partner
+        self.sale_order.partner_shipping_id = partner_pickup
+        with self.mock_request(sale_order_id=self.sale_order.id):
+            self.assertIsNone(WebsiteSale()._check_addresses(self.sale_order))
