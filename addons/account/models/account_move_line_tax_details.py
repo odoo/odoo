@@ -427,16 +427,27 @@ class AccountMoveLine(models.Model):
             for line in move_lines
             if line['selected'] and line['tax_repartition_line_id']
         ]
-        has_base_affecting_tax = any(
-            snapshot['taxes'][tax_line['tax_line_id']]['include_base_amount']
+        base_affecting_sequences = [
+            snapshot['taxes'][tax_line['tax_line_id']]['sequence']
             for tax_line in selected_tax_lines
-        )
-        has_base_affected_tax = has_base_affecting_tax and any(
-            snapshot['taxes'][tax_id]['is_base_affected']
+            if snapshot['taxes'][tax_line['tax_line_id']]['include_base_amount']
+        ]
+        base_affected_sequences = [
+            snapshot['taxes'][flattened_tax_id]['sequence']
             for line in move_lines
             for tax_id in line['tax_ids']
+            if snapshot['taxes'][tax_id]['is_base_affected']
+            for flattened_tax_id in (
+                snapshot['taxes'][tax_id]['children_tax_ids']
+                if snapshot['taxes'][tax_id]['amount_type'] == 'group'
+                else [tax_id]
+            )
+        ]
+        has_tax_on_tax = any(
+            base_affected_sequence > base_affecting_sequence
+            for base_affecting_sequence in base_affecting_sequences
+            for base_affected_sequence in base_affected_sequences
         )
-        has_tax_on_tax = has_base_affecting_tax and has_base_affected_tax
 
         def build_base_tax_line_mapping():
             mapping_rows = []
