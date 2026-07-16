@@ -163,8 +163,8 @@
                                 >
                                     <t t-out="this.state.urlTitle"/>
                                 </a>
-                                <div class="flex-grow-1 d-flex justify-content-end align-items-center gap-2">
-                                    <a href="#" class="o_we_replace_title_btn text-dark"
+                                <div class="flex-grow-1 d-flex justify-content-end align-items-center gap-2 me-2">
+                                    <a href="#" class="justify-content-center btn-link o_we_replace_title_btn text-dark"
                                         t-if="!this.state.isImage and this.state.urlTitle and this.state.label === '' and !this.state.showReplaceTitleBanner"
                                         t-on-click="this.onClickReplaceTitle"
                                         title="Replace URL with its title"
