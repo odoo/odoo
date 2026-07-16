@@ -70,3 +70,6 @@ class ResPartner(models.Model):
             "pickup_delivery_method_id": pickup_delivery_method_id,
             "pickup_location_data": json_location_data,
         })
+
+    def _can_be_edited_by_current_customer(self, **kwargs):
+        return super()._can_be_edited_by_current_customer(**kwargs) and not self.pickup_delivery_method_id
