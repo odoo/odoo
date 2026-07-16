@@ -126,7 +126,7 @@ const checkWebsiteFilters = [
 const deleteSelectedPage = [
     {
         content: "Click on Action",
-        trigger: ".o_cp_action_menus button",
+        trigger: ".o_cp_action_menus button:text(actions)",
         run: "click",
     },
     {
