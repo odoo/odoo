@@ -63,7 +63,11 @@ class CalendarAlarm_Manager(models.AbstractModel):
             COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
             FROM calendar_event cal
             RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-            WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > %(now)s
+            INNER JOIN calendar_event_res_partner_rel AS part_rel
+                ON part_rel.calendar_event_id = cal.id
+                AND part_rel.res_partner_id IN %(partner_ids)s
+            WHERE cal.active = True
+                AND cal.start - interval '1' minute  * calcul_delta.max_delta > %(now)s
         ) + interval '3' minute, %(now)s)"""
 
         self.env.flush_all()
