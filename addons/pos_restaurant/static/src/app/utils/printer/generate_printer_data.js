@@ -9,7 +9,7 @@ patch(GeneratePrinterData.prototype, {
         const extraData = super.commonExtraData;
         if (this.config.module_pos_restaurant) {
             const table = this.order.table_id;
-            extraData.table_number = table?.table_number || false;
+            extraData.table_name = table?.table_number || false;
             extraData.floor_name = table?.floor_id?.name || false;
         }
         return extraData;
@@ -17,7 +17,7 @@ patch(GeneratePrinterData.prototype, {
     generatePreparationData() {
         const receipts = super.generatePreparationData(...arguments);
         for (const receipt of receipts) {
-            if (receipt.extra_data.table_number) {
+            if (receipt.extra_data.table_name) {
                 receipt.extra_data.order_label = false;
             }
         }

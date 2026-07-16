@@ -3,13 +3,13 @@
     <data>
         <template id="pos_restaurant.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
             <div name="order-label" position="after">
-                <div t-if="extra_data.get('table_number')" name="table-info" class="text-large">
+                <div t-if="extra_data.get('table_name')" name="table-info" class="text-large">
                     <span t-if="extra_data.get('floor_name')">
                         <span t-esc="extra_data['floor_name'] + ' - '"/>
                         <span class="text-bold">T </span>
                     </span>
                     <span t-else="" class="text-bold">Table </span>
-                    <span class="text-bold" t-esc="extra_data['table_number']"/>
+                    <span class="text-bold" t-esc="extra_data['table_name']"/>
                 </div>
             </div>
             <div name="order-reference" position="before">
