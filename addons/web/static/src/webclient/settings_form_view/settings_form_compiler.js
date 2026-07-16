@@ -73,19 +73,14 @@ export class SettingsFormCompiler extends FormCompiler {
             append(settingsApp, this.compileNode(child, params));
         }
         params.anchors.push(
-            ...[...settingsApp.querySelectorAll("SearchableSetting")].flatMap((s) => {
-                if (!s.id) {
-                    return [];
-                }
-                return {
-                    app: module.key,
-                    settingId: s.id.replaceAll("`", ""),
-                    fieldNames: [...s.querySelectorAll("Field")].flatMap((el) => {
-                        const name = el.getAttribute("name");
-                        return name ? [name.replaceAll("'", "")] : [];
-                    }),
-                };
-            })
+            ...[...settingsApp.querySelectorAll("SearchableSetting")].flatMap((s) => ({
+                app: module.key,
+                settingId: s.id?.replaceAll("`", ""),
+                fieldNames: [...s.querySelectorAll("Field")].flatMap((el) => {
+                    const name = el.getAttribute("name");
+                    return name ? [name.replaceAll("'", "")] : [];
+                }),
+            }))
         );
         return settingsApp;
     }
