@@ -3,7 +3,7 @@ import logging
 from math import floor
 from urllib.parse import parse_qsl, urlencode, urlparse
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageColor, ImageDraw, ImageFont
 from werkzeug.exceptions import NotFound
 from werkzeug.urls import url_encode
 
@@ -183,6 +183,29 @@ class MailController(http.Controller):
         url = f'/odoo/{model_in_url}/{res_id}?{url_encode(url_params, sort=True)}'
         return request.redirect(url)
 
+    @staticmethod
+    def _get_icon_rendering_info(icon, font):
+        # default to 'oi' (material icons)
+        info = {
+            'path': 'web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2',
+            'layout_engine': ImageFont.Layout.RAQM,
+            'features': ['liga'],
+            'icon': icon,
+        }
+        if font == 'oi' and icon.isdigit():
+            # custom odoo icon
+            info['path'] = 'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2'
+            info['layout_engine'] = None
+            info['features'] = None
+            info['icon'] = chr(int(icon))
+        elif font == 'fa':
+            # legacy fontawesome icon
+            info['path'] = 'web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf'
+            info['layout_engine'] = None
+            info['features'] = None
+            info['icon'] = chr(int(icon)) if icon.isdigit() else icon  # legacy fallback
+        return info
+
     @http.route('/mail/view', type='http', auth='public')
     def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
@@ -272,107 +295,160 @@ class MailController(http.Controller):
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:size>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
-        ], type='http', auth="none")
-    # TODO: Adapt the code to make it work with Material Symbol library
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
-        """ This method converts an unicode character to an image (using Font
+        ], type='http', auth='none')
+    def export_icon_to_png_legacy(self, icon, color='#000', bg=None, size=100, alpha=255, font='fa', width=None, height=None):
+        """ This legacy method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
-            :param icon : decimal encoding of unicode character
+            :param icon : string or decimal encoding of unicode character
             :param color : RGB code of the color
             :param bg : RGB code of the background color
             :param size : Pixels in integer
-            :param alpha : transparency of the image from 0 to 255
-            :param font : font path
+            :param alpha : (unused) transparency of the image from 0 to 255
+            :param font : font key ('fa' or 'oi')
             :param width : Pixels in integer
             :param height : Pixels in integer
 
             :returns PNG image converted from given font
         """
+        # --- Legacy font and icon normalization
+        if icon.startswith('oi_'):
+            icon = icon.removeprefix('oi_')
+            font = 'oi'
         # For custom icons, use the corresponding custom font
         if icon.isdigit():
             oi_font_char_codes = {
                 # Replacement of existing Twitter icons by X icons (the route
                 # here receives the old icon code always, but the replacement
                 # one is also considered for consistency anyway).
-                "61569": "59464",  # F081 -> E848: oi_x-square
-                "61593": "59418",  # F099 -> E81A: oi_x
+                '61569': '59464',  # F081 -> E848: oi_x-square
+                '61593': '59418',  # F099 -> E81A: oi_x
 
                 # Addition of new icons
-                "59407": "59407",  # E80F: oi_strava
-                "59409": "59409",  # E811: oi_discord
-                "59416": "59416",  # E818: oi_threads
-                "59417": "59417",  # E819: oi_kickstarter
-                "59419": "59419",  # E81B: oi_tiktok
-                "59420": "59420",  # E81C: oi_bluesky
-                "59421": "59421",  # E81D: oi_google-play
+                '59407': '59407',  # E80F: oi_strava
+                '59409': '59409',  # E811: oi_discord
+                '59416': '59416',  # E818: oi_threads
+                '59417': '59417',  # E819: oi_kickstarter
+                '59418': '59418',  # E81A: oi_twitter
+                '59419': '59419',  # E81B: oi_tiktok
+                '59420': '59420',  # E81C: oi_bluesky
+                '59421': '59421',  # E81D: oi_google-play
+                '59464': '59464',  # E848: oi_twitter-square
             }
             if icon in oi_font_char_codes:
                 icon = oi_font_char_codes[icon]
-                font = "/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2"
+                font = 'oi'
 
+        # --- Legacy bg and color normalization
+        def normalize_color(hex_color, default):
+            try:
+                # Convert the opacity value compatible with PIL Image color
+                # (0 to 255) when color specifier is 'rgba'
+                if hex_color.startswith('rgba'):
+                    *rgb, a = hex_color.strip(')').split(',')
+                    opacity = str(floor(float(a) * 255))
+                    hex_color = ','.join([*rgb, opacity]) + ')'
+                return ''.join(f'{n:02x}' for n in ImageColor.getrgb(hex_color))
+            except ValueError:
+                return default
+        bg = normalize_color(bg, '00000000') if bg else '00000000'
+        color = normalize_color(color, '000000ff')
+
+        # --- Legacy height, width and font_size normalization
         size = max(width, height, 1) if width else size
         width = width or size
         height = height or size
         # Make sure we have at least size=1
         width = max(1, min(width, 512))
         height = max(1, min(height, 512))
-        # Initialize font
-        if font.startswith('/'):
-            font = font[1:]
-        font_obj = ImageFont.truetype(file_open(font, 'rb'), height)
+        font_size = height
 
-        # if received character is not a number, keep old behaviour (icon is character)
-        icon = chr(int(icon)) if icon.isdigit() else icon
+        return self.export_icon_to_png(icon, font=font, color=color, bg=bg, width=width, height=height, font_size=font_size)
 
-        # Background standardization
-        if bg is not None and bg.startswith('rgba'):
-            bg = bg.replace('rgba', 'rgb')
-            bg = ','.join(bg.split(',')[:-1]) + ')'
+    # all routes need to be kept otherwise mail already sent won't be able to load icons anymore
+    @http.route([
+        '/mail/font_to_img/<icon>/<font>/<color>/<bg>/<int:width>x<int:height>fs<int:font_size>',
+    ], type='http', auth='none')
+    def export_icon_to_png(self, icon, font='oi', color='000000ff', bg='00000000', width=16, height=16, font_size=16):
+        """ Convert an icon to an image. Is used only for mass mailing because
+            custom fonts are not supported in mail.
+            :param icon : icon ligature, or decimal encoding of unicode
+              character
+            :param font : font key ('fa' or 'oi')
+            :param color : font color RGB or RGBA hexadecimal string
+            :param bg : background color RGB or RGBA hexadecimal string
+            :param width : Pixels in integer
+            :param height : Pixels in integer
+            :param font_size : Pixels in integer
 
-        # Convert the opacity value compatible with PIL Image color (0 to 255)
-        # when color specifier is 'rgba'
-        if color is not None and color.startswith('rgba'):
-            *rgb, a = color.strip(')').split(',')
-            opacity = str(floor(float(a) * 255))
-            color = ','.join([*rgb, opacity]) + ')'
+            :returns PNG image converted from given font
+        """
+        rendering_info = self._get_icon_rendering_info(icon, font)
+        font_path = rendering_info['path']
+        layout_engine = rendering_info['layout_engine']
+        features = rendering_info['features']
+        icon = rendering_info['icon']
 
-        # Determine the dimensions of the icon
-        image = Image.new("RGBA", (width, height), color)
-        draw = ImageDraw.Draw(image)
+        # Format colors for PIL
+        color = '#' + str.lower(color)
+        color_tuple = ImageColor.getrgb(color)
+        alpha = color_tuple[3] if len(color_tuple) == 4 else 255
+        bg = '#' + str.lower(bg)
+        # Make sure we have at least size=1
+        width = max(1, min(width, 512))
+        height = max(1, min(height, 512))
+        font_size = max(1, min(font_size, 512))
+        # Determine the dimensions of the icon using a dummy draw
+        draw = ImageDraw.Draw(Image.new('L', (1, 1)))
+        fd = None
+        try:
+            fd = file_open(font_path, 'rb')
+            font_obj = ImageFont.truetype(fd, font_size, layout_engine=layout_engine)
+            box = draw.textbbox((0, 0), icon, font=font_obj, features=features)
+            box_w = box[2] - box[0]
+            box_h = box[3] - box[1]
+            max_ratio = max(box_w / width, box_h / height)
+            if max_ratio > 1:
+                # the old font_obj will no longer be used
+                fd.close()
+                fd = None
+                fd = file_open(font_path, 'rb')
+                # adjust the font_size to fit in requested dimensions
+                font_size = max(1, int(font_size / max_ratio))
+                font_obj = ImageFont.truetype(fd, font_size, layout_engine=layout_engine)
+                box = draw.textbbox((0, 0), icon, font=font_obj, features=features)
+                box_w = box[2] - box[0]
+                box_h = box[3] - box[1]
+            left, top = box[:2]
 
-        if hasattr(draw, 'textbbox'):
-            box = draw.textbbox((0, 0), icon, font=font_obj)
-            left = box[0]
-            top = box[1]
-            boxw = box[2] - box[0]
-            boxh = box[3] - box[1]
-        else:  # pillow < 8.00 (Focal)
-            left, top, _right, _bottom = image.getbbox()
-            boxw, boxh = draw.textsize(icon, font=font_obj)
+            # Create an alpha mask
+            image_mask = Image.new('L', (box_w, box_h), 0)
+            draw_mask = ImageDraw.Draw(image_mask)
+            draw_mask.text((-left, -top), icon, font=font_obj, features=features, fill=255)
+            ink_box = image_mask.getbbox()
+            if ink_box is not None:
+                image_mask = image_mask.crop(ink_box)
+            box_w, box_h = image_mask.size
+            image_mask = image_mask.point(lambda p: p * alpha // 255)
 
-        draw.text((0, 0), icon, font=font_obj)
+            # Create a colored rectangle and apply the alpha mask
+            icon_image = Image.new('RGBA', (box_w, box_h), color_tuple[:3])
+            icon_image.putalpha(image_mask)
 
-        # Create an alpha mask
-        imagemask = Image.new("L", (boxw, boxh), 0)
-        drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
+            out_w = max(width, box_w)
+            out_h = max(height, box_h)
+            x = round((out_w - box_w) / 2)
+            y = round((out_h - box_h) / 2)
 
-        # Create a solid color image and apply the mask
-        if color.startswith('rgba'):
-            color = color.replace('rgba', 'rgb')
-            color = ','.join(color.split(',')[:-1]) + ')'
-        iconimage = Image.new("RGBA", (boxw, boxh), color)
-        iconimage.putalpha(imagemask)
-
-        # Create output image
-        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
-        outimage.paste(iconimage, (left, top), iconimage)
-
-        # output image
-        output = io.BytesIO()
-        outimage.save(output, format="PNG")
-        output.seek(0)
+            # Create output image
+            out_image = Image.new('RGBA', (out_w, out_h), bg)
+            out_image.alpha_composite(icon_image, dest=(x, y))
+            output = io.BytesIO()
+            out_image.save(output, format='PNG')
+            output.seek(0)
+        finally:
+            if fd is not None:
+                fd.close()
         response = send_file(
             output,
             request.httprequest.environ,

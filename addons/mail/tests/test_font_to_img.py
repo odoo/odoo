@@ -22,8 +22,7 @@ class TestFontToImg(HttpCase):
         img = Image.open(BytesIO(response.content))
         self.assertEqual(
             img.size,
-            (201, 200),
-            "Looks strange regarding request but this is the current result",
+            (190, 200),
         )
         # Image is a play button
         img_reference = Image.open(file_open("mail/tests/play.png", "rb"))
