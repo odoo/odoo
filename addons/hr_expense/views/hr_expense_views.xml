@@ -105,16 +105,12 @@
                             invisible="nb_attachment == 0 or state != 'draft'" data-hotkey="v"/>
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
                             invisible="nb_attachment == 0 or not can_approve or state != 'submitted'" class="oe_highlight o_expense_approve_highlight"/>
-                    <button name="action_post" string="Post" type="object" data-hotkey="y" class="oe_highlight o_expense_post_highlight"
-                            invisible="nb_attachment == 0 or state != 'approved'" groups="account.group_account_invoice"/>
 
                     <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
                     <button name="action_submit" string="Submit" type="object" class="o_expense_submit"
                             invisible="nb_attachment &gt;= 1 or state != 'draft'" data-hotkey="v"/>
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
                             invisible="nb_attachment &gt;= 1 or not can_approve or state != 'submitted'" class="o_expense_approve"/>
-                    <button name="action_post" string="Post" type="object" data-hotkey="y" class="o_expense_post"
-                            invisible="nb_attachment  &gt;= 1 or state != 'approved'" groups="account.group_account_invoice"/>
 
                     <button name="action_refuse" string="Refuse" invisible="state not in ('submitted', 'approved')" type="object"
                             groups="hr_expense.group_hr_expense_team_approver" class="o_expense_refuse" data-hotkey="x"/>
@@ -726,7 +722,4 @@
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
 
-        <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22"
-                  parent="account.menu_finance_payables" groups="hr_expense.group_hr_expense_user"
-                  action="action_hr_expense_account"/>
 </odoo>

@@ -2,6 +2,7 @@
 
 from . import hr_employee
 from . import hr_employee_public
+from . import account_journal
 from . import account_move
 from . import account_move_line
 from . import account_payment
