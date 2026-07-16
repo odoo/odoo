@@ -456,8 +456,7 @@ class ProductProduct(models.Model):
             order='product_id, date, id'
         )
 
-        dropship_moves = moves.filtered(lambda m: m.is_dropship)
-        if len(dropship_moves) > 1:
+        if self.env['stock.move'].search_count(moves_domain & Domain('is_dropship', '=', True), limit=1):
             self._get_moves_with_manual_value(product_ids=self.ids)
 
         # PERF avoid memoryerror
