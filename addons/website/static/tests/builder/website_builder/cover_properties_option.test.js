@@ -27,12 +27,8 @@ const websiteServiceWithUserModelName = {
     },
     // Minimal context to avoid crashes.
     context: {},
-    websites: [
-        {
-            id: 1,
-            metadata: {},
-        },
-    ],
+    websites: [{ id: 1, metadata: {} }],
+    currentWebsite: { id: 1, metadata: {} },
 };
 
 test("Add image as cover", async () => {

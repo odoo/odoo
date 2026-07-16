@@ -1,17 +1,33 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+
+/**
+ * Clone `el` and run the handlers needed to get it ready for save
+ *
+ * @param {Plugin} plugin any plugin, needed to access the resources
+ * @param {HTMLElement} el
+ * @param {Object} options passed to `clean_for_save_processors`
+ * @returns {HTMLElement}
+ */
+// This is not a shared of the save plugin, because that plugin is not
+// available in mass mailing (which needs this function to save snippets)
+export function prepareElementForSave(plugin, el, options = {}) {
+    const cloneEl = el.cloneNode(true);
+    const cleanedEl = plugin.processThrough("clean_for_save_processors", cloneEl, options);
+    escapeTextNodes(cleanedEl);
+    return cleanedEl;
+}
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
  * @typedef { Object } SaveShared
  * @property { SavePlugin['save'] } save
  * @property { SavePlugin['ignoreDirty'] } ignoreDirty
- * @property { SavePlugin['groupElements'] } groupElements
  * @property { SavePlugin['setDirtyElement'] } setDirtyElement
  */
 
@@ -20,20 +36,13 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * @typedef {((el?: HTMLElement, groupedEls?: Object.<string, HTMLElement[]>) => Promise<void>)[]} on_will_save_handlers
  * Called before the save process.
  *
- * @typedef {((el: HTMLElement) => Promise<void>)[]} on_will_save_element_handlers
- * Called when saving an element (in parallel to saving the view).
- *
  * @typedef {(() => Promise<boolean>)[]} on_ready_to_save_document_handlers
  * Called concurrently as part of the save process.
- *
- * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
- *
- * @typedef {(() => HTMLElement[] | NodeList)[]} dirty_els_providers
  */
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "ignoreDirty", "groupElements", "setDirtyElement"];
+    static shared = ["save", "ignoreDirty", "setDirtyElement"];
     static dependencies = ["history", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -42,10 +51,10 @@ export class SavePlugin extends Plugin {
         on_editor_started_handlers: this.startObserving.bind(this),
         // Resource definitions:
         clean_for_save_processors: (rootEl) => {
+            rootEl.classList.remove("o_dirty");
             this.removeZWSPFromEmbeddedFields(rootEl);
             return rootEl;
         },
-        dirty_els_providers: () => this.editable.querySelectorAll(".o_dirty"),
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
         on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
@@ -66,34 +75,12 @@ export class SavePlugin extends Plugin {
         this.canObserve = false;
     }
 
-    groupElements(toGroupEls) {
-        return Object.groupBy(toGroupEls, (toGroupEl) => {
-            const model = toGroupEl.dataset.oeModel;
-            const recordId = toGroupEl.dataset.oeId;
-            const field = toGroupEl.dataset.oeField;
-
-            // There are elements which have no linked model as something
-            // special is to be done "to save them". In that case, do not group
-            // those elements.
-            if (!model) {
-                return uniqueId("special-element-to-save-");
-            }
-
-            // Group elements which are from the same field of the same record.
-            return `${model}::${recordId}::${field}`;
-        });
-    }
-
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
-            // Get elements to save, then group them if possible.
-            const dirtyEls = this.getResource("dirty_els_providers").flatMap((p) => [...p()]);
-            const groupedElements = this.groupElements(dirtyEls);
-            await Promise.all(
-                this.trigger("on_will_save_handlers", this.editable, groupedElements)
-            );
-            await this._save(groupedElements);
+            await Promise.all(this.trigger("on_will_save_handlers", this.editable));
+            await Promise.all(this.trigger("on_ready_to_save_document_handlers"));
+            this.dependencies.history.reset();
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } catch (error) {
             if (error.exceptionName === "odoo.exceptions.ValidationError") {
@@ -109,26 +96,6 @@ export class SavePlugin extends Plugin {
                 this.trigger("on_saved_handlers");
             }
         }
-    }
-    async _save(groupedElements) {
-        const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
-            const cleanedEls = dirtyEls.map((dirtyEl) => {
-                dirtyEl.classList.remove("o_dirty");
-                return this.processThrough("clean_for_save_processors", dirtyEl.cloneNode(true));
-            });
-            for (const saveElementsOverride of this.getResource("save_elements_overrides")) {
-                if (await saveElementsOverride(cleanedEls)) {
-                    return;
-                }
-            }
-            for (const cleanedEl of cleanedEls) {
-                await Promise.all(this.trigger("on_will_save_element_handlers", cleanedEl));
-            }
-        });
-        // used to track dirty out of the editable scope, like header, footer or wrapwrap
-        const willSaves = this.trigger("on_ready_to_save_document_handlers");
-        await Promise.all(saveProms.concat(willSaves));
-        this.dependencies.history.reset();
     }
 
     startObserving() {

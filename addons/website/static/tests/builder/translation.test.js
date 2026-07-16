@@ -475,7 +475,7 @@ describe("save translation", () => {
             websiteContent: websiteContent,
         });
         await modifyBothTextsAndSave(getEditor());
-        expect.verifySteps([{ 4: {} }, { 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
+        expect.verifySteps([{ 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }, { 4: {} }]);
     });
 });
 
