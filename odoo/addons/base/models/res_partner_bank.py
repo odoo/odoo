@@ -18,6 +18,7 @@ class ResPartnerBank(models.Model):
     _explanation = "Represents a bank account owned by a partner (customer, vendor, or company). It stores the account number (IBAN), bank details, and owner information."
     _order = 'sequence, id'
     _check_company_domain = models.check_company_domain_parent_of
+    _allow_sudo_commands = False
 
     active = fields.Boolean(default=True)
     account_type = fields.Selection(
