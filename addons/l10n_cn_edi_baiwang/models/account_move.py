@@ -51,16 +51,13 @@ class AccountMove(models.Model):
         required=True,
         help="Type of e-Fapiao to issue: '01' for special (专票) or '02' for general (普票).",
     )
-    l10n_cn_baiwang_invoice_no = fields.Char(string="Fapiao Number", copy=False, readonly=True)
-    l10n_cn_baiwang_invoice_date = fields.Datetime(string="Fapiao Date", copy=False, readonly=True)
+    l10n_cn_baiwang_invoice_no = fields.Char(string="Fapiao Number", copy=False)
+    l10n_cn_baiwang_invoice_date = fields.Datetime(string="Fapiao Date", copy=False)
     l10n_cn_baiwang_serial_no = fields.Char(string="Serial No", copy=False, readonly=True, help="Unique request serial number for idempotency")
     l10n_cn_baiwang_qr_code = fields.Char(string="Invoice QR Code", copy=False, readonly=True)
 
     # Red form fields (for credit notes)
-    l10n_cn_baiwang_red_form_type = fields.Selection(
-        selection=RED_FORM_TYPES,
-        string="Red Form Reason",
-    )
+    l10n_cn_baiwang_red_form_type = fields.Selection(selection=RED_FORM_TYPES, string="Red Form Reason")
 
     # EDI document tracking
     l10n_cn_edi_document_ids = fields.One2many(
@@ -181,29 +178,6 @@ class AccountMove(models.Model):
             move.message_post(body=self.env._("Red Form request revoked on Baiwang and cancelled by user. You may request a new one."))
 
     # ─── Computed Methods ───────────────────────────────────────────────
-
-    @api.depends(
-        'l10n_cn_edi_document_ids.state',
-        'l10n_cn_edi_document_ids.baiwang_uuid',
-        'l10n_cn_edi_document_ids.baiwang_red_form_number',
-    )
-    def _compute_l10n_cn_baiwang_latest_edi_data(self):
-        for move in self:
-            uuid_val = False
-            number_val = False
-            status_val = False
-
-            if move.l10n_cn_edi_document_ids:
-                docs = move.l10n_cn_edi_document_ids.sorted(key=lambda d: d.create_date or fields.Datetime.now(), reverse=True)
-                if docs:
-                    latest = docs[0]
-                    uuid_val = latest.baiwang_uuid
-                    number_val = latest.baiwang_red_form_number
-                    status_val = latest.state
-
-            move.l10n_cn_baiwang_red_form_uuid = uuid_val
-            move.l10n_cn_baiwang_red_form_number = number_val
-            move.l10n_cn_baiwang_red_form_status = status_val
 
     @api.depends('country_code', 'move_type', 'state', 'l10n_cn_baiwang_state')
     def _compute_l10n_cn_baiwang_is_needed(self):
@@ -707,10 +681,11 @@ class AccountMove(models.Model):
         'l10n_cn_edi_document_ids.baiwang_red_form_number',
         'l10n_cn_edi_document_ids.baiwang_red_form_amount_total',
         'l10n_cn_edi_document_ids.baiwang_red_form_amount_tax',
+        'l10n_cn_edi_document_ids.baiwang_red_form_type',
     )
     def _compute_l10n_cn_baiwang_latest_edi_data(self):
         for move in self:
-            uuid_val = number_val = status_val = False
+            uuid_val = number_val = status_val = type_val = False
             amt_total = amt_tax = 0.0
 
             if move.l10n_cn_edi_document_ids:
@@ -722,9 +697,63 @@ class AccountMove(models.Model):
                     status_val = latest.state
                     amt_total = latest.baiwang_red_form_amount_total
                     amt_tax = latest.baiwang_red_form_amount_tax
+                    type_val = latest.baiwang_red_form_type  # <--- Extract it
 
             move.l10n_cn_baiwang_red_form_uuid = uuid_val
             move.l10n_cn_baiwang_red_form_number = number_val
             move.l10n_cn_baiwang_red_form_status = status_val
             move.l10n_cn_baiwang_red_form_amount_total = amt_total
             move.l10n_cn_baiwang_red_form_amount_tax = amt_tax
+            move.l10n_cn_baiwang_red_form_type = type_val  # <--- Pass to the UI
+
+    def action_fetch_inbound_red_form_details(self):
+        """Manually fetch and dump the red form line details into the chatter."""
+        for move in self:
+            latest_doc = move.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
+            if not latest_doc:
+                continue
+
+            if latest_doc.baiwang_uuid.startswith('mock-'):
+                move.message_post(body=self.env._("Cannot fetch details for mock records."))
+                continue
+
+            client = BaiwangClient(move.company_id)
+            try:
+                res = client.query_red_form_detail(latest_doc.baiwang_uuid)
+            except UserError as e:
+                move.message_post(body=self.env._("Failed to fetch details: %s", e))
+                continue
+
+            # Extract the nested detail lines from the Baiwang response
+            details = res[0].get('electricInvoiceDetails', []) if isinstance(res, list) and res else []
+            if not details:
+                move.message_post(body=self.env._("No extra line details found on Baiwang."))
+                continue
+
+            msg = "<b>Red Form Line Details from Baiwang:</b><ul>"
+            for line in details:
+                name = line.get('goodsName', 'Unknown Item')
+                qty = line.get('goodsQuantity', 'N/A')
+                price = line.get('goodsTotalPrice', '0.00')
+                tax = line.get('goodsTotalTax', '0.00')
+                msg += f"<li>{name} — Qty: {qty} | Price: {price} | Tax: {tax}</li>"
+            msg += "</ul>"
+
+            move.message_post(body=msg)
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        """Override to pass the Baiwang Red Fapiao number and reason to the Credit Note."""
+        reversals = super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+        for move, reversal in zip(self, reversals):
+            if move.move_type == 'in_invoice' and move.l10n_cn_baiwang_red_form_status in ('red_form_pending', 'red_form_confirmed'):
+                doc = move.l10n_cn_edi_document_ids.filtered(lambda d: d.baiwang_uuid == move.l10n_cn_baiwang_red_form_uuid)[:1]
+
+                if doc and doc.baiwang_red_invoice_no:
+                    reversal.write({
+                        'l10n_cn_baiwang_invoice_no': doc.baiwang_red_invoice_no,
+                        'l10n_cn_baiwang_state': 'issued',
+                        'l10n_cn_baiwang_red_form_type': doc.baiwang_red_form_type,  # <--- Auto-fill the reason
+                    })
+
+        return reversals

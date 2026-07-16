@@ -24,6 +24,7 @@ Features:
         'views/account_move_view.xml',
         'views/account_move_reversal_view.xml',
         'views/account_tax_view.xml',
+        'views/l10n_cn_edi_document_views.xml',
         'views/product_template_view.xml',
         'views/res_config_settings_view.xml',
         'security/ir.access.csv',
