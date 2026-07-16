@@ -1576,19 +1576,18 @@ class Many2many(_RelationalMulti):
                 raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
         if is_real and len(lines.filtered_domain(comodel_domain := self.get_comodel_domain(model))) < len(lines):
             raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
-        if old_relation == new_relation:
+
+        if new_relation == old_relation:
             return
 
         # update the cache of self
-        if new_relation == old_relation:
-            return
         for record in records:
             new_ids = tuple(new_relation[record.id])
             if old_inactive_relation is not None:
                 new_ids += tuple(old_inactive_relation[record.id])
             self._update_cache(record, new_ids)
 
-        # process pairs to add (beware of duplicates)
+        # determine pairs to add and to remove in the relation
         add_pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         remove_pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
 
@@ -1612,91 +1611,66 @@ class Many2many(_RelationalMulti):
                     [y for x, y in remove_pairs],
                 ))
 
-        # update relation cache
-        registry = records.pool
-        inverse_fields = registry.field_inverses[self]
-        sibling_fields = [
-            field
+        # update the cache of all the other fields that use the same relation
+        registry = model.pool
+
+        if sibling_fields := [
+            registry[model_name]._fields[field_name]
             for model_name, field_name in registry.many2many_relations[self.relation, self.column1, self.column2]
-            if (field := registry[model_name]._fields[field_name]) is not self
-        ]
+            if field_name != self.name
+        ]:
+            # group coids to add/remove by id
+            more, less = defaultdict(OrderedSet), defaultdict(OrderedSet)
+            for x, y in add_pairs:
+                more[x].add(y)
+            for x, y in remove_pairs:
+                less[x].add(y)
+            modified_ids = OrderedSet([*more, *less])
 
-        if add_pairs:
-            def add_cache(field: Field, model: BaseModel, id_to_coids, add_filter):
+            for field in sibling_fields:
+                assert field.model_name == self.model_name and field.comodel_name == self.comodel_name, f"Inconsistent sibling fields {field} and {self}"
                 field_cache = field._get_cache(model.env)
-                for id_, coids in id_to_coids.items():
-                    record = model.browse((id_,))
-                    try:
-                        ids = OrderedSet(field_cache[id_])
-                        ids.update(add_filter(coids))
-                        field._update_cache(record, tuple(ids))
-                    except KeyError:
-                        pass
+                domain = field.get_comodel_domain(model).optimize_dynamic(comodel)
+                for id_ in modified_ids:
+                    if id_ in field_cache:
+                        value = OrderedSet(field_cache[id_])
+                        if ys := more.get(id_):
+                            value.update(comodel.browse(ys).filtered(domain)._ids)
+                        if ys := less.get(id_):
+                            value.difference_update(ys)
+                        field._update_cache(model.browse((id_,)), tuple(value))
 
-            if inverse_fields:
-                y_to_xs = defaultdict(OrderedSet)
-                for x, y in add_pairs:
-                    y_to_xs[y].add(x)
-                for invf in inverse_fields:
-                    domain = invf.get_comodel_domain(comodel)
-                    valid_ids = set(records.filtered_domain(domain)._ids)
-                    if not valid_ids:
-                        continue
-                    add_cache(invf, comodel, y_to_xs, lambda xs: xs & valid_ids)
-            if sibling_fields:
-                x_to_ys = defaultdict(OrderedSet)
-                for x, y in add_pairs:
-                    x_to_ys[x].add(y)
-                for field in sibling_fields:
-                    domain = field.get_comodel_domain(records).optimize_dynamic(comodel)
-                    add_cache(field, records, x_to_ys, lambda ys: comodel.browse(ys).filtered_domain(domain)._ids)
+        if inverse_fields := registry.field_inverses[self]:
+            # group ids to add/remove by coid
+            more, less = defaultdict(OrderedSet), defaultdict(OrderedSet)
+            for x, y in add_pairs:
+                more[y].add(x)
+            for x, y in remove_pairs:
+                less[y].add(x)
+            modified_coids = OrderedSet([*more, *less])
 
-        if remove_pairs:
-            def remove_cache(field: Field, model: BaseModel, id_to_coids):
-                field_cache = field._get_cache(model.env)
-                for id_, coids in id_to_coids.items():
-                    record = model.browse((id_,))
-                    try:
-                        ids = tuple(id_ for id_ in field_cache[id_] if id_ not in coids)
-                        field._update_cache(record, ids)
-                    except KeyError:
-                        pass
-
-            if inverse_fields:
-                y_to_xs = defaultdict(OrderedSet)
-                for x, y in remove_pairs:
-                    y_to_xs[y].add(x)
-                for invf in inverse_fields:
-                    remove_cache(invf, comodel, y_to_xs)
-            if sibling_fields:
-                x_to_ys = defaultdict(OrderedSet)
-                for x, y in remove_pairs:
-                    x_to_ys[x].add(y)
-                for field in sibling_fields:
-                    remove_cache(field, records, x_to_ys)
+            for field in inverse_fields:
+                assert field.model_name == self.comodel_name and field.comodel_name == self.model_name, f"Inconsistent inverse fields {field} and {self}"
+                field_cache = field._get_cache(comodel.env)
+                domain = field.get_comodel_domain(comodel).optimize_dynamic(model)
+                valid_ids = set(records.filtered_domain(domain)._ids)
+                if not valid_ids:
+                    continue
+                for coid in modified_coids:
+                    if coid in field_cache:
+                        value = OrderedSet(field_cache[coid])
+                        if xs := more.get(coid):
+                            value.update(xs & valid_ids)
+                        if xs := less.get(coid):
+                            value.difference_update(xs)
+                        field._update_cache(comodel.browse((coid,)), tuple(value))
 
         # trigger the recomputation of fields that depend on the inverse
         # fields of self on the modified corecords and on sibling fields
-        if inverse_fields:
-            corecords = comodel.browse(unique(itertools.chain(
-                (y for _x, y in add_pairs),
-                (y for _x, y in remove_pairs),
-            )))
-            corecords.modified([
-                invf.name
-                for invf in inverse_fields
-                if invf.model_name == self.comodel_name
-            ])
         if sibling_fields:
-            sibling_records = records.browse(unique(itertools.chain(
-                (x for x, _y in add_pairs),
-                (x for x, _y in remove_pairs),
-            )))
-            sibling_records.modified([
-                f.name
-                for f in sibling_fields
-                if f.model_name == self.model_name
-            ])
+            model.browse(modified_ids).modified([f.name for f in sibling_fields])
+        if inverse_fields:
+            comodel.browse(modified_coids).modified([f.name for f in inverse_fields])
 
     def join(self, table: TableSQL, kind='LEFT JOIN', *, only_ids: bool = False) -> TableSQL:
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
