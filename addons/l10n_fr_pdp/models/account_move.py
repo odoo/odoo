@@ -283,6 +283,7 @@ class AccountMove(models.Model):
         pdp_moves = self.filtered(lambda move: move.state == 'posted')
         # The e-reporting chatter message must use the final values in the same transaction.
         # Recompute the chained fields in dependency order before logging it.
+        pdp_moves = pdp_moves.with_context(skip_is_manually_modified=True)
         pdp_moves._compute_l10n_fr_pdp_flow_10_operation_type()
         pdp_moves._compute_l10n_fr_pdp_flow_10_report_type()
         pdp_moves._compute_l10n_fr_pdp_has_error()
