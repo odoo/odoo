@@ -25,6 +25,12 @@ export class SnippetVisibilityPlugin extends Plugin {
     resources = {
         builder_actions: { DataAttributeChangeAction },
         system_attributes: "data-filter-domain",
+        clean_for_save_processors: (rootEl, { saveSnippet } = {}) => {
+            if (saveSnippet) {
+                rootEl.removeAttribute("data-filter-domain");
+            }
+            return rootEl;
+        },
     };
     setup() {
         this.mailingModelId = this.config.record.data.mailing_model_id.id;
