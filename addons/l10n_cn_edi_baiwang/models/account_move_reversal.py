@@ -26,7 +26,7 @@ class AccountMoveReversal(models.TransientModel):
         for wizard in self:
             wizard.l10n_cn_baiwang_use_red_form_reason = (
                 wizard.country_code == 'CN'
-                and wizard.move_type == 'out_invoice'
+                and wizard.move_type in ('out_invoice', 'in_invoice')
                 and bool(wizard.move_ids)
                 and wizard.company_id.l10n_cn_baiwang_subscription_status == 'authorized'
             )
