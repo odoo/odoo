@@ -735,10 +735,8 @@ class AccountAccount(models.Model):
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         account_domain = Domain('active', '=', True)
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            account_domain &= Domain('internal_group', '=', 'income')
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            account_domain &= Domain('internal_group', '=', 'expense')
+        if allowed_account_types := self._get_name_search_account_types(move_type):
+            account_domain &= Domain('account_type', 'in', allowed_account_types)
         domain = [
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
