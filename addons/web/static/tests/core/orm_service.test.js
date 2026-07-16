@@ -371,6 +371,8 @@ test("webSearchRead method", async () => {
 });
 
 test("orm is specialized for component", async () => {
+    onRpc(() => false);
+
     class MyComponent extends Component {
         static props = {};
         static template = xml`<div />`;
@@ -382,6 +384,10 @@ test("orm is specialized for component", async () => {
     const component = await mountWithCleanup(MyComponent);
 
     expect(component.orm).not.toBe(getService("orm"));
+
+    const promise = component.orm.call("res.partner", "partner_method");
+    expect(typeof promise.abort).toBe("function");
+    await promise;
 });
 
 test("silent mode", async () => {

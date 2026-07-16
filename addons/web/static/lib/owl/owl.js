@@ -3356,7 +3356,7 @@ ${issueStrings}`);
       case STATUS.NEW:
         return "new";
       case STATUS.CANCELLED:
-        return "cancelled";
+        return "destroyed";
       case STATUS.MOUNTED:
         return entity instanceof Plugin ? "started" : "mounted";
       case STATUS.DESTROYED:

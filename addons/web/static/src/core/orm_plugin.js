@@ -77,6 +77,17 @@ export const UPDATE_METHODS = [
 ];
 
 export class ORM extends Plugin {
+    static scoped(self, scope) {
+        return Object.assign(Object.create(self), {
+            rpc(...args) {
+                let promise;
+                const protectedPromise = scope.run(() => (promise = self.rpc(...args)));
+                protectedPromise.abort = promise.abort;
+                return protectedPromise;
+            },
+        });
+    }
+
     rpc = rpc; // to be overridable by the SampleORM
     /** @protected */
     _silent = false;

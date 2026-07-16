@@ -1891,6 +1891,9 @@ export class Runner {
             return;
         }
         const error = ensureError(ev);
+        if (ev.type === "unhandledrejection" && error.name === "AbortError") {
+            return ev.preventDefault();
+        }
         if (handledErrors.has(error)) {
             // Already handled
             return ev.preventDefault();

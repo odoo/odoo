@@ -143,7 +143,7 @@ function handleAbortError(reason) {
  */
 function protectMethod(scope, fn) {
     return function protectedMethod(...args) {
-        if (scope.status === 3) {
+        if (scope.status >= 2) {
             return useService.handleCallWhenDestroyed();
         }
         const promise = fn.call(this, ...args);
