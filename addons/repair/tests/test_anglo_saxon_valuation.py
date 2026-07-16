@@ -136,10 +136,11 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
 
         invoice = so._create_invoices()
         invoice.action_post()
-
         self.assertRecordValues(invoice.line_ids, [
             {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_income.id},
             {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_receivable.id},
+            {'debit': 0.0, 'credit': 0.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 0.0, 'credit': 0.0, 'account_id': self.account_expense.id},
         ])
         self.assertRecordValues(ro.move_ids.account_move_id.line_ids, [
             {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_stock_valuation.id},

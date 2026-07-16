@@ -138,9 +138,6 @@ class StockMove(models.Model):
                 self.origin_returned_move_id.location_usage == "supplier"
             )
 
-    def _get_all_related_sm(self, product):
-        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
-
     def _get_purchase_line_and_partner_from_chain(self):
         moves_to_check = deque(self)
         seen_moves = set()
@@ -258,11 +255,3 @@ class StockMove(models.Model):
                 value=self.company_currency_id.format(value), quantity=quantity, unit=self.product_id.uom_id.name,
                 quotation=self.purchase_line_id.order_id.display_name),
         }
-
-    def _get_related_invoices(self):
-        """ Overridden to return the vendor bills related to this stock move.
-        """
-        rslt = super()._get_related_invoices()
-        purchase_ids = self.env['purchase.order'].search([('picking_ids', 'in', self.picking_id.ids)])
-        rslt += purchase_ids.invoice_ids.filtered(lambda x: x.state == 'posted')
-        return rslt
