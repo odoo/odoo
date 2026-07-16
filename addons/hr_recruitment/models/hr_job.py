@@ -426,7 +426,6 @@ class HrJob(models.Model):
                 'name': admin_user.name,
                 'user_id': admin_user.id,
                 'image_1920': admin_user.image_1920,
-                'structure_type_id': self.env.ref('hr.structure_type_employee').id,
             })
 
         convert_file(
