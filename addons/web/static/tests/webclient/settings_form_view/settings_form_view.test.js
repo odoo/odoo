@@ -539,6 +539,43 @@ test("Warn when unset required field", async () => {
     expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
 });
 
+test("Warn when unset required field without id", async () => {
+    ResConfigSettings._fields.woof = fields.Char();
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="Some App" name="someApp">
+                    <setting string="Woof">
+                        <field name="woof" required="1"/>
+                    </setting>
+                </app>
+                <app string="Some Other App" name="someOtherApp">
+                    <setting string="Some Other App"/>
+                </app>
+            </form>
+        `,
+    });
+    expect(".o_field_char[name=woof]").toHaveCount(1);
+    expect(".settings_tab a").toHaveCount(2);
+
+    // Change page
+    await contains(".settings_tab a:eq(1)").click();
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
+
+    // Save
+    await clickSave();
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").toHaveClass("o_page_invalid");
+
+    // Discard
+    await click(".o_form_button_cancel");
+    await animationFrame();
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
+});
+
 test("don't show noContentHelper if no search is done", async () => {
     await mountView({
         type: "form",
