@@ -14,18 +14,13 @@
 
         <div class="d-flex flex-column px-2 text-break">
             <span class="fw-bolder">Field</span>
-            <ModelFieldSelector
-                readonly="false"
-                filter.bind="props.filter"
-                followRelations="props.followRelations"
-                isDebugMode="!!env.debug"
-                path="state.path"
-                resModel="resModel"
-                readProperty="true"
-                showSearchInput="true"
-                update.bind="setPath"
-                showDebugInput="false"
-            />
+            <div class="o_model_field_selector d-flex o_edit_mode o_input" t-on-click="openFieldSelector">
+                <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="state.fieldName || state.path" data-tooltip-position="top">
+                    <span t-if="state.fieldName || state.path" class="o_model_field_selector_chain_part text-truncate d-inline-block align-middle mb-1 px-1">
+                        <t t-out="state.fieldName || state.path" />
+                    </span>
+                </div>
+            </div>
         </div>
         <div t-if="env.debug and state.path" class="d-flex flex-column px-2 text-break">
             <span class="d-block fw-bolder">Technical name</span>
@@ -45,7 +40,7 @@
             />
         </div>
         <div class="d-flex flex-row px-2 justify-content-end gap-2 mt-auto">
-            <button class="btn btn-primary" t-att-disabled="!state.path" t-on-click="validate">Update</button>
+            <button class="btn btn-primary" t-att-disabled="!state.path || !isValid" t-on-click="validate">Update</button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
         </div>
     </div>

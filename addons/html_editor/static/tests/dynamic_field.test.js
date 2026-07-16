@@ -16,9 +16,41 @@ class SomeModel extends models.Model {
     _name = "some.model";
 
     field = fields.Char({ string: "My little field" });
+    product_id = fields.Many2one({ relation: "product" });
+    properties = fields.Properties({
+        string: "Properties",
+        definition_record: "product_id",
+        definition_record_field: "properties_definitions",
+    });
 }
 
-defineModels([SomeModel]);
+class Product extends models.Model {
+    name = fields.Char({ string: "Product Name" });
+    properties_definitions = fields.PropertiesDefinition();
+
+    _records = [
+        {
+            id: 1,
+            name: "xphone",
+            properties_definitions: [
+                {
+                    name: "property_partner",
+                    type: "many2one",
+                    string: "Partner Property",
+                    comodel: "res.partner",
+                },
+            ],
+        },
+    ];
+}
+
+class Partner extends models.Model {
+    _name = "res.partner";
+
+    name = fields.Char({ string: "Partner Name" });
+}
+
+defineModels([SomeModel, Product, Partner]);
 
 function getEditorOptions() {
     return {
@@ -53,6 +85,34 @@ test("add dynamic field", async () => {
             </div>
         <p data-selection-placeholder=""><br></p>
     `)
+    );
+});
+
+test("add dynamic field with relational property", async () => {
+    const { editor, el } = await setupEditor(`<div>[hop hop]</div>`, getEditorOptions());
+    await insertText(editor, "/");
+    await contains(".o-we-powerbox .o-we-command-name:contains(/^Field$/)").click();
+
+    await contains(".o-dynamic-field-popover .o_model_field_selector_value").click();
+    await contains(
+        "li[data-name='properties'] .o_model_field_selector_popover_item_relation"
+    ).click();
+    expect(".o-dynamic-field-popover button.btn-primary").not.toBeEnabled();
+    await contains(
+        "li[data-name='property_partner'] .o_model_field_selector_popover_item_relation"
+    ).click();
+    expect(".o-dynamic-field-popover .o_model_field_selector_chain_part").toHaveCount(1);
+    expect(".o-dynamic-field-popover .o_model_field_selector_chain_part").toHaveText(
+        "properties.get('property_partner', env['res.partner'])"
+    );
+    await contains("li[data-name='name'] button:contains('Partner Name')").click();
+    expect("input[name='label_value']").toHaveValue("Partner Name");
+
+    await contains(".o-dynamic-field-popover button.btn-primary").click();
+    await animationFrame();
+    expect(getContent(el)).toInclude("Partner Name");
+    expect(getContent(el)).toInclude(
+        `t-out="object.properties.get('property_partner', env['res.partner']).name"`
     );
 });
 
