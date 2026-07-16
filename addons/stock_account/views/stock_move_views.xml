@@ -87,4 +87,15 @@
 action = records.action_adjust_valuation()
         </field>
     </record>
+
+    <record id="view_move_tree" model="ir.ui.view">
+        <field name="name">stock.move.list.inherit.stock.account</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="value_justification" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
