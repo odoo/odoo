@@ -63,7 +63,41 @@ test("should create inline code and exclude surrounding formatting", async () =>
         stepFunction: async (editor) => {
             await insertText(editor, "`");
         },
-        contentAfter: `<p><strong><em><u>a</u></em></strong>\u200b<code class="o_inline_code">bcd</code>\u200b[]<strong><em><u>ef</u></em></strong></p>`,
+        contentAfter: `<p><strong><em><u>a</u></em></strong>\u200b<code class="o_inline_code">bcd</code><strong><em><u>\u200b[]ef</u></em></strong></p>`,
+    });
+});
+
+test("should preserve the formatting when adding inline code", async () => {
+    await testEditor({
+        contentBefore: "<p><strong><em><u>a`bcd[]</u></em></strong></p>",
+        stepFunction: async (editor) => {
+            await insertText(editor, "`");
+            await insertText(editor, "a");
+        },
+        contentAfter: `<p><strong><em><u>a</u></em></strong>\u200b<code class="o_inline_code">bcd</code><strong><em><u>\u200ba[]</u></em></strong></p>`,
+    });
+});
+
+test("should not create an inline code when no text between backticks", async () => {
+    await testEditor({
+        contentBefore: "<p>`[]s</p>",
+        stepFunction: async (editor) => {
+            await insertText(editor, "`");
+        },
+        contentAfter: "<p>``[]s</p>",
+    });
+});
+
+test("should not lose selection when splitting text nodes", async () => {
+    await testEditor({
+        contentBefore: "<p>a[]b</p>",
+        contentBeforeEdit: "<p>a[]b</p>",
+        stepFunction: async (editor) => {
+            await insertText(editor, "b");
+            await press(["Backspace"]);
+            await insertText(editor, "`");
+        },
+        contentAfterEdit: "<p>a`[]b</p>",
     });
 });
 
