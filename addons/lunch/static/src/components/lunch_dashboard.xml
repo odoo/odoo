@@ -10,7 +10,7 @@
 
     <t t-name="lunch.LunchOrderLine">
         <li
-            class="d-flex flex-column gap-2 border rounded p-2 w-100 mb-2"
+            class="d-flex flex-column gap-2 border rounded p-2 w-100 mb-2 bg-view"
             name="o_lunch_order_line"
             t-attf-aria-label="{{this.line.quantity}} {{this.line.product[1]}} - {{this.line.state}}"
             tabindex="0"
@@ -115,8 +115,8 @@
 
     <t t-name="lunch.LunchDashboardOrder">
 
-        <div class="o_lunch_banner d-flex flex-column border-start h-100 bg-view">
-            <div class="p-3 overflow-y-auto w-100">
+        <div class="o_lunch_banner d-flex flex-column me-3 mb-3 border rounded-3 p-3 bg-view">
+            <div class="overflow-y-auto overflow-x-hidden w-100">
                 <div class="d-flex flex-column w-100 gap-2">
                     <LunchAlerts alerts="this.state.infos.alerts"/>
                     <div class="d-flex gap-2 align-content-center">
@@ -211,7 +211,7 @@
                     </t>
                 </div>
             </div>
-            <div t-if="this.hasLines" class="mt-auto p-3 border-top">
+            <div t-if="this.hasLines" class="mt-auto border-top pt-3">
                 <span class="d-flex justify-content-between text-muted">
                     Total
                     <LunchCurrency currency="currency" amount="this.state.infos.total"/>
@@ -220,11 +220,11 @@
                     Already Paid
                     <LunchCurrency currency="currency" amount="this.state.infos.paid_subtotal"/>
                 </span>
-                <h4 class="d-flex justify-content-between">
+                <h4 class="d-flex justify-content-between mt-2 mb-0">
                     To Pay
                     <LunchCurrency currency="currency" amount="this.state.infos.unpaid_subtotal"/>
                 </h4>
-                <div class="d-flex flex-column gap-2" name="o_lunch_order_buttons">
+                <div t-if="this.canOrder or (['new', 'ordered'].includes(this.state.infos.raw_state))" class="d-flex flex-column gap-2 mt-3" name="o_lunch_order_buttons">
                     <button
                         t-if="this.canOrder"
                         type="button"
