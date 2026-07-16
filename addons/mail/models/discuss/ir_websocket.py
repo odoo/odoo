@@ -45,8 +45,11 @@ class IrWebsocket(models.AbstractModel):
         channels.extend([*all_user_channels, *internal_specific_channels])
         discuss_categories = self.env["discuss.category"].browse(discuss_category_id_token_map.keys())
         allowed_discuss_categories = discuss_categories.filtered(
-            lambda category: verify_limited_field_access_token(
-                category, "id", discuss_category_id_token_map[category.id], scope="bus.channel"
+            lambda category: (
+                discuss_category_id_token_map[category.id]
+                and verify_limited_field_access_token(
+                    category, "id", discuss_category_id_token_map[category.id], scope="bus.channel",
+                )
             )
             or category.has_access("read"),
         )
