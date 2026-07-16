@@ -745,10 +745,8 @@ class AccountAccount(models.Model):
             ('account_id.active', '=', True),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'expense'))
+        if allowed_account_types := self._get_name_search_account_types(move_type):
+            domain.append(('account_id.account_type', 'in', allowed_account_types))
 
         query = self.env['account.move.line']._search(domain, bypass_access=True)
         if not filter_never_user_accounts:
