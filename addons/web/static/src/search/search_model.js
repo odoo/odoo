@@ -1,4 +1,4 @@
-import { EventBus, toRaw, plugin } from "@odoo/owl";
+import { EventBus, toRaw, plugin, proxy } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
@@ -160,8 +160,12 @@ function execute(op, source, target) {
     target.nextId = nextId;
     target._appliedSearch = _appliedSearch;
 
-    target.query = query;
-    target.searchItems = searchItems;
+    if (query) {
+        target.query = query;
+    }
+    if (searchItems) {
+        target.searchItems = searchItems;
+    }
 
     target.searchPanelInfo = searchPanelInfo;
 
@@ -185,6 +189,9 @@ const FAVORITE_PRIVATE_GROUP = 1;
 const FAVORITE_SHARED_GROUP = 2;
 
 export class SearchModel extends EventBus {
+    query = proxy([]);
+    searchItems = proxy({});
+
     constructor(env, services, args) {
         super();
         this.env = env;
@@ -309,8 +316,10 @@ export class SearchModel extends EventBus {
 
         this.blockNotification = true;
 
-        this.searchItems = {};
-        this.query = [];
+        for (const key in this.searchItems) {
+            delete this.searchItems[key];
+        }
+        this.query.length = 0;
 
         this.nextId = 1;
         this.nextGroupId = 1;
@@ -525,7 +534,7 @@ export class SearchModel extends EventBus {
      * @param {Search} search
      */
     applySearch(search) {
-        this.query = []; // remove everything
+        this.query.length = 0; // remove everything
         this._appliedSearch = search;
         const { domain, groupBys } = search;
         if (domain !== "[]") {
@@ -562,7 +571,7 @@ export class SearchModel extends EventBus {
      * Remove all the query elements from query.
      */
     clearQuery() {
-        this.query = [];
+        this.query.length = 0;
         this.orderByCount = false;
         this._notify();
     }
@@ -688,10 +697,7 @@ export class SearchModel extends EventBus {
      * with given groupId.
      */
     deactivateGroup(groupId) {
-        this.query = this.query.filter((queryElem) => {
-            const searchItem = this.searchItems[queryElem.searchItemId];
-            return searchItem.groupId !== groupId;
-        });
+        this._filterQuery((item) => this.searchItems[item.searchItemId].groupId !== groupId);
         this._checkOrderByCountStatus();
         this._notify();
     }
@@ -855,7 +861,10 @@ export class SearchModel extends EventBus {
                         this.createNewGroupBy(fieldName, { interval, invisible: true });
                     }
                     const index = this.query.length - activeItemGroupBys.length;
-                    this.query = [...this.query.slice(index), ...this.query.slice(0, index)];
+                    const trail = this.query.slice(index);
+                    const lead = this.query.slice(0, index);
+                    this.query.length = 0;
+                    this.query.push(...trail, ...lead);
                 }
             }
             this.deactivateGroup(groupId);
@@ -867,12 +876,8 @@ export class SearchModel extends EventBus {
         }
         const queryElems = this.query.slice(queryLength);
 
-        if (queryItemIndex !== undefined) {
-            this.query = [
-                ...this.query.slice(0, queryItemIndex),
-                ...queryElems,
-                ...this.query.slice(queryItemIndex, queryLength),
-            ];
+        if (queryItemIndex >= 0) {
+            this.query.splice(queryItemIndex, 0, ...queryElems);
         }
 
         this.blockNotification = false;
@@ -1011,7 +1016,7 @@ export class SearchModel extends EventBus {
             this._checkOrderByCountStatus();
         } else {
             if (searchItem.type === "favorite") {
-                this.query = [];
+                this.query.length = 0;
             }
             this.query.push({ searchItemId });
         }
@@ -1046,24 +1051,19 @@ export class SearchModel extends EventBus {
                     // of type 'year' to be there before being removed above.
                     // Since other options of type 'month' or 'quarter' do
                     // not make sense without a year we deactivate all options.
-                    this.query = this.query.filter(
-                        (queryElem) => queryElem.searchItemId !== searchItemId
-                    );
+                    this._filterQuery((item) => searchItemId !== item.searchItemId);
                 }
             } else {
                 if (generatorId.startsWith("custom")) {
                     if (searchItem.type !== "parentFilter") {
-                        this.query = this.query.filter(
-                            (queryElem) => searchItemId !== queryElem.searchItemId
-                        );
+                        this._filterQuery((item) => searchItemId !== item.searchItemId);
                     }
                     this.query.push({ searchItemId, generatorId });
                     continue;
                 }
-                this.query = this.query.filter(
-                    (queryElem) =>
-                        queryElem.searchItemId !== searchItemId ||
-                        !queryElem.generatorId.startsWith("custom")
+                this._filterQuery(
+                    (item) =>
+                        searchItemId !== item.searchItemId || !item.generatorId.startsWith("custom")
                 );
                 this.query.push({ searchItemId, generatorId });
                 if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
@@ -1789,6 +1789,19 @@ export class SearchModel extends EventBus {
     }
 
     /**
+     * @param {(queryItem: any) => boolean} predicate
+     */
+    _filterQuery(predicate) {
+        const oldQuery = this.query.slice();
+        this.query.length = 0;
+        for (const queryItem of oldQuery) {
+            if (predicate(queryItem)) {
+                this.query.push(queryItem);
+            }
+        }
+    }
+
+    /**
      * Computes and returns the domain based on the current active
      * categories. If "excludedCategoryId" is provided, the category with
      * that id is not taken into account in the domain computation.
@@ -2094,8 +2107,8 @@ export class SearchModel extends EventBus {
         const groupBy = groupBys.length
             ? groupBys
             : this.globalGroupBy.length
-            ? this.globalGroupBy.slice()
-            : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
+              ? this.globalGroupBy.slice()
+              : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
         return typeof groupBy === "string" ? [groupBy] : groupBy;
     }
 

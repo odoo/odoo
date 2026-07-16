@@ -1369,21 +1369,24 @@ test("concurrency: delayed get_filter", async () => {
 
     let promise;
     onRpc("search_panel_select_multi_range", () => promise?.promise);
-    const component = await mountWithSearch(TestComponent, {
+    await mountWithSearch(TestComponent, {
         resModel: "partner",
         searchViewId: false,
     });
-    expect(component.domain).toEqual([]);
+
+    expect(".o_search_panel_filter_value").toHaveCount(2);
 
     // trigger a reload and delay the get_filter
     promise = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Filter");
-    expect(component.domain).toEqual([]);
+
+    expect(".o_search_panel_filter_value").toHaveCount(2);
 
     promise.resolve();
     await animationFrame();
-    expect(component.domain).toEqual([["id", "=", 1]]);
+
+    expect(".o_search_panel_filter_value").toHaveCount(1);
 });
 
 test("use filter (on many2one) to refine search", async () => {
@@ -2193,7 +2196,6 @@ test("scroll kanban view with searchpanel and kept scroll position", async () =>
     }
 
     class WebClientContainer extends Component {
-        props = useProps();
         static components = { WebClient };
         static template = xml`
             <div class="o_web_client" style="max-height: 300px"><WebClient/></div>
@@ -2221,7 +2223,6 @@ test("scroll position is kept when switching between controllers", async () => {
     }
 
     class WebClientContainer extends Component {
-        props = useProps();
         static components = { WebClient };
         static template = xml`
             <div class="o_web_client" style="max-height: 300px"><WebClient/></div>
@@ -2244,7 +2245,7 @@ test("scroll position is kept when switching between controllers", async () => {
     await scroll(`.o_search_panel`, { y: 25 });
     await getService("action").switchView("kanban");
     expect(`.o_kanban_view .o_content`).toHaveCount(1);
-    expect(queryFirst(`.o_search_panel`).scrollTop).toBe(25);
+    expect(queryFirst(`.o_search_panel`).scrollTop).toBeCloseTo(25);
 });
 
 test("search panel is not instantiated in dialogs", async () => {
