@@ -59,6 +59,15 @@ class LoadPublicHolidaysWizard(models.TransientModel):
 
     def action_add_public_holidays(self):
         self.ensure_one()
+        if self.line_ids.filtered(lambda line: not line.work_entry_type_id):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': self.env._("Please select a work entry type for all public holidays before adding them."),
+                },
+            }
         prepared_public_holidays = self._prepare_public_holidays_data()
         warning_messages = self._get_warning_messages(prepared_public_holidays)
         notification_messages = []

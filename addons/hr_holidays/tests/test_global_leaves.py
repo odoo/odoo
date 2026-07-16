@@ -228,6 +228,15 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         )
         wizard = wizard_model.create({'year': 2026})
 
+        wizard.line_ids.work_entry_type_id = self.env['hr.work.entry.type'].create({
+            'name': 'Paid Time Off',
+            'code': 'Paid Time Off',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+
         expected_count = len(wizard.line_ids)
         public_holidays_domain = [
             ('company_id', '=', self.company.id),
