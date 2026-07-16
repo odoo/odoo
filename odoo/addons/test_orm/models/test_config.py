@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
 
     test_many2one_field = fields.Many2one(
         string='Test Many2one Field',
-        comodel_name='res.partner',
+        comodel_name='test_orm.partner',
         config_parameter='test_orm.test_many2one_field',
         help='A test many2one field for configuration settings'
     )

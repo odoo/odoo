@@ -198,8 +198,8 @@ class TestConfigSettings(TransactionCase):
 
     def test_many2one_field(self):
         """Test many2one field functionality"""
-        falsy_partner = self.env['res.partner']
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        falsy_partner = self.env['test_orm.partner']
+        partner = self.env['test_orm.partner'].create({'name': 'Test Partner'})
 
         # [(res_config_write_value, res_config_get_value), [(get_type_default, get_type_value), ...]]
         test_values = [
