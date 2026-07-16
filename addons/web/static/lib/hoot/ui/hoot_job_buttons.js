@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { Job } from "../core/job";
 import { Test } from "../core/test";
 import { HootLink } from "./hoot_link";
@@ -39,7 +39,7 @@ export class HootJobButtons extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         hidden: t.boolean().optional(),
         job: t.instanceOf(Job),
     });

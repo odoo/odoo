@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, plugin, xml } from "@odoo/owl";
+import { Component, usePlugin, xml } from "@odoo/owl";
 import { hasConfigChanged } from "../core/config";
 import { LOG_LEVELS } from "../core/logger";
 import { refresh } from "../core/url";
@@ -269,7 +269,7 @@ export class HootConfigMenu extends Component {
     // Props & plugins
     config = getConfigPlugin();
     runner = getRunnerPlugin();
-    ui = plugin(UiPlugin);
+    ui = usePlugin(UiPlugin);
 
     // Reactive values
     colorScheme = colorScheme;

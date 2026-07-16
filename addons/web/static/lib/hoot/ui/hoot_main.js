@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, signal, types as t, xml } from "@odoo/owl";
+import { Component, signal, t, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { createUrl, refresh } from "../core/url";
 import { callHootKey, T_NULL, useHootKey, useWindowListener } from "../hoot_utils";

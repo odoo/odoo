@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { signal } from "@odoo/owl";
+import { signal, t } from "@odoo/owl";
 import { deepEqual, DEFAULT_EVENT_TYPES, generateSeed } from "../hoot_utils";
 
 /**
@@ -114,7 +114,7 @@ export function makeConfigManager(urlParams) {
     const initialConfig = { ...DEFAULT_CONFIG_AND_FILTERS, ...urlParams };
     manager[S_INITIAL_CONFIG] = initialConfig;
     for (const [key, value] of $entries(initialConfig)) {
-        manager[key] = signal(value);
+        manager[key] = signal(value, { type: t.any() });
     }
     return manager;
 }

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, signal, t, xml } from "@odoo/owl";
+import { Component, signal, t, useProps, xml } from "@odoo/owl";
 import { FILTER_SCHEMA } from "../core/config";
 import { createUrlFromId } from "../core/url";
 import { ensureArray, INCLUDE_LEVEL } from "../hoot_utils";
@@ -38,7 +38,7 @@ export class HootLink extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         class: t.string().optional(),
         ids: t.record(t.or([t.string(), t.array(t.string())])).optional(),
         onClick: t.function([t.instanceOf(PointerEvent)]).optional(),
@@ -90,6 +90,7 @@ export class HootLink extends Component {
     updateHref() {
         const { ids, options } = this.props;
         const simplifiedIds = this.runner.simplifyUrlIds(ids);
-        this.href.set(createUrlFromId(simplifiedIds, options));
+        const url = createUrlFromId(simplifiedIds, options);
+        this.href.set(url.toString());
     }
 }

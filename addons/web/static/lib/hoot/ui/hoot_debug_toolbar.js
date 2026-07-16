@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, computed, props, signal, types as t, useEffect, xml } from "@odoo/owl";
+import { Component, computed, signal, t, useEffect, useProps, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { refresh } from "../core/url";
 import { formatTime, throttle } from "../hoot_utils";
@@ -259,7 +259,7 @@ export class HootDebugToolBar extends Component {
     `;
 
     // Props & plugins
-    props = props({
+    props = useProps({
         test: t.instanceOf(Test),
     });
 
@@ -277,8 +277,8 @@ export class HootDebugToolBar extends Component {
             groupAssertions(lastResults?.getEvents("assertion"))
         );
     });
-    rootRef = signal(null, { type: t.ref(HTMLDivElement) });
-    handleRef = signal(null, { type: t.ref(HTMLElement) });
+    rootRef = signal.ref(HTMLDivElement);
+    handleRef = signal.ref(HTMLElement);
 
     // Other members
     formatTime = formatTime;

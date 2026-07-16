@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { types as t } from "@odoo/owl";
+import { t } from "@odoo/owl";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import {
     createMock,

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { effect, signal, types as t } from "@odoo/owl";
+import { effect, signal, t } from "@odoo/owl";
 import { getAllColors, getPreferredColorScheme } from "../../hoot-dom/hoot_dom_utils";
 import { STORAGE, storageGet, storageSet } from "../hoot_utils";
 
@@ -67,7 +67,7 @@ export function toggleColorScheme() {
     storageSet(STORAGE.scheme, colorScheme());
 }
 
-export const colorRoot = signal(null, { type: t.ref(HTMLElement) });
+export const colorRoot = signal.ref(HTMLElement);
 export const colorScheme = signal(defaultScheme, { type: t.selection(["dark", "light"]) });
 
 effect(() => {
