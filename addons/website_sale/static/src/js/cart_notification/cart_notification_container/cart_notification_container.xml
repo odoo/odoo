@@ -6,12 +6,12 @@
             class="position-fixed w-100 h-100 top-0 end-0 pe-none"
             name="o_cart_notification_container"
         >
-            <div class="d-flex flex-column container align-items-end">
+            <div
+                class="o_cart_notification_sticky d-flex flex-column container align-items-end position-relative"
+                t-ref="this.notificationStackRef"
+            >
                 <t t-foreach="this.state.notifications" t-as="notification" t-key="notification_index">
-                    <div
-                        class="position-relative mt-2"
-                        t-attf-style="top: {{this.state.topOffset}}px;"
-                    >
+                    <div class="position-relative mt-2">
                         <WarningNotification
                             t-if="notification.type === 'warning'"
                             t-props="notification.data"
