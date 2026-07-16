@@ -1,13 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
-import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
-import { isElement, isTextNode, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
-import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
-import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { mergeAdjacentTextNodes, splitTextNode } from "@html_editor/utils/dom";
+import { closestElement, findFurthest, selectElements } from "@html_editor/utils/dom_traversal";
+import { DIRECTIONS } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
-
-/** @typedef {((codeElement: HTMLElement) => void)[]} to_inline_code_processors */
+import { isTextNode, isVisible } from "@html_editor/utils/dom_info";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
@@ -103,154 +101,80 @@ export class InlineCodePlugin extends Plugin {
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
-        if (this.historySavePointRestore) {
-            this.historySavePointRestore();
-            let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
-                this.dependencies.split.splitSelection();
-            const blockEl = closestBlock(anchorNode);
-            // Adjust if anchor/focus directly equals block element
-            const deepChild = (node, offset) => (node === blockEl ? node.childNodes[offset] : node);
-            anchorNode = deepChild(anchorNode, anchorOffset);
-            focusNode = deepChild(focusNode, focusOffset);
-            if (direction === DIRECTIONS.LEFT) {
-                // Swap anchorNode and focusNode
-                [anchorNode, anchorOffset, focusNode, focusOffset] = [
-                    focusNode,
-                    focusOffset,
-                    anchorNode,
-                    anchorOffset,
-                ];
-            }
-            const furthestAnchorElement = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
-            let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
-            const furthestFocusElement = findFurthest(focusNode, blockEl, (n) => !isBlock(n));
-            const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
-
-            let codeElement = this.document.createElement("code");
-            codeElement.classList.add("o_inline_code");
-            start.before(codeElement);
-            while (start) {
-                if (isElement(start)) {
-                    for (const code of selectElements(start, "code")) {
-                        start = unwrapContents(code)[0];
-                    }
-                }
-                const next = start.nextSibling;
-                if (start.nodeName === "IMG") {
-                    // Only create <code> if we still have nodes to process
-                    // after this one.
-                    if (start !== end && next) {
-                        codeElement = this.document.createElement("code");
-                        codeElement.classList.add("o_inline_code");
-                    }
-                } else {
-                    if (!codeElement.isConnected) {
-                        start.before(codeElement);
-                    }
-                    codeElement.appendChild(start);
-                }
-                if (start === end) {
-                    break;
-                }
-                start = next;
-            }
-            this.dispatchTo("to_inline_code_processors", codeElement);
-            this.dependencies.selection.setSelection({
-                anchorNode: codeElement,
-                anchorOffset: nodeSize(codeElement),
-            });
+        const cursor = this.dependencies.selection.preserveSelection();
+        mergeAdjacentTextNodes(selection.anchorNode.parentNode, cursor);
+        const textNode = cursor.anchor.node;
+        const offset = cursor.anchor.offset;
+        cursor.restore();
+        // We don't apply the code tag if there is no content between the two `
+        const textHasTwoTicks = /`[^`]+`/.test(textNode.textContent);
+        if (!textHasTwoTicks) {
             this.dependencies.history.addStep();
-            delete this.historySavePointRestore;
             return;
         }
 
-        // We just inserted a backtick, check if there was another
-        // one in the text.
-        let textNode = selection.startContainer;
-        const wholeText = textNode.wholeText;
-        const textHasTwoTicks = /`[^`]+`/.test(wholeText);
-        // We don't apply the code tag if there is no content between the two `
-        if (textHasTwoTicks && wholeText.replace(/`/g, "").length) {
-            let offset = selection.startOffset;
-            let sibling = textNode.previousSibling;
-            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                if (!isZwnbsp(sibling)) {
-                    offset += sibling.textContent.length;
-                }
-                sibling.textContent += textNode.textContent;
-                textNode.remove();
-                textNode = sibling;
-                sibling = sibling.previousSibling;
-            }
-            sibling = textNode.nextSibling;
-            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                if (!isZwnbsp(sibling)) {
-                    textNode.textContent += sibling.textContent;
-                }
-                sibling.remove();
-                sibling = sibling.nextSibling;
-            }
+        this.dependencies.selection.setSelection({
+            anchorNode: textNode,
+            anchorOffset: offset,
+        });
+        const insertedBacktickIndex = offset - 1;
+        const textBeforeInsertedBacktick = textNode.textContent.substring(
+            0,
+            insertedBacktickIndex - 1
+        );
+        let startOffset, endOffset;
+        const isClosingForward = textBeforeInsertedBacktick.includes("`");
+        if (isClosingForward) {
+            // There is a backtick before the new backtick.
+            startOffset = textBeforeInsertedBacktick.lastIndexOf("`");
+            endOffset = insertedBacktickIndex;
+        } else {
+            // There is a backtick after the new backtick.
+            const textAfterInsertedBacktick = textNode.textContent.substring(offset);
+            startOffset = insertedBacktickIndex;
+            endOffset = offset + textAfterInsertedBacktick.indexOf("`");
+        }
+        // Split around the backticks if needed so text starts
+        // and ends with a backtick.
+        if (endOffset && endOffset < textNode.textContent.length) {
+            splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
+        }
+        if (startOffset) {
+            splitTextNode(textNode, startOffset);
+        }
+        let codeNextSibling;
+        if (isClosingForward) {
+            codeNextSibling = this.document.createTextNode("\u200B");
+            textNode.after(codeNextSibling);
+        }
+        const splitLimit = findFurthest(textNode, closestBlock(textNode), (n) => !isBlock(n));
+        const splitNode = this.dependencies.split.splitAroundUntil(textNode, splitLimit);
+        // Insert code element with plain text.
+        const codeElement = this.document.createElement("code");
+        codeElement.classList.add("o_inline_code");
+        // Remove ticks from the text content.
+        codeElement.textContent = splitNode.textContent.substring(
+            1,
+            splitNode.textContent.length - 1
+        );
+        splitNode.replaceWith(codeElement);
+        if (
+            !codeElement.previousSibling ||
+            codeElement.previousSibling.nodeType !== Node.TEXT_NODE
+        ) {
+            codeElement.before(document.createTextNode("\u200B"));
+        }
+        if (isClosingForward) {
+            // Move selection out of code element.
             this.dependencies.selection.setSelection({
-                anchorNode: textNode,
-                anchorOffset: offset,
+                anchorNode: codeNextSibling,
+                anchorOffset: 1,
             });
-            this.dependencies.history.addStep();
-            const insertedBacktickIndex = offset - 1;
-            const textBeforeInsertedBacktick = textNode.textContent.substring(
-                0,
-                insertedBacktickIndex
-            );
-            let startOffset, endOffset;
-            const isClosingForward = textBeforeInsertedBacktick.includes("`");
-            if (isClosingForward) {
-                // There is a backtick before the new backtick.
-                startOffset = textBeforeInsertedBacktick.lastIndexOf("`");
-                endOffset = insertedBacktickIndex;
-            } else {
-                // There is a backtick after the new backtick.
-                const textAfterInsertedBacktick = textNode.textContent.substring(offset);
-                startOffset = insertedBacktickIndex;
-                endOffset = offset + textAfterInsertedBacktick.indexOf("`");
-            }
-            // Split around the backticks if needed so text starts
-            // and ends with a backtick.
-            if (endOffset && endOffset < textNode.textContent.length) {
-                splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
-            }
-            if (startOffset) {
-                splitTextNode(textNode, startOffset);
-            }
-            const splitLimit = findFurthest(textNode, closestBlock(textNode), (n) => !isBlock(n));
-            const splitNode = this.dependencies.split.splitAroundUntil(textNode, splitLimit);
-            // Insert code element with plain text.
-            const codeElement = this.document.createElement("code");
-            codeElement.classList.add("o_inline_code");
-            // Remove ticks from the text content.
-            codeElement.textContent = splitNode.textContent.substring(
-                1,
-                splitNode.textContent.length - 1
-            );
-            splitNode.replaceWith(codeElement);
-            if (!codeElement.textContent.length) {
-                this.dependencies.history.addStep();
-                this.dependencies.selection.setSelection({
-                    anchorNode: codeElement.firstChild,
-                    anchorOffset: 1,
-                });
-            } else if (isClosingForward) {
-                // Move selection out of code element.
-                this.dependencies.history.addStep();
-                this.dependencies.selection.setSelection({
-                    anchorNode: codeElement.nextSibling,
-                    anchorOffset: 1,
-                });
-            } else {
-                this.dependencies.history.addStep();
-                this.dependencies.selection.setSelection({
-                    anchorNode: codeElement.firstChild,
-                    anchorOffset: 0,
-                });
-            }
+        } else {
+            this.dependencies.selection.setSelection({
+                anchorNode: codeElement.firstChild,
+                anchorOffset: 0,
+            });
         }
     }
 

@@ -1,12 +1,13 @@
-import { animationFrame, delay, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, delay, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, deleteForward, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "../_helpers/ui_expectations";
-import { click } from "@odoo/hoot-dom";
+import { click, press } from "@odoo/hoot-dom";
 import { expandToolbar } from "../_helpers/toolbar";
 import { DELAY_TOOLBAR_OPEN } from "@html_editor/main/toolbar/toolbar_plugin";
+import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
 
 test("should merge successive inline code", async () => {
     await testEditor({
@@ -54,7 +55,42 @@ test("should create inline code and exclude surrounding formatting", async () =>
         stepFunction: async (editor) => {
             await insertText(editor, "`");
         },
-        contentAfter: `<p><strong><em><u>a</u></em></strong><code class="o_inline_code">bcd</code>[]<strong><em><u>ef</u></em></strong></p>`,
+        contentAfter: `<p><strong><em><u>a</u></em></strong>\u200b<code class="o_inline_code">bcd</code><strong><em><u>\u200b[]ef</u></em></strong></p>`,
+    });
+});
+
+test("should preserve the formatting when adding inline code", async () => {
+    await testEditor({
+        contentBefore: "<p><strong><em><u>a`bcd[]</u></em></strong></p>",
+        stepFunction: async (editor) => {
+            await advanceTime(HISTORY_SNAPSHOT_INTERVAL);
+            await insertText(editor, "`");
+            await insertText(editor, "a");
+        },
+        contentAfter: `<p><strong><em><u>a</u></em></strong>\u200b<code class="o_inline_code">bcd</code><strong><em><u>\u200ba[]</u></em></strong></p>`,
+    });
+});
+
+test("should not create an inline code when no text between backticks", async () => {
+    await testEditor({
+        contentBefore: "<p>`[]s</p>",
+        stepFunction: async (editor) => {
+            await insertText(editor, "`");
+        },
+        contentAfter: "<p>``[]s</p>",
+    });
+});
+
+test("should not lose selection when splitting text nodes", async () => {
+    await testEditor({
+        contentBefore: "<p>a[]b</p>",
+        contentBeforeEdit: "<p>a[]b</p>",
+        stepFunction: async (editor) => {
+            await insertText(editor, "b");
+            await press(["Backspace"]);
+            await insertText(editor, "`");
+        },
+        contentAfterEdit: "<p>a`[]b</p>",
     });
 });
 
