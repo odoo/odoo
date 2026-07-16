@@ -7,7 +7,6 @@ import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
 import { Component, proxy, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
@@ -161,8 +160,7 @@ class kioskAttendanceApp extends Component {
     }
 
     async makeRpcWithGeolocation(route, params) {
-        if (!this.props.deviceTrackingEnabled || !navigator.geolocation || isIosApp()) {
-            // iOS app lacks permissions or tracking disabled
+        if (!this.props.deviceTrackingEnabled || !navigator.geolocation) {
             return rpc(route, { ...params });
         }
 
