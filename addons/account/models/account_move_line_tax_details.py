@@ -176,7 +176,6 @@ class AccountMoveLine(models.Model):
         extra_python_line_fields = self._get_python_tax_details_extra_line_fields()
 
         snapshot = {
-            'lines_by_move_id': defaultdict(list),
             'taxes': {},
             'tax_reps': {},
             'currencies': {},
@@ -210,7 +209,7 @@ class AccountMoveLine(models.Model):
             )
         }
 
-        for line_id in move_lines.ids:
+        def build_line_values(line_id):
             move_id = line_cache['move_id'][line_id]
             line_values = {
                 'id': line_id,
@@ -235,7 +234,7 @@ class AccountMoveLine(models.Model):
             }
             for field_name in extra_python_line_fields:
                 line_values[field_name] = line_cache[field_name].get(line_id)
-            snapshot['lines_by_move_id'][move_id].append(line_values)
+            return line_values
 
         tax_fields = self.env['account.tax']._fields
         tax_cache = {
@@ -290,17 +289,29 @@ class AccountMoveLine(models.Model):
                 'decimal_places': currency_cache[currency_id],
             }
 
-        for lines in snapshot['lines_by_move_id'].values():
-            lines.sort(key=lambda line: line['id'])
-
-        tax_details = []
-        for move_id in sorted(snapshot['lines_by_move_id']):
-            tax_details += self._get_python_tax_details_from_snapshot_move(
+        def add_move_tax_details(move_line_values):
+            move_line_values.sort(key=lambda line: line['id'])
+            return self._get_python_tax_details_from_snapshot_move(
                 snapshot,
-                snapshot['lines_by_move_id'][move_id],
+                move_line_values,
                 fallback=fallback,
                 include_currency_amounts=include_currency_amounts,
             )
+
+        tax_details = []
+        current_move_id = None
+        current_move_lines = []
+        for line_id in move_lines.ids:
+            move_id = line_cache['move_id'][line_id]
+            if move_id == current_move_id:
+                current_move_lines.append(build_line_values(line_id))
+                continue
+            if current_move_lines:
+                tax_details += add_move_tax_details(current_move_lines)
+            current_move_id = move_id
+            current_move_lines = [build_line_values(line_id)]
+        if current_move_lines:
+            tax_details += add_move_tax_details(current_move_lines)
         return tax_details
 
     @api.model
