@@ -27,3 +27,26 @@ PT_DOCUMENT_TYPE_DESIGNATIONS = {
 # specification v1.1, section 4; FAQ 4129).
 PT_QR_NOT_SUBJECT_EXEMPTION_REASONS = ('M12', 'M13', 'M14', 'M15', 'M99')
 
+# Mapping from Odoo document_type to AT webservice classeDoc / tipoDoc codes
+# classeDoc: PY = Payment, SI = Sales Invoice
+# tipoDoc: FT = Invoice, FS = Simplified Invoice, FR = Invoice/Receipt,
+#          NC = Credit Note, ND = Debit Note, RG = Payment Receipt
+PT_AT_DOCUMENT_TYPE_MAPPING = {
+    'out_invoice':         {'classeDoc': 'SI', 'tipoDoc': 'FT'},
+    'out_receipt':         {'classeDoc': 'SI', 'tipoDoc': 'FS'},
+    'out_invoice_receipt': {'classeDoc': 'SI', 'tipoDoc': 'FR'},
+    'out_refund':          {'classeDoc': 'SI', 'tipoDoc': 'NC'},
+    'debit_note':          {'classeDoc': 'SI', 'tipoDoc': 'ND'},
+    'payment_receipt':     {'classeDoc': 'PY', 'tipoDoc': 'RG'},
+}
+
+# AT webservice meioProcessamento codes
+PT_AT_MEIO_PROCESSAMENTO = 'PI'  # Programa Informático de Faturação
+
+PT_AT_WS_WSDL_URL = (
+    'https://info.portaldasfinancas.gov.pt/pt/apoio_ao_contribuinte/Outras_entidades/'
+    'Suporte_tecnologico/Webservice/Comunicacao_de_series_ATCUD/Documents/Comunicacao_Series.wsdl'
+)
+
+PT_AT_WS_ENDPOINT_TEST = 'https://servicos.portaldasfinancas.gov.pt:722/SeriesWSService'
+PT_AT_WS_ENDPOINT_PROD = 'https://servicos.portaldasfinancas.gov.pt:422/SeriesWSService'

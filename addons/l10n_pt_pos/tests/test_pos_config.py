@@ -1,5 +1,6 @@
 import unittest
 from datetime import date
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import RedirectWarning
@@ -140,6 +141,22 @@ class TestL10nPtPosConfig(TestL10nPtPosCommon):
         self.assertEqual(self._pos_series(journal), series)
         order = self.sell(session=session)
         self.assertEqual(order.account_move.name, 'SLOJ LOJ2026/00001')
+
+    def test_missing_series_registered_with_at(self):
+        """With the AT webservice configured, the series created on opening are registered and the PoS opens."""
+        def register(series):
+            series.at_code = f'ATREG{series.prefix}'
+
+        journal = self._loja_journal()
+        self.config.invoice_journal_id = journal
+        self.company_pt.sudo().write({'l10n_pt_at_ws_env': 'test', 'l10n_pt_at_ws_username': '123456789/1'})
+        with (
+            patch.object(self.registry['l10n_pt.at.series'], 'action_register_at_series', register),
+            self.enter_registry_test_mode(),
+        ):
+            session = self.open_session()
+        self.assertEqual(session.state, 'opened')
+        self.assertEqual(self._pos_series(journal).mapped('at_code'), ['ATREGLOJ', 'ATREGRECLOJ', 'ATREGRLOJ', 'ATREGSLOJ'])
 
     def test_series_of_next_year_created_at_sync(self):
         """

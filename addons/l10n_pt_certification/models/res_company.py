@@ -4,6 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools.misc import format_datetime
 
+from odoo.addons.l10n_pt_certification.const import PT_AT_WS_ENDPOINT_TEST, PT_AT_WS_ENDPOINT_PROD
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 
@@ -16,6 +17,44 @@ class ResCompany(models.Model):
         readonly=True,
         help="The SystemEntryDate of the last issued document when a user confirmed that the system "
              "clock, although earlier, was correct.",
+    )
+    l10n_pt_at_ws_env = fields.Selection(
+        selection=[
+            ('prod', 'Production'),
+            ('test', 'Test'),
+            ('offline', 'Offline (no connection)'),
+        ],
+        string="AT Webservice Environment",
+        default='offline',
+    )
+    l10n_pt_at_ws_username = fields.Char(
+        string='AT Webservice Username',
+        groups='base.group_system',
+        help="Username (NIF/sub-user ID) for the Autoridade Tributária Series webservice.",
+    )
+    l10n_pt_at_ws_password = fields.Char(
+        string='AT Webservice Password',
+        groups='base.group_system',
+        help="Password for the Autoridade Tributária Series webservice.",
+    )
+    l10n_pt_at_ws_public_cert_id = fields.Many2one(
+        comodel_name='certificate.certificate',
+        string='AT Public Key Certificate',
+        groups='base.group_system',
+        help="The AT public key certificate used to encrypt the password sent to the Series webservice.",
+        check_company=True,
+    )
+    l10n_pt_at_ws_ssl_certificate_ids = fields.One2many(
+        comodel_name='certificate.certificate',
+        inverse_name='company_id',
+        domain=[('scope', '=', 'at_series')],
+    )
+    l10n_pt_at_ws_ssl_certificate_id = fields.Many2one(
+        string="SSL Certificate (AT Series)",
+        comodel_name='certificate.certificate',
+        compute='_compute_l10n_pt_at_ws_ssl_certificate',
+        store=True,
+        readonly=False,
     )
 
     def _l10n_pt_get_last_system_entry_date(self):
@@ -85,6 +124,24 @@ class ResCompany(models.Model):
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }
+
+    @api.depends('country_id', 'l10n_pt_at_ws_ssl_certificate_ids')
+    def _compute_l10n_pt_at_ws_ssl_certificate(self):
+        for company in self:
+            if company.country_code == 'PT':
+                company.l10n_pt_at_ws_ssl_certificate_id = self.env['certificate.certificate'].search(
+                    [('company_id', '=', company.id), ('is_valid', '=', True), ('scope', '=', 'at_series')],
+                    order='date_end desc',
+                    limit=1,
+                )
+            else:
+                company.l10n_pt_at_ws_ssl_certificate_id = False
+
+    def _l10n_pt_at_ws_get_soap_endpoint(self):
+        self.ensure_one()
+        if self.l10n_pt_at_ws_env == 'prod':
+            return PT_AT_WS_ENDPOINT_PROD
+        return PT_AT_WS_ENDPOINT_TEST
 
     def _l10n_pt_get_legal_tz(self):
         """The time zone of the company's region, in which the documents print their times."""

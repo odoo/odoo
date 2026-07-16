@@ -10,6 +10,11 @@
                 <field name='name'/>
                 <field name="prefix"/>
                 <field name="at_code" decoration-success="at_code"/>
+                <button name="action_register_at_series" type="object"
+                        string="Register" class="btn-link"
+                        invisible="at_code"
+                        icon="fa-refresh"
+                        help="Communicate this series to the Autoridade Tributária and retrieve the validation code."/>
                 <field name="date_start"/>
                 <field name='date_end'/>
                 <field name='document_identifier'/>
@@ -36,6 +41,11 @@
                             <field name="name" placeholder="e.g. 2026"/>
                             <field name="document_identifier"/>
                             <field name="at_code" decoration-success="at_code"/>
+                            <button name="action_register_at_series" type="object"
+                                string="Register" class="btn-link"
+                                invisible="at_code"
+                                icon="fa-refresh"
+                                help="Communicate this series to the Autoridade Tributária and retrieve the validation code."/>
                         </group>
                         <group>
                             <field name="date_start"/>

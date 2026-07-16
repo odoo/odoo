@@ -15,7 +15,8 @@ The module adds the following features:
 - QR Code: a QR Code is added to signed documents
 - Hash integrity report is available based on the digital signature
     """,
-    'depends': ['l10n_pt'],
+    'depends': ['l10n_pt', 'certificate'],
+    # Installed with l10n_pt; `certificate`, needed by the AT series webservice only, comes with it.
     'auto_install': ['l10n_pt'],
     'data': [
         'security/ir.model.access.csv',
@@ -31,6 +32,7 @@ The module adds the following features:
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
+        'views/certificate_certificate_views.xml',
         'views/l10n_pt_at_series_views.xml',
         'views/report_invoice.xml',
         'views/report_payment_receipt_templates.xml',

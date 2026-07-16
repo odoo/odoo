@@ -1,5 +1,6 @@
 from . import common
 from . import test_at_series
+from . import test_at_series_ws
 from . import test_iap_signing
 from . import test_invoicing
 from . import test_master_data

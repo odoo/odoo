@@ -1,10 +1,26 @@
+import base64
+import logging
 import re
+
+import requests
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import zeep
 from odoo.tools.misc import format_date
+from odoo.tools.zeep.exceptions import Error as ZeepError, Fault
 
+from odoo.addons.certificate.tools import CertificateAdapter
+from odoo.addons.l10n_pt_certification.const import (
+    PT_AT_DOCUMENT_TYPE_MAPPING,
+    PT_AT_MEIO_PROCESSAMENTO,
+    PT_AT_WS_WSDL_URL,
+    PT_CERTIFICATION_NUMBER,
+)
+from odoo.addons.l10n_pt_certification.utils.series_ws import ATUsernameToken
+
+_logger = logging.getLogger(__name__)
 
 AT_SERIES_ACCOUNTING_DOCUMENT_TYPES = [
     ('out_invoice', 'Invoice (FT)'),
@@ -249,6 +265,27 @@ class L10nPtATSeries(models.Model):
             defaults['document_type'] = document_types[0]
         return defaults
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.at_code:
+                continue
+            if not record.company_id.sudo().l10n_pt_at_ws_username:
+                continue
+            # A series is created whether or not the AT can be reached: it can be registered later,
+            # or its code entered by hand. What registering raises is logged.
+            try:
+                with self.env.cr.savepoint():
+                    record.action_register_at_series()
+            except (UserError, ValueError, OSError, ZeepError):
+                _logger.warning(
+                    "Failed to auto-register AT series %(name)s (type: %(type)s)",
+                    {'name': record.name, 'type': record.document_type},
+                    exc_info=True,
+                )
+        return records
+
     @api.model
     def _l10n_pt_document_models(self):
         """The models of the documents issued in AT series: every concrete model built on the document mixin."""
@@ -326,6 +363,105 @@ class L10nPtATSeries(models.Model):
                 "Set its End Date to close it.",
                 series=", ".join(used_series.mapped('document_identifier')),
             ))
+
+    def _l10n_pt_at_ws_get_registration_params(self):
+        self.ensure_one()
+        mapping = PT_AT_DOCUMENT_TYPE_MAPPING.get(self.document_type)
+        if not mapping:
+            raise UserError(self.env._(
+                "Cannot register series of type '%(type)s' with the AT webservice.",
+                type=self.document_type
+            ))
+        return {
+            'serie': self.name,
+            'tipoSerie': 'F' if self.training_series else 'N',
+            'classeDoc': mapping['classeDoc'],
+            'tipoDoc': mapping['tipoDoc'],
+            'numInicialSeq': 1,
+            'dataInicioPrevUtiliz': self.date_start,
+            'numCertSWFatur': int(PT_CERTIFICATION_NUMBER),
+            'meioProcessamento': PT_AT_MEIO_PROCESSAMENTO,
+        }
+
+    def action_register_at_series(self):
+        self.ensure_one()
+        comp = self.company_id.sudo()
+
+        if comp.l10n_pt_at_ws_env == 'offline':
+            return
+
+        if not comp.l10n_pt_at_ws_username or not comp.l10n_pt_at_ws_password:
+            raise UserError(self.env._(
+                "The AT webservice credentials are not configured for company %(company)s. "
+                "Please configure them in the Accounting Settings.",
+                company=self.company_id.name,
+            ))
+
+        # The AT mandates that the password is RSA-encrypted with their public key. Without the
+        # certificate the request cannot be built, and must not fall back to sending the live
+        # credential in clear text.
+        public_cert = comp.l10n_pt_at_ws_public_cert_id.with_context(bin_size=False)
+        if not public_cert.pem_certificate:
+            raise UserError(self.env._(
+                "The AT public key certificate is not configured for company %(company)s. "
+                "It is required to encrypt the password sent to the Autoridade Tributária. "
+                "Please configure it in the Accounting Settings.",
+                company=self.company_id.name,
+            ))
+        public_key_pem = base64.b64decode(public_cert.pem_certificate)
+
+        if comp.l10n_pt_at_ws_env == 'test' and not self.training_series:
+            self.training_series = True
+
+        wsse_token = ATUsernameToken(
+            comp.l10n_pt_at_ws_username,
+            comp.l10n_pt_at_ws_password,
+            public_key_pem,
+        )
+
+        session = requests.Session()
+        session.cert = comp.l10n_pt_at_ws_ssl_certificate_id
+        session.mount('https://', CertificateAdapter())
+        client = comp._get_zeep_client__(
+            PT_AT_WS_WSDL_URL,
+            wsse=wsse_token,
+            session=session,
+            settings=zeep.Settings(strict=False),
+        )
+        service = client.bind('SeriesWSService', 'SeriesWSPort')
+        service._binding_options['address'] = comp._l10n_pt_at_ws_get_soap_endpoint()
+
+        params = self._l10n_pt_at_ws_get_registration_params()
+        self.at_code = self._registar_serie(service, **params)
+
+    def _registar_serie(self, service, **params):
+        try:
+            response = service.registarSerie(**params)
+        except Fault as e:
+            _logger.error('AT SeriesWS registarSerie SOAP fault: %s', e)
+            raise UserError(
+                self.env._("AT Series registration failed: %(error)s", error=str(e))
+            ) from e
+        except (OSError, TimeoutError, requests.exceptions.SSLError) as e:
+            msg = self.env._("Could not connect to the AT webservice.")
+            _logger.error(msg)
+            raise UserError(msg) from e
+
+        if not response or not hasattr(response, 'infoResultOper'):
+            raise UserError(self.env._("AT Series registration returned an unexpected response."))
+
+        info_result = response.infoResultOper
+        if info_result.codResultOper != 2001:
+            raise UserError(
+                self.env._("AT Series registration error (%(code)s): %(message)s",
+                  code=info_result.codResultOper,
+                  message=info_result.msgResultOper or '')
+            )
+
+        info_serie = response.infoSerie if hasattr(response, 'infoSerie') else None
+        if not info_serie or not hasattr(info_serie, 'codValidacaoSerie'):
+            raise UserError(self.env._("AT Series registration succeeded but no validation code was returned."))
+        return info_serie.codValidacaoSerie
 
     def get_formview_action(self):
         self.ensure_one()
