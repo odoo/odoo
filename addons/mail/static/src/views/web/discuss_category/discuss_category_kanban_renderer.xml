@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="mail.DiscussCategoryKanbanRenderer">
-        <div class="o_kanban_renderer o_renderer o-discuss-CategoryKanban p-2">
+        <div class="o_kanban_renderer o_kanban_ungrouped o_renderer o-discuss-CategoryKanban p-2">
             <t t-if="this.props.list.isGrouped" t-foreach="this.props.list.groups" t-as="group" t-key="group_index">
                 <t t-if="group.count > 0 or group.value === false">
                     <span class="fw-bold fs-5">
