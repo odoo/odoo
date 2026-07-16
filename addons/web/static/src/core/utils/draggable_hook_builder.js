@@ -750,6 +750,20 @@ export function makeDraggableHook(hookParams) {
             };
 
             /**
+             * Document "visibilitychange" event handler.
+             * Cancels the drag sequence as soon as the tab is no longer visible:
+             * pointer and keyboard states (e.g. "Control" being released) cannot
+             * be tracked while the document is hidden, which would lead to
+             * inconsistent behaviors when returning to the tab.
+             * @param {Event} ev
+             */
+            const onVisibilityChange = (ev) => {
+                if (ev.target.visibilityState === "hidden") {
+                    dragEnd(null);
+                }
+            };
+
+            /**
              * Global (= ref) "pointerdown" event handler.
              * @param {PointerEvent} ev
              */
@@ -1126,6 +1140,7 @@ export function makeDraggableHook(hookParams) {
                 addListener(_window, useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
                 addListener(_window, "pointercancel", onPointerCancel);
                 addListener(_window, "keydown", onKeyDown, { capture: true });
+                addListener(_window.document, "visibilitychange", onVisibilityChange);
             }
 
             function initEl(el, addListener) {
