@@ -682,7 +682,7 @@ class Website(Home):
         :return: preview HTML with updated shape URLs
         :rtype: str
         """
-        for shape_url in set(re.findall(r'/(?:html_editor|web_editor)/shape/[^"\'\s)]+', final_html)):
+        for shape_url in set(re.findall(r'/(?:html_editor|web_editor)/(?:image_)?shape/[^"\'\s)]+', final_html)):
             updated_shape_url = self._get_configurator_preview_shape_url(shape_url, palette_map)
             if updated_shape_url != shape_url:
                 final_html = final_html.replace(shape_url, updated_shape_url)
@@ -814,8 +814,8 @@ class Website(Home):
         images_map = self._get_configurator_preview_images_map(theme_name, industry_id)
 
         final_html = self._load_configurator_preview_html(preview_url)
-        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
+        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
         # Add palette variables to make static previews reflect the current configurator selection.
         preview_overrides = self._get_configurator_preview_overrides(palette, final_html)
         final_html = self._inject_configurator_preview_overrides(
