@@ -448,6 +448,19 @@ class ProductProduct(models.Model):
             field_names=['id'],
             order='product_id, date, id'
         )
+<<<<<<< d3264735313f79b7cb40a26a08c1e66ab07e69bf
+||||||| 1b8f6802832cfa4d146193a912af1f4445d09f0a
+
+        dropship_moves = moves.filtered(lambda m: m.is_dropship)
+        if len(dropship_moves) > 1:
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
+=======
+
+        if self.env['stock.move'].search_count(moves_domain & Domain('is_dropship', '=', True), limit=1):
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
+>>>>>>> 5fcb601c683c42d82049b20107425d54a9d18709
         # PERF avoid memoryerror
         move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
