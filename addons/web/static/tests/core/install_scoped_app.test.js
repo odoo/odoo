@@ -62,7 +62,7 @@ test("Installation page displays the app info correctly", async () => {
     await animationFrame();
     expect(".o_install_scoped_app").toHaveCount(1);
     expect(".o_install_scoped_app h1").toHaveText("My App");
-    expect(".o_install_scoped_app img").toHaveAttribute("data-src", "/fake_image_src");
+    expect(".o_install_scoped_app img.rounded-4").toHaveAttribute("data-src", "/fake_image_src");
     expect(".fa-pencil").toHaveCount(0);
     expect("button.btn-primary").toHaveCount(0);
     expect("div.bg-info").toHaveCount(1);
@@ -73,6 +73,11 @@ test("Installation page displays the app info correctly", async () => {
     expect("div.bg-info").toHaveCount(0);
     expect("button.btn-primary").toHaveCount(1);
     expect("button.btn-primary").toHaveText("Install");
+    expect(".o_install_scoped_app img.p-2").toHaveAttribute(
+        "data-src",
+        "/report/barcode/QR/https%3A%2F%2Fwww.hoot.test%2F?width=200&height=200&quiet=0&barLevel=H"
+    );
+    expect(".o_install_scoped_app img.position-absolute").toHaveAttribute("data-src", "/fake_image_src");
     await contains(".fa-pencil").click();
     await contains("input").edit("<Otto&", { confirm: "blur" });
     expect.verifySteps(["URL replace"]);
@@ -109,7 +114,7 @@ test("Installation page displays the error message when browser is not supported
     await animationFrame();
     expect(".o_install_scoped_app").toHaveCount(1);
     expect(".o_install_scoped_app h1").toHaveText("My App");
-    expect(".o_install_scoped_app img").toHaveAttribute("data-src", "/fake_image_src");
+    expect(".o_install_scoped_app img.rounded-4").toHaveAttribute("data-src", "/fake_image_src");
     expect("button.btn-primary").toHaveCount(0);
     expect("div.bg-info").toHaveCount(1);
     expect("div.bg-info").toHaveText("The app cannot be installed with this browser");

@@ -41,6 +41,12 @@ export class InstallScopedApp extends Component {
             },
         });
     }
+
+    get qrCodeSrc() {
+        return `/report/barcode/QR/${encodeURIComponent(
+            browser.location.href
+        )}?width=200&height=200&quiet=0&barLevel=H`;
+    }
 }
 
 registry.category("public_components").add("web.install_scoped_app", InstallScopedApp);
