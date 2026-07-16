@@ -9,6 +9,7 @@
         'data/test_inherits.xml',
         'data/test_orm_data.xml',
         'data/test_orm_partner.xml',
+        'views/test_acl.xml',
         'views/test_orm_views.xml',
         'security/ir.access.csv',
     ],
