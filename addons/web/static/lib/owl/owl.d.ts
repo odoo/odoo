@@ -104,8 +104,7 @@ export declare class OwlError extends Error {
 declare const STATUS: {
 	readonly NEW: 0;
 	readonly MOUNTED: 1;
-	readonly CANCELLED: 2;
-	readonly DESTROYED: 3;
+	readonly DESTROYED: 2;
 };
 export type StatusValue = (typeof STATUS)[keyof typeof STATUS];
 export type Callback = (...args: any[]) => void;
@@ -422,11 +421,9 @@ export declare abstract class Scope {
 	 */
 	get abortSignal(): AbortSignal;
 	/**
-	 * Returns true once the scope has been fully destroyed, i.e. `finalize` has
-	 * run: the abort signal is aborted, onDestroy callbacks have executed and
-	 * computations are disposed. Note that a CANCELLED scope (abandoned before
-	 * mount, but not yet finalized) is dead but not destroyed — to ask "is this
-	 * scope dead?", check `status > STATUS.MOUNTED` instead.
+	 * Returns true once the scope has been destroyed, i.e. `finalize` has run:
+	 * the abort signal is aborted, onDestroy callbacks have executed and
+	 * computations are disposed.
 	 */
 	isDestroyed(): boolean;
 	/**
@@ -434,12 +431,6 @@ export declare abstract class Scope {
 	 * already destroyed, the callback is invoked immediately.
 	 */
 	onDestroy(cb: () => void): void;
-	/**
-	 * Marks the scope as cancelled and aborts its signal. Used when an entity is
-	 * abandoned before it reaches the MOUNTED state. Subclasses may override to
-	 * extend the behavior (e.g. ComponentNode recurses to children).
-	 */
-	cancel(): void;
 	/**
 	 * Aborts the scope's signal, runs all registered onDestroy callbacks in
 	 * reverse registration order, disposes any computations attached to this
@@ -765,7 +756,6 @@ declare class ComponentNode extends Scope implements VNode<ComponentNode> {
 	initiateRender(fiber: Fiber | MountFiber): Promise<void>;
 	render(deep: boolean): Promise<void>;
 	cancel(): void;
-	_cancel(): void;
 	destroy(): void;
 	_destroy(): void;
 	/**
@@ -862,18 +852,15 @@ declare class Scheduler {
 	requestAnimationFrame: Window["requestAnimationFrame"];
 	frame: number;
 	delayedRenders: Fiber[];
-	cancelledNodes: Set<ComponentNode>;
 	processing: boolean;
 	constructor();
 	addFiber(fiber: Fiber): void;
-	scheduleDestroy(node: ComponentNode): void;
 	/**
 	 * Process all current tasks. This only applies to the fibers that are ready.
 	 * Other tasks are left unchanged.
 	 */
 	flush(): void;
 	processTasks(): void;
-	processCancelledNodes(): void;
 }
 export interface TemplateSetConfig {
 	dev?: boolean;
@@ -975,7 +962,7 @@ export declare class Suspense extends Component {
 	private subRootMounted;
 	setup(): void;
 }
-export type STATUS_DESCR = "new" | "started" | "mounted" | "cancelled" | "destroyed";
+export type STATUS_DESCR = "new" | "started" | "mounted" | "destroyed";
 declare function status$1(entity: Component | Plugin$1): STATUS_DESCR;
 export declare const useApp: () => App;
 export declare function onWillUpdateProps(fn: (nextProps: any, scope: ComponentNode) => Promise<void> | void | any): void;

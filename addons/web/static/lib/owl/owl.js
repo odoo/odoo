@@ -89,10 +89,7 @@ var owl = (() => {
     NEW: 0,
     MOUNTED: 1,
     // is ready, and in DOM. It has a valid el
-    // component has been created, but has been replaced by a newer component before being mounted
-    // it is cancelled until the next animation frame where it will be destroyed
-    CANCELLED: 2,
-    DESTROYED: 3
+    DESTROYED: 2
   };
   function batched(callback) {
     let scheduled = false;
@@ -360,11 +357,9 @@ var owl = (() => {
       return (this._controller ??= new AbortController()).signal;
     }
     /**
-     * Returns true once the scope has been fully destroyed, i.e. `finalize` has
-     * run: the abort signal is aborted, onDestroy callbacks have executed and
-     * computations are disposed. Note that a CANCELLED scope (abandoned before
-     * mount, but not yet finalized) is dead but not destroyed — to ask "is this
-     * scope dead?", check `status > STATUS.MOUNTED` instead.
+     * Returns true once the scope has been destroyed, i.e. `finalize` has run:
+     * the abort signal is aborted, onDestroy callbacks have executed and
+     * computations are disposed.
      */
     isDestroyed() {
       return this.status >= STATUS.DESTROYED;
@@ -379,18 +374,6 @@ var owl = (() => {
         return;
       }
       (this._destroyCbs ??= []).push(cb);
-    }
-    /**
-     * Marks the scope as cancelled and aborts its signal. Used when an entity is
-     * abandoned before it reaches the MOUNTED state. Subclasses may override to
-     * extend the behavior (e.g. ComponentNode recurses to children).
-     */
-    cancel() {
-      if (this.status > STATUS.MOUNTED) {
-        return;
-      }
-      this.status = STATUS.CANCELLED;
-      this._controller?.abort();
     }
     /**
      * Aborts the scope's signal, runs all registered onDestroy callbacks in
@@ -922,6 +905,7 @@ var owl = (() => {
       );
     });
     function dispose() {
+      runId++;
       stopEffect();
       runController?.abort();
       runController = null;
@@ -1739,7 +1723,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.43";
+  var version = "3.0.0-alpha.44";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3355,8 +3339,6 @@ ${issueStrings}`);
     switch (entity.__owl__.status) {
       case STATUS.NEW:
         return "new";
-      case STATUS.CANCELLED:
-        return "cancelled";
       case STATUS.MOUNTED:
         return entity instanceof Plugin ? "started" : "mounted";
       case STATUS.DESTROYED:
@@ -3719,7 +3701,7 @@ ${issueStrings}`);
       }
     }
     async render(deep) {
-      if (this.status >= STATUS.CANCELLED) {
+      if (this.status >= STATUS.DESTROYED) {
         return;
       }
       let current = this.fiber;
@@ -3743,7 +3725,7 @@ ${issueStrings}`);
       this.fiber = fiber;
       this.app.scheduler.addFiber(fiber);
       await Promise.resolve();
-      if (this.status >= STATUS.CANCELLED) {
+      if (this.status >= STATUS.DESTROYED) {
         return;
       }
       if (this.fiber === fiber && (current || !fiber.parent)) {
@@ -3751,16 +3733,8 @@ ${issueStrings}`);
       }
     }
     cancel() {
-      this._cancel();
       delete this.parent.children[this.parentKey];
-      this.app.scheduler.scheduleDestroy(this);
-    }
-    _cancel() {
-      super.cancel();
-      const children = this.children;
-      for (let childKey in children) {
-        children[childKey]._cancel();
-      }
+      this._destroy();
     }
     destroy() {
       let shouldRemove = this.status === STATUS.MOUNTED;
@@ -3936,19 +3910,12 @@ ${issueStrings}`);
     requestAnimationFrame;
     frame = 0;
     delayedRenders = [];
-    cancelledNodes = /* @__PURE__ */ new Set();
     processing = false;
     constructor() {
       this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
     }
     addFiber(fiber) {
       this.tasks.add(fiber.root);
-    }
-    scheduleDestroy(node) {
-      this.cancelledNodes.add(node);
-      if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(() => this.processTasks());
-      }
     }
     /**
      * Process all current tasks. This only applies to the fibers that are ready.
@@ -3974,7 +3941,6 @@ ${issueStrings}`);
       }
       this.processing = true;
       this.frame = 0;
-      this.processCancelledNodes();
       for (let fiber of this.tasks) {
         if (fiber.root !== fiber) {
           this.tasks.delete(fiber);
@@ -4004,17 +3970,6 @@ ${issueStrings}`);
         }
       }
       this.processing = false;
-    }
-    processCancelledNodes() {
-      for (let node of this.cancelledNodes) {
-        node._destroy();
-      }
-      this.cancelledNodes.clear();
-      for (let task of this.tasks) {
-        if (task.node.status === STATUS.DESTROYED) {
-          this.tasks.delete(task);
-        }
-      }
     }
   };
   var Component = class {
@@ -4561,7 +4516,6 @@ ${issueStrings}`);
         destroy: () => {
           this.roots.delete(root);
           node?.destroy();
-          this.scheduler.processCancelledNodes();
         }
       };
       this.roots.add(root);
@@ -4572,7 +4526,6 @@ ${issueStrings}`);
         root.destroy();
       }
       this.pluginManager.destroy();
-      this.scheduler.processCancelledNodes();
       this.scheduler.tasks.clear();
       this.scheduler.delayedRenders = [];
       apps.delete(this);
@@ -4924,8 +4877,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-07-10T07:14:31.599Z",
-    hash: "f309e06e",
+    date: "2026-07-16T13:58:03.987Z",
+    hash: "4b650af9",
     url: "https://github.com/odoo/owl"
   };
 
