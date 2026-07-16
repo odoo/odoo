@@ -906,7 +906,7 @@ function enforceImagesResponsivity(element) {
  *                            specificity: number;}>
  */
 export async function toInline(element, cssRules) {
-    await waitUntilImagesLoaded(element);
+    await Promise.all([element.ownerDocument.fonts.ready, waitUntilImagesLoaded(element)]);
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of element.querySelectorAll(".card-img-top")) {
         imgTop.style.setProperty("height", _getHeight(imgTop) + "px");
@@ -1031,19 +1031,14 @@ function flattenBackgroundImages(element) {
  *                           converted to images
  */
 function fontToImg(element) {
-    const { fonts } = odoo.loader.modules.get("@html_editor/utils/fonts");
-
-    for (const font of element.querySelectorAll(".fa")) {
-        let icon, content;
-        fonts.fontIcons.find((fontIcon) =>
-            fonts.getCssSelectors(fontIcon.parser).find((data) => {
-                if (font.matches(data.selector.replace(/::?before/g, ""))) {
-                    icon = data.names[0].split("-").shift();
-                    content = data.css.match(/content:\s*['"]?(.)['"]?/)[1];
-                    return true;
-                }
-            })
-        );
+    for (const font of element.querySelectorAll(".oi")) {
+        let content;
+        const beforeStyle = getComputedStyle(font, "::before");
+        content = beforeStyle["content"].trim().replace(/['"]/g, "");
+        if (font.matches("[data-icon^='oi_']")) {
+            content = content.codePointAt(0);
+        }
+        content = "oi_" + content;
         if (content) {
             const color = _getStylePropertyValue(font, "color").replace(/\s/g, "");
             let backgroundColoredElement = font;
@@ -1072,8 +1067,9 @@ function fontToImg(element) {
             font.style.setProperty("line-height", "normal");
             const intrinsicWidth = _getWidth(font);
             const intrinsicHeight = _getHeight(font);
-            const hPadding = width && intrinsicWidth && (width - intrinsicWidth) / 2;
-            const vPadding = height && intrinsicHeight && (height - intrinsicHeight) / 2;
+            const hPadding = width && intrinsicWidth && Math.max(0, (width - intrinsicWidth) / 2);
+            const vPadding =
+                height && intrinsicHeight && Math.max(0, (height - intrinsicHeight) / 2);
             let padding = "";
             if (hPadding || vPadding) {
                 padding = vPadding ? vPadding + "px " : "0 ";
@@ -1084,9 +1080,9 @@ function fontToImg(element) {
             image.setAttribute("height", intrinsicHeight);
             image.setAttribute(
                 "src",
-                `/mail/font_to_img/${content.charCodeAt(0)}/${encodeURIComponent(
-                    color
-                )}/${encodeURIComponent(bg)}/${Math.max(1, Math.round(intrinsicWidth))}x${Math.max(
+                `/mail/font_to_img/${content}/${encodeURIComponent(color)}/${encodeURIComponent(
+                    bg
+                )}/${Math.max(1, Math.round(intrinsicWidth))}x${Math.max(
                     1,
                     Math.round(intrinsicHeight)
                 )}`
@@ -1126,13 +1122,9 @@ function fontToImg(element) {
             wrapper.style.setProperty("height", height + "px");
             wrapper.style.setProperty("vertical-align", "text-bottom");
             wrapper.style.setProperty("background-color", image.style.backgroundColor);
-            wrapper.setAttribute(
-                "class",
-                "oe_unbreakable " + // prevent sanitize from grouping image wrappers
-                    font
-                        .getAttribute("class")
-                        .replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), "") // remove inline font-awsome style
-            );
+            wrapper.className = font.className;
+            wrapper.classList.remove("oi");
+            wrapper.classList.add("oe_unbreakable"); // prevent sanitize from grouping image wrappers
         } else {
             font.remove();
         }

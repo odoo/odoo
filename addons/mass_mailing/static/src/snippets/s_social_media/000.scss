@@ -60,7 +60,7 @@
     }
     &:not(.no_icon_color) {
         @each $media, $color in $o-social-colors { // @see builder.variables.scss for the media colors
-            .oi-#{$media}, .s_social_media_#{$media} {
+            [data-icon=oi_#{$media}] {
                 color: $color !important;
             }
         }
