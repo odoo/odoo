@@ -40,7 +40,7 @@ export class PurchaseDashBoard extends Component {
         const searchItems = this.env.searchModel.getSearchItems((item) =>
             filters.includes(item.name)
         );
-        this.env.searchModel.query = [];
+        this.env.searchModel.query.length = 0;
         for (const item of searchItems) {
             this.env.searchModel.toggleSearchItem(item.id);
         }

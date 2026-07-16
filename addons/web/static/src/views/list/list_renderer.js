@@ -36,11 +36,11 @@ import {
     onWillUnmount,
     plugin,
     proxy,
-    useProps,
     signal,
     status,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
@@ -142,6 +142,14 @@ export class ListRenderer extends Component {
 
     useMagicColumnWidths = true;
 
+    rootRef = signal.ref();
+    groupInputRef = signal.ref();
+    tableRef = signal.ref();
+
+    debugOpenView = signal(false);
+    editedRecord = signal(null);
+    optionalActiveFields = proxy(this.props.optionalActiveFields || {});
+
     setup() {
         this.uiService = useService("ui");
         this.offlinePlugin = plugin(OfflinePlugin);
@@ -155,7 +163,6 @@ export class ListRenderer extends Component {
         const onGlobalClick = this.onGlobalClick.bind(this);
         onMounted(() => window.addEventListener("click", onGlobalClick, { capture: true }));
         onWillUnmount(() => window.removeEventListener("click", onGlobalClick, { capture: true }));
-        this.tableRef = signal.ref();
         this.odoomark = odoomark;
 
         this.longTouchTimer = null;
@@ -190,17 +197,17 @@ export class ListRenderer extends Component {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
-        this.optionalActiveFields = this.props.optionalActiveFields || {};
         /** @type {Column[]} */
         this.allColumns = [];
         /** @type {Column[]} */
         this.columns = [];
-        this.editedRecord = signal(null);
         onWillRender(() => {
             this.editedRecord.set(this.props.list.editedRecord);
             this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
             Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
-            this.debugOpenView = exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView));
+            this.debugOpenView.set(
+                exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView))
+            );
             this.columns = this.getActiveColumns();
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
             this.aggregates = this.computeAggregates();
@@ -238,11 +245,9 @@ export class ListRenderer extends Component {
                 this.currencyRates = await getCurrencyRates();
             }
         });
-        this.groupInputRef = signal.ref();
         useAutofocus({ ref: this.groupInputRef });
         let dataRowId;
         let dataGroupId;
-        this.rootRef = signal.ref();
         this.resequencePromise = Promise.resolve();
         useSortable({
             enable: () => this.canResequenceRows,
@@ -368,7 +373,7 @@ export class ListRenderer extends Component {
     }
 
     get hasOpenFormViewColumn() {
-        return this.props.hasOpenFormViewButton || this.debugOpenView;
+        return this.props.hasOpenFormViewButton || this.debugOpenView();
     }
 
     get hasOptionalOpenFormViewColumn() {
@@ -2299,7 +2304,6 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
-        render(this);
     }
 
     /**
@@ -2321,13 +2325,11 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
-        render(this);
     }
 
     toggleDebugOpenView() {
-        this.debugOpenView = !this.debugOpenView;
-        browser.localStorage.setItem(this.keyDebugOpenView, this.debugOpenView);
-        render(this);
+        this.debugOpenView.set(!this.debugOpenView());
+        browser.localStorage.setItem(this.keyDebugOpenView, this.debugOpenView());
     }
 
     /**

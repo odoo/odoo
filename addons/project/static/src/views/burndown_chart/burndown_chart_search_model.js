@@ -66,7 +66,8 @@ export class BurndownChartSearchModel extends SearchModel {
                 }
             }
             if (filtered_query.length !== this.query.length) {
-                this.query = filtered_query;
+                this.query.length = 0;
+                this.query.push(...filtered_query);
                 if (triggerNotification) {
                     this._addGroupByNotification(_t("The Burndown Chart must be grouped by Date"));
                 }
