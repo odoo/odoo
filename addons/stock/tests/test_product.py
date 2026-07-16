@@ -301,6 +301,7 @@ class TestVirtualAvailable(TestStockCommon):
             (False, sub_loc01.name, 10.0),
             (False, 'sub', 11.0),
             (False, main_loc.name, 1111.0),
+            (False, main_loc.complete_name.lower(), 111.0),
             (False, (sub_loc01 | sub_loc02 | sub_loc03).ids, 11.0),
             (main_warehouse.id, main_loc.name, 111.0),
             (main_warehouse.id, main_loc.id, 111.0),
