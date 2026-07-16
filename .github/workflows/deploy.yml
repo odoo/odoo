@@ -1,0 +1,34 @@
+name: Deploy ERP to AWS EC2
+
+on:
+  push:
+    branches:
+      - production # Only trigger when code lands on the production branch
+
+jobs:
+  deploy:
+    # This condition ensures the workflow ONLY runs if the push was a merged Pull Request
+    if: github.event.head_commit.message != '' && contains(github.event.head_commit.message, 'Merge pull request') || contains(github.event.head_commit.message, 'Merge branch')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to AWS EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/odoo-app
+
+            # Pull specifically from the production branch
+            git pull origin production
+
+            docker system prune -f
+            docker compose down
+            docker compose up -d --build

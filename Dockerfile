@@ -48,6 +48,10 @@ RUN useradd --create-home --home-dir /var/lib/odoo --shell /bin/bash odoo \
 WORKDIR /opt/odoo
 
 COPY requirements.txt .
+# Do not add `inotify` here to enable --dev=reload. Odoo watches every addons path
+# recursively (~620 modules); over a Docker Desktop bind mount that hangs boot, and
+# Windows host writes never raise inotify events in the Linux VM anyway. Restart the
+# container after Python edits instead.
 RUN pip install --upgrade pip setuptools wheel \
     && pip install -r requirements.txt
 

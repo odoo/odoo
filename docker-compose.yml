@@ -29,7 +29,9 @@ services:
     volumes:
       - .:/opt/odoo
       - odoo-web-data:/var/lib/odoo
-    command: ["python", "odoo-bin", "-c", "/etc/odoo/odoo.conf", "--dev=reload,qweb,werkzeug,xml"]
+    # No `reload`: it needs inotify, which cannot see Windows host writes through the
+    # bind mount and hangs boot watching ~620 addons. Restart the container after .py edits.
+    command: ["python", "odoo-bin", "-c", "/etc/odoo/odoo.conf", "--dev=qweb,werkzeug,xml"]
 
 volumes:
   odoo-db-data:
