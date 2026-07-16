@@ -77,7 +77,7 @@ describe("mailing snippet model", () => {
         ).content;
         snippetEl.querySelector("p").innerText = "This is our custom snippet text!";
         snippetEl.dataset.name = "Snippet Named Bob";
-        await snippetService.saveSnippet(snippetEl, []);
+        await snippetService.saveSnippet(snippetEl, (el) => el.cloneNode(true));
         expect.verifySteps(["mailing snippet info"]);
 
         // Check that the custom snippet exists and that its content is equivalent to the snippet we just saved
