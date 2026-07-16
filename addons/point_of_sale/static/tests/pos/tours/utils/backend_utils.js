@@ -61,3 +61,33 @@ export function openProductForm(name) {
         },
     ];
 }
+
+export function clickNotebookTab(name) {
+    return [
+        {
+            content: `Open the ${name} notebook tab`,
+            trigger: `.o_notebook a.nav-link:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+
+export function openListRowFormView(fieldName) {
+    return [
+        {
+            content: `Open the first ${fieldName} record in its form view`,
+            trigger: `.o_field_widget[name="${fieldName}"] .o_data_row .o_list_record_open_form_view`,
+            run: "click",
+        },
+    ];
+}
+
+export function followMany2oneLink(fieldName) {
+    return [
+        {
+            content: `Follow the internal link of ${fieldName}`,
+            trigger: `.o_field_widget[name="${fieldName}"] a`,
+            run: "click",
+        },
+    ];
+}
