@@ -318,6 +318,14 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
+<<<<<<< 79d5abe7865a3bee5e4aafe7132a3dc31f155cac
+||||||| 2ccbc4660077bd48529e9de43d4309fbfafc75ca
+        this.printKioskChanges(access_token);
+=======
+        if (this.kioskMode) {
+            this.printKioskChanges(access_token);
+        }
+>>>>>>> f7ce9fe800e23091d2ccb065d80527e2e86be37e
         this.resetCategorySelection();
     }
 
@@ -563,6 +571,24 @@ export class SelfOrder extends Reactive {
     }
 
     async printKioskChanges(access_token = "") {
+<<<<<<< 79d5abe7865a3bee5e4aafe7132a3dc31f155cac
+||||||| 2ccbc4660077bd48529e9de43d4309fbfafc75ca
+        if (!this.kioskMode) {
+            return;
+        }
+
+        const d = new Date();
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+=======
+        const d = new Date();
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+>>>>>>> f7ce9fe800e23091d2ccb065d80527e2e86be37e
         const order = access_token
             ? this.models["pos.order"].find((o) => o.access_token === access_token)
             : this.currentOrder;
