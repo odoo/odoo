@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import {WebsiteSale} from "@website_sale/js/website_sale";
+import {KeepLast} from "@web/core/utils/concurrency";
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {
@@ -13,14 +14,31 @@ WebsiteSale.include({
         this.elementState = document.querySelector("select[name='state_id']");
         this.elemenCountry = document.querySelector("select[name='country_id']");
         this.isPeruvianCompany = this.elemenCountry?.dataset.company_country_code === 'PE';
+        if (this.isPeruvianCompany) {
+            const selectedCountryCode = this.elemenCountry.options[this.elemenCountry.selectedIndex]?.getAttribute("code");
+            if (selectedCountryCode === "PE") {
+                // Keep disabled until _changeOption's refresh
+                this.elementCities.disabled = !!this.elementState.value;
+                this.elementDistricts.disabled = !!this.elementCities.value;
+            }
+        }
+        this.pendingOptionsFetches = {
+            cities: new KeepLast(),
+            districts: new KeepLast(),
+        };
         return this._super.apply(this, arguments);
     },
     _changeOption: function (selectCheck, rpcRoute, place, selectElement) {
         if (!selectCheck) {
             return;
         }
-        return this.rpc(rpcRoute, {
-        }).then((data) => {
+        // Disabled while in flight to prevent race conditions
+        selectElement.disabled = true;
+        if (place === "cities") {
+            this.elementDistricts.disabled = true;
+        }
+
+        return this.pendingOptionsFetches[place].add(this.rpc(rpcRoute, {})).then((data) => {
             if (this.isPeruvianCompany) {
                 if (data[place]?.length) {
                     let previousValue = selectElement.value;
@@ -40,6 +58,11 @@ WebsiteSale.include({
                     selectElement.value = "";
                     selectElement.parentElement.style.display = "none";
                 }
+            }
+        }).finally(() => {
+            selectElement.disabled = false;
+            if (place === "cities") {
+                this.elementDistricts.disabled = false;
             }
         });
     },
