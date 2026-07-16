@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, hideTab, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useDraggable } from "@web/core/utils/draggable";
 
@@ -504,4 +504,45 @@ test("Dragging cancels previous drag sequences", async () => {
     await cancel();
 
     expect(".o_dragged").toHaveCount(0);
+});
+
+test("Drag sequence is cancelled when the tab becomes hidden", async () => {
+    class List extends Component {
+        static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
+                    </ul>
+                </div>`;
+        static props = ["*"];
+
+        setup() {
+            useDraggable({
+                ref: useRef("root"),
+                elements: ".item",
+                onDragStart: () => expect.step("start"),
+                onDrop: () => expect.step("drop"),
+                onDragEnd: () => expect.step("end"),
+            });
+        }
+    }
+
+    await mountWithCleanup(List);
+
+    const { moveTo, drop } = await contains(".item").drag();
+    await moveTo(".item:eq(1)");
+
+    expect(".o_dragged").toHaveCount(1);
+    expect.verifySteps(["start"]);
+
+    await hideTab();
+
+    expect(".o_dragged").toHaveCount(0);
+    expect.verifySteps(["end"]);
+
+    // Dropping after the tab was hidden should not trigger any handler
+    await drop();
+
+    expect(".o_dragged").toHaveCount(0);
+    expect.verifySteps([]);
 });
