@@ -1325,7 +1325,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     setSelectedCategory(categoryId) {
         if (categoryId === this.selectedCategory?.id) {
-            if (this.selectedCategory.parent_id) {
+            const isParentAvailable = this.rootCategories.some(
+                (c) => c.id === this.selectedCategory.id
+            );
+            if (this.selectedCategory.parent_id && !isParentAvailable) {
                 this.selectedCategory = this.selectedCategory.parent_id;
             } else {
                 this.selectedCategory = this.models["pos.category"].get(0);
@@ -3128,6 +3131,21 @@ export class PosStore extends WithLazyGetterTrap {
 
     get isSmallProductScreen() {
         return this.ui.size < SIZES.MD;
+    }
+
+    getAvailableCategories() {
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        let availableCategories = this.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            availableCategories = iface_available_categ_ids;
+        }
+        return availableCategories;
+    }
+
+    get rootCategories() {
+        const available = this.getAvailableCategories();
+        const availableIds = new Set(available.map((c) => c.id));
+        return available.filter((c) => !c.parent_id || !availableIds.has(c.parent_id.id));
     }
 }
 
