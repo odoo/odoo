@@ -1567,17 +1567,25 @@ export class SearchModel extends EventBus {
 
     /**
      * Add filters of type 'favorite' determined by the array this.favoriteFilters.
+     *
+     * The selected default favorite is the first private favorite by name; if
+     * there is none, it's the first shared favorite by name.
      */
     _createGroupOfFavorites(irFilters) {
-        let defaultFavoriteId = null;
+        let privateDefaultId = null;
+        let sharedDefaultId = null;
         irFilters.forEach((irFilter) => {
             const favorite = this._irFilterToFavorite(irFilter);
             this._createGroupOfSearchItems([favorite]);
             if (favorite.isDefault) {
-                defaultFavoriteId = favorite.id;
+                if (favorite.groupNumber === FAVORITE_PRIVATE_GROUP) {
+                    privateDefaultId ??= favorite.id;
+                } else {
+                    sharedDefaultId ??= favorite.id;
+                }
             }
         });
-        return defaultFavoriteId;
+        return privateDefaultId || sharedDefaultId;
     }
 
     /**

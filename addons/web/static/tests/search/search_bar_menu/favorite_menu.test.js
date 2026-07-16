@@ -135,6 +135,82 @@ test("default favorite is not activated if activateFavorite is set to false", as
     expect(getFacetTexts()).toEqual([]);
 });
 
+test("a private default favorite is activated over shared default favorites", async () => {
+    // irFilters ordered following ir.filters._order
+    const irFilters = [
+        {
+            context: "{}",
+            domain: "[('foo', '=', 'a')]",
+            id: 1,
+            is_default: true,
+            name: "A shared favorite",
+            sort: "[]",
+            user_ids: [],
+        },
+        {
+            context: "{}",
+            domain: "[('foo', '=', 'b')]",
+            id: 2,
+            is_default: true,
+            name: "B shared favorite",
+            sort: "[]",
+            user_ids: [2, 3],
+        },
+        {
+            context: "{}",
+            domain: "[('foo', '=', 'c')]",
+            id: 3,
+            is_default: true,
+            name: "Z private favorite",
+            sort: "[]",
+            user_ids: [2],
+        },
+    ];
+    await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchMenuTypes: ["favorite"],
+        searchViewId: false,
+        irFilters,
+    });
+    await toggleSearchBarMenu();
+    expect(isItemSelected("Z private favorite")).toBe(true);
+    expect(isItemSelected("A shared favorite")).toBe(false);
+    expect(isItemSelected("B shared favorite")).toBe(false);
+});
+
+test("among several default favorites in the same group, the first one by name is activated", async () => {
+    // irFilters ordered following ir.filters._order
+    const irFilters = [
+        {
+            context: "{}",
+            domain: "[('foo', '=', 'a')]",
+            id: 1,
+            is_default: true,
+            name: "A favorite",
+            sort: "[]",
+            user_ids: [],
+        },
+        {
+            context: "{}",
+            domain: "[('foo', '=', 'b')]",
+            id: 2,
+            is_default: true,
+            name: "Z favorite",
+            sort: "[]",
+            user_ids: [2, 3],
+        },
+    ];
+    await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchMenuTypes: ["favorite"],
+        searchViewId: false,
+        irFilters,
+    });
+    await toggleSearchBarMenu();
+    expect(isItemSelected("A favorite")).toBe(true);
+    expect(isItemSelected("Z favorite")).toBe(false);
+});
+
 test(`toggle favorite correctly clears filter, groupbys and field "options"`, async () => {
     mockDate("2019-07-31T13:43:00");
 
