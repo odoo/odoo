@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.KanbanRenderer">
         <div class="o_lunch_content d-flex flex-column flex-md-row h-100">
-            <div class="o_lunch_content_container flex-grow-1">
+            <div class="o_lunch_content_container flex-grow-1 me-2">
                 <t t-call="lunch.WebKanbanRenderer"/>
             </div>
             <LunchDashboard openOrderLine.bind="this.openOrderLine"/>
