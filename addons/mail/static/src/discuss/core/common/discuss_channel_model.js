@@ -496,7 +496,7 @@ export class DiscussChannel extends Record {
         const showTyping = !ignoreTyping && this.channel.hasOtherMembersTyping;
         return (
             (this.channel.channel_type === "chat" &&
-                (this.channel.correspondent.imStatusUI || showTyping)) ||
+                (this.channel.correspondent?.imStatusUI || showTyping)) ||
             (this.channel.channel_type === "channel" && !this.channel.group_public_id) ||
             (this.channel.channel_type === "group" && showTyping)
         );
