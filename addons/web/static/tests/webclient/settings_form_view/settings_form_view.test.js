@@ -501,7 +501,7 @@ test("edit header field", async () => {
 });
 
 test.tags("desktop");
-test("Warn when unset required field desktop", async () => {
+test("Warn when unset required field", async () => {
     ResConfigSettings._fields.woof = fields.Char();
     await mountView({
         type: "form",
@@ -538,8 +538,8 @@ test("Warn when unset required field desktop", async () => {
     expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
 });
 
-test.tags("mobile");
-test("Warn when unset required field mobile", async () => {
+test.tags("desktop");
+test("Warn when unset required field without id", async () => {
     ResConfigSettings._fields.woof = fields.Char();
     await mountView({
         type: "form",
@@ -547,37 +547,33 @@ test("Warn when unset required field mobile", async () => {
         arch: /* xml */ `
             <form js_class="base_settings">
                 <app string="Some App" name="someApp">
-                    <setting id="setting_id">
+                    <setting string="Woof">
                         <field name="woof" required="1"/>
                     </setting>
                 </app>
                 <app string="Some Other App" name="someOtherApp">
-                    <setting id="setting_id"/>
+                    <setting string="Some Other App"/>
                 </app>
             </form>
         `,
     });
     expect(".o_field_char[name=woof]").toHaveCount(1);
+    expect(".settings_tab a").toHaveCount(2);
 
     // Change page
-    await contains(".settings_tab .o-dropdown").click();
-    await animationFrame(); // await the dropdown to be opened
-    expect(".o-dropdown-item").toHaveCount(2);
-    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
-    await contains(".o-dropdown-item:eq(1)").click();
+    await contains(".settings_tab a:eq(1)").click();
     await animationFrame();
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
 
     // Save
     await clickSave();
     await animationFrame();
-    await contains(".settings_tab .o-dropdown").click();
-    await animationFrame(); // await the dropdown to be opened
-    expect(".o-dropdown-item:eq(0)").toHaveClass("text-danger");
+    expect(".settings_tab a:eq(0)").toHaveClass("o_page_invalid");
 
     // Discard
     await click(".o_form_button_cancel");
     await animationFrame();
-    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
+    expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
 });
 
 test("don't show noContentHelper if no search is done", async () => {
