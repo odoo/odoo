@@ -21,6 +21,7 @@ from operator import attrgetter
 import psycopg2.sql
 
 from odoo import sql_db
+from odoo.exceptions import ConcurrencyError
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -183,6 +184,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         # check whether we have a partially upgraded database that needs updating;
                         # PostgreSQL will detect deadlocks if several processes have the shared
                         # lock and try to acquire the exclusive lock
+                        cr.commit()  # check the latest state after waiting for the shared lock
                         cr.execute("""
                             SELECT FROM ir_module_module
                             WHERE state IN ('to upgrade', 'to install', 'to remove')
@@ -192,7 +194,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
-                    cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
+                    try:
+                        cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
+                    except psycopg2.errors.DeadlockDetected:
+                        # multiple workers were loading the database and try to upgrade it, only one will suceed
+                        raise ConcurrencyError("Deadlock when waiting for lock to update the registry") from None
                 # commit after acquiring the lock to re-start the transaction
                 cr.commit()
 
@@ -230,6 +236,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     upgrade_modules = install_modules = reinit_modules = ()
                 else:
                     raise Exception(f'Failed to load registry after {retries} attempts')  # noqa: TRY301
+        except ConcurrencyError as e:
+            _logger.warning('Failed to load registry: %s', e)
+            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+            return cls.new(db_name, new_db_demo=new_db_demo, lock_wait=lock_wait)
         except Exception:
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
