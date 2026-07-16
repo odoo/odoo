@@ -1330,7 +1330,7 @@ class AccountJournal(models.Model):
         action_name = self.env.context.get('action_name', False)
         if not action_name:
             return False
-        ctx = dict(self.env.context, default_journal_id=self.id)
+        ctx = dict(self.env.context, default_journal_id=self.id, from_statement_view=True)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
             ctx['search_default_journal'] = False  # otherwise it will do a useless groupby in bank statements

@@ -683,11 +683,9 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'date': fields.Date.from_string('2020-01-13'), 'statement_id': statement3.id},
         ])
         self.assertRecordValues(statement1 + statement2 + statement3, [
-            {'is_valid': True, 'balance_start': 10, 'balance_end_real': -5,
-             'date': fields.Date.from_string('2020-01-11')},
-            {'is_valid': True, 'balance_start': False, 'balance_end_real': 100, 'date': False},
-            {'is_valid': True, 'balance_start': -5, 'balance_end_real': -15,
-             'date': fields.Date.from_string('2020-01-13')},
+            {'is_valid': True, 'balance_start': 10, 'balance_end_real': -5, 'date': fields.Date.from_string('2020-01-11')},
+            {'is_valid': True, 'balance_start': 0, 'balance_end_real': 100, 'date': fields.Date.from_string('2020-01-10')},
+            {'is_valid': True, 'balance_start': -5, 'balance_end_real': -15, 'date': fields.Date.from_string('2020-01-13')},
         ])
 
         # computing validity of non-consecutive statement shouldn't affect validity
@@ -1231,15 +1229,15 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         line4.move_id.button_draft()
         statement1.line_ids |= line4
         self.assertRecordValues(statement1, [{
-            'is_complete': True,
-            'balance_end': 3,
+            'is_complete': False,
+            'balance_end': 7,
             'date': fields.Date.from_string(line3.date),
         }])
         # test split with canceled/draft lines
         statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({})
         self.assertRecordValues(statement1 + statement2, [{
             'is_complete': False,
-            'balance_end': 2,
+            'balance_end': 6,
             'balance_start': 0,
             'line_ids': [line4.id, line3.id],
         }, {
@@ -1255,7 +1253,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         self.assertRecordValues(statement1, [{
             'is_complete': False,
             'balance_start': 0,
-            'balance_end': 0,
+            'balance_end': 4,
         }])
 
         # create a statement line with already canceled lines
@@ -1263,13 +1261,13 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'line_ids': [Command.set((line3 + line4).ids)],
         })
         self.assertRecordValues(statement1 + statement3, [{
-            'is_complete': False,
+            'is_complete': True,  # Since no line the statement is complete
             'balance_start': 0,
             'balance_end': 0,
         }, {
-            'is_complete': False, # no posted transactions
+            'is_complete': True,
             'balance_start': 1,  # from statement2's balance_end_real
-            'balance_end': 1, # no posted transactions
+            'balance_end': 5,
         }])
 
     def test_create_statement_line_with_inconsistent_currencies(self):

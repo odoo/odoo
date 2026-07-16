@@ -556,7 +556,16 @@ class AccountJournal(models.Model):
             journal.alias_name = self._alias_prepare_alias_name(
                 False, journal.name, journal.code, journal.type, journal.company_id)
 
+        has_hash_statement_per_journal = self.env['account.bank.statement'].search([
+            ('journal_id', 'in', self.ids),
+            ('is_journal_hash', '=', True),
+            ('is_statement_posted', '=', True),
+        ], limit=1).grouped('journal_id')
+
         for journal in self:
+            if has_hash_statement_per_journal.get(journal._origin):
+                raise UserError(self.env._("The journal (%(journal_code)s) has some hashed statements so the type cannot be changed", journal_code=journal.code))
+
             journal.code = False
             journal.default_account_id = False
             journal.profit_account_id = False
@@ -566,6 +575,8 @@ class AccountJournal(models.Model):
                 journal.default_account_id = company.income_account_id
             elif journal.type == 'purchase' and company.expense_account_id.active:
                 journal.default_account_id = company.expense_account_id
+            elif journal.type == 'bank' and journal.restrict_mode_hash_table:
+                journal.restrict_mode_hash_table = False
             elif journal.type in ('cash', 'bank'):
                 if company.default_cash_difference_income_account_id.active:
                     journal.profit_account_id = company.default_cash_difference_income_account_id
