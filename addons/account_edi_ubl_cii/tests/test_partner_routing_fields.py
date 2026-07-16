@@ -139,6 +139,7 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         """ A France VAT (EAS 9957) used as routing scheme/endpoint is validated as a VAT:
         a valid number is accepted and normalized, an invalid one raises a clear error.
         """
+        self.ensure_installed('base_vat')
         partner = self.env['res.partner'].create({'name': "FR VAT Routing"})
 
         # A valid France VAT is accepted as the routing endpoint.
