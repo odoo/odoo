@@ -6,7 +6,6 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 const { DateTime } = luxon;
 
@@ -95,8 +94,7 @@ export class ActivityMenu extends Component {
         }
         this._attendanceInProgress = true;
 
-        if (!isIosApp() && navigator.onLine) { // iOS app lacks permissions to call `getCurrentPosition`
-
+        if (navigator.geolocation && navigator.onLine) {
             navigator.geolocation.getCurrentPosition(
                 async ({coords: {latitude, longitude}}) => {
                     await this.checking(latitude,longitude);
