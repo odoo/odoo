@@ -22,8 +22,7 @@ class HrVersion(models.Model):
 
         Used for calendar attendances without ``work_entry_type_id`` and for attendances
         without type. Default: the ``002.00`` type of the version's country, else the generic
-        ``hr_work_entry.generic_work_entry_type_attendance``. ``hr_payroll`` gives precedence to
-        the structure type's ``default_work_entry_type_id``.
+        ``hr_work_entry.generic_work_entry_type_attendance``. ``hr_payroll`` caches it per country.
 
         :return: an ``hr.work.entry.type`` id, or ``False`` if none is found
         :rtype: int

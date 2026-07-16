@@ -97,11 +97,6 @@
         <field name="export_id" ref="hr_version_export_template"/>
         <field name="name">employee_type_id</field>
     </record>
-    <record id="hr_version_export_template_line_structure_type_id" model="ir.exports.line">
-        <field name="sequence">200</field>
-        <field name="export_id" ref="hr_version_export_template"/>
-        <field name="name">structure_type_id</field>
-    </record>
     <record id="hr_version_export_template_line_contract_template_id" model="ir.exports.line">
         <field name="sequence">210</field>
         <field name="export_id" ref="hr_version_export_template"/>
@@ -418,11 +413,6 @@
         <field name="sequence">470</field>
         <field name="export_id" ref="hr_employee_all_versions_export_template"/>
         <field name="name">version_ids/employee_type_id</field>
-    </record>
-    <record id="hr_emp_all_line_version_structure_type_id" model="ir.exports.line">
-        <field name="sequence">480</field>
-        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
-        <field name="name">version_ids/structure_type_id</field>
     </record>
     <record id="hr_emp_all_line_version_contract_template_id" model="ir.exports.line">
         <field name="sequence">490</field>
