@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 from odoo import fields, models
 
@@ -15,8 +16,15 @@ class CompraConsolidadaWizard(models.TransientModel):
 
     def _get_consolidated_lines(self):
         self.ensure_one()
+        # Ventana amplia en UTC (superconjunto de cualquier zona horaria real)
+        # para acotar la busqueda; el filtro exacto por dia local sigue siendo
+        # el .filtered() de abajo, sin cambios.
+        window_start = datetime.combine(self.fecha_pedido - timedelta(days=1), datetime.min.time())
+        window_end = datetime.combine(self.fecha_pedido + timedelta(days=2), datetime.min.time())
         orders = self.env['sale.order'].search([
             ('state', '=', 'sale'),
+            ('date_order', '>=', window_start),
+            ('date_order', '<', window_end),
         ])
         matching_orders = orders.filtered(
             lambda o: fields.Datetime.context_timestamp(o, o.date_order).date() == self.fecha_pedido
