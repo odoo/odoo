@@ -8,6 +8,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/views.xml',
+        'views/res_partner_views.xml',
     ],
     'installable': True,
     'application': True,
