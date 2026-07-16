@@ -2,6 +2,8 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
+import "@mail/core/public_web/thread_model_patch";
+
 /** @type {import("models").Thread} */
 const threadPatch = {
     get isEmpty() {

@@ -102,6 +102,7 @@ test("bus subscription is refreshed when channel is left", async () => {
     mockDate(later.toUTC().toFormat("yyyy-MM-dd HH:mm:ss"));
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-Discuss[data-active]");
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     await openDiscuss();
     patchWithCleanup(getService("mail.store"), {
