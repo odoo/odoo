@@ -9,7 +9,7 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 
 const { DateTime } = luxon;
 const mutex = new Mutex(); // Used for sequential cache updates
-const updateRewardsMutex = new Mutex();
+export const updateRewardsMutex = new Mutex();
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);

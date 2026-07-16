@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
+import { PosLoyaltyCard, updateRewardsMutex } from "@pos_loyalty/overrides/models/loyalty";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 patch(PaymentScreen.prototype, {
@@ -78,6 +78,8 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
+        // Ensure the pending rewards recompute has settled so `couponPointChanges` is up to date.
+        await updateRewardsMutex.getUnlockedDef();
         // Compile data for our function
         const { program_by_id, reward_by_id, couponCache } = this.pos;
         const rewardLines = order._get_reward_lines();
