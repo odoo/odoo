@@ -1821,7 +1821,7 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.post.wizard',
             'res_id': self.env['hr.expense.post.wizard'].create(self._prepare_post_wizard_vals()).id,
             'target': 'new',
-            'context': self.with_context(active_ids=self.ids, validate_analytic=True).env.context,
+            'context': self.with_context(active_ids=self.ids).env.context,
         }
 
     def _create_company_paid_moves(self):
