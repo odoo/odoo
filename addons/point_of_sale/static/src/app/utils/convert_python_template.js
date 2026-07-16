@@ -22,7 +22,7 @@ import { registerTemplate } from "@web/core/templates";
  *
  * @param {string} name
  * @param {string} url
- * @param {string} templateString: Must come from ``self.env['ir.qweb']._get_template()``
+ * @param {string} templateString Must come from ``self.env['ir.qweb']._get_template()``
  */
 export function registerPythonTemplate(name, url, templateString) {
     /**
@@ -31,11 +31,11 @@ export function registerPythonTemplate(name, url, templateString) {
      */
     const addTKeyToForeach = (string) =>
         string.replace(
-            /(<[^>]+t-foreach\s*=\s*["'][^"']+["'][^>]*t-as\s*=\s*["']([^"']+)["'][^>]*)(>)/g,
+            /(<[^>]+t-foreach\s*=\s*["'][^"']+["'][^>]*t-as\s*=\s*["']([^"']+)["'][^>]*?)(\/?>)/g,
             (match, startTag, tAsVar, closing) => {
                 // If t-key already exists, leave it
                 if (/t-key\s*=/.test(match)) {
-                    return match + closing;
+                    return match;
                 }
                 const tKey = `${tAsVar}_index`;
                 return `${startTag} t-key="${tKey}"${closing}`;
