@@ -1,60 +1,82 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="training_module.list">
-      <field name="name">training_module list</field>
-      <field name="model">training_module.training_module</field>
+    <record id="view_training_record_list" model="ir.ui.view">
+      <field name="name">training.record.list</field>
+      <field name="model">training.record</field>
       <field name="arch" type="xml">
-        <list>
+        <list string="Training Records">
           <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
+          <field name="quantity"/>
+          <field name="training_date"/>
+          <field name="partner_id"/>
+          <field name="is_completed"/>
         </list>
       </field>
     </record>
--->
 
-    <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="training_module.action_window">
-      <field name="name">training_module window</field>
-      <field name="res_model">training_module.training_module</field>
-      <field name="view_mode">list,form</field>
-    </record>
--->
-
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="training_module.action_server">
-      <field name="name">training_module server</field>
-      <field name="model_id" ref="model_training_module_training_module"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "list,form",
-          "res_model": model._name,
-        }
+    <record id="view_training_record_form" model="ir.ui.view">
+      <field name="name">training.record.form</field>
+      <field name="model">training.record</field>
+      <field name="arch" type="xml">
+        <form string="Training Record">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="quantity"/>
+              <field name="training_date"/>
+              <field name="partner_id"/>
+              <field name="is_completed"/>
+            </group>
+          </sheet>
+        </form>
       </field>
     </record>
--->
 
-    <!-- Top menu item -->
-<!--
-    <menuitem name="training_module" id="training_module.menu_root"/>
--->
-    <!-- menu categories -->
-<!--
-    <menuitem name="Menu 1" id="training_module.menu_1" parent="training_module.menu_root"/>
-    <menuitem name="Menu 2" id="training_module.menu_2" parent="training_module.menu_root"/>
--->
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="training_module.menu_1_list" parent="training_module.menu_1"
-              action="training_module.action_window"/>
-    <menuitem name="Server to list" id="training_module" parent="training_module.menu_2"
-              action="training_module.action_server"/>
--->
+    <record id="view_training_record_search" model="ir.ui.view">
+      <field name="name">training.record.search</field>
+      <field name="model">training.record</field>
+      <field name="arch" type="xml">
+        <search string="Search Training Records">
+          <field name="name"/>
+          <field name="partner_id"/>
+          <field name="training_date"/>
+          <filter name="completed" string="Completed" domain="[('is_completed', '=', True)]"/>
+          <filter name="not_completed" string="Not Completed" domain="[('is_completed', '=', False)]"/>
+          <separator/>
+          <group>
+            <filter name="group_by_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+            <filter name="group_by_date" string="Training Date" context="{'group_by': 'training_date'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <record id="action_training_record" model="ir.actions.act_window">
+      <field name="name">Training Records</field>
+      <field name="res_model">training.record</field>
+      <field name="view_mode">list,form</field>
+      <field name="search_view_id" ref="view_training_record_search"/>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          Create your first training record
+        </p>
+      </field>
+    </record>
+
+    <menuitem
+      id="menu_training_root"
+      name="Training"
+      groups="training_module.group_training_user"
+      sequence="10"
+    />
+
+    <menuitem
+      id="menu_training_record"
+      name="Training Records"
+      parent="menu_training_root"
+      action="action_training_record"
+      groups="training_module.group_training_user"
+      sequence="10"
+    />
   </data>
 </odoo>

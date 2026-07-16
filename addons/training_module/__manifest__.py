@@ -4,7 +4,11 @@
     'category': 'Training',
     'summary': 'Custom module for Odoo training exercises',
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'views/views.xml',
+    ],
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
