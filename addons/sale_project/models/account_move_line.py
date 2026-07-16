@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import models
 from odoo.osv.expression import AND, OR
 
@@ -45,22 +47,26 @@ class AccountMoveLine(models.Model):
             groupby=['project_id'],
             aggregates=['id:recordset']
         ))
-        project_per_accounts = {
-            next(iter(project._get_analytic_distribution())): project
-            for project in projects
-        }
+        projects_per_accounts = defaultdict(lambda: self.env['project.project'])
+        for project in projects:
+            distribution = project._get_analytic_distribution()
+            if not distribution:
+                continue
+            key = next(iter(distribution))
+            projects_per_accounts[key] |= project
 
         for move_line in self:
             analytic_distribution = move_line.analytic_distribution
             if not analytic_distribution:
                 continue
 
+            matching_projects = self.env['project.project']
             for accounts in analytic_distribution:
-                project = project_per_accounts.get(accounts)
-            if not project:
-                continue
+                matching_projects |= projects_per_accounts.get(accounts, self.env['project.project'])
 
-            orders = orders_per_project.get(project)
+            orders = self.env['sale.order']
+            for project in matching_projects:
+                orders |= orders_per_project.get(project, self.env['sale.order'])
             if not orders:
                 continue
             orders = orders.sorted('create_date')
