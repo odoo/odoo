@@ -342,7 +342,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     label = _('Goods Invoiced not Delivered (perpetual valuation)')
                 values = _get_aml_vals(orders, amount, 0.0, stock_variation_account.id, label=_(
                     "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s delivered at %(unit_price)s",
-                    order=order.display_name,
+                    order=order_line.order_id.display_name,
                     order_line=_ellipsis(order_line.name, 20),
                     qty_invoiced=order_line.qty_invoiced_at_date,
                     qty_delivered=order_line.qty_delivered_at_date,
