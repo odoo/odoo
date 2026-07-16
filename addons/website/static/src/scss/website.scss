@@ -1960,7 +1960,12 @@ header {
             // first value of the variable 'menu-border-width' to behave as if
             // the input only accepted one number.
             $-menu-border-bottom-width: nth($-menu-border-width, 1);
-            border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
+            // When no 'menu-border-color' is set, `o-color` returns null and the
+            // border color falls back to a full-opacity `currentColor`. Default
+            // it instead to a faded `currentColor` (like the generic
+            // `--o-border-color`), so the border stays subtle out of the box.
+            $-menu-border-color: o-color('menu-border-color') or $border-color;
+            border: o-website-value('menu-border-style') $-menu-border-color !important;
             border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
             &.o_border_right_only {
