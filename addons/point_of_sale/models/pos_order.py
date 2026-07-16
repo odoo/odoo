@@ -1824,6 +1824,14 @@ class PosOrderLine(models.Model):
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
+        if self.refunded_orderline_id:
+            line_id = self.ids[0]  # do not just use `id` in case of NewId
+            already_refunded_qty = sum(self.refunded_orderline_id.refund_orderline_ids
+                                       .filtered(lambda l: l.id != line_id and l.order_id.state != 'cancel')
+                                       .mapped('qty'))
+            total_refunded_qty = abs(already_refunded_qty) + abs(self.qty)
+            if abs(self.refunded_orderline_id.qty) - total_refunded_qty < 0:
+                raise ValidationError(_("You cannot refund more than the outstanding quantity for this product."))
         if self.product_id:
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
