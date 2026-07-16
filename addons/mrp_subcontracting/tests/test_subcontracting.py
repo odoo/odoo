@@ -1469,6 +1469,33 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_id': self.comp2.id, 'product_uom_qty': 10.0},
         ])
 
+    def test_subcontracting_mo_cannot_be_produced_manually(self):
+        """ A subcontracting MO is done by validating its receipt, and should not be done by hand """
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 300.0,
+            })],
+        })
+        picking_receipt.action_confirm()
+        move = picking_receipt.move_ids
+        mo = move._get_subcontract_production()
+        self.assertEqual(len(mo), 1)
+
+        mo.qty_producing = mo.product_qty
+        with self.assertRaises(UserError):
+            mo.button_mark_done()
+        self.assertNotEqual(mo.state, 'done')
+
+        # Validating the receipt still completes the MO
+        move.quantity = 300.0
+        move.picked = True
+        picking_receipt.button_validate()
+        self.assertEqual(picking_receipt.state, 'done')
+        self.assertEqual(move._get_subcontract_production().state, 'done')
+
 
 class TestSubcontractingSerialMassReceipt(TransactionCase):
 

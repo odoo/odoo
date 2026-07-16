@@ -97,6 +97,12 @@ class MrpProduction(models.Model):
 
     def pre_button_mark_done(self):
         if self._get_subcontract_move():
+            if not self.env.context.get('subcontract_receipt_done'):
+                # Producing it here would leave a done MO on a still-open receipt.
+                raise UserError(_(
+                    "Subcontracted manufacturing orders cannot be produced manually. "
+                    "They are done when the related receipt is validated."
+                ))
             return super(MrpProduction, self.with_context(skip_consumption=True)).pre_button_mark_done()
         return super().pre_button_mark_done()
 

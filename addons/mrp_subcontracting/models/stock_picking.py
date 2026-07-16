@@ -46,7 +46,7 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._action_done()
         for picking in self:
             productions_to_done = picking._get_subcontract_production().sudo()
-            productions_to_done.button_mark_done()
+            productions_to_done.with_context(subcontract_receipt_done=True).button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
             production_moves = productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
