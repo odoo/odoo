@@ -33,7 +33,7 @@ declare module "plugins" {
     import { MediaTranslationShared } from "@website/builder/plugins/translation/options/media_translation_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
-    import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
+    import { save_element_context_processors } from "@website/builder/plugins/website_save_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
@@ -70,7 +70,6 @@ declare module "plugins" {
         websiteFormOption: FormOptionShared;
         websitePageConfigOptionPlugin: WebsitePageConfigOptionShared;
         websiteParallaxPlugin: WebsiteParallaxShared;
-        websiteSavePlugin: WebsiteSaveShared;
         websiteBridge: WebsiteBridgeShared;
     }
 
@@ -93,6 +92,7 @@ declare module "plugins" {
 
         // Processors
         reorder_items_processors: reorder_items_processors;
+        save_element_context_processors: save_element_context_processors;
 
         // Providers
         floating_snippet_scope_providers: floating_snippet_scope_providers;

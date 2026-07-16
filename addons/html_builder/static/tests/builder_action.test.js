@@ -1,6 +1,7 @@
 import {
     addBuilderAction,
     addBuilderOption,
+    addBuilderPlugin,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
@@ -12,6 +13,7 @@ import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
 import { signal, xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
+import { Plugin } from "@html_editor/plugin";
 
 describe.current.tags("desktop");
 
@@ -264,10 +266,16 @@ test("reload action: apply, clean save and reload are called in the right order 
             await super.save();
             expect.step("save async");
         },
-        async saveView() {
-            return new Promise((resolve) => setTimeout(resolve, 10));
-        },
     });
+    addBuilderPlugin(
+        class extends Plugin {
+            static id = "delaySaveTestPlugin";
+            resources = {
+                on_ready_to_save_document_handlers: () =>
+                    new Promise((resolve) => setTimeout(resolve, 10)),
+            };
+        }
+    );
     patch(Builder.prototype, {
         setup() {
             super.setup();
