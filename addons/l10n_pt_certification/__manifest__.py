@@ -15,7 +15,7 @@ The module adds the following features:
 - QR Code: a QR Code is added to signed documents
 - Hash integrity report is available based on the digital signature
     """,
-    'depends': ['l10n_pt'],
+    'depends': ['l10n_pt', 'certificate'],
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',

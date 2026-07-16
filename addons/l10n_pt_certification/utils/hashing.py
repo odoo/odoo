@@ -15,7 +15,7 @@ from odoo.addons.l10n_pt_certification.const import PT_CERTIFICATION_NUMBER
 _lt = LazyTranslate(__name__)
 
 
-SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/api/l10n_pt/1'
+SIGN_DEFAULT_ENDPOINT = 'https://l10n-pt.api.odoo.com/api/l10n_pt/1'
 ERROR_MESSAGES = {
     "error_connecting_iap": _lt("Unable to connect to the IAP endpoint to sign the documents. Please try later. If the problem persists, please contact Odoo support."),
     "error_db_unknown": _lt("This database is not known by Odoo. Please contact Odoo support."),

@@ -1,8 +1,17 @@
+import logging
 import re
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.l10n_pt_certification.const import (
+    PT_AT_DOCUMENT_TYPE_MAPPING,
+    PT_AT_MEIO_PROCESSAMENTO,
+    PT_CERTIFICATION_NUMBER,
+)
+
+_logger = logging.getLogger(__name__)
 
 AT_SERIES_ACCOUNTING_DOCUMENT_TYPES = [
     ('out_invoice', 'Invoice (FT)'),
@@ -173,19 +182,21 @@ class L10nPtATSeries(models.Model):
         return self.at_code
 
     def write(self, vals):
-        if any(field in vals for field in ('name', 'training_series', 'company_exclusive_series', 'document_type', 'prefix', 'at_code')):
+        protected_fields = {'name', 'training_series', 'company_exclusive_series', 'document_type', 'prefix'}
+        if any(field in vals for field in protected_fields | {'at_code'}):
             for at_series in self:
-                if self.env['account.move'].search_count([
+                if at_series.env['account.move'].search_count([
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('state', "in", ('posted', 'cancel')),
                     ('l10n_pt_document_type', '=', at_series.document_type),
-                ], limit=1):
-                    raise UserError(_("You cannot change the properties of a series that has already been used in a move."))
-                if self.env['account.payment'].search_count([
+                ], limit=1) or at_series.env['account.payment'].search_count([
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('state', "in", ('posted', 'cancel')),
                 ], limit=1):
-                    raise UserError(_("You cannot change the properties of a series that has already been used in a payment."))
+                    if any(field in vals for field in protected_fields):
+                        raise UserError(_("You cannot change the properties of a series that has already been used in a move."))
+                    if 'at_code' in vals and at_series.at_code:
+                        raise UserError(_("You cannot change the AT Validation Code of a series that has already been used."))
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -232,3 +243,63 @@ class L10nPtATSeries(models.Model):
                 'code': sequence_code,
             })
         return sequence
+
+    def _l10n_pt_at_ws_get_registration_params(self):
+        self.ensure_one()
+        mapping = PT_AT_DOCUMENT_TYPE_MAPPING.get(self.document_type)
+        if not mapping:
+            raise UserError(_(
+                "Cannot register series of type '%(type)s' with the AT webservice.",
+                type=self.document_type
+            ))
+        return {
+            'serie': self.name,
+            'tipoSerie': 'F' if self.training_series else 'N',
+            'classeDoc': mapping['classeDoc'],
+            'tipoDoc': mapping['tipoDoc'],
+            'numInicialSeq': 1,
+            'dataInicioPrevUtiliz': self.date_start,
+            'numCertSWFatur': int(PT_CERTIFICATION_NUMBER),
+            'meioProcessamento': PT_AT_MEIO_PROCESSAMENTO,
+        }
+
+    def action_register_at_series(self):
+        self.ensure_one()
+        if not self.company_id.sudo().l10n_pt_at_ws_username:
+            raise UserError(_(
+                "The AT webservice username is not configured for company %(company)s. "
+                "Please configure it in the Accounting Settings.",
+                company=self.company_id.name,
+            ))
+        from odoo.addons.l10n_pt_certification.utils.series_ws import L10nPtAtSeriesWS
+        ws = L10nPtAtSeriesWS(self.env, self.company_id)
+        if ws.testing_env and not self.training_series:
+            self.training_series = True
+        params = self._l10n_pt_at_ws_get_registration_params()
+        self.at_code = ws.registar_serie(**params)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.at_code:
+                continue
+            if not record.company_id.sudo().l10n_pt_at_ws_username:
+                continue
+            try:
+                record.action_register_at_series()
+            except Exception:
+                _logger.warning(
+                    "Failed to auto-register AT series %(name)s (type: %(type)s)",
+                    {'name': record.name, 'type': record.document_type},
+                    exc_info=True,
+                )
+        return records
+
+    def get_formview_action(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id(
+            'l10n_pt_certification.action_open_l10n_pt_at_series_series_list_view'
+        )
+        action['domain'] = [('journal_id', '=', self.journal_id.id)]
+        return action

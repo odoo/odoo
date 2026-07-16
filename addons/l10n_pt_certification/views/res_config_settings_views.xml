@@ -20,6 +20,29 @@
                             </div>
                         </div>
                     </setting>
+                    <separator title="AT Series Webservice Configuration" groups="base.group_system"/>
+                    <setting
+                        string="AT Webservice Username"
+                        company_dependent="1"
+                        help="Username (NIF/sub-user ID) for the AT Series webservice."
+                    >
+                        <field name="l10n_pt_at_ws_username"/>
+                    </setting>
+                    <setting
+                        string="AT Webservice Password"
+                        company_dependent="1"
+                        help="Password for the AT Series webservice."
+                    >
+                        <field name="l10n_pt_at_ws_password" password="True"/>
+                    </setting>
+                    <setting
+                        string="AT Public Key Certificate"
+                        company_dependent="1"
+                        help="The AT public key certificate used to encrypt the webservice password."
+                        groups="base.group_system"
+                    >
+                        <field name="l10n_pt_at_ws_public_cert_id"/>
+                    </setting>
                 </block>
             </xpath>
             <!-- Disable editing the layout to ensure PT requirements are not removed -->

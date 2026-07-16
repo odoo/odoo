@@ -102,6 +102,11 @@ class AccountMove(models.Model):
         help="Unique document code formed by the AT series validation code and the number of the document. "
              "Only assigned once the document is secured.",
     )
+    l10n_pt_at_series_missing_at_code = fields.Boolean(
+        string='AT Series missing validation code',
+        compute='_compute_l10n_pt_at_series_missing_at_code',
+        help="The AT Series used does not have a validation code; it must be registered with the AT before sending/printing.",
+    )
     l10n_pt_document_number = fields.Char(
         string="Unique Document Number",
         compute='_compute_l10n_pt_document_number',
@@ -116,6 +121,7 @@ class AccountMove(models.Model):
         string="AT Series",
         compute='_compute_l10n_pt_at_series_id',
         readonly=False, store=True, copy=False,
+        domain="[('journal_id', '=', journal_id)]",
     )
     # Cancelling reason is a PT requirement, added to the SAF-T
     l10n_pt_cancel_reason = fields.Char(
@@ -248,7 +254,7 @@ class AccountMove(models.Model):
         # EXTENDS account
         self.ensure_one()
         if self.country_code == 'PT':
-            return [self._l10n_pt_get_invoice_legal_document()]
+            return [self._l10n_pt_get_invoice_legal_document('pdf', allow_fallback=allow_fallback)]
         return super()._get_invoice_legal_documents_all(allow_fallback=allow_fallback)
 
     def action_print_pdf(self):
@@ -328,11 +334,25 @@ class AccountMove(models.Model):
 
     def _l10n_pt_is_invoice_receipt(self):
         self.ensure_one()
-        return False
-        # return (
-        #     self._is_pt_move()
-        #     and self.move_type == 'out_invoice'
-        # )
+        if not self._is_pt_move() or self.move_type != 'out_invoice':
+            return False
+        if self.payment_state == 'paid':
+            return True
+        payments = self.matched_payment_ids.filtered(
+            lambda p: p.state in ('in_process', 'paid') and p.payment_type == 'inbound'
+        )
+        if not payments:
+            return False
+        total_paid = sum(
+            payment.currency_id._convert(
+                payment.amount,
+                self.currency_id,
+                self.company_id,
+                payment.date or self.invoice_date or fields.Date.context_today(self),
+            )
+            for payment in payments
+        )
+        return self.currency_id.compare_amounts(total_paid, self.amount_total) >= 0
 
     @api.onchange('l10n_pt_global_discount')
     def _inverse_l10n_pt_global_discount(self):
@@ -471,8 +491,6 @@ class AccountMove(models.Model):
             seq_source = self.name
         else:
             seq_source = self._get_starting_sequence()
-            if self.l10n_pt_document_type == 'out_invoice_receipt':
-                seq_source = 'REC' + seq_source
 
         format_string, format_values = self._get_sequence_format_param(seq_source)
 
@@ -506,9 +524,6 @@ class AccountMove(models.Model):
             'company_id': self.company_id.id,
             'date_start': date_start,
             'date_end': date_end,
-            # TODO: to be handled later
-            'training_series': True,
-            'at_code': f'AT-{prefix}{series_name}',
         })
 
     def _check_l10n_pt_at_series_id(self):
@@ -524,15 +539,8 @@ class AccountMove(models.Model):
                 (not series.date_start or series.date_start <= invoice_date)
                 and (not series.date_end or series.date_end >= invoice_date)
             )
-            if not series.active and not series_date_valid:
+            if not series.active or not series_date_valid:
                 raise UserError(_("An inactive series cannot be used."))
-            if not series.at_code:
-                raise UserError(self.env._(
-                        "The AT Series '%(series)s' is missing the AT Validation Code. "
-                        "Please fill in the AT Validation Code obtained from the Portal das Finanças before posting.",
-                        series=series.display_name,
-                    )
-                )
 
     def _check_l10n_pt_document_number(self):
         for move in self.filtered(lambda m: (
@@ -551,6 +559,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'company_id', 'date', 'journal_id', 'l10n_pt_document_type', 'name', 'invoice_date')
     def _compute_l10n_pt_at_series_id(self):
         # Do not recompute AT series if move already has one and journal of AT series matches the move journal
+        today = fields.Date.today()
         moves_to_compute = self.filtered(
             lambda m: (
                 m._is_pt_move()
@@ -560,6 +569,8 @@ class AccountMove(models.Model):
                     or m.l10n_pt_at_series_id.journal_id != m.journal_id
                     or m.l10n_pt_at_series_id.document_type != m.l10n_pt_document_type
                     or not m.l10n_pt_at_series_id.active
+                    or (m.invoice_date or today) < m.l10n_pt_at_series_id.date_start
+                    or ((m.invoice_date or today) > m.l10n_pt_at_series_id.date_end if m.l10n_pt_at_series_id.date_end else False)
                 )
             )
         )
@@ -572,6 +583,10 @@ class AccountMove(models.Model):
                 ('l10n_pt_document_type', '=', move.l10n_pt_document_type),
                 ('l10n_pt_at_series_id', '!=', False),
                 ('l10n_pt_at_series_id.active', '=', True),
+                ('l10n_pt_at_series_id.date_start', '<', move.invoice_date or today),
+                '|',
+                ('l10n_pt_at_series_id.date_end', '=', False),
+                ('l10n_pt_at_series_id.date_end', '>', move.invoice_date or today),
             ], order='id desc', limit=1)
             # If no AT series used in a move in this journal, fallback to an active series for this journal
             at_series = last_move.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
@@ -585,6 +600,10 @@ class AccountMove(models.Model):
                 ('journal_id', '=', move.journal_id.id),
                 ('document_type', '=', move.l10n_pt_document_type),
                 ('active', '=', True),
+                ('date_start', '<', move.invoice_date or today),
+                '|',
+                ('date_end', '=', False),
+                ('date_end', '>', move.invoice_date or today),
             ], limit=1)
 
             move.l10n_pt_at_series_id = at_series
@@ -629,6 +648,26 @@ class AccountMove(models.Model):
                 move.l10n_pt_atcud = f"{move.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
             else:
                 move.l10n_pt_atcud = move.l10n_pt_atcud or False
+
+    @api.depends('l10n_pt_at_series_id.at_code', 'state')
+    def _compute_l10n_pt_at_series_missing_at_code(self):
+        for move in self:
+            move.l10n_pt_at_series_missing_at_code = (
+                move._is_pt_move()
+                and move.state in ('posted', 'cancel')
+                and move.l10n_pt_at_series_id
+                and not move.l10n_pt_at_series_id.at_code
+            )
+
+    def button_hash(self):
+        for move in self:
+            if move.l10n_pt_at_series_missing_at_code:
+                raise UserError(self.env._(
+                    "The AT Series '%(series)s' is missing the AT Validation Code. "
+                    "Please register the series with the Autoridade Tributária before sending or printing.",
+                    series=move.l10n_pt_at_series_id.display_name,
+                ))
+        return super().button_hash()
 
     ####################################
     # HASH AND QR CODE

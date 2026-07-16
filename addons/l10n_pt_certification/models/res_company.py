@@ -8,6 +8,23 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_pt_region_code = fields.Char('Region Code', compute='_compute_l10n_pt_region_code', store=True, readonly=False)
+    l10n_pt_at_ws_username = fields.Char(
+        string='AT Webservice Username',
+        groups='base.group_system',
+        help="Username (NIF/sub-user ID) for the Autoridade Tributária Series webservice.",
+    )
+    l10n_pt_at_ws_password = fields.Char(
+        string='AT Webservice Password',
+        groups='base.group_system',
+        help="Password for the Autoridade Tributária Series webservice.",
+    )
+    l10n_pt_at_ws_public_cert_id = fields.Many2one(
+        comodel_name='certificate.certificate',
+        string='AT Public Key Certificate',
+        groups='base.group_system',
+        help="The AT public key certificate used to encrypt the password sent to the Series webservice.",
+        check_company=True,
+    )
 
     @api.depends('country_id', 'state_id')
     def _compute_l10n_pt_region_code(self):

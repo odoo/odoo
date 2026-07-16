@@ -17,6 +17,7 @@ class AccountPayment(models.Model):
     l10n_pt_at_series_id = fields.Many2one(
         compute='_compute_l10n_pt_at_series_id',
         readonly=False, store=True,
+        domain="[('journal_id', '=', journal_id)]",
     )
     # Document type used in invoice template (when printed, documents have to present the document type on each page)
     l10n_pt_document_type = fields.Selection(

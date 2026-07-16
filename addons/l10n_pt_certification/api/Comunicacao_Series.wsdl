@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:wsp="http://www.w3.org/ns/ws-policy"
+                  xmlns="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://at.gov.pt/"
+                  targetNamespace="http://at.gov.pt/"
+                  name="SeriesWSService">
+   <wsdl:types>
+      <xsd:schema xmlns:ns0="http://at.gov.pt/" targetNamespace="http://at.gov.pt/">
+         <xsd:element name="anularSerie" type="ns0:anularSerie"/>
+         <xsd:element name="anularSerieResponse" type="ns0:anularSerieResponse"/>
+         <xsd:element name="consultarSeries" type="ns0:consultarSeries"/>
+         <xsd:element name="consultarSeriesResponse" type="ns0:consultarSeriesResponse"/>
+         <xsd:element name="finalizarSerie" type="ns0:finalizarSerie"/>
+         <xsd:element name="finalizarSerieResponse" type="ns0:finalizarSerieResponse"/>
+         <xsd:element name="registarSerie" type="ns0:registarSerie"/>
+         <xsd:element name="registarSerieResponse" type="ns0:registarSerieResponse"/>
+         <xsd:simpleType name="serieType">
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="35"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="tipoSerieType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="1"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="classeDocType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="2"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="tipoDocType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="2"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="numSeqType">
+            <xsd:restriction base="xsd:integer">
+               <xsd:minInclusive value="1"/>
+               <xsd:totalDigits value="25"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="numCertSWFaturType">
+            <xsd:restriction base="xsd:integer">
+               <xsd:minInclusive value="0"/>
+               <xsd:totalDigits value="4"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="codValidacaoSerieType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="8"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="motivoType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="2"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="justificacaoType">
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="4000"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="estadoType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="1"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="codResultOperType">
+            <xsd:restriction base="xsd:integer">
+               <xsd:totalDigits value="4"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="msgResultOperType">
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="250"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="nifType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="9"/>
+               <xsd:pattern value="\d{9}"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="meioProcessamentoType">
+            <xsd:restriction base="xsd:string">
+               <xsd:length value="2"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="anularSerie">
+            <xsd:sequence>
+               <xsd:element name="serie" type="ns0:serieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o identificador da Série cuja comunicação pretende anular.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="classeDoc" type="ns0:classeDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a classificação dada ao documento a que pertence a Série cuja comunicação pretende anular.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoDoc" type="ns0:tipoDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo de documento a que pertence a Série cuja comunicação pretende anular.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="codValidacaoSerie" type="ns0:codValidacaoSerieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o código de validação da série, atribuído pela AT, cuja comunicação pretende anular.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="motivo" type="ns0:motivoType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o motivo pelo qual pretende anular a comunicação da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+			            <xsd:element name="declaracaoNaoEmissao" type="xsd:boolean">
+				              <xsd:annotation>
+                    <xsd:documentation>Indicação informativa de que o sujeito passivo teve conhecimento de que não deve anular a comunicação de uma Série se já utilizou documentos emitidos com a informação da mesma. A comunicação não será aceite se o sujeito passivo não indicar (preenchendo com o valor verdadeiro este parâmetro) que teve conhecimento da condição apresentada.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="anularSerieResponse">
+            <xsd:sequence>
+               <xsd:element name="anularSerieResp" type="ns0:seriesResp"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="consultarSeries">
+            <xsd:sequence>
+               <xsd:element name="serie" type="ns0:serieType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o identificador da Série que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoSerie" type="ns0:tipoSerieType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo da Série que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="classeDoc" type="ns0:classeDocType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a classificação dada ao documento a que pertence a Série que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoDoc" type="ns0:tipoDocType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo de documento a que pertence a Série que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="codValidacaoSerie" type="ns0:codValidacaoSerieType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o código de validação da Série, atribuído pela AT, que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataRegistoDe" type="xsd:date" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a data inicial do intervalo de pesquisa.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataRegistoAte" type="xsd:date" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a data final do intervalo de pesquisa.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="estado" type="ns0:estadoType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o estado da Série que pretende consultar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="meioProcessamento" type="ns0:meioProcessamentoType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Código de meio de processamento dos documentos a emitir.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="consultarSeriesResponse">
+            <xsd:sequence>
+               <xsd:element name="consultarSeriesResp" type="ns0:consultSeriesResp"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="finalizarSerie">
+            <xsd:sequence>
+               <xsd:element name="serie" type="ns0:serieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o identificador da Série que pretende finalizar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="classeDoc" type="ns0:classeDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a classificação dada ao documento a que pertence a Série que pretende finalizar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoDoc" type="ns0:tipoDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo de documento a que pertence a Série que pretende finalizar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="codValidacaoSerie" type="ns0:codValidacaoSerieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o código de validação da série, atribuído pela AT, que pretende finalizar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="seqUltimoDocEmitido" type="ns0:numSeqType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o número do último documento emitido da Série que pretende finalizar.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+			            <xsd:element name="justificacao" type="ns0:justificacaoType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique observações pertinentes à finalização da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="finalizarSerieResponse">
+            <xsd:sequence>
+               <xsd:element name="finalizarSerieResp" type="ns0:seriesResp"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="registarSerie">
+            <xsd:sequence>
+               <xsd:element name="serie" type="ns0:serieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o identificador da Série que pretende comunicar a AT.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoSerie" type="ns0:tipoSerieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo da Série que pretende comunicar a AT.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="classeDoc" type="ns0:classeDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a classificação dada ao documento a que pertence a Série a comunicar à AT.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoDoc" type="ns0:tipoDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o tipo de documento a que pertence a Série a comunicar à AT.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="numInicialSeq" type="ns0:numSeqType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o início da numeração de sequência do documento na Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataInicioPrevUtiliz" type="xsd:date">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique a data a partir da qual se prevê a utilização da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="numCertSWFatur" type="ns0:numCertSWFaturType">
+                  <xsd:annotation>
+                    <xsd:documentation>Indique o número do certificado do programa de faturação, atribuído pela AT. Se não aplicável, deve ser preenchido com "0" (zero).</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="meioProcessamento" type="ns0:meioProcessamentoType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código de meio de processamento dos documentos a emitir.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="registarSerieResponse">
+            <xsd:sequence>
+               <xsd:element name="registarSerieResp" type="ns0:seriesResp"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="seriesResp">
+            <xsd:sequence>
+               <xsd:element name="infoSerie" type="ns0:seriesInfo" minOccurs="0"/>
+               <xsd:element name="infoResultOper" type="ns0:operationResultInfo"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="seriesInfo">
+            <xsd:annotation>
+               <xsd:documentation>Informação de caracterização da Série comunicada</xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="serie" type="ns0:serieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Identificador da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoSerie" type="ns0:tipoSerieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código do tipo da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="classeDoc" type="ns0:classeDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código da classificação dada ao documento a que pertence a Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="tipoDoc" type="ns0:tipoDocType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código do tipo de documento da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="numInicialSeq" type="ns0:numSeqType">
+                  <xsd:annotation>
+                    <xsd:documentation>Início da numeração de sequência do documento na Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="numFinalSeq" type="ns0:numSeqType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Fim da numeração de sequência do documento na Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataInicioPrevUtiliz" type="xsd:date">
+                  <xsd:annotation>
+                    <xsd:documentation>Data a partir da qual se prevê a utilização da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="seqUltimoDocEmitido" type="ns0:numSeqType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Sequência do último documento emitido da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="meioProcessamento" type="ns0:meioProcessamentoType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código de meio de processamento dos documentos a emitir.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="numCertSWFatur" type="ns0:numCertSWFaturType">
+                  <xsd:annotation>
+                    <xsd:documentation>Número do certificado do programa de faturação, atribuído pela AT. Se não aplicável, o resultado é preenchido com "0" (zero).</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="codValidacaoSerie" type="ns0:codValidacaoSerieType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código de validação da Série, atribuído pela AT.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataRegisto" type="xsd:date">
+                  <xsd:annotation>
+                    <xsd:documentation>Data do registo da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="estado" type="ns0:estadoType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código do estado que a Série possui no decorrer do processo de comunicação.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="motivoEstado" type="ns0:motivoType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Código de motivo justificativo da mudança de estado.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="justificacao" type="ns0:justificacaoType" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>Observações pertinentes comunicadas sobre a finalização da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="dataEstado" type="xsd:dateTime">
+                  <xsd:annotation>
+                    <xsd:documentation>Data da última alteração de estado da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="nifComunicou" type="ns0:nifType">
+                  <xsd:annotation>
+                    <xsd:documentation>Número fiscal do contribuinte responsável pela comunicação da Série.</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="operationResultInfo">
+            <xsd:annotation>
+               <xsd:documentation>Resultado da operação</xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="codResultOper" type="ns0:codResultOperType">
+                  <xsd:annotation>
+                    <xsd:documentation>Código do resultado da operação</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+               <xsd:element name="msgResultOper" type="ns0:msgResultOperType">
+                  <xsd:annotation>
+                    <xsd:documentation>Mensagem do resultado da operação</xsd:documentation>
+                  </xsd:annotation>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="consultSeriesResp">
+            <xsd:sequence>
+               <xsd:element name="infoSerie" type="ns0:seriesInfo" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element name="infoResultOper" type="ns0:operationResultInfo"/>
+            </xsd:sequence>
+         </xsd:complexType>
+      </xsd:schema>
+   </wsdl:types>
+   <message name="registarSerie">
+        <part name="parameters" element="tns:registarSerie"/>
+    </message>
+   <message name="registarSerieResponse">
+        <part name="parameters" element="tns:registarSerieResponse"/>
+    </message>
+   <message name="finalizarSerie">
+        <part name="parameters" element="tns:finalizarSerie"/>
+    </message>
+   <message name="finalizarSerieResponse">
+        <part name="parameters" element="tns:finalizarSerieResponse"/>
+    </message>
+   <message name="consultarSeries">
+        <part name="parameters" element="tns:consultarSeries"/>
+    </message>
+   <message name="consultarSeriesResponse">
+        <part name="parameters" element="tns:consultarSeriesResponse"/>
+    </message>
+   <message name="anularSerie">
+        <part name="parameters" element="tns:anularSerie"/>
+    </message>
+   <message name="anularSerieResponse">
+        <part name="parameters" element="tns:anularSerieResponse"/>
+    </message>
+   <portType name="SeriesWS">
+        <operation name="registarSerie">
+            <documentation>
+                Esta funcionalidade tem como objetivo, permitir a comunicação das séries à AT, através do 
+                registo das mesmas, de modo a que seja atribuído um código único de validação da série.
+            </documentation>
+            <input wsam:Action="http://at.gov.pt/SeriesWS/registarSerieRequest"
+                message="tns:registarSerie"/>
+            <output wsam:Action="http://at.gov.pt/SeriesWS/registarSerieResponse"
+                 message="tns:registarSerieResponse"/>
+        </operation>
+        <operation name="finalizarSerie">
+            <documentation>
+                Esta funcionalidade tem como objetivo, indicar que uma série foi válida para um conjunto 
+                de documentos, mas que a mesma já não será usada a partir do último documento comunicado.
+            </documentation>
+            <input wsam:Action="http://at.gov.pt/SeriesWS/finalizarSerieRequest"
+                message="tns:finalizarSerie"/>
+            <output wsam:Action="http://at.gov.pt/SeriesWS/finalizarSerieResponse"
+                 message="tns:finalizarSerieResponse"/>
+        </operation>
+        <operation name="consultarSeries">
+            <documentation>
+                Esta funcionalidade tem como objetivo, disponibilizar a consulta das séries comunicadas.
+            </documentation>
+            <input wsam:Action="http://at.gov.pt/SeriesWS/consultarSeriesRequest"
+                message="tns:consultarSeries"/>
+            <output wsam:Action="http://at.gov.pt/SeriesWS/consultarSeriesResponse"
+                 message="tns:consultarSeriesResponse"/>
+        </operation>
+        <operation name="anularSerie">
+            <documentation>
+                Esta funcionalidade tem como objetivo, disponibilizar a ação de anular a comunicação 
+                de uma série anteriormente comunicada, por erro.
+            </documentation>
+            <input wsam:Action="http://at.gov.pt/SeriesWS/anularSerieRequest"
+                message="tns:anularSerie"/>
+            <output wsam:Action="http://at.gov.pt/SeriesWS/anularSerieResponse"
+                 message="tns:anularSerieResponse"/>
+        </operation>
+    </portType>
+   <binding name="SeriesWSPortBinding" type="tns:SeriesWS">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="registarSerie">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="finalizarSerie">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarSeries">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="anularSerie">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+   <service name="SeriesWSService">
+        <port name="SeriesWSPort" binding="tns:SeriesWSPortBinding">
+            <soap:address location="http://localhost:7001/seriesbo/SeriesWSService"/>
+        </port>
+    </service>
+</wsdl:definitions>
