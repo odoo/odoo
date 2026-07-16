@@ -222,27 +222,22 @@ export class Rules {
         for (const [name, value] of dataMap) {
             let fixingRule;
             try {
+                const args = getRuleArgs(name, value);
                 const fixingRules = this.getFixingRules(name);
                 if (
                     fixingRules.length > 0 &&
-                    (fixingRule = this.findFixingRule(fixingRules, ...getRuleArgs(name, value)))
+                    (fixingRule = this.findFixingRule(fixingRules, ...args))
                 ) {
                     _onPass(name, value, fixingRule.howResult);
                     continue;
                 }
                 const blockingRules = this.getBlockingRules(name);
-                if (
-                    blockingRules.length > 0 &&
-                    this.checkRules(blockingRules, ...getRuleArgs(name, value))
-                ) {
+                if (blockingRules.length > 0 && this.checkRules(blockingRules, ...args)) {
                     _onFail(name, value);
                     continue;
                 }
                 const allowingRules = this.getAllowingRules(name);
-                if (
-                    allowingRules.length > 0 &&
-                    this.checkRules(allowingRules, ...getRuleArgs(name, value))
-                ) {
+                if (allowingRules.length > 0 && this.checkRules(allowingRules, ...args)) {
                     _onPass(name, value);
                     continue;
                 }
@@ -260,17 +255,16 @@ export class Rules {
         for (const [name, value] of missing) {
             let requiringRule;
             try {
-                const requiringRules = this.getRequiringRules(name);
-                if (
-                    requiringRules.length > 0 &&
-                    (requiringRule = this.findFixingRule(
-                        requiringRules,
-                        ...getRuleArgs(name, value)
-                    ))
-                ) {
-                    _onPass(name, value, requiringRule.howResult);
-                } else {
-                    onMiss(name, value);
+                const args = getRuleArgs(name, value);
+                const requiringRules = this.getRequiringRules(name).filter((rule) =>
+                    rule.checkConditions(...args)
+                );
+                if (requiringRules.length > 0) {
+                    if ((requiringRule = this.findFixingRule(requiringRules, ...args))) {
+                        _onPass(name, value, requiringRule.howResult);
+                    } else {
+                        onMiss(name, value);
+                    }
                 }
             } finally {
                 if (requiringRule) {
@@ -328,8 +322,7 @@ export class Rules {
         // TODO EGGMAIL: currently the first registered fixing rules wins.
         // evaluate if we need a more complex resolution mechanism.
         return fixingRules.find(
-            (fixingRule) =>
-                fixingRule.checkConditions(...args) && fixingRule.how(...args) !== undefined
+            (rule) => rule.checkConditions(...args) && rule.how(...args) !== undefined
         );
     }
     getAllowingRules(name) {
