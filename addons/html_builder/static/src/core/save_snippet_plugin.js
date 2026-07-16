@@ -1,4 +1,3 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
@@ -69,7 +68,6 @@ export class SaveSnippetPlugin extends Plugin {
             const cleanedEl = this.processThrough("clean_for_save_processors", cloneEl, {
                 saveSnippet: true,
             });
-            escapeTextNodes(cleanedEl);
             this.trigger("on_saved_handlers", el);
             return cleanedEl;
         });
