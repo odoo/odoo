@@ -349,7 +349,7 @@ export class Composer extends Component {
         }
         this.moreActions = this.composerActions.more(this.composerActionsParams, {
             actions: partitionedActions.other,
-            disabledCondition: this.areAllActionsDisabled,
+            disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
             dropdownPosition: "top-start",
             icon: "fa fa-plus-circle",
             name: _t("More Actions"),
