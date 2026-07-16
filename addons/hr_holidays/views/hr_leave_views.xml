@@ -95,6 +95,7 @@
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <separator/>
                     <filter name="group_date_from" string="Date" context="{'group_by':'date_from'}"/>
+                    <filter invisible="1" name="group_date_from_year" string="Date" context="{'group_by':'date_from:year'}"/>
                 </group>
                 <searchpanel>
                     <field name="state" string="Status"/>
