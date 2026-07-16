@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
+from odoo.addons.l10n_cn_edi_baiwang.models.account_move import RED_FORM_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -28,6 +30,7 @@ class L10nCnEdiDocument(models.Model):
     baiwang_red_invoice_no = fields.Char(string="Red Invoice Number", copy=False)
     baiwang_red_form_amount_total = fields.Float(string="Credit Price", copy=False)
     baiwang_red_form_amount_tax = fields.Float(string="Credit Tax", copy=False)
+    baiwang_red_form_type = fields.Selection(selection=RED_FORM_TYPES, string="Red Form Reason", copy=False)
     error_message = fields.Text(string="Error Details")
 
     @api.model
@@ -129,32 +132,39 @@ class L10nCnEdiDocument(models.Model):
 
     @api.model
     def _pull_inbound_red_forms(self):
-        """Poll Baiwang for inbound red forms awaiting our action or already approved (Buyer role)."""
+        """Poll Baiwang for inbound red forms using a high-water mark sync."""
         companies = self.env['res.company'].search([('l10n_cn_baiwang_subscription_status', '=', 'authorized')])
+        today = fields.Date.context_today(self)
+        end_date_str = today.strftime('%Y-%m-%d')
+        limit_date = today - timedelta(days=30)
         for company in companies:
+            latest = self.search([
+                ('move_id.company_id', '=', company.id),
+                ('baiwang_uuid', '!=', False)
+            ], order='create_date desc', limit=1)
+            # 2. Dynamic start date: (Latest - 1 day) clamped to a maximum of 30 days ago
+            start_date = max(
+                (latest.create_date.date() - timedelta(days=1)) if latest else limit_date,
+                limit_date
+            ).strftime('%Y-%m-%d')
             client = BaiwangClient(company)
             try:
-                # Query without a strict confirmState to pull both pending (02) and auto-confirmed (01/04)
                 res = client.query_red_form_list({
                     'buySelSelector': '1',
                     'entryIdentity': '02',
                     'buyerTaxNo': company.vat,
                     'sellerTaxNo': '',
+                    'invoiceStartDate': start_date,
+                    'invoiceEndDate': end_date_str,
                 })
                 form_list = res.get('response', [])
                 if not isinstance(form_list, list):
                     continue
-
                 for form in form_list:
                     uuid = form.get('redConfirmUuid')
                     confirm_state = form.get('confirmState')
-
-                    # We only care about:
-                    # - '02': Pending confirmation
-                    # - '01', '04': No need confirmation / already approved
                     if confirm_state not in ('01', '02', '04'):
                         continue
-
                     if not uuid or self.search_count([('baiwang_uuid', '=', uuid)]):
                         continue
 
@@ -164,21 +174,28 @@ class L10nCnEdiDocument(models.Model):
                         ('company_id', '=', company.id),
                         ('move_type', '=', 'in_invoice'),
                     ], limit=1)
-
-                    if not blue_move:
-                        continue
-
                     is_pending = confirm_state == '02'
-
                     self.create({
                         'move_id': blue_move.id,
-                        'state': 'red_form_pending' if is_pending else 'red_form_confirmed',
+                        'state': odoo_state,
                         'baiwang_uuid': uuid,
                         'baiwang_red_form_number': form.get('redConfirmNo'),
-                        'baiwang_confirm_state': confirm_state,
+                        'baiwang_red_invoice_no': form.get('redInvoiceNo'),
+                        'baiwang_confirm_state': api_state,
                         'baiwang_red_form_amount_total': float(form.get('invoiceTotalPrice', 0.0)),
                         'baiwang_red_form_amount_tax': float(form.get('invoiceTotalTax', 0.0)),
+                        'baiwang_red_form_type': form.get('redInvoiceLabel'),  # <--- Map the JSON key here
                     })
+
+                    if blue_move:
+                        blue_move.activity_schedule(
+                            'mail.mail_activity_data_todo',
+                            summary=self.env._(
+                                "Inbound Red Form %(number)s requires approval (Price: %(price)s, Tax: %(tax)s)",
+                                number=form.get('redConfirmNo'), price=amt_total, tax=amt_tax,
+                            ),
+                            user_id=blue_move.create_uid.id,
+                        )
 
                     if is_pending:
                         summary = self.env._("Inbound Red Form %s requires approval", form.get('redConfirmNo'))

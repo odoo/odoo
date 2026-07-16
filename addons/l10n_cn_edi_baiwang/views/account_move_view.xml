@@ -14,12 +14,10 @@
                     <field name="l10n_cn_baiwang_date_consistency_warning"/>
                 </div>
 
-                <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center" role="alert" 
-                     invisible="move_type != 'in_invoice' or l10n_cn_baiwang_red_form_status != 'red_form_pending'">
+                <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center" role="alert"
+                    invisible="move_type != 'in_invoice' or l10n_cn_baiwang_red_form_status != 'red_form_pending'">
                     <div>
-                        <strong>Red Form <field name="l10n_cn_baiwang_red_form_number" readonly="1" class="oe_inline"/> received</strong><br/>
-                        Credit price (tax exclusive): <field name="l10n_cn_baiwang_red_form_amount_total" readonly="1" class="oe_inline"/><br/>
-                        Credit tax: <field name="l10n_cn_baiwang_red_form_amount_tax" readonly="1" class="oe_inline"/>
+                        <strong>Red Form <field name="l10n_cn_baiwang_red_form_number" readonly="1" class="oe_inline"/> received</strong><br/> Credit price (tax exclusive): <field name="l10n_cn_baiwang_red_form_amount_total" readonly="1" class="oe_inline"/><br/> Credit tax: <field name="l10n_cn_baiwang_red_form_amount_tax" readonly="1" class="oe_inline"/>
                     </div>
                     <div>
                         <button name="action_approve_inbound_red_form" string="01 - Confirm" type="object" class="btn btn-success btn-sm"/>
@@ -27,8 +25,6 @@
                     </div>
                 </div>
             </xpath>
-
-            
 
             <xpath expr="//widget[@name='web_ribbon']" position="before">
                 <widget name="web_ribbon" title="Red Form Requested" bg_color="text-bg-info"
@@ -58,13 +54,13 @@
                 <page string="Baiwang E-Fapiao" name="china_e_fapiao" invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
                     <group>
                         <group string="E-Fapiao Details">
-                            <field name="l10n_cn_baiwang_invoice_no"/>
-                            <field name="l10n_cn_baiwang_invoice_date"/>
+                            <field name="l10n_cn_baiwang_invoice_no" readonly="l10n_cn_baiwang_state in ('sent', 'issued')"/>
+                            <field name="l10n_cn_baiwang_invoice_date" readonly="l10n_cn_baiwang_state in ('sent', 'issued')"/>
                             <field name="l10n_cn_baiwang_state" widget="badge"
                                 decoration-success="l10n_cn_baiwang_state == 'issued'"
                                 decoration-warning="l10n_cn_baiwang_state == 'sent'"
                                 decoration-danger="l10n_cn_baiwang_state == 'failed'"/>
-                            <field name="l10n_cn_baiwang_serial_no" invisible="not l10n_cn_baiwang_serial_no"/>
+                            <field name="l10n_cn_baiwang_serial_no" invisible="not l10n_cn_baiwang_serial_no" readonly="1"/>
                         </group>
 
                         <group string="Red Form Requests" invisible="not l10n_cn_baiwang_red_form_uuid and move_type != 'out_refund'">
