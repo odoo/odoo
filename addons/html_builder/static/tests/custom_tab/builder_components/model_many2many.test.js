@@ -52,7 +52,8 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     );
 
     await contains(":iframe .test-options-target").click();
-    const modelEdit = getEditor().shared.cachedModel.useModelEdit({
+    const editor = getEditor();
+    const modelEdit = editor.shared.cachedModel.useModelEdit({
         model: "test.base",
         recordId: 1,
     });
@@ -75,16 +76,30 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
-    expect(modelEdit.get("rel")).toEqual([
-        { id: 1, name: "First", display_name: "First" },
-        { id: 2, name: "Second", display_name: "Second" },
-    ]);
-    expect("table tr").toHaveCount(2);
+    const assertStateBeforeRemove = () => {
+        expect(modelEdit.get("rel")).toEqual([
+            { id: 1, name: "First", display_name: "First" },
+            { id: 2, name: "Second", display_name: "Second" },
+        ]);
+        expect("table tr").toHaveCount(2);
+    };
+    assertStateBeforeRemove();
 
     await contains("button[data-icon='remove']").click();
-    expect(modelEdit.get("rel")).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
-    expect("table tr").toHaveCount(1);
-    expect("table input").toHaveValue("Second");
+    const assertStateAfterRemove = () => {
+        expect(modelEdit.get("rel")).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
+        expect("table tr").toHaveCount(1);
+        expect("table input").toHaveValue("Second");
+    };
+    assertStateAfterRemove();
+
+    editor.shared.history.undo();
+    await animationFrame();
+    assertStateBeforeRemove();
+
+    editor.shared.history.redo();
+    await animationFrame();
+    assertStateAfterRemove();
 
     await contains(".o_hb_snippets_tabs button").click();
     await contains(":iframe .test-options-target").click();

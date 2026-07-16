@@ -191,11 +191,11 @@ test("copy field", async () => {
 
 test("edit fields and back", async () => {
     const { editor, el } = await setupEditor(
-        `<div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol"></t></div>`,
+        `<div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="original"></t></div>`,
         getEditorOptions()
     );
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p><div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div><p data-selection-placeholder=""><br></p>`
+        `<p data-selection-placeholder=""><br></p><div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="original" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">original</t></div><p data-selection-placeholder=""><br></p>`
     );
 
     await contains(":iframe t[t-out]").click();
@@ -209,27 +209,29 @@ test("edit fields and back", async () => {
     });
     await contains(".o-dynamic-field-popover button.btn-primary").click();
 
-    expect(getContent(el)).toBe(
-        unformat(`
-        <p data-selection-placeholder=""><br></p>
-            <div>a[<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">edited</t>]</div>
-        <p data-selection-placeholder=""><br></p>
-    `)
+    const selectionPlaceholderHtml = `<p data-selection-placeholder=""><br></p>`;
+    const wrapInPlaceholders = (html) => selectionPlaceholderHtml + html + selectionPlaceholderHtml;
+    const originalHtml = wrapInPlaceholders(
+        `<div>[]a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="original" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">original</t></div>`
     );
+    const cleanedOriginalHtml = `<div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="original"></t></div>`;
+    const editedHtml = wrapInPlaceholders(
+        `<div>a[<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">edited</t>]</div>`
+    );
+    const cleanedEditedHtml = `<div>a<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited"></t></div>`;
 
-    expect(getContent(editor.getElContent())).toBe(
-        unformat(`
-        <div>a<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited"></t></div>
-    `)
-    );
+    expect(getContent(el)).toBe(editedHtml);
+    expect(getContent(editor.getElContent())).toBe(cleanedEditedHtml);
 
     editor.shared.history.undo();
     await animationFrame();
-    expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p>` +
-            `<div>[]a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div>` +
-            `<p data-selection-placeholder=""><br></p>`
-    );
+    expect(getContent(el)).toBe(originalHtml);
+    expect(getContent(editor.getElContent())).toBe(cleanedOriginalHtml);
+
+    editor.shared.history.redo();
+    await animationFrame();
+    expect(getContent(el)).toBe(editedHtml);
+    expect(getContent(editor.getElContent())).toBe(cleanedEditedHtml);
 });
 
 test("inserted value from dynamic field should contain the data-oe-t-inline attribute", async () => {

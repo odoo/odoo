@@ -130,18 +130,78 @@ test("mobile and desktop option container", async () => {
     expect(".o_hb_options_container").not.toHaveCount();
 });
 
-test("desktop option undo after override", async () => {
+test("desktop option undo/redo after override", async () => {
     const builder = await setupWebsiteBuilder(`
         <section>test</section>
     `);
     await contains(":iframe section").click();
+
+    // Toggle device visibility (apply no_desktop visibility):
+    // 1. clean: remove `o_snippet_override_invisible`
+    // 2. apply: add `o_snippet_desktop_invisible`
+    // Result: add `o_snippet_desktop_invisible`.
     await contains(
         "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
     ).click();
     expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveClass("o_snippet_desktop_invisible");
+
+    // Toggle target visibility (toggle website visibility) -> add `o_snippet_override_invisible`.
     await contains(".o_we_invisible_entry [data-icon='visibility_off']").click();
     expect(":iframe section").toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveClass("o_snippet_desktop_invisible");
+
+    // Undo:
+    // 2. revert committed mutations: remove `o_snippet_desktop_invisible`
+    // 3. revert "apply toggle device visibility": remove `o_snippet_override_invisible`
+    // 4. revert "clean toggle device visibility": do nothing
+    // Result: remove `o_snippet_desktop_invisible` + remove `o_snippet_override_invisible`.
     builder.getEditor().shared.history.undo();
+    await builder.waitSidebarUpdated();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").not.toHaveClass("o_snippet_desktop_invisible");
+
+    // Redo:
+    // 1. re-apply committed mutations: add `o_snippet_desktop_invisible`
+    // 2. re-apply "clean toggle device visibility": remove `o_snippet_override_invisible`
+    // 3. re-apply "apply toggle device visibility": do nothing
+    // Result: add `o_snippet_desktop_invisible`
+    builder.getEditor().shared.history.redo();
+    await builder.waitSidebarUpdated();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveClass("o_snippet_desktop_invisible");
+
+    // Toggle target visibility (toggle website visibility) -> remove `o_snippet_override_invisible`.
+    await contains(".o_we_invisible_entry [data-icon='visibility']").click();
+    // Toggle target visibility (toggle website visibility) -> add `o_snippet_override_invisible`.
+    await contains(".o_we_invisible_entry [data-icon='visibility_off']").click();
+    expect(":iframe section").toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveClass("o_snippet_desktop_invisible");
+
+    // Toggle device visibility (apply no_desktop visibility)
+    // -> clean: remove `o_snippet_desktop_invisible` + remove `o_snippet_override_invisible`.
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").not.toHaveClass("o_snippet_desktop_invisible");
+
+    // Undo:
+    // 1. revert committed mutations -> add `o_snippet_desktop_invisible`
+    // 2. revert "clean toggle device visibility": do nothing
+    // Result: add `o_snippet_desktop_invisible`.
+    builder.getEditor().shared.history.undo();
+    await builder.waitSidebarUpdated();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    expect(":iframe section").toHaveClass("o_snippet_desktop_invisible");
+
+    // Redo:
+    // 1. re-apply committed mutations -> remove `o_snippet_desktop_invisible`
+    // 2. re-apply "clean toggle device visibility": remove `o_snippet_override_invisible`
+    // Result: remove `o_snippet_desktop_invisible` + remove `o_snippet_override_invisible`.
+    builder.getEditor().shared.history.redo();
+    await builder.waitSidebarUpdated();
+    expect(":iframe section").not.toHaveClass("o_snippet_desktop_invisible");
     expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
 });
 

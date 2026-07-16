@@ -18,9 +18,12 @@ export const PRIORITY_STYLES = {
     hr: new Set(["border-top-width", "border-top-style", "border-top-color"]),
 };
 
+const PLUGIN_ID = "mass_mailing.CustomizeMailingPlugin";
+const ACTION_ID = "mass_mailing.CustomizeMailingVariable";
+
 export class CustomizeMailingPlugin extends Plugin {
-    static id = "mass_mailing.CustomizeMailingPlugin";
-    static dependencies = [];
+    static id = PLUGIN_ID;
+    static dependencies = ["history"];
     static shared = ["getVariableValue", "setVariable"];
 
     resources = {
@@ -219,8 +222,9 @@ export class CustomizeMailingPlugin extends Plugin {
 }
 
 export class CustomizeMailingVariable extends BuilderAction {
-    static id = "mass_mailing.CustomizeMailingVariable";
-    static dependencies = ["builderActions", "color", "mass_mailing.CustomizeMailingPlugin", "domObserver"];
+    static id = ACTION_ID;
+    static dependencies = ["builderActions", "color", "history", PLUGIN_ID];
+
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
     }
@@ -230,9 +234,7 @@ export class CustomizeMailingVariable extends BuilderAction {
      * @param { string } params.property
      */
     getValue({ params }) {
-        const variable = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getVariableValue(
-            params.variable
-        );
+        const variable = this.dependencies[PLUGIN_ID].getVariableValue(params.variable);
         if (!params.variable.includes("color") || !/var\(/g.test(variable)) {
             return variable;
         }
@@ -244,36 +246,17 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
     apply({ params, value }) {
         const oldValue = this.getValue(...arguments);
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
-                    params.variable,
-                    value
-                );
-            },
-            revert: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
-                    params.variable,
-                    oldValue
-                );
-            },
+        this.dependencies.history.stageCustomOperation({
+            apply: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, value),
+            revert: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, oldValue),
         });
     }
     clean({ params }) {
+        const value = params.clean ?? "";
         const oldValue = this.getValue(...arguments);
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
-                    params.variable,
-                    params.clean ?? ""
-                );
-            },
-            revert: () => {
-                this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
-                    params.variable,
-                    oldValue
-                );
-            },
+        this.dependencies.history.stageCustomOperation({
+            apply: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, value),
+            revert: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, oldValue),
         });
     }
 }
