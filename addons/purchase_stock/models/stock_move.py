@@ -193,7 +193,7 @@ class StockMove(models.Model):
             if move.is_in or move.is_dropship:
                 other_candidates_qty += move._get_valued_qty()
             elif move.is_out:
-                other_candidates_qty -= -move._get_valued_qty()
+                other_candidates_qty -= move._get_valued_qty()
 
         if self.product_uom.compare(aml_quantity, other_candidates_qty) <= 0:
             return valuation_data
