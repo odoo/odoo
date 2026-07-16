@@ -310,13 +310,19 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 line.quantity = 1
         reverse_invoice.action_post()
 
+        self.assertEqual(return_picking.move_ids.value, 20, 'Returned component keeps its FIFO value')
+
         amls = reverse_invoice.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
-        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(stock_out_aml.debit, 35, 'Averaged component cost over the sale line moves')
         self.assertEqual(stock_out_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(cogs_aml.debit, 0)
-        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(cogs_aml.credit, 35, 'Averaged component cost over the sale line moves')
+
+        so_cogs_amls = (invoice + reverse_invoice).line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(sum(so_cogs_amls.mapped('debit')) - sum(so_cogs_amls.mapped('credit')), 70)
 
     def test_anglo_saxo_return_and_create_invoice(self):
         """
@@ -411,13 +417,19 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 line.quantity = 1
         reverse_invoice.action_post()
 
+        self.assertEqual(return_picking.move_ids.value, 20, 'Returned component keeps its FIFO value')
+
         amls = reverse_invoice.line_ids
         stock_val_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
-        self.assertEqual(stock_val_aml.debit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(stock_val_aml.debit, 35, 'Averaged component cost over the sale line moves')
         self.assertEqual(stock_val_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(cogs_aml.debit, 0)
-        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(cogs_aml.credit, 35, 'Averaged component cost over the sale line moves')
+
+        so_cogs_amls = (invoice + reverse_invoice).line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(sum(so_cogs_amls.mapped('debit')) - sum(so_cogs_amls.mapped('credit')), 70)
 
     def test_kit_avco_fully_owned_and_delivered_invoice_post_delivery(self):
         self.stock_account_product_categ.property_cost_method = 'average'
@@ -461,12 +473,13 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         invoice = so._create_invoices()
         invoice.action_post()
 
-        # COGS should not exist because the products are owned by an external partner
         amls = invoice.line_ids
         self.assertRecordValues(amls, [
             # pylint: disable=bad-whitespace
-            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 5},
-            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 5,     'credit': 0},
+            {'account_id': self.company_data['default_account_revenue'].id,          'debit': 0,     'credit': 5},
+            {'account_id': self.company_data['default_account_receivable'].id,       'debit': 5,     'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id,  'debit': 0,     'credit': 0},
+            {'account_id': self.company_data['default_account_expense'].id,          'debit': 0,     'credit': 0},
         ])
 
     def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
@@ -807,9 +820,18 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         invoice_2.action_post()
         invoice_2_cogs_amls = invoice_2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
         self.assertRecordValues(invoice_2_cogs_amls, [
-            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 20},
-            {'account_id': self.company_data['default_account_expense'].id,           'debit': 20,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 15},
+            {'account_id': self.company_data['default_account_expense'].id,           'debit': 15,    'credit': 0},
         ])
+
+        invoice_1_cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
+        self.assertRecordValues(invoice_1_cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 15},
+            {'account_id': self.company_data['default_account_expense'].id,           'debit': 15,    'credit': 0},
+        ])
+        all_cogs_amls = (invoice + invoice_2).line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertEqual(sum(all_cogs_amls.mapped('debit')), 30)
+        self.assertEqual(sum(all_cogs_amls.mapped('credit')), 30)
 
     def test_cogs_kit_multi_steps_first_step_validated(self):
         """ Check that cogs are correct for a kit with multiple components product when we are in multi steps delivery
@@ -821,7 +843,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         compo01 = self._create_product(name='Compo 01', is_storable=True, standard_price=10)
         compo02 = self._create_product(name='Compo 02', is_storable=True, standard_price=20)
-        kit = self._create_product(name='Kit', is_storable=True, standard_price=0, invoice_policy='order')
+        kit = self._create_product(name='Kit', is_storable=True, standard_price=30, invoice_policy='order')
 
         self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
         self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1)

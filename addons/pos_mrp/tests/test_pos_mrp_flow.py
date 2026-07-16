@@ -379,12 +379,13 @@ class TestPosMrp(CommonPosMrpTest):
 
         # Edit kit product and component product
         self.product_product_kit_one.categ_id = self.category_fifo_realtime
-        self.product_product_comp_one.standard_price = 12000
-        self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_dozen').id
+        self.product_product_comp_one.standard_price = 1000
+        self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_unit').id
 
         # Edit kit product quantity
+        self.bom_one_line.bom_line_ids[0].product_id.categ_id = self.category_fifo_realtime
         self.bom_one_line.bom_line_ids[0].product_qty = 1
-        self.bom_one_line.bom_line_ids[0].uom_id = self.env.ref('uom.product_uom_unit').id
+        self.bom_one_line.bom_line_ids[0].uom_id = self.env.ref('uom.product_uom_dozen').id
         self.bom_one_line.product_qty = 1
 
         order, _ = self.create_backend_pos_order({
@@ -399,7 +400,7 @@ class TestPosMrp(CommonPosMrpTest):
                 {'payment_method_id': self.cash_payment_method.id}
             ]
         })
-        self.assertEqual(order.lines[0].total_cost, 1000.0)
+        self.assertAlmostEqual(order.lines[0].total_cost, 12000.0)
 
     def test_bom_kit_different_uom_invoice_valuation_no_invoice(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B

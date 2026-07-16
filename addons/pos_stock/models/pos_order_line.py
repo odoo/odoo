@@ -139,7 +139,7 @@ class PosOrderLine(models.Model):
 
     def _get_product_cost_with_moves(self, moves):
         self.ensure_one()
-        return moves._get_price_unit()
+        return moves._get_price_unit(product=self.product_id, include_consumable=True)
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
         self.ensure_one()

@@ -2881,7 +2881,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         expense_line = invoice.line_ids.filtered(lambda line: line.account_name == "Expenses")
         correct_amount = 16  # 2.5 * 4 + 6 * 1
         self.assertTrue(expense_line, "COGS entry was not generated")
-        self.assertAlmostEqual(expense_line.debit, correct_amount, "COGS entry has the incorrect ammount")
+        self.assertEqual(expense_line.debit, correct_amount, "COGS entry has the incorrect ammount")
 
     def test_mto_manufacture_so_qty_update_merges_finished_moves(self):
         """

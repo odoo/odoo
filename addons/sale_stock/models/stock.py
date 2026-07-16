@@ -14,6 +14,25 @@ class StockMove(models.Model):
     _inherit = "stock.move"
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
+    @api.depends('sale_line_id.invoice_lines.parent_state', 'is_valued')
+    def _compute_cogs_aml_ids(self):
+        super()._compute_cogs_aml_ids()
+        amls = self.env['account.move.line'].search([
+            ('cogs_origin_id', 'in', self.sale_line_id.invoice_lines.ids),
+        ])
+        aml_ids_by_sale_line = defaultdict(set)
+        for aml in amls:
+            for so_line in aml.cogs_origin_id.sale_line_ids:
+                aml_ids_by_sale_line[so_line].add(aml.id)
+        move_by_sale_order_line = defaultdict(set)
+        for move in self:
+            if not move.is_valued:
+                continue
+            move_by_sale_order_line[move.sale_line_id].add(move.id)
+        for sale_order_line_id, aml_ids in aml_ids_by_sale_line.items():
+            moves = self.env['stock.move'].browse(move_by_sale_order_line[sale_order_line_id])
+            moves.cogs_aml_ids = self.env['account.move.line'].browse(aml_ids)
+
     @api.depends('sale_line_id', 'sale_line_id.product_uom_id')
     def _compute_packaging_uom_id(self):
         super()._compute_packaging_uom_id()
@@ -90,16 +109,6 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
-    def _get_related_invoices(self):
-        """ Overridden from stock_account to return the customer invoices
-        related to this stock move.
-        """
-        rslt = super(StockMove, self)._get_related_invoices()
-        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state == 'posted')
-        rslt += invoices
-        #rslt += invoices.mapped('reverse_entry_ids')
-        return rslt
-
     def _get_source_document(self):
         res = super()._get_source_document()
         return self.sale_line_id.order_id or res
@@ -120,9 +129,6 @@ class StockMove(models.Model):
                     render_values={'self': picking_id, 'origin': sale_order_id},
                     subtype_xmlid='mail.mt_note',
                 )
-
-    def _get_all_related_sm(self, product):
-        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
     def write(self, vals):
         res = super().write(vals)

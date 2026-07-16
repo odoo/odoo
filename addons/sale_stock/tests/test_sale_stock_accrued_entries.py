@@ -603,13 +603,13 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             # Accrued revenues entries.
             {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 450},
             {'account_id': self.account_expense.id, 'debit': 450, 'credit': 0},
-            {'account_id': account_variation.id, 'debit': 0, 'credit': 229.41},
-            {'account_id': self.account_expense.id, 'debit': 229.41, 'credit': 0},
+            {'account_id': account_variation.id, 'debit': 0, 'credit': 225},
+            {'account_id': self.account_expense.id, 'debit': 225, 'credit': 0},
             # Reversal of accrued revenues entries.
             {'account_id': self.account_revenue.id, 'debit': 450, 'credit': 0},
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 450},
-            {'account_id': account_variation.id, 'debit': 229.41, 'credit': 0},
-            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 229.41},
+            {'account_id': account_variation.id, 'debit': 225, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 225},
         ])
 
     def test_accrued_order_from_sale_order_with_draft_invoice(self):

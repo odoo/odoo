@@ -6,7 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 VALUATION_DICT = {
     'value': 0,
@@ -18,6 +18,11 @@ VALUATION_DICT = {
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    cogs_aml_ids = fields.Many2many(
+        'account.move.line', string="COGS lines",
+        compute='_compute_cogs_aml_ids', compute_sudo=True,
+        help="Account move lines using this move in order to compute their COGS"
+    )
     to_refund = fields.Boolean(
         "Update quantities on SO/PO", copy=True, default=True,
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
@@ -68,6 +73,9 @@ class StockMove(models.Model):
     def _compute_standard_price(self):
         for move in self:
             move.standard_price = move.product_id.with_company(move.company_id).standard_price
+
+    def _compute_cogs_aml_ids(self):
+        self.cogs_aml_ids = False
 
     @api.depends('state', 'move_line_ids')
     def _compute_is_in(self):
@@ -152,6 +160,8 @@ class StockMove(models.Model):
         res = super().write(vals)
         if recompute_date:
             impacted_moves._set_value(recompute_date=recompute_date)
+        if vals.get('value'):
+            self.cogs_aml_ids._set_cogs()
         return res
 
     def _read_group_select(self, table, aggregate_spec):
@@ -215,6 +225,7 @@ class StockMove(models.Model):
         moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
+        moves.cogs_aml_ids._set_cogs()
         moves._create_account_move()
         # Update standard price on outgoing fifo or lot valuated average products
         moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
@@ -264,7 +275,7 @@ class StockMove(models.Model):
         else:
             debit_acc = self.location_dest_id.valuation_account_id
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
-        value = self._get_aml_value()
+        value = self._get_price_unit(exclude_external_cost=True) * self._get_valued_qty()
         return [{
             'account_id': credit_acc.id,
             'name': self.reference + ' - ' + self.product_id.name,
@@ -279,38 +290,32 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
         }]
 
-    def _get_aml_value(self):
-        self.ensure_one()
-        if self.is_in:
-            return self.value
-        else:
-            return -self.value
-
     def _get_analytic_distribution(self):
         return {}
 
-    def _get_price_unit(self):
-        """ Returns the unit price to value this stock move """
-        if len(self.product_id) > 1:
-            return 0
-        total_value = sum(self.mapped('value'))
-        total_qty = sum(m._get_valued_qty(signed=True) for m in self)
-        return total_value / total_qty if total_qty else 0
+    def _get_price_unit(self, product=None, include_consigned=False, include_consumable=False):
+        """ Returns the unit price to value this stock move.
 
-    def _get_cogs_price_unit(self, quantity=0):
-        """ Returns the COGS unit price to value this stock move
-        quantity should be given in product uom """
-
+        :param product: the finished product the moves relate to. Unused here; kit
+            (phantom BoM) valuation relies on it (see ``mrp_account``).
+        :param include_consigned: divide by the full moved quantity, consigned
+            included. Consigned quantities carry no value, so the consigned share
+            of the moves generates no cost (e.g. no COGS).
+        :param include_consumable: value consumable products (which carry no valuation
+            layer, hence a zero value) at their standard price instead of at zero.
+        """
         if len(self.product_id) > 1:
-            return 0
-        total_qty = sum(m._get_valued_qty(signed=True) for m in self)
-        valued_consigned_qty = self._get_valued_consigned_qty()
-        total_valued_qty = total_qty - valued_consigned_qty
-        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
-            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
-            return sum(self.mapped('value')) / total_valued_qty
+            if not product:
+                raise ValidationError(self.env._('Product should be passed as an argument in order to get the unit price for moves in a kit.'))
+            return product.standard_price
+        total_value = sum(m._get_value() if include_consumable else m.value for m in self)
+        if include_consumable:
+            total_qty = sum(m.uom_id._compute_quantity(m.quantity, m.product_id.uom_id) for m in self)
+        elif include_consigned:
+            total_qty = sum(m.uom_id._compute_quantity(m.quantity, m.product_id.uom_id) * (-1 if m.is_out else 1) for m in self)
         else:
-            return self.product_id.standard_price
+            total_qty = sum(m._get_valued_qty(signed=True) for m in self)
+        return total_value / total_qty if total_qty else 0
 
     def _set_value(self, recompute_date=None, skip_check=False):
         """Set the value of the move.
@@ -709,12 +714,6 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
 
-    def _get_related_invoices(self):  # To be overridden in purchase and sale_stock
-        """ This method is overrided in both purchase and sale_stock modules to adapt
-        to the way they mix stock moves with invoices.
-        """
-        return self.env['account.move']
-
     def _is_returned(self, valued_type):
         self.ensure_one()
         if valued_type == 'in':
@@ -722,11 +721,3 @@ class StockMove(models.Model):
         if valued_type == 'out':
             return self.location_dest_id and self.location_dest_id.usage == 'supplier'
         return bool(self.picking_id.return_picking_id)
-
-    def _get_valued_consigned_qty(self):
-        consigned_lines = self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line())
-        consigned_qty = sum(
-            sml.quantity_product_uom * (-1 if sml.location_dest_id._should_be_valued() else 1)
-            for sml in consigned_lines
-        )
-        return consigned_qty

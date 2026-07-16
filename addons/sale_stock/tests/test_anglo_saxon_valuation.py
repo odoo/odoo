@@ -118,9 +118,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 22)
+        self.assertEqual(stock_out_aml.credit, 12)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 22)
+        self.assertEqual(cogs_aml.debit, 12)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml.debit, 12)
@@ -603,7 +603,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Deliver both products (there should be two SML)
         sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
         sale_order.picking_ids.button_validate()
-
         # Invoice
         invoice01 = sale_order._create_invoices()
         invoice01.action_post()
@@ -640,6 +639,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
             {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 0},
         ])
 
     # -------------------------------------------------------------------------
@@ -674,6 +675,36 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         income_aml = amls.filtered(lambda aml: aml.account_id == self.account_income)
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
+
+    def test_fifo_update_ongoing_move_value_updates_cogs(self):
+        """COGS must follow a later revaluation of the incoming move that backs it.
+
+        Receive 1 @ 8, then sell, deliver and invoice 1: the COGS is booked at the
+        cost of the received unit (8). The value of that reception is then corrected
+        to 10 (e.g. a late vendor bill changing the cost). The correction is replayed
+        through the valuation: the delivery move is revalued to 10, and writing that
+        new value propagates to the COGS entry the move feeds, so the expense booked
+        for the product becomes 10 instead of 8.
+        """
+        self.product_fifo_auto.invoice_policy = 'delivery'
+
+        in_move = self._make_in_move(self.product_fifo_auto, 1, 8)
+
+        sale_order = self._so_deliver(self.product_fifo_auto, 1, 12)
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        delivery_move = sale_order.picking_ids.move_ids
+        self.assertEqual(delivery_move.value, -8)
+        self.assertEqual(sum(self._get_expense_move_lines().mapped('balance')), 8)
+        cogs_amls = invoice.line_ids.filtered(lambda aml: aml.display_type == 'cogs')
+        self.assertEqual(delivery_move.cogs_aml_ids, cogs_amls)
+
+        in_move.value_manual = 10
+
+        self.assertEqual(in_move.value, 10)
+        self.assertEqual(delivery_move.value, -10)
+        self.assertEqual(sum(self._get_expense_move_lines().mapped('balance')), 10)
 
     def test_fifo_ordered_invoice_post_partial_delivery(self):
         """Receive 1@8, 1@10, so 2@12, standard price 12, deliver 1, invoice 2: the COGS amount
@@ -837,7 +868,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     def test_fifo_delivered_invoice_post_delivery_2(self):
         """Receive at 8 then at 10. Sale order 10@12 and deliver without receiving the 2 missing.
-        receive 2@12. Invoice."""
+        receive 12@2. Invoice."""
         self.product_fifo_auto.invoice_policy = 'delivery'
         self.product_fifo_auto.standard_price = 10
 
@@ -848,7 +879,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # Make the second receipt
         in_move = self._make_in_move(self.product_fifo_auto, 12, 2)
-        self.assertEqual(in_move.value, 24)  # we sent two at 10 but they should have been sent at 12
+        self.assertEqual(in_move.value, 24)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -859,9 +890,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 100)
+        self.assertEqual(stock_out_aml.credit, 84)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 100)
+        self.assertEqual(cogs_aml.debit, 84)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml.debit, 120)
@@ -953,9 +984,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         ])
 
     def test_fifo_delivered_invoice_post_delivery_4(self):
-        """Receive 8@10. Sale order 10@12. Deliver and also invoice it without receiving the 2 missing.
-        Now, receive 2@12. Make sure price difference is correctly reflected in expense account at
-        closing."""
+        """Receive 8@10. Sale order 10@12. Deliver and also invoice it without receiving the
+        2 missing. Now, receive 2@12. The late receipt refills the oversold quantity at its
+        real cost: the delivery is revalued and the posted COGS follows, so there is nothing
+        left to book at closing."""
         self.product_fifo_auto.invoice_policy = 'delivery'
         self.product_fifo_auto.standard_price = 10
 
@@ -965,20 +997,20 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Create and confirm a sale order for 10@12
         sale_order = self._so_deliver(self.product_fifo_auto, 10, 12)
 
-        # Invoice the sale order.
         invoice = sale_order._create_invoices()
         invoice.action_post()
+        delivery_move = sale_order.picking_ids.move_ids
+        self.assertEqual(delivery_move.value, -100)
 
-        # Make the second receipt
         self._make_in_move(self.product_fifo_auto, 2, 12)
         self._create_bill(self.product_fifo_auto, 2, 12)
 
-        # check the last anglo saxon move line
-        closing_move = self._close()
-        self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 4.0},
-            {'account_id': self.account_stock_variation.id, 'debit': 4.0, 'credit': 0.0},
-        ])
+        self.assertEqual(delivery_move.value, -104)
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.account_id == self.account_stock_valuation)
+        self.assertEqual(cogs_aml.credit, 104)
+
+        with self.assertRaises(UserError):
+            self._close()
 
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
         """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
@@ -1191,9 +1223,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(aml[3].credit, 0.0)
 
     def test_fifo_return_and_credit_note(self):
-        """
-        When posting a credit note for a returned product, the value of the anglo-saxo lines
-        should be based on the returned product's value
+        """When posting a credit note for a returned product, the COGS is re-evaluated
+        at the sale line's average cost, like any other COGS line.
         """
         # Receive one @10, one @20 and one @60
         svl_values = [10, 20, 60]
@@ -1238,11 +1269,11 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         amls = reverse_invoice.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
-        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(stock_out_aml.debit, 35, 'Should be to the average move value')
         self.assertEqual(stock_out_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
         self.assertEqual(cogs_aml.debit, 0)
-        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(cogs_aml.credit, 35, 'Should be to the average move value')
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
@@ -1252,8 +1283,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     def test_fifo_return_and_create_invoice(self):
         """
-        When creating an invoice for a returned product, the value of the anglo-saxo lines
-        should be based on the returned product's value
+        When creating an invoice for a returned product, the COGS is re-evaluated
+        at the sale line's average cost, like any other COGS line.
         """
         self.product_fifo_auto.invoice_policy = 'delivery'
 
@@ -1298,11 +1329,11 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         amls = reverse_invoice.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
-        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(stock_out_aml.debit, 35, 'Should be to the average move value')
         self.assertEqual(stock_out_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
         self.assertEqual(cogs_aml.debit, 0)
-        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(cogs_aml.credit, 35, 'Should be to the average move value')
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
@@ -1354,14 +1385,13 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_fifo_several_invoices_reset_repost(self):
         self.product_fifo_auto.invoice_policy = 'delivery'
 
-        svl_values = [10, 15, 65]
-        total_value = sum(svl_values)
-        for val in svl_values:
+        in_values = [10, 15, 65]
+        total_value = sum(in_values)
+        for val in in_values:
             self._make_in_move(self.product_fifo_auto, 1, val)
 
         so = self._so_deliver(self.product_fifo_auto, 3, 100, picking=False)
 
-        # Deliver one by one, so it creates an out-SVL each time.
         # Then invoice the delivered quantity
         invoices = self.env['account.move']
         picking = so.picking_ids
@@ -1376,17 +1406,18 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             invoice.action_post()
             invoices |= invoice
 
+        cogs_value = total_value / len(in_values)
         out_account = self.account_stock_valuation
         invoice01, _invoice02, invoice03 = invoices
         cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
-        self.assertEqual(cogs.mapped('credit'), svl_values)
+        self.assertEqual(cogs.mapped('credit'), [cogs_value] * len(in_values))
 
         # Reset and repost each invoice
         for i, inv in enumerate(invoices):
             inv.button_draft()
             inv.action_post()
             cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
-            self.assertEqual(cogs.mapped('credit'), svl_values, 'Incorrect values while posting again invoice %s' % (i + 1))
+            self.assertEqual(cogs.mapped('credit'), [cogs_value] * len(in_values), 'Incorrect values while posting again invoice %s' % (i + 1))
 
         # Reset and repost all invoices (we only check the total value as the
         # distribution changes but does not really matter)
