@@ -1443,6 +1443,42 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
 
+    def test_avco_credit_note_without_return(self):
+        """
+        Reversing an invoice without returning the delivered goods should post the COGS
+        at the cost of the original delivery/invoice, not at the current average cost,
+        even if the average cost changed since the invoice was posted.
+        """
+        self.product.categ_id.property_cost_method = 'average'
+        self.product.invoice_policy = 'order'
+        self.product.standard_price = 10
+
+        # Put two items in stock.
+        self._inv_adj_two_units()
+
+        # Create, confirm, deliver and invoice a sale order for 2@12.
+        sale_order = self._so_and_confirm_two_units()
+        sale_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
+        sale_order.picking_ids.button_validate()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        cogs_aml = invoice.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 20)
+
+        self.product.standard_price = 30
+
+        refund_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=invoice.ids,
+        ).create({'journal_id': invoice.journal_id.id})
+        action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        cogs_aml = credit_note.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 0)
+        self.assertEqual(cogs_aml.credit, 20)
+
     def test_fifo_return_and_create_invoice(self):
         """
         When creating an invoice for a returned product, the value of the anglo-saxo lines
