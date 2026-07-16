@@ -174,6 +174,9 @@ class AccountMoveLine(models.Model):
             is_line_reversing = False
             if self.move_id.move_type == 'out_refund' and not move_is_downpayment:
                 is_line_reversing = True
+            if is_line_reversing and not so_line.move_ids.filtered(lambda m: m.origin_returned_move_id):
+                return price_unit
+
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             if self.move_id.move_type == 'out_refund' and move_is_downpayment:
                 qty_to_invoice = -qty_to_invoice
