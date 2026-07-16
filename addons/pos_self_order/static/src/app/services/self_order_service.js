@@ -315,7 +315,9 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
-        this.printKioskChanges(access_token);
+        if (this.kioskMode) {
+            this.printKioskChanges(access_token);
+        }
         this.resetCategorySelection();
     }
 
@@ -535,10 +537,6 @@ export class SelfOrder extends Reactive {
     }
 
     async printKioskChanges(access_token = "") {
-        if (!this.kioskMode) {
-            return;
-        }
-
         const d = new Date();
         let hours = "" + d.getHours();
         hours = hours.length < 2 ? "0" + hours : hours;
