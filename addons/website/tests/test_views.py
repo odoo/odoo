@@ -515,7 +515,7 @@ class TestViewSaving(TestViewSavingCommon):
         })
         view.with_context(lang='fr_FR').arch = "<div>Bonjour Monde</div>"
 
-        # delayed translations are enabled by default (SavePlugin.saveView uses it by default)
+        # delayed translations are enabled by default (WebsiteSavePlugin.saveElements uses it by default)
         view.with_context(delay_translations=True).save(value='<div>New World</div>', xpath='/div')
         self.assertEqual(
             view.with_context(lang='fr_FR').arch,
