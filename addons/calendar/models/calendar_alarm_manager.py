@@ -28,9 +28,9 @@ class CalendarAlarm_Manager(models.AbstractModel):
             FROM
                 calendar_alarm_calendar_event_rel AS rel
             LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.alarm_type = %s
+            WHERE alarm.alarm_type = %(alarm_type)s
             GROUP BY rel.calendar_event_id
-        """, alarm_type)
+        """, alarm_type=alarm_type)
         base_request = SQL("""
             SELECT
                 cal.id,
@@ -45,9 +45,9 @@ class CalendarAlarm_Manager(models.AbstractModel):
             INNER JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
             INNER JOIN calendar_event_res_partner_rel AS part_rel
                 ON part_rel.calendar_event_id = cal.id
-                AND part_rel.res_partner_id IN %s
+                AND part_rel.res_partner_id IN %(partner_ids)s
             WHERE cal.active = True
-        """, tuple(partners.ids))
+        """, partner_ids=tuple(partners.ids))
 
         # Upper bound on first_alarm of requested events
         # first alarm in the future + 3 minutes if there is one, now otherwise
@@ -60,12 +60,17 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
         self.env.flush_all()
         self.env.cr.execute(SQL("""
-            WITH calcul_delta AS (%s)
+            WITH calcul_delta AS (%(delta_request)s)
             SELECT *
-                FROM ( %s ) AS ALL_EVENTS
-            WHERE ALL_EVENTS.first_alarm < %s
-                AND ALL_EVENTS.last_alarm > (%s)
-        """, delta_request, base_request, first_alarm_max_value, self.env.cr.now()))
+                FROM ( %(base_request)s ) AS ALL_EVENTS
+            WHERE ALL_EVENTS.first_alarm < %(first_alarm_max_value)s
+                AND ALL_EVENTS.last_alarm > %(now)s
+        """,
+            delta_request=delta_request,
+            base_request=base_request,
+            first_alarm_max_value=first_alarm_max_value,
+            now=self.env.cr.now(),
+        ))
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self.env.cr.fetchall():
             result[event_id] = {
