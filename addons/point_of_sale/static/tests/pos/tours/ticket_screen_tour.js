@@ -501,3 +501,33 @@ registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on
             FeedbackScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_edit_payment_closes_order_info_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            {
+                content: `Select button Order Info`,
+                trigger: `.ticket-screen td[name='info-column'] button.text-info`,
+                run: "click",
+                isActive: ["desktop"],
+            },
+            { ...Dialog.is({ title: "Order Details: 1001" }), isActive: ["desktop"] },
+            {
+                content: `Click button Edit Payment`,
+                trigger: `.modal:not(.o_inactive_modal) .modal-body button:contains('Edit Payment')`,
+                run: "click",
+                isActive: ["desktop"],
+            },
+            { ...Dialog.isNot(), isActive: ["desktop"] },
+            Chrome.endTour(),
+        ].flat(),
+});

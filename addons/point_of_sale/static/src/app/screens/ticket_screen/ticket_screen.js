@@ -251,7 +251,10 @@ export class TicketScreen extends Component {
     _onInfoOrder(order) {
         this.dialog.add(OrderDetailsDialog, {
             order,
-            editPayment: () => this.pos.editPayment(order),
+            editPayment: () => {
+                this.dialog.closeAll();
+                this.pos.editPayment(order);
+            },
         });
     }
     async onClickReprintAll(order) {

@@ -3898,6 +3898,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         created_order = self.env['pos.order'].search([('partner_id', '=', partner.id)], limit=1)
         self.assertNotEqual(created_order.pricelist_id, not_available_pricelist)
 
+    def test_edit_payment_closes_order_info_dialog(self):
+        """ Test that the OrderInfo dialog must be closed on click edit payment. """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_edit_payment_closes_order_info_dialog")
+
     def test_pos_open_ui_button(self):
         """ Test the Open Register button click behavior in the dashboard. """
         self.start_tour("/odoo/point-of-sale", 'test_pos_open_ui_button', login="pos_user")
