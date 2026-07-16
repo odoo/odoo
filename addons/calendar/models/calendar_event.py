@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from werkzeug.urls import url_parse
+from werkzeug.urls import url_encode, url_parse
 
 from odoo import api, fields, models
 from odoo.fields import Command, Domain
@@ -174,7 +174,9 @@ class CalendarEvent(models.Model):
     location = fields.Char('Location', tracking=True)
     notes = fields.Html('Notes')  # Unlike description, internal use only
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
-    access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
+    access_token = fields.Char('Invitation Token', default=lambda self: str(uuid.uuid4()), copy=False, readonly=True)
+    google_calendar_url = fields.Char('Google Calendar URL', compute="_compute_google_calendar_url",
+        help="Link to manually add the meeting to Google Calendar")
     videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
     videocall_channel_id = fields.Many2one('discuss.channel', 'Discuss Channel', index="btree_not_null")
     # visibility
@@ -307,6 +309,11 @@ class CalendarEvent(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+
+    _access_token_unique = models.Constraint(
+        'unique(access_token)',
+        'Access token should be unique',
+    )
 
     @api.onchange("allday")
     def _onchange_allday(self):
@@ -591,6 +598,25 @@ class CalendarEvent(models.Model):
         for event in self:
             event.display_description = not is_html_empty(event.description)
 
+    @api.depends('allday', 'description', 'location', 'name', 'start', 'stop', 'start_date', 'stop_date')
+    def _compute_google_calendar_url(self):
+        for event in self:
+            if not event.allday:
+                url_date_start = fields.Datetime.from_string(event.start).strftime('%Y%m%dT%H%M%SZ')
+                url_date_stop = fields.Datetime.from_string(event.stop).strftime('%Y%m%dT%H%M%SZ')
+            else:
+                url_date_start = fields.Date.from_string(event.start_date).strftime('%Y%m%d')
+                url_date_stop = fields.Date.from_string(event.stop_date).strftime('%Y%m%d')
+            params = {
+                'action': 'TEMPLATE',
+                'text': event._get_customer_summary(),
+                'dates': f'{url_date_start}/{url_date_stop}',
+                'details': event._get_customer_description(),
+            }
+            if event.location:
+                params.update(location=event.location.replace(', ', ' '))
+            event.google_calendar_url = 'https://www.google.com/calendar/render?' + url_encode(params)
+
     @api.depends('partner_ids', 'start', 'stop')
     def _compute_unavailable_partner_ids(self):
         self.unavailable_partner_ids = False
@@ -607,6 +633,14 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.videocall_source == 'discuss':
                 event._set_discuss_videocall_location()
+
+    def _calendar_event_ensure_token(self):
+        """ Get the calendar event access token. Creating one if there's none. """
+        self.ensure_one()
+        if not self.access_token:
+            # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
+            self.sudo().write({'access_token': str(uuid.uuid4())})
+        return self.access_token
 
     def _is_partner_unavailable(self, partner, partner_events):
         self.ensure_one()
@@ -643,9 +677,7 @@ class CalendarEvent(models.Model):
         Note that recurring events will have different access_tokens.
         This is done by design to prevent users not being able to join a discuss meeting because the base event of the recurrency was deleted.
         """
-        if not self.access_token:
-            self.access_token = uuid.uuid4().hex
-        self.videocall_location = f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{self.access_token}"
+        self.videocall_location = f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{self._calendar_event_ensure_token()}"
 
     @api.model
     def get_discuss_videocall_location(self):
