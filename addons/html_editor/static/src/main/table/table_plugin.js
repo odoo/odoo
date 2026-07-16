@@ -1428,6 +1428,9 @@ export class TablePlugin extends Plugin {
             const thead = table.tHead;
 
             if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
                 if (tbody) {
                     // If a <tbody> already exists, move all rows from
                     // <thead> into the start of <tbody>.

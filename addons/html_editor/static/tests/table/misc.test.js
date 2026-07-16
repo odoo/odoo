@@ -348,8 +348,8 @@ describe("normalize table structure", () => {
                 <table>
                     <tbody style="width: 500px;">
                         <tr>
-                            <th>1</th>
-                            <th>2</th>
+                            <th class="o_table_header">1</th>
+                            <th class="o_table_header">2</th>
                         </tr>
                     </tbody>
                 </table>
@@ -373,8 +373,8 @@ describe("normalize table structure", () => {
                 <table>
                     <tbody style="width: 500px;">
                         <tr>
-                            <th>1</th>
-                            <th>2</th>
+                            <th class="o_table_header">1</th>
+                            <th class="o_table_header">2</th>
                         </tr>
                         <tr>
                             <td>3</td>
