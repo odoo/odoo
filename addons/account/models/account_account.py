@@ -757,9 +757,9 @@ class AccountAccount(models.Model):
             ('account_id.active', '=', True),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+        if move_type in self.env['account.move'].get_sale_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+        elif move_type in self.env['account.move'].get_purchase_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'expense'))
 
         query = self.env['account.move.line']._where_calc(domain)
