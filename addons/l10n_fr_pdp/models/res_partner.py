@@ -128,7 +128,7 @@ class ResPartner(models.Model):
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
-        if self.country_code == 'FR' and not self._l10n_fr_pdp_is_b2c():
+        if self.country_code == 'FR' and not self._l10n_fr_pdp_is_b2c() and self.env.company._get_peppol_proxy_type() == 'pdp':
             return 'ubl_21_fr'
         return super()._get_suggested_invoice_edi_format()
 
