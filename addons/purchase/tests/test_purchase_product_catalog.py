@@ -1,4 +1,4 @@
-from odoo import Command, fields
+from odoo import api, Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import HttpCase, tagged
 
@@ -14,6 +14,9 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         converted in the product catalog
         When it's the same currency, the price shouldn't be changed
         """
+        # Enable UoM
+        self.env['res.users'].sudo().browse(api.SUPERUSER_ID).group_ids += self.env.ref('uom.group_uom')
+
         self.authenticate(self.env.user.login, self.env.user.login)
         company_currency = self.env.company.currency_id
         other_currency = self.setup_other_currency('HRK', rates=[(fields.Date.subtract(fields.Date.today(), days=1), 0.5)])
