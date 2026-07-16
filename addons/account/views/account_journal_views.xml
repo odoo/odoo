@@ -160,9 +160,8 @@
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>
-                                    <group string="Automation" groups="account.group_account_manager">
-                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
-                                        />
+                                    <group string="Automation" groups="account.group_account_manager" invisible="type == 'bank'">
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly"/>
                                         <field name="is_self_billing" invisible="type not in ('sale', 'purchase')"/>
                                     </group>
                                     <group string="Emails" name="group_email_alias"
