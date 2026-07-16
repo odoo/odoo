@@ -112,9 +112,12 @@ class AccountMoveLine(models.Model):
                 # for those case only, we can try to reuse one
                 map_entry_key = (sale_order.id, move_line.product_id.id, price)  # cache entry to limit the call to search
                 sale_line = existing_sale_line_cache.get(map_entry_key)
-                if sale_line:  # already search, so reuse it. sale_line can be sale.order.line record or index of a "to create values" in `sale_line_values_to_create`
+                if sale_line is not None:  # already search, so reuse it. sale_line can be sale.order.line record or index of a "to create values" in `sale_line_values_to_create`
                     map_move_sale_line[move_line.id] = sale_line
-                    existing_sale_line_cache[map_entry_key] = sale_line
+                    if isinstance(sale_line, int):
+                        sale_line_values_to_create[sale_line]['product_uom_qty'] += move_line.quantity
+                    else:
+                        sale_line.product_uom_qty += move_line.quantity
                 else:  # search for existing sale line
                     sale_line = self.env['sale.order.line'].search([
                         ('order_id', '=', sale_order.id),
@@ -124,6 +127,7 @@ class AccountMoveLine(models.Model):
                     ], limit=1)
                     if sale_line:  # found existing one, so keep the browse record
                         map_move_sale_line[move_line.id] = existing_sale_line_cache[map_entry_key] = sale_line
+                        sale_line.product_uom_qty += move_line.quantity
                     else:  # should be create, so use the index of creation values instead of browse record
                         # save value to create it
                         sale_line_values_to_create.append(move_line._sale_prepare_sale_line_values(sale_order, price))
