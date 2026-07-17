@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail_group.tests.common import TestMailListCommon
 from odoo.exceptions import ValidationError, AccessError
@@ -249,3 +250,43 @@ class TestMailGroup(TestMailListCommon):
 
         with self.assertRaises(AccessError, msg='Non moderators should not have access to member'):
             member.with_user(self.user_portal).check_access('read')
+
+    def test_mail_group_reply_to_uses_group_name(self):
+        """The Reply-To header should use the mail group's name as display name,
+        not the message author's name."""
+        self.test_group.moderation = False
+        author = self.user_employee.partner_id
+        alias_email = self.test_group.alias_email
+        mail_message = self.test_group.with_user(self.user_employee).message_post(
+            body='<p>Test reply-to header</p>',
+            subject='Test Reply-To',
+            email_from=author.email_formatted,
+            author_id=author.id,
+        )
+        expected_reply_to = tools.formataddr((self.test_group.name, alias_email))
+        self.assertEqual(mail_message.reply_to, expected_reply_to)
+
+        # Verify that the mail.mail records sent to group members carry
+        # the same correct Reply-To
+        mails = self.env['mail.mail'].sudo().search([
+            ('mail_message_id', '=', mail_message.id),
+        ])
+        self.assertTrue(mails)
+        self.assertRecordValues(mails, [{'reply_to': expected_reply_to}] * len(mails))
+
+    def test_mail_group_reply_to_uses_group_name_batch(self):
+        """Verify reply-to calculation on a multi-record recordset (batch mode),
+        and each group's name is used as the Reply-To display name."""
+        self.test_group.moderation = False
+        other_group = self.env['mail.group'].create({
+            'name': 'Other Group',
+            'alias_name': 'other.group',
+        })
+        groups = self.test_group + other_group
+        author = self.user_employee.partner_id
+        reply_tos = groups._notify_get_reply_to(author_id=author.id)
+        expected_reply_test_group = tools.formataddr((self.test_group.name, self.test_group.alias_email))
+        expected_reply_other_group = tools.formataddr((other_group.name, other_group.alias_email))
+
+        self.assertEqual(reply_tos.get(self.test_group.id), expected_reply_test_group)
+        self.assertEqual(reply_tos.get(other_group.id), expected_reply_other_group)

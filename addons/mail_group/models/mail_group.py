@@ -267,6 +267,14 @@ class MailGroup(models.Model):
 
         return None
 
+    def _notify_get_reply_to_name(self, author_id=False):
+        """Use the mail group name as the display name in Reply-To, instead of
+        the author name. For mailing lists, the Reply-To should identify the
+        group (e.g. "My Company News" <newsletter@domain>) so recipients know
+        which list they are replying to."""
+
+        return self.name or super()._notify_get_reply_to_name(author_id)
+
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """Add the method to make the mail gateway flow work with this model."""

@@ -653,7 +653,7 @@ class Base(models.AbstractModel):
         # compute name of reply-to ("Company Document" <alias@domain>)
         reply_to_formatted = dict(defaults)
         for res_id, record_reply_to in reply_to_email.items():
-            reply_to_formatted[res_id] = self._notify_get_reply_to_formatted_email(
+            reply_to_formatted[res_id] = self.browse(res_id)._notify_get_reply_to_formatted_email(
                 record_reply_to,
                 author_id=author_ids[res_id],
             )
@@ -690,10 +690,7 @@ class Base(models.AbstractModel):
                 'Reply-To: %s ', record_email)
             return record_email
 
-        if author_id:
-            author_name = self.env['res.partner'].browse(author_id).name
-        else:
-            author_name = self.env.user.name
+        author_name = self._notify_get_reply_to_name(author_id)
 
         # try user.name alone, then company.name alone
         formatted_email = tools.formataddr((author_name, record_email))
@@ -702,6 +699,17 @@ class Base(models.AbstractModel):
         if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email
+
+    def _notify_get_reply_to_name(self, author_id=False):
+        """ Return the display name to use in the Reply-To formatted email.
+
+        Override this method to customize the display name for specific models
+
+        :param int author_id: optional partner ID of the message author;
+        :return: display name for the Reply-To header;
+        :rtype: str
+        """
+        return self.env['res.partner'].browse(author_id).name if author_id else self.env.user.name
 
     # ------------------------------------------------------------
     # ALIAS MANAGEMENT
