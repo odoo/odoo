@@ -71,7 +71,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
         sign = math.copysign(1.0, amount)
         amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
-        amount_decimal_part = int(amount_decimal_part * 100)
+        amount_decimal_part = round(amount_decimal_part * 100)
 
         text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
         text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
