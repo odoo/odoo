@@ -727,3 +727,25 @@ class StockMove(models.Model):
         if valued_type == 'out':
             return self.location_dest_id and self.location_dest_id.usage == 'supplier'
         return bool(self.picking_id.return_picking_id)
+
+    def _clear_journal_entries(self):
+        account_moves = self.account_move_id
+        account_moves.sudo().button_draft()
+        account_moves.sudo().unlink()
+
+    def _reset_valuation(self, date):
+        self.value = 0
+        self.product_id._correct_inventory_valuation(date)
+        self.product_id._update_standard_price()
+
+    def _action_reset_to_progress(self):
+        date = min(self.mapped('date'))
+        self._clear_journal_entries()
+        super()._action_reset_to_progress()
+        self._reset_valuation(date)
+
+    def _action_reset_to_draft(self):
+        date = min(self.mapped('date'))
+        self._clear_journal_entries()
+        super()._action_reset_to_draft()
+        self._reset_valuation(date)

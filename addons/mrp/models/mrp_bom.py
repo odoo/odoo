@@ -544,9 +544,8 @@ class MrpBom(models.Model):
                 domain_by_products = Domain('product_id', '=', bom.product_id.id)
             else:
                 domain_by_products = Domain('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)
-            domain_for_confirmed_mo = Domain('state', '=', 'confirmed') & domain_by_products
-            # Avoid confirmed MOs if the BoM's product was changed.
-            domain_by_states = Domain('state', '=', 'draft') | domain_for_confirmed_mo
+            domain_for_committed_mo = Domain('state', 'in', ['confirmed', 'progress', 'to_close', 'done']) & domain_by_products
+            domain_by_states = Domain('state', 'in', ['draft', 'cancel']) | domain_for_committed_mo
             list_of_domain_by_bom.append(Domain('bom_id', '=', bom.id) & domain_by_states)
         productions = self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom))
         if productions:
@@ -554,7 +553,7 @@ class MrpBom(models.Model):
         # Manually sets the MO's bom to not outdated if product or its variant is changed.
         if not skip_bom_outdated_unmark:
             for bom in self:
-                template_domain = [('state', '=', 'confirmed'), ('is_outdated_bom', '=', True), ('bom_id', '=', bom.id)]
+                template_domain = [('state', 'in', ['confirmed', 'progress', 'to_close', 'done']), ('is_outdated_bom', '=', True), ('bom_id', '=', bom.id)]
                 if bom.product_id:
                     template_domain.append(('product_id', '!=', bom.product_id.id))
                 else:
@@ -562,6 +561,12 @@ class MrpBom(models.Model):
                 list_of_domain_by_bom_to_unmark.append(template_domain)
             if list_of_domain_by_bom_to_unmark:
                 self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom_to_unmark)).write({'is_outdated_bom': False})
+
+    def _update_order_line_info(self, *args, **kwargs):
+        # for adding/removing products on boms using Catalog
+        res = super()._update_order_line_info(*args, **kwargs)
+        self._set_outdated_bom_in_productions()
+        return res
 
     @api.model
     def _skip_for_no_variant(self, product, bom_attribule_values, never_attribute_values=False):

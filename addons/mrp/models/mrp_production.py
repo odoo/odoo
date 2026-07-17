@@ -2005,7 +2005,7 @@ class MrpProduction(models.Model):
                 production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
 
         if self._has_workorders():
-            self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
+            self.workorder_ids.action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         (finish_moves | raw_moves).with_context(skip_mo_check=True)._action_cancel()
@@ -2021,6 +2021,24 @@ class MrpProduction(models.Model):
             production._log_manufacture_exception(filtered_documents, cancel=True)
 
         return True
+
+    def action_reset_to_progress(self):
+        self.workorder_ids._action_reset_to_progress()
+        (self.move_raw_ids | self.move_finished_ids)._action_reset_to_progress()
+        for production in self:
+            production.write({
+                'state': 'confirmed',
+                'qty_producing': production.product_qty - production.qty_produced,
+        })
+
+    def action_reset_to_draft(self):
+        self.workorder_ids._action_reset_to_draft()
+        (self.move_raw_ids | self.move_finished_ids)._action_reset_to_draft()
+        for production in self:
+            production.write({
+                'state': 'draft',
+                'qty_producing': 0,
+        })
 
     def _get_document_iterate_key(self, move_raw_id):
         return move_raw_id.move_orig_ids and 'move_orig_ids' or False
@@ -2347,6 +2365,8 @@ class MrpProduction(models.Model):
             if production.lot_producing_ids:
                 if production.product_tracking == 'serial' and production.qty_producing and int(production.qty_producing) != len(production.lot_producing_ids):
                     raise UserError(_("Please specify the produced serial numbers."))
+                if production.product_tracking == 'serial' and not production.qty_producing:
+                    production.set_qty_producing()
                 continue
             if not production.qty_producing:
                 production.qty_producing = production.product_qty - production.qty_produced
@@ -2894,7 +2914,7 @@ class MrpProduction(models.Model):
 
         if self.warehouse_id.manufacture_steps in ('pbm', 'pbm_sam'):
             moves_to_unlink.product_uom_qty = 0
-        moves_to_unlink._action_cancel()
+        moves_to_unlink.with_context(skip_mo_check=True)._action_cancel()
         moves_to_unlink.unlink()
         self.bom_id = bom
 
@@ -3020,7 +3040,8 @@ class MrpProduction(models.Model):
             if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed + unremoved == 0):
                 return True
         # Check presence of same sn in current production
-        duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id.id in lots.ids)
+        not_reset_lots = lots.quant_ids.filtered(lambda q: q.location_id.usage == 'production' and q.quantity != 0)
+        duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id.id in not_reset_lots.ids)
         return bool(duplicates)
 
     def _pre_action_split_merge_hook(self, merge=False, split=False):
