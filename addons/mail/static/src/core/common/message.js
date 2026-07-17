@@ -126,14 +126,14 @@ export class Message extends Component {
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = signal.ref(HTMLDivElement);
+        this.isActive = computed(() => Boolean(this._isActive));
+        this.optionsDropdown = useDropdownState();
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
-        this.optionsDropdown = useDropdownState();
-        this.isActive = computed(() => Boolean(this._isActive));
         useSubEnv({ inMessage: true });
         useChildSubEnv({
             message: this.props.message,
@@ -226,7 +226,10 @@ export class Message extends Component {
 
     get messageActionsParams() {
         return {
+            env: this.env,
             message: () => this.message,
+            messageActive: this.isActive,
+            optionsDropdown: this.optionsDropdown,
             rootRef: this.rootRef,
             thread: () => this.props.thread,
         };
