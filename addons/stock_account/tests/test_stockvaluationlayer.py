@@ -505,6 +505,41 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertAlmostEqual(self.product.total_value, 25.33)
         self.assertEqual(self.product.qty_available, 2)
 
+    def _revalue(self, move, value):
+        """ Revalue an already valued move, as posting a vendor bill does for a
+        move valued on receipt"""
+        return self.env['product.value'].with_context(
+            extra_value_by_product=True,
+        ).create({
+            'move_id': move.id,
+            'value': value,
+            'company_id': self.company.id,
+        })
+
+    def test_revalue_move(self):
+        """ Revaluing a move only brings the difference of its value: its
+        quantity is already part of the standard price """
+        self._make_in_move(self.product, 10, unit_cost=10)
+        move = self._make_in_move(self.product, 10, unit_cost=20)
+
+        self._revalue(move, 200)
+        self.assertEqual(self.product.standard_price, 15)
+
+        # 20 more on the 20 units on hand
+        self._revalue(move, 220)
+        self.assertEqual(self.product.standard_price, 16)
+        self.assertEqual(self.product.total_value, 320)
+
+    def test_revalue_move_valued_at_zero(self):
+        """ A move valued at zero is still a valued move: revaluing it must not
+        add its quantity to the standard price a second time"""
+        self._make_in_move(self.product, 10, unit_cost=10)
+        move = self._make_in_move(self.product, 10, unit_cost=10)
+        self._revalue(move, 0)
+        self.assertEqual(self.product.standard_price, 5)
+        self._revalue(move, 0)
+        self.assertEqual(self.product.standard_price, 5)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
