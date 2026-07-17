@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger, urls
@@ -168,6 +170,27 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
 
+    def test_vat_update_if_not_set(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = self.csrf_token()
+
+        with patch(
+            "odoo.addons.portal.models.res_partner.ResPartner._has_confirmed_documents",
+            return_value=True
+        ):
+            res = self._submit_address_values({
+                **self.default_address_values,
+                "vat": "BE0926372368",
+                "csrf_token": csrf_token,
+                "partner_id": self.portal_user.partner_id.id,
+            })
+            self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+            # User should be able to update vat if not set
+            self.assertRecordValues(
+                self.portal_user.partner_id,
+                [{**self.default_address_values, "vat": "BE0926372368"}],
+            )
+
     def test_vat_update_with_parent_name(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()
@@ -188,22 +211,31 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         )
 
     def test_addtional_identifiers_update(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = self.csrf_token()
+
+        res = self._submit_address_values({
+            **self.default_address_values,
+            "ma_ice": "001561191000066",
+            "csrf_token": csrf_token,
+            "partner_id": self.portal_user.partner_id.id,
+        })
+        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+        self.assertRecordValues(
+            self.portal_user.partner_id,
+            [{**self.default_address_values, "additional_identifiers": {"MA_ICE": "001561191000066"}}],
+        )
+
+    def test_addtional_identifiers_update_on_child_addresses(self):
         self.authenticate(self.account_a.login, self.account_a.login)
         csrf_token = self.csrf_token()
-        address_values = {
+
+        res = self._submit_address_values({
             **self.default_address_values,
             "ma_ice": "001561191000066",
             "csrf_token": csrf_token,
             "partner_id": self.account_a.partner_id.id,
-        }
-        res = self._submit_address_values(address_values)
-        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
-        self.assertRecordValues(
-            self.account_a.partner_id,
-            [{**self.default_address_values, "additional_identifiers": {"MA_ICE": "001561191000066"}}],
-        )
-        # Should not be able to update commercial fields on child address if already set
-        res = self._submit_address_values({**address_values, "ma_ice": "001561191000055"})
+        })
         self.assertIn("ma_ice", res["invalid_fields"])
 
     def test_company_name_update(self):

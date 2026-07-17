@@ -674,9 +674,9 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             ],
         })
         partner_1, _partner_2, _partner_3 = partner_company.child_ids
-        self.assertTrue(partner_company._can_edit_commercial_fields())
+        self.assertTrue(partner_company._is_main_contact())
         self.assertTrue(partner_company._can_edit_country())
-        self.assertTrue(all(not p._can_edit_commercial_fields() for p in partner_company.child_ids))
+        self.assertTrue(all(not p._is_main_contact() for p in partner_company.child_ids))
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
 
         dumb_product = self.env["product.product"].create({"name": "test"})
@@ -689,7 +689,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         invoice.action_post()
 
         self.assertEqual(invoice.state, "posted")
-        self.assertFalse(partner_company._can_edit_commercial_fields())
+        self.assertTrue(partner_company._has_confirmed_documents())
         self.assertFalse(partner_company._can_edit_country())
         self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
         invoice = self.env["account.move"].sudo().create({

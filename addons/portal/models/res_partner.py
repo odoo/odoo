@@ -22,13 +22,13 @@ class ResPartner(models.Model):
         self.ensure_one()
         return True
 
-    def _can_edit_commercial_fields(self):
-        """Return whether the commercial fields of the partner can be edited by the customer.
-
-        Commercial fields are synced between the parent (commercial entity) and the children. Only
-        the commercial entity should be able to edit it (as in backend).
-        """
+    def _has_confirmed_documents(self):
+        """Return whether customer has any confirm documents or not."""
         self.ensure_one()
+        return False
+
+    def _is_main_contact(self):
+        """Return whether contact is main contact and not part of actual company."""
         if not self.parent_id:
             return True
 
