@@ -6,10 +6,12 @@
     <div class="o-mail-MessagingMenuItem" t-att-class="this.attClass" t-ref="this.root">
         <NotificationItem t-if="itemProps" t-props="itemProps">
             <t t-set-slot="name">
-                <t name="itemNameBefore">
-                    <Priority t-if="this.message?.thread?.priority" thread="this.message?.thread"/>
-                </t>
-                <t name="itemName"><span t-att-class="{'ms-1': this.message?.thread?.priority}" class="text-truncate" t-out="this.itemName"/></t>
+                <div class="o-mail-MessagingMenuItem-name d-flex text-nowrap">
+                    <t name="itemNameBefore">
+                        <Priority t-if="this.message?.thread?.priority" thread="this.message?.thread"/>
+                    </t>
+                    <t name="itemName"><span t-att-class="{'ms-1': this.message?.thread?.priority}" class="text-truncate" t-out="this.itemName"/></t>
+                </div>
             </t>
             <t t-set-slot="name-after"/>
             <t t-set-slot="body"><span class="o-mail-MessagingMenuItem-body" t-out="this.itemPreviewText"/></t>

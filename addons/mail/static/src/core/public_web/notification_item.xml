@@ -9,9 +9,9 @@
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
                 <t t-if="this.props.slots and this.props.slots.icon" t-call-slot="icon"/>
             </div>
-            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
+            <div class="d-flex flex-column flex-grow-1 align-self-start overflow-x-hidden overflow-y-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name align-items-baseline o-fw-600 text-truncate d-flex" t-att-class="{ 'fs-5': this.ui.isSmall }">
+                    <span class="o-mail-NotificationItem-name align-items-baseline o-fw-600 text-truncate" t-att-class="{ 'fs-5': this.ui.isSmall }">
                         <t t-call-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
