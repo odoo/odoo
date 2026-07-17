@@ -3998,7 +3998,7 @@ class AccountMoveLine(models.Model):
         return self[0].price_unit
 
     def _can_be_unlinked_from_catalog(self):
-        return super()._can_be_unlinked_from_catalog() and self.state in {'draft', 'sent'}
+        return super()._can_be_unlinked_from_catalog() and self.parent_state in {'draft', 'sent'}
 
     # -------------------------------------------------------------------------
     # TOOLING
