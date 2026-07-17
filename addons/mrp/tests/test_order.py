@@ -3585,7 +3585,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_component_addition_to_finished_mo(self):
         """Test that adding a new component move to a finished MO works as intended,
-           where the newly added component move's picked/state values are consistent
+           where the newly added component move's picked/state/date values are consistent
            with the other component moves that are already consumed."""
         with Form(self.env['mrp.production']) as mo_form:
             mo_form.product_id = self.productA
@@ -3597,17 +3597,19 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         mo.action_toggle_is_locked()
 
-        with Form(mo) as mo_form:
-            with mo_form.move_raw_ids.edit(0) as line:
-                line.quantity = 1
-            with mo_form.move_raw_ids.new() as component:
-                component.product_id = self.productC
-                component.quantity = 1
-            mo = mo_form.save()
+        with freeze_time(mo.date_finished + timedelta(minutes=3)):
+            with Form(mo) as mo_form:
+                with mo_form.move_raw_ids.edit(0) as line:
+                    line.quantity = 1
+                with mo_form.move_raw_ids.new() as component:
+                    component.product_id = self.productC
+                    component.quantity = 1
+                mo = mo_form.save()
 
             self.assertRecordValues(mo.move_raw_ids, [{
                 'picked': True,
                 'state': 'done',
+                'date': mo.date_finished,
                 'quantity': 1,
                 'raw_material_production_id': mo.id,
             } for move in mo.move_raw_ids])
@@ -3615,6 +3617,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{
                 'picked': True,
                 'state': 'done',
+                'date': mo.date_finished,
                 'quantity': 1,
                 'production_id': mo.id,
             } for move in mo.move_raw_ids])
