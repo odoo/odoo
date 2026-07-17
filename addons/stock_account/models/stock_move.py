@@ -215,20 +215,14 @@ class StockMove(models.Model):
         return action
 
     def _action_done(self, cancel_backorder=False):
-        # Use _is_out() instead of is_out since the move is not done
-        # It's called before action_done since we need the current fifo
-        # stack. Limitation when validating at same time out and ins
-        self = self.sudo()
-        moves_out = self.filtered(lambda m: m._is_out())
-        moves_out._set_value()
+        self = self.sudo()  # noqa: PLW0642
         moves = super()._action_done(cancel_backorder=cancel_backorder)
-        moves_out = moves_out.exists()
+        moves_out = moves.filtered(lambda m: m.is_out)
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
+        moves_out._set_value()
         moves_in._set_value()
         moves.cogs_aml_ids._set_cogs()
         moves._create_account_move()
-        # Update standard price on outgoing fifo or lot valuated average products
-        moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
         (moves_in | moves_out).sudo()._create_analytic_move()
         return moves
 
@@ -351,6 +345,15 @@ class StockMove(models.Model):
         products_to_recompute = set()
         lots_to_recompute = set()
         fifo_qty_already_processed = defaultdict(float)
+        for move in self:
+            move = move.with_company(move.company_id)
+            if not move.is_out or move.product_id.cost_method != 'fifo':
+                continue
+            if move.product_id.lot_valuated:
+                for move_line in move.move_line_ids.filtered('lot_id'):
+                    fifo_qty_already_processed[move_line.lot_id] -= move_line.quantity_product_uom
+            else:
+                fifo_qty_already_processed[move.product_id] -= move._get_valued_qty()
 
         for move in self:
             move = move.with_company(move.company_id)
@@ -366,8 +369,12 @@ class StockMove(models.Model):
                 move.value = move.sudo()._get_value()
                 continue
             # Outgoing moves
-            if not move._is_out():
+            if not move.is_out:
                 continue
+            if move.product_id.cost_method == 'fifo' or (move.product_id.cost_method == 'average' and move.product_id.lot_valuated):
+                products_to_recompute.add(move.product_id.id)
+            if move.product_id.lot_valuated and move.product_id.cost_method != 'standard':
+                lots_to_recompute.update(move.move_line_ids.lot_id.ids)
             if move.product_id.cost_method == 'fifo':
                 if not move.product_id.lot_valuated:
                     valued_qty = move._get_valued_qty()
