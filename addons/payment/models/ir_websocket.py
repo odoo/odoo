@@ -35,7 +35,7 @@ class IrWebsocket(models.AbstractModel):
                 if tx_id.isdigit() and (
                     tx := self.env["payment.transaction"].browse(int(tx_id)).exists()
                 ):
-                    if payment_utils.generate_access_token([tx.id], env=self.env) == access_token:
+                    if payment_utils.generate_access_token(tx.id, env=self.env) == access_token:
                         new_channels.append(tx)
             else:
                 new_channels.append(channel)
