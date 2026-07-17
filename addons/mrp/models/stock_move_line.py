@@ -36,6 +36,7 @@ class StockMoveLine(models.Model):
                 # traceability report
                 if line.state != 'done':
                     continue
+                line.date = mo.date_finished
                 finished_lots = mo.lot_producing_ids
                 finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
                 if finished_lots:

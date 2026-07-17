@@ -3583,6 +3583,45 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             ('state', '=', 'draft'),
         ]))
 
+    def test_component_addition_to_finished_mo(self):
+        """Test that adding a new component move to a finished MO works as intended,
+           where the newly added component move's picked/state/date values are consistent
+           with the other component moves that are already consumed."""
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.productA
+            with mo_form.move_raw_ids.new() as component:
+                component.product_id = self.productB
+                component.product_uom_qty = 1
+            mo = mo_form.save()
+
+        mo.button_mark_done()
+        mo.action_toggle_is_locked()
+
+        with freeze_time(mo.date_finished + timedelta(minutes=3)):
+            with Form(mo) as mo_form:
+                with mo_form.move_raw_ids.edit(0) as line:
+                    line.quantity = 1
+                with mo_form.move_raw_ids.new() as component:
+                    component.product_id = self.productC
+                    component.quantity = 1
+                mo = mo_form.save()
+
+            self.assertRecordValues(mo.move_raw_ids, [{
+                'picked': True,
+                'state': 'done',
+                'date': mo.date_finished,
+                'quantity': 1,
+                'raw_material_production_id': mo.id,
+            } for move in mo.move_raw_ids])
+
+            self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{
+                'picked': True,
+                'state': 'done',
+                'date': mo.date_finished,
+                'quantity': 1,
+                'production_id': mo.id,
+            } for move in mo.move_raw_ids])
+
     def test_compute_picking_type_id(self):
         """
         Test that the operation type set on the bom is set in the manufacturing order

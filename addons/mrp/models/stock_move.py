@@ -246,6 +246,7 @@ class StockMove(models.Model):
                 values['propagate_cancel'] = mo.propagate_cancel
                 values['reference_ids'] = mo.reference_ids.ids
                 values['production_group_id'] = mo.production_group_id.id
+                values['date'] = mo.date_finished
                 if values.get('raw_material_production_id', False):
                     product = product_id_to_product[values['product_id']]
                     if not product:
@@ -261,7 +262,6 @@ class StockMove(models.Model):
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
-                values['date'] = mo.date_finished
                 values['date_deadline'] = mo.date_deadline
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
