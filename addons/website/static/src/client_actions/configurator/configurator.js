@@ -1,4 +1,4 @@
-import { useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -242,17 +242,17 @@ export class DescriptionScreen extends Component {
         onMounted(() => this.onMounted());
 
         // Autofocus the next field once the current one is confirmed.
-        useLayoutEffect(
-            (selectedType, selectedIndustry) => {
-                if (selectedType && !selectedIndustry) {
-                    this.industrySelection.el?.querySelector("input").focus();
-                }
-                if (selectedIndustry) {
-                    this.purposeSelectionRef.el?.focus();
-                }
-            },
-            () => [this.state.selectedType, this.state.selectedIndustry]
-        );
+        // useLayoutEffect(
+        //     (selectedType, selectedIndustry) => {
+        //         if (selectedType && !selectedIndustry) {
+        //             this.industrySelection.el?.querySelector("input").focus();
+        //         }
+        //         if (selectedIndustry) {
+        //             this.purposeSelectionRef.el?.focus();
+        //         }
+        //     },
+        //     () => [this.state.selectedType, this.state.selectedIndustry]
+        // );
 
         this.safariHackFocusedOutDropdown = null;
         this.fetchImagesRequestId = 0;
