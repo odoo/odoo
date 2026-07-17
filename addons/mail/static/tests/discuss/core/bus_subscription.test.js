@@ -7,12 +7,12 @@ import {
     contains,
     defineMailModels,
     insertText,
+    MENU_ACTIVE_IDS,
     openDiscuss,
     setupChatHub,
     start,
     startServer,
     triggerHotkey,
-    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
