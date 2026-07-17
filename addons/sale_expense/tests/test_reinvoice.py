@@ -559,5 +559,5 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             # Original SO line:
             {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'price_unit': 235.0, 'price_total': 705.0, 'price_subtotal': 705.0, 'is_expense': False},
             # Expense line:
-            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'price_unit': 209.14, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
         ])
