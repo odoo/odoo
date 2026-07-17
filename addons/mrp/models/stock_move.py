@@ -258,6 +258,7 @@ class StockMove(models.Model):
                         values['picked'] = True
                     if mo.state == 'done':
                         values['state'] = 'done'
+                        values['date'] = mo.date_finished
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
