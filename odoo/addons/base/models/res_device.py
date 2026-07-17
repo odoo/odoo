@@ -7,6 +7,7 @@ from odoo import api, fields, models, tools
 from odoo.http import request
 from odoo.http.session import (
     STORED_SESSION_BYTES,
+    collapse_ip_address,
     get_session_max_inactivity,
     logout,
     session_store,
@@ -187,7 +188,7 @@ class ResDevice(models.Model):
             self.is_current = False
             return
         session_identifier = request.session.sid[:STORED_SESSION_BYTES]
-        ip_address = request.httprequest.remote_addr
+        ip_address = collapse_ip_address(request.httprequest.remote_addr)
         user_agent = request.httprequest.user_agent.string
         for device in self:
             device.is_current = \
