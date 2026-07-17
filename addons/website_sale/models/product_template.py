@@ -673,10 +673,7 @@ class ProductTemplate(models.Model):
         comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_product_price_comparison"
         )
-        uom_price_enabled = self.env["res.groups"]._is_feature_enabled(
-            "product.group_show_uom_price"
-        )
-
+        uom_price_enabled = website.show_product_reference_price
         res = {}
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
@@ -946,7 +943,7 @@ class ProductTemplate(models.Model):
             "taxes": taxes,  # taxes after fpos mapping
         })
 
-        if self.env["res.groups"]._is_feature_enabled("product.group_show_uom_price"):
+        if website.show_product_reference_price:
             price_per_product_uom = uom._compute_price(
                 price=combination_info["price"], to_unit=self.uom_id
             )
