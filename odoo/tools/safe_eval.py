@@ -185,7 +185,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'SET_FUNCTION_ATTRIBUTE',
     # 3.14
     'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',  # LOAD_FAST optimizations
-    'POP_ITER',
+    'POP_ITER', 'JUMP_BACKWARD_NO_INTERRUPT',
     # Hardcoded list of constants, does not bypasses __builtins__
     # c.f. https://github.com/python/cpython/blob/9181d776daf87f0e4e2ce02c08f162150fdf7d79/Python/pylifecycle.c#L830-L836
     'LOAD_COMMON_CONSTANT',
