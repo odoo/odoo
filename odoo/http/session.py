@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import contextlib
 import functools
 import glob
+import ipaddress
 import json
 import logging
 import os
@@ -290,6 +292,20 @@ def touch(session: Session):
     session.is_dirty = True
 
 
+def collapse_ip_address(ip_address: str) -> str:
+    # IPv6 unicast and anycast addresses are commonly structured with a 64-bit
+    # network prefix and a 64-bit interface identifier. The interface identifier
+    # is designed to identify a network interface and may change over time (for
+    # example, due to privacy extensions). Using the /64 prefix for device
+    # identification avoids treating the same network endpoint as multiple
+    # devices when only the interface identifier changes.
+    # The downside is that it is no longer possible to tell apart different
+    # hosts in a same network (e.g. multiple coworkers in a same building).
+    with contextlib.suppress(ipaddress.AddressValueError):
+        return str(ipaddress.IPv6Network(f'{ip_address}/64', strict=False))
+    return ip_address
+
+
 def get_device(session: Session, request: Request) -> Device:
     """
     :return: dict that corresponds to the current device
@@ -300,9 +316,10 @@ def get_device(session: Session, request: Request) -> Device:
         session.is_dirty = True
 
     ip_address = request.httprequest.remote_addr
+    ip_address_key = collapse_ip_address(ip_address)
     user_agent = request.httprequest.user_agent.string
     # No collision with different IP addresses
-    device_key = f'{ip_address.encode().hex()}{adler32(user_agent.encode()):x}'
+    device_key = f'{ip_address_key.encode().hex()}{adler32(user_agent.encode()):x}'
 
     with suppress(KeyError):
         return session['_devices'][device_key]
@@ -310,7 +327,7 @@ def get_device(session: Session, request: Request) -> Device:
     geoip = GeoIP(ip_address)
 
     session['_devices'][device_key] = new_device = {
-        'ip_address': ip_address,
+        'ip_address': ip_address_key,
         'user_agent': user_agent,
         'first_activity': int(datetime.now().timestamp()),
         'last_activity': None,
