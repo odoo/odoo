@@ -1,4 +1,4 @@
-import { Component, onWillPatch, onWillStart, plugin, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillPatch, onWillStart, plugin, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -9,7 +9,7 @@ import { omit } from "@web/core/utils/objects";
 import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { onWillRender, render, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -91,6 +91,10 @@ export class ListController extends Component {
         this.editedRecord = null;
         onWillRender(() => {
             this.editedRecord = this.model.root.editedRecord;
+            if (this.model.isReady()) {
+                void this.model.root.selection.length;
+                void this.model.root.isDomainSelected;
+            }
         });
 
         onWillStart(async () => {
@@ -132,24 +136,30 @@ export class ListController extends Component {
             },
         });
 
-        useLayoutEffect(
-            (isReady) => {
-                if (!isReady) {
-                    return;
-                }
-                if (this.uiService.isSmall) {
-                    setScrollFromState();
-                } else {
-                    const { rendererScrollPositions } = this.props.state || {};
-                    if (rendererScrollPositions) {
-                        const renderer = this.rootRef().querySelector(".o_list_renderer");
+        let scrollRestored = false;
+        const restoreScrollPosition = () => {
+            if (scrollRestored || !this.model.isReady() || !this.rootRef()) {
+                return;
+            }
+            scrollRestored = true;
+            if (this.uiService.isSmall) {
+                setScrollFromState();
+            } else {
+                const { rendererScrollPositions } = this.props.state || {};
+                if (rendererScrollPositions) {
+                    const renderer = this.rootRef().querySelector(".o_list_renderer");
+                    if (renderer) {
                         renderer.scrollLeft = rendererScrollPositions.left;
                         renderer.scrollTop = rendererScrollPositions.top;
                     }
                 }
-            },
-            () => [this.model.isReady()]
-        );
+            }
+        };
+        onMounted(() => {
+            scrollRestored = false;
+            restoreScrollPosition();
+        });
+        onPatched(restoreScrollPosition);
 
         usePager(() => {
             if (this.model.useSampleModel) {
@@ -176,12 +186,11 @@ export class ListController extends Component {
             };
         });
 
-        useLayoutEffect(
-            () => {
+        useEffect(() => {
+            if (this.model.isReady() && this.rootRef()) {
                 this.onSelectionChanged();
-            },
-            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
-        );
+            }
+        });
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
         onWillPatch(() => {
