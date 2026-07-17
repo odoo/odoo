@@ -439,8 +439,20 @@
                         />
                     </td>
                 </t>
-                <td t-else="" tabindex="-1" class="w-print-0 p-print-0"/>
+                <td t-else="" tabindex="-1" class="w-print-0 p-print-0">
+                   <button
+                        t-on-click.prevent.stop="() => this.props.list.enterEditMode(record)"
+                        t-if="this.props.list.model.multiEdit and record.selected and !this.uiService.isSmall" 
+                        class="o_mass_edit_btn btn btn-link btn-dark p-0 w-100 text-start"
+                        name="edit"
+                        aria-label="Click to edit the row"
+                        title="Click to edit the row"
+                    >
+                        <i class="fa fa-fw fa-md fa-pencil" role="img" data-icon="pencil" />
+                    </button>
+                </td>
             </t>
+            
         </tr>
     </t>
 

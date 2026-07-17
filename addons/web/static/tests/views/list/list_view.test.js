@@ -21365,3 +21365,24 @@ test("should not crash in lists with groupby node and sample data", async () => 
 
     expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
 });
+
+test.tags("desktop");
+test("mass edit discoverability: pencil icon displays on selected row and enters edit mode", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1">
+            <field name="foo"/>
+            <field name="int_field"/>
+            <field name="reference" optional="hide"/>
+        </list>`,
+    });
+    expect(".o_mass_edit_btn").toHaveCount(0);
+
+    await clickRecordSelector(1);
+    expect(".o_data_row:eq(0) .o_mass_edit_btn").toHaveCount(1);
+
+    await click(`.o_data_row:eq(0) .o_mass_edit_btn`);
+    await animationFrame();
+    expect(".o_selected_row .o_field_widget[name='foo'] input").toBeFocused();
+});
