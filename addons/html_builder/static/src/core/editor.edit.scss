@@ -100,3 +100,28 @@
     // also not work to override important inline style... this is a limitation.
     transition: none !important;
 }
+
+.oe_structure_empty_message {
+    // Empty structure NOT during drag & drop
+    &:not(:has(> .oe_drop_zone)) {
+        &:after {
+            @include o-editor-messages;
+            content: attr(data-editor-message);
+            color: $o-we-dropzone-text-color;
+            font-size: $o-we-dropzone-font-size;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+            font-family: $o-we-font-family;
+            text-shadow: 0 0 5px $o-we-dropzone-sanitized-color
+        }
+    }
+
+    // Empty structure during drag & drop
+    > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
+        @include o-editor-messages;
+        height: auto;
+        width: 100% - 2 * $-editor-messages-margin-x;
+        padding: 112px 0;
+        margin: 20px $-editor-messages-margin-x;
+    }
+}

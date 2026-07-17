@@ -71,6 +71,7 @@ export class BlockTabPlugin extends Plugin {
                                 // Insert the selected snippet.
                                 closestDropzoneEl.after(snippetEl);
                                 this.dependencies.dropzone.removeDropzones();
+                                this.trigger("on_snippet_inserted_handlers", snippetEl);
                                 return snippetEl;
                             },
                             onClose: () => {
