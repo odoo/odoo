@@ -255,7 +255,7 @@ class ResPartner(models.Model):
         if not company:
             company = self.env.company
 
-        self.invalidate_recordset(['routing_identifier'])
+        self._origin.invalidate_recordset(['routing_identifier'])
         self_partner = self.with_company(company)
         if not self_partner.routing_identifier:
             return False
