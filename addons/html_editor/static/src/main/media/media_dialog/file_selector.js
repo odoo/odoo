@@ -227,12 +227,12 @@ export class FileSelector extends Component {
         useListener(modalBody, "scroll", this.debouncedOnScroll);
 
         useEffect(() => {
-            // Re-run each time the attachments change, and once the button is mounted.
-            void this.allAttachments.length;
             const loadMoreButton = this.loadMoreButtonRef();
             if (!loadMoreButton) {
                 return;
             }
+            // Re-run each time the attachments change.
+            void this.allAttachments.length;
             // Hiding the "Load more" button to prevent it from flickering.
             loadMoreButton.classList.add("o_hide_loading");
             this.state.canScrollAttachments = false;
