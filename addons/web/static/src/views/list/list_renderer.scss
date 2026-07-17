@@ -485,6 +485,23 @@
             }
         }
 
+        .o_data_row_selected {
+            --mass-edit-btn-display: none;
+
+            .o_mass_edit_btn {
+                display: var(--mass-edit-btn-display);
+               
+            }
+
+            &:hover {
+                --mass-edit-btn-display: block;
+                td:last-of-type {
+                    position: sticky;
+                    right: 0;
+                }
+            }
+        }
+
         .o_field_x2many_list_row_add,
         .o_group_field_row_add {
             a:focus,
