@@ -428,6 +428,12 @@ class Alias(models.Model):
             'res_model': self.alias_parent_model_id.model,
             'res_id': self.alias_parent_thread_id,
             'type': 'ir.actions.act_window',
+            'context': dict(
+                self.env.context,
+                active_model=self.alias_parent_model_id.model,
+                active_id=self.alias_parent_thread_id,
+                active_ids=[self.alias_parent_thread_id],
+            ),
         }
 
     # ------------------------------------------------------------

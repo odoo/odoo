@@ -431,6 +431,26 @@ class TestMailAlias(TestMailAliasCommon):
             alias.write({'alias_defaults': "{'custom_field': brokendict"})
         alias.write({'alias_defaults': "{'custom_field': 'validdict'}"})
 
+    def test_open_parent_document_context(self):
+        """ Test that opening the parent document correctly updates the context"""
+        parent_record = self.env['res.partner'].create({'name': 'Parent Document'})
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'test_parent_context',
+            'alias_model_id': self.env['ir.model']._get('res.partner').id,
+            'alias_parent_model_id': self.env['ir.model']._get('res.partner').id,
+            'alias_parent_thread_id': parent_record.id,
+        })
+        old_context = {
+            'active_model': 'mail.alias',
+            'active_id': alias.id,
+            'active_ids': [alias.id],
+        }
+        action = alias.with_context(**old_context).open_parent_document()
+        self.assertIn('context', action, "The action should return a context dictionary")
+        self.assertEqual(action['context'].get('active_model'), 'res.partner', "active_model should be the parent model")
+        self.assertEqual(action['context'].get('active_id'), parent_record.id, "active_id should be the parent record ID")
+        self.assertEqual(action['context'].get('active_ids'), [parent_record.id], "active_ids should contain the parent record ID")
+
 
 @tagged('mail_alias', 'multi_company')
 class TestAliasCompany(TestMailAliasCommon):
