@@ -274,6 +274,14 @@ export class DiscussChannel extends Record {
     }
     /** @type boolean */
     is_readonly;
+    /**
+     * Whether this can restore channel in chat hub on UI.
+     * Normally users can't fetch such channel conversations anyway, but there's an exception with the admin.
+     * We restrict open of chat to prevent several issues like the contraint of max 2 members in a "chat".
+     */
+    get canRestoreInChatHub() {
+        return this.channel_type !== "chat" || this.self_member_id;
+    }
     get isHideUntilNewMessageSupported() {
         return Boolean(this.self_member_id);
     }

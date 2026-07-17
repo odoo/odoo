@@ -778,6 +778,35 @@ test("Synced chat windows should open at page load on mobile", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
+test("Should not auto-open direct chat window without self", async () => {
+    // Chat hub state is saved locally on device. If logging out then loggin in with another user,
+    // this shouldn't open direct chat from previous user that the new user not have access.
+    // Normally this is prevented with being unable to fetch the channel, but admin can still fetch.
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.odoobotId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    setupChatHub({ opened: channelIds }); // simulate having both conversations open when logged in as "Demo User"
+    await start();
+    await contains(".o-mail-ChatHub");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-displayName:text(Demo)");
+});
+
 test("chat window of channels should not have 'Open in Discuss' (mobile)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

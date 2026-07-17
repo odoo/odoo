@@ -107,7 +107,7 @@ export class ChatHub extends Record {
         /** @param {import("models").Channel[]} channels */
         const insertChatWindows = (channels) =>
             channels
-                .filter((channel) => channel?.exists())
+                .filter((channel) => channel?.exists() && channel.canRestoreInChatHub)
                 .map((channel) => this.store.ChatWindow.insert({ channel }));
         const toFold = insertChatWindows(foldChannels);
         const toOpen = insertChatWindows(openChannels);
