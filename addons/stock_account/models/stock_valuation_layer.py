@@ -5,7 +5,6 @@ from odoo import api, fields, models, tools
 from odoo.tools import float_compare, float_is_zero
 
 from itertools import chain
-from odoo.tools import groupby
 from collections import defaultdict
 
 
@@ -90,12 +89,18 @@ class StockValuationLayer(models.Model):
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        products_svl = groupby(self, lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
-        for (product, anglo_saxon_accounting), svls in products_svl:
-            svls = self.browse(svl.id for svl in svls)
+        products_svl = self.grouped(lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
+        # Reconcile all the products sharing the same invoices at once
+        anglo_saxon_products = self.env['product.product'].browse(
+            product.id for product, anglo_saxon_accounting in products_svl if anglo_saxon_accounting
+        )
+        products_by_invoices = anglo_saxon_products.grouped(
+            lambda product: products_svl[product, True].stock_move_id._get_related_invoices()
+        )
+        for invoices, products in products_by_invoices.items():
+            invoices._stock_account_anglo_saxon_reconcile_valuation(product=products)
+        for (product, _), svls in products_svl.items():
             moves = svls.stock_move_id
-            if anglo_saxon_accounting:
-                moves._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
             moves = (moves | moves.origin_returned_move_id).with_prefetch(chain(moves._prefetch_ids, moves.origin_returned_move_id._prefetch_ids))
             for aml in moves._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
