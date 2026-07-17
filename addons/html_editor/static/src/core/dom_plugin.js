@@ -460,7 +460,10 @@ export class DomPlugin extends Plugin {
                     if (!insertBefore) {
                         offset += 1;
                     }
-                    if (offset) {
+                    if (
+                        (offset === 1 && !insertBefore) ||
+                        (offset && isVisible(currentNode?.previousSibling))
+                    ) {
                         const [left, right] = this.dependencies.split.splitElement(
                             currentNode.parentElement,
                             offset
