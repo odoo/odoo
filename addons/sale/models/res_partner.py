@@ -84,9 +84,9 @@ class ResPartner(models.Model):
             ("partner_id", "=", self.id),
         ])
 
-    def _can_edit_commercial_fields(self):
-        """Can't edit commercial fields if there is (non draft) issued SO."""
-        return super()._can_edit_commercial_fields() and not self._has_order([
+    def _has_confirmed_documents(self):
+        """Return `True` if there is (non draft) issued SO."""
+        return super()._has_confirmed_documents() or self._has_order([
             ("partner_id", "child_of", self.commercial_partner_id.id)
         ])
 

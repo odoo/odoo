@@ -213,24 +213,18 @@
                         <t t-out="vat_label"/>
                     </label>
                     <input
-                        type="text"
-                        id="o_vat"
                         name="vat"
-                        t-att-value="current_partner.vat"
-                        t-att-readonly="'1' if not can_edit_commercial_fields else None"
+                        id="o_vat"
+                        type="text"
                         class="form-control"
+                        t-att-value="current_partner.vat"
+                        t-att-readonly="'1' if (commercial_fields_warning or vat_warning) else None"
                     />
-                    <div
-                        t-if="not can_edit_commercial_fields and vat_warning"
-                        class="col-12 d-none d-lg-block mb-1"
-                    >
+                    <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
                         <small class="form-text text-muted" t-out="vat_warning"/>
                     </div>
                 </div>
-                <div
-                    t-if="not can_edit_commercial_fields and commercial_fields_warning"
-                    class="col-12 d-none d-lg-block mb-1"
-                >
+                <div t-if="commercial_fields_warning" class="col-12 d-none d-lg-block mb-1">
                     <small class="form-text text-muted">
                         <t t-out="commercial_fields_warning"/>
                         <t t-if="commercial_address_update_url">
