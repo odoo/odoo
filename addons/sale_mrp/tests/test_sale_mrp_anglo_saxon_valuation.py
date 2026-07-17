@@ -818,7 +818,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         compo01 = self._create_product(name='Compo 01', is_storable=True, standard_price=10)
         compo02 = self._create_product(name='Compo 02', is_storable=True, standard_price=20)
-        kit = self._create_product(name='Kit', is_storable=True, standard_price=0)
+        kit = self._create_product(name='Kit', is_storable=True, standard_price=0, invoice_policy='order')
 
         self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
         self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1)
