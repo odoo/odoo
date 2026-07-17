@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 
 export class AccordionItem extends Component {
@@ -17,12 +17,12 @@ export class AccordionItem extends Component {
         onMounted(() => {
             this.contentHeight = this.calculateFullHeight();
         });
-        useLayoutEffect(
-            () => {
-                this.contentHeight = this.calculateFullHeight();
-            },
-            () => [this.props.slots.content]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.contentHeight = this.calculateFullHeight();
+        //     },
+        //     () => [this.props.slots.content]
+        // );
     }
 
     toggle() {
