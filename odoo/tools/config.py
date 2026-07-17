@@ -15,6 +15,7 @@ from os.path import abspath, expanduser, expandvars, normcase, realpath
 
 from passlib.context import CryptContext
 
+import odoo
 from odoo import release
 from odoo.tools.func import classproperty
 
@@ -183,8 +184,122 @@ def _deduplicate_loggers(loggers):
     )
 
 
+class ServerOptions(collections.abc.MutableMapping):
+    def __init__(
+        self,
+        http_options: collections.abc.MutableMapping,
+        cron_options: collections.abc.MutableMapping,
+        gevent_options: collections.abc.MutableMapping,
+    ):
+        self._http_options = http_options
+        self._cron_options = cron_options
+        self._gevent_options = gevent_options
+
+    def _current_options(self):
+        if odoo.evented:
+            return self._gevent_options
+
+        import threading  # noqa: PLC0415
+        current_thread = threading.current_thread()
+
+        if not hasattr(current_thread, 'type'):
+            return {}  # main thread in threaded mode
+        if current_thread.type == 'http':
+            return self._http_options
+        if current_thread.type == 'cron':
+            return self._cron_options
+
+        e = f"{current_thread} unknown worker type: {current_thread.type}"
+        raise RuntimeError(e)
+
+    def __getitem__(self, item):
+        return self._current_options()[item]
+
+    def __setitem__(self, item, value):
+        self._current_options()[item] = value
+
+    def __delitem__(self, item):
+        del self._current_options()[item]
+
+    def __contains__(self, item):
+        return item in self._current_options()
+
+    def __len__(self):
+        return len(self._current_options())
+
+    def __iter__(self):
+        return iter(self._current_options())
+
+
 class configmanager:
     def __init__(self):
+        # self._http_runtime_options = {}
+        # self._http_cli_options = {}
+        # self._http_env_options = {}
+        # self._http_file_options = {}
+        # self._http_default_options = {}
+        # self._http_options = collections.ChainMap(
+        #     self._http_runtime_options,
+        #     self._http_cli_options,
+        #     self._http_env_options,
+        #     self._http_file_options,
+        #     self._http_default_options,
+        # )
+
+        # self._cron_runtime_options = {}
+        # self._cron_cli_options = {}
+        # self._cron_env_options = {}
+        # self._cron_file_options = {}
+        # self._cron_default_options = {}
+        # self._cron_options = collections.ChainMap(
+        #     self._cron_runtime_options,
+        #     self._cron_cli_options,
+        #     self._cron_env_options,
+        #     self._cron_file_options,
+        #     self._cron_default_options,
+        # )
+
+        # self._gevent_runtime_options = {}
+        # self._gevent_cli_options = {}
+        # self._gevent_env_options = {}
+        # self._gevent_file_options = {}
+        # self._gevent_default_options = {}
+        # self._gevent_options = collections.ChainMap(
+        #     self._gevent_runtime_options,
+        #     self._gevent_cli_options,
+        #     self._gevent_env_options,
+        #     self._gevent_file_options,
+        #     self._gevent_default_options,
+        # )
+
+        # self._common_runtime_options = {}
+        # self._common_cli_options = {}
+        # self._common_env_options = {}
+        # self._common_file_options = {}
+        # self._common_default_options = {}
+        # self._common_options = collections.ChainMap(
+        #     self._common_runtime_options,
+        #     self._common_cli_options,
+        #     self._common_env_options,
+        #     self._common_file_options,
+        #     self._common_default_options,
+        # )
+
+        # self._server_options = ServerOptions(
+        #     self._http_options,
+        #     self._cron_options,
+        #     self._gevent_options,
+        # )
+        # self._options = collections.ChainMap(
+        #     self._common_options,
+        #     self._server_options,
+        # )
+
+        self._http_options = {}
+        self._cron_options = {}
+        self._gevent_options = {}
+        self._server_options = ServerOptions(self.http_options, self.cron_options, self._gevent_options)
+
         self._default_options = {}
         self._file_options = {}
         self._env_options = {}
@@ -194,6 +309,7 @@ class configmanager:
             self._runtime_options,
             self._cli_options,
             self._env_options,
+            self._server_options,
             self._file_options,
             self._default_options,
         )
@@ -995,10 +1111,27 @@ class configmanager:
 
     def _load_file_options(self, rcfile):
         self._file_options.clear()
+        self._http_options.clear()
+        self._cron_options.clear()
+        self._gevent_options.clear()
+
         p = ConfigParser.RawConfigParser()
         try:
             p.read([rcfile])
-            for (name, value) in p.items('options'):
+        except OSError as exc:
+            self._log(logging.WARNING, "Couldn't read the config file at %s", rcfile, exc_info=exc)
+            return
+        for section_name, section_options in (
+            ('options', self._file_options),
+            ('http', self._http_options),
+            ('cron', self._cron_options),
+            ('gevent', self._gevent_options),
+        ):
+            try:
+                section = p.items(section_name)
+            except ConfigParser.NoSectionError:
+                continue
+            for (name, value) in section:
                 if name == 'without_demo':
                     name = 'with_demo'
                     value = str(self._check_without_demo(None, 'without_demo', value))
@@ -1010,7 +1143,7 @@ class configmanager:
                             "%s, option stored as-is, without parsing",
                             name, self['config'],
                         )
-                    self._file_options[name] = value
+                    section_options[name] = value
                     continue
                 if not option.file_loadable:
                     continue
@@ -1022,13 +1155,12 @@ class configmanager:
                     # "False" used to be the my_default of many non-bool options
                     self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
                     continue
-                self._file_options[name] = self.parse(name, value)
-        except OSError:
-            pass
-        except ConfigParser.NoSectionError:
-            pass
+                section_options[name] = self.parse(name, value)
 
     def save(self, keys=None):
+        # TODO: save other sections, likely del current_thread.type, save common
+        #       options, restore current_thread.type, save each section using the
+        #       dedicated _(http|cron|gevent)_options dict
         p = ConfigParser.RawConfigParser()
         rc_exists = os.path.exists(self['config'])
         if rc_exists and keys:
