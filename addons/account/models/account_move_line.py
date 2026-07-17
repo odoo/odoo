@@ -14,6 +14,7 @@ from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
 
 _logger = logging.getLogger(__name__)
+_ignore_tax_lock_date = object()
 
 
 class AccountMoveLine(models.Model):
@@ -1789,7 +1790,8 @@ class AccountMoveLine(models.Model):
             exit_stack.enter_context(self.env.protecting([protected for vals, line in zip(vals_list, lines) for protected in self.env['account.move']._get_protected_vals(vals, line)]))
             container['records'] = lines
 
-        lines._check_tax_lock_date()
+        if self.env.context.get('ignore_tax_lock_date') is not _ignore_tax_lock_date:
+            lines._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
             # Log changes to move lines on each move
@@ -1993,11 +1995,12 @@ class AccountMoveLine(models.Model):
 
         # Check the lock date. (Only relevant if the move is posted and non zero lines)
         non_zero_lines = self.filtered(lambda l: l.balance or l.amount_currency)
-        moves_to_check = non_zero_lines.move_id.filtered(lambda m: m.state == 'posted')
-        moves_to_check._check_fiscal_lock_dates()
 
-        # Check the tax lock date.
-        self._check_tax_lock_date()
+        # Lock dates
+        if self.env.context.get('ignore_tax_lock_date') is not _ignore_tax_lock_date:
+            moves_to_check = non_zero_lines.move_id.filtered(lambda m: m.state == 'posted')
+            moves_to_check._check_fiscal_lock_dates()
+            self._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
             # Log changes to move lines on each move
