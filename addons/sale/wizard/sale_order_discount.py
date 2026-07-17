@@ -122,7 +122,13 @@ class SaleOrderDiscount(models.TransientModel):
             discount_product = company.sale_discount_product_id
         return discount_product
 
-    def _create_discount_lines(self):
+    def _prepare_discount_line_values_for_lines(self, order_lines):
+        """Compute the global-discount so_line values for an explicit subset of order lines,
+        using this wizard's `discount_type`/`discount_percentage`/`discount_amount`.
+
+        :param order_lines: the `sale.order.line` recordset to compute the discount on.
+        :return: the list of so_line value dicts, as returned by `_prepare_global_discount_so_lines`.
+        """
         self.ensure_one()
         self = self.with_context(lang=self.sale_order_id._get_lang())
 
@@ -137,7 +143,6 @@ class SaleOrderDiscount(models.TransientModel):
 
         order = self.sale_order_id
         AccountTax = self.env["account.tax"]
-        order_lines = order.order_line.filtered(lambda x: not x.display_type)
         base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
         AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
@@ -153,9 +158,15 @@ class SaleOrderDiscount(models.TransientModel):
             computation_key=f"global_discount,{self.id}",
             grouping_function=grouping_function,
         )
+        return self._prepare_global_discount_so_lines(global_discount_base_lines)
+
+    def _create_discount_lines(self):
+        self.ensure_one()
+        order = self.sale_order_id
+        order_lines = order.order_line.filtered(lambda x: not x.display_type)
         order.order_line = [
             Command.create(values)
-            for values in self._prepare_global_discount_so_lines(global_discount_base_lines)
+            for values in self._prepare_discount_line_values_for_lines(order_lines)
         ]
 
     def action_apply_discount(self):
