@@ -19,6 +19,7 @@ from . import (
     test_sale_early_payment_discount,
     test_sale_flow,
     test_sale_order,
+    test_sale_order_onchange_combo,
     test_sale_order_product_catalog,
     test_sale_order_tax_mode,
     test_sale_order_ui,

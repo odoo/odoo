@@ -2125,7 +2125,16 @@ class SaleOrderLine(models.Model):
         )
 
     def _get_linked_lines(self):
-        """Return the linked lines of this line, if any.
+        """Return the linked lines of this line, if any."""
+        self.ensure_one()
+        return self.order_id.order_line._get_linked_lines_by_line().get(
+            self, self.env["sale.order.line"]
+        )
+
+    def _get_linked_lines_by_line(self):
+        """Batched version of `_get_linked_lines`.
+
+        Return in a single pass a mapping ``{line: linked_lines}`` for each line in `self`.
 
         This method relies on either `linked_line_id` or `linked_virtual_id` to retrieve the linked
         lines, depending on whether this line is saved in the DB.
@@ -2133,22 +2142,24 @@ class SaleOrderLine(models.Model):
         Note: we can't rely on `linked_line_ids` as it will only be populated when both this line
         and its linked lines are saved in the DB, which we can't ensure.
         """
-        self.ensure_one()
-        return (
-            (
-                self._origin
-                and self.order_id.order_line.filtered(
-                    lambda line: line.linked_line_id._origin == self._origin
-                )
-            )
-            or (
-                self.virtual_id
-                and self.order_id.order_line.filtered(
-                    lambda line: line.linked_virtual_id == self.virtual_id
-                )
-            )
-            or self.env["sale.order.line"]
-        )
+        lines_by_origin = defaultdict(lambda: self.env["sale.order.line"])
+        lines_by_virtual = defaultdict(lambda: self.env["sale.order.line"])
+        for line in self:
+            if line.linked_line_id._origin:
+                lines_by_origin[line.linked_line_id._origin] |= line
+            if line.linked_virtual_id:
+                lines_by_virtual[line.linked_virtual_id] |= line
+
+        SaleOrderLine = self.env["sale.order.line"]
+        linked_lines_by_line = {}
+        for line in self:
+            linked_lines = SaleOrderLine
+            if line._origin:
+                linked_lines = lines_by_origin.get(line._origin, SaleOrderLine)
+            if not linked_lines and line.virtual_id:
+                linked_lines = lines_by_virtual.get(line.virtual_id, SaleOrderLine)
+            linked_lines_by_line[line] = linked_lines
+        return linked_lines_by_line
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids
