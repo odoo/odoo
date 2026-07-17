@@ -20,6 +20,7 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
  * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState, x, y }) => void)[]} on_snippet_move_handlers
  * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_out_dropzone_handlers
  * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_over_dropzone_handlers
+ * @typedef {((arg: { snippetEl: HTMLElement, dropzoneEl: HTMLElement }) => void)[]} on_snippet_inserted_handlers
  */
 
 export class BlockTab extends Component {
@@ -118,6 +119,11 @@ export class BlockTab extends Component {
                                 // Insert the selected snippet.
                                 closestDropzoneEl.after(snippetEl);
                                 this.shared.dropzone.removeDropzones();
+
+                                this.env.editor.dispatchTo(
+                                    "on_snippet_inserted_handlers",
+                                    snippetEl
+                                );
                                 return snippetEl;
                             },
                             onClose: () => {
@@ -436,6 +442,7 @@ export class BlockTab extends Component {
                             dragState: this.dragState,
                         });
                     }
+
                     // The dragged element may have changed, so get it again.
                     draggedEl = this.dragState.draggedEl;
 
@@ -452,6 +459,8 @@ export class BlockTab extends Component {
                     // Replay the drop.
                     currentDropzoneEl.after(draggedEl);
                     this.shared.dropzone.removeDropzones();
+
+                    this.env.editor.dispatchTo("on_snippet_inserted_handlers", draggedEl);
 
                     // Process the dropped element.
                     if (!isSnippetGroup) {

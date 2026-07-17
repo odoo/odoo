@@ -122,3 +122,26 @@ $-editor-messages-margin-x: 2%;
 .o_editable .media_iframe_video .css_editable_mode_display {
     display: block !important;
 }
+
+.oe_structure_empty_message {
+    // Empty structure NOT during drag & drop
+    &:not(:has(> .oe_drop_zone)) {
+        &:after {
+            @extend %o-editor-messages;
+            content: attr(data-editor-message);
+            font-size: 20px;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+            border-radius: $border-radius-lg;
+        }
+    }
+
+    // Empty structure during drag & drop
+    > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
+        @extend %o-editor-messages;
+        height: auto;
+        width: 100% - 2 * $-editor-messages-margin-x;
+        padding: 112px 0;
+        margin: 20px $-editor-messages-margin-x;
+    }
+}
