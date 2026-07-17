@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useEffect } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
@@ -10,14 +10,9 @@ export class QuestionPageListRenderer extends ListRenderer {
         this.fieldsToShow = ["random_questions_count"];
         this.titleField = "title";
 
-        useLayoutEffect(
-            (table) => {
-                if (table) {
-                    table.classList.add("o_section_list_view");
-                }
-            },
-            () => [this.tableRef()]
-        );
+        useEffect(() => {
+            this.tableRef()?.classList.add("o_section_list_view");
+        });
     }
 
     add(params) {
