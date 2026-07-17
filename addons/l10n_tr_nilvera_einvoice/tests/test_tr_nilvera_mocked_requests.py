@@ -154,6 +154,12 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             'company_id': cls.company.id,
         })
 
+    def test_amount_in_words_rounds_subunit(self):
+        note = self.env['account.edi.xml.ubl.tr']._l10n_tr_get_amount_integer_partn_text_note(
+            3989.33, self.env.ref('base.TRY'),
+        )
+        self.assertEqual(note, 'YALNIZ : ÜÇBINDOKUZYÜZSEKSENDOKUZ TRY OTUZÜÇ KURUS')
+
     @patch_nilvera_request
     def test_which_service_to_call(self):
         _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
