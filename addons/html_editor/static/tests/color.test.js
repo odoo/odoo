@@ -1,7 +1,7 @@
 import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { insertText, setColor } from "./_helpers/user_actions";
+import { deleteBackward, insertText, setColor } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
@@ -113,6 +113,45 @@ test("should get ready to type without color and background color after removing
     expect(getContent(el)).toBe(
         '<p>ab<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">cd</font>x[]<font style="color: rgb(255, 0, 0); background-color: rgb(0, 255, 0);">ef</font>gh</p>'
     );
+});
+
+test("should get ready to type without color after removing format on empty colored paragraph", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);">a[]</font></p>'
+    );
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    execCommand(editor, "removeFormat");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe("<p>x[]</p>");
+});
+
+test("should get ready to type without color after removing format on empty background colored paragraph", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="background-color: rgb(255, 0, 0);">a[]</font></p>'
+    );
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    execCommand(editor, "removeFormat");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe("<p>x[]</p>");
+});
+
+test("should get ready to type without color after removing format on empty colored and background colored paragraph", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0); background-color: rgb(229, 255, 0);">a[]</font></p>'
+    );
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    execCommand(editor, "removeFormat");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe("<p>x[]</p>");
 });
 
 test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
