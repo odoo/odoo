@@ -5,6 +5,7 @@ import math
 
 __all__ = [
     "float_compare",
+    "float_div",
     "float_is_zero",
     "float_repr",
     "float_round",
@@ -190,6 +191,36 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
     if float_is_zero(delta, precision_rounding=rounding_factor):
         return 0
     return -1 if delta < 0.0 else 1
+
+
+def float_div(value1, value2, precision_digits=None, precision_rounding=None):
+    """Return the euclidean division of ``value1`` by ``value2`` as the tuple
+       ``(quotient, remainder)``, computed at the given precision so that the
+       result is free of the IEEE-754 representation errors that affect the
+       native ``int(value1 / value2)`` and ``value1 % value2`` operations.
+       Both operands are rounded onto the precision grid and scaled to integers
+       before dividing, so that ``value1`` rounds to ``quotient * value2 +
+       remainder`` at the given precision, with ``quotient`` an integer.
+       Precision must be given by ``precision_digits`` or ``precision_rounding``,
+       not both!
+
+       :param float value1: the dividend
+       :param float value2: the divisor
+       :param int precision_digits: number of fractional digits to round to.
+       :param float precision_rounding: decimal number representing the minimum
+           non-zero value at the desired precision (for example, 0.01 for a
+           2-digit precision).
+       :return: the tuple ``(quotient, remainder)``
+       :rtype: tuple(int, float)
+    """
+    rounding = _float_check_precision(precision_digits=precision_digits,
+                                      precision_rounding=precision_rounding)
+    # snap both operands onto the precision grid and scale them to exact
+    # integers, so the euclidean division carries no representation error
+    scaled1 = builtins.round(float_round(value1, precision_rounding=rounding) / rounding)
+    scaled2 = builtins.round(float_round(value2, precision_rounding=rounding) / rounding)
+    quotient, remainder = divmod(scaled1, scaled2)
+    return quotient, float_round(remainder * rounding, precision_rounding=rounding)
 
 
 def float_repr(value, precision_digits):
