@@ -644,10 +644,7 @@ test.tags("focus required");
 test("[text composer] Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const [channelId, salesChannelId] = pyEnv["discuss.channel"].create([
-        { name: "General" },
-        { name: "Sales" },
-    ]);
+    const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         expect.step("mark-all-messages-as-read");
@@ -656,6 +653,13 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
+    await start();
+    // Load the channel before the needaction message arrives: reopening an
+    // already loaded channel skips the messages fetch, so mark_all_as_read is
+    // the only flow that marks the message as read (a fetch around the 0
+    // separator would call set_message_done first and win the race).
+    await openDiscuss(channelId);
+    await click("button:has(:text('Sales'))");
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchell Admin",
@@ -679,8 +683,6 @@ test("[text composer] Opening thread with needaction messages should mark all me
             })
             .as_dict(),
     });
-    await start();
-    await openDiscuss(salesChannelId);
     await click("button:has(:text('General')):has(.badge:text(1))");
     await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
@@ -689,10 +691,7 @@ test.tags("focus required", "html composer");
 test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const [channelId, salesChannelId] = pyEnv["discuss.channel"].create([
-        { name: "General" },
-        { name: "Sales" },
-    ]);
+    const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         expect.step("mark-all-messages-as-read");
@@ -701,6 +700,15 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    // Load the channel before the needaction message arrives: reopening an
+    // already loaded channel skips the messages fetch, so mark_all_as_read is
+    // the only flow that marks the message as read (a fetch around the 0
+    // separator would call set_message_done first and win the race).
+    await openDiscuss(channelId);
+    await click("button:has(:text('Sales'))");
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchell Admin",
@@ -723,10 +731,6 @@ test("Opening thread with needaction messages should mark all messages of thread
             })
             .as_dict(),
     });
-    await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
-    await openDiscuss(salesChannelId);
     await click("button:has(:text('General')):has(.badge:text(1))");
     await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
