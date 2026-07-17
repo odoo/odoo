@@ -344,6 +344,15 @@ class TestDevice(TestHttpBase):
             "By default, devices should be found from the most recent to the least recent (according to their last activity).",
         )
 
+    def test_detection_device_collapse_ipv6(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', ip='2001:db8:1234:5678:1111:2222:3333:4444')
+        self.assertEqual(len(res.session['_devices']), 1)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', ip='2001:db8:1234:5678:aaaa:bbbb:cccc:dddd')
+        self.assertEqual(len(res.session['_devices']), 1)
+        collapsed_ip_address = next(iter(res.session['_devices'].values()))['ip_address']
+        self.assertEqual(collapsed_ip_address, '2001:db8:1234:5678::/64')
+
     # --------------------
     # DELETION
     # --------------------
