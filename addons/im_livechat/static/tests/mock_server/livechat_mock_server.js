@@ -215,16 +215,34 @@ async function livechat_conversation_create_and_link_expertise(request) {
 
 patch(mailDataHelpers, {
     _process_request_for_all(store, name, params) {
-        const ResPartner = this.env["res.partner"];
+        const MailGuest = this.env["mail.guest"];
         const ResUsers = this.env["res.users"];
         super._process_request_for_all(...arguments);
         store.add({ livechat_available: true });
         if (name === "init_livechat") {
             if (this.env.user && !ResUsers._is_public(this.env.uid)) {
-                store.add(
-                    ResPartner.browse(this.env.user.partner_id),
-                    makeKwArgs({ fields: ["email"] })
-                );
+                store.add({
+                    self_user: mailDataHelpers.Store.one(
+                        ResUsers.browse(this.env.user.id),
+                        makeKwArgs({
+                            fields: [
+                                mailDataHelpers.Store.one(
+                                    "partner_id",
+                                    makeKwArgs({
+                                        fields: ["email"],
+                                    })
+                                ),
+                            ],
+                        })
+                    ),
+                });
+            }
+            if (this.env.cookie.get("dgid")) {
+                store.add({
+                    self_guest: mailDataHelpers.Store.one(
+                        MailGuest.browse(this.env.cookie.get("dgid"))
+                    ),
+                });
             }
         }
     },

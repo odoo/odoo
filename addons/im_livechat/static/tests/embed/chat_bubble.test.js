@@ -15,8 +15,13 @@ test("Do not show bot IM status", async () => {
     await makeMockEnv({ embedLivechat: true });
     const partnerId1 = pyEnv["res.partner"].create({ name: "Mitchell" });
     pyEnv["res.users"].create({ partner_id: partnerId1, im_status: "online" });
+    const paulPid = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });
+    pyEnv["res.users"].create({ partner_id: paulPid, login: "paul", password: "paul" });
     const channelId1 = pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: partnerId1 })],
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: paulPid }),
+        ],
         channel_type: "chat",
     });
     const partnerId2 = pyEnv["res.partner"].create({ name: "Dummy" });
@@ -24,11 +29,12 @@ test("Do not show bot IM status", async () => {
         name: "Dummy",
         channel_member_ids: [
             Command.create({ partner_id: partnerId2, livechat_member_type: "bot" }),
+            Command.create({ partner_id: paulPid, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
     });
     setupChatHub({ folded: [channelId1, channelId2] });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: { login: "paul", password: "paul" } });
     await contains(".o-mail-ChatBubble[name='Mitchell'] .o-mail-ImStatus");
     await contains(".o-mail-ChatBubble[name='Dummy']");
     await contains(".o-mail-ChatBubble[name='Dummy'] .o-mail-ImStatus", { count: 0 });
