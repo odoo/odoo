@@ -782,7 +782,20 @@ class MrpWorkorder(models.Model):
     def action_cancel(self):
         self.leave_id.unlink()
         self.end_all()
-        return self.filtered(lambda wo: wo.state != 'cancel').write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
+
+    def _action_reset_to_assigned(self):
+        pass
+
+    def _action_reset_to_draft(self):
+        self.leave_id.unlink()
+        self.time_ids.unlink()
+        self.with_context(allow_qty_change=True).write({
+            'state': 'ready',
+            'qty_produced': 0,
+            'date_start': False,
+            'date_finished': False,
+        })
 
     def action_replan(self):
         """ Replans every planned work orders

@@ -64,3 +64,16 @@ class StockMove(models.Model):
             )
             price_unit += component_price * qty_per_kit_by_line.get(bom_line, 0)
         return price_unit
+
+    def _clear_journal_entries(self):
+        account_moves = self.account_move_id
+        account_moves.sudo().button_draft()
+        account_moves.sudo().unlink()
+
+    def _action_reset_to_assigned(self):
+        self._clear_journal_entries()
+        super()._action_reset_to_assigned()
+
+    def _action_reset_to_draft(self):
+        self._clear_journal_entries()
+        super()._action_reset_to_draft()

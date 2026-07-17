@@ -35,6 +35,11 @@ class MrpProduction(models.Model):
                     workorder.mo_analytic_account_line_ids.name = _("[WC] %s", workorder.display_name)
         return res
 
+    def action_cancel(self):
+        res = super().action_cancel()
+        (self.move_raw_ids | self.move_finished_ids).analytic_account_line_ids.sudo().unlink()
+        return res
+
     def action_view_move_wip(self):
         self.ensure_one()
         action = {

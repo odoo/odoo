@@ -244,6 +244,8 @@
                             confirm-title="Cancel Manufacturing Order"
                             confirm-label="Cancel this Order"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" invisible="state != 'cancel'" groups="mrp.group_mrp_manager"/>
+                    <button name="action_reset_to_progress" type="object" string="Set to In Progress" invisible="state != 'done'" groups="mrp.group_mrp_manager"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>
@@ -306,7 +308,7 @@
                                 <span class="o_stat_text">Overview</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="build" invisible="serial_numbers_count == 0">
+                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="build" invisible="serial_numbers_count == 0 or state == 'draft'">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="serial_numbers_count"/></span>
                                 <span class="o_stat_text">Serial Numbers</span>
@@ -459,7 +461,7 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="[('type', '=', 'consu')]"/>
-                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
+                                    <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" invisible="state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
                                     <field name="uom_id" column_invisible="True"/>

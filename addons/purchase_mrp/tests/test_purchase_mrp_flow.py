@@ -1499,3 +1499,70 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # Monthly demand of the raw material(component) should be 20.0 with and without warehouse.
         self.assertEqual(component.with_context(warehouse_id=self.warehouse.id).monthly_demand, 20.0)
         self.assertEqual(component.monthly_demand, 20.0)
+
+    def test_reset_to_draft_preserves_mto_links(self):
+        """When an MO components are linked to MTO supply, resetting to draft and re-confirming
+        should reuse the same PO and child MO that were triggered on the first confirmation instead
+        of creating new ones.
+        """
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "make_to_order"
+        route_mto.product_selectable = True
+
+        self.component_a.write({
+            'seller_ids': [Command.create({'partner_id': self.partner_a.id})],
+            'route_ids': [Command.link(route_mto.id)],
+        })
+        self.component_b.write({
+            'route_ids': [Command.link(route_mto.id)],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': self.component_c.id, 'product_qty': 1.0})],
+        })
+
+        finished = self.component_d
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': self.component_a.id, 'product_qty': 1.0}),
+                Command.create({'product_id': self.component_b.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': finished.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        # Child MO and PO are triggered correctly
+        move_a = mo.move_raw_ids.filtered(lambda m: m.product_id == self.component_a)
+        move_b = mo.move_raw_ids.filtered(lambda m: m.product_id == self.component_b)
+        po_line = move_a._get_active_created_purchase_lines()
+        child_mo = move_b.move_orig_ids.production_id
+        self.assertEqual(len(po_line), 1)
+        self.assertEqual(len(child_mo), 1)
+
+        # Reset to draft and re-confirm, the same MTO links should be reused.
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.state, 'draft')
+        mo.action_confirm()
+
+        # No new PO lines or child MOs were created
+        self.assertEqual(
+            self.env['purchase.order.line'].search_count([('product_id', '=', self.component_a.id)]), 1,
+            "No new po_lines should be created")
+        self.assertEqual(
+            self.env['mrp.production'].search_count([('product_id', '=', self.component_b.id)]), 1,
+            "No new child MOs shoud be created")
+
+        # Same old PO and child MO are still linked to the original MO
+        new_move_a = mo.move_raw_ids.filtered(lambda m: m.product_id == self.component_a)
+        new_move_b = mo.move_raw_ids.filtered(lambda m: m.product_id == self.component_b)
+        self.assertEqual(new_move_a._get_active_created_purchase_lines(), po_line)
+        self.assertEqual(new_move_b.move_orig_ids.production_id, child_mo)

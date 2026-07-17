@@ -5673,6 +5673,137 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertTrue(mo.is_planned)
         self.assertEqual(mo.workorder_ids.sorted('sequence').mapped('date_start'), planned_starts)
 
+    def test_reset_to_draft_cancelled_mo(self):
+        """The test assures resetting a canceled basic MO to draft resets its move_row_ids to draft
+        properly and user is able to re-confirm and produce normally.
+        """
+        mo, __, __, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=2, qty_base_2=3)
+
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel')
+        self.assertTrue(all(m.state == 'cancel' for m in mo.move_raw_ids))
+
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.state, 'draft')
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertTrue(all(m.state == 'draft' for m in mo.move_raw_ids))
+        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.state == 'cancel'))
+
+        # Confirm and Produce with no errors
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertTrue(all(m.state == 'done' for m in mo.move_raw_ids))
+
+    def test_reset_to_draft_validated_mo(self):
+        """The test assures resetting a validated basic MO to draft resets quantities and the MO
+        back to draft.
+        """
+        Quant = self.env['stock.quant']
+        mo, __, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=2, qty_base_2=3)
+        Quant._update_available_quantity(p1, self.stock_location, 10)
+        Quant._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        # components consumed, finished product produced.
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 8)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 7)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 1)
+
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.state, 'draft')
+
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 10)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 10)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 0)
+
+        self.assertTrue(all(m.state == 'draft' for m in mo.move_raw_ids))
+        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.state == 'done'))
+
+        # Confirm and Produce again with no errors
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 8)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 7)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 1)
+
+    def test_reset_to_draft_reuses_serial(self):
+        """The test assures that after resetting a serial-tracked MO to draft with already generated
+        lot_producing_ids, re-confirming and re-producing must reuse the same serial numbers"""
+        mo, __, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=1, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        mo.action_generate_serial()
+        sn = mo.lot_producing_ids
+        self.assertTrue(sn)
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        # resetting to draft doesn't remove lot_producing_ids, it just hides them if state == 'draft'
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.state, 'draft')
+        self.assertEqual(mo.lot_producing_ids, sn, "produced serial should remain attached after reset")
+
+        # Confirm and Produce again with no blocking and using the same generated lot_producing_ids
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.lot_producing_ids, sn, "same serial reused, no new lot generated")
+        self.assertEqual(
+            self.env['stock.lot'].search_count([('product_id', '=', p_final.id)]), 1,
+            "no additional serial should have been created"
+        )
+
+    def test_reset_to_draft_reuses_serial_partial(self):
+        """The test assures that after resetting a serial-tracked MO to draft with already generated
+        lot_producing_ids and producing 2/3 units, re-confirming and re-producing shouldn't block
+        the user asking to generate an extra SN, but produce 2/3 unless the user generates extra SN
+        """
+        mo, __, __, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=3, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        res = mo.action_generate_serial()
+        wizard = Form.from_action(self.env, res)
+        wizard.lot_name = 'sn#01'
+        wizard.lot_quantity = 2
+        res = wizard.save().action_generate_serial_numbers()
+        wizard = Form.from_action(self.env, res)
+        wizard.save().action_apply()
+        sns = mo.lot_producing_ids
+        self.assertEqual(sns.mapped('name'), ['sn#01', 'sn#02'])
+        self.assertEqual(mo.qty_producing, 2)
+
+        action = mo.button_mark_done()
+        # close MO to confirm producing 2/3 with no backorders
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
+        Form.from_action(self.env, backorder.action_close_mo()).save().action_confirm()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.qty_produced, 2)
+
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.lot_producing_ids, sns)
+
+        # Confirm and Produce should use the same 2/3 SNs
+        mo.action_confirm()
+        mo.action_assign()
+        action = mo.button_mark_done()
+        # same normal producing scenario without blocking the user to generate a third SN
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
+        Form.from_action(self.env, backorder.action_close_mo()).save().action_confirm()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.qty_produced, 2, "reproduce must follow the 2 assigned serials")
+        self.assertEqual(mo.lot_producing_ids, sns)
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (

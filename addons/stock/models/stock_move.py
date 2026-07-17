@@ -2309,6 +2309,18 @@ Please change the quantity done or the rounding precision in your settings.""",
                 picking.batch_id = None
         return True
 
+    def _action_reset_to_assigned(self):
+        self.move_dest_ids._do_unreserve()
+        self.write({'state': 'draft'})
+        self.picked = False
+        # we reset quantities, re-reserve the move_lines to use same lot_ids and set back to assgined
+        self.move_line_ids._action_reset_to_draft()
+        self.filtered(lambda m: m.move_line_ids).write({'state': 'assigned'})
+        self.move_dest_ids._action_assign()
+
+    def _action_reset_to_draft(self):
+        self.write({'state': 'draft'})
+
     def _log_cancel_activity(self):
         return
 

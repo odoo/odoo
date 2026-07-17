@@ -657,6 +657,15 @@ class StockMove(models.Model):
         res['bom_line_id'] = self.bom_line_id.id
         return res
 
+    def _get_old_demand_qty(self):
+        self.ensure_one()
+        move_origin_ids = self.move_orig_ids.filtered(lambda m: m.state != 'cancel')
+        return sum(m.uom_id._compute_quantity(m.product_uom_qty, self.uom_id) for m in move_origin_ids)
+
+    def _get_active_created_purchase_lines(self):
+        # overridden in purchase_mrp
+        return False
+
     def _search_picking_for_assignation_domain(self):
         domain = super()._search_picking_for_assignation_domain()
         domain += self._get_production_assignation_domain()
