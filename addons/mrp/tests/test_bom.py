@@ -1920,8 +1920,8 @@ class TestBoM(TestMrpCommon):
         with bom_form.bom_line_ids.edit(1) as bom_line:
             bom_line.product_qty = 2
         bom = bom_form.save()
-        self.assertEqual(mo_2.is_outdated_bom, False)
-        # As the quantities were changed manually, the MO will be in progress and can no longer be updated from the BOM.
+        # A progress MO is now also flagged when its BoM changes (Update BoM is available in progress).
+        self.assertEqual(mo_2.is_outdated_bom, True)
 
     def test_bom_updates_mo_after_updating_operations(self):
         """ Creates a Manufacturing Order using a BoM with operations and checks the raw moves are

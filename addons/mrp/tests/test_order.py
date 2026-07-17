@@ -5687,6 +5687,145 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.qty_producing = 1.0
         self.assertEqual(mo.finished_move_line_ids.production_id, mo)
 
+    def test_reset_to_draft_cancelled_mo(self):
+        """The test assures resetting a canceled basic MO to draft resets its move_row_ids to draft
+        properly and user is able to re-confirm and produce normally.
+        """
+        mo, __, __, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=2, qty_base_2=3)
+
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel')
+        self.assertTrue(all(m.state == 'cancel' for m in mo.move_raw_ids))
+
+        mo.action_reset_to_draft()
+        self.assertEqual(mo.state, 'draft')
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertTrue(all(m.state == 'draft' for m in mo.move_raw_ids))
+        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.state == 'cancel'))
+
+        # Confirm and Produce with no errors
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_confirm()
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertTrue(all(m.state == 'done' for m in mo.move_raw_ids))
+
+    def test_reset_to_progress_validated_mo(self):
+        """A validated (done) MO is set back to 'in progress'. Its done moves are reset to assigned
+        to match the pre-produce state.
+        """
+        Quant = self.env['stock.quant']
+        mo, __, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=2, qty_base_2=3)
+        Quant._update_available_quantity(p1, self.stock_location, 10)
+        Quant._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        # components consumed, finished product produced.
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 8)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 7)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 1)
+
+        mo.action_reset_to_progress()
+        # done MOs are reopened to progress/to_close, depending on the workorders state if exist
+        self.assertNotIn(mo.state, ('done', 'draft', 'cancel'))
+
+        # components are returned to stock but re-reserved for the reset MO and the finished product
+        # is removed from stock again.
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 8)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 7)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 0)
+
+        self.assertTrue(all(m.state == 'assigned' for m in mo.move_raw_ids))
+        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.state == 'done'))
+
+        # Produce again with no errors
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(Quant._get_available_quantity(p1, self.stock_location), 8)
+        self.assertEqual(Quant._get_available_quantity(p2, self.stock_location), 7)
+        self.assertEqual(Quant._get_available_quantity(p_final, self.stock_location), 1)
+
+    def test_reset_to_progress_reuses_serial(self):
+        """After setting a serial-tracked done MO back to progress, re-producing reuses the same
+        serial number.
+        """
+        mo, __, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=1, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        mo.action_generate_serial()
+        sn = mo.lot_producing_ids
+        self.assertTrue(sn)
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        mo.action_reset_to_progress()
+        self.assertNotIn(mo.state, ('done', 'draft', 'cancel'))
+        self.assertEqual(mo.lot_producing_ids, sn, "produced serial should remain attached after reset")
+
+        # Produce again with no blocking, using the same generated lot_producing_ids
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.lot_producing_ids, sn, "same serial reused, no new lot generated")
+        self.assertEqual(
+            self.env['stock.lot'].search_count([('product_id', '=', p_final.id)]), 1,
+            "no additional serial should have been created"
+        )
+
+    def test_reset_to_progress_reuses_serial_partial(self):
+        """After producing 2/3 and setting the done MO back to progress, re-producing reuses the
+        same 2 serials on the generating wizard.
+        """
+        mo, __, __, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=3, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 10)
+        mo.action_assign()
+        res = mo.action_generate_serial()
+        wizard = Form.from_action(self.env, res)
+        wizard.lot_name = 'sn#01'
+        wizard.lot_quantity = 2
+        res = wizard.save().action_generate_serial_numbers()
+        wizard = Form.from_action(self.env, res)
+        wizard.save().action_apply()
+        sns = mo.lot_producing_ids
+        self.assertEqual(sns.mapped('name'), ['sn#01', 'sn#02'])
+        self.assertEqual(mo.qty_producing, 2)
+
+        action = mo.button_mark_done()
+        # close MO to confirm producing 2/3 with no backorders
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
+        Form.from_action(self.env, backorder.action_close_mo()).save().action_confirm()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.qty_produced, 2)
+
+        mo.action_reset_to_progress()
+        self.assertNotIn(mo.state, ('done', 'draft', 'cancel'))
+        self.assertEqual(mo.lot_producing_ids, sns)
+        finished = mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id)
+        self.assertTrue(all(m.state == 'assigned' for m in mo.move_raw_ids))
+        self.assertEqual(finished.move_line_ids.lot_id, sns,
+            "the reopened finished move keeps its two serials")
+
+        # produce the whole MO (3/3): the wizard defaults to the first existing serial and the full
+        # quantity, so it keeps the two already-generated serials and adds a third on its own.
+        res = mo.action_generate_serial()
+        wizard = Form.from_action(self.env, res)
+        res = wizard.save().action_generate_serial_numbers()
+        wizard = Form.from_action(self.env, res)
+        wizard.save().action_apply()
+        self.assertEqual(mo.lot_producing_ids.mapped('name'), ['sn#01', 'sn#02', 'sn#03'])
+        self.assertLessEqual(sns, mo.lot_producing_ids, "the two original serials are kept")
+
+        action = mo.button_mark_done()
+        Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save().action_confirm()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.qty_produced, 3)
+        self.assertEqual(len(mo.lot_producing_ids), 3)
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (

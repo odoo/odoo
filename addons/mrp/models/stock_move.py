@@ -452,6 +452,10 @@ class StockMove(models.Model):
                 mo_to_cancel.action_cancel()
         return res
 
+    def _action_reset_to_progress(self):
+        super()._action_reset_to_progress()
+        self.filtered(lambda m: m.raw_material_production_id).picked = True
+
     def _log_cancel_activity(self):
         super()._log_cancel_activity()
         if not self:
