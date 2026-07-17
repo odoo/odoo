@@ -4,6 +4,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import BinaryBytes
 
@@ -42,6 +43,7 @@ COMMON_REQUEST_DICT = {
     'totalItemsDiscountAmount': 0.0,
     'signatures': ETA_TEST_SIGNATURES,
 }
+
 
 def mocked_action_post_sign_invoices(self):
     for invoice in self:
@@ -904,3 +906,35 @@ class TestEdiJson(TestEGEdiCommon):
                 json_file['request']['receiver']['address']['street'],
                 '12th dec. street apt 5',
             )
+
+    def test_11_description_over_eta_character_limit(self):
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    "product_id": self.product_a.id,
+                    "name": "x" * 501,
+                    "price_unit": 100.0,
+                    "product_uom_id": self.env.ref("uom.product_uom_unit").id,
+                    "tax_ids": [],
+                },
+            ],
+        )
+        with self.assertRaisesRegex(UserError, "exceeds the ETA limit of 500 characters"):
+            invoice.action_post()
+
+    def test_12_description_at_eta_character_limit(self):
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    "product_id": self.product_a.id,
+                    "name": "x" * 500,
+                    "price_unit": 100.0,
+                    "product_uom_id": self.env.ref("uom.product_uom_unit").id,
+                    "tax_ids": [],
+                },
+            ],
+        )
+        invoice.action_post()
+        self.assertEqual(invoice.state, "posted")
