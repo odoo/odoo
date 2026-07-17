@@ -1614,10 +1614,13 @@ class Many2many(_RelationalMulti):
         # update the cache of all the other fields that use the same relation
         registry = model.pool
 
+        # collect impacted records {model_name: (ids, field_names)} (see below)
+        modified = {}
+
         if sibling_fields := [
-            registry[model_name]._fields[field_name]
+            field
             for model_name, field_name in registry.many2many_relations[self.relation, self.column1, self.column2]
-            if field_name != self.name
+            if (field := registry[model_name]._fields[field_name]) is not self
         ]:
             # group coids to add/remove by id
             more, less = defaultdict(OrderedSet), defaultdict(OrderedSet)
@@ -1625,13 +1628,19 @@ class Many2many(_RelationalMulti):
                 more[x].add(y)
             for x, y in remove_pairs:
                 less[x].add(y)
-            modified_ids = OrderedSet([*more, *less])
+            ids = OrderedSet([*more, *less])
 
             for field in sibling_fields:
-                assert field.model_name == self.model_name and field.comodel_name == self.comodel_name, f"Inconsistent sibling fields {field} and {self}"
+                modified.setdefault(field.model_name, (ids, []))[1].append(field.name)
+                if field.model_name != self.model_name or field.comodel_name != self.comodel_name:
+                    # this may happen when the relation is reused with an SQL view
+                    field._invalidate_cache(model.env, ids)
+                    continue
                 field_cache = field._get_cache(model.env)
+                if not field_cache:
+                    continue
                 domain = field.get_comodel_domain(model).optimize_dynamic(comodel)
-                for id_ in modified_ids:
+                for id_ in ids:
                     if id_ in field_cache:
                         value = OrderedSet(field_cache[id_])
                         if ys := more.get(id_):
@@ -1647,16 +1656,22 @@ class Many2many(_RelationalMulti):
                 more[y].add(x)
             for x, y in remove_pairs:
                 less[y].add(x)
-            modified_coids = OrderedSet([*more, *less])
+            ids = OrderedSet([*more, *less])
 
             for field in inverse_fields:
-                assert field.model_name == self.comodel_name and field.comodel_name == self.model_name, f"Inconsistent inverse fields {field} and {self}"
+                modified.setdefault(field.model_name, (ids, []))[1].append(field.name)
+                if field.model_name != self.comodel_name or field.comodel_name != self.model_name:
+                    # this may happen when the relation is reused with an SQL view
+                    field._invalidate_cache(comodel.env, ids)
+                    continue
                 field_cache = field._get_cache(comodel.env)
+                if not field_cache:
+                    continue
                 domain = field.get_comodel_domain(comodel).optimize_dynamic(model)
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
-                for coid in modified_coids:
+                for coid in ids:
                     if coid in field_cache:
                         value = OrderedSet(field_cache[coid])
                         if xs := more.get(coid):
@@ -1667,10 +1682,8 @@ class Many2many(_RelationalMulti):
 
         # trigger the recomputation of fields that depend on the inverse
         # fields of self on the modified corecords and on sibling fields
-        if sibling_fields:
-            model.browse(modified_ids).modified([f.name for f in sibling_fields])
-        if inverse_fields:
-            comodel.browse(modified_coids).modified([f.name for f in inverse_fields])
+        for model_name, (ids, field_names) in modified.items():
+            model.env[model_name].browse(ids).modified(field_names)
 
     def join(self, table: TableSQL, kind='LEFT JOIN', *, only_ids: bool = False) -> TableSQL:
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
