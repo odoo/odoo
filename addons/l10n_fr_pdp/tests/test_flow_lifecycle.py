@@ -2068,3 +2068,34 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         invoices = xml.findall('./TransactionsReport/Invoice')
         self.assertEqual(len(invoices), 1)
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
+
+    def test_force_update_f10_moves_find_parent_receivable_account_on_branch(self):
+        """
+        Activating PDP flow-10 reporting on a branch company should allow
+        invoices to create a PDP flow using the parent company's receivable account.
+        """
+        branch = self.env['res.company'].create({
+            'name': 'Test Branch FR',
+            'parent_id': self.company.id,
+            'country_id': self.env.ref('base.fr').id,
+            'l10n_fr_pdp_send_to_ppf': True,
+            'l10n_fr_pdp_annuaire_start_date': '2025-01-01',
+        })
+        self.proxy_user.company_id = branch.id
+
+        # Ensure the partner has a receivable account for the branch by copying from parent company
+        self.b2bi_customer.with_company(branch).property_account_receivable_id = self.b2bi_customer.with_company(self.company).property_account_receivable_id
+
+        invoice = self._create_invoice_one_line(
+            move_type='out_invoice',
+            company_id=branch,
+            partner_id=self.b2bi_customer.id,
+            invoice_date='2025-01-01',
+            product_id=self.product_a,
+            price_unit=100.0,
+            tax_ids=self._get_tax_on_payment_20(),
+            post=True,
+        )
+        branch.l10n_fr_pdp_pilot_phase = True
+        self.assertTrue(branch.l10n_fr_f10_enable_reporting)
+        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
