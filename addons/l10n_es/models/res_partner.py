@@ -1,3 +1,5 @@
+import re
+
 from odoo import models
 
 
@@ -8,6 +10,17 @@ class ResPartner(models.Model):
         self.ensure_one()
 
         return self.country_id.code not in ('ES', False) or (self.vat or '').upper().startswith(("ESN", "N"))
+
+    def _l10n_es_freelancer(self):
+        self.ensure_one()
+        if not self.vat:
+            return False
+
+        vat = self.vat
+        if vat.startswith('ES'):
+            vat = vat[2:]
+
+        return bool(re.fullmatch(r"(\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]|[XYZ]\d{7}[TRWAGMYFPDXBNJZSQVHLCKE]|E\d{7}[A-J0-9])", vat))
 
     def _l10n_es_edi_get_partner_info(self):
         """ Used in SII and Veri*factu"""
@@ -43,9 +56,6 @@ class ResPartner(models.Model):
         """
         super()._compute_is_company()
         for partner in self:
-            country_code, vat_number = self._split_vat(partner.vat or '')
-            if partner.commercial_partner_id == partner\
-                and country_code in ('ES', '') and len(vat_number) == 9\
-                and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
-                and vat_number[1:-1].isdigit():
-                partner.is_company = True
+            country_code, _ = self._split_vat(partner.vat or '')
+            if partner.commercial_partner_id == partner and (country_code == 'ES' or (not country_code and partner.country_code == 'ES')):
+                partner.is_company = not partner._l10n_es_freelancer()
