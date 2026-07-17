@@ -610,8 +610,18 @@ class CalendarRecurrence(models.Model):
                 rrule_params['count'] = min(limit_years, MAX_RECURRENT_EVENT)
             elif freq == 'monthly':
                 rrule_params['count'] = min(limit_years * 12, MAX_RECURRENT_EVENT)
-            else:
-                rrule_params['count'] = MAX_RECURRENT_EVENT
+            elif freq == 'weekly':
+                # A weekly recurrence yields one occurrence per selected weekday,
+                # every `interval` weeks. Keep the horizon bounded by `limit_years`
+                # (like yearly/monthly) instead of always generating the hard cap.
+                # ~52 weeks per standard year (365 // 7).
+                weekdays = len(self._get_week_days())  # always >= 1 for weekly (validated above)
+                weeks = limit_years * 365 // 7
+                rrule_params['count'] = min(weeks * weekdays // max(self.interval, 1),
+                                            MAX_RECURRENT_EVENT)
+            else:  # daily
+                rrule_params['count'] = min(limit_years * 365 // max(self.interval, 1),
+                                            MAX_RECURRENT_EVENT)
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
             rrule_params['until'] = datetime.combine(self.until, time.max)
         return rrule.rrule(
