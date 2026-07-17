@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger, urls
@@ -165,6 +167,27 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             self.portal_user.partner_id,
             [{**self.default_address_values, 'vat': 'BE0926372368'}],
         )
+
+    def test_vat_update_if_not_set(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = self.csrf_token()
+
+        with patch(
+            "odoo.addons.portal.models.res_partner.ResPartner.can_edit_vat",
+            return_value=False
+        ):
+            res = self._submit_address_values({
+                **self.default_address_values,
+                "vat": "BE0926372368",
+                "csrf_token": csrf_token,
+                "partner_id": self.portal_user.partner_id.id,
+            })
+            self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+            # User should be able to update vat if not set
+            self.assertRecordValues(
+                self.portal_user.partner_id,
+                [{**self.default_address_values, "vat": "BE0926372368"}],
+            )
 
     def test_vat_update_with_parent_name(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
