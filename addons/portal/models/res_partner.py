@@ -30,6 +30,10 @@ class ResPartner(models.Model):
         the commercial entity should be able to edit it (as in backend).
         """
         self.ensure_one()
+        return self._is_individual_contact()
+
+    def _is_individual_contact(self):
+        """Return whether contact is part of actual company or not."""
         if not self.parent_id:
             return True
 
