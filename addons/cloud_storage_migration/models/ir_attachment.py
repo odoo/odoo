@@ -138,7 +138,7 @@ class CloudStorageAttachmentMigration(models.Model):
         """,
             max_attachment_id=max_attachment_id,
             check_model=check_model,
-            unsuported_models=self._get_cloud_storage_unsupported_models(),
+            unsupported_models=self._get_cloud_storage_unsupported_models(),
             # ignore if attachment is too small or too large
             min_file_size=min_file_size,
             max_file_size=max_file_size,
