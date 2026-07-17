@@ -1745,7 +1745,7 @@ test("should close the color picker and return focus to the toolbar color button
     // On Escape, the color picker should close and
     // focus should return to the toolbar color button
     await press("Escape");
-    expectElementCount(".o_font_color_selector", 0); // selector closed
+    await expectElementCount(".o_font_color_selector", 0); // selector closed
     expect(".o-select-color-foreground").toBeFocused();
     expect(getContent(el)).toBe(`<p>[test]</p>`);
 });
@@ -1765,7 +1765,7 @@ test("should close the color picker and return focus to the editable on selectin
     await contains(".o_color_button[data-color='#6BADDE']").focus();
     expect(".o_color_button[data-color='#6BADDE']").toBeFocused();
     await press("Enter");
-    expectElementCount(".o_font_color_selector", 0); // selector closed
+    await expectElementCount(".o_font_color_selector", 0); // selector closed
     expect(el).toBeFocused();
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
 });
