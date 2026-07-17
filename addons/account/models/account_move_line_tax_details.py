@@ -275,6 +275,10 @@ class AccountMoveLine(models.Model):
                     tax_rel.account_move_line_id = base_tax_line_mapping.tax_line_id
                 JOIN account_tax tax ON
                     tax.id = tax_rel.account_tax_id
+                    AND (
+                        tax.sequence > tax_include_base_amount.sequence
+                        OR (tax.sequence = tax_include_base_amount.sequence AND tax.id > tax_include_base_amount.id)
+                    )
                 JOIN base_tax_line_mapping tax_line_matching ON
                     tax_line_matching.base_line_id = base_tax_line_mapping.base_line_id
                 JOIN account_move_line tax_line ON
