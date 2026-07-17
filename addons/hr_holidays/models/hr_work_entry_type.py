@@ -90,7 +90,7 @@ class HrWorkEntryType(models.Model):
         ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
         tracking=True,
         help="""Define the minimum time off duration in which an employee can take when requesting a leave""")
-    unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
+    unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of Measure", required=True,
                                        tracking=True,
                                        help="Define if the time type will be allocated/accrued in hours or days")
     unpaid = fields.Boolean('Is Unpaid', default=False, tracking=True)
