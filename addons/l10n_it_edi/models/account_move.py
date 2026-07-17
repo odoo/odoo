@@ -1723,7 +1723,7 @@ class AccountMove(models.Model):
             #  Dati DDT. <2.1.8>
             if elements := tree.xpath('.//DatiGenerali/DatiDDT'):
                 message = Markup("<br/>").join((
-                    _("Transport informations from XML file:"),
+                    _("Transport information from XML file:"),
                     self._compose_info_message(tree, './/DatiGenerali/DatiDDT')
                 ))
                 message_to_log.append(message)
