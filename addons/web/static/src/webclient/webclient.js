@@ -46,6 +46,11 @@ export class WebClient extends Component {
                 document.body.style.pointerEvents = "auto";
             }
         });
+        useBus(this.env.bus, "ACTION_MANAGER:UPDATE", ({ detail: info }) => {
+            if (info.fullscreen) {
+                this.state.fullscreen = true;
+            }
+        });
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
             if (mode !== "new") {
                 this.state.fullscreen = mode === "fullscreen";

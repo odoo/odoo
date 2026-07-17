@@ -1161,6 +1161,7 @@ export function makeActionManager(env, router = _router) {
                     onMounted: () => resolve(),
                     withControlPanel: action.type === "ir.actions.act_window",
                 },
+                fullscreen: _getActionMode(action) === "fullscreen",
             });
             await promise;
         }
