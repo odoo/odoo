@@ -25,14 +25,6 @@ patch(storeService, {
             discussActionIds.push(store.action_discuss_id);
         }
         store.discuss.isActive ||= discussActionIds.includes(router.current.action);
-        services.ui.bus.addEventListener("resize", () => {
-            const thread = store.discuss.thread;
-            if (services.ui.isSmall && thread?.channel) {
-                store.discuss.sidebarState.activeTab = thread.channel.primaryMessagingMenuTab;
-            } else {
-                store.discuss.sidebarState.activeTab = store.messagingMenu.allTabs[0];
-            }
-        });
         return store;
     },
 });
