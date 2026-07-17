@@ -392,7 +392,7 @@ class CustomerPortal(Controller):
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
             # TODO: Remove me in master (Kept here to avoid changing the portal templates)
-            'is_commercial_address': can_edit_vat,
+            'is_commercial_address': not current_partner or current_partner._is_individual_contact(),
             'is_main_address': not current_partner or (partner_sudo and partner_sudo == current_partner),
             'commercial_address_update_url': (
                 # Only redirect to account update if the logged in user is their own commercial
@@ -681,7 +681,7 @@ class CustomerPortal(Controller):
             # commercial partner values, and would be reset if modified on the commercial partner.
             can_edit_commercial_fields = (
                 not current_partner
-                or (partner_sudo == current_partner and current_partner.can_edit_vat())
+                or (partner_sudo == current_partner and current_partner._is_individual_contact())
             )
             if not can_edit_commercial_fields:
                 commercial_fields = partner_sudo._commercial_fields()
