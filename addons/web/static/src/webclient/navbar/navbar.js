@@ -1,4 +1,4 @@
-import { render, useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { render, useChildSubEnv } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -8,7 +8,17 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, plugin, proxy, signal, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    onWillUnmount,
+    plugin,
+    proxy,
+    signal,
+    useListener,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const systrayRegistry = registry.category("systray");
@@ -43,8 +53,8 @@ export class NavBar extends Component {
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());
         useListener(window, "resize", debouncedAdapt);
-
         let adaptCounter = 0;
+        let lastAdaptCounter = 0;
         const renderAndAdapt = () => {
             adaptCounter++;
             render(this);
@@ -60,12 +70,16 @@ export class NavBar extends Component {
 
         // We don't want to adapt every time we are patched
         // rather, we adapt only when menus or systrays have changed.
-        useLayoutEffect(
-            () => {
+        onMounted(() => {
+            lastAdaptCounter = adaptCounter;
+            this.adapt();
+        });
+        onPatched(() => {
+            if (adaptCounter !== lastAdaptCounter) {
+                lastAdaptCounter = adaptCounter;
                 this.adapt();
-            },
-            () => [adaptCounter]
-        );
+            }
+        });
 
         // allow systray items to trigger an adapt when their layout changes
         useChildSubEnv({ redrawNavbar: renderAndAdapt });
