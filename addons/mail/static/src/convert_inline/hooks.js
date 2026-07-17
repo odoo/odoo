@@ -55,7 +55,8 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
                 referenceDocument.body.setAttribute(
                     "style",
                     `margin: 0 !important;
-                    padding: 0 !important;`
+                    padding: 0 !important;
+                    background-color: transparent !important;`
                 );
             });
             await scope.run(() => Promise.all([contentPromise, assetsPromise]));
