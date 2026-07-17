@@ -13,13 +13,16 @@ import re
 import sys
 import traceback
 import typing
+from collections import defaultdict
 from collections.abc import Collection, Iterable, Mapping
 from os.path import join as opj
 
-import odoo.addons
 import odoo.release as release
 import odoo.tools as tools
 import odoo.upgrade
+from odoo.tools.translate import get_po_paths, get_translations_for_references
+
+import odoo.addons
 
 if typing.TYPE_CHECKING:
     from unittest import TestCase
@@ -186,6 +189,9 @@ class Manifest(Mapping[str, typing.Any]):
         if not MODULE_NAME_RE.match(self.name):
             raise FileNotFoundError(f"Invalid module name: {self.name}")
         self.__manifest_content = manifest_content
+        # Maps PO file paths to a dict of field names to translated strings.
+        # e.g. {'/path/to/fr.po': {'description': 'Description en français', 'summary': 'Résumé en français'}}
+        self.__manifest_translations: dict[str, dict[str, str]] = {}
 
     @property
     def addons_path(self) -> str:
@@ -229,6 +235,52 @@ class Manifest(Mapping[str, typing.Any]):
         if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
             return static_path
         return None
+
+    def get_translations(self, langs: Iterable[str]) -> dict[str, dict[str, str]]:
+        """Get manifest translations for multiple languages.
+
+        Parsing is cached per PO path to reuse work across related locales,
+        e.g. ``fr_BE`` and ``fr_FR`` can share ``fr.po``.
+
+        Returns a dictionary mapping field names to dictionaries of language codes to translated strings.
+        For example:
+        ```
+        {
+            'description': {
+                'fr_FR': 'Description en français',
+                'es_ES': 'Descripción en español',
+            },
+            'summary': {
+                'fr_FR': 'Résumé en français',
+                'es_ES': 'Resumen en español',
+            },
+        }
+        ```
+        """
+        reference_to_field = {
+            f'model:ir.module.module,description:base.module_{self.name}': 'description',
+            f'model:ir.module.module,shortdesc:base.module_{self.name}': 'shortdesc',
+            f'model:ir.module.module,summary:base.module_{self.name}': 'summary',
+        }
+        translations_by_field: dict[str, dict[str, str]] = defaultdict(dict)
+
+        for lang in dict.fromkeys(langs):
+            # fields_for_lang: dict[str, str] = {}
+            for po_path in get_po_paths(self.name, lang):
+                po_translations = self.__manifest_translations.get(po_path)
+                if po_translations is None:
+                    refs = get_translations_for_references(po_path, reference_to_field)
+                    po_translations = {}
+                    for ref, ref_translations in refs.items():
+                        field_name = reference_to_field[ref]
+                        po_translations[field_name] = list(ref_translations.values())[-1]
+                    self.__manifest_translations[po_path] = po_translations
+                if not po_translations:
+                    continue
+                for field_name, msgstr in po_translations.items():
+                    translations_by_field[field_name][lang] = msgstr
+
+        return dict(translations_by_field)
 
     def __getitem__(self, key: str):
         if key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
