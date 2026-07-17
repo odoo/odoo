@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { Rules } from "../core/rules_models";
-import { MainTableLayout, MainTableWrapper } from "./main_table_models";
+import { MainTable, MainTableLayout, MainTableWrapper } from "./main_table_models";
 import { StyleInfo } from "../core/style_models";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 
@@ -20,7 +20,7 @@ export class MainTableStrategyPlugin extends Plugin {
         // Sequence 1 is used so that this strategy is applied before e.g. the table strategy,
         // which would also match but is less relevant.
         element_layout_analysis_processors: withSequence(1, this.analyzeElementLayout.bind(this)),
-        merge_layout_overrides: this.mergeNeutralReference.bind(this),
+        cell_ref_name_processors: [this.getCellRefName.bind(this)],
         on_reference_content_loaded_handlers: this.identifyLayout.bind(this),
         refine_layout_processors: withSequence(
             DEFAULT_SPACING_SEQUENCE - 1,
@@ -41,17 +41,11 @@ export class MainTableStrategyPlugin extends Plugin {
         this.provideBodyGlobalStyleRules();
     }
 
-    mergeNeutralReference({ parentEmailNode, layout }) {
-        if (
-            parentEmailNode.referenceNodes.length !== 1 ||
-            parentEmailNode.referenceNodes.at(0) !== this.config.reference
-        ) {
-            return;
+    getCellRefName(refName, emailNode) {
+        if (emailNode.layout instanceof MainTable) {
+            return "td";
         }
-        if (parentEmailNode.layout.isNeutral()) {
-            parentEmailNode.layout = layout;
-            return true;
-        }
+        return refName;
     }
 
     discardMarginInfo(layout, { emailNode }) {
@@ -124,7 +118,8 @@ export class MainTableStrategyPlugin extends Plugin {
         }
         if (isMainTable) {
             analysis.facts.isMainTable = true;
-            analysis.parsingFacts.canMerge = false;
+            analysis.parsingFacts.attemptCellMerge = true;
+            analysis.parsingFacts.canMerge = true;
             layout.pluginIds.add(MainTableStrategyPlugin.id);
             return { layout, analysis };
         }

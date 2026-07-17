@@ -9,6 +9,7 @@ export class ListStrategyPlugin extends Plugin {
     static dependencies = ["contextStyle", "measurementSnapshot"];
     resources = {
         element_layout_analysis_processors: this.analyzeFakeListLayout.bind(this),
+        cell_ref_name_processors: [this.getCellRefName.bind(this)],
     };
 
     // Multiple approaches here: either try to support "list-group"
@@ -23,16 +24,18 @@ export class ListStrategyPlugin extends Plugin {
         let { layout, analysis } = defaultEmailNodeArguments;
         let detectionResult;
         if ((detectionResult = this.detectFakeListContainer(referenceNode))) {
+            analysis.parsingFacts.canMerge = false;
             analysis.facts.isFakeListContainer = true;
             layout = this.buildFakeListContainer(layout, referenceNode);
         } else if (
             parentEmailNode?.analysis.facts.isFakeListContainer &&
             (detectionResult = this.detectFakeListItem(referenceNode))
         ) {
+            analysis.parsingFacts.canMerge = true;
+            analysis.parsingFacts.attemptCellMerge = true;
             layout = this.buildFakeListItem(layout, referenceNode);
         }
         if (detectionResult) {
-            analysis.parsingFacts.canMerge = false;
             analysis.parsingFacts.canParentMerge = false;
             layout.pluginIds.add(ListStrategyPlugin.id);
             return { layout, analysis };
@@ -68,6 +71,13 @@ export class ListStrategyPlugin extends Plugin {
                 div: layout.getRef(),
             },
         });
+    }
+
+    getCellRefName(refName, emailNode) {
+        if (emailNode.layout instanceof FakeListItem) {
+            return "div";
+        }
+        return refName;
     }
 }
 

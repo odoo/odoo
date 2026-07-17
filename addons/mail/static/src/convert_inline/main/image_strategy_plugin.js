@@ -285,7 +285,7 @@ export class ImageStrategyPlugin extends Plugin {
      */
     // TODO EGGMAIL: implement the parsing variant to support OI icons (vs FA icons)
     buildFontIconImageRef({ imageNode: fontIcon, shouldBeBlock }) {
-        // TODO EGGMAIL: WORKING HERE, rgba is an alias for rgb
+        // TODO EGGMAIL: rgba is an alias for rgb
         // rgb can also have an alpha channel
         // the value should be normalized for PILLOW
         // maybe it should be normalized for emails too.
@@ -377,7 +377,7 @@ export class ImageStrategyPlugin extends Plugin {
         });
     }
 
-    discardImageEmailNodeInLink({ parentEmailNode, analysis }) {
+    discardImageEmailNodeInLink(parentEmailNode, { analysis }) {
         if (parentEmailNode.analysis.facts.isImageLink && analysis.facts.isImage) {
             // the imageLink will be handled as a whole from the link, no need to
             // keep the image node in the render tree. Only the image padding

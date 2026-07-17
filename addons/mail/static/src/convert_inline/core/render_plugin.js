@@ -1,8 +1,9 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { Analysis, ElementLayout, EmailNode, TextNodeLayout } from "./render_models";
+import { Analysis, ElementLayout, EmailNode, LayoutModel, TextNodeLayout } from "./render_models";
 import { isSelfClosingElement } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
+import { UniqueArray } from "../data_structures";
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -20,8 +21,8 @@ import { childNodes } from "@html_editor/utils/dom_traversal";
  */
 export class RenderPlugin extends Plugin {
     static id = "render";
-    static dependencies = ["measurementSnapshot", "referenceNode", "rules"];
-    static shared = ["isDiscarded"];
+    static dependencies = ["math", "measurementSnapshot", "referenceNode", "rules"];
+    static shared = ["attemptMerge", "isDiscarded"];
     resources = {
         on_build_render_tree_handlers: this.buildRenderTree.bind(this),
         on_render_email_template_handlers: this.renderEmailHtml.bind(this),
@@ -82,7 +83,7 @@ export class RenderPlugin extends Plugin {
     // -- -- deny absorption by parent (if parent allows it)
     // -- -- deny future children absorption (without considering children identities)
     // -- -- provide useful layout info (styleInfo selection, attributes, etc)
-    createEmailNode(referenceNode, parentEmailNode) {
+    createEmailNode(referenceNode, parentEmailNode, isOnlyChild) {
         let childNodes, emailNode;
         if (referenceNode.nodeType === Node.TEXT_NODE) {
             const layout = new TextNodeLayout({ content: referenceNode.nodeValue });
@@ -93,23 +94,16 @@ export class RenderPlugin extends Plugin {
             });
         } else {
             const { layout, analysis } = this.getEmailNodeArguments(referenceNode, parentEmailNode);
-            const parentParsingFacts = parentEmailNode?.analysis.parsingFacts;
-            if (parentEmailNode && !analysis.parsingFacts.canParentMerge) {
-                parentParsingFacts.canMerge = false;
-            }
-            emailNode = parentEmailNode;
-            if (parentEmailNode && parentParsingFacts.canMerge) {
-                if (
-                    !this.delegateTo("merge_email_node_overrides", {
-                        parentEmailNode,
-                        layout,
-                        analysis,
-                    })
-                ) {
-                    this.mergeElementLayout({ parentEmailNode, layout, analysis });
-                    this.mergeElementAnalysis({ parentEmailNode, layout, analysis });
-                }
-                parentEmailNode.pushReferenceNode(referenceNode);
+            if (
+                parentEmailNode &&
+                isOnlyChild &&
+                this.attemptMerge(parentEmailNode, {
+                    analysis,
+                    layout,
+                    referenceNodes: new UniqueArray([referenceNode]),
+                })
+            ) {
+                emailNode = parentEmailNode;
             } else {
                 emailNode = new EmailNode({
                     layout,
@@ -122,47 +116,84 @@ export class RenderPlugin extends Plugin {
                 referenceNode,
                 (node) => !this.discardedNodes.has(node)
             );
-            if (childNodes.length !== 1) {
-                emailNode.analysis.parsingFacts.canMerge = false;
-            }
         }
         if (emailNode.analysis.parsingFacts.needSyntheticEmailNode) {
             this.syntheticEmailNodeContainers.add(emailNode);
         }
-        for (const childNode of childNodes ?? []) {
-            this.createEmailNode(childNode, emailNode);
+        childNodes ??= [];
+        for (const childNode of childNodes) {
+            this.createEmailNode(childNode, emailNode, childNodes.length === 1);
         }
         return emailNode;
+    }
+
+    attemptMerge(parentEmailNode, { analysis, layout, referenceNodes }) {
+        const referenceNode = referenceNodes.at(-1);
+        const parentParsingFacts = parentEmailNode.analysis.parsingFacts;
+        if (!parentParsingFacts.canMerge || !analysis.parsingFacts.canParentMerge) {
+            return false;
+        }
+        let mergeSuccess = false;
+        const parentLayout = parentEmailNode.layout;
+        if (this.delegateTo("merge_email_node_overrides", parentEmailNode, { layout, analysis })) {
+            mergeSuccess = true;
+        } else if (
+            // TODO EGGMAIL: investigate if more automatic merge cases
+            // can be allowed // => neutral div into a strategy table could be
+            // correct (need investigation if table can accept div properties)
+            parentLayout instanceof ElementLayout &&
+            parentLayout.descendantTag === "DIV" &&
+            referenceNode &&
+            this.isBlock(referenceNode) &&
+            parentEmailNode.lastReferenceNode &&
+            this.isBlock(parentEmailNode.lastReferenceNode) &&
+            this.areRectEqual(
+                this.getBoundingClientRect(parentEmailNode.lastReferenceNode),
+                this.getBoundingClientRect(referenceNode)
+            )
+        ) {
+            mergeSuccess = true;
+            this.mergeElementLayout(parentEmailNode, { layout, analysis });
+            this.mergeAnalysis(parentEmailNode, { layout, analysis });
+        } else if (
+            this.delegateTo("merge_layout_overrides", parentEmailNode, { layout, analysis })
+        ) {
+            mergeSuccess = true;
+            this.mergeAnalysis(parentEmailNode, { layout, analysis });
+        }
+        if (mergeSuccess) {
+            parentEmailNode.pushReferenceNodes(...referenceNodes);
+        }
+        return mergeSuccess;
     }
 
     /**
      * Default merge logic for layouts, childLayout overrides parentLayout
      * values
      */
-    mergeElementLayout({ parentEmailNode, layout, analysis }) {
-        if (this.delegateTo("merge_layout_overrides", { parentEmailNode, layout, analysis })) {
+    mergeElementLayout(parentEmailNode, { layout, analysis }) {
+        if (this.delegateTo("merge_layout_overrides", parentEmailNode, { layout, analysis })) {
             return;
         }
-        // TODO EGGMAIL: review default merge behavior
-        const parentLayout = parentEmailNode.layout;
-        const mergedLayout = new ElementLayout({
-            refs: { root: { tag: layout.ancestorTag || parentLayout.ancestorTag || "DIV" } },
-        });
-        mergedLayout.setAttributes(parentLayout.getRef());
-        mergedLayout.setAttributes(layout.getRef());
-        parentEmailNode.layout = mergedLayout;
+        // Build a dummy to aggregate the child layout properties onto the
+        // parent layout properties
+        const dummyLayout = new LayoutModel({ refs: parentEmailNode.layout.getRefs() });
+        for (const refName of layout.getRefNames()) {
+            dummyLayout.setAttributes(layout.getRef(refName), refName);
+        }
+        const refs = dummyLayout.getRefs();
+        refs.root.tag = layout.ancestorTag;
+        parentEmailNode.layout = new layout.constructor({ refs });
     }
 
     /**
      * Default merge logic for analysis, childAnalysis overrides parentAnalysis
      * values, and constraints are concatenated
      */
-    mergeElementAnalysis({ parentEmailNode, layout, analysis }) {
-        //parentAnalysis, childAnalysis) {
-        if (this.delegateTo("merge_analysis_overrides", { parentEmailNode, layout, analysis })) {
+    mergeAnalysis(parentEmailNode, { layout, analysis }) {
+        if (this.delegateTo("merge_analysis_overrides", parentEmailNode, { layout, analysis })) {
             return;
         }
-        // TODO EGGMAIL: review default merge behavior
         const parentAnalysis = parentEmailNode.analysis;
         const mergedAnalysis = new Analysis(parentAnalysis);
         parentEmailNode.analysis = mergedAnalysis;
@@ -191,7 +222,7 @@ export class RenderPlugin extends Plugin {
             this.syntheticEmailNodeContainers.delete(emailNode);
             // IMPORTANT: if emailNode is replaced/removed, all of its children
             // should be given a new parent, this is not a phase where nodes
-            // can be discarded.
+            // can be discarded lightly.
             this.processThrough("synthetic_email_node_processors", emailNode);
         }
     }

@@ -3,7 +3,7 @@ import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
 import { CellLayout, EmptyCellLayout, TableRowLayout } from "./table_models";
-import { EmailNode } from "../core/render_models";
+import { Analysis, ElementLayout, EmailNode } from "../core/render_models";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { StyleInfo } from "../core/style_models";
@@ -30,6 +30,7 @@ export class TableStrategyPlugin extends Plugin {
         "contextStyle",
         "math",
         "measurementSnapshot",
+        "render",
         "responsiveBlock",
         "referenceNode",
         "rules",
@@ -54,6 +55,7 @@ export class TableStrategyPlugin extends Plugin {
             this.analyzeElementLayout.bind(this),
             this.addBottomUpConstraintsForTables.bind(this),
         ],
+        merge_layout_overrides: [this.mergeCellDescendant.bind(this)],
         should_discard_reference_node_predicates: this.isUnsupportedTableElement.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {
@@ -535,6 +537,27 @@ export class TableStrategyPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
+    mergeCellDescendant(parentEmailNode, { layout, analysis }) {
+        if (!parentEmailNode.analysis.parsingFacts.attemptCellMerge) {
+            return;
+        }
+        if (
+            layout instanceof ElementLayout &&
+            layout.tag === "DIV" &&
+            !analysis.desktopMarginStyleInfo &&
+            !analysis.desktopPaddingStyleInfo
+        ) {
+            // need to know which ref has to receive the "DIV" info
+            const refName = this.processThrough(
+                "cell_ref_name_processors",
+                "root",
+                parentEmailNode
+            );
+            parentEmailNode.layout.setAttributes(layout.getRef(), refName);
+            return true;
+        }
+    }
+
     // TODO EGGMAIL: evaluate how float: left/right behave, will it match
     // this table detection algo or does it need a custom one?
     // -> can support it with a specific table layout
@@ -612,6 +635,9 @@ export class TableStrategyPlugin extends Plugin {
                 }
             }
         }
+        // TODO EGGMAIL: do we need to keep the emailNode if it's a div?
+        // At least when it is neutral and has no margin/padding we could
+        // replace it by the rows directly
         emailNode.spliceChildren(0, emailNode.children.length, ...rows);
         return emailNode;
     }
@@ -752,7 +778,7 @@ export class TableStrategyPlugin extends Plugin {
         { cell, strategy },
         { contextStyleInfo, cluster, emailNode, widthRatio, verticalAlign, isLast }
     ) {
-        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        let clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%` };
@@ -765,14 +791,8 @@ export class TableStrategyPlugin extends Plugin {
             attributes,
         });
         const layout = new cell.Layout({ refs });
-        const cellEmailNode = new EmailNode({ layout });
-        for (const child of clusterEmailNodes) {
-            child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
-                child.analysis.facts.desktopMarginStyleInfo,
-                child
-            );
-            cellEmailNode.appendChild(child);
-        }
+        const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
+        const cellEmailNode = new EmailNode({ layout, analysis });
         if (!verticalAlign) {
             if (!isLast) {
                 cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
@@ -782,6 +802,19 @@ export class TableStrategyPlugin extends Plugin {
             cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         }
         cellEmailNode.analysis.facts[strategy] = true;
+        if (
+            clusterEmailNodes.length === 1 &&
+            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
+        ) {
+            clusterEmailNodes = clusterEmailNodes.at(0).children;
+        }
+        for (const child of clusterEmailNodes) {
+            child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
+                child.analysis.facts.desktopMarginStyleInfo,
+                child
+            );
+            cellEmailNode.appendChild(child);
+        }
         return cellEmailNode;
     }
 

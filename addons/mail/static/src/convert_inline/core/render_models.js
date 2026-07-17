@@ -151,6 +151,14 @@ export class LayoutModel {
         };
     }
 
+    getRefs() {
+        const refs = {};
+        for (const refName of this.getRefNames()) {
+            refs[refName] = this.getRef(refName);
+        }
+        return refs;
+    }
+
     renderAttributes(ref = "root") {
         return renderAttributes(this.getRef(ref));
     }
@@ -248,8 +256,9 @@ export class CommentNodeLayout {
 export class Analysis {
     constructor(options = {}) {
         options.parsingFacts ??= {
-            canMerge: false,
-            canParentMerge: false,
+            // both canMerge and canParentMerge must be true for a merge ATTEMPT to be authorized (not guaranteed)
+            canMerge: false, // authorization to attempt merging the layout and analysis of a descendant onto oneself
+            canParentMerge: false, // authorization for a parent to attempt merging the layout and analysis of oneself onto them
         };
         this.facts = { ...(options.facts ?? {}) };
         this.parsingFacts = { ...(options.parsingFacts ?? {}) };
@@ -269,7 +278,7 @@ export class EmailNode {
             parent.appendChild(this);
         }
         if (referenceNode) {
-            this.pushReferenceNode(referenceNode);
+            this.pushReferenceNodes(referenceNode);
         }
         this.analysis = new Analysis(analysis);
         this.marginNode = undefined;
@@ -337,8 +346,8 @@ export class EmailNode {
         return removedChildren;
     }
 
-    pushReferenceNode(referenceNode) {
-        return this.referenceNodes.push(referenceNode);
+    pushReferenceNodes(...referenceNodes) {
+        return this.referenceNodes.push(...referenceNodes);
     }
 
     appendChild(emailNode) {
@@ -362,6 +371,8 @@ export class EmailNode {
         // Small optimization: if "this" would be rendered as a div with no
         // style instruction, it does not need to be rendered and we can
         // keep only the padding and/or the margin, if there is one.
+        // TODO EGGMAIL: missing optimization: spacing wrapper can absorb
+        // a non-neutral div ?
         const isNeutral = this.layout.isNeutral();
         const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
             let renderChildren;
