@@ -176,6 +176,7 @@ export class ColorPlugin extends Plugin {
     }
 
     removeAllColor() {
+        this.activeColorInfo = {};
         const sel = this.dependencies.selection.getEditableSelection();
         if (sel.isCollapsed) {
             const el = closestElement(sel.anchorNode);
@@ -189,7 +190,6 @@ export class ColorPlugin extends Plugin {
             this.trigger("on_color_requested_handlers");
             return;
         }
-        this.activeColorInfo = {};
         const colorModes = ["color", "backgroundColor"];
         const colorNodeProviders = this.getResource("color_target_providers");
         let someColorWasRemoved = true;
