@@ -5,7 +5,6 @@ from datetime import timedelta
 
 from odoo import fields
 
-from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
@@ -336,27 +335,26 @@ class TestDeleteEvents(TestCommon):
         idx = 0
         self.organizer_user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
 
-        # Act: try to delete a recurrent event that was already synced.
-        with self.assertRaises(UserError):
-            self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('all_events')
-            self.call_post_commit_hooks()
+        # Act: archiving a synced recurrent event is now allowed.
+        self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('all_events')
+        self.call_post_commit_hooks()
 
-        # Ensure that event remains undeleted after deletion attempt and delete method wasn't called.
+        # Ensure that sync is active and the event is now archived.
         self.assertTrue(self.recurrent_events[idx].with_user(self.organizer_user)._check_microsoft_sync_status())
-        self.assertTrue(self.recurrent_events[idx].active)
-        mock_delete.assert_not_called()
+        self.assertFalse(self.recurrent_events[idx].active)
 
-    def test_forbid_recurrence_unlinking_list_view(self):
-        # Forbid recurrence unlinking from list view with sync on.
+    def test_recurrence_unlinking_list_view(self):
+        # Recurrence unlinking from list view is now allowed even with sync on.
         self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
-        with self.assertRaises(UserError):
-            self.recurrent_events.unlink()
+        first_event = self.recurrent_events[0]
+        first_event.unlink()
+        self.assertFalse(first_event.exists(), "Recurrent event must be deleted after unlink.")
 
-        # Allow recurrence unlinking when update comes from Microsoft (dont_notify=True).
+        # Recurrence unlinking when update comes from Microsoft (dont_notify=True) also works.
         self.recurrent_events[2:].with_context(dont_notify=True).unlink()
         self.assertTrue(all(not event.exists() for event in self.recurrent_events[2:]), "Recurrent event must be deleted after unlink from Microsoft.")
 
-        # Allow unlinking recurrence when sync is off for the current user.
+        # Recurrence unlinking when sync is off for the current user also works.
         self.organizer_user.microsoft_synchronization_stopped = True
         self.assertFalse(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
         self.recurrent_events[1].with_user(self.organizer_user).unlink()

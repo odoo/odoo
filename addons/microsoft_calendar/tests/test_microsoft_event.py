@@ -4,7 +4,6 @@ from datetime import datetime, UTC
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.tests import tagged
 
@@ -38,11 +37,10 @@ class TestMicrosoftEvent(TestCommon):
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
 
-    def test_forbid_edit_outlook_recurring_event(self):
+    def test_edit_outlook_recurring_event(self):
         """
-        Test that no user can edit a recurring event imported from Outlook
-        (identified by microsoft_recurrence_master_id), but that the sync
-        mechanism itself can still write through via dont_notify context.
+        Test that users can now edit recurring events imported from Outlook,
+        and that the sync mechanism itself can also write through via dont_notify context.
         """
         # Give the organizer user a Microsoft token
         self.organizer_user.microsoft_calendar_token = "fake_token"
@@ -71,26 +69,21 @@ class TestMicrosoftEvent(TestCommon):
             },
         ])
 
-        # No user should be able to edit the Outlook event through Odoo
-        for user in [self.attendee_user, self.organizer_user]:
-            with self.assertRaises(UserError):
-                outlook_recurring_event.with_user(user).with_context(dont_notify=False).write({
-                    'name': 'Trying to change name',
-                    'recurrence_update': 'future_events',
-                })
-        self.assertEqual(outlook_recurring_event.name, 'Outlook Recurring Event')
+        # Users can now edit Outlook-imported recurring events through Odoo
+        outlook_recurring_event.with_user(self.organizer_user).with_context(dont_notify=False).write({
+            'name': 'Changed by organizer',
+            'recurrence_update': 'self_only',
+        })
+        self.assertEqual(outlook_recurring_event.name, 'Changed by organizer')
 
-        # But changes from Microsoft sync itself should still work
+        # Changes from Microsoft sync itself should also work
         outlook_recurring_event.with_context(dont_notify=True).write({
             'name': 'Updated from Outlook',
-            'recurrence_update': 'future_events'
+            'recurrence_update': 'self_only'
         })
         self.assertEqual(outlook_recurring_event.name, 'Updated from Outlook')
 
-        # Remove token: organizer is no longer synced to Outlook
-        self.organizer_user.microsoft_calendar_token = False
-
-        # Any user should be able to edit a non-Outlook recurring event
+        # Any user should be able to edit a non-Outlook recurring event (all modes, including future_events)
         for user in [self.attendee_user, self.organizer_user]:
             recurring_event.with_user(user).with_context(dont_notify=False).write({
                 'name': f'Changed by {user.name}',

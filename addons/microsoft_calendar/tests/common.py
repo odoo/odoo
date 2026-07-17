@@ -480,8 +480,7 @@ class TestCommon(HttpCase):
         )
         already_created = self.recurrent_base_event
 
-        # Currently, it is forbidden to create recurrences in Odoo. A trick for deactivating the checking
-        # is needed below in this test setup: deactivating the synchronization during recurrences creation.
+        # Create the recurrence with sync paused so no Microsoft API calls are made during test setup.
         sync_previous_state = self.env.user.microsoft_synchronization_stopped
         self.env.user.microsoft_synchronization_stopped = False
 
