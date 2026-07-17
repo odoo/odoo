@@ -22,7 +22,7 @@ declare module "plugins" {
     import { is_draggable_handlers, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
     import { lower_panel_entries, on_mobile_preview_clicked, trigger_dom_updated } from "@html_builder/builder";
     import { on_reveal_target_handlers } from "@html_builder/sidebar/invisible_elements_panel";
-    import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
+    import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_inserted_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_handlers } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_groups_providers, background_shape_target_providers, is_element_in_invisible_panel_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
@@ -93,6 +93,7 @@ declare module "plugins" {
         on_snippet_dropped_handlers: on_snippet_dropped_handlers;
         on_snippet_dropped_near_handlers: on_snippet_dropped_near_handlers;
         on_snippet_dropped_over_handlers: on_snippet_dropped_over_handlers;
+        on_snippet_inserted_handlers: on_snippet_inserted_handlers;
         on_snippet_move_handlers: on_snippet_move_handlers;
         on_snippet_out_dropzone_handlers: on_snippet_out_dropzone_handlers;
         on_snippet_over_dropzone_handlers: on_snippet_over_dropzone_handlers;
