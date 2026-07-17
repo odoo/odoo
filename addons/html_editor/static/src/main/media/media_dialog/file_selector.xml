@@ -16,7 +16,7 @@
             </select>
         </div>
         <div class="col justify-content-end flex-nowrap input-group has-validation">
-            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !this.state.showUrlInput, 'w-auto': this.state.showUrlInput }" name="url" t-att-placeholder="this.props.urlPlaceholder" t-model.proxy="this.state.urlInput" t-on-input="this.onUrlInput" t-if="this.state.showUrlInput" t-custom-ref="urlInput"/>
+            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !this.state.showUrlInput, 'w-auto': this.state.showUrlInput }" name="url" t-att-placeholder="this.props.urlPlaceholder" t-model.proxy="this.state.urlInput" t-on-input="this.onUrlInput" t-if="this.state.showUrlInput" t-ref="this.urlInputRef"/>
             <button type="button" class="btn o_upload_media_url_button text-nowrap" t-att-class="{ 'btn-primary': this.state.urlInput, 'btn-secondary': !this.state.urlInput}" t-on-click="this.onUrlUploadClick" t-att-disabled="!this.enableUrlUploadClick">
                     <t t-out="this.props.addText"/>
             </button>
@@ -59,7 +59,7 @@
         <t t-call="{{ this.constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments"
             class="pt-3 pb-1 text-center mx-auto o_we_load_more"
-            t-custom-ref="load-more-button">
+            t-ref="this.loadMoreButtonRef">
             <button t-if="this.canLoadMore"
                 class="btn btn-primary o_load_more"
                 type="button"
