@@ -55,7 +55,6 @@ from odoo.tools import (
     SQL, sql, groupby,
 )
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
 
@@ -1033,7 +1032,7 @@ class BaseModel(metaclass=MetaModel):
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
-        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(1024))
+        flush_recordset = self.with_context(import_flush=flush)
 
         # TODO: break load's API instead of smuggling via context?
         limit = self.env.context.get('_import_limit')
@@ -1227,28 +1226,40 @@ class BaseModel(metaclass=MetaModel):
                 record.update(info)
             log(record)
 
-        for stream_index, (record, extras) in enumerate(records):
-            # xid
-            xid = record.get('id', False)
-            # dbid
-            dbid = False
-            if record.get('.id'):
-                try:
-                    dbid = int(record['.id'])
-                except ValueError:
-                    # in case of overridden id column
-                    dbid = record['.id']
-                if not self.search([('id', '=', dbid)]):
-                    log(dict(extras,
-                        type='error',
-                        record=stream_index,
-                        field='.id',
-                        message=_(u"Unknown database identifier '%s'", dbid)))
-                    dbid = False
+        stream_index = -1
+        for batch_records in itertools.batched(records, n=1000):
+            db_ids = []
+            for record, _extras in batch_records:
+                if record.get('.id'):
+                    try:
+                        db_ids.append(int(record['.id']))
+                    except ValueError:
+                        # in case of overridden id column
+                        db_ids.append(record['.id'])
+            allowed_db_ids = set(self.search([('id', 'in', db_ids)]).ids)
 
-            converted = convert(record, functools.partial(_log, extras, stream_index))
+            for stream_index, (record, extras) in enumerate(batch_records, start=stream_index + 1):
+                # xid
+                xid = record.get('id', False)
+                # dbid
+                dbid = False
+                if record.get('.id'):
+                    try:
+                        dbid = int(record['.id'])
+                    except ValueError:
+                        # in case of overridden id column
+                        dbid = record['.id']
+                    if dbid not in allowed_db_ids:
+                        log(dict(extras,
+                            type='error',
+                            record=stream_index,
+                            field='.id',
+                            message=_("Unknown database identifier '%s'", dbid)))
+                        dbid = False
 
-            yield dbid, xid, converted, dict(extras, record=stream_index)
+                converted = convert(record, functools.partial(_log, extras, stream_index))
+
+                yield dbid, xid, converted, dict(extras, record=stream_index)
 
     def _validate_fields(self, field_names: Iterable[str], excluded_names: Iterable[str] = ()) -> None:
         """ Invoke the constraint methods for which at least one field name is

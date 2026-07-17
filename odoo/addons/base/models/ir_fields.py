@@ -8,7 +8,7 @@ from typing import NamedTuple
 import pytz
 
 from odoo import api, Command, fields, models
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, SQL
 from odoo.tools.translate import _, code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -492,6 +492,10 @@ class IrFieldsConverter(models.AbstractModel):
                  warnings
         :rtype: (ID|None, unicode, list)
         """
+        cache = self.env.cr.cache.setdefault('db_id_for', {})
+        key = (model, field, subfield, value, savepoint)
+        if key in cache:
+            return cache[key], []  # the warning was already raised
         # the function 'flush' comes from BaseModel.load(), and forces the
         # creation/update of former records (batch creation)
         flush = self.env.context.get('import_flush', lambda **kw: None)
@@ -516,6 +520,7 @@ class IrFieldsConverter(models.AbstractModel):
         if subfield == '.id':
             field_type = self.env._("database id")
             if isinstance(value, str) and not self._str_to_boolean(model, field, value, savepoint=savepoint)[0]:
+                cache[key] = False
                 return False, warnings
             try:
                 tentative_id = int(value)
@@ -530,6 +535,7 @@ class IrFieldsConverter(models.AbstractModel):
         elif subfield == 'id':
             field_type = self.env._("external id")
             if not self._str_to_boolean(model, field, value, savepoint=savepoint)[0]:
+                cache[key] = False
                 return False, warnings
             if '.' in value:
                 xmlid = value
@@ -540,6 +546,7 @@ class IrFieldsConverter(models.AbstractModel):
         elif subfield is None:
             field_type = self.env._("name")
             if value == '':
+                cache[key] = False
                 return False, warnings
             flush(model=field.comodel_name)
             ids = RelatedModel.name_search(name=value, operator='=')
@@ -591,32 +598,33 @@ class IrFieldsConverter(models.AbstractModel):
                 message,
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 error_info_dict)
+        cache[key] = id
         return id, warnings
 
     def _xmlid_to_record_id(self, xmlid, model):
         """ Return the record id corresponding to the given external id,
         provided that the record actually exists; otherwise return ``None``.
         """
-        import_cache = self.env.context.get('import_cache', {})
-        result = import_cache.get(xmlid)
-
-        if not result:
-            module, name = xmlid.split('.', 1)
-            query = """
+        module, name = xmlid.split('.', 1)
+        result = self.env.execute_query(SQL(
+            """
                 SELECT d.model, d.res_id
                 FROM ir_model_data d
-                JOIN "{}" r ON d.res_id = r.id
-                WHERE d.module = %s AND d.name = %s
-            """.format(model._table)
-            self.env.cr.execute(query, [module, name])
-            result = self.env.cr.fetchone()
+                JOIN %(table)s r ON d.res_id = r.id
+                WHERE d.module = %(module)s AND d.name = %(name)s
+            """,
+            table=SQL.identifier(model._table),
+            module=module,
+            name=name,
+        ))
+        if not result:
+            return None
 
-        if result:
-            res_model, res_id = import_cache[xmlid] = result
-            if res_model != model._name:
-                MSG = "Invalid external ID %s: expected model %r, found %r"
-                raise ValueError(MSG % (xmlid, model._name, res_model))
-            return res_id
+        res_model, res_id = result[0]
+        if res_model != model._name:
+            MSG = "Invalid external ID %s: expected model %r, found %r"
+            raise ValueError(MSG % (xmlid, model._name, res_model))
+        return res_id
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an
