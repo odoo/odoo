@@ -30,11 +30,15 @@ export const timeOffCalendarHrLeaveView = {
     Controller: TimeOffCalendarControllerHrLeave,
     Renderer: TimeOffCalendarRenderer,
     Model: TimeOffCalendarModel,
-    buttonTemplate: "hr_holidays.CalendarView.Buttons",
+    buttonTemplate: "hr_holidays.CalendarController.Buttons",
 };
-registry.category("views").add("time_off_calendar_hr_leave", timeOffCalendarHrLeaveView);
 
 registry.category("views").add("time_off_calendar_dashboard", {
     ...timeOffCalendarHrLeaveView,
     Renderer: TimeOffDashboardCalendarRenderer,
+});
+
+registry.category("views").add("time_off_management_calendar", {
+    ...timeOffCalendarHrLeaveView,
+    buttonTemplate: "hr_holidays.CalendarController.ManagementButtons",
 });

@@ -1,12 +1,13 @@
 import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
 import { onWillStart, usePlugin, providePlugins } from "@odoo/owl";
-import { TimeOffNewDropdown } from "../../components/time_off_new_dropdown/time_off_new_dropdown";
 import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
 import { TimeOffPlugin } from "../time_off_plugin";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
@@ -18,9 +19,9 @@ export class TimeOffCalendarController extends CalendarController {
         ...CalendarController.components,
         CalendarSidePanel: TimeOffCalendarSidePanel,
         MobileFilterPanel: TimeOffCalendarMobileFilterPanel,
-        NewButton: TimeOffNewDropdown,
+        Dropdown,
+        DropdownItem,
     };
-    static template = "hr_holidays.CalendarController";
 
     setup() {
         super.setup();

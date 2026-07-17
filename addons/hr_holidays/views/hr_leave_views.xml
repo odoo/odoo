@@ -569,9 +569,32 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
+            <xpath expr="//group[@name='col_left']/*[1]" position="before">
+                <div class="d-flex gap-2">
+                    <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
+                </div>
+                <div>
+                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible"
+                        readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
+                </div>
+            </xpath>
+            <field name="work_entry_type_id" position="attributes">
+                <attribute name="domain">[
+                    '|',
+                        ('requires_allocation', '=', False),
+                        '&amp;',
+                            ('has_valid_allocation', '=', True),
+                            '|',
+                                ('allows_negative', '=', True),
+                                '&amp;',
+                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                    ('allows_negative', '=', False),
+                ]</attribute>
+            </field>
             <field name="work_entry_type_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
             </field>
+            <div name="warning_wrong_company" position="replace"/>
         </field>
     </record>
 
@@ -596,6 +619,19 @@
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_calendar_manager" model="ir.ui.view">
+        <field name="name">hr.leave.view.calendar.manager</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_dashboard"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <calendar position="attributes">
+                <attribute name="js_class">time_off_management_calendar</attribute>
+                <attribute name="form_view_id">%(hr_leave_view_form_dashboard_manager_new_time_off)d</attribute>
             </calendar>
         </field>
     </record>
@@ -956,7 +992,7 @@
     <record id="action_view_calendar_manager_approve" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="hr_leave_view_dashboard"/>
+        <field name="view_id" ref="hr_leave_view_calendar_manager"/>
         <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
     </record>
     <record id="action_view_activity_manager_approve" model="ir.actions.act_window.view">
