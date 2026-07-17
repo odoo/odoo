@@ -875,11 +875,8 @@ class Website(models.CachedModel):
         company = website.company_id
         attachment = self.env['ir.attachment'].browse(logo_attachment_id).exists() if logo_attachment_id else False
         if attachment:
-            attachment.write({
-                'res_model': 'website',
-                'res_field': 'logo',
-                'res_id': website.id,
-            })
+            website.logo = BinaryBytes(attachment.raw)
+            attachment.unlink()
         elif not company.uses_default_logo:
             website.logo = BinaryBytes(company.logo.content)
 
