@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { registry } from "@web/core/registry";
 
@@ -7,14 +7,14 @@ class DescriptionPageField extends CharField {
     setup() {
         super.setup();
         const inputRef = useRef("input");
-        useLayoutEffect(
-            (input) => {
-                if (input) {
-                    input.classList.add("col");
-                }
-            },
-            () => [inputRef.el]
-        );
+        // useLayoutEffect(
+        //     (input) => {
+        //         if (input) {
+        //             input.classList.add("col");
+        //         }
+        //     },
+        //     () => [inputRef.el]
+        // );
     }
     onExternalBtnClick() {
         this.env.openRecord(this.props.record);
