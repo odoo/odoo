@@ -1,5 +1,6 @@
 import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -118,6 +119,15 @@ export class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.bootstrap.getOrCreateInstance(this.window.Modal, modalEl)._hideModal();
         }
+
+        // Delete all empty popups upon save
+        for (const popupEl of selectElements(rootEl, ".s_popup")) {
+            const isPopupEmpty = !popupEl.querySelector(".oe_structure > *:not(.s_popup_close)");
+            if (isPopupEmpty) {
+                popupEl.remove();
+            }
+        }
+
         return rootEl;
     }
 
