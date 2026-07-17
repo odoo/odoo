@@ -261,7 +261,7 @@ test("Connections shape color updates when snippet is dropped next to it", async
             styleContent: getShapeTestCSS(),
             snippets: {
                 snippet_groups: [
-                    '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                    '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 ],
                 snippet_structure: [
                     getSnippetStructure({
