@@ -1,5 +1,5 @@
 import { beforeEach, delay, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -253,8 +253,7 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
     });
 
-    test("emptied s_popup are removed and the options are updated correctly", async () => {
-        const editor = builder.getEditor();
+    test("deleting the inner content of a popup does not delete the popup", async () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
             contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
         );
@@ -266,45 +265,32 @@ describe("Popup options: popup in page before edit", () => {
         await contains(
             "div[data-container-title='Block'] button[data-icon='delete'].oi-filled"
         ).click();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
         expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
+        expect(":iframe .s_popup .modal-content").toHaveClass("oe_structure_empty_message");
 
-        expect(editor.shared.history.canRedo()).toBe(true);
-        redo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
+        // Expect the empty message to be removed if the popup is no longer empty
+        await contains(".o-snippets-tabs [data-name='blocks']").click();
+        await insertCategorySnippet({ group: "text", snippet: "s_title" });
+        expect(":iframe .s_popup .modal-content").not.toHaveClass("oe_structure_empty_message");
+    });
 
-        // Undo -> Hide popup -> Redo -> Undo -> Popup expected to be visible
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
-
-        contains(".o_we_invisible_entry [data-icon='visibility']").click();
-        await animationFrame();
-        expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
-
-        expect(editor.shared.history.canRedo()).toBe(true);
-        redo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(0);
-        expect("div[data-container-title='Block']").toHaveCount(0);
-
-        expect(editor.shared.history.canUndo()).toBe(true);
-        undo(editor);
-        await animationFrame();
-        expect(":iframe .s_popup").toHaveCount(1);
-        expect("div[data-container-title='Block']").toHaveCount(1);
+    test("saving an empty popup deletes the popup", async () => {
+        onRpc("ir.ui.view", "save", ({ args }) => {
+            expect.step("save");
+            expect(args[1]).not.toInclude("s_popup");
+            return true;
+        });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
+        );
+        await waitFor(":iframe .s_popup .modal", { visible: true });
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
+        expect(":iframe .s_popup .modal").toBeVisible();
+
+        await contains(":iframe section p:contains('Popup content')").click();
+        await contains(".overlay .oe_snippet_remove").click();
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+        expect.verifySteps(["save"]);
     });
 });
 
