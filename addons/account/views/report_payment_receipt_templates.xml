@@ -26,8 +26,8 @@
                                 Payment Amount: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">50 USD</span>
                             </div>
                             <div name="payment_method"
-                                 t-if="values['display_payment_method'] and o.payment_method_id">
-                                Payment Method: <span t-field="o.payment_method_id.name">Credit card</span>
+                                 t-if="values['display_payment_method'] and o.payment_method_line_id">
+                                Payment Method: <span t-field="o.payment_method_line_id.name">Credit card</span>
                             </div>
                             <div t-if="o.memo">
                                 Memo: <span t-field="o.memo">Sample Memo</span>
