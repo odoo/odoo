@@ -282,6 +282,7 @@ class Website(models.Model):
         domain=[("type", "=", "sale")],
         check_company=True,
     )
+    show_product_reference_price = fields.Boolean(string="Product Reference Price")
 
     extra_step_category_ids = fields.Many2many(
         string="Extra Step Categories",
