@@ -158,14 +158,18 @@ class PaymentTransaction(models.Model):
 
     def _mercado_pago_get_api_url(self, response_content):
         if self.payment_method_code == "pix":
-            if response_content["status"] == "action_required":
-                return response_content["transactions"]["payments"][0]["payment_method"][
-                    "ticket_url"
-                ]
-        else:
-            return response_content[
-                "init_point" if self.provider_id.is_live else "sandbox_init_point"
-            ]
+            if ticket_url := (
+                response_content
+                .get("transactions", {})
+                .get("payments", [{}])[0]
+                .get("payment_method", {})
+                .get("ticket_url")
+            ):
+                return ticket_url
+            raise ValidationError(
+                self.env._("Connection to the payment provider failed. Please try again.")
+            )
+        return response_content["init_point" if self.provider_id.is_live else "sandbox_init_point"]
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Mercado Pago.
