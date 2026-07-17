@@ -197,7 +197,8 @@ export class ToggleBlockPlugin extends Plugin {
             block.nextElementSibling ||
             leaf !== endContainer ||
             !isParagraphRelatedElement(block) ||
-            this.preventDeleteBackwardContentEnd
+            this.preventDeleteBackwardContentEnd ||
+            closestBlock(block.parentElement) !== content
         ) {
             return;
         }
