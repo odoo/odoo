@@ -216,7 +216,6 @@ class PosSession(models.Model):
 
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
         pos_config = self.env['pos.config'].browse(config_id)
-        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(pos_config)
         pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(pos_config)
         today = fields.Date.today()
         pricelist_item_domain = [
@@ -234,7 +233,7 @@ class PosSession(models.Model):
 
         return {
             'product.pricelist.item': pricelist_item.read(pricelist_item_fields, load=False),
-            'product.pricelist': pricelist.read(pricelist_fields, load=False)
+            'product.pricelist': pricelist._load_pos_data_read(pricelist, pos_config),
         }
 
     @api.depends('currency_id', 'company_id.currency_id')
