@@ -13,7 +13,7 @@
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
-                <filter name="group_work_type" string="Type of Work" context="{'group_by': 'count_as'}"/>
+                <filter name="group_work_type" string="Considered as" context="{'group_by': 'count_as'}"/>
             </search>
         </field>
     </record>
@@ -40,7 +40,7 @@
                 <field name="code" string="Code"/>
                 <field name="display_code" string="Display"/>
                 <field name="external_code" optional="hide"/>
-                <field string="Type of Work" name="count_as"/>
+                <field string="Considered as" name="count_as"/>
                 <field name="country_id" optional="hide"/>
                 <field name="color" widget="color_picker"/>
             </list>

@@ -12,7 +12,7 @@ class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
     wizard_id = fields.Many2one('load.public.holiday.wizard', required=True, ondelete='cascade')
     start_date = fields.Date(required=True)
     company_id = fields.Many2one('res.company', required=True)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', string="Work Entry Type",
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', string="Time Type",
         compute='_compute_work_entry_type', readonly=False, store=True,
         domain="[('id', 'in', allowed_work_entry_type_ids)]")
     allowed_work_entry_type_ids = fields.Many2many('hr.work.entry.type', compute='_compute_work_entry_type', store=True)
