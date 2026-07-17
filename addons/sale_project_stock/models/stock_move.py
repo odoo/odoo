@@ -71,7 +71,13 @@ class StockMove(models.Model):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
+<<<<<<< bbafbbd8950ec7123ab652851ede5479484eee26
         project = self.sale_line_id.order_id.project_id
+||||||| 5ba36db5408ab13c106ecde384c25b4bd550fab0
+        project = self.sale_line_id.order_id.project_id or self.group_id.sale_id.project_id
+=======
+        project = self.sale_line_id.order_id.project_id or self.group_id.sale_id.sudo().project_id
+>>>>>>> 581f10980667579dfdb5d44ec230251f0488bf94
         if project:
             res['project_id'] = project.id
         return res
