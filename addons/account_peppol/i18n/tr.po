@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:33+0000\n"
-"PO-Revision-Date: 2026-06-06 19:26+0000\n"
+"POT-Creation-Date: 2026-07-03 17:39+0000\n"
+"PO-Revision-Date: 2026-07-04 09:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/tr/>\n"
@@ -52,7 +52,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " ( %(eas)s eksik)"
 
 #. module: account_peppol
 #. odoo-python
@@ -116,7 +116,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "'%s Zaten bir bağlantı mevcuttur."
 
 #. module: account_peppol
 #. odoo-python
@@ -396,7 +396,7 @@ msgstr "Demo"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Disable the reception."
-msgstr ""
+msgstr "Resepsiyonu devre dışı bırakın."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -463,7 +463,7 @@ msgstr "EDI kullanıcısı"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDI kullanıcısı aşağıdaki türlerden biri olmalıdır: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -505,6 +505,13 @@ msgstr "Fetch Peppol invoice status"
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
 msgid "Fetch from Peppol"
 msgstr "Fetch from Peppol"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -561,6 +568,8 @@ msgstr "Gelen Faturalar Günlüğü"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"%s 'daki fatura, Peppol üzerinden gönderilebilmesi için gerekli olan 64 MB "
+"boyut sınırını aşıyor."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -706,7 +715,7 @@ msgstr "Üst Şirket"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Ortak formatı alamıyor"
 
 #. module: account_peppol
 #. odoo-python
@@ -717,12 +726,12 @@ msgstr "Partner doesn't have a valid Peppol configuration."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Ortak Peppol'da değil"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Ortak Peppol'da yer almaktadır"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -763,7 +772,7 @@ msgstr "Peppol kimliği ana şirketinkinden farklı olmalıdır."
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol Gönderildi"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
@@ -861,6 +870,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Lütfen cep telefonu numarasını doğru uluslararası formatta girin.\n"
+"Örneğin: +32123456789; burada +32 ülke kodudur."
 
 #. module: account_peppol
 #. odoo-python
@@ -1032,7 +1043,7 @@ msgstr "Bir soru cevapsız ve atlandı"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Bazı ekler XML ile gönderilemedi:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1098,6 +1109,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Fatura, Peppol Erişim Noktasına gönderilmiştir. XML dosyasıyla birlikte "
+"aşağıdaki ekler gönderilmiştir:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1190,6 +1203,18 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr ""
@@ -1203,7 +1228,7 @@ msgstr "UBL BIS Faturalama 3.0.12"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "İşaretlenmemiş"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1281,6 +1306,12 @@ msgstr "What is Peppol and why it's great ?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
 msgstr "Why should I use PEPPOL ?"
 
@@ -1303,6 +1334,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"KDV numaranızla kayıt olmak üzeresiniz. Yeni yönetmeliğe uymak için önce "
+"Şirket Sicili'ne (BCE/KBO) kaydolduğunuzdan emin olun."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1348,6 +1381,10 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"Peppol fatura alımı için kullanılan yevmiye defterinin türünü 'Satınalma'dan "
+"farklı bir türe değiştiremezsiniz.\n"
+"Lütfen bu yevmiye defterinin türünü değiştirmeden önce Peppol alımı için "
+"kullanılan yevmiye defterini değiştirin."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1429,6 +1466,8 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Müşterinin \"%s\" (Fatura Bilgileri) bölümünde bir "
+"elektronik adres (EAS) belirtilmelidir."
 
 #. module: account_peppol
 #. odoo-python
@@ -1437,6 +1476,8 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Şirketin '%s' alanında bir elektronik adres (EAS) "
+"belirtilmelidir."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

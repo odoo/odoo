@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-24 19:43+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-16 16:50+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/stock/da/>"
 "\n"
 "Language: da\n"
@@ -3572,13 +3572,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Prognosticeret antal (beregnet som Antal på lager - Udgående + Indkommende)\n"
-"Ved en enkelt lokation omfatter dette varer, der er gemt på denne placering "
-"eller nogen af dets andre lokationer.\n"
-"Ved en enkelt lagerbygning omfatter dette varer, der er opbevaret på "
-"lagerpladsen på dette lager eller nogen af dets andre lagre.\n"
-"Ellers omfatter dette varer, der er opbevaret i en hvilken som helst "
-"lagerlokation med typen 'intern'."
+"Forventet mængde (beregnet som Mængde på lager − Udgående + Indgående).\n"
+"Ved en enkelt lokation omfatter dette varer, der er opbevaret på denne "
+"lokation eller en af dens underlokationer.\n"
+"Ved et enkelt lager omfatter dette varer, der er opbevaret på en lokation i "
+"dette lager eller et af dets underlagre.\n"
+"Ellers omfatter dette varer, der er opbevaret på en vilkårlig lagerlokation "
+"af typen \"Intern\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -3606,19 +3606,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "Forecasted"
-msgstr "Prognosticeret"
+msgstr "Forventet"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Forecasted Date"
-msgstr "Prognosticeret dato"
+msgstr "Forventet dato"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Forecasted Date + Visibility Days"
-msgstr "Prognosticeret dato + synlighedsdage"
+msgstr "Forventet dato + synlighedsdage"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -3628,13 +3628,13 @@ msgstr "Prognosticerede leveringer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr "Prognosticeret, forventet dato"
+msgstr "Forventet på dato"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
-msgstr "Prognosticeret lagerbeholdning"
+msgstr "Forventet lagerbeholdning"
 
 #. module: stock
 #. odoo-python
@@ -3644,7 +3644,7 @@ msgstr "Prognosticeret lagerbeholdning"
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 msgid "Forecasted Quantity"
-msgstr "Prognosticeret mængde"
+msgstr "Forventet mængde"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
@@ -3658,23 +3658,23 @@ msgstr "Prognosticerede kvitteringer"
 #: model:ir.actions.client,name:stock.stock_forecasted_product_product_action
 #: model:ir.actions.client,name:stock.stock_forecasted_product_template_action
 msgid "Forecasted Report"
-msgstr "Prognosticeret rapport"
+msgstr "Forventet rapport"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr "Prognosticeret lagerbeholdning"
+msgstr "Forventet lagerbeholdning"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
 msgid "Forecasted Weight"
-msgstr "Prognosticeret vægt"
+msgstr "Forventet vægt"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted with Pending"
-msgstr "Prognosticeret med afventende"
+msgstr "Forventet med afventende"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
@@ -3691,13 +3691,13 @@ msgstr "Gratis mængde"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Free Stock"
-msgstr "Gratis lagerbeholdning"
+msgstr "Tilgængelig lagerbeholdning"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Free Stock in Transit"
-msgstr "Gratis lagerbeholdning under transport"
+msgstr "Tilgængelig lagerbeholdning under transport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -5628,7 +5628,7 @@ msgstr "Antal udgående bevægelser"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Negative Forecasted Quantity"
-msgstr "Negativ prognosticeret mængde"
+msgstr "Negativ forventet mængde"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9342,7 +9342,7 @@ msgstr "Følgende genopfyldningsordre er blevet genereret"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "The forecasted quantity of"
-msgstr "Den prognosticerede mængde af"
+msgstr "Den forventede mængde af"
 
 #. module: stock
 #. odoo-javascript
@@ -9846,7 +9846,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
-"Dette vil medføre, at alle ikke-anvendte optællinger slettes. Vil du "
+"Dette vil medføre, at alle ikke-anvendte optællinger slettes. Ønsker du at "
 "fortsætte?"
 
 #. module: stock
@@ -10008,7 +10008,7 @@ msgstr "Efterspurgt i alt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Forecasted"
-msgstr "Prognosticeret i alt"
+msgstr "Forventet i alt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -10967,7 +10967,7 @@ msgid ""
 msgstr ""
 "Hvis den virtuelle lagerbeholdning falder under den minimumsmængde, der er "
 "angivet i dette felt, genererer Odoo et indkøbsforslag for at bringe den "
-"forventede beholdning op over minimumsniveauet."
+"forventede mængde op over minimumsniveauet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty

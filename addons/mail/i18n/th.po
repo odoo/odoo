@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-06-17 08:17+0000\n"
-"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-16 21:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/mail/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -930,24 +930,27 @@ msgid "Add Reaction"
 msgstr "เพิ่มการโต้ตอบ"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "เพิ่มการโต้ตอบ"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "เพิ่มคีย์ Tenor GIF API เพื่อเปิดใช้การรองรับ GIF"
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"เพิ่มคีย์ Tenor GIF API เพื่อเปิดใช้การรองรับ GIF https://developers.google.com/tenor/"
-"guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "เพิ่มการโต้ตอบ"
 
 #. module: mail
 #. odoo-javascript
@@ -4802,6 +4805,14 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "หากคุณต้องการใช้ twilio เป็นผู้ให้บริการเซิร์ฟเวอร์ TURN/STUN"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "ละเว้นทั้งหมด"
@@ -5353,6 +5364,32 @@ msgstr "คีย์"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "ขอแสดงความนับถือ"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8590,6 +8627,12 @@ msgstr "ค้นหาเซิร์ฟเวอร์เมลขาเข้
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
 msgstr "ค้นหาข้อความ"
@@ -8631,12 +8674,6 @@ msgstr "ปุ่มค้นหา"
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
 msgstr "ค้นหาตามชื่อ"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "ค้นหา GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -9467,36 +9504,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "เทมเพลต"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "คีย์ API ของ Tenor"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "คีย์ API ของ Tenor GIF"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr "ตัวกรองเนื้อหา Tenor GIF"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr "ข้อจำกัดของ Tenor GIF"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr "ข้อจำกัดของ Tenor GIF"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr "ตัวกรองเนื้อหา Tenor"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -11699,8 +11706,8 @@ msgstr "เพิ่งมอบหมายให้คุณทำกิจก
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12011,7 +12018,41 @@ msgstr "“%(member_name)s” ใน “%(channel_name)s”"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
+
+#~ msgid "Search for a GIF"
+#~ msgstr "ค้นหา GIF"
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "เพิ่มคีย์ Tenor GIF API เพื่อเปิดใช้การรองรับ GIF"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "เพิ่มคีย์ Tenor GIF API เพื่อเปิดใช้การรองรับ GIF https://developers.google.com/"
+#~ "tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "คีย์ API ของ Tenor"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "คีย์ API ของ Tenor GIF"
+
+#~ msgid "Tenor GIF content filter"
+#~ msgstr "ตัวกรองเนื้อหา Tenor GIF"
+
+#~ msgid "Tenor GIF limits"
+#~ msgstr "ข้อจำกัดของ Tenor GIF"
+
+#~ msgid "Tenor Gif Limit"
+#~ msgstr "ข้อจำกัดของ Tenor GIF"
+
+#~ msgid "Tenor content filter"
+#~ msgstr "ตัวกรองเนื้อหา Tenor"
+
+#~ msgid "https://developers.google.com/tenor/guides/content-filtering"
+#~ msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr "%(user)s เชื่อมต่อแล้ว ซึ่งเป็นการเชื่อมต่อครั้งแรกของพวกเขา"

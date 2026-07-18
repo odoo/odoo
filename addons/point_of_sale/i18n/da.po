@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
-"PO-Revision-Date: 2026-06-23 17:02+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"PO-Revision-Date: 2026-07-06 12:57+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/da/>\n"
@@ -240,8 +240,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hej %(client_name)s.<br/>Her er din kvittering %(is_invoiced)sfor"
-"             %(pos_name)s på %(amount)s fra %(company_name)s. </p>"
+"<p>Hej %(client_name)s.<br/>Her er din kvittering %"
+"(is_invoiced)sfor             %(pos_name)s på %(amount)s fra %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -536,7 +537,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Accounting"
-msgstr "Bogføring"
+msgstr "Regnskab"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
@@ -751,7 +752,7 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"Hvis du bruger Bogføringsappen, skal alle tilgængelige prislister være i "
+"Hvis du bruger Regnskabsappen, skal alle tilgængelige prislister være i "
 "samme valuta som virksomheden eller den salgsjournal, der er knyttet til "
 "kassen."
 
@@ -1604,7 +1605,8 @@ msgstr "Slank afslappet T-shirt i ren bomuld. Fås i forskellige størrelser"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr "Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
+msgstr ""
+"Afslappet T-shirt i ren bomuld. Fås i forskellige farver og størrelser."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -2106,7 +2108,7 @@ msgstr "Forbindelsen mislykkedes"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/utils.js:0
 msgid "Connection successful"
-msgstr ""
+msgstr "Forbindelsen oprettet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2649,6 +2651,12 @@ msgstr "Destinationskonto er skrivebeskyttet"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Detailed Receipt"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Details"
 msgstr "Detaljer"
@@ -2971,6 +2979,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
+#: code:addons/point_of_sale/static/src/app/printer/printer_service.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Error"
@@ -3211,6 +3221,12 @@ msgstr "Møbler"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Furniture Shop"
 msgstr "Møbelforretning"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "General Message"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3552,7 +3568,7 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "Når kontoplanen installeres via Generelle Indstillinger i \n"
-"                Fakturering/Bogføringsappen oprettes kontantbetalinger eller "
+"                Fakturering/Regnskabsappen oprettes kontantbetalinger eller "
 "betalinger via\n"
 "                bankoverførsler automatisk."
 
@@ -3642,7 +3658,8 @@ msgstr "Fakturaanmodning"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
+msgstr ""
+"Fakturabetaling for %(order)s (%(account_move)s) med %(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -4535,6 +4552,12 @@ msgid "Not Invoiced"
 msgstr "Ikke faktureret"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_note_model
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_note_ids
@@ -5405,8 +5428,8 @@ msgstr ""
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Indtast venligst dine faktureringsoplysninger <small class=\"text-muted\">"
-"eller</small>"
+"Indtast venligst dine faktureringsoplysninger <small class=\"text-"
+"muted\">eller</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7006,6 +7029,12 @@ msgid "Session Report"
 msgstr "Sessionsrapport"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "Session åben i over 7 dage"
@@ -7988,7 +8017,7 @@ msgid ""
 msgstr ""
 "Sessionen er allerede blevet lukket af en anden bruger. Alle salg, der er "
 "gennemført i mellemtiden, er gemt i en gendannelsessession, som altid kan "
-"gennemgås og bogføres i Bogføringsappen via POS-dashboardet."
+"gennemgås og bogføres i Regnskabsappen via POS-dashboardet."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8469,7 +8498,8 @@ msgstr "For at registrere nye ordrer bedes du starte en ny session."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
+msgstr ""
+"For at returnere produkt(er) skal du åbne en session i kassesystemet %s"
 
 #. module: point_of_sale
 #. odoo-javascript

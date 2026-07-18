@@ -21,11 +21,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-06-23 15:31+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-15 12:06+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/mail/da/>"
-"\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/mail/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +154,8 @@ msgstr "%(person1)s, %(person2)s og %(person3)s har reageret med %(emoji)s"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr "%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
+msgstr ""
+"%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
 
 #. module: mail
 #. odoo-javascript
@@ -189,8 +190,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)stil %(open_cancel)sannulér%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"stil %(open_save)sgem%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)stil %(open_save)sgem%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -439,8 +440,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Skriv en besked</b> til medlemmer af denne her kanal.</p>\n"
-"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med <i>"
-"'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
+"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med "
+"<i>'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
 "kommandoer.</p>"
 
 #. module: mail
@@ -541,7 +542,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr ""
+msgstr "<span>Åbn post</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -939,24 +940,27 @@ msgid "Add Reaction"
 msgstr "Tilføj reaktion"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "Tilføj en reaktion"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er."
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "Tilføj en reaktion"
 
 #. module: mail
 #. odoo-javascript
@@ -1251,13 +1255,13 @@ msgstr "Alle beskeder"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "All conversations have been muted"
-msgstr ""
+msgstr "Alle samtaler er blevet slået fra"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_resend_message.py:0
 msgid "All partners must belong to the same message"
-msgstr ""
+msgstr "Alle partnere skal tilhøre den samme besked"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__allow_public_upload
@@ -1355,7 +1359,8 @@ msgstr "Arkiveret"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
+msgstr ""
+"Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
 
 #. module: mail
 #. odoo-javascript
@@ -1379,7 +1384,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Are you sure you want to delete this message?"
-msgstr ""
+msgstr "Er du sikker på, at du ønsker at slette denne besked?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -1800,8 +1805,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %(document_name)"
-"s. Vælg et andet alias, eller ændr det i det andet dokument."
+"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %"
+"(document_name)s. Vælg et andet alias, eller ændr det i det andet dokument."
 
 #. module: mail
 #. odoo-python
@@ -1889,7 +1894,7 @@ msgstr "Kan redigere brødtekst"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Kan sendes igen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2004,8 +2009,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Hverken den første besked eller den overordnede kanal kan ændres: %(channels)"
-"s."
+"Hverken den første besked eller den overordnede kanal kan ændres: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2600,6 +2605,9 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"Det var ikke muligt at hente dine e-mails. Se fejlmeddelelsen nedenfor for "
+"at få mere at vide:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2995,8 +3003,8 @@ msgid ""
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
 "Standard, når der ikke er match med filtre for den udgående server. Kan være "
-"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. ‘"
-"notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
+"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. "
+"‘notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3703,7 +3711,7 @@ msgstr "E-maildomæne f.eks. 'eksempel.com' i 'odoo@eksempel.com'"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr "E-mailmeddelelse"
+msgstr "E-mailnotifikation"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -4882,6 +4890,14 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Hvis du ønsker at bruge Twilio som TURN/STUN-serverudbyder"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "Ignorér alle"
@@ -5446,6 +5462,32 @@ msgid "Kind Regards"
 msgstr "Med venlig hilsen"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.xml:0
@@ -5858,7 +5900,7 @@ msgstr "Håndtering af primære vedhæftede filer i e-mails"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
-msgstr "E-mailmeddelelses-ID Int"
+msgstr "E-mailnotifikations-ID Int"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_rtc_session
@@ -6456,13 +6498,13 @@ msgstr "Slå samtale fra"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute all conversations"
-msgstr ""
+msgstr "Slå alle samtaler fra"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Mute duration"
-msgstr ""
+msgstr "Slå varighed fra"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
@@ -6475,6 +6517,8 @@ msgstr "Slå notifikationer fra indtil"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Muting prevents unread indicators and notifications from appearing."
 msgstr ""
+"Når du slår lyden fra, vises der ingen indikatorer for ulæste beskeder eller "
+"meddelelser."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -7297,8 +7341,8 @@ msgid ""
 msgstr ""
 "Valgfrit oversættelsessprog (ISO-kode) til brug ved afsendelse af en e-mail. "
 "Hvis det ikke er angivet, anvendes den engelske udgave. Normalt bør dette "
-"være et pladsholderudtryk, der angiver det passende sprog, f.eks. {{ "
-"object.partner_id.lang }}."
+"være et pladsholderudtryk, der angiver det passende sprog, f.eks. "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -8153,7 +8197,7 @@ msgstr "Modtager"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 msgid "Recipient Name"
-msgstr ""
+msgstr "Modtagernavn"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -8437,7 +8481,7 @@ msgstr "Gensend"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_partner_action
 msgid "Resend Email"
-msgstr ""
+msgstr "Gensend e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -8734,6 +8778,12 @@ msgstr "Søg indgående e-mailservere"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
 msgstr "Søg besked"
@@ -8775,12 +8825,6 @@ msgstr "Søgeknap"
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
 msgstr "Søg efter navn"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "Søg efter en GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -8838,7 +8882,7 @@ msgstr "Sikkerhedsopdatering: Adgangskode ændret"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "See Error Details"
-msgstr ""
+msgstr "Se fejloplysninger"
 
 #. module: mail
 #. odoo-python
@@ -8923,7 +8967,7 @@ msgstr "Send"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Send & close"
-msgstr ""
+msgstr "Send og luk"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__mail_post
@@ -9625,36 +9669,6 @@ msgid "Templates"
 msgstr "Skabeloner"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API-nøgle"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API-nøgle"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Test og bekræft"
@@ -9837,8 +9851,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Meddelelsen nedenfor kunne ikke accepteres af adressen %(alias_display_name)"
-"s.\n"
+"Meddelelsen nedenfor kunne ikke accepteres af adressen %"
+"(alias_display_name)s.\n"
 "                 Kun %(contact_description)s har tilladelse til at kontakte "
 "denne adresse.<br /><br />\n"
 "                 Sørg for, at du bruger den korrekte adresse, eller kontakt "
@@ -10106,8 +10120,8 @@ msgstr ""
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Disse værdier understøttes ikke som muligheder ved gengivelse: %(param_names)"
-"s"
+"Disse værdier understøttes ikke som muligheder ved gengivelse: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -10388,7 +10402,7 @@ msgstr "Udløser næste aktivitet"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Prøv igen"
 
 #. module: mail
 #. odoo-javascript
@@ -10486,7 +10500,8 @@ msgstr "Kan ikke oprette forbindelse til SMTP-serveren"
 #. odoo-python
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
+msgstr ""
+"Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
 
 #. module: mail
 #. odoo-python
@@ -11551,7 +11566,8 @@ msgstr "Din/dit"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
-msgstr "Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
+msgstr ""
+"Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -11784,8 +11800,8 @@ msgstr "f.eks. \"Velkomstmail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, {{ "
-"object.name }}\""
+"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -11906,8 +11922,8 @@ msgstr "har netop tildelt dig følgende aktivitet:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12223,3 +12239,26 @@ msgstr "\"%(member_name)s\" i \"%(channel_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "\"%s\""
+
+#~ msgid "Search for a GIF"
+#~ msgstr "Søg efter en GIF"
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr ""
+#~ "Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Tilføj en Tenor GIF API-nøgle for at aktivere understøttelse af GIF'er. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API-nøgle"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API-nøgle"
+
+#~ msgid "https://developers.google.com/tenor/guides/content-filtering"
+#~ msgstr "https://developers.google.com/tenor/guides/content-filtering"

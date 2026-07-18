@@ -15,16 +15,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-05-27 15:25+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-06 08:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/mail/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #. odoo-python
@@ -957,25 +957,34 @@ msgid "Add Reaction"
 msgstr "Reactie toevoegen"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "Voeg een reactie toe"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
 msgstr ""
-"Voeg een Tenor GIF API key toe om de ondersteuning van GIFS te activeren."
+"Voeg een Klipy GIF API-sleutel toe om ondersteuning voor GIF’s in te "
+"schakelen. Als je een Tenor GIF API-sleutel gebruikte (dienst stopgezet op "
+"30 juni 2026), vervang deze dan hier door een Klipy GIF API-sleutel"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"Voeg een Tenor GIF API key toe om de ondersteuning van GIFs te activeren. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+"Voeg een Klipy GIF API-sleutel toe om ondersteuning voor GIF’s in te "
+"schakelen. https://docs.klipy.com/getting-started\n"
+"Als je een Tenor GIF API-sleutel gebruikte (dienst stopgezet op 30 juni "
+"2026), vervang deze dan hier door een Klipy GIF API-sleutel"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "Voeg een reactie toe"
 
 #. module: mail
 #. odoo-javascript
@@ -4935,6 +4944,16 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Als je twilio als TURN/STUN-serverprovider wilt gebruiken"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+"Als je een Tenor-API-sleutel gebruikte, vervang deze dan door een Klipy-API-"
+"sleutel in de Algemene instellingen."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "Negeer alle"
@@ -5502,6 +5521,32 @@ msgstr "Sleutel"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "Met vriendelijke groet"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr "Klipy API-sleutel"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr "Klipy GIF API-sleutel"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr "Klipy GIF inhoudsfilter"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr "Klipy GIF limieten"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr "Klipy inhoudsfilter"
 
 #. module: mail
 #. odoo-javascript
@@ -8806,6 +8851,12 @@ msgstr "Zoeken in inkomende e-mailservers"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
 msgstr "Zoek bericht"
@@ -8847,12 +8898,6 @@ msgstr "Zoekknop"
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
 msgstr "Zoek op naam"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "Zoek naar een GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -9700,36 +9745,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "Sjablonen"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API key"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API key"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr "Tenor GIF inhoudsfilter"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr "Tenor GIF limieten"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr "Tenor Gif limiet"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr "Tenor inhoudsfilter"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -11509,7 +11524,7 @@ msgstr "Je kunt dit bericht zonder problemen negeren"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "Je kunt geen lege domeinnaam toewijzen."
 
 #. module: mail
 #. odoo-python
@@ -12015,8 +12030,8 @@ msgstr "heeft je zojuist de volgende activiteit toegewezen:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
+msgstr "https://docs.klipy.com/migrate-from-tenor/content-filtering"
 
 #. module: mail
 #. odoo-javascript
@@ -12332,6 +12347,41 @@ msgstr "“%(member_name)s” in “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "“%s”"
+
+#~ msgid "Search for a GIF"
+#~ msgstr "Zoek naar een GIF"
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr ""
+#~ "Voeg een Tenor GIF API key toe om de ondersteuning van GIFS te activeren."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Voeg een Tenor GIF API key toe om de ondersteuning van GIFs te activeren. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API key"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API key"
+
+#~ msgid "Tenor GIF content filter"
+#~ msgstr "Tenor GIF inhoudsfilter"
+
+#~ msgid "Tenor GIF limits"
+#~ msgstr "Tenor GIF limieten"
+
+#~ msgid "Tenor Gif Limit"
+#~ msgstr "Tenor Gif limiet"
+
+#~ msgid "Tenor content filter"
+#~ msgstr "Tenor inhoudsfilter"
+
+#~ msgid "https://developers.google.com/tenor/guides/content-filtering"
+#~ msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"
