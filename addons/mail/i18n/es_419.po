@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 11:06+0000\n"
+"POT-Creation-Date: 2026-07-17 17:36+0000\n"
+"PO-Revision-Date: 2026-07-14 20:09+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-17/mail/es_419/>\n"
@@ -893,6 +893,10 @@ msgid ""
 "GIF API key (service shutdown on June 30, 2026), please replace it here with "
 "a Klipy GIF API key"
 msgstr ""
+"Agrega una clave API de GIF de Klipy para activar la compatibilidad con los "
+"archivos GIF. Si usabas una clave API de GIF de Tenor (el servicio dejó de "
+"funcionar el 30 de junio de 2026), reemplázala aquí por una clave API para "
+"GIF de Klipy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -902,6 +906,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Agrega una clave API de GIF de Klipy para activar la compatibilidad con los "
+"archivos GIF. https://docs.klipy.com/getting-started\n"
+"Si usabas una clave API de GIF de Tenor (el servicio dejó de funcionar el 30 "
+"de junio de 2026), reemplázala aquí por una clave API de GIF de Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -3589,7 +3597,7 @@ msgstr "Activar notificaciones de escritorio para el chat"
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Enter"
-msgstr "Ingresar"
+msgstr "Enter"
 
 #. module: mail
 #. odoo-javascript
@@ -4729,6 +4737,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Si usabas una clave API de Tenor, reemplázala por una clave API de Klipy en "
+"Ajustes generales."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5299,28 +5309,28 @@ msgstr "Saludos cordiales,"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Clave API de Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Klipy GIF API key"
-msgstr ""
+msgstr "Clave API de GIF de Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Klipy GIF content filter"
-msgstr ""
+msgstr "Filtro de contenido de GIF de Klipy"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Klipy GIF limits"
-msgstr ""
+msgstr "Límites de GIF de Klipy"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
 msgid "Klipy content filter"
-msgstr ""
+msgstr "Filtro de contenido de Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -5592,7 +5602,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "Registro"
+msgstr "Registrar"
 
 #. module: mail
 #. odoo-javascript
@@ -8455,6 +8465,13 @@ msgstr "Buscar en los servidores de correo entrantes"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #: code:addons/mail/static/src/core/web/chatter.xml:0
@@ -8473,13 +8490,6 @@ msgstr "Buscar sesión de comunicación en tiempo real"
 #, python-format
 msgid "Search button"
 msgstr "Botón de búsqueda"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#, python-format
-msgid "Search for a GIF"
-msgstr "Buscar un GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -11463,7 +11473,7 @@ msgstr "le acaba de asignar la siguiente actividad:"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
 msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
-msgstr ""
+msgstr "https://docs.klipy.com/migrate-from-tenor/content-filtering"
 
 #. module: mail
 #. odoo-python
@@ -11794,6 +11804,10 @@ msgstr "“%(member_name)s” en “%(channel_name)s”"
 #, python-format
 msgid "“%s”"
 msgstr "\"%s\""
+
+#, python-format
+#~ msgid "Search for a GIF"
+#~ msgstr "Buscar un GIF"
 
 #~ msgid "Add a Tenor GIF API key to enable GIFs support."
 #~ msgstr ""

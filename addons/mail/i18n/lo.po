@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-22 10:07+0000\n"
+"POT-Creation-Date: 2026-07-17 17:36+0000\n"
+"PO-Revision-Date: 2026-07-14 15:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/mail/lo/>\n"
 "Language: lo\n"
@@ -69,7 +69,7 @@ msgstr "\"%(activity_name)s: %(summary)s\" ໄດ້ມອບໝາຍໃຫ້�
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "\"%(hostname)s\" needs to access your microphone"
-msgstr ""
+msgstr "\"%(hostname)s\" ຕ້ອງການເຂົ້າເຖິງໄມໂຄຣໂຟນຂອງທ່ານ"
 
 #. module: mail
 #. odoo-javascript
@@ -132,7 +132,7 @@ msgstr ""
 #, python-format
 msgid ""
 "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
+msgstr "%(open_button)s%(icon)s%(open_em)sຍົກເລີກການແກ້ໄຂ%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -143,6 +143,10 @@ msgid ""
 "%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
 "Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sEscape%(close_samp)s %(open_em)sເພື່ອ "
+"%(open_cancel)sຍົກເລີກ%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
+"Enter%(close_samp)s %(open_em)sເພື່ອ "
+"%(open_save)sບັນທຶກ%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -154,6 +158,10 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sEscape%(close_samp)s %(open_em)sເພື່ອ "
+"%(open_cancel)sຍົກເລີກ%(close_cancel)s%(close_em)s, "
+"%(open_samp)sEnter%(close_samp)s %(open_em)sເພື່ອ "
+"%(open_save)sບັນທຶກ%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -181,7 +189,7 @@ msgstr "%(user_name)s ໄດ້ເຊີນທ່ານໃຫ້ຕິດຕາ�
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "%(user_name)s pinned a message to this channel."
-msgstr ""
+msgstr "%(user_name)s ໄດ້ປັກໝຸດຂໍ້ຄວາມໄວ້ໃນຊ່ອງນີ້."
 
 #. module: mail
 #. odoo-python
@@ -272,14 +280,14 @@ msgstr "%s ກຳລັງພິມ..."
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 #, python-format
 msgid "%s messages found"
-msgstr ""
+msgstr "ພົບ %s ຂໍ້ຄວາມ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "%s raised their hand"
-msgstr ""
+msgstr "%s ໄດ້ຍົກມືຂຶ້ນ"
 
 #. module: mail
 #. odoo-python
@@ -340,14 +348,14 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #: code:addons/mail/static/src/core/common/message.js:0
 #, python-format
 msgid "(Translated from: %(language)s)"
-msgstr ""
+msgstr "(ແປຈາກ: %(language)s)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 #, python-format
 msgid "(Translation Failure: %(error)s)"
-msgstr ""
+msgstr "(ການແປລົ້ມເຫຼວ: %(error)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -383,6 +391,7 @@ msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
 msgstr ""
+"<b invisible=\"not no_record\" class=\"text-warning\">ບໍ່ມີຂໍ້ມູນສຳລັບໂມເດວນີ້</b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -409,12 +418,12 @@ msgstr "<span class=\"d-block w-75 py-2\">ສີສ່ວນຫົວ</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"me-1\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -455,6 +464,20 @@ msgid ""
 "the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                ຂໍ້ຄວາມຈະຖືກສົ່ງເປັນອີເມລ໌ໄປຫາຜູ້ຮັບຂອງ\n"
+"                                ເທັມເພຼດ ແລະ ຈະບໍ່ປາກົດໃນປະຫວັດການສົ່ງຂໍ້ຄວາມ.\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != 'note'\">\n"
+"                                ຂໍ້ຄວາມຈະຖືກໂພສເປັນບັນທຶກພາຍໃນທີ່ຜູ້ໃຊ້ພາຍໃນ\n"
+"                                ສາມາດເຫັນໄດ້ໃນປະຫວັດການສົ່ງຂໍ້ຄວາມ.\n"
+"                            </span>\n"
+"                            <span invisible=\"mail_post_method != "
+"'comment'\">\n"
+"                                ຂໍ້ຄວາມຈະຖືກໂພສເປັນຂໍ້ຄວາມໃນຂໍ້ມູນ,\n"
+"                                ເພື່ອແຈ້ງເຕືອນຜູ້ຕິດຕາມທັງໝົດ. "
+"ມັນຈະປາກົດໃນປະຫວັດການສົ່ງຂໍ້ຄວາມ.\n"
+"                            </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -561,6 +584,8 @@ msgid ""
 "A valid Google API key is required to enable message translation. https://"
 "cloud.google.com/translate/docs/setup"
 msgstr ""
+"ຕ້ອງມີ Google API key ທີ່ຖືກຕ້ອງເພື່ອເປີດໃຊ້ການແປຂໍ້ຄວາມ. https://cloud.google.com/"
+"translate/docs/setup"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
@@ -806,7 +831,7 @@ msgstr "ກິດຈະກຳ: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Add Context Action"
-msgstr ""
+msgstr "ເພີ່ມການດຳເນີນການຕາມສະພາບການ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -863,7 +888,7 @@ msgstr "ເພີ່ມຄຳອະທິບາຍ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Add a description to your activity..."
-msgstr ""
+msgstr "ເພີ່ມຄຳອະທິບາຍໃຫ້ກັບກິດຈະກຳຂອງທ່ານ..."
 
 #. module: mail
 #. odoo-python
@@ -928,7 +953,7 @@ msgstr "ການເພີ່ມຜູ້ຕິດຕາມໃນຊ່ອງທ
 msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
-msgstr ""
+msgstr "ບໍ່ສາມາດເພີ່ມສະມາຊິກໃນການສົນທະນານີ້ໄດ້; ມັນຖືກອອກແບບມາສຳລັບຄົນສອງຄົນເທົ່ານັ້ນ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -1014,6 +1039,8 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
+"ນາມແຝງ %(matching_name)s (%(current_id)s) ໄດ້ຖືກເຊື່ອມໂຍງກັບ %(alias_model_name)s "
+"(%(matching_id)s) ແລ້ວ ແລະ ຖືກໃຊ້ໂດຍ %(parent_name)s %(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1023,6 +1050,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
+"ນາມແຝງ %(matching_name)s (%(current_id)s) ໄດ້ຖືກເຊື່ອມໂຍງກັບ %(alias_model_name)s "
+"(%(matching_id)s) ແລ້ວ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1056,7 +1085,7 @@ msgstr "ຊື່ໂດເມນຊື່ແຝງ"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr ""
+msgstr "ໂດເມນນາມແຝງ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
@@ -1078,7 +1107,7 @@ msgstr "ສະຖານະຊື່ແຝງ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr ""
+msgstr "ຊື່ໂດເມນນາມແຝງ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -1104,6 +1133,7 @@ msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
 msgstr ""
+"ນາມແຝງ %(alias_names)s ຖືກໃຊ້ເປັນທີ່ຢູ່ bounce ຫຼື catchall ແລ້ວ. ກະລຸນາເລືອກນາມແຝງອື່ນ."
 
 #. module: mail
 #. odoo-javascript
@@ -1118,7 +1148,7 @@ msgstr "ທັງໝົດ"
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "All Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທັງໝົດ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
@@ -1135,7 +1165,7 @@ msgstr "ຄູ່ຄ້າທັງໝົດຕ້ອງຂຶ້ນກັບຂ
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__allow_public_upload
 msgid "Allow Public Upload"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ສາທາລະນະອັບໂຫຼດ"
 
 #. module: mail
 #. odoo-python
@@ -1153,7 +1183,7 @@ msgstr ""
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "ຕ້ອງມີ access token ສຳລັບແຕ່ລະໄຟລ໌ຄັດຕິດ."
 
 #. module: mail
 #. odoo-python
@@ -1236,7 +1266,7 @@ msgstr "ຖືກເກັບໄວ້ໃນຄັງຍ້ອນ %(user_name)s 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
 msgid "Are you sure you want to delete this Mail Template?"
-msgstr ""
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບເທັມເພຼດອີເມລ໌ນີ້?"
 
 #. module: mail
 #. odoo-javascript
@@ -1265,7 +1295,7 @@ msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການເອ
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
-msgstr ""
+msgstr "ຖາມເມື່ອເລີ່ມຕົ້ນ"
 
 #. module: mail
 #. odoo-javascript
@@ -1279,7 +1309,7 @@ msgstr "ມອບໝາຍໃຫ້ ..."
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Assign to me"
-msgstr ""
+msgstr "ມອບໝາຍໃຫ້ຂ້ອຍ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
@@ -1458,7 +1488,7 @@ msgstr "ກຳນົດເວລາກິດຈະກຳນີ້ໂດຍອັ
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Available for all Companies"
-msgstr ""
+msgstr "ໃຊ້ໄດ້ກັບທຸກບໍລິສັດ"
 
 #. module: mail
 #. odoo-javascript
@@ -1531,7 +1561,7 @@ msgstr "ແບບຟອມພື້ນຖານ"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__sfu_server_key
 msgid "Base64 encoded key"
-msgstr ""
+msgstr "ລະຫັດແບບ Base64"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
@@ -1622,13 +1652,13 @@ msgstr "ຕີກັບ (Bounce)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_alias
 msgid "Bounce Alias"
-msgstr ""
+msgstr "ນາມແຝງ Bounce"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_email
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_email
 msgid "Bounce Email"
-msgstr ""
+msgstr "ອີເມລ໌ Bounce"
 
 #. module: mail
 #. odoo-python
@@ -1638,11 +1668,13 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
+"ນາມແຝງ Bounce %(bounce)s ແມ່ນຖືກນຳໃຊ້ແລ້ວສຳລັບໂດເມນອື່ນທີ່ມີຊື່ດຽວກັນ. ກະລຸນາໃຊ້ Bounce ອື່ນ "
+"ຫຼື ໃຊ້ໂດເມນນາມແຝງອື່ນ."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
 msgid "Bounce emails should be unique"
-msgstr ""
+msgstr "ອີເມລ໌ Bounce ຄວນມີພຽງໜຶ່ງດຽວ"
 
 #. module: mail
 #. odoo-python
@@ -1652,6 +1684,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
+"Bounce/Catchall '%(matching_alias_name)s' ແມ່ນຖືກນຳໃຊ້ແລ້ວໂດຍ %(document_name)s. "
+"ກະລຸນາເລືອກນາມແຝງອື່ນ ຫຼື ປ່ຽນແປງມັນຢູ່ໃນເອກະສານອື່ນ."
 
 #. module: mail
 #. odoo-python
@@ -1661,6 +1695,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
 msgstr ""
+"Bounce/Catchall '%(matching_alias_name)s' ແມ່ນຖືກນຳໃຊ້ແລ້ວ. ກະລຸນາເລືອກນາມແຝງອື່ນ ຫຼື "
+"ປ່ຽນແປງມັນຢູ່ໃນໂມເດວທີ່ເຊື່ອມໂຍງ."
 
 #. module: mail
 #. odoo-javascript
@@ -1678,6 +1714,7 @@ msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
 msgstr ""
+"Brave: ເປີດໃຊ້ 'Google Services for Push Messaging' ເພື່ອເປີດໃຊ້ການແຈ້ງເຕືອນແບບ Push"
 
 #. module: mail
 #. odoo-javascript
@@ -1689,12 +1726,12 @@ msgstr "ຄ່າເລີ່ມຕົ້ນຂອງບຣາວເຊີ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_partner_device__endpoint
 msgid "Browser endpoint"
-msgstr ""
+msgstr "ປາຍທາງບຣາວເຊີ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_partner_device__keys
 msgid "Browser keys"
-msgstr ""
+msgstr "ຄີຂອງບຣາວເຊີ"
 
 #. module: mail
 #. odoo-python
@@ -1845,7 +1882,7 @@ msgstr "Catchall"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_alias
 msgid "Catchall Alias"
-msgstr ""
+msgstr "ນາມແຝງ Catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_email
@@ -1861,11 +1898,13 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
+"ນາມແຝງ Catchall %(catchall)s ແມ່ນຖືກນຳໃຊ້ແລ້ວສຳລັບໂດເມນອື່ນທີ່ມີຊື່ດຽວກັນ. ກະລຸນາໃຊ້ "
+"Catchall ອື່ນ ຫຼື ໃຊ້ໂດເມນນາມແຝງອື່ນ."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
 msgid "Catchall emails should be unique"
-msgstr ""
+msgstr "ອີເມລ໌ Catchall ຄວນມີພຽງໜຶ່ງດຽວ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -1916,14 +1955,14 @@ msgstr "ປະເພດຊ່ອງທາງ"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr ""
+msgstr "ຊ່ອງທາງເຕັມແລ້ວ"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, python-format
 msgid "Channel members cannot include public users."
-msgstr ""
+msgstr "ສະມາຊິກຊ່ອງທາງບໍ່ສາມາດລວມເອົາຜູ້ໃຊ້ສາທາລະນະໄດ້."
 
 #. module: mail
 #. odoo-javascript
@@ -1949,7 +1988,7 @@ msgstr "ຊ່ອງທາງ"
 #: model:ir.actions.act_window,name:mail.discuss_channel_member_action
 #: model:ir.ui.menu,name:mail.discuss_channel_member_menu
 msgid "Channels/Members"
-msgstr ""
+msgstr "ຊ່ອງທາງ/ສະມາຊິກ"
 
 #. module: mail
 #. odoo-javascript
@@ -1994,19 +2033,19 @@ msgstr "ເລືອກແມ່ແບບ..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a user..."
-msgstr ""
+msgstr "ເລືອກຜູ້ໃຊ້..."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Choose another value or change it on the other document."
-msgstr ""
+msgstr "ເລືອກຄ່າອື່ນ ຫຼື ປ່ຽນມັນໃນເອກະສານອື່ນ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
-msgstr ""
+msgstr "ເລືອກການມອບໝາຍສຳລັບກິດຈະກຳທີ່ມີການມອບໝາຍແບບຕາມຄວາມຕ້ອງການ."
 
 #. module: mail
 #. odoo-javascript
@@ -2043,28 +2082,28 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #, python-format
 msgid "Close Search"
-msgstr ""
+msgstr "ປິດການຄົ້ນຫາ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Close button"
-msgstr ""
+msgstr "ປຸ່ມປິດ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/action_panel.xml:0
 #, python-format
 msgid "Close panel"
-msgstr ""
+msgstr "ປິດແຜງຄວບຄຸມ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Close search"
-msgstr ""
+msgstr "ປິດການຄົ້ນຫາ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__closed
@@ -2126,7 +2165,7 @@ msgstr "ບໍລິສັດ"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "ບໍລິສັດທີ່ໃຊ້ໂດເມນນີ້ເປັນຄ່າເລີ່ມຕົ້ນໃນການສົ່ງອີເມລ໌"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2251,7 +2290,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Connection type:"
-msgstr ""
+msgstr "ປະເພດການເຊື່ອມຕໍ່:"
 
 #. module: mail
 #. odoo-javascript
@@ -2583,7 +2622,7 @@ msgstr "ປັບແຕ່ງຮູບແບບຂອງອີເມວອັດ
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_notifications
 msgid "Customized Notifications"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນທີ່ກຳນົດເອງ"
 
 #. module: mail
 #. odoo-javascript
@@ -2685,12 +2724,12 @@ msgstr "ໂໝດການສະແດງຜົນເລີ່ມຕົ້ນ"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from_email
 #: model:ir.model.fields,field_description:mail.field_res_company__default_from_email
 msgid "Default From"
-msgstr ""
+msgstr "ຄ່າເລີ່ມຕົ້ນຈາກ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from
 msgid "Default From Alias"
-msgstr ""
+msgstr "ນາມແຝງເລີ່ມຕົ້ນຈາກ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
@@ -2721,6 +2760,9 @@ msgid ""
 "local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"ຄ່າເລີ່ມຕົ້ນ \"ຈາກ\" (From) ເມື່ອມັນບໍ່ກົງກັບຕົວຕອງຂອງເຊີເວີຂາອອກ. ສາມາດເປັນໄດ້ທັງພາກສ່ວນທ້ອງຖິ່ນ "
+"ເຊັ່ນ: 'notifications' ຫຼື ທີ່ຢູ່ອີເມລທີ່ສົມບູນ ເຊັ່ນ: 'notifications@example.com' "
+"ເພື່ອຂຽນທັບອີເມລຂາອອກທັງໝົດ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -2741,7 +2783,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ເລີ່ມຕົ້ນ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -2792,7 +2834,7 @@ msgstr "ລຶບອີເມວ"
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #, python-format
 msgid "Delete all previews"
-msgstr ""
+msgstr "ລຶບຕົວຢ່າງທັງໝົດ"
 
 #. module: mail
 #. odoo-javascript
@@ -2897,7 +2939,7 @@ msgstr "ແຖບຂ້າງການສົນທະນາ"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
 msgid "Discuss: channel member unmute"
-msgstr ""
+msgstr "Discuss: ເປີດສຽງສະມາຊິກຊ່ອງທາງ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -3051,7 +3093,7 @@ msgstr "ສຳເລັດ ແລະ ຕັ້ງເວລາອັນຖັດ�
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
 msgid "Done Date"
-msgstr ""
+msgstr "ວັນທີສຳເລັດ"
 
 #. module: mail
 #. odoo-javascript
@@ -3074,7 +3116,7 @@ msgstr "ດາວໂຫຼດ"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Download Files"
-msgstr ""
+msgstr "ດາວໂຫລດໄຟລ໌"
 
 #. module: mail
 #. odoo-javascript
@@ -3088,7 +3130,7 @@ msgstr "ດາວໂຫຼດບັນທຶກ (Logs)"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Download:"
-msgstr ""
+msgstr "ດາວໂຫລດ:"
 
 #. module: mail
 #. odoo-javascript
@@ -3154,7 +3196,7 @@ msgstr "ລາຍງານແບບໄດນາມິກ (Dynamic)"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__generic
 msgid "Dynamic User (based on record)"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ແບບໄດນາມິກ (ອີງຕາມຂໍ້ມູນ)"
 
 #. module: mail
 #. odoo-javascript
@@ -3242,7 +3284,7 @@ msgstr "ມິກຊິນຊື່ແຝງອີເມວ"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin_optional
 msgid "Email Aliases Mixin (light)"
-msgstr ""
+msgstr "ສ່ວນປະສົມນາມແຝງອີເມລ (ແບບເບົາ)"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3254,7 +3296,7 @@ msgstr "ລາຍຊື່ບລັອກອີເມວ"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_secondary_color
 msgid "Email Button Color"
-msgstr ""
+msgstr "ສີປຸ່ມອີເມລ໌"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -3270,13 +3312,13 @@ msgstr "ການຕັ້ງຄ່າອີເມວ"
 #: model:ir.model,name:mail.model_mail_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_id
 msgid "Email Domain"
-msgstr ""
+msgstr "ໂດເມນອີເມລ໌"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
-msgstr ""
+msgstr "ສີສ່ວນຫົວອີເມລ໌"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -3368,6 +3410,7 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
+"ນາມແຝງອີເມລ %(alias_name)s ບໍ່ສາມາດໃຊ້ກັບຫຼາຍໆຂໍ້ມູນພ້ອມກັນໄດ້. ກະລຸນາອັບເດດຂໍ້ມູນເທື່ອລະອັນ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3591,7 +3634,7 @@ msgstr "ຂະຫຍາຍ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_partner_device__expiration_time
 msgid "Expiration Token Date"
-msgstr ""
+msgstr "ວັນໝົດອາຍຸຂອງ Token"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -3613,21 +3656,21 @@ msgstr "ບໍ່ຜ່ານ"
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 #, python-format
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "ບໍ່ສາມາດເປີດໃຊ້ການແຈ້ງເຕືອນແບບ Push ໄດ້"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
-msgstr ""
+msgstr "ບໍ່ສາມາດໂຫຼດ GIF ໄດ້..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "ບໍ່ສາມາດໂຫຼດ SFU ເຊີບເວີໄດ້, ກັບຄືນໄປໃຊ້ແບບ peer-to-peer"
 
 #. module: mail
 #. odoo-python
@@ -3642,6 +3685,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"ບໍ່ສາມາດປະມວນຜົນແມ່ແບບ QWeb ສຳລັບ %(template_label)s\n"
+"ໂມເດວເປົ້າໝາຍ: %(model_name)s\n"
+"ບໍລິບົດພາສາ: %(lang_context)s\n"
+"ຂໍ້ຜິດພາດ: %(error_details)s\n"
+"\n"
+"ສ່ວນຂອງລະຫັດຕົ້ນສະບັບແມ່ແບບ:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -3651,6 +3701,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"ບໍ່ສາມາດສະແດງຜົນແມ່ແບບ inline_template: %(template_txt)s\n"
+"ລາຍລະອຽດຂໍ້ຜິດພາດ: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -3710,7 +3762,7 @@ msgstr "ດຶງຂໍ້ມູນດຽວນີ້"
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Fetch up to the specified number of GIF."
-msgstr ""
+msgstr "ດຶງຂໍ້ມູນ GIF ຕາມຈຳນວນທີ່ກຳນົດໄວ້."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_id
@@ -3766,6 +3818,8 @@ msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
+"ຟິວ (Field) “%(field)s” ໃນໂມເດວ “%(model)s” ຕ້ອງເປັນປະເພດ Many2one ແລະ ມີ "
+"tracking=True ສຳລັບການຄິດໄລ່ໄລຍະເວລາ."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -3790,14 +3844,14 @@ msgstr "ໄຟລ໌ໃຫຍ່ເກີນໄປ"
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "File upload is disabled for external users"
-msgstr ""
+msgstr "ການອັບໂຫຼດໄຟລ໌ຖືກປິດໃຊ້ງານສຳລັບຜູ້ໃຊ້ພາຍນອກ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "File upload is enabled for external users"
-msgstr ""
+msgstr "ການອັບໂຫຼດໄຟລ໌ຖືກເປີດໃຊ້ງານສຳລັບຜູ້ໃຊ້ພາຍນອກ"
 
 #. module: mail
 #. odoo-javascript
@@ -3865,12 +3919,12 @@ msgstr "ສະເພາະຜູ້ຕິດຕາມເທົ່ານັ້ນ
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to add"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມທີ່ຈະເພີ່ມ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to remove"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມທີ່ຈະລຶບອອກ"
 
 #. module: mail
 #. odoo-javascript
@@ -3904,35 +3958,35 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 1 hour"
-msgstr ""
+msgstr "ເປັນເວລາ 1 ຊົ່ວໂມງ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 15 minutes"
-msgstr ""
+msgstr "ເປັນເວລາ 15 ນາທີ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 24 hours"
-msgstr ""
+msgstr "ເປັນເວລາ 24 ຊົ່ວໂມງ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 3 hours"
-msgstr ""
+msgstr "ເປັນເວລາ 3 ຊົ່ວໂມງ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "For 8 hours"
-msgstr ""
+msgstr "ເປັນເວລາ 8 ຊົ່ວໂມງ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -3995,21 +4049,21 @@ msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Category"
-msgstr ""
+msgstr "ໝວດໝູ່ GIF"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Favorites"
-msgstr ""
+msgstr "GIF ທີ່ມັກ"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_gif_favorite_action
@@ -4017,12 +4071,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_gif_favorite_view_tree
 msgid "GIF favorite"
-msgstr ""
+msgstr "GIF ທີ່ມັກ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "GIF id ຈາກ Tenor"
 
 #. module: mail
 #. odoo-javascript
@@ -4030,7 +4084,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/gif_picker/common/picker_content_patch.xml:0
 #, python-format
 msgid "GIFs"
-msgstr ""
+msgstr "GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -4042,12 +4096,12 @@ msgstr "ປະຕູເຊື່ອມຕໍ່"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr ""
+msgstr "ໄປທີ່ການສົນທະນາ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Google Translate Integration"
-msgstr ""
+msgstr "ການເຊື່ອມຕໍ່ກັບ Google Translate"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -4147,7 +4201,7 @@ msgstr "ຈັດການໃນ Odoo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
 msgid "Has Error"
-msgstr ""
+msgstr "ມີຂໍ້ຜິດພາດ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
@@ -4196,7 +4250,7 @@ msgstr "ມີຂໍ້ຜິດພາດ"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__has_user_on_demand
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_has_user_on_demand
 msgid "Has on demand responsible"
-msgstr ""
+msgstr "ມີຜູ້ຮັບຜິດຊອບຕາມຄວາມຕ້ອງການ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -4252,7 +4306,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #, python-format
 msgid "Hide Pinned Messages"
-msgstr ""
+msgstr "ເຊື່ອງຂໍ້ຄວາມທີ່ປັກໝຸດ"
 
 #. module: mail
 #. odoo-javascript
@@ -4470,13 +4524,14 @@ msgid ""
 "If set every modification done to this field is tracked. Value is used to "
 "order tracking values."
 msgstr ""
+"ຫາກຕັ້ງຄ່າໄວ້, ທຸກໆການປ່ຽນແປງໃນຟິວນີ້ຈະຖືກຕິດຕາມ. ຄ່າດັ່ງກ່າວຈະຖືກໃຊ້ເພື່ອຈັດລຽງຄ່າການຕິດຕາມ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__mute_until_dt
 msgid ""
 "If set, the member will not receive notifications from the channel until "
 "this date."
-msgstr ""
+msgstr "ຫາກຕັ້ງຄ່າໄວ້, ສະມາຊິກຈະບໍ່ໄດ້ຮັບການແຈ້ງເຕືອນຈາກຊ່ອງທາງຈົນກວ່າຈະເຖິງວັນທີນີ້."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -4511,6 +4566,9 @@ msgid ""
 "user.                                                   If not set, shared "
 "with all users."
 msgstr ""
+"ຖ້າຫາກຕັ້ງຄ່າໄວ້, "
+"ຈະຈຳກັດການນຳໃຊ້ແມ່ແບບນີ້ໃຫ້ສະເພາະຜູ້ໃຊ້ນີ້ເທົ່ານັ້ນ.                                                   "
+"ຫາກບໍ່ໄດ້ຕັ້ງຄ່າໄວ້, ແມ່ນຈະແບ່ງປັນໃຫ້ກັບຜູ້ໃຊ້ທັງໝົດ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -4637,7 +4695,7 @@ msgstr "ສາຍເອີ້ນເຂົ້າ..."
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
-msgstr ""
+msgstr "ອີເມລ໌ຂາເຂົ້າ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -4751,13 +4809,13 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "ຟິວ “%(field_name)s” ບໍ່ຖືກຕ້ອງເມື່ອສ້າງຊ່ອງທາງທີ່ມີສະມາຊິກ."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_invalid
 msgid "Invalid from address"
-msgstr ""
+msgstr "ທີ່ຢູ່ \"ຈາກ\" ບໍ່ຖືກຕ້ອງ"
 
 #. module: mail
 #. odoo-python
@@ -4863,7 +4921,7 @@ msgstr "ເຊີນຜູ້ຕິດຕາມ"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "Invite a User"
-msgstr ""
+msgstr "ເຊີນຜູ້ໃຊ້"
 
 #. module: mail
 #. odoo-javascript
@@ -4905,7 +4963,7 @@ msgstr "ແມ່ນຜູ້ໃຊ້ປັດຈຸບັນ ຫຼື ຜູ�
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "ສາມາດແກ້ໄຂໄດ້"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
@@ -4938,12 +4996,12 @@ msgstr "ອ່ານແລ້ວ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_self
 msgid "Is Self"
-msgstr ""
+msgstr "ແມ່ນຕົນເອງ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__is_template_editor
 msgid "Is Template Editor"
-msgstr ""
+msgstr "ແມ່ນຜູ້ແກ້ໄຂເທັມເພຼດ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_chat
@@ -4994,6 +5052,8 @@ msgid ""
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
 msgstr ""
+"ເບິ່ງຄືວ່າທ່ານກຳລັງພະຍາຍາມສ້າງສະມາຊິກຊ່ອງທາງ, ແຕ່ຄືວ່າທ່ານລືມກຳນົດຊ່ອງທາງທີ່ກ່ຽວຂ້ອງ. "
+"ເພື່ອດຳເນີນການຕໍ່, ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ລະບຸຂໍ້ມູນຊ່ອງທາງທີ່ຈຳເປັນ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_partner_device__keys
@@ -5005,6 +5065,12 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside "
 "of Odoo"
 msgstr ""
+"ມັນໝາຍເຖິງຄີຂອງບຣາວເຊີທີ່ໃຊ້ໂດຍການແຈ້ງເຕືອນ:\n"
+"\n"
+"- p256dh: ມັນແມ່ນຄີສາທາລະນະສຳລັບການຕິດຕາມທີ່ສ້າງຂຶ້ນໂດຍບຣາວເຊີ. "
+"ບຣາວເຊີຈະເກັບຮັກສາຄີສ່ວນຕົວໄວ້ເປັນຄວາມລັບ ແລະ ໃຊ້ເພື່ອຖອດລະຫັດຂໍ້ມູນ (payload)\n"
+"\n"
+"- auth: ຄ່າ auth ຄວນຖືກເກັບຮັກສາໄວ້ເປັນຄວາມລັບ ແລະ ຫ້າມແບ່ງປັນອອກນອກລະບົບ Odoo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
@@ -5057,7 +5123,7 @@ msgstr "ເກັບໄຟລ໌ຄັດຕິດໄວ້"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
 msgid "Keep Done"
-msgstr ""
+msgstr "ເກັບຮັກສາທີ່ສຳເລັດແລ້ວ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
@@ -5078,7 +5144,7 @@ msgstr "ເກັບສຳເນົາເນື້ອໃນອີເມລໄວ
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
 msgid "Keep activities marked as done in the activity view"
-msgstr ""
+msgstr "ເກັບກິດຈະກຳທີ່ໝາຍວ່າສຳເລັດແລ້ວໄວ້ໃນມຸມມອງກິດຈະກຳ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5290,7 +5356,7 @@ msgstr "ອອກຈາກ"
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.js:0
 #, python-format
 msgid "Leave Conversation"
-msgstr ""
+msgstr "ອອກຈາກການສົນທະນາ"
 
 #. module: mail
 #. odoo-javascript
@@ -5370,6 +5436,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"ພາກສ່ວນທ້ອງຖິ່ນຂອງອີເມລທີ່ໃຊ້ສຳລັບ Reply-To ເພື່ອຮັບຄຳຕອບ ເຊັ່ນ: 'catchall' ໃນ "
+"'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5377,6 +5445,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"ພາກສ່ວນທ້ອງຖິ່ນຂອງອີເມລທີ່ໃຊ້ສຳລັບ Return-Path ເມື່ອອີເມລຖືກຕີກັບ ເຊັ່ນ: 'bounce' ໃນ "
+"'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -5411,7 +5481,7 @@ msgstr "ບັນທຶກກິດຈະກຳ"
 #: code:addons/mail/static/src/views/web/composer_patch.js:0
 #, python-format
 msgid "Log an internal note…"
-msgstr ""
+msgstr "ບັນທຶກບັນທຶກພາຍໃນ…"
 
 #. module: mail
 #. odoo-javascript
@@ -5433,7 +5503,7 @@ msgstr "ຂັ້ນຕອນບັນທຶກ:"
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
 msgid "Logged in as %s"
-msgstr ""
+msgstr "ເຂົ້າສູ່ລະບົບໃນນາມ %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5450,7 +5520,7 @@ msgstr "ຕ່ຳ"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Lower Hand"
-msgstr ""
+msgstr "ເອົາມືລົງ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_mimetype
@@ -5565,7 +5635,7 @@ msgstr "ຣີເຊັດແບບຟອມເມລ"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "ເທັມເພຼດອີເມລ໌: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-python
@@ -5603,7 +5673,7 @@ msgstr "ເມລຖືກສ້າງຂຶ້ນເພື່ອແຈ້ງໃ
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "Mail template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "ໂມເດວເທັມເພຼດອີເມລ໌ຂອງ %(action_name)s ບໍ່ກົງກັບໂມເດວການດຳເນີນການ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
@@ -5623,7 +5693,7 @@ msgstr "ເມລ: ບໍລິການດຶງເມລ"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
 msgid "Mail: send web push notification"
-msgstr ""
+msgstr "ອີເມລ໌: ສົ່ງການແຈ້ງເຕືອນເວັບແບບ Push"
 
 #. module: mail
 #. odoo-python
@@ -5734,7 +5804,7 @@ msgstr "ໝາຍວ່າສຳເລັດແລ້ວ"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "ເທັມເພຼດການສົ່ງອີເມລ໌ຈຳນວນຫຼາຍ: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -5793,7 +5863,7 @@ msgstr "ການກ່າວເຖິງ"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__custom_notifications__mentions
 #, python-format
 msgid "Mentions Only"
-msgstr ""
+msgstr "ສະເພາະການກ່າວເຖິງເທົ່ານັ້ນ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
@@ -5882,12 +5952,12 @@ msgstr "ຊື່ຂໍ້ມູນຂໍ້ຄວາມ"
 #: model:ir.model,name:mail.model_mail_message_translation
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Message Translation"
-msgstr ""
+msgstr "ການແປຂໍ້ຄວາມ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
 msgid "Message Translation API Key"
-msgstr ""
+msgstr "Message Translation API Key"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__name
@@ -6019,7 +6089,7 @@ msgstr "ຂໍ້ຄວາມທີ່ມີຄ່າການຕິດຕາມ
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_voice_metadata
 msgid "Metadata for voice attachments"
-msgstr ""
+msgstr "ຂໍ້ມູນເມຕາ ສຳລັບໄຟລ໌ແນບສຽງ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -6035,14 +6105,14 @@ msgstr "ທີ່ຢູ່ອີເມລຫາຍໄປ"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_missing
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_missing
 msgid "Missing from address"
-msgstr ""
+msgstr "ຂາດທີ່ຢູ່ \"ຈາກ\""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_duration_mixin
 msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
-msgstr ""
+msgstr "Mixin ເພື່ອຄຳນວນເວລາທີ່ບັນທຶກໃຊ້ໃນແຕ່ລະຄ່າທີ່ຟິວ many2one ສາມາດມີໄດ້"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__res_model
@@ -6116,7 +6186,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
 msgid "Mute notifications until"
-msgstr ""
+msgstr "ປິດສຽງການແຈ້ງເຕືອນຈົນຮອດ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6291,7 +6361,7 @@ msgstr "ບໍ່ມີຂໍ້ມູນ"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
 msgid "No activities."
-msgstr ""
+msgstr "ບໍ່ມີກິດຈະກຳ."
 
 #. module: mail
 #. odoo-javascript
@@ -6326,7 +6396,7 @@ msgstr "ບໍ່ມີຂໍ້ຄວາມໃນປະຫວັດ"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "No language detected in context"
-msgstr ""
+msgstr "ບໍ່ພົບພາສາໃນບໍລິບົດ"
 
 #. module: mail
 #. odoo-python
@@ -6340,14 +6410,14 @@ msgstr "ບໍ່ພົບ message_id ໃນບໍລິບົດ"
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 #, python-format
 msgid "No messages found"
-msgstr ""
+msgstr "ບໍ່ພົບຂໍ້ຄວາມ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/chatter.js:0
 #, python-format
 msgid "No recipient"
-msgstr ""
+msgstr "ບໍ່ມີຜູ້ຮັບ"
 
 #. module: mail
 #. odoo-python
@@ -6373,7 +6443,7 @@ msgstr ""
 #, python-format
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
-msgstr ""
+msgstr "ບໍ່ໄດ້ລະບຸຜູ້ຮັບຜິດຊອບສຳລັບ %(activity_type_name)s: %(activity_summary)s."
 
 #. module: mail
 #. odoo-javascript
@@ -6501,7 +6571,7 @@ msgstr "ພາລາມິເຕີການແຈ້ງເຕືອນ"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, python-format
 msgid "Notification Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າການແຈ້ງເຕືອນ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
@@ -6647,7 +6717,7 @@ msgstr "Odoo ຈະສົ່ງການແຈ້ງເຕືອນໃນອຸ�
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
 msgid "Off"
-msgstr ""
+msgstr "ປິດ"
 
 #. module: mail
 #. odoo-javascript
@@ -6768,7 +6838,7 @@ msgstr "ເປີດ"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr ""
+msgstr "ເປີດເມນູການດຳເນີນການ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -6781,7 +6851,7 @@ msgstr "ເປີດເອກະສານ"
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 #, python-format
 msgid "Open Form View"
-msgstr ""
+msgstr "ເປີດເບິ່ງແບບຟອມ"
 
 #. module: mail
 #. odoo-javascript
@@ -6800,7 +6870,7 @@ msgstr "ເປີດເຈົ້າຂອງ"
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 #, python-format
 msgid "Open card"
-msgstr ""
+msgstr "ເປີດບັດ"
 
 #. module: mail
 #. odoo-javascript
@@ -6885,7 +6955,7 @@ msgstr "ຂໍ້ຄວາມຕົ້ນສະບັບຖືກລຶບແລ
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 #, python-format
 msgid "Other activities"
-msgstr ""
+msgstr "ກິດຈະກຳອື່ນໆ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -6897,7 +6967,7 @@ msgstr "ຂາອອກ"
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email_outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing Email"
-msgstr ""
+msgstr "ອີເມລຂາອອກ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7117,12 +7187,12 @@ msgstr "ຢຸດຊົ່ວຄາວ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__payload
 msgid "Payload"
-msgstr ""
+msgstr "ຂໍ້ມູນເນື້ອໃນ (Payload)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Permanently delete this template"
-msgstr ""
+msgstr "ລຶບແມ່ແບບນີ້ຖາວອນ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -7147,7 +7217,7 @@ msgstr "ປັກໝຸດ"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Pin It"
-msgstr ""
+msgstr "ປັກໝຸດໄວ້"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__pinned_at
@@ -7174,12 +7244,12 @@ msgstr "ແຜນຜັງ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_available_ids
 msgid "Plan Available"
-msgstr ""
+msgstr "ແຜນທີ່ມີຢູ່"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
 msgid "Plan Date"
-msgstr ""
+msgstr "ວັນທີແຜນການ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -7190,12 +7260,12 @@ msgstr "ຊື່ແຜນການ"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
 msgid "Plan Summary"
-msgstr ""
+msgstr "ບົດສະຫຼຸບແຜນການ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Plan summary"
-msgstr ""
+msgstr "ບົດສະຫຼຸບແຜນການ"
 
 #. module: mail
 #. odoo-javascript
@@ -7514,7 +7584,7 @@ msgstr "ເຊດຊັນ RTC"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "ໄອດີເຊດຊັນ RTC:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -7532,7 +7602,7 @@ msgstr "ເຊດຊັນ RTC"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Raise Hand"
-msgstr ""
+msgstr "ຍົກມືຂຶ້ນ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -7751,12 +7821,12 @@ msgstr "ລຶບອອກ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
-msgstr ""
+msgstr "ເອົາການດຳເນີນການບໍລິບົດອອກ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__remove_followers
 msgid "Remove Followers"
-msgstr ""
+msgstr "ເອົາຜູ້ຕິດຕາມອອກ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
@@ -7778,7 +7848,7 @@ msgstr "ລຶບຜູ້ຕິດຕາມນີ້ອອກ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_info
 msgid "Removed field information"
-msgstr ""
+msgstr "ຂໍ້ມູນຟິວທີ່ຖືກເອົາອອກ"
 
 #. module: mail
 #. odoo-javascript
@@ -7945,7 +8015,7 @@ msgstr "ໄຟລ໌ແນບທີ່ຖືກຈຳກັດ"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__source_lang
 msgid "Result of the language detection based on its content."
-msgstr ""
+msgstr "ຜົນຂອງການກວດຫາພາສາໂດຍອີງໃສ່ເນື້ອໃນຂອງມັນ."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -7958,7 +8028,7 @@ msgstr "ລອງໃໝ່"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Revert"
-msgstr ""
+msgstr "ຄືນຄ່າ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7988,17 +8058,17 @@ msgstr "ເຊດຊັນ Rtc"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_url
 msgid "SFU Server URL"
-msgstr ""
+msgstr "URL ຂອງເຊີບເວີ SFU"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_key
 msgid "SFU Server key"
-msgstr ""
+msgstr "ຄີຂອງເຊີບເວີ SFU"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "SFU server"
-msgstr ""
+msgstr "ເຊີບເວີ SFU"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -8042,12 +8112,12 @@ msgstr "ບັນທຶກເປັນແມ່ແບບໃໝ່"
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Save editing"
-msgstr ""
+msgstr "ບັນທຶກການແກ້ໄຂ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
-msgstr ""
+msgstr "ບັນທຶກ GIF ທີ່ມັກຈາກ Tenor API"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -8059,7 +8129,7 @@ msgstr "ກຳນົດເວລາ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Schedule & Mark as Done"
-msgstr ""
+msgstr "ກຳນົດເວລາ ແລະ ໝາຍວ່າສຳເລັດແລ້ວ"
 
 #. module: mail
 #. odoo-javascript
@@ -8077,7 +8147,7 @@ msgstr "ກຳນົດເວລາສ້າງກິດຈະກຳ"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity On Selected Records"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳໃນບັນທຶກທີ່ເລືອກ"
 
 #. module: mail
 #. odoo-javascript
@@ -8112,7 +8182,7 @@ msgstr "ກຳນົດເວລາກິດຈະກຳ"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule an activity on selected records"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳໃນບັນທຶກທີ່ເລືອກ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -8170,12 +8240,19 @@ msgstr "ຄົ້ນຫາເຊີເວີເມລຂາເຂົ້າ"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Search Messages"
-msgstr ""
+msgstr "ຄົ້ນຫາຂໍ້ຄວາມ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
@@ -8187,14 +8264,7 @@ msgstr "ຄົ້ນຫາເຊດຊັນ RTC"
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Search button"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#, python-format
-msgid "Search for a GIF"
-msgstr ""
+msgstr "ປຸ່ມຄົ້ນຫາ"
 
 #. module: mail
 #. odoo-javascript
@@ -8217,7 +8287,7 @@ msgstr "ຄົ້ນຫາຜູ້ໃຊ້..."
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Search in progress"
-msgstr ""
+msgstr "ກຳລັງຄົ້ນຫາ"
 
 #. module: mail
 #. odoo-javascript
@@ -8290,7 +8360,7 @@ msgstr "ເລືອກຜູ້ໃຊ້..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Select the content filter used for filtering GIFs"
-msgstr ""
+msgstr "ເລືອກຕົວຕອງເນື້ອໃນທີ່ໃຊ້ສຳລັບການກັ່ນຕອງ GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -8322,7 +8392,7 @@ msgstr "ສົ່ງອີເມລ"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send Email As"
-msgstr ""
+msgstr "ສົ່ງອີເມລໃນນາມ"
 
 #. module: mail
 #. odoo-python
@@ -8350,7 +8420,7 @@ msgstr "ສົ່ງດຽວນີ້"
 #: code:addons/mail/static/src/views/web/composer_patch.js:0
 #, python-format
 msgid "Send a message to followers…"
-msgstr ""
+msgstr "ສົ່ງຂໍ້ຄວາມຫາຜູ້ຕິດຕາມ…"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8494,19 +8564,19 @@ msgstr "ການກໍານົດຄ່າ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sfu_channel_uuid
 msgid "Sfu Channel Uuid"
-msgstr ""
+msgstr "Uuid ຂອງຊ່ອງ Sfu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sfu_server_url
 msgid "Sfu Server Url"
-msgstr ""
+msgstr "Url ຂອງເຊີບເວີ Sfu"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Share Screen"
-msgstr ""
+msgstr "ແບ່ງປັນໜ້າຈໍ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -8538,7 +8608,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
 msgid "Shortened language code used as the target for the translation request."
-msgstr ""
+msgstr "ລະຫັດພາສາແບບຫຍໍ້ທີ່ໃຊ້ເປັນເປົ້າໝາຍສຳລັບການຮ້ອງຂໍການແປ."
 
 #. module: mail
 #. odoo-javascript
@@ -8587,7 +8657,7 @@ msgstr "ສະແດງກິດຈະກຳ"
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Show all recipients"
-msgstr ""
+msgstr "ສະແດງຜູ້ຮັບທັງໝົດ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -8645,14 +8715,14 @@ msgstr "ການດຳເນີນການແຖບຂ້າງເພື່ອ
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_site_name
 msgid "Site name"
-msgstr ""
+msgstr "ຊື່ເວັບໄຊ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "So uhh... maybe go favorite some GIFs?"
-msgstr ""
+msgstr "ເອີ່... ບາງທີລອງໄປເລືອກ GIF ທີ່ມັກເບິ່ງບໍ?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -8662,7 +8732,7 @@ msgstr "ແຫຼ່ງທີ່ມາ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__source_lang
 msgid "Source Language"
-msgstr ""
+msgstr "ພາສາຕົ້ນທາງ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -8707,7 +8777,7 @@ msgstr "ເລີ່ມຕົ້ນການໂທ"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Start a Conversation"
-msgstr ""
+msgstr "ເລີ່ມຕົ້ນການສົນທະນາ"
 
 #. module: mail
 #. odoo-javascript
@@ -8765,7 +8835,7 @@ msgstr "ເວລາສະຖານະ"
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 #, python-format
 msgid "Status with time"
-msgstr ""
+msgstr "ສະຖານະພ້ອມເວລາ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -8791,7 +8861,7 @@ msgstr "ຢຸດບັນທຶກ"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Stop Sharing Screen"
-msgstr ""
+msgstr "ຢຸດການແບ່ງປັນໜ້າຈໍ"
 
 #. module: mail
 #. odoo-javascript
@@ -8829,7 +8899,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__body
 msgid "String received from the translation request."
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ໄດ້ຮັບຈາກການຮ້ອງຂໍການແປ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
@@ -8933,7 +9003,7 @@ msgstr "ການແຈ້ງເຕືອນລະບົບ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
 msgid "Target Language"
-msgstr ""
+msgstr "ພາສາເປົ້າໝາຍ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
@@ -9008,7 +9078,7 @@ msgstr "ຄຳອະທິບາຍແມ່ແບບ"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template name not identified"
-msgstr ""
+msgstr "ລະບຸຊື່ແມ່ແບບບໍ່ໄດ້"
 
 #. module: mail
 #. odoo-python
@@ -9089,7 +9159,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The activity cannot be launched:"
-msgstr ""
+msgstr "ກິດຈະກຳບໍ່ສາມາດເລີ່ມຕົ້ນໄດ້:"
 
 #. module: mail
 #. odoo-python
@@ -9100,6 +9170,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model "
 "\"%(activity_type_model)s\"."
 msgstr ""
+"ປະເພດກິດຈະກຳ \"%(activity_type_name)s\" ບໍ່ເຂົ້າກັນກັບແຜນ \"%(plan_name)s\" "
+"ເພາະວ່າມັນຖືກຈຳກັດໄວ້ສະເພາະໂມເດວ \"%(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -9107,21 +9179,21 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "ໄຟລ໌ແນບ %s ບໍ່ມີຢູ່ ຫຼື ທ່ານບໍ່ມີສິດໃນການເຂົ້າເຖິງມັນ."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment %s does not exist."
-msgstr ""
+msgstr "ໄຟລ໌ແນບ %s ບໍ່ມີຢູ່."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/discuss.js:0
 #, python-format
 msgid "The avatar has been updated!"
-msgstr ""
+msgstr "ຮູບຕົວແທນໄດ້ຖືກອັບເດດແລ້ວ!"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
@@ -9138,7 +9210,7 @@ msgstr "ຜູ້ໃຊ້ປັດຈຸບັນສາມາດແກ້ໄຂ
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "The duration of voice messages is limited to 1 minute."
-msgstr ""
+msgstr "ຄວາມຍາວຂອງຂໍ້ຄວາມສຽງຖືກຈຳກັດໄວ້ທີ່ 1 ນາທີ."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -9148,7 +9220,7 @@ msgstr "ອີເມວທີ່ສົ່ງຫາ"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
 msgid "The endpoint must be unique !"
-msgstr ""
+msgstr "ຈຸດເຊື່ອມຕໍ່ (Endpoint) ຕ້ອງບໍ່ຊ້ຳກັນ !"
 
 #. module: mail
 #. odoo-python
@@ -9231,14 +9303,14 @@ msgstr ""
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The plan \"%(plan_name)s\" cannot be launched:"
-msgstr ""
+msgstr "ແຜນ \"%(plan_name)s\" ບໍ່ສາມາດເລີ່ມຕົ້ນໄດ້:"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The plan \"%(plan_name)s\" has been started"
-msgstr ""
+msgstr "ແຜນ \"%(plan_name)s\" ໄດ້ເລີ່ມຕົ້ນແລ້ວ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -9250,7 +9322,7 @@ msgstr "ຕົວຈັດການຄິວຈະສົ່ງອີເມວຫ
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The records must belong to the same company."
-msgstr ""
+msgstr "ບັນທຶກຕ້ອງເປັນຂອງບໍລິສັດດຽວກັນ."
 
 #. module: mail
 #. odoo-python
@@ -9284,7 +9356,7 @@ msgstr "ຄວາມມັກໃນການຕິດຕາມໄດ້ຖືກ
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__user_id
 msgid "The template belongs to this user"
-msgstr ""
+msgstr "ແມ່ແບບນີ້ເປັນຂອງຜູ້ໃຊ້ນີ້"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
@@ -9314,7 +9386,7 @@ msgstr "ນີ້"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "This action can only be done on a mail thread models"
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ສາມາດເຮັດໄດ້ໃນໂມເດວກະທູ້ຈົດໝາຍເທົ່ານັ້ນ"
 
 #. module: mail
 #. odoo-python
@@ -9328,14 +9400,14 @@ msgstr "ການດຳເນີນການນີ້ບໍ່ສາມາດເ
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 #, python-format
 msgid "This action will send an email."
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ຈະສົ່ງອີເມລ."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This channel doesn't have any attachments."
-msgstr ""
+msgstr "ຊ່ອງນີ້ບໍ່ມີໄຟລ໌ແນບໃດໆ."
 
 #. module: mail
 #. odoo-javascript
@@ -9349,7 +9421,7 @@ msgstr "ຊ່ອງທາງນີ້ບໍ່ມີຂໍ້ຄວາມທີ
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This conversation doesn't have any attachments."
-msgstr ""
+msgstr "ການສົນທະນານີ້ບໍ່ມີໄຟລ໌ແນບໃດໆ."
 
 #. module: mail
 #. odoo-javascript
@@ -9496,7 +9568,7 @@ msgstr "ສິ່ງທີ່ຕ້ອງເຮັດ"
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "ເຖິງ:"
 
 #. module: mail
 #. odoo-javascript
@@ -9635,14 +9707,14 @@ msgstr "ແປ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__body
 msgid "Translation Body"
-msgstr ""
+msgstr "ເນື້ອໃນການແປ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 #, python-format
 msgid "Translation Failure"
-msgstr ""
+msgstr "ການແປຫຼົ້ມເຫຼວ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -9784,7 +9856,7 @@ msgstr "ຍົກເລີກການມອບໝາຍ"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Unassign from me"
-msgstr ""
+msgstr "ຍົກເລີກການມອບໝາຍໃຫ້ຂ້ອຍ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -9855,14 +9927,14 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "ແມ່ແບບຈົດໝາຍທີ່ບໍ່ມີຊື່"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "ການສົ່ງຈົດໝາຍທີ່ບໍ່ມີຊື່"
 
 #. module: mail
 #. odoo-javascript
@@ -9884,7 +9956,7 @@ msgstr "ເຊົາປັກໝຸດການສົນທະນາ"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Unpin Message"
-msgstr ""
+msgstr "ເອົາໝຸດຂໍ້ຄວາມອອກ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -9927,7 +9999,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 #, python-format
 msgid "Until I turn it back on"
-msgstr ""
+msgstr "ຈົນກວ່າຂ້ອຍຈະເປີດມັນຄືນໃໝ່"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9939,7 +10011,7 @@ msgstr "ອັບເດດຮູບແບບອີເມວ"
 #: code:addons/mail/static/src/core/common/discuss.xml:0
 #, python-format
 msgid "Upload Avatar"
-msgstr ""
+msgstr "ອັບໂຫຼດຮູບຕົວແທນ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
@@ -9966,7 +10038,7 @@ msgstr "ອັບໂຫຼດໄຟລ໌"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Upload:"
-msgstr ""
+msgstr "ອັບໂຫຼດ:"
 
 #. module: mail
 #. odoo-javascript
@@ -9989,6 +10061,8 @@ msgid ""
 "Use 'Specific User' to always assign the same user on the next activity. Use "
 "'Dynamic User' to specify the field name of the user to choose on the record."
 msgstr ""
+"ໃຊ້ 'ຜູ້ໃຊ້ສະເພາະ' ເພື່ອມອບໝາຍໃຫ້ຜູ້ໃຊ້ຄົນດຽວກັນສະເໝີໃນກິດຈະກຳຖັດໄປ. ໃຊ້ 'ຜູ້ໃຊ້ແບບໄດນາມິກ' "
+"ເພື່ອລະບຸຊື່ຟິວຂອງຜູ້ໃຊ້ທີ່ຈະເລືອກໃນບັນທຶກ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -10020,12 +10094,12 @@ msgstr "ໃຊ້ເຊີເວີ Outlook"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use different domains for your mail aliases"
-msgstr ""
+msgstr "ໃຊ້ໂດເມນທີ່ແຕກຕ່າງກັນສຳລັບນາມແຝງຈົດໝາຍຂອງທ່ານ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
 msgid "Use in batch"
-msgstr ""
+msgstr "ໃຊ້ແບບກຸ່ມ (Batch)"
 
 #. module: mail
 #. odoo-python
@@ -10097,7 +10171,7 @@ msgstr "ຜູ້ໃຊ້"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User Field"
-msgstr ""
+msgstr "ຟິວຜູ້ໃຊ້"
 
 #. module: mail
 #: model:ir.model,name:mail.model_bus_presence
@@ -10169,7 +10243,7 @@ msgstr "ຜູ້ໃຊ້ອອນລາຍຢູ່"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
 msgid "User should not have duplicated favorite GIF"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ບໍ່ຄວນມີ GIF ທີ່ມັກຊ້ຳກັນ"
 
 #. module: mail
 #. odoo-python
@@ -10227,6 +10301,8 @@ msgid ""
 "validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
+"ຄ່າ %(allowed_domains)s ສຳລັບ `mail.catchall.domain.allowed` ບໍ່ສາມາດກວດສອບໄດ້.\n"
+"ມັນຄວນຈະເປັນລາຍການໂດເມນທີ່ຂັ້ນດ້ວຍຈຸດ ເຊັ່ນ: example.com, example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -10288,7 +10364,7 @@ msgstr "ສຽງ"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 #, python-format
 msgid "Voice Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມສຽງ"
 
 #. module: mail
 #. odoo-javascript
@@ -10309,7 +10385,7 @@ msgstr "ເກນການກວດຈັບສຽງ"
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, python-format
 msgid "Voice recording stopped"
-msgstr ""
+msgstr "ການບັນທຶກສຽງຢຸດແລ້ວ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -10333,7 +10409,7 @@ msgstr "ລະດັບສຽງຂອງຄູ່ຮ່ວມຄ້າອື່
 msgid ""
 "Want to spice up your conversations with GIFs? Activate the feature in the "
 "settings!"
-msgstr ""
+msgstr "ຢາກເພີ່ມສີສັນໃຫ້ການສົນທະນາຂອງທ່ານດ້ວຍ GIF ບໍ? ເປີດໃຊ້ງານຄຸນສົມບັດນີ້ໄດ້ໃນການຕັ້ງຄ່າ!"
 
 #. module: mail
 #. odoo-javascript
@@ -10352,6 +10428,9 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
+"ພວກເຮົາບໍ່ສາມາດສ້າງນາມແຝງ %(alias_name)s ໄດ້ ເພາະວ່າໂດເມນ %(alias_domain_name)s "
+"ເປັນຂອງບໍລິສັດ %(alias_company_names)s ໃນຂະນະທີ່ເອກະສານເຈົ້າຂອງເປັນຂອງບໍລິສັດ "
+"%(company_name)s."
 
 #. module: mail
 #. odoo-python
@@ -10362,6 +10441,9 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
+"ພວກເຮົາບໍ່ສາມາດສ້າງນາມແຝງ %(alias_name)s ໄດ້ ເພາະວ່າໂດເມນ %(alias_domain_name)s "
+"ເປັນຂອງບໍລິສັດ %(alias_company_names)s ໃນຂະນະທີ່ເອກະສານເປົ້າໝາຍເປັນຂອງບໍລິສັດ "
+"%(company_name)s."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -10379,7 +10461,7 @@ msgstr "ຍິນດີຕ້ອນຮັບສູ່ MyCompany!"
 #, python-format
 msgid ""
 "Well, nothing lasts forever, but are you sure you want to unpin this message?"
-msgstr ""
+msgstr "ເອົາລະ, ບໍ່ມີຫຍັງຄົງຢູ່ຕະຫຼອດໄປ, ແຕ່ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການເອົາໝຸດຂໍ້ຄວາມນີ້ອອກ?"
 
 #. module: mail
 #. odoo-javascript
@@ -10394,7 +10476,7 @@ msgstr "ທ່ານຊື່ຫຍັງ?"
 #, python-format
 msgid ""
 "When selecting \"Default user\" assignment, you must specify a responsible."
-msgstr ""
+msgstr "ເມື່ອເລືອກການມອບໝາຍ \"ຜູ້ໃຊ້ເລີ່ມຕົ້ນ\", ທ່ານຕ້ອງກຳນົດຜູ້ຮັບຜິດຊອບ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -10450,7 +10532,7 @@ msgstr "ປີ-ເດືອນ-ວັນ ຊົ່ວໂມງ:ນາທີ:ວ�
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Yeah, pin it!"
-msgstr ""
+msgstr "ແມ່ນແລ້ວ, ປັກໝຸດເລີຍ!"
 
 #. module: mail
 #. odoo-javascript
@@ -10464,7 +10546,7 @@ msgstr "ແມ່ນ"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Yes, remove it please"
-msgstr ""
+msgstr "ແມ່ນແລ້ວ, ກະລຸນາເອົາອອກ"
 
 #. module: mail
 #. odoo-javascript
@@ -10496,7 +10578,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "ທ່ານຢູ່ຄົນດຽວໃນການສົນທະນາສ່ວນຕົວ."
 
 #. module: mail
 #. odoo-python
@@ -10510,14 +10592,14 @@ msgstr "ທ່ານຢູ່ຄົນດຽວໃນຊ່ອງທາງນີ
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "ທ່ານຢູ່ໃນການສົນທະນາສ່ວນຕົວ ກັບ %(member_names)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "ທ່ານຢູ່ໃນຊ່ອງ %(bold_start)s#%(channel_name)s%(bold_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10538,7 +10620,7 @@ msgstr "ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ອ
 #: code:addons/mail/controllers/attachment.py:0
 #, python-format
 msgid "You are not allowed to upload attachments on this channel."
-msgstr ""
+msgstr "ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ອັບໂຫຼດໄຟລ໌ແນບໃນຊ່ອງນີ້."
 
 #. module: mail
 #. odoo-javascript
@@ -10586,7 +10668,7 @@ msgstr "ທ່ານສາມາດລະເລີຍຂໍ້ຄວາມນີ
 #: code:addons/mail/models/mail_activity_type.py:0
 #, python-format
 msgid "You cannot delete %(activity_names)s as it is required in various apps."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດລຶບ %(activity_names)s ໄດ້ ເພາະວ່າມັນຈຳເປັນຕ້ອງໃຊ້ໃນຫຼາຍໆແອັບ."
 
 #. module: mail
 #. odoo-python
@@ -10605,6 +10687,7 @@ msgid ""
 "You cannot modify %(activities_names)s target model as they are are required "
 "in various apps."
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂໂມເດວເປົ້າໝາຍ %(activities_names)s ໄດ້ ເພາະວ່າມັນຈຳເປັນຕ້ອງໃຊ້ໃນຫຼາຍໆແອັບ."
 
 #. module: mail
 #. odoo-python
@@ -10614,6 +10697,7 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດໃຊ້ສິ່ງອື່ນນອກຈາກຕົວອັກສອນລາຕິນທີ່ບໍ່ມີເຄື່ອງໝາຍວັນນະຍຸດໃນທີ່ຢູ່ນາມແຝງ %(alias_name)s."
 
 #. module: mail
 #. odoo-python
@@ -10623,6 +10707,7 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the domain "
 "name %(domain_name)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດໃຊ້ສິ່ງອື່ນນອກຈາກຕົວອັກສອນລາຕິນທີ່ບໍ່ມີເຄື່ອງໝາຍວັນນະຍຸດໃນຊື່ໂດເມນ %(domain_name)s."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -10676,7 +10761,7 @@ msgstr "ທ່ານບໍ່ສາມາດກຳນົດແມ່ແບບໃ
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr ""
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການປັກໝຸດຂໍ້ຄວາມນີ້ໄວ້ໃນ %(conversation)s ຕະຫຼອດໄປ?"
 
 #. module: mail
 #. odoo-javascript
@@ -10780,7 +10865,7 @@ msgstr "ຊື່ຂອງທ່ານ"
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 #, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (ບໍ່ມີທີ່ຢູື່ອີເມລ)"
 
 #. module: mail
 #. odoo-python
@@ -10816,7 +10901,7 @@ msgstr "ໄຟລ໌ຄັດຕິດຂອງອີເມວນີ້."
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "ບິດເຣດ (bitrate) ທີ່ມີຢູ່:"
 
 #. module: mail
 #. odoo-javascript
@@ -10874,7 +10959,7 @@ msgstr "ຊ່ອງ"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "ອັດຕາໂມງ (clock rate):"
 
 #. module: mail
 #. odoo-javascript
@@ -10888,14 +10973,14 @@ msgstr "ປິດ"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
-msgstr ""
+msgstr "ຕົວຖອດລະຫັດ (codec):"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "created this channel."
-msgstr ""
+msgstr "ໄດ້ສ້າງຊ່ອງນີ້."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -10926,7 +11011,7 @@ msgstr "ຫູໜວກ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__user_device
 msgid "devices"
-msgstr ""
+msgstr "ອຸປະກອນ"
 
 #. module: mail
 #. odoo-python
@@ -10948,14 +11033,14 @@ msgstr "ສຳເລັດ"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "DTLS ຂາລົງ:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "ICE ຂາລົງ:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10982,12 +11067,12 @@ msgstr "ຕ.ຢ. \"ຍິນດີຕ້ອນຮັບສູ່ MyCompany\" ຫ
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "ເຊັ່ນ: \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "ເຊັ່ນ: \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10997,7 +11082,7 @@ msgstr "ຕ.ຢ. \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "ເຊັ່ນ: \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11051,7 +11136,7 @@ msgstr "ຕ.ຢ. true.true..f"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. user_id"
-msgstr ""
+msgstr "ເຊັ່ນ: user_id"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -11132,7 +11217,7 @@ msgstr "ລາຍການ"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າ (list-item)"
 
 #. module: mail
 #. odoo-javascript
@@ -11191,7 +11276,7 @@ msgstr "ປິດສຽງແລ້ວ"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "new"
-msgstr ""
+msgstr "ໃໝ່"
 
 #. module: mail
 #. odoo-javascript
@@ -11351,14 +11436,14 @@ msgstr "ບໍ່ຮູ້ຈັກຮູບແບບເປົ້າໝາຍ %s
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "DTLS ຂາຂຶ້ນ:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "ICE ຂາຂຶ້ນ:"
 
 #. module: mail
 #. odoo-javascript
@@ -11389,7 +11474,7 @@ msgstr "ອາທິດ"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "your alias"
-msgstr ""
+msgstr "ນາມແຝງຂອງທ່ານ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11401,14 +11486,18 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
-msgstr ""
+msgstr "“%(member_name)s” ໃນ “%(channel_name)s”"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 #, python-format
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
+
+#, python-format
+#~ msgid "Search for a GIF"
+#~ msgstr "ຄົ້ນຫາ GIF"
 
 #, python-format
 #~ msgid "%s raised a hand"

@@ -49,7 +49,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 13:08+0000\n"
-"PO-Revision-Date: 2026-07-07 11:56+0000\n"
+"PO-Revision-Date: 2026-07-17 09:50+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/base/fi/>"
 "\n"
@@ -10984,40 +10984,38 @@ msgstr ""
 "Tämä on perusmoduuli Belgian kirjanpitokaavion hallintaan Odoossa.\n"
 "==============================================================================\n"
 "\n"
-"Kun tämä moduuli on asennettu, kirjanpidon konfigurointiohjattu "
-"konfigurointi käynnistyy.\n"
-"    * Meillä on tilimalleja, joista voi olla apua tilikarttojen luomisessa.\n"
+"Kun tämä moduuli on asennettu, kirjanpidon ohjattu määritystoiminto "
+"käynnistyy.\n"
+"    * Meillä on tilipohjia, joista voi olla apua tilikarttojen luomisessa.\n"
 "    * Kyseisessä ohjatussa toiminnossa sinua pyydetään antamaan yrityksen "
 "nimi,\n"
-"      seurattava tilikarttamalli, luotavien numeroiden määrä, tilikarttasi "
-"koodi\n"
-"      tili ja pankkitili, valuutta, jolla päiväkirjat luodaan.\n"
+"      seurattava mallipohja, luotavien numeroiden määrä, tilisi ja "
+"pankkitilisi\n"
+"      koodi sekä valuutta, jolla päiväkirjat luodaan.\n"
 "\n"
-"Näin luodaan puhdas kopio Chart Template -kaaviointimallista.\n"
+"Näin syntyy puhdas kopio kaaviopohjasta.\n"
 "\n"
 "Tämän moduulin tarjoamat ohjatut toiminnot:\n"
 "--------------------------------\n"
-"    * Partner VAT Intra: Luetteloi kumppanit ja niihin liittyvät alv:t ja "
-"laskut\n"
+"    * Kumppanin issäinen ALV: Luetteloi kumppanit sekä niihin liittyvät "
+"arvonlisäverot ja laskutetut\n"
 "      määrät. Valmistelee XML-tiedostomuodon.\n"
 "\n"
-"        **Polku, josta pääsee käsiksi:** Laskutus/Raportointi/"
-"Lainsäädäntöraportit/Belgium Statements/Kumppanin alv Intra\n"
-"    * Säännöllinen alv-ilmoitus: Valmistelee XML-tiedoston alv-ilmoitusta "
-"varten\n"
-"      parhaillaan kirjautuneen käyttäjän pääyhtiön.\n"
+"        **Reitti:** Laskutus/Raportointi/Lainsäädännölliset raportit/Belgian "
+"tiliotteet/Kumppanin sisäinen ALV\n"
+"    * Säännöllinen ALV-ilmoitus: Valmistelee XML-tiedoston kirjautuneena "
+"olevan käyttäjän\n"
+"      pääyrityksen ALV-ilmoitusta varten.\n"
 "\n"
-"        **Polku, johon pääsee:** Invoicing/Reporting/Legal Reports/Belgium "
-"Statements/Periodical VAT Declaration (Laskutus/Raportointi/"
-"Lainsäädäntöraportit/Belgium Statements/Periodical VAT Declaration)\n"
-"    * Arvonlisäverovelvollisten asiakkaiden vuosittainen luettelointi: "
-"Valmistelee XML-tiedoston arvonlisäverotusta varten\n"
-"      Sisäänkirjautuneen käyttäjän pääyrityksen ilmoitus Perustuu "
-"seuraavaan\n"
+"        **Reitti** Laskutus/Raportointi/Lainsäädännölliset raportit/Belgian "
+"tiliotteet/Säännöllinen ALV-ilmoitus\n"
+"    * ALV-velvollisten asiakkaiden vuosittainen luettelointi: Valmistelee "
+"XML-tiedoston kirjautuneena olevan käyttäjän\n"
+"      pääyrityksen ALV-ilmoitusta varten.\n"
 "      Verovuosi.\n"
 "\n"
-"        **Polku, johon pääsee:** Laskutus/Raportointi/Lainmukaiset raportit/"
-"Belgium-ilmoitukset/Annual Listing Of VAT-Subjected Customers\n"
+"        **Reitti:** Laskutus/Raportointi/Lainsäädännölliset raportit/Belgian "
+"tiliotteet/ALV-velvollisten asiakkaiden vuosittainen luettelointi\n"
 "\n"
 
 #. module: base
@@ -12491,11 +12489,12 @@ msgstr ""
 "Tämän moduulin avulla voit hallita ostosopimuksia.\n"
 "===========================================================\n"
 "\n"
-"Hallitse tarjouspyyntöjä ja yleistilauksia. Tarjouspyyntöjä käytetään "
-"hankkimaan\n"
-"kilpailevia tarjouksia eri toimittajilta ja valita parhaat. Yleistilaukset\n"
-"ovat sopimuksia, joita teet toimittajien kanssa, jotta voit hyödyntää "
-"ennalta määritettyä hinnoittelua.\n"
+"Hallinnoi tarjousten kilpailutusta ja puitetilauksia. Tarjousten "
+"kilpailutusta käytetään\n"
+"eri toimittajien tarjousten hankkimiseksi ja parhaiden tarjousten "
+"valitsemiseksi. Puitetilaukset\n"
+"ovat sopimuksia, joita teet toimittajien kanssa hyödyntääksesi ennalta "
+"määritettyä hinnoittelua.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_forecast
@@ -20835,7 +20834,7 @@ msgstr "Konfiguraation asentaja"
 #: model:ir.model,name:base.model_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 msgid "Configuration Wizards"
-msgstr "Määritä ohjattuja toimintoja"
+msgstr "Ohjatut määritystoiminnot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
@@ -24684,7 +24683,7 @@ msgstr "Suodata dokumenttejani"
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr "Suotimet"
+msgstr "Suodattimet"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -28566,7 +28565,7 @@ msgstr "Käynnistä"
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch Configuration Wizard"
-msgstr "Lounaskonfiguraation velho"
+msgstr "Käynnistä ohjattu määritystoiminto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -29469,9 +29468,7 @@ msgstr "Hallitse alennuksia taxclouds-laskelmissa."
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Manage engineering change orders on products, bills of material"
-msgstr ""
-"Tuotteita, materiaaliluetteloita koskevien teknisten muutostilausten "
-"hallinnointi"
+msgstr "Hallinnoi tuotteiden teknisiä muutostilauksia ja materiaaliluetteloita"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_booth
@@ -40398,10 +40395,10 @@ msgid ""
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
 msgstr ""
-"Automaattisia toimintoja käytetään auttamaan uuden Odoo-instanssin "
-"konfiguroinnissa.  Ne käynnistetään uusien moduulien asennuksen aikana, "
-"mutta voit uudelleen käynnistää joitakin automaattisia toimintoja "
-"manuaalisesti tästä valikosta."
+"Ohjattuja määritystoimintoja käytetään uuden Odoo-instanssin konfiguroinnin "
+"apuna. Ne käynnistetään uusien moduulien asennuksen aikana, mutta voit "
+"uudelleenkäynnistää joitakin ohjattuja toimintoja manuaalisesti tästä "
+"valikosta."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__related

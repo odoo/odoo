@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-22 09:57+0000\n"
+"PO-Revision-Date: 2026-07-18 15:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/hr_holidays/"
 "lo/>\n"
@@ -66,7 +66,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(employee_name)s - from %(date_from)s to %(date_to)s - %(state)s"
-msgstr ""
+msgstr "%(employee_name)s - ຈາກ %(date_from)s ຫາ %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -109,14 +109,14 @@ msgstr "%(leave_type)s: %(duration).2f ຊົ່ວໂມງ ໃນວັນທ�
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%(name)s (%(duration)s day(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s ມື້)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s ຊົ່ວໂມງ)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -126,6 +126,7 @@ msgid ""
 "%(name)s does not have a valid allocation for the leave type %(leave_type)s "
 "to cover that request."
 msgstr ""
+"%(name)s ບໍ່ມີສິດການລາພັກທີ່ໃຊ້ໄດ້ສຳລັບປະເພດການລາ %(leave_type)s ເພື່ອຮອງຮັບການຮ້ອງຂໍນີ້."
 
 #. module: hr_holidays
 #. odoo-python
@@ -558,6 +559,9 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
+"'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -565,6 +569,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -589,6 +595,9 @@ msgid ""
 "                                <span class=\"ml8\" "
 "invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">ມື້</span>\n"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">ຊົ່ວໂມງ</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -650,7 +659,7 @@ msgstr "<span class=\"o_stat_text\">ການພັກວຽກ</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\"> to </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> ຫາ </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -681,6 +690,8 @@ msgid ""
 "<span>You can only take this time off in whole days, so if your schedule has "
 "half days, it won't be used efficiently.</span>"
 msgstr ""
+"<span>ທ່ານສາມາດລາພັກໄດ້ສະເພາະແບບເຕັມມື້ເທົ່ານັ້ນ, ດັ່ງນັ້ນ ຫາກຕາຕະລາງຂອງທ່ານມີເຄິ່ງມື້, ມັນອາດຈະບໍ່ຖື"
+"ກນຳໃຊ້ຢ່າງມີປະສິດທິພາບ.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -754,7 +765,7 @@ msgstr "ຂາດວຽກມື້ນີ້"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Accrual (Future):"
-msgstr ""
+msgstr "ສະສົມ (ໃນອະນາຄົດ):"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
@@ -817,7 +828,7 @@ msgstr "ຈຳນວນການສະສົມ"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrued_gain_time
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__accrued_gain_time
 msgid "Accrued Gain Time"
-msgstr ""
+msgstr "ເວລາທີ່ໄດ້ຮັບຈາກການສະສົມ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -949,7 +960,7 @@ msgstr "ການລາພັກທັງໝົດ"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
 msgid "All accrued time carried over"
-msgstr ""
+msgstr "ຍົກຍອດເວລາສະສົມທັງໝົດໄປ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__last_several_days
@@ -961,7 +972,7 @@ msgstr "ໝົດມື້"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Allocated ("
-msgstr ""
+msgstr "ຈັດສັນແລ້ວ ("
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -1074,7 +1085,7 @@ msgstr "ການຈັດສັນ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allows_negative
 msgid "Allow Negative Cap"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຕິດລົບໄດ້"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1099,7 +1110,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
 msgid "Already Accrued"
-msgstr ""
+msgstr "ສະສົມແລ້ວ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -1116,7 +1127,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "An employee already booked time off which overlaps with this period:%s"
-msgstr ""
+msgstr "ມີພະນັກງານຈອງມື້ລາພັກທີ່ທັບຊ້ອນກັບໄລຍະເວລານີ້ແລ້ວ: %s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1230,27 +1241,27 @@ msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶ
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
 msgid "At the allocation date"
-msgstr ""
+msgstr "ໃນວັນທີຈັດສັນ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__accrued_gain_time__end
 msgid "At the end of the accrual period"
-msgstr ""
+msgstr "ເມື່ອສິ້ນສຸດໄລຍະການສະສົມ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__accrued_gain_time__start
 msgid "At the start of the accrual period"
-msgstr ""
+msgstr "ເມື່ອເລີ່ມຕົ້ນໄລຍະການສະສົມ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__year_start
 msgid "At the start of the year"
-msgstr ""
+msgstr "ເມື່ອເລີ່ມຕົ້ນປີ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "At work"
-msgstr ""
+msgstr "ຢູ່ບ່ອນເຮັດວຽກ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids
@@ -1287,7 +1298,7 @@ msgstr "ວ່າງ"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Available:"
-msgstr ""
+msgstr "ໃຊ້ໄດ້:"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1301,7 +1312,7 @@ msgstr "ບໍ່ຢູ່"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 #, python-format
 msgid "Balance at the"
-msgstr ""
+msgstr "ຍອດເຫຼືອເມື່ອ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -1382,7 +1393,7 @@ msgstr "ສາມາດຍົກເລີກໄດ້"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__can_modify_value_type
 msgid "Can Modify Value Type"
-msgstr ""
+msgstr "ສາມາດແກ້ໄຂປະເພດຄ່າໄດ້"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -1444,53 +1455,53 @@ msgstr "ຍົກເລີກ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
 msgid "Cap accrued time"
-msgstr ""
+msgstr "ຈຳກັດເວລາສະສົມ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Cap:"
-msgstr ""
+msgstr "ຂີດຈຳກັດ:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry over"
-msgstr ""
+msgstr "ຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__maximum
 msgid "Carry over with a maximum"
-msgstr ""
+msgstr "ຍົກຍອດໄປຕາມຈຳນວນສູງສຸດ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Carry over:"
-msgstr ""
+msgstr "ຍົກຍອດ:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Carry-Over Date"
-msgstr ""
+msgstr "ວັນທີຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_date
 msgid "Carry-Over Time"
-msgstr ""
+msgstr "ເວລາຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_day
 msgid "Carryover Day"
-msgstr ""
+msgstr "ວັນທີ່ຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_day_display
 msgid "Carryover Day Display"
-msgstr ""
+msgstr "ການສະແດງວັນທີ່ຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_month
 msgid "Carryover Month"
-msgstr ""
+msgstr "ເດືອນທີ່ຍົກຍອດ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__category_id
@@ -1507,11 +1518,13 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
+"ການປ່ຽນຕາຕະລາງການເຮັດວຽກນີ້ ສົ່ງຜົນໃຫ້ພະນັກງານມີສິດລາພັກບໍ່ພຽງພໍສຳລັບການລາທີ່ຈອງໄວ້ໃນອະນາຄົດ. ກະລຸ"
+"ນາກວດສອບການລາຂອງພະນັກງານ ແລະ ປັບປຸງການຈັດສັນໃຫ້ເໝາະສົມ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Choose a cap for this accrual."
-msgstr ""
+msgstr "ເລືອກຂີດຈຳກັດສຳລັບການສະສົມນີ້."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_ids
@@ -1519,6 +1532,8 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
+"ເລືອກເຈົ້າໜ້າທີ່ການລາພັກທີ່ຈະໄດ້ຮັບການແຈ້ງເຕືອນເພື່ອອະນຸມັດການຈັດສັນ ຫຼື ຄຳຮ້ອງຂໍລາພັກ. ຫາກວ່າງໄວ້, ຈະບໍ່"
+"ມີໃຜໄດ້ຮັບການແຈ້ງເຕືອນ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1597,7 +1612,7 @@ msgstr "ຮັບຮູ້ເເລັວ"
 #: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #, python-format
 msgid "Confirmed and Approved"
-msgstr ""
+msgstr "ຢືນຢັນ ແລະ ອະນຸມັດແລ້ວ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1695,7 +1710,7 @@ msgstr "ປີປັດຈຸບັນ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Currently Valid"
-msgstr ""
+msgstr "ມີຜົນສັກສິດໃນຕອນນີ້"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
@@ -1769,7 +1784,7 @@ msgstr "ທັນວາ"
 msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
-msgstr ""
+msgstr "ກຳນົດຈຳນວນມື້ສູງສຸດທີ່ຕິດລົບໄດ້ສຳລັບການລາປະເພດນີ້. ຄ່າຕ້ອງມີຢ່າງໜ້ອຍ 1."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1870,6 +1885,8 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
+"ເນື່ອງຈາກມີການປ່ຽນແປງວັນຢຸດສາກົນ, ຈຳນວນ %s ມື້ ໄດ້ຖືກຫັກອອກຈາກການຈັດສັນຂອງທ່ານ. ກະລຸນາກວດສອບຄື"
+"ນ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1880,6 +1897,8 @@ msgid ""
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
 msgstr ""
+"ເນື່ອງຈາກມີການປ່ຽນແປງວັນຢຸດສາກົນ, ການລາພັກນີ້ຈຶ່ງມີສິດບໍ່ພຽງພໍ ແລະ ຖືກປ່ຽນເປັນປະຕິເສດ. ກະລຸນາກວດສອບ"
+"ຄືນ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1905,7 +1924,7 @@ msgstr "ໄລຍະເວລາ (ມື້)"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours
 msgid "Duration (Hours)"
-msgstr ""
+msgstr "ໄລຍະເວລາ (ຊົ່ວໂມງ)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -1964,7 +1983,7 @@ msgstr "ພະນັກງານທີ່ຍັງເຮັດວຽກຢູ່
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
 msgid "Employee Company"
-msgstr ""
+msgstr "ບໍລິສັດຂອງພະນັກງານ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
@@ -1981,7 +2000,7 @@ msgstr "ແທັກພະນັກງານ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Employee accrue"
-msgstr ""
+msgstr "ການສະສົມຂອງພະນັກງານ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
@@ -2113,6 +2132,8 @@ msgid ""
 "given to the employee, due to a previous start date, on the first run of the "
 "plan. This can be manually edited."
 msgstr ""
+"ສຳລັບການຈັດສັນແບບສະສົມ, ຫ້ອງນີ້ຈະສະແດງຈຳນວນເວລາຕາມທິດສະດີທີ່ມອບໃຫ້ພະນັກງານໃນຄັ້ງທຳອິດ. ສາມາດແ"
+"ກ້ໄຂດ້ວຍຕົນເອງໄດ້."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -2149,7 +2170,7 @@ msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 #, python-format
 msgid "Grant Time"
-msgstr ""
+msgstr "ມອບເວລາພັກ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_search
@@ -2190,7 +2211,7 @@ msgstr "ເຄິ່ງມື້"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_mandatory_day
 msgid "Has Mandatory Day"
-msgstr ""
+msgstr "ມີວັນບັງຄັບ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_message
@@ -2322,6 +2343,7 @@ msgid ""
 "If checked, the accrual period will be calculated according to the work "
 "days, not calendar days."
 msgstr ""
+"ຫາກໝາຍໄວ້, ໄລຍະການສະສົມຈະຖືກຄິດໄລ່ຕາມມື້ເຮັດວຽກ, ບໍ່ແມ່ນຕາມມື້ໃນປະຕິທິນ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -2329,6 +2351,7 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
+"ຫາກໝາຍໄວ້, ຜູ້ໃຊ້ສາມາດຮ້ອງຂໍເກີນຈຳນວນມື້ທີ່ຈັດສັນ ແລະ ຍອດເຫຼືອສາມາດຕິດລົບໄດ້."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2461,7 +2484,7 @@ msgstr "ກິດຈະກຳທີ່ຊ້າກວ່າກຳນົດ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_increases_duration
 msgid "Leave Type Increases Duration"
-msgstr ""
+msgstr "ປະເພດການລາທີ່ເພີ່ມໄລຍະເວລາ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
@@ -2544,7 +2567,7 @@ msgstr "ການອະນຸມັດໂດຍຜູ້ຈັດການ"
 #: model:ir.model,name:hr_holidays.model_hr_leave_mandatory_day
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 msgid "Mandatory Day"
-msgstr ""
+msgstr "ວັນບັງຄັບ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2553,7 +2576,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_mandatory_day_menu_configuration
 #, python-format
 msgid "Mandatory Days"
-msgstr ""
+msgstr "ວັນບັງຄັບ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__mar
@@ -2636,7 +2659,7 @@ msgstr "ຂີດໝາຍ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
 msgid "Milestone Transition"
-msgstr ""
+msgstr "ການປ່ຽນຊ່ວງເວລາ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -2717,7 +2740,7 @@ msgstr "ທີມຂອງຂ້ອຍ"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 msgid "My Time"
-msgstr ""
+msgstr "ເວລາຂອງຂ້ອຍ"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2737,7 +2760,7 @@ msgstr "ຊື່"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Negative Cap"
-msgstr ""
+msgstr "ຂີດຈຳກັດການຕິດລົບ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2858,7 +2881,7 @@ msgstr "ບໍ່ຈຳເປັນຕ້ອງມີການຢືນຢັນ
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Nobody will be notified"
-msgstr ""
+msgstr "ຈະບໍ່ມີໃຜໄດ້ຮັບການແຈ້ງເຕືອນ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2870,7 +2893,7 @@ msgstr "ບໍ່ມີ"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
 msgid "None. Accrued time reset to 0"
-msgstr ""
+msgstr "ບໍ່ມີ. ເວລາສະສົມຈະຖືກຕັ້ງເປັນ 0"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
@@ -2880,7 +2903,7 @@ msgstr "ບໍ່ອະນຸຍາດ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr ""
+msgstr "ເຈົ້າໜ້າທີ່ການລາພັກທີ່ຈະແຈ້ງເຕືອນ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2926,7 +2949,7 @@ msgstr "ຈຳນວນມື້ຂອງຄຳຮ້ອງຂໍລາພັກ
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid "Number of days of the time off request. Used in the calculation."
-msgstr ""
+msgstr "ຈຳນວນມື້ຂອງການຮ້ອງຂໍລາພັກ. ໃຊ້ສຳລັບການຄິດໄລ່."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2944,7 +2967,7 @@ msgstr "ຈຳນວນຊົ່ວໂມງຂອງຄຳຮ້ອງຂໍລ
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
 msgid "Number of hours of the time off request. Used in the calculation."
-msgstr ""
+msgstr "ຈຳນວນຊົ່ວໂມງຂອງການຮ້ອງຂໍລາພັກ. ໃຊ້ສຳລັບການຄິດໄລ່."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -3037,6 +3060,7 @@ msgstr "ສະເພາະຜູ້ຈັດການການລາພັກເ
 #, python-format
 msgid "Only a Time Off Officer or Manager can approve/refuse its own requests."
 msgstr ""
+"ສະເພາະເຈົ້າໜ້າທີ່ການລາພັກ ຫຼື ຜູ້ຈັດການເທົ່ານັ້ນ ທີ່ສາມາດອະນຸມັດ/ປະຕິເສດຄຳຮ້ອງຂໍຂອງຕົນເອງໄດ້."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3396,7 +3420,7 @@ msgstr "ການສະແດງວັນຂອງເດືອນທີສອງ
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Second approval request for %(leave_type)s"
-msgstr ""
+msgstr "ຄຳຮ້ອງຂໍອະນຸມັດຂັ້ນທີສອງສຳລັບ %(leave_type)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3465,7 +3489,7 @@ msgstr "ລຳດັບຖືກສ້າງຂຶ້ນໂດຍອັດຕະ
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Set a maximum of accruals an allocation keeps at the end of the year."
-msgstr ""
+msgstr "ກຳນົດຈຳນວນສະສົມສູງສຸດທີ່ຈະເກັບໄວ້ໃນຕອນທ້າຍປີ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
@@ -3491,6 +3515,7 @@ msgstr "ເວລາພັກເຈັບປ່ວຍ"
 #, python-format
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr ""
+"ການລາບາງລາຍການບໍ່ສາມາດເຊື່ອມໂຍງກັບການຈັດສັນໃດໆ. ເພື່ອເບິ່ງລາຍການເຫຼົ່ານັ້ນ,"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3500,6 +3525,7 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"ບາງແຜນການສະສົມທີ່ທ່ານພະຍາຍາມລຶບ ຖືກເຊື່ອມໂຍງກັບການຈັດສັນທີ່ມີຢູ່. ກະລຸນາລຶບ ຫຼື ຍົກເລີກພວກມັນກ່ອນ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3661,6 +3687,8 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
+"ເງື່ອນໄຂການຈັດສັນຂອງປະເພດການລາບໍ່ສາມາດປ່ຽນແປງໄດ້ ຫາກມີການລາປະເພດນັ້ນໄປແລ້ວ. ທ່ານຄວນສ້າງປະເພ"
+"ດການລາໃໝ່ແທນ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3718,6 +3746,7 @@ msgid ""
 "allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
+"ການລາພັກທີ່ວາງແຜນໄວ້ໃນອະນາຄົດເກີນຈຳນວນສູງສຸດຂອງການຈັດສັນ. ທ່ານຈະບໍ່ສາມາດລາໄດ້ທັງໝົດ."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
@@ -3736,7 +3765,7 @@ msgstr "ຈຳນວນຊົ່ວໂມງ/ມື້ ທີ່ຈະເພີ�
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
 msgid "The request start date must be before or equal to the request end date."
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນຕ້ອງມາກ່ອນ ຫຼື ເທົ່າກັບ ວັນທີສິ້ນສຸດ."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_mandatory_day_date_from_after_day_to
@@ -3746,7 +3775,7 @@ msgstr "ວັນທີເລີ່ມຕົ້ນຕ້ອງມາກ່ອນ
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 msgid "The start date must be before or equal to the end date."
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນຕ້ອງມາກ່ອນ ຫຼື ເທົ່າກັບ ວັນທີສິ້ນສຸດ."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3804,6 +3833,8 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
+"ການຈັດສັນນີ້ໄດ້ປະມວນຜົນໄປແລ້ວ, ການແກ້ໄຂໃດໆຈະບໍ່ມີຜົນຕໍ່ມື້ທີ່ຈັດສັນໃຫ້ພະນັກງານ. ຫາກຕ້ອງການປ່ຽນແປງ, ໃຫ້"
+"ລຶບ ແລະ ສ້າງໃໝ່."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -4055,12 +4086,12 @@ msgstr "ການລາພັກ."
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_cron_cancel_invalid_ir_actions_server
 msgid "Time Off: Cancel invalid leaves"
-msgstr ""
+msgstr "ການລາພັກ: ຍົກເລີກການລາທີ່ບໍ່ຖືກຕ້ອງ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Time off"
-msgstr ""
+msgstr "ການລາພັກ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4076,7 +4107,7 @@ msgstr "ການວິເຄາະການລາພັກໂດຍພະນັ
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_pivot
 msgid "Time off Summary"
-msgstr ""
+msgstr "ສະຫຼຸບການລາພັກ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -4261,7 +4292,7 @@ msgstr "ປະເພດ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
 msgid "Type Request Unit"
-msgstr ""
+msgstr "ປະເພດຫົວໜ່ວຍການຮ້ອງຂໍ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
@@ -4390,7 +4421,7 @@ msgstr "ກຳລັງລໍຖ້າການອະນຸມັດ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Waiting For Me"
-msgstr ""
+msgstr "ລໍຖ້າການອະນຸມັດຈາກຂ້ອຍ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate1
@@ -4576,7 +4607,7 @@ msgstr "ເຈົ້າບໍ່ສາມາດອະນຸມັດການລ
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 #, python-format
 msgid "You cannot have a cap on accrued time without setting a maximum amount."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດຈຳກັດເວລາສະສົມໄດ້ໂດຍບໍ່ກຳນົດຈຳນວນສູງສຸດ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4585,7 +4616,7 @@ msgstr ""
 msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by "
 "the employee."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດຫຼຸດໄລຍະເວລາລົງໃຫ້ໜ້ອຍກວ່າຈຳນວນມື້ທີ່ພະນັກງານໄດ້ລາໄປແລ້ວ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4595,6 +4626,8 @@ msgid ""
 "You do not have any allocation for this time off type.\n"
 "Please request an allocation before submitting your time off request."
 msgstr ""
+"ທ່ານບໍ່ມີສິດຈັດສັນສຳລັບການລາປະເພດນີ້.\n"
+"ກະລຸນາຮ້ອງຂໍການຈັດສັນກ່ອນສົ່ງຄຳຮ້ອງຂໍລາພັກ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4651,6 +4684,9 @@ msgid ""
 "Attempting to double-book your time off won't magically make your vacation "
 "2x better!\n"
 msgstr ""
+"ທ່ານໄດ້ຈອງມື້ລາພັກທີ່ທັບຊ້ອນກັບໄລຍະເວລານີ້ແລ້ວ:\n"
+"%s\n"
+"ການຈອງຊ້ອນກັນຈະບໍ່ເຮັດໃຫ້ການພັກຜ່ອນຂອງທ່ານດີຂຶ້ນເປັນສອງເທົ່າ!\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4728,14 +4764,14 @@ msgstr "ໂດຍປະເພດ"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "can be used before the allocation expires."
-msgstr ""
+msgstr "ສາມາດໃຊ້ໄດ້ກ່ອນທີ່ການຈັດສັນຈະໝົດອາຍຸ."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "click here"
-msgstr ""
+msgstr "ຄລິກທີ່ນີ້"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4790,7 +4826,7 @@ msgstr "ເຊັ່ນ: ປະເພດການລາພັກ (ຈາກເ�
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "from %(date_from)s to %(date_to)s - %(state)s"
-msgstr ""
+msgstr "ຈາກ %(date_from)s ຫາ %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4812,7 +4848,7 @@ msgstr "ໃນ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "initially"
-msgstr ""
+msgstr "ໃນຕອນເລີ່ມຕົ້ນ"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4884,7 +4920,7 @@ msgstr "ໃຊ້ໄປແລ້ວ"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "the accruated amount is insufficient for that duration."
-msgstr ""
+msgstr "ຈຳນວນທີ່ສະສົມໄວ້ແມ່ນບໍ່ພຽງພໍສຳລັບໄລຍະເວລານັ້ນ."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -4894,7 +4930,7 @@ msgstr "ຫາ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "to refuse"
-msgstr ""
+msgstr "ທີ່ຈະປະຕິເສດ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

@@ -7,13 +7,14 @@
 # Abe Manyo, 2025
 #
 # "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-23 17:31+0000\n"
-"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:36+0000\n"
+"PO-Revision-Date: 2026-07-14 14:58+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-17/mail/"
 "id/>\n"
 "Language: id\n"
@@ -900,6 +901,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Tambahkan API key Klipy GIF untuk mengaktifkan dukungan GIF. https://"
+"docs.klipy.com/getting-started\n"
+"Jika Anda sebelumnya menggunakan API key Tenor GIF (layanan ditutup pada 30 "
+"Juni 2026), silakan ganti di sini dengan API key Klipy GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -3757,6 +3762,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Gagal merender template QWeb untuk %(template_label)s\n"
+"Model Target: %(model_name)s\n"
+"Konteks Bahasa: %(lang_context)s\n"
+"Kesalahan: %(error_details)s\n"
+"\n"
+"Snippet Sumber Template:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -3766,6 +3778,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Gagal merender template inline_template: %(template_txt)s\n"
+"Detail kesalahan: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -4694,6 +4708,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Jika Anda sebelumnya menggunakan API key Tenor, silakan ganti dengan API key "
+"Klipy di Pengaturan Umum."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5265,7 +5281,7 @@ msgstr "Salam Hangat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "API key Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5738,7 +5754,7 @@ msgstr "Reset Templat Email"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Template Email: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-python
@@ -5915,7 +5931,7 @@ msgstr "Tandai sebagai selesai"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Template Pengiriman Massal: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -6521,7 +6537,7 @@ msgstr "Tidak ada sejarah pesan"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "No language detected in context"
-msgstr ""
+msgstr "Bahasa tidak terdeteksi dalam konteks"
 
 #. module: mail
 #. odoo-python
@@ -8404,6 +8420,13 @@ msgstr "Cari Incoming Mail Server"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #: code:addons/mail/static/src/core/web/chatter.xml:0
@@ -8422,13 +8445,6 @@ msgstr "Cari sesi RTC"
 #, python-format
 msgid "Search button"
 msgstr "Tombol pencarian"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#, python-format
-msgid "Search for a GIF"
-msgstr "Cari GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -9253,7 +9269,7 @@ msgstr "Keterangan templat"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template name not identified"
-msgstr ""
+msgstr "Nama template tidak teridentifikasi"
 
 #. module: mail
 #. odoo-python
@@ -10121,7 +10137,7 @@ msgstr "Unmute Channel"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Template Email Tanpa Nama"
 
 #. module: mail
 #. odoo-python
@@ -11721,6 +11737,10 @@ msgstr "“%(member_name)s” di “%(channel_name)s”"
 #, python-format
 msgid "“%s”"
 msgstr ""
+
+#, python-format
+#~ msgid "Search for a GIF"
+#~ msgstr "Cari GIF"
 
 #~ msgid "Add a Tenor GIF API key to enable GIFs support."
 #~ msgstr "Tambahkan Tenor GIF API key untuk mengaktifkan bantuan GIF."
