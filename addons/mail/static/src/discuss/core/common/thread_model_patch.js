@@ -39,6 +39,35 @@ const threadPatch = {
         }
         return res;
     },
+    /**
+     * Executes a mark as read after it was requested, possibly queued behind
+     * an in-flight one: re-validates against the current state before the RPC.
+     *
+     * @param {import("models").Message} newestPersistentMessage message to mark
+     *  as read, captured when the mark as read was requested
+     * @param {boolean} wasMarkedAsUnread whether the channel was marked as
+     *  unread when the mark as read was requested
+     */
+    async handleMarkAsRead(newestPersistentMessage, wasMarkedAsUnread) {
+        if (!this.channel?.self_member_id || this.isReadBySelf(newestPersistentMessage)) {
+            return;
+        }
+        if (!wasMarkedAsUnread && this.channel.markedAsUnread) {
+            // The user marked the channel as unread after this mark as read
+            // was requested: executing it now would revert that more recent
+            // explicit action.
+            return;
+        }
+        this.markingAsRead = true;
+        return this.markAsReadRpc(newestPersistentMessage);
+    },
+    /** @param {import("models").Message} message */
+    isReadBySelf(message) {
+        return (
+            this.channel?.self_member_id?.seen_message_id?.id >= message.id &&
+            this.channel?.self_member_id?.new_message_separator > message.id
+        );
+    },
     get isUnread() {
         return this.channel?.self_member_id?.message_unread_counter > 0 || super.isUnread;
     },
@@ -48,31 +77,34 @@ const threadPatch = {
         if (!this.channel?.self_member_id) {
             return;
         }
+        // Captured at request time: newer messages have not been validated as
+        // read by the caller, their own triggers request another mark as read.
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage) {
             return;
         }
-        const alreadyReadBySelf =
-            this.channel?.self_member_id.seen_message_id?.id >= newestPersistentMessage.id &&
-            this.channel?.self_member_id.new_message_separator > newestPersistentMessage.id;
-        if (alreadyReadBySelf) {
+        if (this.isReadBySelf(newestPersistentMessage)) {
             return;
         }
-        this.markReadSequential(async () => {
-            this.markingAsRead = true;
-            return rpc(
-                "/discuss/channel/mark_as_read",
-                {
-                    channel_id: this.id,
-                    last_message_id: newestPersistentMessage.id,
-                },
-                { silent: true }
-            ).catch((e) => {
-                if (e.code !== 404) {
-                    throw e;
-                }
-            });
-        }).then(() => (this.markingAsRead = false));
+        const wasMarkedAsUnread = this.channel.markedAsUnread;
+        this.markReadSequential(() =>
+            this.handleMarkAsRead(newestPersistentMessage, wasMarkedAsUnread)
+        ).then(() => (this.markingAsRead = false));
+    },
+    /** @param {import("models").Message} newestPersistentMessage */
+    markAsReadRpc(newestPersistentMessage) {
+        return rpc(
+            "/discuss/channel/mark_as_read",
+            {
+                channel_id: this.id,
+                last_message_id: newestPersistentMessage.id,
+            },
+            { silent: true }
+        ).catch((e) => {
+            if (e.code !== 404) {
+                throw e;
+            }
+        });
     },
     /** @override */
     get needactionCounter() {
