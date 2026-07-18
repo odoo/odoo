@@ -49,7 +49,8 @@ export class DiscussCoreCommon {
             const self_member_id = message.channel_id?.self_member_id;
             if (self_member_id) {
                 if (
-                    message.id > self_member_id?.seen_message_id.id &&
+                    self_member_id &&
+                    message.id > (self_member_id.seen_message_id?.id ?? 0) &&
                     notifId > self_member_id.message_unread_counter_bus_id
                 ) {
                     self_member_id.message_unread_counter--;
