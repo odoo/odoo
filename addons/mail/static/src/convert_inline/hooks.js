@@ -45,7 +45,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
 
     const setupIframe = async () => {
         try {
-            await scope.until(convertInlineIframeService.readyPromise);
+            await scope.run(() => convertInlineIframeService.readyPromise);
             convertInlineIframeService.add(referenceIframe, targetRef);
             const assetsPromise = loadIframeBundles(referenceIframe, bundles);
             const contentPromise = loadIframe(referenceIframe, () => {
@@ -58,7 +58,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
                     padding: 0 !important;`
                 );
             });
-            await scope.until(Promise.all([contentPromise, assetsPromise]));
+            await scope.run(() => Promise.all([contentPromise, assetsPromise]));
             return true;
         } catch (e) {
             if (e?.name === "AbortError") {
