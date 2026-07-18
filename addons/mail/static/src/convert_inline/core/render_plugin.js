@@ -202,11 +202,11 @@ export class RenderPlugin extends Plugin {
             factType: "parsingFacts",
         });
         this.mergeFacts(parentEmailNode, { facts: analysis.facts });
-        mergedAnalysis.constraintsForAncestors = mergedAnalysis.constraintsForAncestors.concat(
-            analysis.constraintsForAncestors
+        mergedAnalysis.bottomUpConstraints = mergedAnalysis.bottomUpConstraints.concat(
+            analysis.bottomUpConstraints
         );
-        mergedAnalysis.constraintsForDescendants = mergedAnalysis.constraintsForAncestors.concat(
-            analysis.constraintsForDescendants
+        mergedAnalysis.topDownConstraints = mergedAnalysis.topDownConstraints.concat(
+            analysis.topDownConstraints
         );
     }
 
@@ -316,17 +316,15 @@ export class RenderPlugin extends Plugin {
                 const newConstraint = annotations.constraint ?? constraint;
                 propagatedConstraints.push(newConstraint);
             }
-            if (annotations.constraintsForDescendants) {
-                emailNode.analysis.constraintsForDescendants.push(
-                    ...annotations.constraintsForDescendants
-                );
+            if (annotations.topDownConstraints) {
+                emailNode.analysis.topDownConstraints.push(...annotations.topDownConstraints);
             }
             this.mergeFacts(emailNode, {
                 facts: annotations.facts ?? {},
                 isConstraint: true,
             });
         }
-        return emailNode.analysis.constraintsForAncestors.concat(propagatedConstraints);
+        return emailNode.analysis.bottomUpConstraints.concat(propagatedConstraints);
     }
 
     /**
@@ -352,7 +350,7 @@ export class RenderPlugin extends Plugin {
         for (const child of emailNode.children) {
             this.addTopDownConstraints(
                 child,
-                emailNode.analysis.constraintsForDescendants.concat(propagatedConstraints)
+                emailNode.analysis.topDownConstraints.concat(propagatedConstraints)
             );
         }
     }

@@ -267,7 +267,7 @@ export class TableStrategyPlugin extends Plugin {
      *   for every reference element, during the first render tree phase,
      *   identify if there is a border/background on every element.
      * - if there is, create a tableStrategyReport that is propagated towards
-     *   ancestors as a constraintsForAncestors
+     *   ancestors as a bottomUpConstraints
      *   this report should include cleanup functions that will be called when
      *   the report is accepted AND is stopped from propagating
      * - stop propagation if
@@ -389,7 +389,7 @@ export class TableStrategyPlugin extends Plugin {
          *   nullify all sources (border, bacgkround, margin, padding) of the report (towards descendants)
          *
          */
-        analysis.constraintsForAncestors.push((emailNode) => {
+        analysis.bottomUpConstraints.push((emailNode) => {
             const analysis = emailNode.analysis;
             const referenceNode = emailNode.lastReferenceNode;
             const acceptTableStrategyReport = this.delegateTo(
@@ -400,19 +400,17 @@ export class TableStrategyPlugin extends Plugin {
                 const report = { ...tableStrategyReport };
                 const facts = { tableStrategyReport: report };
                 report.spacing = { ...report.spacing, marginRect: storedMarginRect };
-                const constraintsForDescendants = [];
+                const topDownConstraints = [];
                 let shouldPropagate = true;
                 if (analysis.facts.acceptTableOuterSpacing) {
                     shouldPropagate = false;
-                    constraintsForDescendants.push(...tableStrategyReport.spacing.cleanup);
+                    topDownConstraints.push(...tableStrategyReport.spacing.cleanup);
                 }
                 if (analysis.facts.acceptDescendantBorder) {
-                    constraintsForDescendants.push(...tableStrategyReport.descendantBorder.cleanup);
+                    topDownConstraints.push(...tableStrategyReport.descendantBorder.cleanup);
                 }
                 if (analysis.facts.acceptDescendantBackground) {
-                    constraintsForDescendants.push(
-                        ...tableStrategyReport.descendantBackground.cleanup
-                    );
+                    topDownConstraints.push(...tableStrategyReport.descendantBackground.cleanup);
                 }
                 if (analysis.facts.acceptCellNewWidth) {
                     facts.cellMargin = this.containerPadding(
@@ -423,7 +421,7 @@ export class TableStrategyPlugin extends Plugin {
                 return {
                     facts,
                     shouldPropagate,
-                    constraintsForDescendants,
+                    topDownConstraints,
                 };
             } else if (!referenceNode || analysis.facts.tableStrategyReport) {
                 return { shouldPropagate: false };

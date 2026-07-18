@@ -48,7 +48,7 @@ export class ButtonStrategyPlugin extends Plugin {
         if (rawStyleInfo.getPropertyValue("width") !== "100%") {
             return defaultEmailNodeArguments;
         }
-        analysis.constraintsForAncestors.push((emailNode) => {
+        analysis.bottomUpConstraints.push((emailNode) => {
             const node =
                 emailNode.lastReferenceNode ??
                 this.config.referenceDocument.createElement(emailNode.layout.descendantTag);
