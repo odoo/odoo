@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:35+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -70,7 +70,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
-msgid "<br/>Guest"
+msgid "<span class=\"text-bold\">T </span>"
 msgstr ""
 
 #. module: pos_restaurant
@@ -799,6 +799,7 @@ msgstr "Grilda pishirilgan sabzavotlar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 #, fuzzy
 msgid "Guest"
 msgstr "Mehmon"
@@ -1577,15 +1578,10 @@ msgstr "Pol ko‘rinishini o‘zgartirish"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
-msgid "T %s"
-msgstr ""
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 #, fuzzy
 msgid "Table"

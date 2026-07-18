@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-07-04 12:47+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -937,6 +937,17 @@ msgid "Report Action"
 msgstr "Rapor işlemi"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Reverse charge: In the absence of a written objection within one month of "
+"receipt of the invoice, the customer is deemed to acknowledge that they are "
+"a taxable person required to file periodic returns. If this condition is not "
+"met, the customer will be liable for the payment of the tax, interest, and "
+"penalties due in relation to this condition."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
 msgid "Romania VAT"
 msgstr "Romanya KDV Numarası"
@@ -1087,8 +1098,8 @@ msgid ""
 "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
 "line '%(line)s'."
 msgstr ""
-"Eşleşen vadeye sahip vergi bulunamadı: '%(exigibility)s satır için '%(line)"
-"s'."
+"Eşleşen vadeye sahip vergi bulunamadı: '%(exigibility)s satır için '%"
+"(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1346,8 +1357,8 @@ msgstr "Bilinmeyen İş Ortağı"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
-msgid "Unspported file type via %s"
-msgstr "Desteklenmeyen dosya türü: %s"
+msgid "Unsupported file type via %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2203,6 +2214,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0 #"
+
+#~ msgid "Unspported file type via %s"
+#~ msgstr "Desteklenmeyen dosya türü: %s"
 
 #~ msgid ""
 #~ "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
