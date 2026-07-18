@@ -243,10 +243,11 @@ export function convertCSSColorToRgba(cssColor = "") {
 
     if (/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(cssColor)) {
         return {
-            red: parseInt(cssColor.substr(1, 2), 16),
-            green: parseInt(cssColor.substr(3, 2), 16),
-            blue: parseInt(cssColor.substr(5, 2), 16),
-            opacity: (cssColor.length === 9 ? parseInt(cssColor.substr(7, 2), 16) / 255 : 1) * 100,
+            red: parseInt(cssColor.substring(1, 3), 16),
+            green: parseInt(cssColor.substring(3, 5), 16),
+            blue: parseInt(cssColor.substring(5, 7), 16),
+            opacity:
+                (cssColor.length === 9 ? parseInt(cssColor.substring(7, 9), 16) / 255 : 1) * 100,
         };
     }
 

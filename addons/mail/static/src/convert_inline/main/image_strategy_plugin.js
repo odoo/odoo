@@ -4,9 +4,10 @@ import { StyleInfo } from "../core/style_models";
 import { parseCssValue } from "../css_parsers";
 import { ImageLayout, ImageLinkLayout } from "./image_models";
 import { Rules } from "../core/rules_models";
-import { isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import { isParagraphRelatedElement, isPhrasingContent } from "@html_editor/utils/dom_info";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
@@ -149,7 +150,7 @@ export class ImageStrategyPlugin extends Plugin {
     isFontIcon({ referenceNode }) {
         // TODO EGGMAIL: check new material icons PR, and if this selector needs to be
         // adapted/completed
-        return referenceNode.nodeType === Node.ELEMENT_NODE && referenceNode.matches(".fa");
+        return referenceNode.nodeType === Node.ELEMENT_NODE && referenceNode.matches(".fa,.oi");
     }
 
     getFontIconContent(referenceNode) {
@@ -158,6 +159,24 @@ export class ImageStrategyPlugin extends Plugin {
 
     getFontIconPropertyValue(referenceNode, propertyName) {
         return this.getComputedStyle(referenceNode, "::before").getPropertyValue(propertyName);
+    }
+
+    /**
+     * Simplified scaling parsing
+     * TODO EGGMAIL: evaluate if this needs to be completed Y scaling or more
+     *
+     * @param {string} transform property value
+     * @returns horizontal scaling factor
+     */
+    getScaling(transform) {
+        let scale;
+        try {
+            const matrix = new DOMMatrixReadOnly(transform);
+            scale = matrix.a;
+        } catch {
+            scale = 1;
+        }
+        return scale;
     }
 
     analyzeImageLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
@@ -215,13 +234,31 @@ export class ImageStrategyPlugin extends Plugin {
         };
     }
 
+    convertCSSColorToPILRgba(color) {
+        const obj = convertCSSColorToRgba(color);
+        const bind8bitsIntToHex = (value) =>
+            Math.max(0, Math.min(255, Math.round(value)))
+                .toString(16)
+                .padStart(2, "0");
+        if (obj) {
+            obj.red = bind8bitsIntToHex(obj.red);
+            obj.green = bind8bitsIntToHex(obj.green);
+            obj.blue = bind8bitsIntToHex(obj.blue);
+            // convertCSSColorToRgba returns opacity as a float percentage,
+            // but PIL library needs a 8 bits integer.
+            obj.opacity = bind8bitsIntToHex((255 * obj.opacity) / 100);
+            return `${obj.red}${obj.green}${obj.blue}${obj.opacity}`;
+        }
+        return false;
+    }
+
     /**
      * TODO EGGMAIL: clean comments (most of it seems implemented)
      * find a way to generalize the layout building functions
      * so that it does not require direct access to referenceNode, and it can build everything
      * from facts.
      * Register everything needed into facts
-     * => the EmailNode should output the image properly instead of the element with the .fa class
+     * => the EmailNode should output the image properly instead of the element with the .fa,.oi class
      */
     /**
      * can get computedStyle, ::before
@@ -246,41 +283,56 @@ export class ImageStrategyPlugin extends Plugin {
      * <i>/<span> fa + circle should be centered properly when the icon is converted into an image
      *
      */
+    // TODO EGGMAIL: implement the parsing variant to support OI icons (vs FA icons)
     buildFontIconImageRef({ imageNode: fontIcon, shouldBeBlock }) {
+        // TODO EGGMAIL: WORKING HERE, rgba is an alias for rgb
+        // rgb can also have an alpha channel
+        // the value should be normalized for PILLOW
+        // maybe it should be normalized for emails too.
+        const font = fontIcon.matches(".fa") ? "fa" : "oi";
+        const isCustom = fontIcon.matches("[data-icon^='oi_'");
         const content = this.getFontIconContent(fontIcon) || " ";
-        const color = this.getFontIconPropertyValue(fontIcon, "color").replace(/\s/g, "");
+        const icon = font === "fa" || isCustom ? content.codePointAt(0) : content;
+        const color = this.getFontIconPropertyValue(fontIcon, "color");
+        const pilColor =
+            this.convertCSSColorToPILRgba(color) || this.convertCSSColorToPILRgba("rgb(0,0,0)");
         let bg, isTransparent;
         let element = fontIcon;
         do {
             bg = this.getStylePropertyValue(element, "background-color").replace(/\s/g, "");
             isTransparent = bg === "transparent" || bg === "rgba(0,0,0,0)";
             element = element.parentElement;
-        } while (isTransparent && element);
+        } while (isTransparent && element && isPhrasingContent(element));
         if (isTransparent) {
-            bg = "rgb(255,255,255)";
+            bg = "rgba(0,0,0,0)";
         }
+        const pilBg =
+            this.convertCSSColorToPILRgba(bg) || this.convertCSSColorToPILRgba("rgba(0,0,0,0)");
+        const fontSize = parseCssValue(this.getFontIconPropertyValue(fontIcon, "font-size"));
+        const iconScale = this.getScaling(this.getFontIconPropertyValue(fontIcon, "transform"));
+        const scaledFontSize = fontSize.number * iconScale;
         const computedStyle = this.getComputedStyle(fontIcon);
         const width = parseCssValue(computedStyle.getPropertyValue("width"));
         const height = parseCssValue(computedStyle.getPropertyValue("height"));
-        const fontSize = parseCssValue(computedStyle.getPropertyValue("font-size"));
+        const containerScale = this.getScaling(computedStyle.getPropertyValue("transform"));
+        const scaledWidth = Math.max(width.number * containerScale, scaledFontSize);
+        const scaledHeight = Math.max(height.number * containerScale, scaledFontSize);
         // render at double the resolution for sharper zoom accuracy
-        const renderWidth = Math.max(1, Math.round(width.number * 2));
-        const renderHeight = Math.max(1, Math.round(height.number * 2));
-        const renderFontSize = Math.max(1, Math.round(fontSize.number * 2));
-        const src = `/mail/font_to_img/${content.charCodeAt(0)}/${encodeURIComponent(
-            color
-        )}/${encodeURIComponent(bg)}/${renderWidth}x${renderHeight}fs${renderFontSize}`;
+        const renderWidth = Math.max(1, Math.round(scaledWidth * 2));
+        const renderHeight = Math.max(1, Math.round(scaledHeight * 2));
+        const renderFontSize = Math.max(1, Math.round(scaledFontSize * 2));
+        const src = `/mail/font_to_img/${icon}/${font}/${pilColor}/${pilBg}/${renderWidth}x${renderHeight}fs${renderFontSize}`;
         const defaultStyleInfo = StyleInfo.from({
-            width: `${width.number}px`,
-            height: `${height.number}px`,
+            width: `${scaledWidth}px`,
+            height: `${scaledHeight}px`,
             "vertical-align": "middle",
         });
         const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
         return {
             attributes: Object.assign(this.getAttributes(fontIcon), {
                 src,
-                width: `${Math.round(width.number)}`,
-                height: `${Math.round(height.number)}`,
+                width: `${Math.round(scaledWidth)}`,
+                height: `${Math.round(scaledHeight)}`,
             }),
             style: defaultStyleInfo.merge(forcedStyleInfo),
         };
