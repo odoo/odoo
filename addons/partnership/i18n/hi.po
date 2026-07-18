@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2026-06-28 01:01+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"PO-Revision-Date: 2026-07-17 17:58+0000\n"
+"Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "partnership/hi/>\n"
 "Language: hi\n"
@@ -27,18 +27,19 @@ msgstr ""
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__active
 msgid "Active"
-msgstr "सक्रिय"
+msgstr "ऐक्टिव"
 
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.action_grade_partners
 msgid "Add this grade to a partner or member."
-msgstr ""
+msgstr "इस ग्रेड को एक पार्टनर या सदस्य में जोड़ें।"
 
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.action_pricelist_partners
 msgid ""
 "Add this pricelist to a grade in order to assign it to a partner or a member."
 msgstr ""
+"इस प्राइसलिस्ट को एक ग्रेड में जोड़ें, ताकि इसे किसी पार्टनर या मेंबर को असाइन किया जा सके।"
 
 #. module: partnership
 #: model_terms:ir.ui.view,arch_db:partnership.res_partner_grade_view_search
@@ -48,13 +49,13 @@ msgstr "संग्रहीत किया गया"
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_sale_order__assigned_grade_id
 msgid "Assigned Grade"
-msgstr ""
+msgstr "असाइन किया गया ग्रेड"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_product__grade_id
 #: model:ir.model.fields,field_description:partnership.field_product_template__grade_id
 msgid "Assigned Level"
-msgstr ""
+msgstr "असाइन किया गया लेवल"
 
 #. module: partnership
 #: model:res.partner.grade,name:partnership.res_partner_grade_data_bronze
@@ -89,13 +90,14 @@ msgstr "ग्राहक बनाएं"
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.res_partner_grade_action
 msgid "Create a Partner Level"
-msgstr ""
+msgstr "एक पार्टनर लेवल बनाएं"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:partnership.field_product_template__service_tracking
+#, fuzzy
 msgid "Create on Order"
-msgstr ""
+msgstr "ऑर्डर पर बनाएं"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__create_uid
@@ -109,8 +111,9 @@ msgstr "इस तारीख को बनाया गया"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__default_pricelist_id
+#, fuzzy
 msgid "Default Pricelist"
-msgstr ""
+msgstr "डिफ़ॉल्ट मूल्य सूची"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_pricelist__display_name
@@ -157,8 +160,9 @@ msgstr "लेवल"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__name
+#, fuzzy
 msgid "Level Name"
-msgstr ""
+msgstr "लेवल का नाम"
 
 #. module: partnership
 #: model:ir.actions.act_window,name:partnership.res_partner_grade_action
@@ -177,17 +181,18 @@ msgstr "सदस्य"
 #: model:ir.actions.act_window,name:partnership.action_grade_partners
 #: model:ir.actions.act_window,name:partnership.action_pricelist_partners
 msgid "Members / Partners"
-msgstr ""
+msgstr "सदस्य या पार्टनर"
 
 #. module: partnership
 #: model:ir.model.fields.selection,name:partnership.selection__product_template__service_tracking__partnership
 msgid "Membership / Partnership"
-msgstr ""
+msgstr "मेंबरशिप या पार्टनरशिप"
 
 #. module: partnership
 #: model_terms:ir.ui.view,arch_db:partnership.res_config_settings_view_form
+#, fuzzy
 msgid "Name given to affiliates:"
-msgstr ""
+msgstr "सहयोगियों को दिया गया नाम:"
 
 #. module: partnership
 #: model:ir.model.fields,help:partnership.field_product_pricelist__partners_label
@@ -196,17 +201,20 @@ msgstr ""
 #: model:ir.model.fields,help:partnership.field_res_partner_grade__partners_label
 msgid "Name used to refer to affiliates: partners, members, alumnis, etc..."
 msgstr ""
+"सहयोगियों को संबोधित करने के लिए इस्तेमाल किया जाने वाला नाम: पार्टनर, मेंबर, एलुमनाई, "
+"वगैरह..।"
 
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.action_grade_partners
 #: model_terms:ir.actions.act_window,help:partnership.action_pricelist_partners
+#, fuzzy
 msgid "No data yet!"
-msgstr ""
+msgstr "अभी तक कोई डेटा नहीं मिला!"
 
 #. module: partnership
 #: model:ir.model,name:partnership.model_res_partner_grade
 msgid "Partner Grade"
-msgstr ""
+msgstr "पार्टनर का ग्रेड"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner__grade_id
@@ -214,19 +222,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:partnership.view_partner_grade_form
 #: model_terms:ir.ui.view,arch_db:partnership.view_partner_grade_tree
 msgid "Partner Level"
-msgstr ""
+msgstr "पार्टनर का लेवल"
 
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.res_partner_grade_action
 msgid ""
 "Partner Levels allow you to rank your Partners based on their performances."
 msgstr ""
+"पार्टनर लेवल आपको अपने पार्टनर को उनके प्रदर्शन के आधार पर रैंक देने की अनुमति देते हैं।"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_pricelist__partners_count
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__partners_count
 msgid "Partners Count"
-msgstr ""
+msgstr "पार्टनर की संख्या"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_pricelist__partners_label
@@ -234,7 +243,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:partnership.field_res_config_settings__partnership_label
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__partners_label
 msgid "Partnership Label"
-msgstr ""
+msgstr "पार्टनरशिप का लेबल"
 
 #. module: partnership
 #: model:ir.model,name:partnership.model_product_pricelist
@@ -255,12 +264,12 @@ msgstr "सेल्स ऑर्डर"
 #. module: partnership
 #: model_terms:ir.ui.view,arch_db:partnership.res_partner_grade_view_search
 msgid "Search Partner Grade"
-msgstr ""
+msgstr "पार्टनर ग्रेड खोजें"
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_partner_grade__sequence
 msgid "Sequence"
-msgstr "अनुक्रम"
+msgstr "सीक्वेंस"
 
 #. module: partnership
 #: model:res.partner.grade,name:partnership.res_partner_grade_data_silver
@@ -274,6 +283,8 @@ msgid ""
 "You are trying to assign two different pricelists (one directly and one from "
 "grade (%(grade_name)s))."
 msgstr ""
+"आप एक साथ दो अलग-अलग मूल्य सूचियां असाइन करने की कोशिश कर रहे हैं (एक सीधे और दूसरी "
+"ग्रेड (%(grade_name)s) के ज़रिए)।"
 
 #. module: partnership
 #. odoo-python
@@ -282,8 +293,10 @@ msgid ""
 "You cannot confirm Sale Order %(sale_order_name)s because there are products "
 "assigning different grades."
 msgstr ""
+"आप सेल ऑर्डर %(sale_order_name)s की पुष्टि नहीं कर सकते, क्योंकि प्रॉडक्ट को अलग-अलग "
+"ग्रेड असाइन किए जा रहे हैं।"
 
 #. module: partnership
 #: model_terms:ir.ui.view,arch_db:partnership.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "जैसे- गोल्ड पार्टनर"
