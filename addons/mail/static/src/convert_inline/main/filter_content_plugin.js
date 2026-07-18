@@ -153,10 +153,18 @@ export class FilterContentPlugin extends Plugin {
     genericTextAndFontStyleRules(rules) {
         // TODO EGGMAIL: replace regexes by exhaustive string lists? (rules optimization)
         // Avoid text-shadow (poor support)
-        // text-decoration is safe but limited (underline mostly)
         rules.allow(/^font(-.*)?$/);
+        // text-decoration is safe but limited (underline mostly)
         // TODO EGGMAIL: text-align values should be fixed to not include "start" or "end" (converted with rtl to left or right)
         rules.allow(/^text-(align|decoration|transform|indent)$/);
+        // text-decoration-line has very low support => fallback to text-decoration
+        rules.fix("text-decoration-line", {
+            how: ({ propertyValue }) => {
+                if (propertyValue === "underline") {
+                    return { propertyName: "text-decoration", propertyValue };
+                }
+            },
+        });
         rules.allow("line-height");
         rules.allow("letter-spacing");
         rules.allow("word-spacing");

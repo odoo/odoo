@@ -87,9 +87,10 @@ export class RulesPlugin extends Plugin {
                 },
             ],
             onPass: (attributeName, attributeValue, fixedArgs = {}) => {
+                const name = fixedArgs.attributeName ?? attributeName;
                 const value = fixedArgs.attributeValue ?? attributeValue;
                 if (value !== undefined) {
-                    filteredAttributes[attributeName] = value;
+                    filteredAttributes[name] = value;
                 }
             },
             onFail: (attributeName) => {
@@ -153,10 +154,11 @@ export class RulesPlugin extends Plugin {
                 },
             ],
             onPass: (propertyName, propertyInfo, fixedArgs = {}) => {
+                const name = fixedArgs.propertyName ?? propertyName;
                 const value = fixedArgs.propertyValue ?? propertyInfo?.value;
                 if (value !== undefined) {
                     filteredStyleInfo.setProperty(
-                        propertyName,
+                        name,
                         value,
                         fixedArgs.propertyPriority ?? propertyInfo?.priority ?? "",
                         propertyInfo.sequence
