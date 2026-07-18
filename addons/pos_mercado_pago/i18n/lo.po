@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2026-06-06 12:13+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
@@ -26,6 +26,12 @@ msgstr "APP_USR-..."
 
 #. module: pos_mercado_pago
 #. odoo-python
+#: code:addons/pos_mercado_pago/models/mercado_pago_pos_request.py:0
+msgid "Cannot decode Mercado Pago POS response. Error: %s"
+msgstr ""
+
+#. module: pos_mercado_pago
+#. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Mercado Pago"
 msgstr "ບໍ່ມີສິດເຂົ້າເຖິງເພື່ອດຶງຂໍ້ມູນໂທເຄັນຈາກ Mercado Pago"
@@ -35,8 +41,7 @@ msgstr "ບໍ່ມີສິດເຂົ້າເຖິງເພື່ອດຶ
 msgid ""
 "Enter your Point Smart terminal serial number written on the back of your "
 "terminal (after the S/N:)"
-msgstr ""
-"ປ້ອນໝາຍເລກຊີຣີເຄື່ອງເທມີນໍ Point Smart ຂອງທ່ານທີ່ຂຽນໄວ້ຢູ່ດ້ານຫຼັງຂອງເຄື່ອງ (ຖັດຈາກ S/N:)"
+msgstr "ປ້ອນໝາຍເລກຊີຣີເຄື່ອງເທມີນໍ Point Smart ຂອງທ່ານທີ່ຂຽນໄວ້ຢູ່ດ້ານຫຼັງຂອງເຄື່ອງ (ຖັດຈາກ S/N:)"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
@@ -44,10 +49,16 @@ msgid "Force PDV"
 msgstr "ບັງຄັບ PDV"
 
 #. module: pos_mercado_pago
+#. odoo-javascript
+#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+msgid "Mercado Pago %s"
+msgstr ""
+
+#. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid ""
-"Mercado Pago customer production user token: "
-"https://www.mercadopago.com.mx/developers/en/reference"
+"Mercado Pago customer production user token: https://www.mercadopago.com.mx/"
+"developers/en/reference"
 msgstr ""
 "ໂທເຄັນຜູ້ໃຊ້ງານການຜະລິດຂອງລູກຄ້າ Mercado Pago: https://www.mercadopago.com.mx/"
 "developers/en/reference"
@@ -55,8 +66,8 @@ msgstr ""
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
 msgid ""
-"Mercado Pago production secret key from integration application: "
-"https://www.mercadopago.com.mx/developers/panel/app"
+"Mercado Pago production secret key from integration application: https://"
+"www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
 "ຄີລັບການຜະລິດ Mercado Pago ຈາກແອັບພລິເຄຊັນການເຊື່ອມຕໍ່: https://www.mercadopago.com.mx/"
 "developers/panel/app"
@@ -127,6 +138,12 @@ msgstr "ຄີລັບການຜະລິດ"
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid "Production user token"
 msgstr "ໂທເຄັນຜູ້ໃຊ້ງານການຜະລິດ"
+
+#. module: pos_mercado_pago
+#. odoo-javascript
+#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+msgid "System error"
+msgstr ""
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart

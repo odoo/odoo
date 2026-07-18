@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-06-14 21:22+0000\n"
+"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"PO-Revision-Date: 2026-07-11 18:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/nl/>\n"
@@ -61,6 +61,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Voorbeeld\n"
+"                   </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -72,6 +77,7 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
+"Er moet een kopersreferentie of inkooporderreferentie worden opgegeven."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -271,6 +277,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"Er kon geen partner worden gevonden die overeenkomt met '%s' met hetzelfde "
+"btw-nummer. Er is een nieuwe partner aangemaakt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -610,14 +618,6 @@ msgstr "Chorus Pro installeren"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Intra-Community supply"
 msgstr "Intracommunautaire levering"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid ""
-"Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor "
-"tax, or ensure your custom tax uses a tax amount of 0"
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -1009,6 +1009,10 @@ msgid ""
 "it does not match the product's UoM category (%(product_category)s). The UoM "
 "was left empty."
 msgstr ""
+"De maateenheid '%(uom)s' (van eenheidscode '%(code)s', categorie %"
+"(xml_category)s) werd genegeerd op de regel voor product '%(product)s' omdat "
+"deze niet overeenkomt met de maateenheid-categorie van het product (%"
+"(product_category)s). De maateenheid is leeg gelaten."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1094,6 +1098,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Dit is een visuele weergave van de XML-inhoud.<br/>\n"
+"                    <strong style=\"color: #495057;\">Het is geen officieel "
+"document.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1123,17 +1130,17 @@ msgstr "UBL BIS-facturering 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "UBL PINT-EU Layer"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
@@ -1181,7 +1188,7 @@ msgstr "Onbekende partner"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
-msgid "Unspported file type via %s"
+msgid "Unsupported file type via %s"
 msgstr "Niet-ondersteund bestandstype via %s"
 
 #. module: account_edi_ubl_cii
@@ -1267,6 +1274,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Unspported file type via %s"
+#~ msgstr "Niet-ondersteund bestandstype via %s"
 
 #~ msgid "<span class=\"text-muted\">FROM</span>"
 #~ msgstr "<span class=\"text-muted\">VAN</span>"

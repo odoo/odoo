@@ -43,8 +43,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-03-21 18:01+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-18 09:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
 "account/bg/>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -7586,7 +7586,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account (%s)"
-msgstr ""
+msgstr "Чужда данъчна сметка (%s)"
 
 #. module: account
 #. odoo-python
@@ -9406,19 +9406,19 @@ msgstr "Счетоводна операция"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "Създадена статия в дневник „ %s “"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "Статията „ %s “ е изтрита"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "Статия в дневник „ %s “ актуализирана"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -9889,7 +9889,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "Редът „%s “ се дефинира като свой родител."
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -9933,7 +9933,7 @@ msgstr "Заключете"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "Изключение за датата на заключване %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
@@ -9963,6 +9963,7 @@ msgid "Looks great!"
 msgstr "Изглежда страхотно!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Loss"
@@ -11473,6 +11474,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr ""
@@ -12484,6 +12486,11 @@ msgid "Profit Account"
 msgstr "Сметка за печалба"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr "Доходност"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
@@ -12785,7 +12792,7 @@ msgstr "Записи"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Recursion found for tax “%s”."
-msgstr ""
+msgstr "Намерена рекурсия за данък „%s“."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -13053,6 +13060,7 @@ msgstr "Ограничено"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Приход"
@@ -13185,7 +13193,7 @@ msgstr "Дясно"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
 msgid "Root"
-msgstr ""
+msgstr "Основна"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__root_report_id
@@ -13288,7 +13296,7 @@ msgstr "SO123"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "СТАНДАРТНИ УСЛОВИЯ ЗА ПРОДАЖБА"
 
 #. module: account
 #: model:account.account,name:account.1_expense_salary
@@ -13757,6 +13765,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Изпращането на фалшиви фактури с измамен номер на банкова сметка е често "
+"срещана фишинг практика. За да се предпазите, винаги проверявайте новите "
+"номера на банкови сметки, за предпочитане като се обадите на доставчика, тъй "
+"като фишингът обикновено се случва, когато имейлите им са компрометирани. "
+"След като ги проверите, можете да активирате възможността за изпращане на "
+"пари."
 
 #. module: account
 #. odoo-python
@@ -14119,6 +14133,9 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
+"Някои методи на плащане, които би трябвало да са уникални, вече съществуват "
+"на друго място.\n"
+"(%s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -15835,7 +15852,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "Текущият баланс (%s) не съвпада с посочения краен баланс."
 
 #. module: account
 #. odoo-python
@@ -16872,7 +16889,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "Прехвърлете записа към %s"
 
 #. module: account
 #. odoo-python
@@ -16956,6 +16973,11 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr "Некатегоризиран"
 
 #. module: account
 #. odoo-python
@@ -17608,7 +17630,7 @@ msgstr "Предупреждение за %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Предупреждение относно метода за закръгляване на сумите: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -17942,6 +17964,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Не можете да създадете нов ред в отчета, без да имате междинна сметка, "
+"зададена в дневника „ %s “."
 
 #. module: account
 #. odoo-python
@@ -18130,6 +18154,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Не можете да изтриете този таг на сметката (%s), тъй като той се използва в "
+"дефиницията на сметкоплана."
 
 #. module: account
 #. odoo-python
@@ -18153,6 +18179,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Не можете да изтриете този отчет (%s), тъй като той се използва от механизма "
+"за генериране на счетоводни PDF файлове."
 
 #. module: account
 #. odoo-python
@@ -18239,6 +18267,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Не можете да импортирате „openning_balance“, ако началната операция (%s) "
+"вече е публикувана.                 Ако сте абсолютно сигурни, че искате да "
+"промените началното салдо на сметките си, върнете операцията в чернова."
 
 #. module: account
 #. odoo-python
@@ -18261,12 +18292,16 @@ msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
+"Не можете да променяте полето „ %s “ на счетоводен дневник, който вече "
+"съдържа счетоводни записи."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"Не можете да променяте следните само за четене полета при публикувано "
+"преместване: %s"
 
 #. module: account
 #. odoo-python
@@ -18293,7 +18328,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Не можете да публикувате запис с архивиран аналитичен акаунт: %s"
 
 #. module: account
 #. odoo-python
@@ -18322,6 +18357,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Не можете да премахнете/деактивирате сметките „%s “, които са зададени в ред "
+"за разпределение на данъците."
 
 #. module: account
 #. odoo-python
@@ -18330,6 +18367,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Не можете да премахнете/деактивирате сметките „%s “, които са зададени в "
+"съответствието на сметките на дадена фискална позиция."
 
 #. module: account
 #. odoo-python
@@ -18437,7 +18476,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr ""
+msgstr "Не можете да валидирате документ с неактивна валута: %s"
 
 #. module: account
 #. odoo-python
@@ -18456,6 +18495,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"Нямате право да извършите тази операция, тъй като нямате достъп до следните "
+"компании: %s."
 
 #. module: account
 #. odoo-python
@@ -18641,7 +18682,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "от %s"
 
 #. module: account
 #. odoo-python

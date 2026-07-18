@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-06-17 17:47+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-11 18:31+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/account/"
 "hi/>\n"
@@ -2485,7 +2485,7 @@ msgstr "सभी "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 msgid "All Companies"
-msgstr ""
+msgstr "सभी कंपनियां"
 
 #. module: account
 #. odoo-python
@@ -7843,8 +7843,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
-"' %(engine)s' इंजन द्वारा 'ग्रुपबाय' सुविधा काम नहीं करती है. कृपया ' %(report_line)"
-"s' से ग्रुपबाय वैल्यू को हटा दें"
+"' %(engine)s' इंजन द्वारा 'ग्रुपबाय' सुविधा काम नहीं करती है. कृपया ' %"
+"(report_line)s' से ग्रुपबाय वैल्यू को हटा दें"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -10000,6 +10000,7 @@ msgid "Looks great!"
 msgstr "अच्छा लग रहा है!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "नुकसान"
@@ -11569,6 +11570,7 @@ msgstr ""
 "कीमत और इनवॉइस में यह टैक्स जुड़ा हुआ है या नहीं."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "P&L खाता"
@@ -12569,6 +12571,11 @@ msgid "Profit Account"
 msgstr "प्रॉफिट अकाउंट"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr "लाभ"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
@@ -13140,6 +13147,7 @@ msgstr "प्रतिबंधित"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "रेवेन्यू"
@@ -15495,8 +15503,7 @@ msgstr "यह एंट्री एक खास हैश से सुरक
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
-msgstr ""
-"यह एंट्री दूसरी कंपनी के खातों (%(accounts_codes_names)s) का उपयोग कर रही है।"
+msgstr "यह एंट्री दूसरी कंपनी के खातों (%(accounts_codes_names)s) का उपयोग कर रही है।"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -17057,6 +17064,11 @@ msgstr ""
 "दोबारा क्रम में लगाना चाहेंगे."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
@@ -18496,8 +18508,7 @@ msgstr "आप बंद किए हुए जर्नल (%(journal)s) म�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
-"आप आर्काइव किए गए एनालिटिक खाते (%s) के साथ कोई एंट्री पोस्ट नहीं कर सकते"
+msgstr "आप आर्काइव किए गए एनालिटिक खाते (%s) के साथ कोई एंट्री पोस्ट नहीं कर सकते"
 
 #. module: account
 #. odoo-python

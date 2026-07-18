@@ -29,20 +29,21 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # or balmas, 2025
 # or balmas <or@laylinetech.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 22:20+0000\n"
-"Last-Translator: or balmas <or@laylinetech.com>\n"
+"PO-Revision-Date: 2026-07-09 16:28+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/hr/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 2) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -59,7 +60,7 @@ msgstr "%s (העתק)"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'תג - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -81,7 +82,7 @@ msgstr "1 ראיון במקום העבודה"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Phone Call"
-msgstr ""
+msgstr "שיחת טלפון אחת"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -103,7 +104,7 @@ msgstr "פעילות Mixin"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "2 open days"
-msgstr ""
+msgstr "2 ימים פתוחים"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -377,6 +378,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
 msgstr ""
+"תוכניות פעילות משמשות להקצאת רשימת פעילויות בכמה לחיצות\n"
+"                    (למשל \"קליטת עובד\", \"סיום העסקה\", ...)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
@@ -1451,7 +1454,7 @@ msgstr "תגיות עובדים"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
-msgstr ""
+msgstr "פרופיל עובדים"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -1560,6 +1563,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
+"עבור %(channels)s, ‏channel_type צריך להיות 'channel' כדי לאפשר הרשמה "
+"אוטומטית של המחלקה."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -2577,7 +2582,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
 msgid "Plan Department Filterable"
-msgstr ""
+msgstr "תוכנית ניתנת לסינון לפי מחלקה"
 
 #. module: hr
 #. odoo-python
@@ -2586,6 +2591,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"פעילויות התוכנית %(template_names)s אינן יכולות להשתמש במאמן, מנהל או אחראי "
+"עובד מכיוון שהן משמשות רק לתוכניות עובדים."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2595,7 +2602,7 @@ msgstr "תוכניות"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr ""
+msgstr "מספר תוכניות"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2772,7 +2779,7 @@ msgstr ""
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "מו\"פ ארה\"ב"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -2836,7 +2843,7 @@ msgstr "עובדים מקושרים"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "מספר שותפים מקושרים"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3207,6 +3214,7 @@ msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
 msgstr ""
+"מזהה התג חייב להיות אלפאנומרי ללא סימנים דיאקריטיים ובאורך של עד 18 תווים."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3313,7 +3321,7 @@ msgstr "האשרת עבודה של %(employee)s פגת תוקף בעוד %(date)
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "תזה"
 
 #. module: hr
 #. odoo-python
@@ -3361,7 +3369,7 @@ msgstr "אזור זמן"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "טיפ: איפה בריאן?"
 
 #. module: hr
 #. odoo-python
@@ -3370,6 +3378,8 @@ msgid ""
 "To avoid multi company issues (losing the access to your previous contracts, "
 "leaves, ...), you should create another employee in the new company instead."
 msgstr ""
+"כדי להימנע מבעיות ריבוי חברות (אובדן גישה לחוזים קודמים, חופשות וכו׳), עדיף "
+"ליצור עובד נוסף בחברה החדשה במקום זאת."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -3463,7 +3473,7 @@ msgstr "כתובות IP חוקיות"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Valid work permit for Belgium"
-msgstr ""
+msgstr "היתר עבודה בתוקף לבלגיה"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -3541,7 +3551,7 @@ msgstr "מה נהדר בתפקיד?"
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
-msgstr ""
+msgstr "האם העובד חבר במחלקה של המשתמש הפעיל או באחת ממחלקות הבת שלה."
 
 #. module: hr
 #. odoo-python
@@ -3685,6 +3695,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
+"אין לך הרשאה לגשת לרשומות \"עובד\" (hr.employee).\n"
+"נוכל להפנות אותך לרשימת העובדים הציבורית."
 
 #. module: hr
 #. odoo-python
@@ -3761,6 +3773,13 @@ msgid ""
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-"
 "Neuve and Namur)."
 msgstr ""
+"תיקח חלק בשירותי הייעוץ שאנו מספקים לשותפים וללקוחות שלנו: אפיון, ניתוח, "
+"פיתוח, בדיקות, ניהול פרויקטים, תמיכה/ליווי. תעבוד באופן עצמאי וכן תתאם ותפקח "
+"על צוותי פיתוח מבוזרים קטנים בחלק מהפרויקטים. אופציונלית, תעביר הדרכות Odoo "
+"לשותפים וללקוחות (8–10 אנשים במפגש). תדווח לראש מחלקת השירותים המקצועיים "
+"ותעבוד בשיתוף פעולה הדוק עם כל המפתחים והיועצים.\n"
+"\n"
+"המשרה ממוקמת בגרנד-רוזייר (1367), בלגיה (בין לובן-לה-נב לנאמור)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3782,7 +3801,7 @@ msgstr "מחלקה"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "למשל בניין 2, מרחוק וכו׳"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3798,17 +3817,17 @@ msgstr "למשל: מנהל מכירות"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "למשל סכם את המשרה בשורה או שתיים..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "למשל johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "למשל myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers
@@ -3829,4 +3848,4 @@ msgstr "מוגבל לעובדים"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
-msgstr ""
+msgstr "work_permit_name"

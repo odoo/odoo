@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 12:41+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-11 18:31+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/account/zh_Hans/>\n"
@@ -1764,7 +1764,7 @@ msgstr "Account Chart Template"
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
-msgstr ""
+msgstr "会计科目映射页面不支持直接访问，仅允许通过会计科目表入口进入。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -6392,7 +6392,7 @@ msgstr "显示金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "显示附件小工具"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -10140,6 +10140,7 @@ msgid "Looks great!"
 msgstr "看起来很棒！"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "损失"
@@ -11701,6 +11702,7 @@ msgstr ""
 "and invoices includes this tax."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "损益科目"
@@ -12711,6 +12713,11 @@ msgid "Profit Account"
 msgstr "利润科目"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr "盈利能力"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
@@ -13283,6 +13290,7 @@ msgstr "受限"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "收入"
@@ -15495,8 +15503,8 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
-"与本发票关联的公司银行账户（%(account_number)s ）尚未被信任。请前往“银行设置”"
-"，确认该账户是否属于您，或修正账号，然后点击“发送资金”以将其设为可信账户。"
+"与本发票关联的公司银行账户（%(account_number)s ）尚未被信任。请前往“银行设"
+"置”，确认该账户是否属于您，或修正账号，然后点击“发送资金”以将其设为可信账户。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -16148,7 +16156,7 @@ msgstr "The running balance (%s) doesn't match the specified ending balance."
 msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
-msgstr ""
+msgstr "计划任务“自动发送发票”已被归档。您将无法批量发送发票。"
 
 #. module: account
 #. odoo-python
@@ -17290,6 +17298,11 @@ msgid ""
 msgstr ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr "未归类"
 
 #. module: account
 #. odoo-python
