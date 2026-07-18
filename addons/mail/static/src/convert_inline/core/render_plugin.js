@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { Analysis, ElementLayout, EmailNode, LayoutModel, TextNodeLayout } from "./render_models";
 import { isSelfClosingElement } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
-import { UniqueArray } from "../data_structures";
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -31,6 +30,7 @@ export class RenderPlugin extends Plugin {
     setup() {
         this.discardedNodes = new WeakSet();
         this.syntheticEmailNodeContainers = new Set();
+        this.syntheticEmailNodeContainersPile = [];
     }
 
     isDiscarded(referenceNode) {
@@ -94,23 +94,14 @@ export class RenderPlugin extends Plugin {
             });
         } else {
             const { layout, analysis } = this.getEmailNodeArguments(referenceNode, parentEmailNode);
-            if (
-                parentEmailNode &&
-                isOnlyChild &&
-                this.attemptMerge(parentEmailNode, {
-                    analysis,
-                    layout,
-                    referenceNodes: new UniqueArray([referenceNode]),
-                })
-            ) {
+            emailNode = new EmailNode({
+                layout,
+                referenceNode: referenceNode,
+                parent: parentEmailNode,
+                analysis,
+            });
+            if (parentEmailNode && isOnlyChild && this.attemptMerge(parentEmailNode, emailNode)) {
                 emailNode = parentEmailNode;
-            } else {
-                emailNode = new EmailNode({
-                    layout,
-                    referenceNode: referenceNode,
-                    parent: parentEmailNode,
-                    analysis,
-                });
             }
             childNodes = this.processChildNodes(
                 referenceNode,
@@ -127,15 +118,27 @@ export class RenderPlugin extends Plugin {
         return emailNode;
     }
 
-    attemptMerge(parentEmailNode, { analysis, layout, referenceNodes }) {
-        const referenceNode = referenceNodes.at(-1);
-        const parentParsingFacts = parentEmailNode.analysis.parsingFacts;
-        if (!parentParsingFacts.canMerge || !analysis.parsingFacts.canParentMerge) {
+    /**
+     * TODO EGGMAIL: if attemptMerge is done during addSyntheticEmailNode
+     * we could potentially remove a node that has not yet been handled
+     * in this case, we need to add the new parent to the list and remove
+     * the previous one
+     */
+    attemptMerge(parentEmailNode, emailNode) {
+        if (!parentEmailNode.children.has(emailNode)) {
+            return false;
+        }
+        if (
+            !parentEmailNode.analysis.parsingFacts.canMerge ||
+            !emailNode.analysis.parsingFacts.canParentMerge
+        ) {
             return false;
         }
         let mergeSuccess = false;
         const parentLayout = parentEmailNode.layout;
-        if (this.delegateTo("merge_email_node_overrides", parentEmailNode, { layout, analysis })) {
+        // merge_email_node_overrides callbacks must only modify layout and
+        // analysis, other concerns are handled in case of mergeSuccess.
+        if (this.delegateTo("merge_email_node_overrides", parentEmailNode, emailNode)) {
             mergeSuccess = true;
         } else if (
             // TODO EGGMAIL: investigate if more automatic merge cases
@@ -143,26 +146,37 @@ export class RenderPlugin extends Plugin {
             // correct (need investigation if table can accept div properties)
             parentLayout instanceof ElementLayout &&
             parentLayout.descendantTag === "DIV" &&
-            referenceNode &&
-            this.isBlock(referenceNode) &&
+            emailNode.lastReferenceNode &&
+            this.isBlock(emailNode.lastReferenceNode) &&
             parentEmailNode.lastReferenceNode &&
             this.isBlock(parentEmailNode.lastReferenceNode) &&
             this.areRectEqual(
                 this.getBoundingClientRect(parentEmailNode.lastReferenceNode),
-                this.getBoundingClientRect(referenceNode)
+                this.getBoundingClientRect(emailNode.lastReferenceNode)
             )
         ) {
             mergeSuccess = true;
-            this.mergeElementLayout(parentEmailNode, { layout, analysis });
-            this.mergeAnalysis(parentEmailNode, { layout, analysis });
-        } else if (
-            this.delegateTo("merge_layout_overrides", parentEmailNode, { layout, analysis })
-        ) {
+            this.mergeElementLayout(parentEmailNode, emailNode);
+            this.mergeAnalysis(parentEmailNode, emailNode);
+        } else if (this.delegateTo("merge_layout_overrides", parentEmailNode, emailNode)) {
             mergeSuccess = true;
-            this.mergeAnalysis(parentEmailNode, { layout, analysis });
+            this.mergeAnalysis(parentEmailNode, emailNode);
         }
         if (mergeSuccess) {
-            parentEmailNode.pushReferenceNodes(...referenceNodes);
+            if (
+                this.syntheticEmailNodeContainers.has(emailNode) &&
+                this.syntheticEmailNodeContainersPile.length !== 0
+            ) {
+                // if a node needing synthetic handling is merged into its parent
+                // during synthetic handling, replace it by its parent in the queue
+                const index = this.syntheticEmailNodeContainersPile.indexOf(emailNode);
+                this.syntheticEmailNodeContainersPile[index] = parentEmailNode;
+            }
+            parentEmailNode.pushReferenceNodes(...emailNode.referenceNodes);
+            parentEmailNode.removeChild(emailNode);
+            for (const child of emailNode.children) {
+                parentEmailNode.appendChild(child);
+            }
         }
         return mergeSuccess;
     }
@@ -171,10 +185,11 @@ export class RenderPlugin extends Plugin {
      * Default merge logic for layouts, childLayout overrides parentLayout
      * values
      */
-    mergeElementLayout(parentEmailNode, { layout, analysis }) {
-        if (this.delegateTo("merge_layout_overrides", parentEmailNode, { layout, analysis })) {
+    mergeElementLayout(parentEmailNode, emailNode) {
+        if (this.delegateTo("merge_layout_overrides", parentEmailNode, emailNode)) {
             return;
         }
+        const { layout } = emailNode;
         // Build a dummy to aggregate the child layout properties onto the
         // parent layout properties
         const dummyLayout = new LayoutModel({ refs: parentEmailNode.layout.getRefs() });
@@ -188,26 +203,25 @@ export class RenderPlugin extends Plugin {
 
     /**
      * Default merge logic for analysis, childAnalysis overrides parentAnalysis
-     * values, and constraints are concatenated
+     * values, and constraints are evaluated
      */
-    mergeAnalysis(parentEmailNode, { layout, analysis }) {
-        if (this.delegateTo("merge_analysis_overrides", parentEmailNode, { layout, analysis })) {
+    mergeAnalysis(parentEmailNode, emailNode) {
+        if (this.delegateTo("merge_analysis_overrides", parentEmailNode, emailNode)) {
             return;
         }
+        const { analysis } = emailNode;
         const parentAnalysis = parentEmailNode.analysis;
-        const mergedAnalysis = new Analysis(parentAnalysis);
-        parentEmailNode.analysis = mergedAnalysis;
+        // Apply BottomUp constraints from the child and concat propagated ones
+        parentAnalysis.bottomUpConstraints = parentAnalysis.bottomUpConstraints.concat(
+            this.applyBottomUpConstraints(parentEmailNode, analysis.bottomUpConstraints)
+        );
+        // Discard TopDown propagated constraints as emailNode will be removed
+        this.applyTopDownConstraints(emailNode, parentAnalysis.topDownConstraints);
         this.mergeFacts(parentEmailNode, {
             facts: analysis.parsingFacts,
             factType: "parsingFacts",
         });
         this.mergeFacts(parentEmailNode, { facts: analysis.facts });
-        mergedAnalysis.bottomUpConstraints = mergedAnalysis.bottomUpConstraints.concat(
-            analysis.bottomUpConstraints
-        );
-        mergedAnalysis.topDownConstraints = mergedAnalysis.topDownConstraints.concat(
-            analysis.topDownConstraints
-        );
     }
 
     /**
@@ -218,7 +232,9 @@ export class RenderPlugin extends Plugin {
      * natural treeWalking order
      */
     addSyntheticEmailNodes() {
-        for (const emailNode of [...this.syntheticEmailNodeContainers]) {
+        this.syntheticEmailNodeContainersPile = [...this.syntheticEmailNodeContainers].reverse();
+        let emailNode;
+        while ((emailNode = this.syntheticEmailNodeContainersPile.pop())) {
             this.syntheticEmailNodeContainers.delete(emailNode);
             // IMPORTANT: if emailNode is replaced/removed, all of its children
             // should be given a new parent, this is not a phase where nodes
@@ -271,7 +287,10 @@ export class RenderPlugin extends Plugin {
         });
     }
 
-    mergeFacts(emailNode, { facts = {}, factType = "facts", isConstraint = false } = {}) {
+    mergeFacts(
+        emailNode,
+        { facts = {}, factType = "facts", isConstraint = false, direction = "down" } = {}
+    ) {
         for (const [fact, value] of Object.entries(facts)) {
             if (
                 !this.delegateTo("merge_fact_overrides", {
@@ -280,6 +299,7 @@ export class RenderPlugin extends Plugin {
                     value,
                     factType,
                     isConstraint,
+                    direction,
                 })
             ) {
                 // TODO EGGMAIL: not sure if delegate is the best action here
@@ -291,6 +311,8 @@ export class RenderPlugin extends Plugin {
                 // TODO EGGMAIL: here a fact from a descendant is directly applied to the current
                 // emailNode, maybe it makes sense to aggregate all descendant facts, then apply
                 // the final result on the current emailNode?
+                // TODO EGGMAIL: re-evaluate every fact, and decide if they need a custom
+                // merge handling
                 emailNode.analysis[factType][fact] = value;
             }
         }
@@ -305,8 +327,13 @@ export class RenderPlugin extends Plugin {
         for (const child of emailNode.children) {
             childConstraints = childConstraints.concat(this.addBottomUpConstraints(child));
         }
+        const propagatedConstraints = this.applyBottomUpConstraints(emailNode, childConstraints);
+        return emailNode.analysis.bottomUpConstraints.concat(propagatedConstraints);
+    }
+
+    applyBottomUpConstraints(emailNode, constraints) {
         const propagatedConstraints = [];
-        for (const constraint of childConstraints) {
+        for (const constraint of constraints) {
             // `constraint` API => return object with "shouldPropagate"+ "facts" + "constraint" function
             const annotations = constraint(emailNode);
             if (!annotations) {
@@ -322,9 +349,10 @@ export class RenderPlugin extends Plugin {
             this.mergeFacts(emailNode, {
                 facts: annotations.facts ?? {},
                 isConstraint: true,
+                direction: "up",
             });
         }
-        return emailNode.analysis.bottomUpConstraints.concat(propagatedConstraints);
+        return propagatedConstraints;
     }
 
     /**
@@ -332,6 +360,16 @@ export class RenderPlugin extends Plugin {
      * callbacks (DFS propagation)
      */
     addTopDownConstraints(emailNode, constraints = []) {
+        const propagatedConstraints = this.applyTopDownConstraints(emailNode, constraints);
+        for (const child of emailNode.children) {
+            this.addTopDownConstraints(
+                child,
+                emailNode.analysis.topDownConstraints.concat(propagatedConstraints)
+            );
+        }
+    }
+
+    applyTopDownConstraints(emailNode, constraints) {
         const propagatedConstraints = [];
         for (const constraint of constraints) {
             const annotations = constraint(emailNode);
@@ -347,12 +385,7 @@ export class RenderPlugin extends Plugin {
                 isConstraint: true,
             });
         }
-        for (const child of emailNode.children) {
-            this.addTopDownConstraints(
-                child,
-                emailNode.analysis.topDownConstraints.concat(propagatedConstraints)
-            );
-        }
+        return propagatedConstraints;
     }
 
     // My idea right now:

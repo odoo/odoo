@@ -70,6 +70,7 @@ export class TableStrategyPlugin extends Plugin {
             this.applyDescendantBorder.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
+        merge_fact_overrides: this.mergeTableStrategyReport.bind(this),
     };
 
     setup() {
@@ -93,6 +94,17 @@ export class TableStrategyPlugin extends Plugin {
         this.provideStyleRules();
     }
 
+    mergeTableStrategyReport({ fact, isConstraint }) {
+        if (isConstraint) {
+            return;
+        }
+        if (fact === "tableStrategyReport" || fact === "cellMargin") {
+            // never overwrite tableStrategyReport or cellMargin unless it is a
+            // constraint
+            return true;
+        }
+    }
+
     isUnsupportedTableElement(referenceNode) {
         if (!referenceNode) {
             return;
@@ -111,6 +123,11 @@ export class TableStrategyPlugin extends Plugin {
         cellMarginRules.allow(/^margin-(top|bottom)$/);
     }
 
+    /**
+     * Remove horizontal margin (for the child of a cell), as
+     * it won't render properly with box-sizing: content-box (cells have a
+     * dimension)
+     */
     getCellMarginStyleInfo(styleInfo, emailNode) {
         if (!styleInfo) {
             return styleInfo;
@@ -359,6 +376,7 @@ export class TableStrategyPlugin extends Plugin {
             });
         }
         const tableStrategyReport = {
+            originNode: referenceNode,
             descendantBackground: {
                 styleInfo: backgroundStyleInfo,
                 cleanup: [cleanupBackground],
@@ -542,8 +560,8 @@ export class TableStrategyPlugin extends Plugin {
         if (
             layout instanceof ElementLayout &&
             layout.tag === "DIV" &&
-            !analysis.desktopMarginStyleInfo &&
-            !analysis.desktopPaddingStyleInfo
+            !this.hasMarginSpacing(analysis) &&
+            !this.hasPaddingSpacing(analysis)
         ) {
             // need to know which ref has to receive the "DIV" info
             const refName = this.processThrough(
@@ -776,7 +794,7 @@ export class TableStrategyPlugin extends Plugin {
         { cell, strategy },
         { contextStyleInfo, cluster, emailNode, widthRatio, verticalAlign, isLast }
     ) {
-        let clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%` };
@@ -800,18 +818,23 @@ export class TableStrategyPlugin extends Plugin {
             cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         }
         cellEmailNode.analysis.facts[strategy] = true;
-        if (
-            clusterEmailNodes.length === 1 &&
-            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
-        ) {
-            clusterEmailNodes = clusterEmailNodes.at(0).children;
-        }
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
                 child
             );
             cellEmailNode.appendChild(child);
+        }
+        if (
+            clusterEmailNodes.length === 1 &&
+            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
+        ) {
+            for (const child of cellEmailNode.children) {
+                child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
+                    child.analysis.facts.desktopMarginStyleInfo,
+                    child
+                );
+            }
         }
         return cellEmailNode;
     }

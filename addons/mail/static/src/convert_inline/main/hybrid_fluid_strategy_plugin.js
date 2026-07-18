@@ -246,7 +246,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         { cell, strategy },
         { needsZoomCorrection, cluster, emailNode, width, verticalAlign }
     ) {
-        let clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
         const refs = { root: {} };
         const cellWidth = width - (needsZoomCorrection ? ZOOM_WIDTH_CORRECTION : 0);
         Object.assign(refs.root, {
@@ -259,18 +259,23 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
         const cellEmailNode = new EmailNode({ layout, analysis });
         cellEmailNode.analysis.facts[strategy] = true;
-        if (
-            clusterEmailNodes.length === 1 &&
-            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
-        ) {
-            clusterEmailNodes = clusterEmailNodes.at(0).children;
-        }
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
                 child
             );
             cellEmailNode.appendChild(child);
+        }
+        if (
+            clusterEmailNodes.length === 1 &&
+            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
+        ) {
+            for (const child of cellEmailNode.children) {
+                child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
+                    child.analysis.facts.desktopMarginStyleInfo,
+                    child
+                );
+            }
         }
         return cellEmailNode;
     }

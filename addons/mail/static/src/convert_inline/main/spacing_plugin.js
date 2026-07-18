@@ -46,6 +46,8 @@ export class SpacingPlugin extends Plugin {
         "getMarginStyleInfo",
         "buildMarginNode",
         "buildPaddingNode",
+        "hasMarginSpacing",
+        "hasPaddingSpacing",
         "validateSpacingValue",
     ];
     resources = {
@@ -73,7 +75,13 @@ export class SpacingPlugin extends Plugin {
     }
 
     mergeSpacingInfo({ fact, isConstraint }) {
-        if (fact === "desktopMarginStyleInfo" && !isConstraint) {
+        if (isConstraint) {
+            return;
+        }
+        // TODO EGGMAIL: maybe combine padding of ancestor with margin and padding of descendant?
+        // currently margin of ancestor is preserved, and padding of descendant is preserved
+        // which is ok as long as they have the same dimensions
+        if (fact === "desktopMarginStyleInfo") {
             // Prevent override of desktopMarginStyleInfo:
             // use case is top -> down traversal, margin info of the ancestor is
             // kept.
@@ -156,6 +164,20 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
+    hasPaddingSpacing(analysis) {
+        return (
+            analysis.facts.desktopPaddingStyleInfo &&
+            analysis.facts.desktopPaddingStyleInfo.size !== 0
+        );
+    }
+
+    hasMarginSpacing(analysis) {
+        return (
+            analysis.facts.desktopMarginStyleInfo &&
+            analysis.facts.desktopMarginStyleInfo.size !== 0
+        );
+    }
+
     applyDefaultSpacing(layout, { emailNode }) {
         const contextNode = this.getContextNode(emailNode);
         const renderNode = this.config.referenceDocument.createElement(
@@ -172,7 +194,7 @@ export class SpacingPlugin extends Plugin {
             return layout;
         }
         if (
-            emailNode.analysis.facts.desktopMarginStyleInfo &&
+            this.hasMarginSpacing(emailNode.analysis) &&
             !paragraphRelatedElements.includes(layout.ancestorTag)
         ) {
             const marginNode = this.buildMarginNode(emailNode, {
@@ -182,7 +204,7 @@ export class SpacingPlugin extends Plugin {
                 emailNode.marginNode = marginNode;
             }
         }
-        if (emailNode.analysis.facts.desktopPaddingStyleInfo) {
+        if (this.hasPaddingSpacing(emailNode.analysis)) {
             const paddingNode = this.buildPaddingNode(emailNode, {
                 refs: { root: { style: { width: "100%" } } },
             });
