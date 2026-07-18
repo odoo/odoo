@@ -225,7 +225,9 @@ export class StylePlugin extends Plugin {
         } else {
             styleInfo = this.computeStyleInfo(element);
         }
-        return styleInfo;
+        // Return a copy of the rawStyleInfo, so that the caller can write
+        // on it
+        return StyleInfo.from(styleInfo);
     }
 
     /**

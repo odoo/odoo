@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
 
-const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = ["font-size", "font-weight"];
+const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = ["font-size", "font-weight", "text-align"];
 const TEXT_ALIGN_ALLOWED_VALUES = new Set(["right", "left", "center", "justify"]);
 const TEXT_ALIGN_FIXABLE_VALUES = new Set(["start", "end"]);
 
@@ -27,9 +27,8 @@ export class ContextStylePlugin extends Plugin {
 
     provideTableContextStyleRules() {
         const tableContextRules = this.tableContextStyleRules.forPlugin(ContextStylePlugin.id);
-        for (const propertyName of COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES) {
-            tableContextRules.allow(propertyName);
-        }
+        tableContextRules.allow("font-size");
+        tableContextRules.allow("font-weight");
         tableContextRules.allow("line-height");
         tableContextRules.allow("text-align", {
             when: ({ propertyValue }) => TEXT_ALIGN_ALLOWED_VALUES.has(propertyValue),
@@ -65,19 +64,18 @@ export class ContextStylePlugin extends Plugin {
     }
 
     getTableContextStyleInfo(element) {
-        const styleInfo = this.filterStyleInfo(
-            this.getRawStyleInfo(element),
-            element,
-            this.tableContextStyleRules
-        );
-        for (const propertyName of COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES) {
-            if (!styleInfo.has(propertyName)) {
-                styleInfo.setProperty(
+        const rawStyleInfo = this.getRawStyleInfo(element);
+        // TODO EGGMAIL: rethink what "COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES" means
+        // -> we should probably have a value for each of the useragent overwriting rule
+        for (const propertyName of [...COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES]) {
+            if (!rawStyleInfo.has(propertyName)) {
+                rawStyleInfo.setProperty(
                     propertyName,
                     this.getStylePropertyValue(element, propertyName)
                 );
             }
         }
+        const styleInfo = this.filterStyleInfo(rawStyleInfo, element, this.tableContextStyleRules);
         if (styleInfo.getPropertyValue("line-height") === "") {
             // TODO EGGMAIL: fix simplification if necessary.
             // line-height should be extracted as a factor, not a px value.
