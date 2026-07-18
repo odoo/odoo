@@ -182,15 +182,20 @@ export class SpacingPlugin extends Plugin {
                 emailNode.marginNode = marginNode;
             }
         }
-        if (
-            emailNode.analysis.facts.desktopPaddingStyleInfo &&
-            !paragraphRelatedElements.includes(layout.descendantTag)
-        ) {
+        if (emailNode.analysis.facts.desktopPaddingStyleInfo) {
             const paddingNode = this.buildPaddingNode(emailNode, {
                 refs: { root: { style: { width: "100%" } } },
             });
             if (paddingNode) {
-                emailNode.paddingNode = paddingNode;
+                if (paragraphRelatedElements.includes(layout.descendantTag)) {
+                    // inline style margin is allowed on paragraph related elements
+                    // but not padding. To support padding, wrap the element in
+                    // a spacing table (the reverse can not be done because a
+                    // table inside a paragraph is illegal html).
+                    emailNode.marginNode = paddingNode;
+                } else {
+                    emailNode.paddingNode = paddingNode;
+                }
             }
         }
         return layout;
