@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-30 03:24+0000\n"
 "Last-Translator: Alexandra Morel <alex.morel@tecnativa.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -501,11 +501,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "Identificación con código de barras en una tableta"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Balance"
-msgstr "Saldo"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr "Código de barras / RFID"
@@ -745,8 +740,8 @@ msgstr ""
 "  Máximo: utiliza la tarifa más alta (p.ej.: combinación de 150 % y 120 = "
 "150 %)\n"
 "  Suma: suma el pago *extra* (es decir, por encima del 100 %).\n"
-"    Por ejemplo: tarifa combinada para 150 % y 120 % = 100 % (base) + (150-"
-"100) % + (120-100) % = 170 %\n"
+"    Por ejemplo: tarifa combinada para 150 % y 120 % = 100 % (base) + "
+"(150-100) % + (120-100) % = 170 %\n"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__country_id
@@ -839,11 +834,6 @@ msgstr "Descripción"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Device & Location Tracking"
 msgstr "Seguimiento de dispositivo y ubicación"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Difference"
-msgstr "Diferencia"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
@@ -991,12 +981,9 @@ msgid "Errors"
 msgstr "Errores"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "Horas extras"
 
@@ -1634,11 +1621,6 @@ msgid "Outside of a specific schedule"
 msgstr "Fuera de un horario específico"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
-msgid "Over Time"
-msgstr "Horas extraordinarias"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
 msgstr "Horas extraordinarias"
@@ -2262,6 +2244,11 @@ msgid "Usual work hours"
 msgstr "Horas de trabajo habituales"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+msgid "Validated Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Validation Error"
@@ -2314,9 +2301,7 @@ msgid "Work Hours"
 msgstr "Horas laborables"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Worked Extra Hours"
 msgstr "Horas extras trabajadas"
 
@@ -2445,6 +2430,15 @@ msgstr "con una tasa de"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "con código PIN opcional"
+
+#~ msgid "Balance"
+#~ msgstr "Saldo"
+
+#~ msgid "Difference"
+#~ msgstr "Diferencia"
+
+#~ msgid "Over Time"
+#~ msgstr "Horas extraordinarias"
 
 #~ msgid "Theoretical Hours"
 #~ msgstr "Horas teóricas"

@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:35+0000\n"
-"PO-Revision-Date: 2026-07-11 09:32+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-18 00:45+0000\n"
 "Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "account/bg/>\n"
@@ -301,7 +301,7 @@ msgstr "%s не е съхранено поле"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "%s данъци"
 
 #. module: account
 #. odoo-python
@@ -1619,6 +1619,144 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in "
+"invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_INVOICES_TO_DISPLAY\" t-value=\"5\"/>\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
+"serif; color: #454748;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
+"       <tr>\n"
+"            <td align=\"center\"> \n"
+"               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"background-color: white; border-collapse:separate;\">\n"
+"                    <!-- HEADER --> \n"
+"                   <tr>\n"
+"                        <td align=\"center\"> \n"
+"                           <table width=\"100%\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"background-color: #875A7B; color: #FFFFFF; font-"
+"size: 14px; padding: 14px 0; border-radius: 3px;\">\n"
+"                                <tr> \n"
+"                                   <td align=\"left\" style=\"padding-left: "
+"16px;\"> \n"
+"                                        Получихте <t t-if=\"invoice_count "
+"&gt; 1\">нови електронни фактури!</t><t t-else=\"\">нова електронна фактура!"
+"</t>\n"
+"                                    </td>\n"
+"                                   <td align=\"right\" style=\"padding-"
+"right: 16px;\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/> \n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                           </table>\n"
+"                        </td> \n"
+"                   </tr>\n"
+"                    <!-- BODY --> \n"
+"                   <tr>\n"
+"                        <td align=\"center\"> \n"
+"                           <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 16px 32px; background-color: white; "
+"border-collapse:separate;\">\n"
+"                                <tr> \n"
+"                                   <td style=\"font-size: 14px;\">\n"
+"                                        <h3 style=\"font-size: 20px; margin-"
+"bottom: 20px;\"> \n"
+"                                           <t t-"
+"if=\"object.company_id.name\"> \n"
+"                                                Здравейте, <t t-"
+"out=\"object.company_id.name\"/>,\n"
+"                                           </t>\n"
+"                                            <t t-else=\"\"> \n"
+"                                                Здравейте,\n"
+"                                           </t>\n"
+"                                        </h3> \n"
+"                                       <p style=\"margin-top: 12px;\"> \n"
+"                                            Получихте <t t-"
+"if=\"invoice_count &gt; 1\">нови електронни фактури</t><t t-else=\"\">нова "
+"електронна фактура</t>!\n"
+"                                       </p>\n"
+"                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
+"t-value=\"5\"/> \n"
+"                                       <t t-"
+"foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
+"                                            <t t-if=\"not inv_first\"> \n"
+"                                               <div style=\"background-"
+"color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;\"/>\n"
+"                                            </t> \n"
+"                                           <p style=\"line-height: 1.7em; "
+"padding-top: 16px;\">\n"
+"                                                <t t-if=\"inv.name or "
+"inv.ref\"> \n"
+"                                                   <span style=\"font-"
+"weight:bold;\"> Референтен номер на фактурата:</span> <t t-out=\"inv.name or "
+"inv.ref\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-"
+"if=\"inv.partner_id.name\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Доставчик:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-"
+"if=\"inv.amount_total\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Сума:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"object.company_id.currency_id}\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-"
+"if=\"inv.invoice_date_due\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Краен срок за плащане:</span> <t t-"
+"out=\"inv.invoice_date_due\"/>\n"
+"                                               </t>\n"
+"                                            </p> \n"
+"                                       </t>\n"
+"\n"
+"                                        <div style=\"text-align: center; "
+"padding-top: 24px;\"> \n"
+"                                           <a t-if=\"invoice_count != 1\" t-"
+"attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\"> \n"
+"                                               Преглед на фактури\n"
+"                                           </a>\n"
+"                                            <a t-else=\"\" t-attf-href=\"/"
+"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" "
+"target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-"
+"weight: bold; color: #FFFFFF; text-decoration: none !important; background-"
+"color: #008384; border-radius:3px; display: inline-block;\"> \n"
+"                                               Преглед на фактура\n"
+"                                           </a>\n"
+"                                            <p style=\"font-size: 11px; "
+"margin-top: 8px; color: #777;\"> Време е да изчислим някои цифри</p>\n"
+"                                        </div>\n"
+"                                       <br/>\n"
+"                                        <p style=\"text-align: center; "
+"margin-top: 16px;\"> \n"
+"                                            Ако желаете да се отпишете от "
+"получаването на имейли за постъпили фактури, кликнете тук <a t-attf-href=\"/"
+"my/journal/{{ object.id }}/unsubscribe\"></a> .\n"
+"                                       </p>\n"
+"                                    </td> \n"
+"                               </tr>\n"
+"                            </table> \n"
+"                       </td>\n"
+"                    </tr> \n"
+"               </table>\n"
+"            </td> \n"
+"       </tr>\n"
+"    </table> \n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_invoice_subscriber
@@ -7738,6 +7876,11 @@ msgid "Electronic Data Interchange"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "Електронен формат"
@@ -7979,6 +8122,8 @@ msgid ""
 "Error while creating XML:\n"
 "- %s"
 msgstr ""
+"Грешка при създаването на XML:\n"
+"- %s"
 
 #. module: account
 #. odoo-python
@@ -8677,7 +8822,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account (%s)"
-msgstr ""
+msgstr "Чужда данъчна сметка (%s)"
 
 #. module: account
 #. odoo-python
@@ -10748,19 +10893,19 @@ msgstr "Счетоводна Операция"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "Създадена статия в дневник „ %s “"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "Статията „ %s “ е изтрита"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "Статия в дневник „ %s “ актуализирана"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -11260,7 +11405,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "Редът „%s “ се дефинира като свой родител."
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -11328,7 +11473,7 @@ msgstr "Заключете"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "Изключение за датата на заключване %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
@@ -13073,11 +13218,6 @@ msgid "PDF without Payment"
 msgstr "PDF без плащане"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
 msgid "PEPPOL Invoicing"
 msgstr ""
@@ -14452,7 +14592,7 @@ msgstr "Записи"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Recursion found for tax “%s”."
-msgstr ""
+msgstr "Намерена рекурсия за данък „%s“."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -15254,7 +15394,7 @@ msgstr ""
 #: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
-msgstr ""
+msgstr "Търсене: %s"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_merge_wizard_line__display_type__line_section
@@ -15510,6 +15650,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Изпращането на фалшиви фактури с измамен номер на банкова сметка е често "
+"срещана фишинг практика. За да се предпазите, винаги проверявайте новите "
+"номера на банкови сметки, за предпочитане като се обадите на доставчика, тъй "
+"като фишингът обикновено се случва, когато имейлите им са компрометирани. "
+"След като ги проверите, можете да активирате възможността за изпращане на "
+"пари."
 
 #. module: account
 #. odoo-python
@@ -15959,6 +16105,9 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
+"Някои методи на плащане, които би трябвало да са уникални, вече съществуват "
+"на друго място.\n"
+"(%s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -17748,7 +17897,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The recurrence will end on %s (included)."
-msgstr ""
+msgstr "Повторението ще приключи на %s (включително)."
 
 #. module: account
 #. odoo-python
@@ -17795,7 +17944,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "Текущият баланс (%s) не съвпада с посочения краен баланс."
 
 #. module: account
 #. odoo-python
@@ -18390,6 +18539,8 @@ msgid ""
 "This move is configured to be posted automatically at the accounting date: "
 "%s."
 msgstr ""
+"Тази операция е настроена да се публикува автоматично на счетоводната дата: "
+"%s."
 
 #. module: account
 #. odoo-python
@@ -18806,7 +18957,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "Прехвърлете записа към %s"
 
 #. module: account
 #. odoo-python
@@ -19609,7 +19760,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Предупреждение относно метода за закръгляване на сумите: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__warnings
@@ -19934,6 +20085,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Не можете да създадете нов ред в отчета, без да имате междинна сметка, "
+"зададена в дневника „ %s “."
 
 #. module: account
 #. odoo-python
@@ -20122,6 +20275,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Не можете да изтриете този таг на сметката (%s), тъй като той се използва в "
+"дефиницията на сметкоплана."
 
 #. module: account
 #. odoo-python
@@ -20145,6 +20300,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Не можете да изтриете този отчет (%s), тъй като той се използва от механизма "
+"за генериране на счетоводни PDF файлове."
 
 #. module: account
 #. odoo-python
@@ -20222,6 +20379,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Не можете да импортирате „openning_balance“, ако началната операция (%s) "
+"вече е публикувана.                 Ако сте абсолютно сигурни, че искате да "
+"промените началното салдо на сметките си, върнете операцията в чернова."
 
 #. module: account
 #. odoo-python
@@ -20244,12 +20404,16 @@ msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
+"Не можете да променяте полето „ %s “ на счетоводен дневник, който вече "
+"съдържа счетоводни записи."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"Не можете да променяте следните само за четене полета при публикувано "
+"преместване: %s"
 
 #. module: account
 #. odoo-python
@@ -20276,7 +20440,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Не можете да публикувате запис с архивиран аналитичен акаунт: %s"
 
 #. module: account
 #. odoo-python
@@ -20320,6 +20484,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Не можете да премахнете/деактивирате сметките „%s “, които са зададени в ред "
+"за разпределение на данъците."
 
 #. module: account
 #. odoo-python
@@ -20328,6 +20494,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Не можете да премахнете/деактивирате сметките „%s “, които са зададени в "
+"съответствието на сметките на дадена фискална позиция."
 
 #. module: account
 #. odoo-python
@@ -20426,7 +20594,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr ""
+msgstr "Не можете да валидирате документ с неактивна валута: %s"
 
 #. module: account
 #. odoo-python
@@ -20445,6 +20613,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"Нямате право да извършите тази операция, тъй като нямате достъп до следните "
+"компании: %s."
 
 #. module: account
 #. odoo-python
@@ -20656,7 +20826,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "от %s"
 
 #. module: account
 #. odoo-python

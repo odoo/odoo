@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-30 08:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -500,11 +500,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "Badge cu cod de bare pe tabletă"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Balance"
-msgstr "Sold"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr "Cod de bare / RFID"
@@ -839,11 +834,6 @@ msgid "Device & Location Tracking"
 msgstr "Urmărirea dispozitivului și a locației"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Difference"
-msgstr "Diferență"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_extra_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_display_overtime
@@ -855,7 +845,8 @@ msgstr "Afișează ore suplimentare"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours in Kiosk mode and on User profile."
-msgstr "Afișează ore suplimentare în modul Kiosk și în profilul utilizatorului."
+msgstr ""
+"Afișează ore suplimentare în modul Kiosk și în profilul utilizatorului."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -987,12 +978,9 @@ msgid "Errors"
 msgstr "Erori"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "Ore suplimentare"
 
@@ -1625,11 +1613,6 @@ msgid "Outside of a specific schedule"
 msgstr "În afara unui program specific"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
-msgid "Over Time"
-msgstr "Timp peste program"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
 msgstr "Suplimentare"
@@ -2223,12 +2206,14 @@ msgstr "Necunoscut"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "Utilizați coduri PIN (definite în profilul angajatului) pentru a intra."
+msgstr ""
+"Utilizați coduri PIN (definite în profilul angajatului) pentru a intra."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use this url to access your kiosk mode from any device."
-msgstr "Folosiți acest url pentru a accesa modul chioșc de pe orice dispozitiv."
+msgstr ""
+"Folosiți acest url pentru a accesa modul chioșc de pe orice dispozitiv."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -2244,6 +2229,11 @@ msgstr "Utilizator: Își citește propriile prezențe"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours
 msgid "Usual work hours"
 msgstr "Ore obișnuite de lucru"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+msgid "Validated Extra Hours"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2298,9 +2288,7 @@ msgid "Work Hours"
 msgstr "Ore de Lucru"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Worked Extra Hours"
 msgstr "Ore suplimentare lucrate"
 
@@ -2429,6 +2417,15 @@ msgstr "cu o rată de"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "cu cod PIN opțional"
+
+#~ msgid "Balance"
+#~ msgstr "Sold"
+
+#~ msgid "Difference"
+#~ msgstr "Diferență"
+
+#~ msgid "Over Time"
+#~ msgstr "Timp peste program"
 
 #~ msgid "Expected Hours"
 #~ msgstr "Ore așteptate"

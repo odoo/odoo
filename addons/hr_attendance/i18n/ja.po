@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-29 16:59+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -29,7 +29,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "\"チェックアウト\"時間は\"チェックイン\"時間より早くすることはできません。"
+msgstr ""
+"\"チェックアウト\"時間は\"チェックイン\"時間より早くすることはできません。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -243,8 +244,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
 msgstr ""
-"会社の利益のために、時間外労働がカウントされない時間（就業時間前後）を設ける"
-"。"
+"会社の利益のために、時間外労働がカウントされない時間（就業時間前後）を設け"
+"る。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -259,8 +260,8 @@ msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
 msgstr ""
-"従業員のアクセスおよび出勤状況を追跡するために、GPS位置情報、IPアドレス、"
-"ブラウザ／デバイスの詳細の収集を許可します"
+"従業員のアクセスおよび出勤状況を追跡するために、GPS位置情報、IPアドレス、ブラ"
+"ウザ／デバイスの詳細の収集を許可します"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
@@ -495,11 +496,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "バーコード付バッジ (タブレット)"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Balance"
-msgstr "残高"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr "バーコード / RFID"
@@ -536,7 +532,8 @@ msgstr "基準"
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__in_location
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__out_location
 msgid "Based on GPS-Coordinates if available or on IP Address"
-msgstr "利用可能であればGPS座標に基づき、そうでなければIPアドレスに基づきます。"
+msgstr ""
+"利用可能であればGPS座標に基づき、そうでなければIPアドレスに基づきます。"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -829,11 +826,6 @@ msgid "Device & Location Tracking"
 msgstr "デバイスと位置情報の追跡"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Difference"
-msgstr "差異"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_extra_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_display_overtime
@@ -977,12 +969,9 @@ msgid "Errors"
 msgstr "エラー"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "時間外労働"
 
@@ -1182,8 +1171,8 @@ msgid ""
 "If checked, days not covered by an attendance will be visible in the Report. "
 "Does not apply to employees with a flexible working schedule."
 msgstr ""
-"チェックした場合、出勤日数以外の日数がレポートに表示されます。"
-"フレックスタイム制の社員には適用されません。"
+"チェックした場合、出勤日数以外の日数がレポートに表示されます。フレックスタイ"
+"ム制の社員には適用されません。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1615,11 +1604,6 @@ msgid "Outside of a specific schedule"
 msgstr "特定のスケジュール以外"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
-msgid "Over Time"
-msgstr "残業時間"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
 msgstr "残業"
@@ -1836,7 +1820,8 @@ msgstr "ルール「%(name)s 」は数量に基づいているが、期間は指
 msgid ""
 "Rule '%(name)s' is based off quantity, but the usual amount of work hours is "
 "not specified"
-msgstr "ルール「%(name)s 」は数量に基づくが、通常の勤務時間数は明記されていません"
+msgstr ""
+"ルール「%(name)s 」は数量に基づくが、通常の勤務時間数は明記されていません"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2057,7 +2042,8 @@ msgstr ""
 msgid ""
 "The user will have access to all attendance records and reports for all "
 "employees."
-msgstr "このユーザは、すべての従業員の勤怠記録およびレポートにアクセスできます。"
+msgstr ""
+"このユーザは、すべての従業員の勤怠記録およびレポートにアクセスできます。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
@@ -2226,6 +2212,11 @@ msgid "Usual work hours"
 msgstr "通常の勤務時間"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+msgid "Validated Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Validation Error"
@@ -2278,9 +2269,7 @@ msgid "Work Hours"
 msgstr "就業時間"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Worked Extra Hours"
 msgstr "時間外実労働時間"
 
@@ -2409,6 +2398,15 @@ msgstr "以下の割合で："
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "オプションPINコードで"
+
+#~ msgid "Balance"
+#~ msgstr "残高"
+
+#~ msgid "Difference"
+#~ msgstr "差異"
+
+#~ msgid "Over Time"
+#~ msgstr "残業時間"
 
 #~ msgid "Expected Hours"
 #~ msgstr "想定勤務時間"
