@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:07+0000\n"
-"PO-Revision-Date: 2026-07-03 18:07+0000\n"
+"POT-Creation-Date: 2026-07-17 18:05+0000\n"
+"PO-Revision-Date: 2026-07-17 18:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid ""
 "A French e-invoicing response with Response Code '%(status)s' was sent to "
-"the French e-invoicing Access Point."
+"the Approved Platform."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -319,6 +319,11 @@ msgid "Available Statuses"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__reason_code__calcul_err
 msgid "Billing calculation error"
 msgstr ""
@@ -519,6 +524,12 @@ msgid "Demo"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Details:"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_view_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_config_wizard_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_response_wizard_form
@@ -549,6 +560,7 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_cii__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_ubl_21_fr__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_journal__display_name
@@ -623,6 +635,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_view_move_form
 msgid "E-Invoicing Status"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "E-Invoicing Status Update"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -742,6 +760,18 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__error_moves_count
 msgid "Error Moves Count"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Errors from %(error_source)s:"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Errors:"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -888,12 +918,6 @@ msgid "French PDP Flow"
 msgstr ""
 
 #. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid "French e-invoicing response error: %s"
-msgstr ""
-
-#. module: l10n_fr_pdp
 #. odoo-javascript
 #: code:addons/l10n_fr_pdp/static/src/js/pdp_info.xml:0
 msgid "Fully automated"
@@ -943,6 +967,7 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_cii__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_edi_xml_ubl_21_fr__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_journal__id
@@ -1068,6 +1093,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 msgid "Invalid Invoices"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+msgid "Invalid email address '%s'"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1388,6 +1419,24 @@ msgid "Out of scope"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PA Invoice"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PA Lifecycle"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PA Status:"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_move_search
 msgid "PDP Error"
 msgstr ""
@@ -1452,9 +1501,21 @@ msgid "PEPPOL status"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PPF Invoice"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_bank_statement_line__pdp_ppf_move_state
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move__pdp_ppf_move_state
 msgid "PPF Invoice Status"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PPF Lifecycle"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1466,6 +1527,12 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_peppol_response__pdp_ppf_state
 msgid "PPF Status"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "PPF Status:"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1735,22 +1802,6 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__ab
 msgid "Received"
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid ""
-"Received response for status %(ref_status_info)s with Response Code "
-"'%(response_code)s' issued on %(issue_date)s."
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid ""
-"Received response with Response Code '%(response_code)s' issued on "
-"%(issue_date)s."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2128,14 +2179,6 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid ""
-"The Response issued on %(issue_date)s with Response Code '%(response_code)s'"
-" was sent by the access point."
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid "The SIREN of the company could not be determined."
 msgstr ""
@@ -2206,6 +2249,14 @@ msgid ""
 "The identifier starts with the SIREN, the part after the SIREN is optional. "
 "The expected format of the identifier is: SIREN, SIREN_SIRET, "
 "SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Approved Platform. The following "
+"attachments were sent with the XML:"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2329,6 +2380,12 @@ msgstr ""
 msgid ""
 "Type of transmission per Flux 10 v1.2: IN (Initial) or RE (Rectificative). "
 "No references to previous flows in v1.2."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+msgid "Unknown error"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2514,21 +2571,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 msgid "[Flow %(flow_number)s] %(main_message)s"
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid ""
-"[Flow 1] There was an error when sending the tax extract to the PPF: %s"
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
-msgid ""
-"[Flow 6] There was an error when sending a '%(status)s' response (UUID "
-"%(uuid)s) to the PPF: %(error)s"
 msgstr ""
 
 #. module: l10n_fr_pdp
