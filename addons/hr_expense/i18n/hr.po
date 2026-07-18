@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"POT-Creation-Date: 2026-07-03 17:36+0000\n"
 "PO-Revision-Date: 2026-06-12 05:40+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -355,6 +355,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Pridruži račun, obično slika ili pdf datoteka."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr "Broj priloga"
@@ -593,6 +598,7 @@ msgstr "Odbaci"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -1043,6 +1049,7 @@ msgstr "HR trošak: alias domena"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -2376,13 +2383,14 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"Kada je cijena proizvoda troška različita od 0, tada korisnik"
-"                                             koji koristi ovaj proizvod neće "
-"moći mijenjati iznos troška,                                             "
-"samo količinu. Koristite cijenu različitu od 0 za kategorije troškova koje "
-"tvrtka financira                                             po fiksnoj "
-"cijeni, poput naknada za kilometražu, dnevnica, smještaja"
-"                                             ili obroka."
+"Kada je cijena proizvoda troška različita od 0, tada "
+"korisnik                                             koji koristi ovaj "
+"proizvod neće moći mijenjati iznos "
+"troška,                                             samo količinu. Koristite "
+"cijenu različitu od 0 za kategorije troškova koje tvrtka "
+"financira                                             po fiksnoj cijeni, "
+"poput naknada za kilometražu, dnevnica, "
+"smještaja                                             ili obroka."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2407,6 +2415,25 @@ msgstr "Sada ga možete predati voditelju putem sljedeće poveznice."
 #, fuzzy
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr "Možete generirati računovodstveni unos samo za odobrene troškove."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2502,6 +2529,12 @@ msgstr "Nemate potrebnu dozvolu za predaju ovog troška."
 #, fuzzy
 msgid "You do not have the rights to edit this expense."
 msgstr "Nemate prava za uređivanje ovog troška."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

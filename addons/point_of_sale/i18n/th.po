@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-27 21:18+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-02 06:20+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/th/>\n"
@@ -66,6 +66,14 @@ msgid "% Disc"
 msgstr "% ส่วนลด"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
@@ -89,6 +97,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -290,6 +304,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                   <t t-set=\"store_name\" t-value=\"object.config_id.name\"/"
+">\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/> \n"
+"                   <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div> \n"
+"                       <t t-if=\"client_name\">สวัสดีค่ะ/ครับ<t t-"
+"out=\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ/ครับ</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> ขอบคุณที่ซื้อสินค้าจาก<t t-out=\"store_name\">ชื่อร้าน</t>!</"
+"div>\n"
+"                    <div>แนบมาด้วยคือใบเสร็จรับเงินสำหรับการซื้อ<span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">วันที่</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">เวลา</t>.</"
+"span>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div>ด้วยความเคารพ</div>\n"
+"                    <br/>\n"
+"                   <t t-out=\"store_name\">ชื่อร้าน</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1123,6 +1167,12 @@ msgstr "เก็บถาวรแล้ว"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Are you sure that the customer wants to  pay"
 msgstr "แน่ใจหรือว่าลูกค้าต้องการจ่าย"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "Are you sure?"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
@@ -3270,6 +3320,7 @@ msgstr "ลดราคา"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__display_name
@@ -3527,6 +3578,12 @@ msgstr "ที่อยู่ IP ของเครื่องพิมพ์ E
 #: code:addons/point_of_sale/models/pos_printer.py:0
 msgid "Epson Printer IP Address cannot be empty."
 msgstr "ที่อยู่ IP ของเครื่องพิมพ์ Epson ต้องไม่เว้นว่าง"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/printer_service.js:0
+msgid "Error"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -4086,6 +4143,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__id
@@ -5608,6 +5666,12 @@ msgid "Not available"
 msgstr "ไม่พร้อมใช้งาน"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
 msgstr ""
@@ -5736,6 +5800,7 @@ msgstr "คำสั่งซื้อแบบออฟไลน์"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -7807,6 +7872,11 @@ msgid "Remaining"
 msgstr "เหลืออยู่"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_removal
+msgid "Removal Strategy"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
@@ -8394,6 +8464,12 @@ msgid "Session Statistics"
 msgstr "สถิติเซสชัน"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "เซสชั่นเปิดมากกว่า 7 วัน"
@@ -8677,6 +8753,14 @@ msgid ""
 msgstr ""
 "ไม่สามารถส่งคำสั่งซื้อบางรายการไปยังเซิร์ฟเวอร์ได้เนื่องจากปัญหาการเชื่อมต่ออินเทอร์เน็ต "
 "คุณสามารถออกจากระบบขายหน้าร้านได้ แต่อย่าปิดเซสชันก่อนที่ปัญหาจะได้รับการแก้ไข"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

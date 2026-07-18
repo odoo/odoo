@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:38+0000\n"
-"PO-Revision-Date: 2026-06-16 21:14+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"PO-Revision-Date: 2026-07-17 20:26+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/sale/es_419/>\n"
@@ -1013,13 +1013,14 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        por un total de\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(transaction_sudo.amount, object.currency_id) or ''\">$10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or "
+"''\">$10.00</span>\n"
 "        para la orden\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
-"S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            está pendiente.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -1029,9 +1030,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Una vez confirmado, faltarán\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
-"object.currency_id) or ''\">$10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$10.00</span>\n"
 "                por pagar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -1040,9 +1041,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>Faltan \n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid, object.currency_id) or ''\">"
-"$10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$10.00</span>\n"
 "                por pagar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -2336,11 +2337,6 @@ msgid "Connect with your software!"
 msgstr "Conéctate con tu software"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Conecta tu software"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr "Conectores"
@@ -3425,7 +3421,7 @@ msgstr "Incoterm"
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Ubicación Incoterm"
+msgstr "Ubicación del incoterm"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4111,9 +4107,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
-"Una vez confirmada la orden de venta ya no es posible quitar ninguna de las "
+"Una vez que confirmas una orden de venta, no puedes eliminar ninguna de sus "
 "líneas (son necesarias para determinar si algo se factura o se entrega).\n"
-"                En su lugar, establezca la cantidad en 0."
+"Establece la cantidad en 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -6739,11 +6735,6 @@ msgid "sale order"
 msgstr "orden de venta"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "para crear cotizaciones en automático."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "para conocer todas las formas de conectar tu software con"
@@ -6752,11 +6743,6 @@ msgstr "para conocer todas las formas de conectar tu software con"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "unidades"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "con"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -6805,6 +6791,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
+
+#~ msgid "Connect your software"
+#~ msgstr "Conecta tu software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "para crear cotizaciones en automático."
+
+#~ msgid "with"
+#~ msgstr "con"
 
 #~ msgid ""
 #~ "The following sale orders %(invalid_orders) can't be delivered. Cancelled "
