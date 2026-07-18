@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 13:43+0000\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-01 00:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "hr/>\n"
@@ -1767,11 +1767,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Povežite se sa svojim softverom!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Povežite svoj softver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4163,6 +4158,8 @@ msgid "Quantities to invoice from sales orders"
 msgstr "Količine za u račun iz prodajnih naloga"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -5860,7 +5857,8 @@ msgstr "Valjanost narudžbe, nakon toga nećete moći potpisati i platiti ponudu
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, fuzzy
 msgid "Values set here are company-specific."
-msgstr "Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
+msgstr ""
+"Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6186,11 +6184,6 @@ msgid "sale order"
 msgstr "Prodajni nalog"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "za automatsko kreiranje ponuda."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "naučiti sve načine povezivanja vašeg softvera s"
@@ -6199,11 +6192,6 @@ msgstr "naučiti sve načine povezivanja vašeg softvera s"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "jedinice"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6241,3 +6229,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Connect your software"
+#~ msgstr "Povežite svoj softver"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "za automatsko kreiranje ponuda."
+
+#~ msgid "with"
+#~ msgstr "s"

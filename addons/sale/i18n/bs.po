@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 12:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-01 22:56+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "bs/>\n"
 "Language: bs\n"
@@ -989,7 +989,8 @@ msgstr "Potvrđeni prodajni nalog zahtijeva datum potvrde."
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #, fuzzy
 msgid "A note, whose content usually applies to the section or product above."
-msgstr "Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
+msgstr ""
+"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: sale
 #. odoo-python
@@ -1135,8 +1136,8 @@ msgid ""
 msgstr ""
 "Planovi aktivnosti koriste se za dodjeljivanje popisa aktivnosti u samo "
 "nekoliko klikova\n"
-"               npr. \"Raspored dostave\", \"Praćenje plaćanja narudžbe\", "
-"...)"
+"               npr. \"Raspored dostave\", \"Praćenje plaćanja "
+"narudžbe\", ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1859,12 +1860,6 @@ msgstr ""
 #, fuzzy
 msgid "Connect with your software!"
 msgstr "Povežite se sa svojim softverom!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "Connect your software"
-msgstr "Povežite svoj softver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3082,7 +3077,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
 #, fuzzy
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr "Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
+msgstr ""
+"Interno upozorenje za partnera ili proizvode koje je postavio korisnik."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
@@ -4497,6 +4493,8 @@ msgid "Quantities to invoice from sales orders"
 msgstr "Količine za fakturisanje sa prodajne narudžbe"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4683,7 +4681,8 @@ msgstr "Referenca"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 #, fuzzy
 msgid "Reference of the document that generated this sales order request"
-msgstr "Referenca dokumenta koji je generirao ovaj zahtjev za prodajnu narudžbu"
+msgstr ""
+"Referenca dokumenta koji je generirao ovaj zahtjev za prodajnu narudžbu"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -6738,12 +6737,6 @@ msgid "sale order"
 msgstr "Prodajni nalog"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "to create quotes automatically."
-msgstr "za automatsko kreiranje ponuda."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, fuzzy
 msgid "to learn all the ways to connect your software with"
@@ -6754,12 +6747,6 @@ msgstr "za učenje svih načina povezivanja vašeg softvera s"
 #, fuzzy
 msgid "units"
 msgstr "jedinice"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "with"
-msgstr "s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6799,3 +6786,15 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Connect your software"
+#~ msgstr "Povežite svoj softver"
+
+#, fuzzy
+#~ msgid "to create quotes automatically."
+#~ msgstr "za automatsko kreiranje ponuda."
+
+#, fuzzy
+#~ msgid "with"
+#~ msgstr "s"

@@ -9,89 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:38+0000\n"
-"PO-Revision-Date: 2026-06-13 14:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-3/sale/lo/>"
-"\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-06-30 19:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-3/sale/lo/"
+">\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Add to order\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Discard\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Confirm\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Discard\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Included\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product/product.xml:0
-msgid ""
-"\n"
-"                    Remove\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-msgid ""
-"\n"
-"                    Your browser does not support iframe.\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid ""
-"\n"
-"                Click to define an invoicing target\n"
-"            "
-msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -524,28 +452,27 @@ msgid ""
 "10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; "
 "font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
 "role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and "
-"object.tax_totals['subtotals']\">\n"
-"                                        <t t-"
-"foreach=\"object.tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-foreach=\"line['tax_groups']"
-"\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; "
-"padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/"
-"></td>\n"
-"                                                    <td style=\"width: 80%;"
-"\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: "
 "4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
@@ -1231,6 +1158,12 @@ msgid "Add several variants to an order from a grid"
 msgstr "ເພີ່ມສິນຄ້າຫຼາຍລຸ້ນເຂົ້າໃນໃບສັ່ງຊື້ຈາກຕາຕະລາງ"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Add to order"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
 #, fuzzy
 msgid "Add/Remove Followers"
@@ -1275,8 +1208,8 @@ msgstr ""
 "ຕົວຢ່າງ: ຕົວເລືອກນີ້ມີປະໂຫຍດໃນການແບ່ງປັນໄຟລ໌ຄຳອະທິບາຍສິນຄ້າ.\n"
 "ເມື່ອຢືນຢັນການສັ່ງຊື້: ເອກະສານຈະຖືກສົ່ງໄປຫາ ແລະ ສາມາດເຂົ້າເຖິງໄດ້ໂດຍລູກຄ້າ.\n"
 "ຕົວຢ່າງ: ຕົວເລືອກນີ້ມີປະໂຫຍດໃນການແບ່ງປັນຄູ່ມືການໃຊ້ງານ ຫຼື ເນື້ອຫາສື່ດິຈິຕອນທີ່ຊື້ໃນ ecommerce. \n"
-"ພາຍໃນໃບສະເໜີລາຄາ: ເອກະສານຈະຖືກລວມເຂົ້າໃນໄຟລ໌ pdf ຂອງໃບສະເໜີລາຄາ ແລະ ໃບສັ່ງຊື້ ລະຫວ່າງໜ້າສ່"
-"ວນຫົວ ແລະ ຕາຕະລາງລາຄາ. "
+"ພາຍໃນໃບສະເໜີລາຄາ: ເອກະສານຈະຖືກລວມເຂົ້າໃນໄຟລ໌ pdf ຂອງໃບສະເໜີລາຄາ ແລະ ໃບສັ່ງຊື້ "
+"ລະຫວ່າງໜ້າສ່ວນຫົວ ແລະ ຕາຕະລາງລາຄາ. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1382,8 +1315,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
-"ນຳໃຊ້ສ່ວນຫຼຸດດ້ວຍຕົນເອງໃນລາຍການໃບສັ່ງຊື້ ຫຼື ສະແດງສ່ວນຫຼຸດທີ່ຄິດໄລ່ຈາກລາຍການລາຄາ (ຕົວເລືອກເພື່ອເປີດໃຊ້"
-"ໃນການຕັ້ງຄ່າລາຍການລາຄາ)."
+"ນຳໃຊ້ສ່ວນຫຼຸດດ້ວຍຕົນເອງໃນລາຍການໃບສັ່ງຊື້ ຫຼື ສະແດງສ່ວນຫຼຸດທີ່ຄິດໄລ່ຈາກລາຍການລາຄາ "
+"(ຕົວເລືອກເພື່ອເປີດໃຊ້ໃນການຕັ້ງຄ່າລາຍການລາຄາ)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1396,8 +1329,7 @@ msgstr ""
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
-"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຍົກເລີກລາຍການທີ່ໄດ້ຮັບອະນຸມັດແລ້ວ? ການດຳເນີນການນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້."
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຍົກເລີກລາຍການທີ່ໄດ້ຮັບອະນຸມັດແລ້ວ? ການດຳເນີນການນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1529,9 +1461,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"ເພີ່ມຍອດຂາຍດ້ວຍໂປຣແກຣມຫຼາຍຮູບແບບ: ຄູປອງ, ໂປຣໂມຊັ່ນ, ບັດຂອງຂວັນ, ການສະສົມຄະແນນ. ສາມາດກຳນົດ"
-"ເງື່ອນໄຂສະເພາະໄດ້ (ສິນຄ້າ, ລູກຄ້າ, ຍອດຊື້ຂັ້ນຕ່ຳ, ໄລຍະເວລາ). ລາງວັນອາດເປັນສ່ວນຫຼຸດ (% ຫຼື ຈຳນວນເ"
-"ງິນ) ຫຼື ສິນຄ້າຟຣີ."
+"ເພີ່ມຍອດຂາຍດ້ວຍໂປຣແກຣມຫຼາຍຮູບແບບ: ຄູປອງ, ໂປຣໂມຊັ່ນ, ບັດຂອງຂວັນ, ການສະສົມຄະແນນ. "
+"ສາມາດກຳນົດເງື່ອນໄຂສະເພາະໄດ້ (ສິນຄ້າ, ລູກຄ້າ, ຍອດຊື້ຂັ້ນຕ່ຳ, ໄລຍະເວລາ). ລາງວັນອາດເປັນສ່ວນຫຼຸດ "
+"(% ຫຼື ຈຳນວນເງິນ) ຫຼື ສິນຄ້າຟຣີ."
 
 #. module: sale
 #. odoo-javascript
@@ -1670,8 +1602,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
-"ການປ່ຽນບໍລິສັດຂອງໃບສະເໜີລາຄາທີ່ມີຢູ່ແລ້ວ ອາດຈະຕ້ອງມີການປັບປຸງລາຍລະອຽດຂອງລາຍການດ້ວຍຕົນເອງ. ທ່ານຄ"
-"ວນພິຈາລະນາອັບເດດລາຄາຄືນໃໝ່."
+"ການປ່ຽນບໍລິສັດຂອງໃບສະເໜີລາຄາທີ່ມີຢູ່ແລ້ວ ອາດຈະຕ້ອງມີການປັບປຸງລາຍລະອຽດຂອງລາຍການດ້ວຍຕົນເອງ. "
+"ທ່ານຄວນພິຈາລະນາອັບເດດລາຄາຄືນໃໝ່."
 
 #. module: sale
 #. odoo-javascript
@@ -1684,6 +1616,12 @@ msgstr "ຄລິກທີ່ນີ້ເພື່ອເພີ່ມສິນຄ
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Click to configure"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+msgid "Click to define an invoicing target"
 msgstr ""
 
 #. module: sale
@@ -1799,8 +1737,7 @@ msgstr "ຕັ້ງຄ່າວິທີການຈັດສົ່ງ"
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
-msgstr ""
-"ຕັ້ງຄ່າວິທີການຈັດສົ່ງ ຫຼື ເຮັດວຽກຮ່ວມກັບຜູ້ໃຫ້ບໍລິການຈັດສົ່ງໂດຍໃຊ້ການເຊື່ອມຕໍ່ທີ່ມີຢູ່."
+msgstr "ຕັ້ງຄ່າວິທີການຈັດສົ່ງ ຫຼື ເຮັດວຽກຮ່ວມກັບຜູ້ໃຫ້ບໍລິການຈັດສົ່ງໂດຍໃຊ້ການເຊື່ອມຕໍ່ທີ່ມີຢູ່."
 
 #. module: sale
 #. odoo-javascript
@@ -1810,6 +1747,8 @@ msgid "Configure your product"
 msgstr "ຕັ້ງຄ່າຜະລິດຕະພັນຂອງທ່ານ"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, fuzzy
 msgid "Confirm"
@@ -1843,11 +1782,6 @@ msgstr "ເຊື່ອມຕໍ່ Stripe"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
 msgstr ""
 
 #. module: sale
@@ -2121,8 +2055,7 @@ msgstr "ວັນທີ:"
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
-msgstr ""
-"ຈຳນວນມື້ລະຫວ່າງການສະເໜີລາຄາຈົນເຖິງມື້ໝົດອາຍຸ. 0 ມື້ໝາຍເຖິງປິດການໝົດອາຍຸອັດຕະໂນມັດ"
+msgstr "ຈຳນວນມື້ລະຫວ່າງການສະເໜີລາຄາຈົນເຖິງມື້ໝົດອາຍຸ. 0 ມື້ໝາຍເຖິງປິດການໝົດອາຍຸອັດຕະໂນມັດ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -2151,8 +2084,7 @@ msgstr "ລາຄາຂາຍເລີ່ມຕົ້ນລວມພາສີ"
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
-msgstr ""
-"ຄ່າເລີ່ມຕົ້ນວ່າລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ກັບບໍລິສັດນີ້ແມ່ນລວມພາສີແລ້ວຫຼືບໍ່."
+msgstr "ຄ່າເລີ່ມຕົ້ນວ່າລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ກັບບໍລິສັດນີ້ແມ່ນລວມພາສີແລ້ວຫຼືບໍ່."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2253,9 +2185,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"ວັນທີຈັດສົ່ງທີ່ທ່ານສາມາດສັນຍາກັບລູກຄ້າ, ຄິດໄລ່ຈາກໄລຍະເວລາລໍຖ້າຕ່ຳສຸດຂອງລາຍການສັ່ງຊື້ໃນກໍລະນີຂອງສິນຄ້າບໍລິ"
-"ການ. ໃນກໍລະນີຂອງການຈັດສົ່ງ, ນະໂຍບາຍການຈັດສົ່ງຂອງໃບສັ່ງຊື້ຈະຖືກນຳມາພິຈາລະນາເພື່ອໃຊ້ໄລຍະເວລາລໍຖ້າຕ່"
-"ຳສຸດ ຫຼື ສູງສຸດຂອງລາຍການສັ່ງຊື້."
+"ວັນທີຈັດສົ່ງທີ່ທ່ານສາມາດສັນຍາກັບລູກຄ້າ, "
+"ຄິດໄລ່ຈາກໄລຍະເວລາລໍຖ້າຕ່ຳສຸດຂອງລາຍການສັ່ງຊື້ໃນກໍລະນີຂອງສິນຄ້າບໍລິການ. ໃນກໍລະນີຂອງການຈັດສົ່ງ, "
+"ນະໂຍບາຍການຈັດສົ່ງຂອງໃບສັ່ງຊື້ຈະຖືກນຳມາພິຈາລະນາເພື່ອໃຊ້ໄລຍະເວລາລໍຖ້າຕ່ຳສຸດ ຫຼື ສູງສຸດຂອງລາຍການສັ່ງຊື້."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
@@ -2265,8 +2197,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
-"ໄລຍະເວລານຳການຈັດສົ່ງ, ເປັນມື້. ມັນແມ່ນຈຳນວນມື້, ທີ່ສັນຍາກັບລູກຄ້າ, ລະຫວ່າງການຢືນຢັນໃບສັ່ງຊື້ ແລະ ການ"
-"ຈັດສົ່ງ."
+"ໄລຍະເວລານຳການຈັດສົ່ງ, ເປັນມື້. ມັນແມ່ນຈຳນວນມື້, ທີ່ສັນຍາກັບລູກຄ້າ, ລະຫວ່າງການຢືນຢັນໃບສັ່ງຊື້ ແລະ "
+"ການຈັດສົ່ງ."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2290,6 +2222,9 @@ msgid "Disc.%"
 msgstr "ຫຼຸດ %"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, fuzzy
 msgid "Discard"
@@ -2734,8 +2669,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"ຈາກລາຍງານນີ້, ທ່ານສາມາດເຫັນພາບລວມຂອງມູນຄ່າທີ່ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. ເຄື່ອງມືຄົ້ນຫາຍັງສາມາດໃ"
-"ຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານໃຫ້ສອດຄ່ອງກັບຄວາມຕ້ອງການ."
+"ຈາກລາຍງານນີ້, ທ່ານສາມາດເຫັນພາບລວມຂອງມູນຄ່າທີ່ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. "
+"ເຄື່ອງມືຄົ້ນຫາຍັງສາມາດໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານໃຫ້ສອດຄ່ອງກັບຄວາມຕ້ອງການ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
@@ -3014,6 +2949,12 @@ msgid "In the Order"
 msgstr "ໃນໃບສັ່ງຊື້"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Included"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
@@ -3050,8 +2991,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"ເງື່ອນໄຂການຄ້າລະຫວ່າງປະເທດແມ່ນຊຸດຂອງເງື່ອນໄຂທາງການຄ້າທີ່ຖືກກຳນົດໄວ້ລ່ວງໜ້າ ເຊິ່ງໃຊ້ໃນການເຮັດທຸລະກຳ"
-"ລະຫວ່າງປະເທດ."
+"ເງື່ອນໄຂການຄ້າລະຫວ່າງປະເທດແມ່ນຊຸດຂອງເງື່ອນໄຂທາງການຄ້າທີ່ຖືກກຳນົດໄວ້ລ່ວງໜ້າ "
+"ເຊິ່ງໃຊ້ໃນການເຮັດທຸລະກຳລະຫວ່າງປະເທດ."
 
 #. module: sale
 #. odoo-python
@@ -3134,8 +3075,7 @@ msgstr "ສະຖານະໃບແຈ້ງໜີ້"
 #: code:addons/sale/models/product_template.py:0
 #, fuzzy
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
-"ອອກໃບແຈ້ງໜີ້ຫຼັງການຈັດສົ່ງ, ອີງຕາມຈຳນວນທີ່ສົ່ງມອບ, ບໍ່ແມ່ນຈຳນວນທີ່ສັ່ງຊື້."
+msgstr "ອອກໃບແຈ້ງໜີ້ຫຼັງການຈັດສົ່ງ, ອີງຕາມຈຳນວນທີ່ສົ່ງມອບ, ບໍ່ແມ່ນຈຳນວນທີ່ສັ່ງຊື້."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
@@ -3156,8 +3096,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"ລາຍໄດ້ຈາກໃບແຈ້ງໜີ້ສຳລັບເດືອນປັດຈຸບັນ. ນີ້ແມ່ນມູນຄ່າທີ່ຊ່ອງທາງການຂາຍໄດ້ອອກໃບແຈ້ງໜີ້ໃນເດືອນນີ້. ມັນຖືກໃຊ້ເ"
-"ພື່ອຄິດໄລ່ອັດຕາສ່ວນຄວາມຄືບໜ້າຂອງລາຍໄດ້ປັດຈຸບັນທຽບກັບເປົ້າໝາຍໃນມຸມມອງຄຳບັງ (Kanban)."
+"ລາຍໄດ້ຈາກໃບແຈ້ງໜີ້ສຳລັບເດືອນປັດຈຸບັນ. ນີ້ແມ່ນມູນຄ່າທີ່ຊ່ອງທາງການຂາຍໄດ້ອອກໃບແຈ້ງໜີ້ໃນເດືອນນີ້. "
+"ມັນຖືກໃຊ້ເພື່ອຄິດໄລ່ອັດຕາສ່ວນຄວາມຄືບໜ້າຂອງລາຍໄດ້ປັດຈຸບັນທຽບກັບເປົ້າໝາຍໃນມຸມມອງຄຳບັງ (Kanban)."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -3496,8 +3436,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"ຕັ້ງຄ່າຈຳນວນດ້ວຍຕົນເອງໃນໃບສັ່ງ: ອອກໃບເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນດ້ວຍຕົນເອງ, ໂດຍບໍ່ມີການສ້າງບັນຊີວິເຄາ"
-"ະ.\n"
+"ຕັ້ງຄ່າຈຳນວນດ້ວຍຕົນເອງໃນໃບສັ່ງ: ອອກໃບເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນດ້ວຍຕົນເອງ, "
+"ໂດຍບໍ່ມີການສ້າງບັນຊີວິເຄາະ.\n"
 "ໃບບັນທຶກເວລາໃນສັນຍາ: ອອກໃບເກັບເງິນຕາມຊົ່ວໂມງທີ່ຕິດຕາມໃນໃບບັນທຶກເວລາທີ່ກ່ຽວຂ້ອງ.\n"
 "ສ້າງວຽກ ແລະ ຕິດຕາມຊົ່ວໂມງ: ສ້າງວຽກເມື່ອຢືນຢັນໃບສັ່ງຊື້ ແລະ ຕິດຕາມຊົ່ວໂມງເຮັດວຽກ."
 
@@ -3770,7 +3710,7 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
-msgid "On "
+msgid "On"
 msgstr ""
 
 #. module: sale
@@ -3816,8 +3756,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"ເມື່ອໃບສະເໜີລາຄາຖືກຢືນຢັນ, ມັນຈະກາຍເປັນໃບສັ່ງຂາຍ.<br> ທ່ານຈະສາມາດສ້າງໃບເກັບເງິນ ແລະ ເກັບເງິນໄ"
-"ດ້."
+"ເມື່ອໃບສະເໜີລາຄາຖືກຢືນຢັນ, ມັນຈະກາຍເປັນໃບສັ່ງຂາຍ.<br> ທ່ານຈະສາມາດສ້າງໃບເກັບເງິນ ແລະ "
+"ເກັບເງິນໄດ້."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -4469,6 +4409,8 @@ msgid "Quantities to invoice from sales orders"
 msgstr "ຈຳນວນທີ່ຈະອອກໃບເກັບເງິນຈາກໃບສັ່ງຂາຍ"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4536,8 +4478,7 @@ msgstr "ສົ່ງແລ້ວ"
 #: code:addons/sale/wizard/res_config_settings.py:0
 #, fuzzy
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
-"ຈຳເປັນຕ້ອງມີອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາ ແລະ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບ 0."
+msgstr "ຈຳເປັນຕ້ອງມີອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາ ແລະ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບ 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
@@ -4665,6 +4606,12 @@ msgstr "ໃບເກັບເງິນປົກກະຕິ"
 #, fuzzy
 msgid "Reject This Quotation"
 msgstr "ປະຕິເສດໃບສະເໜີລາຄານີ້"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/product/product.xml:0
+msgid "Remove"
+msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -5026,8 +4973,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"ລາຍການໃບສັ່ງຊື້ທີ່ຈະຖືກເພີ່ມເວລາທີ່ໃຊ້ເຂົ້າໄປເພື່ອອອກໃບເກັບເງິນໃຫ້ລູກຄ້າ. ລຶບລາຍການໃບສັ່ງຊື້ອອກຈາກການບັນ"
-"ທຶກໃບລາຍງານຊົ່ວໂມງເພື່ອເຮັດໃຫ້ມັນເກັບເງິນບໍ່ໄດ້."
+"ລາຍການໃບສັ່ງຊື້ທີ່ຈະຖືກເພີ່ມເວລາທີ່ໃຊ້ເຂົ້າໄປເພື່ອອອກໃບເກັບເງິນໃຫ້ລູກຄ້າ. "
+"ລຶບລາຍການໃບສັ່ງຊື້ອອກຈາກການບັນທຶກໃບລາຍງານຊົ່ວໂມງເພື່ອເຮັດໃຫ້ມັນເກັບເງິນບໍ່ໄດ້."
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
@@ -5277,7 +5224,6 @@ msgstr "ເຊັນອອນລາຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #, fuzzy
 msgid "Signature"
 msgstr "ລາຍເຊັນ"
@@ -5410,8 +5356,7 @@ msgstr "Stripe"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr ""
-"Stripe Connect ບໍ່ມີໃຫ້ບໍລິການໃນປະເທດຂອງທ່ານ, ກະລຸນາໃຊ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນອື່ນ."
+msgstr "Stripe Connect ບໍ່ມີໃຫ້ບໍລິການໃນປະເທດຂອງທ່ານ, ກະລຸນາໃຊ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນອື່ນ."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
@@ -5658,8 +5603,7 @@ msgstr ""
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
-msgstr ""
-"ວັນທີສົ່ງສິນຄ້າແມ່ນໄວກວ່າວັນທີທີ່ຄາດໄວ້. ທ່ານອາດຈະບໍ່ສາມາດສົ່ງສິນຄ້າໄດ້ຕາມກຳນົດ."
+msgstr "ວັນທີສົ່ງສິນຄ້າແມ່ນໄວກວ່າວັນທີທີ່ຄາດໄວ້. ທ່ານອາດຈະບໍ່ສາມາດສົ່ງສິນຄ້າໄດ້ຕາມກຳນົດ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -5698,8 +5642,8 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
-"ໃບເກັບເງິນຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດ ແລະ ສາມາດເບິ່ງໄດ້ໃນພອດທໍລູກຄ້າເມື່ອທຸລະກຳຖືກຢືນຢັນໂດຍຜູ້ໃຫ້ບໍລິກາ"
-"ນຊຳລະເງິນ."
+"ໃບເກັບເງິນຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດ ແລະ "
+"ສາມາດເບິ່ງໄດ້ໃນພອດທໍລູກຄ້າເມື່ອທຸລະກຳຖືກຢືນຢັນໂດຍຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5707,8 +5651,7 @@ msgstr ""
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
-msgstr ""
-"ອັດຕາກຳໄລຖືກຄິດໄລ່ຈາກຜົນລວມຂອງລາຄາຂາຍສິນຄ້າ ລົບດ້ວຍຕົ້ນທຶນທີ່ຕັ້ງໄວ້ໃນຟອມລາຍລະອຽດ."
+msgstr "ອັດຕາກຳໄລຖືກຄິດໄລ່ຈາກຜົນລວມຂອງລາຄາຂາຍສິນຄ້າ ລົບດ້ວຍຕົ້ນທຶນທີ່ຕັ້ງໄວ້ໃນຟອມລາຍລະອຽດ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5832,8 +5775,7 @@ msgstr ""
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr ""
-"ຄ່າເລີ່ມຕົ້ນນີ້ຈະຖືກໃຊ້ກັບທຸກສິນຄ້າໃໝ່ທີ່ສ້າງຂຶ້ນ. ສາມາດແກ້ໄຂໄດ້ໃນແບບຟອມລາຍລະອຽດສິນຄ້າ."
+msgstr "ຄ່າເລີ່ມຕົ້ນນີ້ຈະຖືກໃຊ້ກັບທຸກສິນຄ້າໃໝ່ທີ່ສ້າງຂຶ້ນ. ສາມາດແກ້ໄຂໄດ້ໃນແບບຟອມລາຍລະອຽດສິນຄ້າ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -5854,8 +5796,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"ນີ້ແມ່ນວັນທີສົ່ງສິນຄ້າທີ່ສັນຍາກັບລູກຄ້າ. ຖ້າຕັ້ງໄວ້, ໃບສົ່ງສິນຄ້າຈະຖືກກຳນົດເວລາຕາມວັນທີນີ້ແທນທີ່ຈະເປັນໄລຍະເວລ"
-"ານຳສົ່ງສິນຄ້າ."
+"ນີ້ແມ່ນວັນທີສົ່ງສິນຄ້າທີ່ສັນຍາກັບລູກຄ້າ. ຖ້າຕັ້ງໄວ້, "
+"ໃບສົ່ງສິນຄ້າຈະຖືກກຳນົດເວລາຕາມວັນທີນີ້ແທນທີ່ຈະເປັນໄລຍະເວລານຳສົ່ງສິນຄ້າ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -6212,8 +6154,7 @@ msgstr ""
 #: model:mail.template,description:sale.email_template_edi_sale
 #, fuzzy
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
-"ໃຊ້ໂດຍພະນັກງານຂາຍເມື່ອພວກເຂົາສົ່ງໃບສະເໜີລາຄາ ຫຼື ໃບເກັບເງິນຊົ່ວຄາວໃຫ້ກັບລູກຄ້າທີ່ຄາດຫວັງ"
+msgstr "ໃຊ້ໂດຍພະນັກງານຂາຍເມື່ອພວກເຂົາສົ່ງໃບສະເໜີລາຄາ ຫຼື ໃບເກັບເງິນຊົ່ວຄາວໃຫ້ກັບລູກຄ້າທີ່ຄາດຫວັງ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -6357,8 +6298,7 @@ msgstr ""
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບໃບສະເໜີລາຄາທີ່ສົ່ງແລ້ວ ຫຼື ໃບສັ່ງຂາຍທີ່ຢືນຢັນແລ້ວ. ທ່ານຕ້ອງຍົກເລີກມັນກ່ອນ."
+msgstr "ທ່ານບໍ່ສາມາດລຶບໃບສະເໜີລາຄາທີ່ສົ່ງແລ້ວ ຫຼື ໃບສັ່ງຂາຍທີ່ຢືນຢັນແລ້ວ. ທ່ານຕ້ອງຍົກເລີກມັນກ່ອນ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -6367,8 +6307,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"ທ່ານສາມາດເລືອກໃບສັ່ງຊື້ທັງໝົດ ແລະ ອອກໃບເກັບເງິນເປັນຊຸດ, <br> ຫຼື ກວດສອບແຕ່ລະໃບສັ່ງຊື້ ແລະ ອອກໃບເ"
-"ກັບເງິນເທື່ອລະລາຍການ."
+"ທ່ານສາມາດເລືອກໃບສັ່ງຊື້ທັງໝົດ ແລະ ອອກໃບເກັບເງິນເປັນຊຸດ, <br> ຫຼື ກວດສອບແຕ່ລະໃບສັ່ງຊື້ ແລະ "
+"ອອກໃບເກັບເງິນເທື່ອລະລາຍການ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -6409,8 +6349,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງລາຍການໃບສັ່ງຂາຍໄດ້. ທ່ານຄວນລຶບລາຍການປັດຈຸບັນ ແລະ ສ້າງລາຍການໃໝ່ທີ່ມີປະເ"
-"ພດທີ່ຖືກຕ້ອງແທນ."
+"ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງລາຍການໃບສັ່ງຂາຍໄດ້. ທ່ານຄວນລຶບລາຍການປັດຈຸບັນ ແລະ "
+"ສ້າງລາຍການໃໝ່ທີ່ມີປະເພດທີ່ຖືກຕ້ອງແທນ."
 
 #. module: sale
 #. odoo-python
@@ -6437,8 +6377,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
-"ທ່ານບໍ່ສາມາດຕັ້ງຄ່າເປັນຕົວເລກລົບສຳລັບອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາເລີ່ມຕົ້ນ. ປະໃຫ້ວ່າງ (ຫຼື 0) ເພື່ອປິດ"
-"ການໝົດອາຍຸອັດຕະໂນມັດ."
+"ທ່ານບໍ່ສາມາດຕັ້ງຄ່າເປັນຕົວເລກລົບສຳລັບອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາເລີ່ມຕົ້ນ. ປະໃຫ້ວ່າງ (ຫຼື 0) "
+"ເພື່ອປິດການໝົດອາຍຸອັດຕະໂນມັດ."
 
 #. module: sale
 #. odoo-python
@@ -6470,6 +6410,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+msgid "Your browser does not support iframe."
 msgstr ""
 
 #. module: sale
@@ -6585,11 +6531,6 @@ msgid "sale order"
 msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr ""
@@ -6599,12 +6540,6 @@ msgstr ""
 #, fuzzy
 msgid "units"
 msgstr "ຫົວໜ່ວຍ"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "with"
-msgstr "ກັບ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6643,3 +6578,7 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "with"
+#~ msgstr "ກັບ"

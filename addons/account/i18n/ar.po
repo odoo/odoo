@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:34+0000\n"
-"PO-Revision-Date: 2026-06-11 17:56+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-07 13:53+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/ar/>\n"
 "Language: ar\n"
@@ -85,6 +85,8 @@ msgid ""
 "\n"
 "Example: %(example)s"
 msgstr ""
+"\n"
+"مثال: %(example)s"
 
 #. module: account
 #. odoo-python
@@ -93,6 +95,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"يُرجى التواصل مع مديرك."
 
 #. module: account
 #. odoo-python
@@ -188,6 +192,7 @@ msgstr "%(exception)s لـ %(user)s%(end_datetime_string)s%(reason)s."
 msgid ""
 "%(failed_count)s out of %(total_count)s entries could not be reset to draft."
 msgstr ""
+"تعذّر إعادة %(failed_count)s من أصل %(total_count)s قيد إلى حالة المسودة."
 
 #. module: account
 #. odoo-python
@@ -329,18 +334,6 @@ msgstr "%s ضرائب"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s، أو / إذا لم يكن منطبقاً"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s، أو غير منطبق"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "'%(filename)s' (تم استخلاصها من '%(root_filename)s'، النوع=%(type)s)"
@@ -456,12 +449,6 @@ msgid "... (View all)"
 msgstr "... (عرض الكل)"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ إذا لم يكن منطبقاً"
-
-#. module: account
 #: model:account.tax,name:account.21_sale_export_tax_template
 msgid "0% Exports"
 msgstr "0% على الصادرات"
@@ -493,19 +480,20 @@ msgstr "100.00 USD"
 #: code:addons/account/tools/partner_identifiers.py:0
 #, fuzzy
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr "10XXXXXXXXY أو 20XXXXXXXXY أو 15XXXXXXXXY أو 16XXXXXXXXY أو 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY أو 20XXXXXXXXY أو 15XXXXXXXXY أو 16XXXXXXXXY أو 17XXXXXXXXY"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) أو 2222222222 (VKN)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "123-45-67890 or 1234567890"
-msgstr ""
+msgstr "123-45-67890 أو 1234567890"
 
 #. module: account
 #. odoo-python
@@ -520,7 +508,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "12345678-1-11 أو 8071592153"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -806,8 +794,8 @@ msgstr ""
 "            الفاتورة\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "        </t>\n"
 "        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -1265,11 +1253,13 @@ msgid ""
 "<span class=\"me-1\">One or more Bank Accounts set on this partner are also "
 "used by others:</span>"
 msgstr ""
+"<span class=\"me-1\">يتم استخدام حساب بنكي واحد أو أكثر من الحسابات المصرفية "
+"المحددة لهذا الشريك من قِبل جهات أخرى أيضًا:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">قد يكون الحساب البنكي نسخة مكررة من</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1446,6 +1436,8 @@ msgid ""
 "<span invisible=\"name or name_placeholder or "
 "document_sequence_editable\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or "
+"document_sequence_editable\">مسودة</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1541,7 +1533,6 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>1.00</span>"
 msgstr "<span>1.00</span>"
 
@@ -2545,7 +2536,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique."
-msgstr ""
+msgstr "يجب أن يكون اسم مجموعة دفتر الأستاذ العام فريدًا."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2591,6 +2582,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"رقم التسوية (أو رقم التوجيه) يشير إلى بنك أو فرع أو موقع، ويُستخدم في "
+"بروتوكولات التحويلات المالية المحلية (من/إلى الحسابات البنكية داخل الدولة "
+"نفسها)."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
@@ -2609,7 +2603,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
-msgstr ""
+msgstr "يوجد بالفعل وضع ضريبي برقم ضريبي أجنبي في هذه الدولة."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2655,6 +2649,8 @@ msgid ""
 "A new field 'Total (tax inc.)' to speed up and control the encoding by "
 "automating line creation with the right account and tax."
 msgstr ""
+"حقل جديد \"الإجمالي (شامل الضريبة)\" لتسريع عملية الإدخال والتحكم بها من "
+"خلال إنشاء بنود تلقائيًا باستخدام الحساب والضريبة المناسبين."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2707,7 +2703,7 @@ msgstr "لا يمكن استخدام رقم مؤقت في المطابقة ال�
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "ACN"
-msgstr ""
+msgstr "ACN"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -2798,12 +2794,12 @@ msgstr "الحساب %s هو حساب مستحق القبض، ولكنه يُس�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Account (with children)"
-msgstr ""
+msgstr "الحساب (مع الحسابات التابعة)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__account_active
 msgid "Account Active"
-msgstr ""
+msgstr "الحساب نشط"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2920,7 +2916,7 @@ msgstr "رقم الحساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_hierarchy
 msgid "Account Parents"
-msgstr ""
+msgstr "الحسابات الرئيسية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -2932,7 +2928,7 @@ msgstr "حساب الدائن"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_active
 msgid "Account Payable Active"
-msgstr ""
+msgstr "الحساب الدائن نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
@@ -2954,12 +2950,7 @@ msgstr "حساب مدين"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
-msgid "Account Reconcile"
-msgstr "تسوية الحساب"
+msgstr "الحساب المدين نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3316,37 +3307,37 @@ msgstr "المجموع المستحق"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Amortization - Buildings"
-msgstr ""
+msgstr "الإهلاك المتراكم - المباني"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
 msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr ""
+msgstr "الإهلاك المتراكم - الأثاث والتجهيزات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
 msgid "Accumulated Amortization - Improvements"
-msgstr ""
+msgstr "الإهلاك المتراكم - التحسينات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
 msgid "Accumulated Amortization - Machines & Tools"
-msgstr ""
+msgstr "الإهلاك المتراكم - الآلات والأدوات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
 msgid "Accumulated Amortization - Other Property"
-msgstr ""
+msgstr "الإهلاك المتراكم - الممتلكات الأخرى"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
 msgid "Accumulated Amortization - Technology"
-msgstr ""
+msgstr "الإهلاك المتراكم - التكنولوجيا"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
 msgid "Accumulated Amortization - Vehicles"
-msgstr ""
+msgstr "الإهلاك المتراكم - المركبات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
@@ -3357,7 +3348,7 @@ msgstr "الاستهلاك المتراكم"
 #: model:account.account,name:account.21_retained_earnings
 #: model:account.account,name:account.22_account_account_us_retained_earnings
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "الأرباح المحتجزة المتراكمة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -3592,13 +3583,13 @@ msgstr "أضف الشروط والأحكام الخاصة بك في أسفل ا�
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add..."
-msgstr ""
+msgstr "إضافة..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:account.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "معرفات إضافية"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -3835,7 +3826,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "السماح برقم التعريف الضريبي الأجنبي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3910,7 +3901,7 @@ msgstr "دائما خاضعة للضريبة"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__always_unfolded
 msgid "Always Unfolded"
-msgstr ""
+msgstr "غير مطوي دائماً"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -4007,6 +3998,8 @@ msgid ""
 "Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay "
 "twice."
 msgstr ""
+"المبلغ %(amount).2f %(currency)s تم دفعه بالفعل. تأكد من عدم إجراء عملية دفع "
+"مكررة."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -4301,7 +4294,7 @@ msgstr "التطبيق فقط إذا كانت دولة التسليم مطابق
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "لا تنطبق هذه الشروط إلا إذا كان لدى الشريك رقم تعريف ضريبي."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4309,11 +4302,13 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"تطبيق الضريبة وتخطيطات الحسابات في الفواتير تلقائياً إذا تم استيفاء المعايير "
+"المطابقة (المعرّف الضريبي/الدولة)."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "تخصيص الأرباح أو الخسائر"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4464,13 +4459,13 @@ msgstr "أغسطس"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Australian Company Number."
-msgstr ""
+msgstr "رقم الشركة الأسترالية."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Austrian company registry number (UID)."
-msgstr ""
+msgstr "رقم تسجيل الشركة النمساوية (UID)."
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_auto_insurance
@@ -4599,7 +4594,7 @@ msgstr "التوافر"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_additional_identifiers_metadata
 #: model:ir.model.fields,field_description:account.field_res_users__available_additional_identifiers_metadata
 msgid "Available Additional Identifiers Metadata"
-msgstr ""
+msgstr "المعرفات الإضافية المتاحة - البيانات الوصفية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_invoice_template_pdf_report_ids
@@ -4647,7 +4642,7 @@ msgstr "متوسط السعر"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "BCE/KBO"
-msgstr ""
+msgstr "BCE/KBO"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
@@ -4908,7 +4903,7 @@ msgstr "الحساب البنكي المعلق"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_active
 msgid "Bank Suspense Account Active"
-msgstr ""
+msgstr "حساب التعليق البنكي نشط"
 
 #. module: account
 #. odoo-python
@@ -4934,6 +4929,8 @@ msgid ""
 "Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred "
 "from the bank account number."
 msgstr ""
+"نوع الحساب البنكي: عادي، IBAN، CLABE، أو نوع آخر حسب التوطين. يتم استنتاجه "
+"من رقم الحساب البنكي."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -4955,7 +4952,7 @@ msgstr "بنك أودو"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "إعدادات البنك"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5012,7 +5009,7 @@ msgstr "حساب تحصيل الضرائب الأساسية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_active
 msgid "Base Tax Received Account Active"
-msgstr ""
+msgstr "حساب الضريبة الأساسية المستلمة نشط"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -5100,13 +5097,13 @@ msgstr "قبل تاريخ الدفع التالي"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Belgian Crossroads Bank for Enterprises number."
-msgstr ""
+msgstr "رقم بنك كروسروادز البلجيكي للمؤسسات."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Belgian national identification number."
-msgstr ""
+msgstr "رقم الهوية الوطنية البلجيكي."
 
 #. module: account
 #. odoo-python
@@ -5241,13 +5238,13 @@ msgstr "الفرع:"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brazilian company identification number. 14 digits."
-msgstr ""
+msgstr "رقم تعريف الشركة البرازيلية. 14 رقمًا."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brazilian individual identification number."
-msgstr ""
+msgstr "رقم التعريف الشخصي البرازيلي."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
@@ -5263,7 +5260,7 @@ msgstr "تصفح البلدان المتاحة."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brønnøysund nr"
-msgstr ""
+msgstr "Brønnøysund nr"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_budget
@@ -5284,13 +5281,13 @@ msgstr "المباني"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Business ID"
-msgstr ""
+msgstr "رقم التعريف التجاري"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Business ID (Y-tunnus)."
-msgstr ""
+msgstr "رقم التعريف التجاري (Y-tunnus)."
 
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
@@ -5317,6 +5314,11 @@ msgid ""
 "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
 "adjustments without affecting local statutory accounts."
 msgstr ""
+"بشكل افتراضي، يتم ترحيل جميع دفاتر اليومية إلى دفتر الأستاذ النظامي "
+"(المعايير المحاسبية المحلية).\n"
+"يتيح تحديد دفتر أستاذ معيّن عزل تعديلات المعايير الدولية لإعداد التقارير "
+"المالية (IFRS)، أو الضرائب، أو المعاملات بين الشركات دون التأثير على "
+"الحسابات النظامية المحلية."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -5373,7 +5375,7 @@ msgstr "CLABE"
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "CLABE should be a string of 18 digits."
-msgstr ""
+msgstr "يجب أن يكون CLABE عبارة عن سلسلة مكونة من 18 رقم."
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
@@ -5389,7 +5391,7 @@ msgstr "التكلفة والتأمين والشحن"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "CPF"
-msgstr ""
+msgstr "CPF"
 
 #. module: account
 #. odoo-python
@@ -5401,7 +5403,7 @@ msgstr "CUST"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "CVR"
-msgstr ""
+msgstr "CVR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
@@ -5832,7 +5834,7 @@ msgstr "تحقق من عناوين البريد الإلكتروني للشرك�
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Check payments"
-msgstr ""
+msgstr "تحقق من المدفوعات"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -5878,7 +5880,7 @@ msgstr "اختر ضريبة مبيعات افتراضية لمنتجاتك."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Citizen Identification"
-msgstr ""
+msgstr "رقم هوية المواطن"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__city
@@ -5889,7 +5891,7 @@ msgstr "المدينة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "تسمية حساب التسوية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
@@ -5949,7 +5951,7 @@ msgstr "تخطيط الكود"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_path
 msgid "Code Path"
-msgstr ""
+msgstr "مسار الكود"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
@@ -5993,6 +5995,9 @@ msgid ""
 "Item).             When set, the report lines will generate sublines grouped "
 "by those keys except when specified on the report line."
 msgstr ""
+"قائمة مفصولة بفواصل لحقول `account.move.line` (بند قيد اليومية).             "
+"عند تعيينها، ستُنشئ بنود التقرير بنوداً فرعية مجمّعة حسب تلك المفاتيح، باستثناء "
+"الحقول المحددة في بند التقرير."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__groupby
@@ -6001,6 +6006,9 @@ msgid ""
 "Item).             When set, this report will have report lines generating "
 "sublines grouped by those keys except when specified on the report line."
 msgstr ""
+"قائمة مفصولة بفواصل لحقول `account.move.line` (بند قيد اليومية).             "
+"عند تعيينها، سيحتوي هذا التقرير على بنود تقرير تُنشئ بنوداً فرعية مجمّعة حسب "
+"تلك المفاتيح، باستثناء الحقول المحددة في بند التقرير."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__groupby
@@ -6141,7 +6149,7 @@ msgstr "كود الدولة المالية للشركة"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Company Registry"
-msgstr ""
+msgstr "سجل الشركات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -6162,13 +6170,13 @@ msgstr "لدى الشركة شجرة حسابات"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_company_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_company_id
 msgid "Company of the Journal"
-msgstr ""
+msgstr "شركة دفتر اليومية"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Company registry"
-msgstr ""
+msgstr "سجل الشركات"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -6429,6 +6437,16 @@ msgid "Could not upload files"
 msgstr "لم نتمكن من رفع الملفات"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
 msgstr "العناصر المقابلة"
@@ -6436,7 +6454,7 @@ msgstr "العناصر المقابلة"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "الدول التي تمتلك فيها الشركة رقمًا ضريبيًا"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -6859,7 +6877,7 @@ msgstr "إشعار دائن"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Credit Note :"
-msgstr ""
+msgstr "إشعار دائن:"
 
 #. module: account
 #. odoo-python
@@ -6919,7 +6937,7 @@ msgstr "الحد الائتماني المخصص لهذا الشريك."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Croatian company registry number."
-msgstr ""
+msgstr "رقم تسجيل الشركة الكرواتية."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6929,48 +6947,48 @@ msgstr "الرصيد التراكمي"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
 msgid "Cumulated balance for the account."
-msgstr ""
+msgstr "الرصيد التراكمي للحساب."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
 msgid "Cumulative amortization recorded for building assets."
-msgstr ""
+msgstr "تم تسجيل الإهلاك التراكمي لأصول المباني."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
 msgid "Cumulative amortization recorded for capitalized technology assets."
-msgstr ""
+msgstr "الإهلاك التراكمي المسجل للأصول التكنولوجية المرسملة."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
 msgid "Cumulative amortization recorded for furniture and fixture assets."
-msgstr ""
+msgstr "تم تسجيل الإهلاك التراكمي لأصول الأثاث والتجهيزات."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
 "Cumulative amortization recorded for leasehold or property improvements."
-msgstr ""
+msgstr "الإهلاك التراكمي المسجل لتحسينات العقارات أو حقوق الانتفاع."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
 msgid "Cumulative amortization recorded for machinery and tool assets."
-msgstr ""
+msgstr "الإهلاك التراكمي المسجل لأصول الآلات والأدوات."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
 msgid "Cumulative amortization recorded for other depreciable property assets."
-msgstr ""
+msgstr "الإهلاك التراكمي المسجل للأصول العقارية الأخرى القابلة للاستهلاك."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
-msgstr ""
+msgstr "تم تسجيل الإهلاك التراكمي لأصول المركبات."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "الأرباح والخسائر المتراكمة غير الموزعة"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7155,7 +7173,7 @@ msgstr "حساب خصم فواتير العملاء"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_active
 msgid "Customer Invoices Discounts Account Active"
-msgstr ""
+msgstr "حساب خصومات فواتير العملاء نشط"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -7252,7 +7270,7 @@ msgstr "استقطاع {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #. odoo-python
@@ -7280,19 +7298,19 @@ msgstr "تسليم خالص التكاليف"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "DUNS"
-msgstr ""
+msgstr "DUNS"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Danish Central Business Register number."
-msgstr ""
+msgstr "رقم السجل التجاري المركزي الدنماركي."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Danish tax entity number (SE-nummer)."
-msgstr ""
+msgstr "رقم الكيان الضريبي الدنماركي (SE-nummer)."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -7474,7 +7492,7 @@ msgstr "تسلسل دفع مخصص"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_percentage
 msgid "Deductibility Percentage"
-msgstr ""
+msgstr "نسبة الخصم"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -7491,7 +7509,7 @@ msgstr "حساب افتراضي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_active
 msgid "Default Account Active"
-msgstr ""
+msgstr "الحساب الافتراضي نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
@@ -7747,37 +7765,37 @@ msgstr "إهلاك"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
 msgid "Depreciation Expense - Buildings"
-msgstr ""
+msgstr "نفقات الاستهلاك - المباني"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_furniture
 msgid "Depreciation Expense - Furniture & Fixtures"
-msgstr ""
+msgstr "نفقات الاستهلاك - الأثاث والتجهيزات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_improvements
 msgid "Depreciation Expense - Improvements"
-msgstr ""
+msgstr "نفقات الاستهلاك - التحسينات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_machines
 msgid "Depreciation Expense - Machines & Tools"
-msgstr ""
+msgstr "نفقات الاستهلاك - الآلات والأدوات"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_other_property
 msgid "Depreciation Expense - Other Property"
-msgstr ""
+msgstr "نفقات الاستهلاك - الممتلكات الأخرى"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_technology
 msgid "Depreciation Expense - Technology"
-msgstr ""
+msgstr "نفقات الاستهلاك - التكنولوجيا"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_vehicles
 msgid "Depreciation Expense - Vehicles"
-msgstr ""
+msgstr "نفقات الاستهلاك - المركبات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
@@ -8235,7 +8253,7 @@ msgstr "رقمنة المستند"
 #: model:ir.model.fields,field_description:account.field_res_company__document_sequence_editable
 #: model:ir.model.fields,field_description:account.field_res_config_settings__document_sequence_editable
 msgid "Document's sequence editable"
-msgstr ""
+msgstr "تسلسل المستندات قابل للتعديل"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -8455,7 +8473,7 @@ msgstr "الرسوم والاشتراكات"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dun & Bradstreet unique 9-digit business identifier."
-msgstr ""
+msgstr "معرّف الأعمال الفريد المكوّن من 9 أرقام لشركة Dun & Bradstreet."
 
 #. module: account
 #. odoo-javascript
@@ -8507,13 +8525,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dutch Chamber of Commerce registration number."
-msgstr ""
+msgstr "رقم التسجيل في غرفة التجارة الهولندية."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dutch government Organisation Identification Number."
-msgstr ""
+msgstr "رقم تعريف المنظمة الحكومية الهولندية."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
@@ -8524,7 +8542,7 @@ msgstr "نطاق ديناميكي يُستخدم للعلامة التي يمك�
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "EAN/GLN"
-msgstr ""
+msgstr "EAN/GLN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -8561,7 +8579,7 @@ msgstr "أرباح خصم الدفع المبكر"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_active
 msgid "Early Discount Gain Account Active"
-msgstr ""
+msgstr "حساب أرباح الخصم المبكر نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -8571,7 +8589,7 @@ msgstr "خصائص خصم الدفع المبكر"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_active
 msgid "Early Discount Loss Account Active"
-msgstr ""
+msgstr "حساب خسائر الخصم المبكر نشط"
 
 #. module: account
 #. odoo-python
@@ -8637,10 +8655,15 @@ msgid "Electronic Data Interchange"
 msgstr "تبادل البيانات إلكترونياً"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Electronic address for French e-invoicing platforms (PDP/PPF)."
-msgstr ""
+msgstr "العنوان الإلكتروني لمنصات الفوترة الإلكترونية الفرنسية (PDP/PPF)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8746,7 +8769,7 @@ msgstr "تفعيل PEPPOL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__enable_snapshots
 msgid "Enable Snapshots"
-msgstr ""
+msgstr "تمكين اللقطات"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -8793,7 +8816,7 @@ msgstr "أدخل وصفاً"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Enter description here..."
-msgstr ""
+msgstr "أدخل الوصف هنا..."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -8834,7 +8857,7 @@ msgstr "لا تنتمي القيود إلى نفس الشركة: %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Entries in error"
-msgstr ""
+msgstr "القيود الخاطئة"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -8932,7 +8955,7 @@ msgstr "خطأ!"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Estonian business registry code."
-msgstr ""
+msgstr "رمز السجل التجاري الإستوني."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
@@ -8999,9 +9022,10 @@ msgstr "يومية أرباح أو خسائر الصرف"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Loss"
-msgstr ""
+msgstr "خسائر صرف العملة"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "حركة الصرف"
@@ -9010,17 +9034,17 @@ msgstr "حركة الصرف"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Profit"
-msgstr ""
+msgstr "أرباح صرف العملة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate
 msgid "Exchange Rate"
-msgstr ""
+msgstr "سعر صرف العملة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate_currency_code
 msgid "Exchange Rate Currency Code"
-msgstr ""
+msgstr "رمز عملة سعر الصرف"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9073,7 +9097,7 @@ msgstr "حساب النفقات"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_account_active
 msgid "Expense Account Active"
-msgstr ""
+msgstr "حساب النفقات نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -9194,7 +9218,7 @@ msgstr "نسبة العامل"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
 msgid ""
 "Factor to apply on the journal items generated from this distribution line"
-msgstr ""
+msgstr "العامل المراد تطبيقه على قيود اليومية الناتجة عن بند التوزيع هذا"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -9202,6 +9226,8 @@ msgid ""
 "Factor to apply on the journal items generated from this distribution line, "
 "in percents"
 msgstr ""
+"العامل (بالنسبة المئوية) المراد تطبيقه على قيود اليومية الناتجة عن سطر "
+"التوزيع هذا"
 
 #. module: account
 #. odoo-python
@@ -9315,6 +9341,16 @@ msgstr "فهرس البند الأول"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "التسلسل الجديد الأول"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9456,7 +9492,7 @@ msgstr "مبلغ بالصيغة العشرية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__foldability
 msgid "Foldability"
-msgstr ""
+msgstr "قابلية الطي"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__foldable
@@ -9546,7 +9582,7 @@ msgstr "للنسبة المئوية أدخل نسبة بين 0-100."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "For the Last 365 Days"
-msgstr ""
+msgstr "خلال آخر 365 يوم"
 
 #. module: account
 #. odoo-python
@@ -9613,7 +9649,7 @@ msgstr "معرّف الضريبة الأجنبية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "البلدان ذات أرقام التعريف الضريبية الأجنبية"
 
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
@@ -9683,19 +9719,19 @@ msgstr "France Register of legal persons"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French 14-digit establishment identification number (SIREN + NIC)."
-msgstr ""
+msgstr "رقم تعريف المؤسسة الفرنسي المكون من 14 رقمًا (SIREN + NIC)."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French 9-digit business identification number."
-msgstr ""
+msgstr "رقم التعريف التجاري الفرنسي المكون من 9 أرقام."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French national identification number (NIR)."
-msgstr ""
+msgstr "رقم الهوية الوطنية الفرنسي (NIR)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -9710,7 +9746,7 @@ msgstr "من"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "From Category"
-msgstr ""
+msgstr "من الفئة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -9846,7 +9882,7 @@ msgstr "GB123456782 أو XI123456782"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "GEBA"
-msgstr ""
+msgstr "GEBA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__global_location_number
@@ -9866,7 +9902,7 @@ msgstr "GS1 identification keys"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
-msgstr ""
+msgstr "مفاتيح تعريف GS1 لإدارة سلسلة التوريد."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9882,7 +9918,7 @@ msgstr "حساب أرباح سعر الصرف"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_active
 msgid "Gain Exchange Rate Account Active"
-msgstr ""
+msgstr "حساب أرباح سعر الصرف نشط "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -9926,7 +9962,7 @@ msgstr "التقرير الضريبي العام"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "German Electronic Business Address."
-msgstr ""
+msgstr "عنوان البريد الإلكتروني للأعمال باللغة الألمانية."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9942,13 +9978,13 @@ msgstr "احصل على نتيجة سلامة التشفيرات بصيغة PDF.
 #: model:ir.model.fields,help:account.field_res_partner__global_location_number
 #: model:ir.model.fields,help:account.field_res_users__global_location_number
 msgid "Global Location Number"
-msgstr ""
+msgstr "رقم الموقع العالمي"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Global Location Number, used to identify parties and locations."
-msgstr ""
+msgstr "رقم الموقع العالمي، يُستخدم لتحديد الأطراف والمواقع."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__fiscalyear_lock_date
@@ -9985,13 +10021,13 @@ msgstr "البضائع"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "البضائع المُسلَّمة غير المُفوترة (التقييم المستمر للمخزون)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "البضائع المُفوترة غير المُسلَّمة (التقييم المستمر للمخزون)"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_ground_transportation
@@ -10084,7 +10120,7 @@ msgstr "يحتوي قيود محاسبية"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_draft_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__has_draft_move_duplicate
 msgid "Has Draft Move Duplicate"
-msgstr ""
+msgstr "يحتوي على حركة مسودة مكررة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
@@ -10112,7 +10148,7 @@ msgstr "يحتوي على كشوفات غير صالحة"
 #: model:ir.model.fields,field_description:account.field_account_journal__has_ledger
 #: model:ir.model.fields,field_description:account.field_res_company__has_ledger
 msgid "Has Ledger"
-msgstr ""
+msgstr "يحتوي على دفتر الأستاذ العام"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -10137,7 +10173,7 @@ msgstr "لديه عامل سلبي"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_phishing_warnings
 msgid "Has Phishing Warnings"
-msgstr ""
+msgstr "يحتوي على تحذيرات من التصيد الاحتيالي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -10259,7 +10295,7 @@ msgstr "إبراز زر الإرسال"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "اسم صاحب الحساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10285,7 +10321,7 @@ msgstr "كيفية احتساب مبلغ الضريبة في أوامر البي
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Hungarian company registry number."
-msgstr ""
+msgstr "رقم تسجيل الشركة في المجر."
 
 #. module: account
 #. odoo-python
@@ -10300,7 +10336,7 @@ msgstr "IBAN"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "ICE"
-msgstr ""
+msgstr "ICE"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10397,7 +10433,7 @@ msgstr "المُعرف"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "IIN"
-msgstr ""
+msgstr "IIN"
 
 #. module: account
 #. odoo-python
@@ -10429,7 +10465,7 @@ msgstr "INV001"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "IVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_exception_icon
@@ -10822,7 +10858,7 @@ msgstr "مشمول في التكلفة التحليلية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__included_journal_ids
 msgid "Included Journals"
-msgstr ""
+msgstr "دفاتر اليومية المشمولة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
@@ -10852,7 +10888,7 @@ msgstr "حساب الدخل"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_account_active
 msgid "Income Account Active"
-msgstr ""
+msgstr "حساب الدخل نشط"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_state_income_tax
@@ -11034,7 +11070,7 @@ msgstr "تحويل داخلي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_active
 msgid "Internal Transfer Account Active"
-msgstr ""
+msgstr "حساب التحويل الداخلي نشط"
 
 #. module: account
 #. odoo-python
@@ -11090,7 +11126,7 @@ msgstr "رابط داخلي"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "رقم الحساب البنكي الدولي، المستخدم كمعرف EDI."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -11147,7 +11183,7 @@ msgstr "صيغة غير صالحة للتعبير '%(label)s' في البند '%
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Invalid identifier: %(identifier)s.%(example)s"
-msgstr ""
+msgstr "معرف غير صالح: %(identifier)s.%(example)s"
 
 #. module: account
 #. odoo-python
@@ -11197,7 +11233,7 @@ msgstr "رقم فاتورة"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Invoice :"
-msgstr ""
+msgstr "الفاتورة :"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11336,7 +11372,7 @@ msgstr "النواتح الإجمالية للفواتير"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
 msgid "Invoice Vendor Bill"
-msgstr ""
+msgstr "فاتورة المورد"
 
 #. module: account
 #. odoo-python
@@ -11621,7 +11657,7 @@ msgstr "قيود"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "حركة مكررة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -11768,7 +11804,7 @@ msgstr "يناير"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Japanese corporate number (Specified Subject to Tax)."
-msgstr ""
+msgstr "رقم الشركة اليابانية (محدد خاضع للضريبة)."
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal
@@ -11867,7 +11903,7 @@ msgstr "معلومات قيد اليومية"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "عكس قيد اليومية"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -12021,7 +12057,7 @@ msgstr "مزود مؤشرات الأداء الرئيسية"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "KVK"
-msgstr ""
+msgstr "KVK"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12267,7 +12303,7 @@ msgstr "الأنشطة المتأخرة"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Latvian unified registration number."
-msgstr ""
+msgstr "رقم التسجيل الموحد اللاتفي."
 
 #. module: account
 #. odoo-python
@@ -12341,7 +12377,7 @@ msgstr "الإشارات القانونية التي يجب طباعتها عل�
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Leitweg-ID"
-msgstr ""
+msgstr "Leitweg-ID"
 
 #. module: account
 #. odoo-python
@@ -12401,7 +12437,7 @@ msgstr "Licenses or computer services (like repairs or upgrades)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
-msgstr ""
+msgstr "تحديد تاريخ حقول القيمة المتبقية (في تاريخ محدد)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -12459,7 +12495,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Lithuanian legal entity code (JAK)."
-msgstr ""
+msgstr "رمز الكيان القانوني الليتواني (JAK)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
@@ -12481,7 +12517,7 @@ msgstr "رقمنة القروض"
 #: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
-msgstr ""
+msgstr "المعايير المحاسبية المحلية (GAAP)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_property_tax
@@ -12542,6 +12578,7 @@ msgid "Looks great!"
 msgstr "يبدو رائعًا!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "خسارة"
@@ -12555,7 +12592,7 @@ msgstr "حساب الخسائر"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__loss_account_active
 msgid "Loss Account Active"
-msgstr ""
+msgstr "حساب الخسائر نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_currency_exchange_account_id
@@ -12566,13 +12603,13 @@ msgstr "حساب خسائر سعر الصرف"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_active
 msgid "Loss Exchange Rate Account Active"
-msgstr ""
+msgstr "حساب خسائر سعر الصرف نشط "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Luxembourg business registry number."
-msgstr ""
+msgstr "رقم السجل التجاري في لوكسمبورغ."
 
 #. module: account
 #. odoo-python
@@ -12637,7 +12674,7 @@ msgstr "أنشئ قيوداً تراكمية"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Malaysian company registration number."
-msgstr ""
+msgstr "رقم تسجيل الشركة الماليزية."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_management_menu
@@ -12805,7 +12842,7 @@ msgstr "تحليل الهوامش"
 #. module: account
 #: model:ir.actions.server,name:account.action_mark_payment_as_reconciled
 msgid "Mark as Reconciled"
-msgstr ""
+msgstr "تحديد كتمّت تسويته"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -13104,7 +13141,7 @@ msgstr "المزيد من الدقة في أسعار المنتجات"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid ""
 "Moroccan joint business identifier (Identifiant Commun de l'Entreprise)."
-msgstr ""
+msgstr "المعرّف المشترك للمؤسسة المغربية (Identifiant Commun de l'Entreprise)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -13206,7 +13243,7 @@ msgstr "فواتيري"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "NZBN"
-msgstr ""
+msgstr "NZBN"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__partner_name
@@ -13232,7 +13269,7 @@ msgstr "الاسم"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name_path
 msgid "Name Path"
-msgstr ""
+msgstr "مسار الاسم"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
@@ -13263,7 +13300,7 @@ msgstr "بحاجة إلى إلغاء الطلب"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "يحتاج إلى تحديث "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -13306,7 +13343,7 @@ msgstr "مطلقًا"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__never_unfolded
 msgid "Never Unfolded"
-msgstr ""
+msgstr "لم يتم فتحه مطلقًا"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -13344,7 +13381,7 @@ msgstr "قيم جديدة"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "New Zealand Business Number."
-msgstr ""
+msgstr "رقم الأعمال في نيوزيلندا."
 
 #. module: account
 #: model:mail.template,name:account.mail_template_einvoice_notification
@@ -13445,7 +13482,7 @@ msgstr "لا توجد طريقة دفع"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__no_review
 msgid "No Review"
-msgstr ""
+msgstr "لا توجد مراجعة"
 
 #. module: account
 #. odoo-python
@@ -13508,7 +13545,7 @@ msgstr "لم يتم العثور على إجراء ممكن للبنود الم�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
-msgstr ""
+msgstr "المبلغ غير القابل للخصم"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -13580,7 +13617,7 @@ msgstr "المدين العادي"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Norwegian Register of Legal Entities (Brønnøysund Register Center)"
-msgstr ""
+msgstr "السجل النرويجي للكيانات القانونية (مركز تسجيل برونويسوند)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__not_contains
@@ -13651,7 +13688,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Note to add on invoices using this Fiscal Position."
-msgstr ""
+msgstr "ملاحظة لإضافتها إلى الفواتير التي تستخدم هذا الوضع المالي."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -13779,7 +13816,7 @@ msgstr "القيمة العددية"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "OIN"
-msgstr ""
+msgstr "OIN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14289,7 +14326,7 @@ msgstr "الديون المعلقة"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Outstanding payments"
-msgstr ""
+msgstr "المدفوعات المستحقة"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -14337,6 +14374,7 @@ msgid "Owner's Current Account"
 msgstr "حساب المالك الحالي"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "حسابات الربح والخسارة"
@@ -14367,11 +14405,6 @@ msgstr "ملف PDF"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "ملف PDF غير مدفوع"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "PEPPOL Electronic Invoicing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -14432,7 +14465,7 @@ msgstr "الأصل"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__parent_id
 msgid "Parent Account"
-msgstr ""
+msgstr "الحساب الرئيسي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
@@ -14551,7 +14584,7 @@ msgstr "العنصر النائب لضريبة القيمة المضافة لل�
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Partner set to %s"
-msgstr ""
+msgstr "الشريك المحدد هو %s"
 
 #. module: account
 #. odoo-python
@@ -14612,7 +14645,7 @@ msgstr "الدائن"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__payable_account_id
 msgid "Payable Account"
-msgstr ""
+msgstr "حساب الدائنين"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
@@ -14741,8 +14774,9 @@ msgstr "عنوان إيصال الدفع"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
+#: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Payment Reconciliation"
-msgstr ""
+msgstr "تسوية المدفوعات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -14803,7 +14837,7 @@ msgstr "نوع السداد"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payment must be in paid state to be reconciled."
-msgstr ""
+msgstr "يجب أن تكون الدفعة في حالة مدفوعة ليتم تسويتها."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14905,7 +14939,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payments linked to an Asset Cash account cannot be reconciled."
-msgstr ""
+msgstr "لا يمكن تسوية الدفعات المرتبطة بحساب نقدي للأصول."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14993,54 +15027,54 @@ msgstr "مقارنة المدة"
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
 msgid "Periodic depreciation expense for building assets."
-msgstr ""
+msgstr "نفقات الإهلاك الدوري لأصول المباني."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_technology
 msgid "Periodic depreciation expense for capitalized technology assets."
-msgstr ""
+msgstr "النفقات الدورية للاستهلاك للأصول التكنولوجية المرسملة."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_furniture
 msgid "Periodic depreciation expense for furniture and fixture assets."
-msgstr ""
+msgstr "النفقات الدورية للاستهلاك لأصول الأثاث والتجهيزات."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_improvements
 msgid "Periodic depreciation expense for leasehold or property improvements."
-msgstr ""
+msgstr "النفقات الدورية للاستهلاك لتحسينات العقارات أو الممتلكات المؤجرة."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_machines
 msgid "Periodic depreciation expense for machinery and tool assets."
-msgstr ""
+msgstr "النفقات الدورية للاستهلاك لأصول الآلات والأدوات."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_other_property
 msgid "Periodic depreciation expense for other depreciable property assets."
-msgstr ""
+msgstr "النفقات الدورية للاستهلاك للأصول العقارية الأخرى القابلة للاستهلاك."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_vehicles
 msgid "Periodic depreciation expense for vehicle assets."
-msgstr ""
+msgstr "مصروف الإهلاك الدوري لأصول المركبات."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Peruvian unique taxpayer registry number (RUC)."
-msgstr ""
+msgstr "رقم التسجيل الضريبي الفريد في بيرو (RUC)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__phishing_warnings
 msgid "Phishing Warnings"
-msgstr ""
+msgstr "تحذيرات من التصيد الاحتيالي"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk"
-msgstr ""
+msgstr "خطر التصيد الاحتيالي"
 
 #. module: account
 #. odoo-python
@@ -15049,6 +15083,8 @@ msgid ""
 "Phishing risk: %(label1)s is in %(country1)s but %(label2)s is in %"
 "(country2)s"
 msgstr ""
+"خطر التصيد الاحتيالي: %(label1)s موجود في %(country1)s لكن %(label2)s موجود "
+"في %(country2)s"
 
 #. module: account
 #. odoo-python
@@ -15057,6 +15093,8 @@ msgid ""
 "Phishing risk: %(money_transfer_service)s is a money transfer service and "
 "not a bank. Double check if the account can be trusted by calling the vendor."
 msgstr ""
+"خطر التصيد الاحتيالي: %(money_transfer_service)s هي خدمة لتحويل الأموال "
+"وليست بنكًا. تأكد جيدًا من موثوقية الحساب عن طريق الاتصال بالبائع."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_internet
@@ -15145,7 +15183,7 @@ msgstr "ترحيل الفرق في"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Post Entry?"
-msgstr ""
+msgstr "ترحيل القيد؟"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -15329,7 +15367,7 @@ msgstr "الطباعة في صفحة جديدة"
 #. module: account
 #: model:ir.actions.server,name:account.action_server_payment_receipt
 msgid "Print Payment Receipt"
-msgstr ""
+msgstr "طباعة إيصال الدفع"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15349,7 +15387,7 @@ msgstr "حساب الأسهم الخاص"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_active
 msgid "Private Share Account Active"
-msgstr ""
+msgstr "حساب مشاركة خاص نشط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -15475,7 +15513,7 @@ msgstr "حساب الربح"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_active
 msgid "Profit Account Active"
-msgstr ""
+msgstr "حساب الأرباح نشط"
 
 #. module: account
 #. odoo-python
@@ -15483,6 +15521,11 @@ msgstr ""
 #: model:account.account,name:account.21_profit_or_loss
 #: model:account.account,name:account.22_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
+msgstr "تخصيص الأرباح أو الخسائر"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
 msgstr ""
 
 #. module: account
@@ -15688,7 +15731,7 @@ msgstr "نفقات البحث والتطوير"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "RO1234567897 or 8001011234567 or 9000123456789"
-msgstr ""
+msgstr "RO1234567897 أو 8001011234567 أو 9000123456789"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__rating_ids
@@ -15747,7 +15790,7 @@ msgstr "المدين"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__receivable_account_id
 msgid "Receivable Account"
-msgstr ""
+msgstr "حساب المدينين"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -15853,7 +15896,7 @@ msgstr "أجزاء التسوية"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__reference
 msgid "Record Reference"
-msgstr ""
+msgstr "مرجع السجل"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
@@ -15949,7 +15992,7 @@ msgstr "تسجيل دفعة"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Registrikood"
-msgstr ""
+msgstr "Registrikood"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16220,6 +16263,7 @@ msgstr "Retirement plans costs (401K match)"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "الإيرادات"
@@ -16354,7 +16398,7 @@ msgstr "مراجعة كشوف الحسابات"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Review all the modification done by the user with right under bookkeeper."
-msgstr ""
+msgstr "راجع جميع التعديلات التي أجراها المستخدم مع صلاحية **المحاسب** مباشرةً."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__set_to_review_documents
@@ -16362,7 +16406,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__set_to_review_documents
 #: model:ir.model.fields,field_description:account.field_res_config_settings__set_to_review_documents
 msgid "Review data"
-msgstr ""
+msgstr "مراجعة البيانات"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__reviewed
@@ -16398,7 +16442,7 @@ msgstr "تقرير الجذر"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Root account"
-msgstr ""
+msgstr "الحساب الجذري"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_per_line
@@ -16448,7 +16492,7 @@ msgstr "استراتيجية التقريب"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Routing ID for invoicing German public authorities."
-msgstr ""
+msgstr "معرّف التوجيه للفوترة للسلطات العامة الألمانية."
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -16464,7 +16508,7 @@ msgstr "الرصيد الجاري"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SE"
-msgstr ""
+msgstr "SE"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
@@ -16480,13 +16524,13 @@ msgstr "نظام الخصم المباشر من SEPA"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SIREN"
-msgstr ""
+msgstr "SIREN"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SIRET"
-msgstr ""
+msgstr "SIRET"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
@@ -16511,7 +16555,7 @@ msgstr "SO123"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SST"
-msgstr ""
+msgstr "SST"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16805,7 +16849,7 @@ msgstr "رمز الحماية"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "See exchange information"
-msgstr ""
+msgstr "عرض معلومات سعر الصرف"
 
 #. module: account
 #. odoo-python
@@ -17287,7 +17331,7 @@ msgstr "إظهار الخصائص المحاسبية - للقراءة فقط"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "إظهار رقم التسوية"
 
 #. module: account
 #. odoo-javascript
@@ -17337,7 +17381,7 @@ msgstr "إظهار خصائص عدم قابلية التغيير"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "عرض فاتورة المورد"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -17440,13 +17484,13 @@ msgstr "إظهار دفتر اليومية في لوحة البيانات"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Singapore Unique Entity Number."
-msgstr ""
+msgstr "رقم الكيان الفريد لسنغافورة."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Slovak company identification number (IČO)."
-msgstr ""
+msgstr "رقم تعريف الشركة السلوفاكي (IČO)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -17478,7 +17522,7 @@ msgstr "بعض المستندات يتم إرسالها في عملية أخرى
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Some entries could not be reset to draft"
-msgstr ""
+msgstr "تعذر إعادة تعيين بعض القيود إلى حالة المسودة"
 
 #. module: account
 #. odoo-javascript
@@ -17822,19 +17866,19 @@ msgstr "حساب معلّق"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_active
 msgid "Suspense Account Active"
-msgstr ""
+msgstr "حساب التعليق نشط"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Swedish organization number (Organisationsnummer)."
-msgstr ""
+msgstr "رقم المنظمة السويدية (Organisationsnummer)."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Swiss company identification number (UIDB)."
-msgstr ""
+msgstr "رقم تعريف الشركة السويسرية (UIDB)."
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
@@ -18121,7 +18165,7 @@ msgstr "رمز دولة الضريبة"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Tax Distribution"
-msgstr ""
+msgstr "توزيع الضرائب"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
@@ -18172,7 +18216,7 @@ msgstr "معرف الضريبة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "رقم التعريف الضريبي مطلوب"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -18444,7 +18488,7 @@ msgstr "حقل تقني للحصول على النطاق في البنك"
 #: model:ir.model.fields,help:account.field_res_partner_bank__phishing_warnings
 msgid ""
 "Technical field used to display warnings if there's a potential phishing risk"
-msgstr ""
+msgstr "حقل تقني يُستخدم لعرض تحذيرات في حالة وجود خطر محتمل للتصيد الاحتيالي"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -18497,43 +18541,43 @@ msgstr "يتطلب إنشاء القالب من الملحن نموذجًا صا
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Bills"
-msgstr ""
+msgstr "قالب الفواتير (فواتير الموردين)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Template for Chart of Accounts"
-msgstr ""
+msgstr "قالب لشجرة الحسابات "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Credit Notes"
-msgstr ""
+msgstr "نموذج لمذكرات الائتمان"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Invoices"
-msgstr ""
+msgstr "قالب الفواتير (فواتير العملاء)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Template for Journal Items"
-msgstr ""
+msgstr "قالب لعناصر اليومية "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Misc. Operations"
-msgstr ""
+msgstr "قالب للعمليات المتنوعة"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Refunds"
-msgstr ""
+msgstr "قالب عمليات رد المبالغ المستردة"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -18675,7 +18719,7 @@ msgstr "يجب أن يكون خصم الدفع المبكر موجباً فقط.
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_column_expression_label_uniq
 msgid "The Expression label must be unique per account report."
-msgstr ""
+msgstr "يجب أن تكون تسمية التعبير فريدة لكل تقرير حسابات."
 
 #. module: account
 #. odoo-python
@@ -18744,18 +18788,6 @@ msgstr ""
 "للنسبة 100%."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-#: model:ir.model.fields,help:account.field_res_partner__vat
-#: model:ir.model.fields,help:account.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"رقم التعريف الضريبي. سيتم التحقق من القيم الموجودة هنا بناءً على صيغة الدولة. "
-"يمكنك استخدام '/' للإشارة إلى أن الشريك لا يخضع للضريبة."
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
@@ -18766,7 +18798,7 @@ msgstr "الحساب %(name)s (%(code)s) مؤرشف."
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "The account code can only contain alphanumeric characters, dots, and dashes."
-msgstr ""
+msgstr "لا يمكن أن يحتوي رمز الحساب إلا على أحرف أبجدية رقمية ونقاط وشرطات."
 
 #. module: account
 #. odoo-python
@@ -18961,6 +18993,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"تعذّر تحديد الدولة الخاصة بالرقم الضريبي الأجنبي. يُرجى تعيين دولة للوضع "
+"الضريبي."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19065,7 +19099,7 @@ msgstr "يجب أن تكون الأيام التي قد تمت إضافتها ب
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The deductibility percentage must be between 0% and 100%"
-msgstr ""
+msgstr "يجب أن تتراوح نسبة الخصم بين 0% و100%"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -19077,7 +19111,7 @@ msgstr "سيتم استخدام عنوان التوصيل عند احتساب ا
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "The document's sequence becomes editable on all documents."
-msgstr ""
+msgstr "يصبح تسلسل المستند قابلاً للتحرير في كافة المستندات."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -19470,6 +19504,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"الإجراء المجدول 'إرسال الفواتير تلقائيًا' مؤرشف. لن تتمكن من إرسال الفواتير "
+"على دفعات."
 
 #. module: account
 #. odoo-python
@@ -19800,7 +19836,7 @@ msgstr ""
 msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
-msgstr ""
+msgstr "حدث خطأ أثناء استيراد الفاتورة، يمكنك العثور على ملف XML الوارد مرفقًا "
 
 #. module: account
 #. odoo-python
@@ -19822,7 +19858,7 @@ msgstr "واحد وثلاثون دولاراً وخمس سنتات"
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "This CLABE does not pass the checksum check, please verify it."
-msgstr ""
+msgstr "لا يجتاز رقم CLABE هذا اختبار المجموع الاختباري، يرجى التحقق منه."
 
 #. module: account
 #. odoo-python
@@ -19864,6 +19900,8 @@ msgid ""
 "This account is used in bank reconciliation. Currency rate difference "
 "entries will be automatically created if needed."
 msgstr ""
+"يُستخدم هذا الحساب في التسوية البنكية. سيتم إنشاء قيود فروق أسعار الصرف "
+"تلقائيًا إذا لزم الأمر."
 
 #. module: account
 #. odoo-python
@@ -19884,6 +19922,8 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"لا يمكن التراجع عن هذا الإجراء: لا يمكن تعديل المدين/الدائن مرة أخرى من هذه "
+"الشاشة.  -  سيؤثر هذا الإجراء على شركتك الحالية فقط."
 
 #. module: account
 #. odoo-python
@@ -19974,7 +20014,7 @@ msgstr ""
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
-msgstr ""
+msgstr "تمت مراجعة هذا القيد بالفعل. تحتاج إلى صلاحية مدير المحاسبة لتغييره."
 
 #. module: account
 #. odoo-python
@@ -20000,6 +20040,8 @@ msgstr "لقد تم عكس هذا القيد من %s"
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"تمت مراجعة هذا القيد بالفعل. تحتاج إلى صلاحيات وصول المحاسب حتى تتمكن من "
+"تغييره."
 
 #. module: account
 #. odoo-python
@@ -20115,7 +20157,7 @@ msgstr "سوف يتم ترحيل هذه الحركة في التاريخ الم�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "This note will be mentioned on invoices using this tax."
-msgstr ""
+msgstr "سيتم ذكر هذه الملاحظة في الفواتير التي تستخدم هذه الضريبة."
 
 #. module: account
 #. odoo-javascript
@@ -20640,13 +20682,13 @@ msgstr "نوع النشاط المستثنى في السجل."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "UEN"
-msgstr ""
+msgstr "UEN"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "UIDB"
-msgstr ""
+msgstr "UIDB"
 
 #. module: account
 #. odoo-python
@@ -20668,6 +20710,11 @@ msgid ""
 msgstr ""
 "تعذر إنشاء كشف الحساب نظراً لعدم وجود بعض المعاملات. قد ترغب في إعادة طلب "
 "المعاملات قبل المتابعة."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20800,7 +20847,7 @@ msgstr "القيود غير المسواة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__unreconciled_paid_amount
 msgid "Unreconciled Paid Amount"
-msgstr ""
+msgstr "المبلغ المدفوع غير المُسوّى"
 
 #. module: account
 #. odoo-python
@@ -20893,7 +20940,7 @@ msgstr "تحديث الشروط والأحكام"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "تحديث التطبيق"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -21109,12 +21156,12 @@ msgstr "صالح لمدة"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Journal Entry"
-msgstr ""
+msgstr "تصديق قيد اليومية"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Validate and Post"
-msgstr ""
+msgstr "تصديق وترحيل "
 
 #. module: account
 #: model:res.groups,name:account.group_validate_bank_account
@@ -21272,7 +21319,7 @@ msgstr "حساب خصم فواتير الموردين"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_income_allocation_active
 msgid "Vendor Bills Discounts Account Active"
-msgstr ""
+msgstr "حساب خصم فواتير الموردين نشط "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -21673,6 +21720,13 @@ msgstr ""
 "واستلامها هنا."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+#: model:ir.model.fields,help:account.field_res_partner__vat
+#: model:ir.model.fields,help:account.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -21822,7 +21876,7 @@ msgstr "لا يمكنك إضافة/تعديل القيود قبل وأثناء %
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
-msgstr ""
+msgstr "لا يمكنك تغيير مبلغ دفعة تحتوي على عدة بنود سيولة."
 
 #. module: account
 #. odoo-python
@@ -21857,6 +21911,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"لا يمكنك إنشاء وضع ضريبي برقم ضريبي أجنبي ضمن دولتك الضريبية دون تعيين ولاية/"
+"منطقة له."
 
 #. module: account
 #. odoo-python
@@ -21894,7 +21950,7 @@ msgstr "لا يمكنك حذف عناصر اليومية التي تنتمي إ�
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
-msgstr ""
+msgstr "لا يمكنك حذف الضرائب المستخدمة حاليًا. يُرجى أرشفتها بدلًا من ذلك."
 
 #. module: account
 #. odoo-python
@@ -21986,6 +22042,8 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"لا يمكن تعديل دفتر اليومية لقيود يومية تم ترحيلها مسبقًا، إلا إذا تم حذف "
+"الاسم أو تعيينه إلى \"/\". وقد يؤدي ذلك إلى حدوث فجوة في تسلسل الأرقام."
 
 #. module: account
 #. odoo-python
@@ -21995,6 +22053,8 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"لا يمكن تعديل دفتر اليومية لقيد يحتوي على رقم تسلسلي مُعيّن، إلا إذا تم حذف "
+"الاسم أو تعيينه إلى \"/\". وقد يؤدي ذلك إلى حدوث فجوة في تسلسل الأرقام."
 
 #. module: account
 #. odoo-python
@@ -22071,7 +22131,7 @@ msgstr "لا يمكنك ترحيل قيد في يومية مؤرشفة (%(journa
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "لا يمكنك ترحيل قيد يحتوي على حساب تحليلي مؤرشف: %s"
 
 #. module: account
 #. odoo-python
@@ -22082,6 +22142,13 @@ msgid ""
 msgstr ""
 "لا يمكنك تقليل عدد الخانات العشرية لعملة قد تم استخدامها من قبل لإنشاء قيود "
 "محاسبية."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22172,7 +22239,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "لا يمكنك تغيير نوع مستند يحتوي على رقم تسلسلي مستخدم بالفعل."
 
 #. module: account
 #. odoo-python
@@ -22293,13 +22360,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a payable account for 'Tax Payable Account'."
-msgstr ""
+msgstr "يجب تحديد حساب دائن لحقل 'حساب الضريبة المستحقة'."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a receivable account for 'Tax Receivable Account'."
-msgstr ""
+msgstr "يجب تحديد حساب مدين لحقل 'حساب الضريبة القابلة للاسترداد'."
 
 #. module: account
 #. odoo-python
@@ -22317,7 +22384,7 @@ msgstr "يجب أن تحدد حساب الأرباح (يعتمد على الشر
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must use non-trade accounts for tax groups."
-msgstr ""
+msgstr "يجب استخدام حسابات غير تجارية للمجموعات الضريبية."
 
 #. module: account
 #. odoo-python
@@ -22573,7 +22640,7 @@ msgstr "مثال: الرسوم البنكية"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 msgid "e.g. CONSO, IFRS, ..."
-msgstr ""
+msgstr "على سبيل المثال: CONSO، IFRS، ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -22625,7 +22692,7 @@ msgstr "الجميع"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range.<br/>"
-msgstr ""
+msgstr "تقع خارج النطاق المعتاد.<br/>"
 
 #. module: account
 #. odoo-python
@@ -22731,12 +22798,6 @@ msgstr ""
 "المسجَّل خلال 8 أيام من تاريخ تسليم البضاعة أو أحكام الخدمات."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr "غير منطبق"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "من الضريبة"
@@ -22831,6 +22892,8 @@ msgstr "معكوس"
 msgid ""
 "similar to parent path but with codes instead of ids, used to order accounts"
 msgstr ""
+"مماثل لمسار الأصل ولكن باستخدام الرموز بدلًا من المعرّفات، ويُستخدم لترتيب "
+"الحسابات"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__name_path
@@ -22838,6 +22901,8 @@ msgid ""
 "similar to parent path but with names instead of ids, used to order and "
 "search accounts"
 msgstr ""
+"مماثل لمسار الأصل ولكن باستخدام الأسماء بدلًا من المعرّفات، ويُستخدم لترتيب "
+"الحسابات والبحث عنها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -22977,6 +23042,32 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} الفاتورة الذاتية (المرجع {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "PEPPOL Electronic Invoicing"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s، أو / إذا لم يكن منطبقاً"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s، أو غير منطبق"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ إذا لم يكن منطبقاً"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "رقم التعريف الضريبي. سيتم التحقق من القيم الموجودة هنا بناءً على صيغة "
+#~ "الدولة. يمكنك استخدام '/' للإشارة إلى أن الشريك لا يخضع للضريبة."
+
+#~ msgid "not applicable"
+#~ msgstr "غير منطبق"
+
+#~ msgid "Account Reconcile"
+#~ msgstr "تسوية الحساب"
 
 #~ msgid "e.g. GAAP, IFRS, ..."
 #~ msgstr "مثال GAAP، IFRS، ..."

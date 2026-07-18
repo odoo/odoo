@@ -37,8 +37,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 14:12+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 07:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/crm/"
 "fi/>\n"
 "Language: fi\n"
@@ -243,8 +243,8 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
-"2\">Samankaltaiset liidit </span>\n"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">"
+"Samankaltaiset liidit </span>\n"
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Samanlainen liidi</span>"
 
@@ -256,8 +256,8 @@ msgid ""
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Liidit</span>\n"
-"                        <span class=\"o_stat_text\" "
-"invisible=\"use_leads\">Myyntimahdollisuudet</span>"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">"
+"Myyntimahdollisuudet</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -374,16 +374,16 @@ msgstr ""
 "Mukava tavata! Nyt kun olet mukana, tulet tutustumaan kaikkeen mahtavaan <t "
 "t-out=\"object.company_id.name or ''\">Yritykseni (Helsinki)</t> tarjoamaan. "
 "Minun nimeni on <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja "
-"autan sinua saamaan kaiken irti Odoosta. Voisimmeko sopia nopean demon?<br/"
-">\n"
+"autan sinua saamaan kaiken irti Odoosta. Voisimmeko sopia nopean demon?<br/>"
+"\n"
 "Ethän epäröi ottaa yhteyttä koska tahansa!<br/><br/>\n"
 "Parhain terveisin,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Sähköposti: <t t-out=\"object.user_id.email or "
-"''\">mark.brown23@esimerkki.fi</t>\n"
-"    <br/>Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
-"t>\n"
+"    <br/>Sähköposti: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@esimerkki.fi</t>\n"
+"    <br/>Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>"
+"\n"
 "</t>\n"
 "<t t-else=\"\">\n"
 "    <t t-out=\"object.company_id.name or ''\">Yritykseni (Helsinki)</t>\n"
@@ -790,12 +790,12 @@ msgstr "Viestin palautuminen"
 #: model_terms:ir.ui.view,arch_db:crm.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "CRM"
-msgstr "CRM-järjestelmä"
+msgstr "CRM"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_activity_report
 msgid "CRM Activity Analysis"
-msgstr "CRM-järjestelmän toimenpiteiden analyysi"
+msgstr "CRM-toimenpideanalyysi"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_recurring_plan
@@ -810,7 +810,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
 msgid "CRM: Lead Assignment"
-msgstr "CRM-järjestelmä: liidien kohdennus"
+msgstr "CRM: liidien kohdennus"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -1171,7 +1171,7 @@ msgstr "Luo myyntimahdollisuus"
 #: code:addons/crm/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Create an opportunity to start playing with your pipeline."
-msgstr "Luo uusi myyntimahdollisuus aloittaakseni myyntiputken käytön."
+msgstr "Luo uusi myyntimahdollisuus aloittaaksesi myyntiputken käytön."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
@@ -1934,8 +1934,7 @@ msgstr "Onko automaattinen todennäköisyys?"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
-"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+msgstr "JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1970,12 +1969,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "KPI-mittaristo CRM-järjestelmä Liidi Luotu Arvo"
+msgstr "Kpi CRM Liidi Luotu arvo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr "KPI-mittaristo CRM-järjestelmä Myyntimahdollisuudet Voitettu Arvo"
+msgstr "Kpi CRM Myyntimahdollisuudet Voitettu arvo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
@@ -2540,8 +2539,7 @@ msgstr "Tapaamiset"
 msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
-msgstr ""
-"Käyttäjän %(user)s ja tiimin %(team)s kohdistusalue on muotoiltu väärin"
+msgstr "Käyttäjän %(user)s ja tiimin %(team)s kohdistusalue on muotoiltu väärin"
 
 #. module: crm
 #. odoo-python
@@ -3957,8 +3955,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
 msgid "This field is used to set/get locales for user"
-msgstr ""
-"Tämän kentän avulla haetaan/asetetaan käyttäjän aluekohtaiset asetukset"
+msgstr "Tämän kentän avulla haetaan/asetetaan käyttäjän aluekohtaiset asetukset"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id

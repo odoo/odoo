@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 07:16+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"PO-Revision-Date: 2026-07-06 19:14+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "account_peppol/nl/>\n"
@@ -37,7 +37,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (%(eas)s ontbreekt/ontbreken)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,6 +69,8 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s Peppol-document(en) verwerkt, %(deleted)s document(en) "
+"verwijderd"
 
 #. module: account_peppol
 #. odoo-python
@@ -78,8 +80,8 @@ msgstr "%s heeft elektronische factuurontvangst aangevraagd op Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>Authenticeren met itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -428,11 +430,6 @@ msgid "Activate"
 msgstr "Activeer"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Elektronische facturatie activeren"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -440,6 +437,7 @@ msgstr "Elektronische facturatie activeren (via Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Peppol activeren"
 
@@ -599,6 +597,12 @@ msgstr "Er is een interne fout opgetreden"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication failed"
 msgstr "Authenticatie mislukt"
 
@@ -649,7 +653,7 @@ msgstr "Kan verzenden, in afwachting van registratie om te ontvangen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -832,19 +836,19 @@ msgstr "Selectie 'Gebruik bovenliggende verbinding' weergeven"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Wil je doorgaan?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Document succesvol geannuleerd"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Document succesvol teruggezet naar concept"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -854,6 +858,10 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Documenten die via Peppol zijn verzonden/ontvangen kunnen niet worden "
+"verwijderd.\n"
+"\n"
+"Wil je dit document in plaats daarvan annuleren?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -863,6 +871,10 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Documenten die via Peppol zijn verzonden/ontvangen kunnen niet worden "
+"verwijderd.\n"
+"\n"
+"Wil je dit document in plaats daarvan terugzetten naar de status 'concept'?"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -937,6 +949,13 @@ msgstr ""
 "database hebt hersteld vanuit een back-up of hebt gekopieerd zonder deze te "
 "neutraliseren. Om dit op te lossen, ga je naar Instellingen > Boekhouding > "
 "Peppol Instellingen en klik je op 'Deze database opnieuw verbinden'."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr "Frankrijk - Elektronische facturatie (goedgekeurd platform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1014,11 +1033,6 @@ msgid "Invoice sending"
 msgstr "Factuur verzenden"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
-
-#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
 msgid "Journal"
 msgstr "Dagboek"
@@ -1092,7 +1106,7 @@ msgstr "Er zijn geen geldige AS4-deelnemerseindpunten gevonden."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Nee, behouden"
 
 #. module: account_peppol
 #. odoo-python
@@ -1183,6 +1197,12 @@ msgstr "Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol Activation"
+msgstr "Peppol-activatie"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol Address should be provided."
 msgstr "Een Peppol-adres is vereist."
 
@@ -1210,13 +1230,13 @@ msgstr "Peppol-contactmail"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol-documenten kunnen niet worden verwijderd"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol-documenten: Factuur kan niet worden verwijderd"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1514,7 +1534,7 @@ msgstr "Afgewezen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Terugzetten naar concept"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
@@ -1811,6 +1831,8 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"De volgende %s Peppol-documenten worden teruggezet naar de status ‘concept’: "
+"%s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1820,6 +1842,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"De volgende %s Peppol-documenten in concept worden geannuleerd:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1871,7 +1896,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "De overige %s documenten worden verwijderd."
 
 #. module: account_peppol
 #. odoo-python
@@ -2018,6 +2043,22 @@ msgstr ""
 "factuur te genereren."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+"Om het goedgekeurde platform voor Franse elektronische facturatie te "
+"gebruiken, installeer je de module"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+"Om het goedgekeurde platform voor Franse elektronische facturatie te "
+"gebruiken, installeer je de module"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr "Token niet gesynchroniseerd"
@@ -2067,6 +2108,12 @@ msgid "Use Parent Connection Selection"
 msgstr "Selectie van bovenliggende verbinding gebruiken"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "Controleer"
@@ -2111,6 +2158,12 @@ msgstr "Wat is Peppol en waarom is het geweldig?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr "Waarom zou ik Franse elektronische facturatie gebruiken?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
 msgstr "Waarom zou ik PEPPOL gebruiken?"
 
@@ -2124,13 +2177,13 @@ msgstr "Waarom zou je het gebruiken?"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Ja, annuleren"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Ja, doorgaan"
 
 #. module: account_peppol
 #. odoo-python
@@ -2268,6 +2321,14 @@ msgstr ""
 "database opnieuw koppelt."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2348,6 +2409,15 @@ msgstr "om facturen te versturen, maar deze"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "gebruikt"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>Authenticeren met itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Elektronische facturatie activeren"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"
 
 #~ msgid " (no access)"
 #~ msgstr " (geen toegang)"

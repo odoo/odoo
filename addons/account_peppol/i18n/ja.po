@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 07:16+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"PO-Revision-Date: 2026-07-06 05:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "account_peppol/ja/>\n"
@@ -37,7 +37,7 @@ msgstr " (デモ)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (%(eas)sが未設定です)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,6 +69,8 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s Peppolドキュメントが処理され、%(deleted)s ドキュメントが削除さ"
+"れました"
 
 #. module: account_peppol
 #. odoo-python
@@ -78,8 +80,8 @@ msgstr "%s Peppolでの電子請求書受領をリクエストしました。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>itsmeで認証</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -424,11 +426,6 @@ msgid "Activate"
 msgstr "有効化"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "電子請求を有効化"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -436,6 +433,7 @@ msgstr "電子請求を有効化 (Peppol経由)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Peppolを有効化"
 
@@ -586,6 +584,12 @@ msgstr "内部エラーが発生しました"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication failed"
 msgstr "認証に失敗しました"
 
@@ -636,7 +640,7 @@ msgstr "送信は可能、受信は登録待ち"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -815,19 +819,19 @@ msgstr "表示 使用 親接続 選択"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "続行しますか?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "ドキュメントは正常にキャンセルされました"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "ドキュメントが正常にドラフト状態に戻されました"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -837,6 +841,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Peppol経由で送受信されたドキュメントは削除できません。\n"
+"\n"
+"代わりに、このドキュメントをキャンセルしますか?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -846,6 +853,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Peppol経由で送受信されたドキュメントは削除できません。\n"
+"\n"
+"代わりに、このドキュメントをドラフトに戻しますか?"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -919,6 +929,13 @@ msgstr ""
 "復元した場合や、中立化せずにコピーした場合に発生することがあります。解決する"
 "には、管理設定 > 会計 > Peppol設定から、「このデータベースを再接続」をクリッ"
 "クします。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr "フランス - 電子請求書(承認済みプラットフォーム)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -996,11 +1013,6 @@ msgid "Invoice sending"
 msgstr "顧客請求書送付中"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
-
-#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
 msgid "Journal"
 msgstr "仕訳帳"
@@ -1074,7 +1086,7 @@ msgstr "有効なAS4参加者のエンドポイントが検証されませんで
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "いいえ、そのままにします"
 
 #. module: account_peppol
 #. odoo-python
@@ -1165,6 +1177,12 @@ msgstr "Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol Activation"
+msgstr "Peppolの有効化"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol Address should be provided."
 msgstr "Peppolアドレスを指定する必要があります。"
 
@@ -1192,13 +1210,13 @@ msgstr "Peppol 連絡先メールアドレス"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppolドキュメントは削除できません"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppolドキュメント：請求書を削除できません"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1492,7 +1510,7 @@ msgstr "拒否済"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "ドラフトに戻す"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
@@ -1780,6 +1798,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"以下の%s Peppolドキュメントはドラフト状態に戻されます:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1789,6 +1810,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"以下の%s のPeppolドラフトは取り消されます:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1840,7 +1864,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "残りの%s ドキュメントは削除されます。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1975,6 +1999,22 @@ msgid ""
 msgstr "完全な電子顧客請求書を作成するには、この取引先の国も設定します。"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+"フランス語の電子請求書発行用承認プラットフォームを使用するには、モジュールを"
+"インストールしてください"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+"フランス語の電子請求書発行用承認プラットフォームを使用するには、モジュールを"
+"インストールしてください"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr "トークンの同期が取れていません"
@@ -2024,6 +2064,12 @@ msgid "Use Parent Connection Selection"
 msgstr "親接続の選択を使用"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "確認"
@@ -2068,6 +2114,12 @@ msgstr "Peppolとは何ですか？何が優れているのでしょうか?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr "フランスの電子請求を使うべき理由は?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
 msgstr "PEPPOLを使うべき理由"
 
@@ -2081,13 +2133,13 @@ msgstr "使用するべき理由"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "はい、キャンセルします"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "はい、続行します"
 
 #. module: account_peppol
 #. odoo-python
@@ -2221,6 +2273,14 @@ msgstr ""
 "い。"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2299,6 +2359,15 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>itsmeで認証</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "電子請求を有効化"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"
 
 #~ msgid " (no access)"
 #~ msgstr " (アクセス権なし)"

@@ -37,9 +37,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 11:27+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-15 08:34+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "ca/>\n"
 "Language: ca\n"
@@ -649,13 +649,14 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        per un import de\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(transaction_sudo.amount, object.currency_id) or ''\">10 €</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">10 "
+"€</span>\n"
 "        per a la seva comanda\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
-"S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            està pendent de pagament.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -665,9 +666,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Un cop confirmat el pagament,\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
-"object.currency_id) or ''\">10 €</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">10 €</span>\n"
 "                quedaran pendents d'abonar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -676,9 +677,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid, object.currency_id) or ''\">10 €</"
-"span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">10 €</span>\n"
 "                a pagar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -758,8 +759,8 @@ msgstr ""
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
 "€</span> està disponible per a revisar-se.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
-"\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -824,9 +825,9 @@ msgstr ""
 "('draft', 'sent') else 'comanda'\"/>\n"
 "        Hola:\n"
 "        <br/><br/>\n"
-"        La seva factura proforma associada al <t t-out=\"doc_name or ''\">"
-"pressupost</t> <span style=\"font-weight: bold;\" t-out=\"object.name or "
-"''\">S00052</span>\n"
+"        La seva factura proforma associada al <t t-out=\"doc_name or "
+"''\">pressupost</t> <span style=\"font-weight: bold;\" t-out=\"object.name "
+"or ''\">S00052</span>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (amb referència: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
@@ -1861,11 +1862,6 @@ msgstr "Connecta Stripe"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Connecta't amb el teu software!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Connecteu el vostre software"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4259,6 +4255,8 @@ msgid "Quantities to invoice from sales orders"
 msgstr "Quantitats a facturar des de comandes"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -5702,7 +5700,7 @@ msgstr "Total"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr "Total impostos"
+msgstr "Total d'impostos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -6253,11 +6251,6 @@ msgid "sale order"
 msgstr "comanda de venda"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "per crear pressupostos automàticament."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "per aprendre totes les maneres de connectar el vostre programari"
@@ -6266,11 +6259,6 @@ msgstr "per aprendre totes les maneres de connectar el vostre programari"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "unitats"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "amb"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6308,3 +6296,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Connect your software"
+#~ msgstr "Connecteu el vostre software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "per crear pressupostos automàticament."
+
+#~ msgid "with"
+#~ msgstr "amb"

@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-07 13:25+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-07-15 08:30+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "project/de/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -840,6 +840,11 @@ msgid "Activities of"
 msgstr "Aktivitäten von"
 
 #. module: project
+#: model:ir.model,name:project.model_mail_activity
+msgid "Activity"
+msgstr "Aktivität"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
@@ -953,8 +958,12 @@ msgstr "Administrator"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "Der Administrator kann den Plan der Mitarbeiter verwalten"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
+"Administrator: Kann Projekte und Phasen verwalten und hat Zugriff auf "
+"Berichte und Konfigurationen."
 
 #. module: project
 #. odoo-javascript
@@ -2115,6 +2124,7 @@ msgstr "Verwerfen"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:project.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:project.field_mail_message__display_name
 #: model:ir.model.fields,field_description:project.field_portal_share__display_name
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2274,7 +2284,8 @@ msgstr "Fehler! Sie können keine rekursive Hierarchie von Aufgaben erstellen."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr "Jeder kann Ideen vorschlagen und der Editor kennzeichnet die besten mit"
+msgstr ""
+"Jeder kann Ideen vorschlagen und der Editor kennzeichnet die besten mit"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
@@ -2544,6 +2555,7 @@ msgstr "Wie geht es mit diesem Projekt voran?"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:project.field_mail_activity__id
 #: model:ir.model.fields,field_description:project.field_mail_message__id
 #: model:ir.model.fields,field_description:project.field_portal_share__id
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -5858,8 +5870,8 @@ msgstr "Benutzereinstellungen"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "Der Benutzer kann den Plan Ihrer Mitarbeiter verwenden"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr "Benutzer: Kann Aufgaben in geteilten Projekten verwalten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6406,6 +6418,12 @@ msgstr "👤 Nicht zugewiesen"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "Der Administrator kann den Plan der Mitarbeiter verwalten"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "Der Benutzer kann den Plan Ihrer Mitarbeiter verwenden"
 
 #~ msgid ""
 #~ "\n"

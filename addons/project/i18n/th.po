@@ -20,9 +20,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-06-11 04:48+0000\n"
-"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-07-02 00:39+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/project/"
 "th/>\n"
 "Language: th\n"
@@ -272,8 +272,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
@@ -301,8 +301,8 @@ msgstr ""
 "width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
 "table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>โปรดบอกเราว่าคุณรู้สึกอย่างไรเกี่ยวกับบริการของเรา</strong>"
-"<br/>\n"
+"                    <strong>โปรดบอกเราว่าคุณรู้สึกอย่างไรเกี่ยวกับบริการของเรา</"
+"strong><br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(คลิกที่หน้ายิ้มอันใดอันหนึ่ง)</span>\n"
 "                </td></tr>\n"
@@ -337,8 +337,8 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            เราขอขอบคุณสำหรับข้อเสนอแนะของคุณ ข้อเสนอแนะของคุณช่วยให้เราปรับปรุงอย่างต่อเ"
-"นื่อง\n"
+"            เราขอขอบคุณสำหรับข้อเสนอแนะของคุณ "
+"ข้อเสนอแนะของคุณช่วยให้เราปรับปรุงอย่างต่อเนื่อง\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">แบบสำรวจความพึงพอใจนี้ถูกส่งไปเนื่องจากงานของคุณถูกย้ายไปยังขั้นตอน... "
@@ -347,29 +347,30 @@ msgstr ""
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">แบบสอบถามความพึงพอใจนี้ถูกส่ง <b t-"
-"out=\"object.stage_id.rating_status_period or ''\">รายสัปดาห์</b> ตราบใดที่งานนั้นอ"
-"ยู่ใน <b t-out=\"object.stage_id.name or ''\">กำลังดำเนินการ</b> </span>\n"
+"out=\"object.stage_id.rating_status_period or ''\">รายสัปดาห์</b> "
+"ตราบใดที่งานนั้นอยู่ใน <b t-out=\"object.stage_id.name or ''\">กำลังดำเนินการ</b> </"
+"span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>ขอแสดงความนับถืออย่างยิ่ง</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">บริษัทของคุณ</t>"
-"\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">บริษัทของคุณ</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
-"4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ "
-"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
-"info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -409,9 +410,9 @@ msgstr ""
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
-"color: #454748;\" groups=\"project.group_project_stages\">คุณได้รับอีเมลนี้เนื่องจากโ"
-"ปรเจ็กต์ของคุณถูกย้ายไปยังขั้นตอน <b t-out=\"object.stage_id.name or ''\">เสร็จสิ้นแล้ว</"
-"b></span>\n"
+"color: #454748;\" "
+"groups=\"project.group_project_stages\">คุณได้รับอีเมลนี้เนื่องจากโปรเจ็กต์ของคุณถูกย้ายไปยังขั้นตอน "
+"<b t-out=\"object.stage_id.name or ''\">เสร็จสิ้นแล้ว</b></span>\n"
 "            "
 
 #. module: project
@@ -791,6 +792,11 @@ msgid "Activities of"
 msgstr ""
 
 #. module: project
+#: model:ir.model,name:project.model_mail_activity
+msgid "Activity"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
@@ -900,7 +906,9 @@ msgstr "ผู้ดูแลระบบ"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
 msgstr ""
 
 #. module: project
@@ -1996,6 +2004,7 @@ msgstr "ละทิ้ง"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:project.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:project.field_mail_message__display_name
 #: model:ir.model.fields,field_description:project.field_portal_share__display_name
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2414,6 +2423,7 @@ msgstr "โปรเจ็กต์นี้เป็นอย่างไรบ
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:project.field_mail_activity__id
 #: model:ir.model.fields,field_description:project.field_mail_message__id
 #: model:ir.model.fields,field_description:project.field_portal_share__id
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -3741,6 +3751,23 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"การเข้าถึงและการมองเห็นของโปรเจกต์และงาน:\n"
+"- ผู้ใช้ภายในที่ได้รับเชิญ: สามารถเข้าถึงได้เฉพาะโปรเจกต์หรืองานที่พวกเขาติดตาม "
+"ผู้ที่ได้รับมอบหมายจะได้รับการเข้าถึงโดยอัตโนมัติ\n"
+"- ผู้ใช้ภายในและผู้ใช้พอร์ทัลที่ได้รับเชิญ: เหมือนกับข้างต้น แต่ขยายไปยังผู้ใช้พอร์ทัล\n"
+"- ผู้ใช้ภายในทั้งหมด: การเข้าถึงเต็มรูปแบบต่อโปรเจกต์และงานทั้งหมด\n"
+"- ผู้ใช้ภายในและผู้ใช้พอร์ทัลทั้งหมด: ผู้ใช้ภายในจะได้รับการเข้าถึงเต็มรูปแบบ "
+"ผู้ใช้พอร์ทัลสามารถเข้าถึงได้เฉพาะโครงการหรืองานที่พวกเขาติดตาม\n"
+"\n"
+"ระดับการเข้าถึงพอร์ทัล:\n"
+"- อ่านอย่างเดียว: ผู้ใช้พอร์ทัลสามารถดูงานผ่านพอร์ทัลของตนได้ แต่ไม่สามารถแก้ไขได้\n"
+"- แก้ไข (จำกัด): ผู้ใช้พอร์ทัลสามารถเข้าถึงมุมมองแบบคัมบัง/รายการ "
+"และสามารถแก้ไขฟิลด์ที่จำกัดในงานที่ติดตามได้\n"
+"- แก้ไข: เหมือนกับข้างต้น แต่สามารถเข้าถึงงานทั้งหมดได้\n"
+"\n"
+"กฎอื่น ๆ:\n"
+"- ผู้ใช้ภายในสามารถเปิดงานจากลิงก์โดยตรงได้ แม้จะไม่มีสิทธิ์เข้าถึงโปรเจ็กต์ก็ตาม\n"
+"- ผู้ดูแลระบบโปรเจ็กต์สามารถเข้าถึงโปรเจ็กต์ส่วนตัวได้ แม้จะไม่ได้เป็นผู้ติดตามก็ตาม\n"
 
 #. module: project
 #. odoo-javascript
@@ -5587,7 +5614,7 @@ msgstr "การตั้งค่าผู้ใช้"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
+msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project

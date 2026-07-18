@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 13:31+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"PO-Revision-Date: 2026-07-07 08:43+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/id/>\n"
@@ -40,6 +40,11 @@ msgid "% Disc"
 msgstr "% Disc"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
+msgid "% discount off on"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/models/pos_order_line.py:0
@@ -60,6 +65,12 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
 msgstr "%(old_pm)s diubah menjadi %(new_pm)s untuk %(old_amount)s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr "%(original)s + %(tip)s tip = %(overall)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -118,7 +129,7 @@ msgstr "%s pelanggan ditemukan untuk \"%s\"."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s days left"
-msgstr ""
+msgstr "%s hari lagi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -132,7 +143,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s hours left"
-msgstr ""
+msgstr "%s jam lagi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -140,7 +151,7 @@ msgstr ""
 msgid ""
 "%s is more than %s% of the order's total amount. Are you sure of this tip "
 "amount?"
-msgstr ""
+msgstr "%s lebih besar %s% dari total pesanan. Yakin dengan jumlah tip ini?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -152,7 +163,7 @@ msgstr "%s tersisa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s min. left"
-msgstr ""
+msgstr "%s mnt lagi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -216,13 +227,13 @@ msgstr "1 Jam"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 day left"
-msgstr ""
+msgstr "1 hari lagi"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 hour left"
-msgstr ""
+msgstr "1 jam lagi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -334,16 +345,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
 msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Perusahaan\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Telepon\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -386,6 +398,8 @@ msgid ""
 "<span class=\"o_field_widget o_readonly_modifier\" "
 "invisible=\"is_total_cost_computed\">To be determined</span>"
 msgstr ""
+"<span class=\"o_field_widget o_readonly_modifier\" "
+"invisible=\"is_total_cost_computed\">Akan ditentukan</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -435,7 +449,7 @@ msgstr "<span name=\"ticket\">Tiket</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -882,6 +896,8 @@ msgid ""
 "Add a reference price per UoM on products (e.g $/kg), in addition to the "
 "sale price"
 msgstr ""
+"Tambahkan harga acuan per satuan ukuran pada produk (misalnya $/kg), selain "
+"harga jual"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -898,12 +914,12 @@ msgstr "Tambahkan catatan opening..."
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_bill
 msgid "Add coins and bills"
-msgstr ""
+msgstr "Tambahkan koin dan uang kertas"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_combo_choice_action
 msgid "Add combo choices"
-msgstr ""
+msgstr "Tambahkan pilihan kombo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1022,7 +1038,7 @@ msgstr "Semua Order"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__all_providers_installed
 msgid "All Providers Installed"
-msgstr ""
+msgstr "Semua Penyedia Terpasang"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1300,7 +1316,7 @@ msgstr "Apakah Anda yakin bahwa pelanggan ingin membayar"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "Yakin?"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
@@ -1358,7 +1374,7 @@ msgstr "Authorized Difference"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_electronic_payment
 msgid "Auto Validate Electronic Payment"
-msgstr ""
+msgstr "Validasi Otomatis Pembayaran Elektronik"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
@@ -1406,6 +1422,8 @@ msgid ""
 "Automatically validates orders paid with an electronic payment (terminals, "
 "qr codes, ...)."
 msgstr ""
+"Otomatis memvalidasi pesanan yang dibayar dengan pembayaran elektronik "
+"(terminal, kode QR, ...)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
@@ -1432,7 +1450,7 @@ msgstr "Tersedia"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__available_payment_method_types
 msgid "Available Payment Method Types"
-msgstr ""
+msgstr "Tipe Metode Pembayaran Tersedia"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
@@ -1442,7 +1460,7 @@ msgstr "Metode Pembayaran Tersedia"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__available_payment_providers
 msgid "Available Payment Providers"
-msgstr ""
+msgstr "Penyedia Pembayaran Tersedia"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1576,7 +1594,7 @@ msgstr "Barcode"
 #. odoo-python
 #: code:addons/point_of_sale/models/product_product.py:0
 msgid "Barcode \"%(barcode)s\" already assigned to \"%(product_list)s\""
-msgstr ""
+msgstr "Barcode \"%(barcode)s\" sudah ditetapkan ke \"%(product_list)s\""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1717,7 +1735,7 @@ msgstr "Roti-Roti"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "Pisahkan Kombo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1728,7 +1746,7 @@ msgstr "Prompt LNA Browser"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_combo_choice_action
 msgid "Build flexible product combinations."
-msgstr ""
+msgstr "Buat kombinasi produk yang fleksibel."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -1944,7 +1962,7 @@ msgstr "Baris-Baris Kas"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Cash Machine"
-msgstr ""
+msgstr "Mesin ATM"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2020,7 +2038,7 @@ msgstr "Kas masuk/keluar untuk %s akan diabaikan."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash inserted"
-msgstr ""
+msgstr "Uang dimasukkan"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2659,7 +2677,7 @@ msgstr "Koneksi Hilang"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__timeout
 msgid "Connection Timeout (ms)"
-msgstr ""
+msgstr "Waktu Koneksi Habis (ms)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2869,12 +2887,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_note_model
 msgid "Create predefined notes"
-msgstr ""
+msgstr "Buat template catatan"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_attribute_action
 msgid "Create product attributes"
-msgstr ""
+msgstr "Buat atribut produk"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -2964,7 +2982,7 @@ msgstr "Header & Footer Custom"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__custom_image
 msgid "Custom Image"
-msgstr ""
+msgstr "Gambar Kustom"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
@@ -3006,7 +3024,7 @@ msgstr "Tampilan Pelanggan"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.xml:0
 msgid "Customer Info"
-msgstr ""
+msgstr "Info Pelanggan"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3594,13 +3612,13 @@ msgstr "Unduh"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Download IDB Errors"
-msgstr ""
+msgstr "Unduh Kesalahan IDB"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Download IndexedDB error logs from localStorage"
-msgstr ""
+msgstr "Unduh log kesalahan IndexedDB dari localStorage"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3755,6 +3773,10 @@ msgid ""
 "of the unit price. This applies to both normal POS usage and when integrated "
 "with a hardware scale."
 msgstr ""
+"Aktifkan opsi ini jika produk akan dijual berdasarkan berat. Saat diaktifkan "
+"tetapi timbangan tidak tersedia, tombol 'Harga' akan memperbarui kuantitas "
+"alih-alih harga satuan. Hal ini berlaku untuk penggunaan POS biasa maupun "
+"saat terintegrasi dengan perangkat timbangan."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -4833,7 +4855,7 @@ msgstr "Item Jurnal"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Grafik Dashboard Kanban"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4870,7 +4892,7 @@ msgstr "Lampu LED"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "LNA"
-msgstr ""
+msgstr "LNA"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5380,7 +5402,7 @@ msgstr "Melampaui Maksimum"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
 msgid "Maximum items"
-msgstr ""
+msgstr "Item maksimum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_max
@@ -5509,7 +5531,7 @@ msgstr "Pembuatan faktur dengan lebih dari satu pesanan"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline Kegiatan Saya"
+msgstr "Tenggat Aktivitas Saya"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -5658,7 +5680,7 @@ msgstr "Kalender Acara Aktivitas Berikutnya"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Batas Waktu Aktivitas Berikutnya"
+msgstr "Tenggat Aktivitas Berikutnya"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_summary
@@ -5882,6 +5904,12 @@ msgid "Not available"
 msgstr "Tidak tersedia"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr "Belum diterapkan"
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
 msgstr "Tidak diperlukan"
@@ -6006,6 +6034,7 @@ msgstr "Order Luring"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -6363,7 +6392,7 @@ msgstr "Urutan Pesanan"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Order Time"
-msgstr ""
+msgstr "Waktu Pemesanan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refunded_order_id
@@ -6611,12 +6640,12 @@ msgstr "Pain au Chocolat"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__paper_size
 msgid "Paper Size"
-msgstr ""
+msgstr "Ukuran Kertas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__paper_size_keys
 msgid "Paper Size Keys"
-msgstr ""
+msgstr "Key Ukuran Kertas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
@@ -6715,7 +6744,7 @@ msgstr "Demo Nama Pembayaran"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Penyedia Pembayaran"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
@@ -6770,6 +6799,8 @@ msgid ""
 "Payment provider that will be used to process payments made with this "
 "payment method."
 msgstr ""
+"Penyedia layanan pembayaran yang akan digunakan untuk memproses pembayaran "
+"dari metode pembayaran ini."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_ref_no
@@ -7391,6 +7422,8 @@ msgid ""
 "Presets are group of settings that you can apply in pos in one click "
 "(takeaway, delivery...)."
 msgstr ""
+"Preset adalah sekumpulan pengaturan yang dapat diterapkan di POS dengan satu "
+"klik (bawa pulang, pengiriman, dll.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7678,7 +7711,7 @@ msgstr "Tetap Lanjutka"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Processing..."
-msgstr ""
+msgstr "Memproses..."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -8776,6 +8809,12 @@ msgid "Session Statistics"
 msgstr "Statistik Sesi"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "Sesi terbuka selama 7 hari"
@@ -9045,6 +9084,14 @@ msgstr ""
 "Beberapa pesanan tidak dapat diserahkan ke server oleh karena error koneksi "
 "internet. Anda dapat keluar dari POS, tapi jangan tutup sesi sebelum masalah "
 "diselesaikan."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10892,6 +10939,11 @@ msgstr "Uuid"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "VAT"
 msgstr "PPN"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "VAT:"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 12:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-09 09:52+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "da/>\n"
 "Language: da\n"
@@ -664,6 +664,51 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"       <t t-set=\"doc_name\" t-value=\"'tilbud' if object.state in ('draft', "
+"'sent') else 'ordre'\"/> \n"
+"        Hej\n"
+"       <br/><br/> \n"
+"        Dit tilbud fra <t t-out=\"doc_name or ''\"></t> <span style=\"font-"
+"weight: bold;\" t-out=\"object.name or ''\"/> \n"
+"       <t t-if=\"object.origin\"> \n"
+"            (med reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"       </t> \n"
+"        på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er klar til gennemgang.\n"
+"       <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+"> \n"
+"       <t t-if=\"documents\">\n"
+"            <br/> \n"
+"           <t t-if=\"len(documents)&gt;1\"> \n"
+"                Her er nogle yderligere dokumenter, der måske interesserer "
+"dig:\n"
+"           </t>\n"
+"            <t t-else=\"\"> \n"
+"                Her er et yderligere dokument, der måske interesserer dig:\n"
+"           </t>\n"
+"            <ul style=\"margin-bottom: 0;\"> \n"
+"               <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\"> \n"
+"                       <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
+"                    </li> \n"
+"               </t>\n"
+"            </ul> \n"
+"       </t>\n"
+"        <br/> \n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
+"       <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -693,6 +738,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"       <t t-set=\"doc_name\" t-value=\"'tilbud' if object.state in ('draft', "
+"'sent') else 'ordre'\"/> \n"
+"        Hej\n"
+"       <br/><br/> \n"
+"        Din proformafaktura for tilbuddet <t t-out=\"doc_name or ''\"></t> "
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\"> S00052</"
+"span>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (med reference: <t t-out=\"object.origin or ''\"/> )\n"
+"       </t> \n"
+"        på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er klar.\n"
+"       <br/><br/> \n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
+"       <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -754,7 +823,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr "<i class=\"fa fa-print me-1\"/>Se detaljer"
+msgstr "<i class=\"fa fa-print me-1\"/>Vis detaljer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1265,7 +1334,7 @@ msgstr "Omkostningslinje"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Anvendelsesmuligheder for omkostningsplaner"
+msgstr "Anvendelsesmuligheder for analytiske kontoplaner"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -1545,7 +1614,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr "Hæv transaktion"
+msgstr "Registrér transaktion"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1595,7 +1664,6 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-#, fuzzy
 msgid "Click to define an invoicing target"
 msgstr "Klik her for at definere et faktureringsmål"
 
@@ -1672,7 +1740,7 @@ msgstr "Virksomhed"
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Layout af virksomhedsdokument"
+msgstr "Virksomhedens dokumentlayout"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1742,11 +1810,6 @@ msgstr "Forbind Stripe"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Opret forbindelse til din software!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Opret forbindelse med software"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1838,8 +1901,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Opret faktura, registrér betalinger, og hold overblik over samtaler med dine "
-"kunder."
+"Opret faktura, registrér betalinger, og bevar overblikket over samtaler med "
+"dine kunder."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2020,8 +2083,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
-"Standardindstilling for, om salgsprisen, der anvendes på produktet og "
-"faktura med denne virksomhed, inkluderer moms."
+"Standardindstilling for, om salgsprisen på produktet og fakturaen fra denne "
+"virksomhed inkluderer moms."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2081,7 +2144,6 @@ msgstr "Leveringsdato"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-#, fuzzy
 msgid "Delivery Date:"
 msgstr "Leveringsdato:"
 
@@ -2123,7 +2185,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
-#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
@@ -2207,7 +2268,7 @@ msgstr "Rabattype"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr "Rabatguide"
+msgstr "Rabatassistent"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -2265,7 +2326,7 @@ msgstr "Vis udkast til fakturaadvarsel"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__display_product_images_on_so
@@ -2276,7 +2337,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
-#, fuzzy
 msgid "Display Qty Widget"
 msgstr "Vis mængdewidget"
 
@@ -2536,7 +2596,7 @@ msgstr "Følgere (partnere)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
+msgstr "FontAwesome-ikon, f.eks. fa-opgaver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -4143,6 +4203,8 @@ msgid "Quantities to invoice from sales orders"
 msgstr "Fakturerbar mængde baseret på salgsordrer"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4327,7 +4389,6 @@ msgstr "Afvis dette tilbud"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
-#, fuzzy
 msgid "Remove"
 msgstr "Fjern"
 
@@ -4368,7 +4429,7 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
-"Anmod om betaling for at bekræfte ordrer, enten fuldt ud (100%) eller "
+"Anmod om betaling for at bekræfte ordrer, enten fuldt ud (100 %) eller "
 "delvist. Standardindstillingen kan ændres pr. ordre eller skabelon."
 
 #. module: sale
@@ -4442,7 +4503,6 @@ msgstr "Salgsoplysninger"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
-#, fuzzy
 msgid "Sale Line Warn Msg"
 msgstr "Advarselsmeddelelse for salgslinje"
 
@@ -4872,7 +4932,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr "Vis alle poster, hvor næste aktivitetsdato er tidligere end i dag"
+msgstr "Vis alle poster, hvis næste aktivitetsdato er før i dag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5212,8 +5272,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
-"Salgsordren %(order)s til fakturering er blevet pt. låst. Det er ikke muligt "
-"at registrere en udgift på en låst salgsordre."
+"Salgsordren %(order)s til fakturering er blevet p.t. låst. Det er ikke "
+"muligt at registrere en udgift på en låst salgsordre."
 
 #. module: sale
 #. odoo-python
@@ -5389,7 +5449,6 @@ msgstr "Produktet (%(product)s) har uforenelige værdier: %(value_list)s"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
-#, fuzzy
 msgid "The sale order has expired."
 msgstr "Salgsordren er udløbet."
 
@@ -5478,7 +5537,7 @@ msgid ""
 "of email list"
 msgstr ""
 "Dette er kilden til linket, f.eks. søgemaskine, andet domæne eller navn på "
-"mailingliste"
+"adresseliste"
 
 #. module: sale
 #. odoo-javascript
@@ -5837,7 +5896,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Values set here are company-specific."
 msgstr "Værdier angivet her er specifikke for virksomheden."
 
@@ -6056,7 +6114,6 @@ msgstr "Dit referencenummer:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-#, fuzzy
 msgid "Your browser does not support iframe."
 msgstr "Din browser understøtter ikke iframe."
 
@@ -6164,11 +6221,6 @@ msgid "sale order"
 msgstr "salgsordre"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "for at oprette tilbud automatisk."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "for at lære om alle muligheder for at integrere din software med"
@@ -6177,11 +6229,6 @@ msgstr "for at lære om alle muligheder for at integrere din software med"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "enheder"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "med"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6196,8 +6243,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Ordre under behandling' or 'Ordre' }} (Ref {{ object.name "
-"or 'n/a' }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -6219,3 +6266,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Connect your software"
+#~ msgstr "Opret forbindelse med software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "for at oprette tilbud automatisk."
+
+#~ msgid "with"
+#~ msgstr "med"
