@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Thread.loadOlder" t-inherit-mode="extension">
-        <xpath expr="//button[@t-custom-ref='load-older']" position="before">
+        <xpath expr="//button[@t-ref='this.loadOlderRef']" position="before">
             <hr t-if="this.displayRating" class="o-discuss-separator flex-grow-1"/>
         </xpath>
-        <xpath expr="//button[@t-custom-ref='load-older']" position="after">
+        <xpath expr="//button[@t-ref='this.loadOlderRef']" position="after">
             <hr t-if="this.displayRating" class="o-discuss-separator flex-grow-1"/>
         </xpath>
     </t>

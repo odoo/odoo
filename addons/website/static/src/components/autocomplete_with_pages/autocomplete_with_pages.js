@@ -14,9 +14,10 @@ export class AutoCompleteWithPages extends AutoComplete {
         super.setup();
         useLayoutEffect(
             (input, inputRef) => {
-                if (inputRef) {
-                    inputRef.value = input.value;
+                if (!inputRef) {
+                    return;
                 }
+                inputRef.value = input.value;
                 const targetBlur = this.onInputBlur.bind(this);
                 const targetClick = this._syncInputClick.bind(this);
                 const targetChange = this.onInputChange.bind(this);

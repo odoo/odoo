@@ -14,8 +14,8 @@ test("event on targetDropdown does not crash when the inner input ref is gone", 
     // Menu), and binds its listeners to that external input, which outlives its
     // own hidden input. When the dialog closes, the input is removed while a
     // blur/change/click is still in flight, so a handler can run after
-    // `inputRef.el` has been cleared. Here we force that state and fire those
-    // events; without the guard the handlers crash reading `inputRef.el.value`.
+    // `inputRef()` has been cleared. Here we force that state and fire those
+    // events; without the guard the handlers crash reading `inputRef().value`.
     const targetDropdown = document.createElement("input");
     getFixture().appendChild(targetDropdown);
 
@@ -35,19 +35,19 @@ test("event on targetDropdown does not crash when the inner input ref is gone", 
         },
     });
 
-    expect(component.inputRef.el).not.toBe(null);
+    expect(component.inputRef()).not.toBe(null);
 
     // Detach the inner input subtree, then force a render so OWL sweeps the
     // now-disconnected ref to null (component and its listeners stay alive).
-    component.inputRef.el.closest(".o-autocomplete").remove();
+    component.inputRef().closest(".o-autocomplete").remove();
     component.render(true);
     await animationFrame();
-    expect(component.inputRef.el).toBe(null);
+    expect(component.inputRef()).toBe(null);
 
     manuallyDispatchProgrammaticEvent(targetDropdown, "change");
     manuallyDispatchProgrammaticEvent(targetDropdown, "click");
     manuallyDispatchProgrammaticEvent(targetDropdown, "blur");
     await animationFrame();
 
-    expect(component.inputRef.el).toBe(null);
+    expect(component.inputRef()).toBe(null);
 });

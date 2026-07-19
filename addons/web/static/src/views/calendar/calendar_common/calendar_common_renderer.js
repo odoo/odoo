@@ -95,7 +95,7 @@ export class CalendarCommonRenderer extends Component {
                 fullCalendarResizeObserver.observe(el);
                 return () => fullCalendarResizeObserver.unobserve(el);
             },
-            () => [resolveRefEl(this.fullCalendarRef)]
+            () => [resolveRefEl(this.ref)]
         );
 
         useSquareSelection(this.ref);

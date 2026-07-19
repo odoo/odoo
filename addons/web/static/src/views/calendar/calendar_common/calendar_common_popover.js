@@ -9,7 +9,7 @@ import { CardRenderer } from "@web/views/card/card_renderer";
 import { getColor, getFormattedDateSpan } from "@web/views/calendar/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 
-import { Component, onWillStart, useRef, useListener } from "@odoo/owl";
+import { Component, onWillStart, useListener } from "@odoo/owl";
 
 export const BODY_ATTRIBUTE = "popover-body";
 export const FOOTER_ATTRIBUTE = "popover-footer";
@@ -33,8 +33,7 @@ class CalendarCard extends Card {
 
     setup() {
         super.setup();
-        const rootRef = useRef("root");
-        useViewButtons(rootRef, {
+        useViewButtons(this.rootRef, {
             reload: () => this.props.afterButtonClicked(),
         });
     }

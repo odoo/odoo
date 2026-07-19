@@ -242,7 +242,7 @@ export class LinkPopover extends Component {
     }
 
     onKeydown(ev) {
-        if (!this.editingWrapper?.el) {
+        if (!this.editingWrapper()) {
             return;
         }
         if (ev.key === "Escape") {

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -22,6 +21,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     proxy,
+    signal,
     untrack,
     useEffect,
 } from "@odoo/owl";
@@ -60,7 +60,7 @@ export class PropertiesField extends Component {
             setActiveElement: false, // make tag navigation work when adding a tag property
             closeOnEscape: false,
         });
-        this.propertiesRef = useRef("properties");
+        this.propertiesRef = signal.ref();
         this.uiService = useService("ui");
 
         let currentResId;
@@ -186,7 +186,7 @@ export class PropertiesField extends Component {
             cursor: "grabbing",
             onDragStart: ({ element, group }) => {
                 this.state.isDragging = true;
-                this.propertiesRef.el.classList.add("o_property_dragging");
+                this.propertiesRef().classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 group.classList.add("o_property_drag_group");
                 // without this, if we edit a char property, move it,
@@ -225,9 +225,9 @@ export class PropertiesField extends Component {
             },
             onDragEnd: ({ element }) => {
                 this.state.isDragging = false;
-                this.propertiesRef.el.classList.remove("o_property_dragging");
+                this.propertiesRef().classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
-                const targetGroup = this.propertiesRef.el.querySelector(".o_property_drag_group");
+                const targetGroup = this.propertiesRef().querySelector(".o_property_drag_group");
                 if (targetGroup) {
                     targetGroup.classList.remove("o_property_drag_group");
                 }
@@ -250,7 +250,7 @@ export class PropertiesField extends Component {
             cursor: "grabbing",
             onDragStart: ({ element }) => {
                 this.state.isDragging = true;
-                this.propertiesRef.el.classList.add("o_property_dragging");
+                this.propertiesRef().classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 document.activeElement.blur();
             },
@@ -261,7 +261,7 @@ export class PropertiesField extends Component {
             },
             onDragEnd: ({ element }) => {
                 this.state.isDragging = false;
-                this.propertiesRef.el.classList.remove("o_property_dragging");
+                this.propertiesRef().classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
             },
         });
@@ -818,7 +818,7 @@ export class PropertiesField extends Component {
             return;
         }
         const propertyName = this.openPropertyDefinition;
-        const labels = this.propertiesRef.el.querySelectorAll(
+        const labels = this.propertiesRef().querySelectorAll(
             `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
         );
         this.openPropertyDefinition = null;
@@ -1040,7 +1040,7 @@ export class PropertiesField extends Component {
     }
 
     _getClosestField() {
-        return this.propertiesRef.el.closest(".o_field_properties");
+        return this.propertiesRef().closest(".o_field_properties");
     }
 
     _getNewPropertyDefinition(newName, count) {

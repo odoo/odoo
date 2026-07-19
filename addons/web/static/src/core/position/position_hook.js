@@ -65,7 +65,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
         const targetEl = getTarget();
         if (!popperEl || !targetEl?.isConnected || lock) {
             // No compute needed
-            return;
+            return false;
         }
         const repositionOptions = omit(options, "onPositioned");
         const solution = reposition(popperEl, targetEl, repositionOptions);
@@ -74,6 +74,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
             options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         }
         options.onPositioned?.(popperEl, solution);
+        return true;
     };
 
     const component = useComponent();
@@ -81,10 +82,14 @@ export function usePosition(popperRef, getTarget, options = {}) {
 
     let executingUpdate = false;
     const batchedUpdate = async () => {
-        // not same as batch, here we're executing once and then awaiting
-        if (!executingUpdate) {
+        // not same as batch, here we're executing once and then awaiting.
+        // Only open the batching window when a reposition actually happened:
+        // update() may run before the popper ref is set (its subtree commits
+        // later in the same task), and consuming the window then would drop
+        // the "update" trigger that follows the ref assignment, leaving the
+        // popper unpositioned until an unrelated event repositions it.
+        if (!executingUpdate && update()) {
             executingUpdate = true;
-            update();
             await Promise.resolve();
             executingUpdate = false;
         }

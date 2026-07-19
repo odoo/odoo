@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { localization } from "@web/core/l10n/localization";
 import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
@@ -37,7 +38,7 @@ export class CalendarYearRenderer extends Component {
             this.fcs[month] = useFullCalendar(this.fcRefs[month], this.getOptionsForMonth(month));
         }
         this.popover = useCalendarPopover(this.constructor.components.Popover);
-        this.rootRef = useRef("root");
+        this.rootRef = signal.ref();
         this.uiService = useService("ui");
 
         useLayoutEffect(() => {
@@ -164,8 +165,9 @@ export class CalendarYearRenderer extends Component {
         }
     }
     updateSize() {
-        const height = window.innerHeight - this.rootRef.el.getBoundingClientRect().top;
-        this.rootRef.el.style.height = `${height}px`;
+        const rootEl = resolveRefEl(this.rootRef);
+        const height = window.innerHeight - rootEl.getBoundingClientRect().top;
+        rootEl.style.height = `${height}px`;
     }
 
     onDateClick(info) {
