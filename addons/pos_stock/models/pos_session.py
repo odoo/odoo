@@ -19,7 +19,7 @@ class PosSession(models.Model):
             session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids)])
             session.failed_pickings = bool(self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids), ('state', '!=', 'done')], limit=1))
 
-    @api.depends('sales_move_id', 'refunds_move_id')
+    @api.depends('sale_move_ids', 'refund_move_ids')
     def _compute_move_ids(self):
         super()._compute_move_ids()
         for session in self:

@@ -47,8 +47,8 @@ class PosSession(models.Model):
         super()._validate_session_accounting()
         gst_sessions = self.filtered(
             lambda session: session.company_id.l10n_in_is_gst_registered
-            and (session.sales_move_id or session.refunds_move_id),
+            and (session.sale_move_ids or session.refund_move_ids),
         )
         if gst_sessions:
             tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
-            (gst_sessions.sales_move_id | gst_sessions.refunds_move_id).line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+            (gst_sessions.sale_move_ids | gst_sessions.refund_move_ids).line_ids._set_l10n_in_gstr_section(tax_tags_dict)

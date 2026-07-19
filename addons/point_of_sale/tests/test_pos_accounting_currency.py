@@ -68,7 +68,7 @@ class TestPosMultiCurrencyPayment(TestPosAccounting):
             products=[[self.product_6, {}]],
         )
         self.close_session()
-        move = session.sales_move_id
+        move = session.move_ids
         term_lines = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         self.assertEqual(term_lines.currency_id, move.currency_id)
         self.assertEqual(move.amount_residual, 0.0)

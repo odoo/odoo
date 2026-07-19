@@ -883,7 +883,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
         currency_rounding = pos_session.currency_id.rounding
 
         # check expected session journal entry
-        self._assert_account_move(pos_session.sales_move_id, expected_values['session_journal_entry'])
+        self._assert_account_move(pos_session.sale_move_ids, expected_values['session_journal_entry'])
         _logger.info("DONE: Check of the session's account move.")
 
         # check expected cash journal entries

@@ -191,6 +191,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(session.state, 'opened')
         return session
 
+    def simulate_cron_trigger(self):
+        session = self.get_pos_session()
+        session._validate_session_accounting()
+
     def close_session(self, amount=0):
         session = self.get_pos_session()
         closing_data = session.get_closing_control_data()
@@ -268,7 +272,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
         move = order.account_move
-        self.assertNotEqual(move, session.sales_move_id)
+        self.assertNotIn(move, session.sale_move_ids)
 
     def test_cash_statement_opening_and_closing_consistency(self):
         def open_and_close_session_with_cash_amounts(init, start, end):
@@ -652,7 +656,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             expected_cashbox_amount = cash_details['payment_amount']
             session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
             self.assertEqual(session.state, 'closed')
-            rounding_lines = session.sales_move_id.line_ids.filtered(
+            rounding_lines = session.sale_move_ids.line_ids.filtered(
                 lambda line: line.display_type == 'rounding',
             )
             if difference > 0:
@@ -797,8 +801,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         order.action_pos_order_invoice()
         refund.action_pos_order_invoice()
 
-        session_sales = session.sales_move_id
-        session_refunds = session.refunds_move_id
+        session_sales = session.sale_move_ids
+        session_refunds = session.refund_move_ids[0]
         reversal_sale_move = session_sales.reversal_move_ids
         reversal_refund_move = session_refunds.reversal_move_ids
 
@@ -906,8 +910,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         expected_cashbox_amount = cash_details['payment_amount']
         session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
         self.assertEqual(session.state, 'closed')
-        sale_move = session.sales_move_id
-        refund_move = session.refunds_move_id
+        sale_move = session.sale_move_ids
+        refund_move = session.refund_move_ids[0]
 
         self.assertEqual(sale_move.move_type, 'out_invoice')
         self.assertEqual(sale_move.amount_total, 21.8)
@@ -1316,11 +1320,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                     self.assertEqual(len(statement), 1)
                     self.assertEqual(statement.amount, payment.amount)
                 elif pm.type == 'pay_later':
-                    session_move = session.sales_move_id
                     self.assertEqual(order.to_invoice, True)
-                    self.assertNotEqual(
+                    self.assertNotIn(
                         order.account_move,
-                        session_move,
+                        session.sale_move_ids,
                     )
                     acc = self.partner_1.property_account_receivable_id
                     self.assertEqual(term.account_id, acc)
@@ -1534,8 +1537,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 },
             )
             self.close_session()
-            classic_refund = session.refunds_move_id
-            classic_sale = session.sales_move_id
+            classic_refund = session.refund_move_ids[0]
+            classic_sale = session.sale_move_ids
 
             self.env.company.account_storno = True
             session = self.open_pos_session()
@@ -1552,8 +1555,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 },
             )
             self.close_session()
-            storno_refund = session.refunds_move_id
-            storno_sale = session.sales_move_id
+            storno_refund = session.refund_move_ids[0]
+            storno_sale = session.sale_move_ids
 
             r_classic_credit = classic_refund.line_ids.mapped('credit')
             r_classic_debit = classic_refund.line_ids.mapped('debit')
@@ -1943,8 +1946,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             },
         )
         self.close_session()
-        self.assertFalse(session.refunds_move_id)
-        self.assertFalse(session.sales_move_id)
+        self.assertFalse(session.refund_move_ids)
+        self.assertFalse(session.sale_move_ids)
         self.assertEqual(order.account_move.move_type, 'out_refund')
 
         session = self.open_pos_session()
@@ -1961,9 +1964,84 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             products=[[self.product_6, {'qty': 1}]],
         )
         self.close_session()
-        self.assertTrue(session.refunds_move_id)
-        self.assertTrue(session.sales_move_id)
-        self.assertEqual(session.refunds_move_id.move_type, 'out_refund')
-        self.assertEqual(session.sales_move_id.move_type, 'out_invoice')
-        self.assertEqual(session.refunds_move_id.amount_total, 21.2)
-        self.assertEqual(session.sales_move_id.amount_total, 10.6)
+        self.assertTrue(session.refund_move_ids[0])
+        self.assertTrue(session.sale_move_ids)
+        self.assertEqual(session.refund_move_ids[0].move_type, 'out_refund')
+        self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
+        self.assertEqual(session.refund_move_ids[0].amount_total, 21.2)
+        self.assertEqual(session.sale_move_ids.amount_total, 10.6)
+
+    def test_periodic_closing_with_cron(self):
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(session.state, 'opened')
+        self.simulate_cron_trigger()
+        self.assertEqual(order.state, 'done')
+        self.assertEqual(len(session.sale_move_ids), 1)
+        self.close_session()
+        self.assertEqual(len(session.sale_move_ids), 1)                 # Should not create any new move since the order is already posted by the cron
+
+    def test_periodic_closing_with_cron_and_post_invoicing(self):
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            extra_data={'partner_id': self.partner_1.id},
+        )
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(session.state, 'opened')
+        self.simulate_cron_trigger()
+        self.assertEqual(order.state, 'done')
+        self.assertEqual(len(session.sale_move_ids), 1)
+        order.action_pos_order_invoice()
+        self.assertTrue(order.is_singly_invoiced)
+
+        session_sales = session.sale_move_ids
+        reversal_sale_move = session_sales.reversal_move_ids
+
+        # Check that the reversal moves have the exact opposite lines
+        # than the original moves
+        used_line = self.env['account.move.line']
+        for sline in session_sales.line_ids:
+            rline = reversal_sale_move.line_ids.filtered(
+                lambda line: line.account_id == sline.account_id and not line in used_line,
+            )
+            used_line |= rline[0]
+            self.assertEqual(sline.debit, rline[0].credit)
+            self.assertEqual(sline.credit, rline[0].debit)
+
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.close_session()
+        self.assertEqual(len(session.sale_move_ids), 2)                 # Should create a new move since the order is posted after the cron
+
+    def test_post_invoicing_take_the_correct_move_after_cron_job(self):
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.simulate_cron_trigger()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.simulate_cron_trigger()
+        self.assertEqual(len(session.sale_move_ids), 2)
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            extra_data={'partner_id': self.partner_1.id},
+        )
+        self.simulate_cron_trigger()
+        order_move = order.account_move
+        order.action_pos_order_invoice()
+        self.assertTrue(order_move.reversal_move_ids)
+        other_orders = session.order_ids - order
+        self.assertFalse(other_orders.account_move.reversal_move_ids)

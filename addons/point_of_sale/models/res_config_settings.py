@@ -45,6 +45,8 @@ class ResConfigSettings(models.TransientModel):
     pos_customer_display_bg_img_name = fields.Char(related='pos_config_id.customer_display_bg_img_name', readonly=False)
 
     # pos.config fields
+    pos_session_closing_mode = fields.Selection(related='pos_config_id.session_closing_mode', readonly=False)
+    pos_session_closing_daily_hour = fields.Float(related='pos_config_id.session_closing_daily_hour', readonly=False)
     pos_use_presets = fields.Boolean(related='pos_config_id.use_presets', readonly=False)
     pos_default_preset_id = fields.Many2one('pos.preset', related='pos_config_id.default_preset_id', readonly=False)
     pos_available_preset_ids = fields.Many2many('pos.preset', related='pos_config_id.available_preset_ids', readonly=False)
@@ -125,6 +127,9 @@ class ResConfigSettings(models.TransientModel):
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(related='pos_config_id.iface_printbill', readonly=False)
     pos_use_download_invoice = fields.Boolean(related='pos_config_id.use_download_invoice', readonly=False)
+
+    def action_launch_cron_generate_invoice_period(self):
+        self.env['pos.session']._launch_cron_generate_invoice_period()
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)

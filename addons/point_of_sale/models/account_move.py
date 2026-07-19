@@ -12,22 +12,42 @@ class AccountMove(models.Model):
     reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
         index='btree_not_null',
         help="The pos order that was reverted after closing the session to create an invoice for it.")
-    pos_session_ids = fields.One2many("pos.session", compute="_compute_pos_sessions", search="_search_pos_sessions", string="POS Sessions")
-    pos_session_from_sales_ids = fields.One2many("pos.session", "sales_move_id", "POS Sessions from Sales")
-    pos_session_from_refunds_ids = fields.One2many("pos.session", "refunds_move_id", "POS Sessions from Refunds")
     pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')
+    pos_session_ids = fields.One2many(
+        "pos.session",
+        compute="_compute_pos_sessions",
+        search="_search_pos_sessions",
+        string="POS Sessions",
+    )
+    pos_session_sales_id = fields.Many2one(
+        "pos.session",
+        string="POS Sessions from Sales",
+        index='btree_not_null',
+    )
+    pos_session_refunds_id = fields.Many2one(
+        "pos.session",
+        string="POS Sessions from Refunds",
+        index='btree_not_null',
+    )
+    pos_session_correction_id = fields.Many2one(
+        "pos.session",
+        string="POS Sessions from Corrections",
+        index='btree_not_null',
+    )
 
-    @api.depends('pos_session_from_sales_ids', 'pos_session_from_refunds_ids')
+    @api.depends('pos_session_sales_id', 'pos_session_refunds_id', 'pos_session_correction_id')
     def _compute_pos_sessions(self):
         for move in self:
-            move.pos_session_ids = move.pos_session_from_sales_ids | move.pos_session_from_refunds_ids
+            move.pos_session_ids = move.pos_session_sales_id | move.pos_session_refunds_id | move.pos_session_correction_id
 
     def _search_pos_sessions(self, operator, value):
         sessions = self.env['pos.session'].sudo().search([('id', operator, value)])
         return [
             '|',
-            ('pos_session_from_sales_ids', 'in', sessions.ids),
-            ('pos_session_from_refunds_ids', 'in', sessions.ids),
+            '|',
+            ('pos_session_sales_id', 'in', sessions.ids),
+            ('pos_session_refunds_id', 'in', sessions.ids),
+            ('pos_session_correction_id', 'in', sessions.ids),
         ]
 
     @api.depends('pos_order_ids')
