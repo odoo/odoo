@@ -233,7 +233,7 @@ class DeliveryCarrier(models.Model):
             )
         elif source._name == 'stock.picking':
             total_weight = sum(
-                move.product_id.weight * move.product_uom_qty
+                move.product_id.weight * move.product_qty
                 for move in source.move_ids
             )
         else:
@@ -249,7 +249,7 @@ class DeliveryCarrier(models.Model):
             )
         elif source._name == 'stock.picking':
             total_volume = sum(
-                move.product_id.volume * move.product_uom_qty
+                move.product_id.volume * move.product_qty
                 for move in source.move_ids
             )
         else:
