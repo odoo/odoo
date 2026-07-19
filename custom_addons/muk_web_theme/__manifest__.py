@@ -58,7 +58,7 @@
     ],
     'installable': True,
     'application': False,
-    'auto_install': False,
+    'auto_install': True,
     'post_init_hook': '_setup_module',
     'uninstall_hook': '_uninstall_cleanup',
 }
