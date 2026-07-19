@@ -20,8 +20,8 @@ class AccountPayment(models.Model):
     def write(self, vals):
         trigger_fields = {
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
-            'ref', 'expense_sheet_id', 'payment_method_line_id'
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id',
+            'memo', 'expense_sheet_id', 'payment_method_line_id'
         }
         if self.expense_sheet_id and any(field_name in trigger_fields for field_name in vals):
             raise UserError(_("You cannot do this modification since the payment is linked to an expense report."))
