@@ -73,6 +73,7 @@ class AccountAccount(models.Model):
             ("liability_non_current", "Non-current Liabilities"),
             ("equity", "Equity"),
             ("equity_unaffected", "Current Year Earnings"),
+            ("equity_retained", "Retained Earnings"),
             ("income", "Income"),
             ("income_other", "Other Income"),
             ("expense", "Expenses"),

@@ -28,6 +28,7 @@ test("ODOO.ACCOUNT.GROUP type", async function () {
         '"liability_non_current"',
         '"equity"',
         '"equity_unaffected"',
+        '"equity_retained"',
         '"income"',
         '"income_other"',
         '"expense"',

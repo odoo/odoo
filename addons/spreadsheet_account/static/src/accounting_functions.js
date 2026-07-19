@@ -332,6 +332,7 @@ const ACCOUNT_TYPES = [
     "liability_non_current",
     "equity",
     "equity_unaffected",
+    "equity_retained",
     "income",
     "income_other",
     "expense",
