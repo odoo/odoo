@@ -863,8 +863,8 @@ class AccountMoveLine(models.Model):
 
         date_from = self.env.context.get('date_from')
         date_to = self.env.context['date_to']
-        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
-
+        current_date = self.env.context.get('cta_date_to') or date_to
+        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to, current_date=current_date)
         raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
         raw_rates_table = SQL(
             """(
@@ -881,7 +881,15 @@ class AccountMoveLine(models.Model):
             conversion_table = SQL(
                 """(
                     SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
-                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN (
+                                    SELECT interval_elem->>'rate'
+                                      FROM jsonb_array_elements(
+                                          COALESCE((%(average)s->>(%(base_line_company)s::text))::jsonb, '[]'::jsonb)
+                                      ) AS interval_elem
+                                     WHERE interval_elem->>'date_from' <= (%(base_line_date)s::text)
+                                       AND interval_elem->>'date_to' >= (%(base_line_date)s::text)
+                                     LIMIT 1
+                                )
                                 ELSE %(current)s->>(%(base_line_company)s::text)
                            END::numeric AS rate
                 )""",

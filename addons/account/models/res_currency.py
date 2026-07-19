@@ -80,52 +80,153 @@ class ResCurrency(models.Model):
             date_to=date_to,
         ))
 
-    def _get_parsed_rates(self, companies, date_from, date_to):
+    def _get_parsed_rates(self, companies, date_from, date_to, current_date=None):
         currency_translation = self.env.context.get('currency_translation', 'current')
         date_from, date_to = bool(date_from) and str(date_from), bool(date_to) and str(date_to)
-        if not date_from:
-            # When there is no start date, we want to compute the average rate on the current year only
-            date_from = str(date_utils.start_of(fields.Date.from_string(date_to), 'year'))
+        current_date = str(current_date) if current_date else date_to
 
         if currency_translation == 'current':
             fetch_from = date_to
         else:
-            fetch_from = min((str(self.env['account.move']._first_date()), date_from))
+            first_date = str(self.env['account.move']._first_date())
+            fetch_from = min(first_date, date_from) if date_from else first_date
+            fetch_from = min(fetch_from, date_to)
 
-        # raw_cache: {companies: (min_date, max_date, {company_id: {date: rate}})}
-        # Stores all fetched rates; extended on either end as needed to avoid redundant DB queries.
+        fetch_from = min(fetch_from, current_date)
+        fetch_to = max(date_to, current_date)
+
         raw_cache = self.env.cr.cache.setdefault('res_currency_to_company_rates', {})
         cached_min, cached_max, historical = raw_cache.get(companies, (None, None, {}))
         new_min, new_max = cached_min, cached_max
 
         if cached_min is None:
-            for company_id, rate_date, rate in self._get_raw_rates(companies, fetch_from, date_to):
+            for company_id, rate_date, rate in self._get_raw_rates(companies, fetch_from, fetch_to):
                 historical.setdefault(company_id, {})[str(rate_date)] = rate
-            new_min, new_max = fetch_from, date_to
+            new_min, new_max = fetch_from, fetch_to
         else:
             if fetch_from < cached_min:
                 for company_id, rate_date, rate in self._get_raw_rates(companies, fetch_from, cached_min):
                     historical[company_id][str(rate_date)] = rate
                 new_min = fetch_from
-            if date_to > cached_max:
-                for company_id, rate_date, rate in self._get_raw_rates(companies, cached_max, date_to):
+            if fetch_to > cached_max:
+                for company_id, rate_date, rate in self._get_raw_rates(companies, cached_max, fetch_to):
                     historical[company_id][str(rate_date)] = rate
-                new_max = date_to
+                new_max = fetch_to
 
         if new_min != cached_min or new_max != cached_max:
             raw_cache[companies] = (new_min, new_max, historical)
 
-        current = {company_id: date2rate[date_to] for company_id, date2rate in historical.items()}
-        period = list(date_utils.date_range(
-            fields.Date.to_date(date_to if currency_translation == 'current' else date_from),
-            fields.Date.to_date(date_to),
-            timedelta(days=1),
-        ))
-        average = {
-            company_id: sum(date2rate[str(d)] for d in period) / len(period)
-            for company_id, date2rate in historical.items()
-        }
+        current = {company_id: date2rate[current_date] for company_id, date2rate in historical.items()}
+        average = self._get_fiscalyear_average_rates(companies, historical, date_from, date_to) if currency_translation == 'cta' else {}
+
         return historical, average, current
+
+    def _get_fiscalyear_average_rates(self, companies, historical, date_from, date_to):
+        """ Per company, a list of {date_from, date_to, rate} intervals giving the
+            average rate to apply to a P&L move dated within that interval.
+        """
+        if date_from:
+            # date_from is set (for example, a bounded report column - even one whose window straddles a fiscal year-end,
+            #  e.g., a custom Nov-Feb range): the whole window is treated as ONE period with one average.
+            single_window = [(date_from, date_to)]
+            average = {}
+            for company in companies:
+                date2rate = historical.get(company.id)
+                if date2rate:
+                    average[company.id] = self._average_rate_intervals(date2rate, single_window, date_from, date_to)
+            return average
+
+        # date_from is empty (e.g., initial balance scopes reaching back to "the beginning"): split per fiscal year.
+        custom_fiscal_years = self._prefetch_custom_fiscal_years(companies)
+        boundaries_cache = self.env.cr.cache.setdefault('res_currency_fiscalyear_boundaries', {})
+        average = {}
+        for company in companies:
+            date2rate = historical.get(company.id)
+            if not date2rate:
+                continue
+            window_start = min(date2rate)
+            boundaries = self._get_fiscalyear_boundaries(company, custom_fiscal_years[company.id], window_start, date_to, boundaries_cache)
+            average[company.id] = self._average_rate_intervals(date2rate, boundaries, window_start, date_to)
+
+        return average
+
+    @api.model
+    def _average_rate_intervals(self, date2rate, boundaries, window_start, window_end):
+        sorted_dates = sorted(d for d in date2rate if window_start <= d <= window_end)
+        intervals = []
+
+        bucket_start = 0
+        nb_dates = len(sorted_dates)
+        boundary_idx = 0
+
+        while bucket_start < nb_dates:
+            while boundaries[boundary_idx][1] < sorted_dates[bucket_start]:
+                boundary_idx += 1
+            fiscalyear_date_to = boundaries[boundary_idx][1]
+
+            bucket_end = bucket_start
+            rate_sum = 0.0
+            while bucket_end < nb_dates and sorted_dates[bucket_end] <= fiscalyear_date_to:
+                rate_sum += date2rate[sorted_dates[bucket_end]]
+                bucket_end += 1
+
+            nb_days_in_bucket = bucket_end - bucket_start
+            intervals.append({
+                'date_from': sorted_dates[bucket_start],
+                'date_to': sorted_dates[bucket_end - 1],
+                'rate': rate_sum / nb_days_in_bucket,
+            })
+            bucket_start = bucket_end
+
+        return intervals
+
+    @api.model
+    def _get_fiscalyear_boundaries(self, company, custom_records, window_start, window_end, boundaries_cache):
+        cache_entry = boundaries_cache.setdefault(company.id, {'min': None, 'max': None, 'boundaries': []})
+
+        def fiscalyear_covering(date_str):
+            for custom_date_from, custom_date_to in custom_records:
+                if custom_date_from <= date_str <= custom_date_to:
+                    return custom_date_from, custom_date_to
+
+            default_date_from, default_date_to = date_utils.get_fiscal_year(
+                fields.Date.to_date(date_str),
+                day=company.fiscalyear_last_day,
+                month=int(company.fiscalyear_last_month),
+            )
+            fy_date_from, fy_date_to = str(default_date_from), str(default_date_to)
+            for custom_date_from, custom_date_to in custom_records:
+                if custom_date_from <= fy_date_from <= custom_date_to:
+                    fy_date_from = fields.Date.to_string(fields.Date.to_date(custom_date_to) + timedelta(days=1))
+                if custom_date_from <= fy_date_to <= custom_date_to:
+                    fy_date_to = fields.Date.to_string(fields.Date.to_date(custom_date_from) - timedelta(days=1))
+            return fy_date_from, fy_date_to
+
+        def append_boundaries_covering(range_from, range_to):
+            date_cursor = range_from
+            while date_cursor <= range_to:
+                fy_date_from, fy_date_to = fiscalyear_covering(date_cursor)
+                if not cache_entry['boundaries'] or cache_entry['boundaries'][-1] != (fy_date_from, fy_date_to):
+                    cache_entry['boundaries'].append((fy_date_from, fy_date_to))
+                date_cursor = fields.Date.to_string(fields.Date.to_date(fy_date_to) + timedelta(days=1))
+
+        if cache_entry['min'] is None:
+            append_boundaries_covering(window_start, window_end)
+            cache_entry['min'], cache_entry['max'] = window_start, window_end
+        else:
+            if window_start < cache_entry['min']:
+                cache_entry['boundaries'] = []
+                append_boundaries_covering(window_start, cache_entry['max'])
+                cache_entry['min'] = window_start
+            if window_end > cache_entry['max']:
+                append_boundaries_covering(cache_entry['max'], window_end)
+                cache_entry['max'] = window_end
+
+        return cache_entry['boundaries']
+
+    @api.model
+    def _prefetch_custom_fiscal_years(self, companies):
+        return {company.id: [] for company in companies}
 
 
 class ResCurrencyRate(models.Model):
