@@ -25,7 +25,7 @@ export class FloatTimeField extends Component {
         this.inputFloatTimeRef = useInputField({
             getValue: () => this.formattedValue,
             ref: this.numpadDecimalRef,
-            parse: (v) => parseFloatTime(v, this.props.unit),
+            parse: (v) => this.parseValue(v),
         });
 
         this.state = proxy({
@@ -90,6 +90,10 @@ export class FloatTimeField extends Component {
             }
             this.closePopover();
         }
+    }
+
+    parseValue(value) {
+        return parseFloatTime(value, this.props.unit);
     }
 
     get formattedValue() {

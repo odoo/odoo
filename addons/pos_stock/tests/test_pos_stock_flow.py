@@ -981,7 +981,7 @@ class TestPosStockFlow(CommonPosStockTest):
         reversal_move = order_no_invoice.reversed_move_ids
         self.assertEqual(len(reversal_move.line_ids), 7)
         used_line = self.env['account.move.line']
-        for line in order_no_invoice.session_id.sales_move_id.line_ids:
+        for line in order_no_invoice.session_id.sale_move_ids.line_ids:
             reverse_line = reversal_move.line_ids.filtered(
                 lambda l: l.account_id == line.account_id and l not in used_line,
             )
@@ -994,7 +994,7 @@ class TestPosStockFlow(CommonPosStockTest):
         reversal_move = refund_order_no_invoice.reversed_move_ids
         self.assertEqual(len(reversal_move.line_ids), 7)
         used_line = self.env['account.move.line']
-        for line in refund_order_no_invoice.session_id.refunds_move_id.line_ids:
+        for line in refund_order_no_invoice.session_id.refund_move_ids[0].line_ids:
             reverse_line = reversal_move.line_ids.filtered(
                 lambda l: l.account_id == line.account_id and l not in used_line,
             )

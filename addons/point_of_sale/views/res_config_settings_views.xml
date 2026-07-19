@@ -234,6 +234,29 @@
                                 </setting>
                             </block>
                             <block title="Accounting" id="pos_accounting_section">
+                                <setting id="pos_accounting" title="Accounting" help="Accounting settings for PoS">
+                                    <label string="Closing entries" for="pos_session_closing_mode" />
+                                    <div class="text-muted">
+                                        Generate the accounting entries for your PoS orders.
+                                    </div>
+                                    <div class="o_row">
+                                        <field name="pos_session_closing_mode"/>
+                                        <label for="pos_session_closing_mode" string="at" invisible="pos_session_closing_mode != 'daily'" />
+                                        <field name="pos_session_closing_daily_hour"
+                                            class="text-center"
+                                            invisible="pos_session_closing_mode != 'daily'"
+                                            widget="float_time_tz"
+                                            options="{ 'numeric': true }" />
+                                        <label for="pos_session_closing_daily_hour" string="hour" invisible="pos_session_closing_mode != 'daily'" />
+                                    </div>
+                                    <button name="action_launch_cron_generate_invoice_period"
+                                        data-icon="refresh"
+                                        type="object"
+                                        string="Run manually"
+                                        class="oi btn-link"
+                                        invisible="pos_session_closing_mode != 'daily'"
+                                        groups="base.group_no_one"/>
+                                </setting>
                                 <setting id="default_sales_tax_setting" title="This tax is applied to any new product created in the catalog." documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                     <label string="Default Sales Tax" for="sale_tax_id"/>
                                     <i class="oi me-1" data-icon="info" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>

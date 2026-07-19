@@ -30,4 +30,14 @@
         <field name="interval_type">minutes</field>
         <field name="active" eval="True"/>
     </record>
+
+    <record id="ir_cron_pos_auto_order_invoicing" model="ir.cron">
+        <field name="name">POS: Auto Order Invoicing</field>
+        <field name="model_id" ref="point_of_sale.model_pos_session"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_generate_invoice_period()</field>
+        <field name="interval_number">10</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
 </odoo>

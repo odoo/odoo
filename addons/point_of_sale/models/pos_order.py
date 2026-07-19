@@ -935,7 +935,7 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-        account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id | self.session_id.sales_move_id | self.session_id.refunds_move_id
+        account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id | self.session_id.sale_move_ids | self.session_id.refund_move_ids
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
             'pos.session': [],
@@ -1687,11 +1687,14 @@ class PosOrder(models.Model):
 
     def action_pos_order_invoice(self):
         self.ensure_one()
+        account_move = self.account_move
+        globally = self.is_globally_invoiced
+        singly = self.is_singly_invoiced
 
-        if self.invoice_status == 'invoiced':
+        if singly and account_move:
             # Already has a real customer invoice (account_move is not a session closing entry).
             move = self.account_move
-        elif self.session_id and self.session_id.state == 'closed':
+        elif (self.session_id and self.session_id.state == 'closed') or (globally and account_move):
             # Session is closed: reverse the closing entry and create a proper invoice.
             move = self._generate_invoice_after_session_closing()
         else:
@@ -1718,13 +1721,14 @@ class PosOrder(models.Model):
         of the session closing.
         """
         self.ensure_one()
-        if not self.session_id or self.session_id.state != "closed":
+        if self.session_id.state != "closed" and not self.is_globally_invoiced:
             return self._generate_pos_order_invoice()
 
         session = self.session_id
-        refund_move = session.refunds_move_id
-        sale_move = session.sales_move_id
+        refund_move = self.account_move if self.is_globally_invoiced or not session.refund_move_ids else session.refund_move_ids[-1]
+        sale_move = self.account_move if self.is_globally_invoiced or not session.sale_move_ids else session.sale_move_ids[-1]
         global_move = refund_move if self.is_refund_or_negative() else sale_move
+
         if not global_move or global_move.state != "posted":
             return self.env['account.move']
 

@@ -54,10 +54,42 @@
                         <group>
                             <field name="opening_balance" widget="monetary" readonly="1" />
                             <field name="closing_balance" widget="monetary" readonly="1" />
-                            <field name="sales_move_id" readonly="1" groups="base.group_no_one" />
-                            <field name="refunds_move_id" readonly="1" groups="base.group_no_one" />
+                            <field name="sale_move_ids" readonly="1" groups="base.group_no_one" widget="many2many_tags" />
+                            <field name="refund_move_ids" readonly="1" groups="base.group_no_one" widget="many2many_tags" />
                         </group>
                     </group>
+                    <notebook invisible="(not sale_move_count and not refund_move_count) or (sale_move_count == 1 and refund_move_count == 1)">
+                        <page string="Daily sales" name="daily_sales" invisible="sale_move_count &lt;= 1">
+                            <field name="sale_move_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="amount_untaxed_in_currency_signed" sum="Total"/>
+                                    <field name="amount_total_in_currency_signed" sum="Total"/>
+                                    <field name="status_in_payment" widget="badge"
+                                        decoration-info="status_in_payment == 'draft'"
+                                        decoration-danger="status_in_payment in ('blocked', 'cancel')"
+                                        decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                                        decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Daily refunds" name="daily_refunds" invisible="refund_move_count &lt;= 1">
+                            <field name="refund_move_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="amount_untaxed_in_currency_signed" sum="Total"/>
+                                    <field name="amount_total_in_currency_signed" sum="Total"/>
+                                    <field name="status_in_payment" widget="badge"
+                                        decoration-info="status_in_payment == 'draft'"
+                                        decoration-danger="status_in_payment in ('blocked', 'cancel')"
+                                        decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                                        decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>

@@ -10,9 +10,9 @@ from babel.dates import format_date
 import odoo.release
 from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import SQL, convert
-from odoo.fields import Domain
 from odoo.tools.misc import get_lang
 from odoo.tools.translate import mark_as_copy
 
@@ -88,6 +88,17 @@ class PosConfig(models.Model):
         required=True,
         default=_default_partner,
         check_company=True)
+    session_closing_mode = fields.Selection(
+        [('daily', 'Daily'), ('closing', 'At closing')],
+        string='Closing Mode',
+        default='daily',
+        readonly=True,
+    )
+    session_closing_daily_hour = fields.Float(
+        string='Daily Closing Hour',
+        default=4.0,
+        help="The hour at which the session will be automatically closed when the closing mode is set to 'Daily'.",
+    )
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, compute_sudo=True, string="Currency")
     order_seq_id = fields.Many2one('ir.sequence', string='Order Sequence', readonly=True, copy=False)
     order_backend_seq_id = fields.Many2one('ir.sequence', string='Order Backend Sequence', readonly=True, copy=False)
