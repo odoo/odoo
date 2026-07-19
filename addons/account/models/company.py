@@ -775,6 +775,7 @@ class ResCompany(models.Model):
 
         if vals.get('fiscalyear_last_day') or vals.get('fiscalyear_last_month'):
             self.env.cr.cache.pop('cached_fiscalyears_by_company', None)
+            self.env.cr.cache.pop('res_currency_to_company_rates', None)
 
         # Reflect the change on accounts
         for company in self:
