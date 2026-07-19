@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16
+    restart: unless-stopped   # <-- Add this line
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: odoo
@@ -16,6 +17,7 @@ services:
   odoo:
     build:
       context: .
+    restart: unless-stopped   # <-- Add this line
     depends_on:
       db:
         condition: service_healthy
