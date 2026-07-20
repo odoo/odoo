@@ -2,6 +2,8 @@
 
 from lxml import html
 from unittest.mock import patch
+from freezegun import freeze_time
+from datetime import date
 
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -279,6 +281,20 @@ class WithContext(HttpCase):
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 200, "Admin should see the specific unpublished page")
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
+
+    def test_unpublished_page_no_cache(self):
+        """Ensure that a previously-published page that is now unpublished will not be cached."""
+        self.authenticate(None, None)
+
+        with freeze_time(date(2025, 12, 30)):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200, "Restricted users should see the published page")
+
+        self.page.write({'is_published': False})
+
+        with freeze_time(date(2025, 12, 31)):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 404, "Restricted users should see a 404 as the page is unpublished")
 
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_search(self):
