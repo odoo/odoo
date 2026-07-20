@@ -19,7 +19,15 @@ const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
-    static dependencies = ["image", "split", "history", "selection", "baseContainer", "clipboard"];
+    static dependencies = [
+        "image",
+        "split",
+        "history",
+        "selection",
+        "baseContainer",
+        "clipboard",
+        "embeddedComponents",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

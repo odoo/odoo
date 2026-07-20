@@ -30,7 +30,9 @@ import { _t } from "@web/core/l10n/translation";
  */
 /**
  * @typedef { string[] } history_commit_data_properties
- * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreSelection: boolean }) => void)[] } on_apply_history_commit_handlers
+ * @typedef { ((commit: HistoryCommit, options: { restoreSelection: boolean }) => void)[] } on_apply_history_commit_handlers
+ * @typedef { (() => void)[] } on_will_capture_history_changes_handlers
+ * @typedef { (() => void)[] } on_history_changes_captured_handlers
  * @typedef { ((commit: HistoryCommit) => void)[] } on_committed_to_history_handlers
  * @typedef { (() => void)[] } on_history_commit_restored_handlers
  * @typedef { ((lastCommitUndone: HistoryCommit<"standard" | "redo"> | undefined) => void)[] } on_history_commit_undone_handlers
@@ -40,7 +42,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef { (() => void)[] } on_irreversible_history_commit_applied_handlers
  * @typedef { ((stashedCommit: HistoryCommit<"stash">) => void)[] } on_pending_changes_unstashed_handlers
  * @typedef { ((newCommit: HistoryCommit) => void)[] } on_remote_history_commit_applied_handlers
- * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreFocus: boolean }) => void)[] } on_revert_history_commit_handlers
+ * @typedef { ((commit: HistoryCommit, options: { restoreFocus: boolean }) => void)[] } on_revert_history_commit_handlers
  * @typedef { ((savePoint: HistoryCommit<"savePoint">) => void)[] } on_savepoint_restored_handlers
  * @typedef { (() => void)[] } on_will_invalidate_pending_changes_handlers
  * @typedef { (() => void)[] } on_will_preview_handlers
@@ -255,6 +257,23 @@ export class HistoryPlugin extends Plugin {
     // ====================
 
     /**
+     * Perform an operation while capturing the changes it causes. Return the
+     * processed changes in the form of commit data.
+     *
+     * @template { WritableHistoryCommitType } [T="standard"]
+     * @param { Function } operation
+     * @param { HistoryCommitData<T> } [initialData = {}]
+     * @returns { HistoryCommitData<T> }
+     */
+    captureChanges(operation, initialData = {}) {
+        this.trigger("on_will_capture_history_changes_handlers");
+        operation();
+        const data = this.processCommitData(initialData);
+        this.trigger("on_history_changes_captured_handlers");
+        return data;
+    }
+
+    /**
      * Return a complete `HistoryCommitData` object made of any pending data
      * in plugins that subscribe to `pending_history_commit_data_processors`, as
      * well as metadata provided by this plugin.
@@ -336,14 +355,10 @@ export class HistoryPlugin extends Plugin {
      *
      * @param { HistoryCommit } commit
      * @param { Object } [params = {}]
-     * @param { boolean } [params.ensureNewMutations = false]
      * @param { boolean } [params.restoreSelection = false]
      */
-    applyCommit(commit, { ensureNewMutations = false, restoreSelection = false } = {}) {
-        this.trigger("on_apply_history_commit_handlers", commit, {
-            ensureNewMutations,
-            restoreSelection,
-        });
+    applyCommit(commit, { restoreSelection = false } = {}) {
+        this.trigger("on_apply_history_commit_handlers", commit, { restoreSelection });
     }
 
     /**
@@ -352,14 +367,10 @@ export class HistoryPlugin extends Plugin {
      *
      * @param { HistoryCommit } commit
      * @param { Object } [params = {}]
-     * @param { boolean } [params.ensureNewMutations = false]
      * @param { boolean } [params.restoreFocus = true]
      */
-    revertCommit(commit, { ensureNewMutations = false, restoreFocus = true } = {}) {
-        this.trigger("on_revert_history_commit_handlers", commit, {
-            ensureNewMutations,
-            restoreFocus,
-        });
+    revertCommit(commit, { restoreFocus = true } = {}) {
+        this.trigger("on_revert_history_commit_handlers", commit, { restoreFocus });
     }
 
     // ============================
@@ -381,20 +392,14 @@ export class HistoryPlugin extends Plugin {
         /** @type { type extends "undo" ? HistoryCommit<"standard" | "redo"> : HistoryCommit<"undo"> } */
         let reversedCommit;
         for (reversedCommit of commitsToReverse) {
-            this.revertCommit(reversedCommit, { ensureNewMutations: true });
-            this.revertedCommits.add(reversedCommit.id);
             /** @type { HistoryCommitData<T> } */
-            const commitData = this.processCommitData({
+            const commitData = this.captureChanges(() => this.revertCommit(reversedCommit), {
                 batchable: reversedCommit.data.batchable,
                 commitTimestamp: reversedCommit.data.commitTimestamp,
                 relatedCommit: reversedCommit,
             });
-            this.appendCommit(
-                new HistoryCommit({
-                    type,
-                    data: commitData,
-                })
-            );
+            this.revertedCommits.add(reversedCommit.id);
+            this.appendCommit(new HistoryCommit({ type, data: commitData }));
         }
         this.trigger(
             type === HISTORY_COMMIT_TYPES.UNDO
@@ -584,38 +589,42 @@ export class HistoryPlugin extends Plugin {
             const commitsToRestore = this.commits.slice(index === -1 ? 1 : index + 1).reverse();
             /** @type { HistoryCommit[] } */
             const irreversibleCommits = [];
-            for (const commitToRestore of commitsToRestore) {
-                const isReversible = this.isCommitReversible(commitToRestore);
-                // Savepoint restoration is used for previews, so keep focus on the
-                // external UI (for example the color picker) while reverting the
-                // underlying history commit.
-                this.revertCommit(commitToRestore, {
-                    ensureNewMutations: true,
-                    restoreFocus: false,
-                });
-                this.trigger("on_history_commit_restored_handlers");
-                if (isReversible) {
-                    this.discardedCommits.add(commitToRestore.id);
-                    savePoint.data.lastRevertedChanges = commitToRestore.data;
-                } else {
-                    irreversibleCommits.unshift(commitToRestore);
-                }
-            }
-            // Re-apply every non reversible commit (typically collaborators commits).
-            for (const irreversibleCommit of irreversibleCommits) {
-                this.applyCommit(irreversibleCommit, {
-                    ensureNewMutations: true,
-                    restoreSelection: true,
-                });
-                this.trigger("on_irreversible_history_commit_applied_handlers");
-            }
+            const restoreData = this.captureChanges(
+                () => {
+                    for (const commitToRestore of commitsToRestore) {
+                        const isReversible = this.isCommitReversible(commitToRestore);
+                        // Savepoint restoration is used for previews so keep
+                        // focus on the external UI (eg, the color picker) while
+                        // reverting the underlying history commit.
+                        this.revertCommit(commitToRestore, {
+                            restoreFocus: false,
+                        });
+                        this.trigger("on_history_commit_restored_handlers");
+                        if (isReversible) {
+                            this.discardedCommits.add(commitToRestore.id);
+                            savePoint.data.lastRevertedChanges = commitToRestore.data;
+                        } else {
+                            irreversibleCommits.unshift(commitToRestore);
+                        }
+                    }
+                    // Re-apply every non reversible commit (typically
+                    // collaborators commits).
+                    for (const irreversibleCommit of irreversibleCommits) {
+                        this.applyCommit(irreversibleCommit, {
+                            restoreSelection: true,
+                        });
+                        this.trigger("on_irreversible_history_commit_applied_handlers");
+                    }
+                },
+                { relatedCommit }
+            );
             if (!isLastCommit) {
                 // Register resulting mutations as a new "restore" commit
                 // (prevent undo).
                 /** @type { HistoryCommit<"restore"> } */
                 const restoreCommit = new HistoryCommit({
                     type: HISTORY_COMMIT_TYPES.RESTORE,
-                    data: this.processCommitData({ relatedCommit }),
+                    data: restoreData,
                 });
                 this.appendCommit(restoreCommit);
             }

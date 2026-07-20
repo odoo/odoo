@@ -119,7 +119,7 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
  *
  * @typedef { ((node: Node, attributeName: string, attributeValue: string) => boolean)[] } set_attribute_overrides
  *
- * @typedef { ((value: string, params: { mutation: NativeMutation<"attributes">, ensureMutations?: boolean, wasReversed?: boolean }) => string)[] } attributes_mutation_value_processors
+ * @typedef { ((value: string, params: { mutation: NativeMutation<"attributes"> }) => string)[] } attributes_mutation_value_processors
  *
  * @typedef { ((mutation: NativeMutation) => boolean | undefined)[] } is_mutation_savable_predicates
  * @typedef { ((mutation: EditorMutation<"classList">) => boolean | undefined)[] } is_classlist_mutation_savable_predicates
@@ -178,14 +178,20 @@ export class DomObserverPlugin extends Plugin {
         },
 
         // Apply / Revert
-        on_apply_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+        on_will_capture_history_changes_handlers: () => {
+            this.isCapturingHistoryChanges = true;
+        },
+        on_history_changes_captured_handlers: () => {
+            this.isCapturingHistoryChanges = false;
+        },
+        on_apply_history_commit_handlers: (commit) => {
             if (commit.data.mutations) {
-                this.applyMutations(commit.data.mutations, { ensureNewMutations });
+                this.applyMutations(commit.data.mutations);
             }
         },
-        on_revert_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+        on_revert_history_commit_handlers: (commit) => {
             if (commit.data.mutations) {
-                this.revertMutations(commit.data.mutations, { ensureNewMutations });
+                this.revertMutations(commit.data.mutations);
             }
         },
         on_will_invalidate_pending_changes_handlers: () => this.discardPendingMutations(),
@@ -203,7 +209,7 @@ export class DomObserverPlugin extends Plugin {
         },
         on_savepoint_restored_handlers: withSequence(0, (savePoint) => {
             // Apply draft mutations to recover the same mutations state as before.
-            this.applyMutations(savePoint.data.mutations, { ensureNewMutations: true });
+            this.applyMutations(savePoint.data.mutations);
             this.stagePendingMutations();
             this.triggerContentUpdated();
         }),
@@ -244,8 +250,8 @@ export class DomObserverPlugin extends Plugin {
         // ----------
 
         has_history_commit_changes_predicates: (commit) => {
-            if ("mutations" in commit.data) {
-                return !!commit.data.mutations.length;
+            if (commit.data.mutations?.length) {
+                return true;
             }
         },
     };
@@ -983,15 +989,10 @@ export class DomObserverPlugin extends Plugin {
      * Take a batch of serialized mutations and apply them in the DOM, in order.
      *
      * @param { SerializedMutation[] } mutations
-     * @param { Object } options
-     * @param { boolean } options.ensureNewMutations whether to ensure new
-     *        mutations are generated when applying the mutations
-     * @param { boolean } options.areReversed whether the mutations are the
-     *        reverse of other mutations
      */
-    applyMutations(mutations, { ensureNewMutations = false, areReversed = false } = {}) {
-        if (ensureNewMutations) {
-            this.fixClassListMutationsToEnsureNewMutations(mutations);
+    applyMutations(mutations) {
+        if (this.isCapturingHistoryChanges) {
+            this.prepareClassListMutationsForCapture(mutations);
         }
         for (const mutation of mutations) {
             switch (mutation.type) {
@@ -1014,8 +1015,7 @@ export class DomObserverPlugin extends Plugin {
                     break;
                 }
                 case EDITOR_MUTATION_TYPES.ATTRIBUTES: {
-                    const options = { ensureNewMutations, wasReversed: areReversed };
-                    this.applyAttributesMutation(mutation, options);
+                    this.applyAttributesMutation(mutation);
                     break;
                 }
                 case EDITOR_MUTATION_TYPES.REMOVE: {
@@ -1034,21 +1034,14 @@ export class DomObserverPlugin extends Plugin {
      * Take a serialized "attributes" mutation and apply it in the DOM.
      *
      * @param { SerializedMutation<"attributes"> } mutation
-     * @param { Object } options
-     * @param { boolean } [options.ensureNewMutations = false] whether the mutation is being used
-     *        to create a new commit and requires to ensure new mutations are generated
-     * @param { boolean } [options.wasReversed = false] whether the change was reversed
      */
-    applyAttributesMutation(mutation, options = {}) {
+    applyAttributesMutation(mutation) {
         const node = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
         if (node) {
             const value = this.processThrough(
                 "attributes_mutation_value_processors",
                 mutation.value,
-                {
-                    mutation,
-                    ...options,
-                }
+                { mutation }
             );
             if (!this.delegateTo("set_attribute_overrides", node, mutation.attributeName, value)) {
                 if (value === null) {
@@ -1137,11 +1130,8 @@ export class DomObserverPlugin extends Plugin {
      * order, then apply that.
      *
      * @param { SerializedMutation[] } mutations
-     * @param { Object } [options]
-     * @param { boolean } [options.ensureNewMutations = false] whether to ensure
-     *        new mutations are generated when applying the mutations
      */
-    revertMutations(mutations, { ensureNewMutations = false } = {}) {
+    revertMutations(mutations) {
         const reversedMutations = mutations.map((mutation) => {
             switch (mutation.type) {
                 case EDITOR_MUTATION_TYPES.CHARACTER_DATA:
@@ -1158,10 +1148,7 @@ export class DomObserverPlugin extends Plugin {
                     throw new Error(`Unknown mutation type: ${mutation.type}`);
             }
         });
-        this.applyMutations(reversedMutations.toReversed(), {
-            ensureNewMutations,
-            areReversed: true,
-        });
+        this.applyMutations(reversedMutations.toReversed());
     }
 
     /**
@@ -1183,7 +1170,7 @@ export class DomObserverPlugin extends Plugin {
      *
      * @param { EditorMutation[] } mutations
      */
-    fixClassListMutationsToEnsureNewMutations(mutations) {
+    prepareClassListMutationsForCapture(mutations) {
         const isFirstOcurrence = trackOccurrencesPair();
         // Mutations that when applied would not produce observable classList mutations
         const nonObservableClassMutations = mutations
