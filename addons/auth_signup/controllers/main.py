@@ -44,6 +44,7 @@ class AuthSignupHome(Home):
                 if not request.env['ir.http']._verify_request_recaptcha_token('signup'):
                     raise UserError(_("Suspicious activity detected by Google reCaptcha."))
 
+                qcontext['validate_email'] = True
                 self.do_signup(qcontext)
 
                 # Set user to public if they were not signed in by do_signup
@@ -92,6 +93,7 @@ class AuthSignupHome(Home):
                 if not request.env['ir.http']._verify_request_recaptcha_token('password_reset'):
                     raise UserError(_("Suspicious activity detected by Google reCaptcha."))
                 if qcontext.get('token'):
+                    qcontext['validate_email'] = False
                     self.do_signup(qcontext)
                     return self.web_login(*args, **kw)
                 else:
@@ -153,6 +155,12 @@ class AuthSignupHome(Home):
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        login = values.get('login')
+        if qcontext.get('validate_email'):
+            check_email = request.env['ir.config_parameter'].sudo().get_param('auth_signup.validate_email', 'False')
+            if check_email.lower() in ('true', '1'):
+                if not login or not tools.single_email_re.match(login):
+                    raise UserError(_("Invalid email; please enter a valid email address with no spaces."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
