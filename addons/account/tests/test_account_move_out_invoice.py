@@ -11,7 +11,6 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 
-
 @tagged('post_install', '-at_install')
 class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
@@ -24,7 +23,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('HRK', rounding=0.001)
         cls.company_data_2 = cls.setup_other_company()
 
-        cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
+        cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a + cls.product_b)
 
         cls.product_line_vals_1 = {
             'name': 'product_a',
@@ -394,7 +393,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'fiscal_position_ids': [Command.link(fiscal_position.id)],
             'original_tax_ids': [Command.link(tax_price_include_1.id)],
         })
-
 
         product = self.env['product.product'].create({
             'name': 'product',
@@ -2562,9 +2560,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'currency_id': self.other_currency.id,
-            'amount_tax' : -self.move_vals['amount_tax'],
-            'amount_total' : -self.move_vals['amount_total'],
-            'amount_untaxed' : -self.move_vals['amount_untaxed'],
+            'amount_tax': -self.move_vals['amount_tax'],
+            'amount_total': -self.move_vals['amount_total'],
+            'amount_untaxed': -self.move_vals['amount_untaxed'],
         })
 
         move.action_switch_move_type()
@@ -2609,9 +2607,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'currency_id': self.other_currency.id,
-            'amount_tax' : self.move_vals['amount_tax'],
-            'amount_total' : self.move_vals['amount_total'],
-            'amount_untaxed' : self.move_vals['amount_untaxed'],
+            'amount_tax': self.move_vals['amount_tax'],
+            'amount_total': self.move_vals['amount_total'],
+            'amount_untaxed': self.move_vals['amount_untaxed'],
         })
 
     def test_out_invoice_switch_out_refund_3(self):
@@ -3423,12 +3421,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -3545,12 +3545,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -3703,7 +3705,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice_tax_matching, refund_tax_matching = tax_lines.mapped('matching_number')
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
-
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
@@ -4392,8 +4393,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1000.0,
             'amount_total_signed': 500.00,
         }])
-
-
 
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """

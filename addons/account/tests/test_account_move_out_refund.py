@@ -6,6 +6,7 @@ from odoo import fields, Command
 
 from collections import defaultdict
 
+
 @tagged('post_install', '-at_install')
 class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
@@ -982,12 +983,14 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -1104,12 +1107,14 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',

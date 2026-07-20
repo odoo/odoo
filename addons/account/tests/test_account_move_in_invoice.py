@@ -10,6 +10,7 @@ from datetime import date
 from collections import defaultdict
 from unittest.mock import patch
 
+
 @tagged('post_install', '-at_install')
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
@@ -1594,7 +1595,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
 
         action_create_payment = wizard.action_create_payments()
-        payment = self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
+        self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
 
         move.action_post()
         self.assertFalse(move.payment_ids)  # don't auto reconcile payments
@@ -1791,9 +1792,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'date': fields.Date.from_string('2019-01-31'),
             'currency_id': self.other_currency.id,
-            'amount_tax' : -self.move_vals['amount_tax'],
-            'amount_total' : -self.move_vals['amount_total'],
-            'amount_untaxed' : -self.move_vals['amount_untaxed'],
+            'amount_tax': -self.move_vals['amount_tax'],
+            'amount_total': -self.move_vals['amount_total'],
+            'amount_untaxed': -self.move_vals['amount_untaxed'],
         })
         move.action_switch_move_type()  # Switch to refund
 
@@ -1838,9 +1839,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'date': fields.Date.from_string('2019-01-31'),
             'currency_id': self.other_currency.id,
-            'amount_tax' : self.move_vals['amount_tax'],
-            'amount_total' : self.move_vals['amount_total'],
-            'amount_untaxed' : self.move_vals['amount_untaxed'],
+            'amount_tax': self.move_vals['amount_tax'],
+            'amount_total': self.move_vals['amount_total'],
+            'amount_untaxed': self.move_vals['amount_untaxed'],
         })
         move.action_switch_move_type()  # Switch back to invoice
 
@@ -2088,12 +2089,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'purchase',
@@ -2210,12 +2213,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'purchase',

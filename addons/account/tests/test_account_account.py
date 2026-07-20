@@ -303,12 +303,12 @@ class TestAccountAccount(TestAccountMergeCommon):
             ('hello',     ['hello.copy', 'hello.copy2', 'hello.copy3', 'hello.copy4']),
             ('9998',      ['9999', '9998.copy', '9998.copy2', '9998.copy3']),
         ]
-        for start_code, expected_tested_codes in tests:
-            start_account = self.env['account.account'].create({
-                'code': start_code,
-                'name': 'Test',
-                'account_type': 'asset_receivable',
-            })
+        start_accounts = self.env['account.account'].create([{
+            'code': start_code,
+            'name': 'Test',
+            'account_type': 'asset_receivable',
+        } for start_code, _ in tests])
+        for start_account, (start_code, expected_tested_codes) in zip(start_accounts, tests):
             tested_codes = [start_account.copy().code for _ in expected_tested_codes]
 
             self.assertListEqual(tested_codes, expected_tested_codes)
