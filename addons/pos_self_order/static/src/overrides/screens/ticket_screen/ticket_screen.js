@@ -23,4 +23,13 @@ patch(TicketScreen.prototype, {
     getTableTag(order) {
         return super.getTableTag(order) || order?.self_ordering_table_id?.table_number;
     },
+    _getSearchFields() {
+        return Object.assign({}, super._getSearchFields(...arguments), {
+            SOURCE: {
+                repr: (order) => order.source,
+                displayName: _t("Source"),
+                modelFields: ["source"],
+            },
+        });
+    },
 });

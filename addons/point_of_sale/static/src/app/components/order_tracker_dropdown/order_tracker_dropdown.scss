@@ -1,0 +1,17 @@
+.button-hover:hover {
+    background-color: rgba(150, 150, 150, 0.2);
+}
+.new-order-badge {
+    font-size: 0.65rem;
+}
+.order_tracker_dropdown_container {
+    max-height: 23pc;
+
+    .state-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    // Override pos navbar effects on dropdown items
+    .o-dropdown-item {
+        padding: 2px map-get($spacers, 2);
+    }
+}

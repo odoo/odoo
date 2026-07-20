@@ -194,7 +194,7 @@ class PosSession(models.Model):
             'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
             'account.cash.rounding', 'account.fiscal.position', 'res.currency', 'pos.note',
             'product.tag', 'ir.module.module', 'account.move', 'account.account',
-            'pos.product.template.snooze', 'pos.prep.order', 'pos.prep.line',
+            'pos.snooze', 'pos.prep.order', 'pos.prep.line',
         ]
 
     @api.model

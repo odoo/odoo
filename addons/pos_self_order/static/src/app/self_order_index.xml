@@ -4,6 +4,9 @@
         <div t-if="!this.selfOrder.ordering and !this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
             We're currently closed.
         </div>
+        <div t-elif="this.selfOrder.isSelfSnoozed" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+            Self-ordering is temporarily paused.
+        </div>
         <div t-if="this.selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>
