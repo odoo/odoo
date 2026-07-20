@@ -179,13 +179,12 @@ class TestVariants(ProductVariantsCommon):
 
         # produced variants: two variants, simple matrix
         self.assertEqual(len(test_template.product_variant_ids), 2)
+        all_variants = test_template.product_variant_ids
         for ptav in sofa_size_s + sofa_size_m:
-            products = self.env['product.product'].search([
-                ('product_tmpl_id', '=', test_template.id),
-                ('product_template_attribute_value_ids', 'in', ptav.id),
-                ('product_template_attribute_value_ids', 'in', sofa_attr1_v2.id)
-            ])
-            self.assertEqual(len(products), 1)
+            matching = all_variants.filtered(
+                lambda p, ptav=ptav: ptav in p.product_template_attribute_value_ids and sofa_attr1_v2 in p.product_template_attribute_value_ids
+            )
+            self.assertEqual(len(matching), 1)
 
     def test_variants_creation_matrix(self):
         test_template = self.env['product.template'].create({
@@ -216,14 +215,13 @@ class TestVariants(ProductVariantsCommon):
 
         # produced variants: value matrix : 2x3 values
         self.assertEqual(len(test_template.product_variant_ids), 6)
+        all_variants = test_template.product_variant_ids
         for value_1 in sofa_attr1_v1 + sofa_attr1_v2:
             for value_2 in sofa_size_s + sofa_size_m + sofa_size_l:
-                products = self.env['product.product'].search([
-                    ('product_tmpl_id', '=', test_template.id),
-                    ('product_template_attribute_value_ids', 'in', value_1.id),
-                    ('product_template_attribute_value_ids', 'in', value_2.id)
-                ])
-                self.assertEqual(len(products), 1)
+                matching = all_variants.filtered(
+                    lambda p, v1=value_1, v2=value_2: v1 in p.product_template_attribute_value_ids and v2 in p.product_template_attribute_value_ids
+                )
+                self.assertEqual(len(matching), 1)
 
     def test_variants_creation_multi_update(self):
         test_template = self.env['product.template'].create({
