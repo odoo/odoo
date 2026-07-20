@@ -38,6 +38,7 @@ from odoo.http.session import (
 )
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from .models.bus import dispatch, fetch_bus_notifications
@@ -65,7 +66,7 @@ def acquire_cursor(db):
             with ExitStack() as stack:
                 cr = None
                 with suppress(PoolError):
-                    cr = stack.enter_context(Registry(db).cursor())
+                    cr = stack.enter_context(db_connect(db).cursor())
                 if cr is not None:
                     yield cr
                     return
