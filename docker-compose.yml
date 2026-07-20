@@ -1,6 +1,8 @@
 services:
   db:
     image: postgres:16
+    ports:
+      - "127.0.0.1:5432:5432"   # <-- ADD THIS LINE IF MISSING
     restart: unless-stopped   # <-- Add this line
     environment:
       POSTGRES_DB: postgres
