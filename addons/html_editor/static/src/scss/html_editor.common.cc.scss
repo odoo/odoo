@@ -69,7 +69,8 @@ $resolved-btn-secondary-outline-color: null !default;
     $headings-threshold: null,
     $link-threshold: 2.0,
     $btn-fill-threshold: 1.05,
-    $btn-outline-threshold: 3.0
+    $btn-outline-threshold: 3.0,
+    $debug: false
 ) {
     // Store in parent scope by prefixing with 'resolved-'
     $resolved-bg-color: $bg-color !global;
@@ -133,6 +134,22 @@ $resolved-btn-secondary-outline-color: null !default;
             o-preset-color-key('btn-secondary', $index),
             $bg-color, $btn-outline-threshold, $color-contrast-dark, $color-contrast-light,
     ) !global;
+
+    @if $debug {
+        @debug '[o-cc-resolve-colors] index=#{$index}';
+        @debug '  bg-color:                   #{$resolved-bg-color}';
+        @debug '  contrasted:                 #{$resolved-contrasted}';
+        @debug '  text-color:                 #{$resolved-text-color}';
+        @debug '  headings-color:             #{$resolved-headings-color}';
+        @debug '  link-color:                 #{$resolved-link-color}';
+        @debug '  link-hover-color:           #{$resolved-link-hover-color}';
+        @debug '  btn-primary-color:          #{$resolved-btn-primary-color}';
+        @debug '  btn-primary-border-color:   #{$resolved-btn-primary-border-color}';
+        @debug '  btn-primary-outline-color:  #{$resolved-btn-primary-outline-color}';
+        @debug '  btn-secondary-color:        #{$resolved-btn-secondary-color}';
+        @debug '  btn-secondary-border-color: #{$resolved-btn-secondary-border-color}';
+        @debug '  btn-secondary-outline-color:#{$resolved-btn-secondary-outline-color}';
+    }
 }
 
 
