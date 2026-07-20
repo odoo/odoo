@@ -668,7 +668,7 @@ class ResPartner(models.Model):
                 partner = partner.parent_id
 
     @api.depends_context('company')
-    @api.depends('country_code')
+    @api.depends('country_code', 'commercial_partner_id.invoice_edi_format_store')
     def _compute_invoice_edi_format(self):
         for partner in self:
             if not partner.commercial_partner_id or partner.commercial_partner_id.invoice_edi_format_store == 'none':
@@ -678,12 +678,14 @@ class ResPartner(models.Model):
 
     def _inverse_invoice_edi_format(self):
         for partner in self:
-            if partner.invoice_edi_format == partner._get_suggested_invoice_edi_format():
-                partner.invoice_edi_format_store = False
+            if partner.invoice_edi_format == partner.commercial_partner_id._get_suggested_invoice_edi_format():
+                val_to_store = False
             elif not partner.invoice_edi_format:
-                partner.invoice_edi_format_store = 'none'
+                val_to_store = 'none'
             else:
-                partner.invoice_edi_format_store = partner.invoice_edi_format
+                val_to_store = partner.invoice_edi_format
+
+            partner.commercial_partner_id.invoice_edi_format_store = val_to_store
 
     @api.depends_context('company')
     def _compute_use_partner_credit_limit(self):
