@@ -17,13 +17,6 @@ class PosSession(models.Model):
     _description = 'Point of Sale Session'
     _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin", 'pos.load.mixin']
 
-    POS_SESSION_STATE = [
-        ('opening_control', 'Opening Control'),
-        ('opened', 'In Progress'),
-        ('closing_control', 'Closing Control'),
-        ('closed', 'Closed & Posted'),
-    ]
-
     company_id = fields.Many2one(
         'res.company',
         related='config_id.company_id',
@@ -55,7 +48,12 @@ class PosSession(models.Model):
     opening_notes = fields.Text(string="Opening Notes")
     closing_notes = fields.Text(string="Closing Notes")
     state = fields.Selection(
-        POS_SESSION_STATE,
+        [
+            ('opening_control', 'Opening Control'),
+            ('opened', 'In Progress'),
+            ('closing_control', 'Closing Control'),
+            ('closed', 'Closed & Posted'),
+        ],
         string='Status',
         required=True,
         readonly=True,
