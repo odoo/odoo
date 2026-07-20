@@ -16,8 +16,10 @@ class TestAnalyticAccount(AnalyticCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.partner_a = cls.env['res.partner'].create({'name': 'partner_a', 'company_id': False})
-        cls.partner_b = cls.env['res.partner'].create({'name': 'partner_b', 'company_id': False})
+        cls.partner_a, cls.partner_b = cls.env['res.partner'].create([
+            {'name': 'partner_a', 'company_id': False},
+            {'name': 'partner_b', 'company_id': False},
+        ])
 
         cls.distribution_1, cls.distribution_2 = cls.env['account.analytic.distribution.model'].create([
             {
@@ -159,9 +161,11 @@ class TestAnalyticAccount(AnalyticCommon):
             'name': 'Sub Sub Plan',
             'parent_id': self.analytic_sub_plan.id,
         })
-        self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': self.analytic_plan.id})
-        self.env['account.analytic.account'].create({'name': 'Child Account', 'plan_id': self.analytic_sub_plan.id})
-        self.env['account.analytic.account'].create({'name': 'Grand Child Account', 'plan_id': self.analytic_sub_sub_plan.id})
+        self.env['account.analytic.account'].create([
+            {'name': 'Account', 'plan_id': self.analytic_plan.id},
+            {'name': 'Child Account', 'plan_id': self.analytic_sub_plan.id},
+            {'name': 'Grand Child Account', 'plan_id': self.analytic_sub_sub_plan.id},
+        ])
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
         self.assertEqual(2, len(plans_json) - self.analytic_plan_offset,
                          "The parent plan should be available even if the analytic account is set on child of third generation")

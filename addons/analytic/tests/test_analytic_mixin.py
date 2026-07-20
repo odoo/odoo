@@ -10,12 +10,21 @@ class TestAnalyticMixin(TransactionCase):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan'})
 
-        cls.sales_aa = cls.env['account.analytic.account'].create({'name': 'Sales', 'plan_id': cls.analytic_plan.id})
-        cls.administrative_aa = cls.env['account.analytic.account'].create({'name': 'Administrative', 'plan_id': cls.analytic_plan.id})
-        cls.rd_aa = cls.env['account.analytic.account'].create({'name': 'Research & Development', 'plan_id': cls.analytic_plan.id})
-        cls.commercial_aa = cls.env['account.analytic.account'].create({'name': 'Commercial', 'plan_id': cls.analytic_plan.id})
-        cls.marketing_aa = cls.env['account.analytic.account'].create({'name': 'Marketing', 'plan_id': cls.analytic_plan.id})
-        cls.com_marketing_aa = cls.env['account.analytic.account'].create({'name': 'Commercial & Marketing', 'plan_id': cls.analytic_plan.id})
+        (
+            cls.sales_aa,
+            cls.administrative_aa,
+            cls.rd_aa,
+            cls.commercial_aa,
+            cls.marketing_aa,
+            cls.com_marketing_aa,
+        ) = cls.env['account.analytic.account'].create([
+            {'name': 'Sales', 'plan_id': cls.analytic_plan.id},
+            {'name': 'Administrative', 'plan_id': cls.analytic_plan.id},
+            {'name': 'Research & Development', 'plan_id': cls.analytic_plan.id},
+            {'name': 'Commercial', 'plan_id': cls.analytic_plan.id},
+            {'name': 'Marketing', 'plan_id': cls.analytic_plan.id},
+            {'name': 'Commercial & Marketing', 'plan_id': cls.analytic_plan.id},
+        ])
 
     def test_filtered_domain(self):
         """
@@ -33,23 +42,21 @@ class TestAnalyticMixin(TransactionCase):
         # `analytic_distribution` is generally not required on other models and we want to test what happens in those cases as well
         self.env.cr.execute("ALTER TABLE account_analytic_distribution_model ALTER analytic_distribution DROP NOT NULL")
 
-        self.adm_sales_admin_ad = self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {
-                self.sales_aa.id: 50,
-                self.administrative_aa.id: 50,
-            }
-        })
-        self.adm_rd_ad = self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {self.rd_aa.id: 100},
-        })
-        self.adm_commercial_ad = self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {self.commercial_aa.id: 100},
-        })
-        self.adm_com_marketing_ad = self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {self.com_marketing_aa.id: 100},
-        })
-        self.adm_without_ad = self.env['account.analytic.distribution.model'].create({})
-        self.adm_without_ad_1 = self.env['account.analytic.distribution.model'].create({})
+        (
+            self.adm_sales_admin_ad,
+            self.adm_rd_ad,
+            self.adm_commercial_ad,
+            self.adm_com_marketing_ad,
+            self.adm_without_ad,
+            self.adm_without_ad_1,
+        ) = self.env['account.analytic.distribution.model'].create([
+            {'analytic_distribution': {self.sales_aa.id: 50, self.administrative_aa.id: 50}},
+            {'analytic_distribution': {self.rd_aa.id: 100}},
+            {'analytic_distribution': {self.commercial_aa.id: 100}},
+            {'analytic_distribution': {self.com_marketing_aa.id: 100}},
+            {},
+            {},
+        ])
 
         adm_ids = self.env['account.analytic.distribution.model'].search([])
 
