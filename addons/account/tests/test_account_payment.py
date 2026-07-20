@@ -470,6 +470,9 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         """ Ensure the 'partner_bank_id' is well computed on payments. When the payment is inbound, the money must be
         received by a bank account linked to the company. In case of outbound payment, the bank account must be found
         on the partner.
+
+        The 'return_partner_bank_id' must be computed the other way around: for an outbound payment it must be a
+        bank account of the company, while for an inbound payment it must be a bank account of the partner.
         """
         payment = self.env['account.payment'].create({
             'journal_id': self.bank_journal_1.id,
@@ -481,12 +484,16 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         self.assertRecordValues(payment, [{
             'available_partner_bank_ids': self.partner_a.bank_ids.ids,
             'partner_bank_id': self.partner_bank_account1.id,
+            'available_return_partner_bank_ids': [],
+            'return_partner_bank_id': False,
         }])
 
         payment.payment_type = 'inbound'
         self.assertRecordValues(payment, [{
             'available_partner_bank_ids': [],
             'partner_bank_id': False,
+            'available_return_partner_bank_ids': self.partner_a.bank_ids.ids,
+            'return_partner_bank_id': self.partner_bank_account1.id,
         }])
 
         self.bank_journal_2.bank_account_id = self.comp_bank_account2
@@ -496,6 +503,8 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         self.assertRecordValues(payment, [{
             'available_partner_bank_ids': self.comp_bank_account2.ids,
             'partner_bank_id': self.comp_bank_account2.id,
+            'available_return_partner_bank_ids': self.partner_a.bank_ids.ids,
+            'return_partner_bank_id': self.partner_bank_account1.id,
         }])
 
     def test_reconciliation_with_old_oustanding_account(self):

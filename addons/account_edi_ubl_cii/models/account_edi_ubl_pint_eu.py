@@ -55,23 +55,23 @@ class AccountEdiUBLPintEU(models.AbstractModel):
                     node['cbc:PaymentMeansCode']['name'] = 'unknown'
 
             # Set up SEPA Direct Debit payment means and mandate node if a usable mandate exists
-            if self.module_installed('account_sepa_direct_debit'):
-                sdd_mandate = invoice._sdd_get_usable_mandate() or self.env['sdd.mandate']
+
+            if (
+                self.module_installed('account_sepa_direct_debit')
+                and (sdd_mandate := invoice._get_usable_mandate(mandate_type='sepa'))
+                and sdd_mandate.partner_bank_id.account_number
+                and sdd_mandate.company_id.sdd_creditor_identifier
+            ):
                 # If the group "DIRECT DEBIT" (BG-19) is delivered, the element "Debited account identifier" (BT-91) shall be provided.
                 # If the group "DIRECT DEBIT" (BG-19) is delivered, the element "Bank assigned creditor identifier" (BT-90) shall be provided
-                if (
-                    sdd_mandate
-                    and sdd_mandate.partner_bank_id.account_number
-                    and (sdd_creditor_identifier := sdd_mandate.company_id.sdd_creditor_identifier)
-                ):
-                    vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyIdentification'].append({
-                        'cbc:ID': {'_text': sdd_creditor_identifier, 'schemeID': 'SEPA'},
-                    })
-                    for node in nodes:
-                        node['cbc:PaymentMeansCode']['_text'] = 59
-                        node['cbc:PaymentMeansCode']['name'] = 'sepa direct debit'
-                        node['cac:PaymentMandate'] = self._ubl_get_payment_means_payment_mandate_node_from_mandate(vals, sdd_mandate)
-                        node['cac:PayeeFinancialAccount'] = None
+                vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyIdentification'].append({
+                    'cbc:ID': {'_text': sdd_mandate.company_id.sdd_creditor_identifier, 'schemeID': 'SEPA'},
+                })
+                for node in nodes:
+                    node['cbc:PaymentMeansCode']['_text'] = 59
+                    node['cbc:PaymentMeansCode']['name'] = 'sepa direct debit'
+                    node['cac:PaymentMandate'] = self._ubl_get_payment_means_payment_mandate_node_from_mandate(vals, sdd_mandate)
+                    node['cac:PayeeFinancialAccount'] = None
 
     def _ubl_add_billing_reference_nodes(self, vals):
         super()._ubl_add_billing_reference_nodes(vals)
