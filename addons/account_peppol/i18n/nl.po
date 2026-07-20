@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-07-07 07:13+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -80,8 +80,8 @@ msgstr "%s heeft elektronische factuurontvangst aangevraagd op Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>Authenticeren met itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -220,8 +220,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;\">"
-"Melding</span>\n"
+"                                    <span style=\"font-size: 10px;"
+"\">Melding</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -230,26 +230,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
-"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
-"!important; font-weight: 400; background-color: {{ "
-"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Verstuur facturen\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object.uses_default_logo\">"
-"\n"
-"                                        <img t-att-src=\"'/"
-"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
-"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?"
+"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
+"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-"
-"align:center;\">\n"
+"                                <td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -265,8 +265,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>Beste <t t-out=\"object.name or ''\">"
-"YourCompany</t>,</p>\n"
+"                                    <p>Beste <t t-out=\"object.name or "
+"''\">YourCompany</t>,</p>\n"
 "\n"
 "                                    <p>We hebben je bedrijf succesvol "
 "toegevoegd aan het <strong>Peppol-netwerk</strong>.</p>\n"
@@ -455,11 +455,6 @@ msgid "Activate"
 msgstr "Activeer"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Elektronische facturatie activeren"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -467,6 +462,7 @@ msgstr "Elektronische facturatie activeren (via Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Peppol activeren"
 
@@ -651,6 +647,12 @@ msgid "At least one reason must be given when rejecting a Peppol invoice."
 msgstr ""
 "Er moet ten minste één reden worden opgegeven bij het afwijzen van een "
 "Peppol-factuur."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1086,7 +1088,8 @@ msgstr "Als je geen Itsme hebt, neem dan contact op met"
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "If you want to be invoiced by Peppol, your configuration must be valid."
-msgstr "Je configuratie dient geldig te zijn als je via Peppol wilt factureren."
+msgstr ""
+"Je configuratie dient geldig te zijn als je via Peppol wilt factureren."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
@@ -1111,11 +1114,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
 msgstr "Factuur verzenden"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
@@ -2418,6 +2416,12 @@ msgid "Use Parent Connection Selection"
 msgstr "Selectie van bovenliggende verbinding gebruiken"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "Controleer"
@@ -2505,7 +2509,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You are not authorized to change the contact email."
-msgstr "Je bent niet gemachtigd om het e-mailadres van dit contact te wijzigen."
+msgstr ""
+"Je bent niet gemachtigd om het e-mailadres van dit contact te wijzigen."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2624,6 +2629,14 @@ msgstr ""
 "database opnieuw koppelt."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2728,3 +2741,12 @@ msgstr "om facturen te versturen, maar deze"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "gebruikt"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>Authenticeren met itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Elektronische facturatie activeren"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"

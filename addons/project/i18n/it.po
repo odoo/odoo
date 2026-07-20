@@ -18,9 +18,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-06-09 08:55+0000\n"
+"PO-Revision-Date: 2026-07-17 11:01+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "project/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -501,6 +501,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-calendar px-1 mt-1\" role=\"img\" aria-label=\"Deadline\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar px-1 mt-1\" role=\"img\" aria-label=\"Scadenza\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -600,12 +601,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Data\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-fw fa-check me-1\" title=\"Lavori\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -786,6 +787,7 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private (non-template) task cannot have a parent."
 msgstr ""
+"Un lavoro privato (che non è un modello) non può avere un lavoro principale."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -845,7 +847,7 @@ msgstr "Attività di"
 #. module: project
 #: model:ir.model,name:project.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Attività"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
@@ -965,6 +967,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Amministratore: può gestire progetti e fasi, con accesso ai resoconti e alle "
+"impostazioni."
 
 #. module: project
 #. odoo-javascript
@@ -1029,7 +1033,7 @@ msgstr "Tutti"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "All Projects"
-msgstr ""
+msgstr "Tutti i progetti"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
@@ -1413,6 +1417,8 @@ msgid ""
 "Cannot convert back to regular task because the task has no project defined "
 "but has a parent or sub-tasks."
 msgstr ""
+"Impossibile riconvertire in lavoro normale poiché il lavoro non ha progetti "
+"definiti ma presenta un lavoro principale o lavori secondari."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1608,7 +1614,7 @@ msgstr "Numero di contatto"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
 msgid "Convert Project to Template"
-msgstr ""
+msgstr "Converti progetto in modello"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -1662,13 +1668,13 @@ msgstr "Data creazione"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Crea progetto"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
 msgid "Create Project (Template: %s)"
-msgstr ""
+msgstr "Crea progetto (Modello: %s)"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
@@ -1678,7 +1684,7 @@ msgstr "Crea cliente"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project_template
 msgid "Create a Project Template"
-msgstr ""
+msgstr "Crea modello di progetto"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -3334,7 +3340,7 @@ msgstr "Nessun ruolo progetto trovato. Creiamone uno!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_template
 msgid "No project templates found. Let's create one!"
-msgstr ""
+msgstr "Nessun modello di progetto trovato. Creiamone uno!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3713,6 +3719,9 @@ msgid ""
 "Private (non-template) tasks cannot be converted into sub-tasks. Please set "
 "a project on the task to gain access to this feature."
 msgstr ""
+"I lavori privati (che non sono un modello) non possono essere convertiti in "
+"lavori secondari. Assegna un progetto al lavoro così da accedere a questa "
+"funzionalità."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -4438,6 +4447,10 @@ msgid ""
 "                    Standardize workflows and ensure consistency across "
 "projects."
 msgstr ""
+"Risparmia tempo utilizzando i modelli di progetto con dettagli "
+"precompilati.<br>\n"
+"                    Standardizza i flussi di lavoro e garantisci la coerenza "
+"tra i progetti."
 
 #. module: project
 #. odoo-javascript
@@ -5134,7 +5147,7 @@ msgstr "Fasi dei lavori"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
 msgid "Tasks Templates"
-msgstr ""
+msgstr "Modelli di lavori"
 
 #. module: project
 #. odoo-python
@@ -5852,7 +5865,7 @@ msgstr "Impostazioni utente"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
-msgstr ""
+msgstr "Utente: può gestire i lavori nei progetti condivisi."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -5863,7 +5876,7 @@ msgstr "Visualizza"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 msgid "View More"
-msgstr ""
+msgstr "Mostra di più"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -6005,7 +6018,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Scrivi un messaggio…"
 
 #. module: project
 #. odoo-javascript

@@ -37,10 +37,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-06-12 03:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-14 10:10+0000\n"
+"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -783,6 +783,28 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Caro/a <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>:"
+"<br/><br/>\n"
+"        Obrigado pelo seu pagamento.\n"
+"        Em anexo encontrará o recibo do seu pagamento <span style=\"font-"
+"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or "
+"''\">BNK1-2021-05-0002</span> no montante total\n"
+"        de <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</"
+"span> da <t t-out=\"object.company_id.name or ''\">ASuaEmpresa</t>.\n"
+"        <br/><br/>\n"
+"        Se tiver alguma questão, não hesite em contactar-nos.\n"
+"        <br/><br/>\n"
+"        Com os melhores cumprimentos,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -877,6 +899,12 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Eliminar todas as duplicatas</"
+"span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Eliminar duplicatas</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -920,6 +948,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        Para rever\n"
+"                                   </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -950,7 +981,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">A conta bancária pode ser uma duplicata de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -991,6 +1022,10 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"move_type != 'in_refund'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_type != 'out_refund'\">Fatura</"
+"span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'in_refund'\">Fatura do fornecedor</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -7920,6 +7955,11 @@ msgid "Electronic Data Interchange"
 msgstr "Intercâmbio Eletrônico de Dados (EDI)"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "Formato eletrônico"
@@ -13512,11 +13552,6 @@ msgstr "Arquivo PDF"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "PDF sem pagamento"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "Faturamento eletrônico PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -22178,6 +22213,9 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "Faturamento eletrônico PEPPOL"
 
 #~ msgid "%s, or / if not applicable"
 #~ msgstr "%s, ou/se não for aplicável"

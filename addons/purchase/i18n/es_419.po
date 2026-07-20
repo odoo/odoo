@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-07-06 19:05+0000\n"
+"PO-Revision-Date: 2026-07-17 20:46+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-4/purchase/es_419/>\n"
@@ -49,6 +49,7 @@ msgstr "Número de líneas"
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "%(added_lines_count)s PO lines added to the bill."
 msgstr ""
+"%(added_lines_count)s líneas de la orden de compra agregadas a la factura."
 
 #. module: purchase
 #. odoo-python
@@ -57,6 +58,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"%(matched_lines_count)s líneas de la factura conciliadas, %"
+"(unmatched_lines_count)s sin conciliar."
 
 #. module: purchase
 #. odoo-python
@@ -100,7 +103,7 @@ msgstr "-&gt;"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
-msgstr ""
+msgstr "0 líneas de la factura conciliadas con esta orden de compra."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -535,7 +538,7 @@ msgstr "<strong>Fecha prevista</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -815,7 +818,7 @@ msgstr "Todas las solicitudes de cotización enviadas"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
 msgid "All variants"
-msgstr ""
+msgstr "Todas las variantes"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -987,7 +990,7 @@ msgstr "Líneas de factura"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
 msgid "Bill Matched Ratio"
-msgstr ""
+msgstr "Proporción de facturas conciliadas"
 
 #. module: purchase
 #. odoo-python
@@ -999,7 +1002,7 @@ msgstr "Conciliación de factura"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Bill Qty"
-msgstr ""
+msgstr "Cantidad facturada"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -1194,7 +1197,7 @@ msgstr "Conecte su software"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "Moneda de consolidación"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1373,6 +1376,8 @@ msgstr "Descripción"
 msgid ""
 "Difference between demand and quantity but not affected by invoice policy"
 msgstr ""
+"Diferencia entre la demanda y la cantidad, pero que no se ve afectada por la "
+"política de facturación"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1437,7 +1442,7 @@ msgstr "Cuenta analítica de distribución"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Modo de impuestos del documento"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1707,7 +1712,7 @@ msgstr "Incoterm"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Ubicación del incoterm"
 
 #. module: purchase
 #. odoo-javascript
@@ -1949,7 +1954,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Matching Invoices"
-msgstr ""
+msgstr "Facturas coincidentes"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -2172,7 +2177,7 @@ msgstr "Sin recibir"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
 msgid "Not Invoiced Quantity"
-msgstr ""
+msgstr "Cantidad no facturada"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
@@ -2329,6 +2334,8 @@ msgid ""
 "Ordered quantity not invoiced. This may or may not include quantities that "
 "won't be invoiced, depending on the product's Control Policy."
 msgstr ""
+"Cantidad ordenada sin facturar. Puede incluir o no cantidades que no se "
+"facturarán, según la política de control del producto."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -2355,12 +2362,12 @@ msgstr "Nuestras órdenes"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "PO Matching"
-msgstr ""
+msgstr "Coincidencia de órdenes de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "PO Qty"
-msgstr ""
+msgstr "Cantidad de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2488,7 +2495,7 @@ msgstr "Cantidad de UdM del producto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
 msgid "Product Uom Qty To Invoice"
-msgstr ""
+msgstr "Cantidad del producto por facturar en la UdM"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2592,7 +2599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
 msgid "Purchase Matched Ratio"
-msgstr ""
+msgstr "Proporción de coincidencia de compras"
 
 #. module: purchase
 #. odoo-python
@@ -2603,7 +2610,7 @@ msgstr "Conciliación de compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
 msgid "Purchase Matching Issue Msg"
-msgstr ""
+msgstr "Mensaje de problema de coincidencia de compras"
 
 #. module: purchase
 #. odoo-python
@@ -2834,12 +2841,12 @@ msgstr "Cant. recibida"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid "Qty not invoiced"
-msgstr ""
+msgstr "Cantidad sin facturar"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Qty to Invoice"
-msgstr ""
+msgstr "Cantidad por facturar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -2910,7 +2917,7 @@ msgstr "Solicitudes de cotización y compras"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Tasa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -3372,12 +3379,12 @@ msgstr "País del impuesto"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "Impuestos excl."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "Impuestos incl."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
@@ -3595,7 +3602,7 @@ msgstr "Por aprobar"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "To Invoice"
-msgstr ""
+msgstr "Por facturar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3781,7 +3788,7 @@ msgstr "Subtotal"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #. module: purchase
 #. odoo-javascript
@@ -3866,13 +3873,13 @@ msgstr "País del proveedor"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
 msgid "Vendor Incoterm"
-msgstr ""
+msgstr "Incoterm del proveedor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
 msgid "Vendor Incoterm Location"
-msgstr ""
+msgstr "Ubicación del Incoterm del proveedor"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -4076,7 +4083,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -4140,3 +4147,5 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"Solicitud de cotización de {{ object.company_id.name }} (Ref. {{ object.name "
+"or 'n/a' }})"

@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-07-09 10:02+0000\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-17 14:15+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/sale/"
 "da/>\n"
@@ -686,12 +686,12 @@ msgstr ""
 "        <t t-if=\"object.client_order_ref\"> \n"
 "            (<t t-out=\"object.client_order_ref or ''\">KUNDENUMMER</t>)\n"
 "       </t> \n"
-"        på <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 $</span> er klar til "
-"gennemgang.\n"
+"        på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er klar til gennemgang.\n"
 "       <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/> "
-"\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+"> \n"
 "       <t t-if=\"documents\">\n"
 "            <br/> \n"
 "           <t t-if=\"len(documents)&gt;1\"> \n"
@@ -759,16 +759,17 @@ msgstr ""
 "        Hej\n"
 "       <br/><br/> \n"
 "        Din proformafaktura for tilbuddet <t t-out=\"doc_name or ''\"></t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\"> S00052</span>"
-"\n"
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\"> S00052</"
+"span>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (med reference: <t t-out=\"object.origin or ''\"/> )\n"
 "       </t>\n"
 "        <t t-if=\"object.client_order_ref\"> \n"
 "            (<t t-out=\"object.client_order_ref or ''\">KUNDEREF.</t>)\n"
 "       </t> \n"
-"        på <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 $</span> er klar.\n"
+"        på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er klar.\n"
 "       <br/><br/> \n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "       <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -1555,7 +1556,6 @@ msgstr "Annullér"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
 msgid "Cancel Order"
 msgstr "Annullér ordre"
 
@@ -1817,11 +1817,6 @@ msgstr "Forbind Stripe"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Opret forbindelse til din software!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Opret forbindelse med software"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2204,7 +2199,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
-#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
@@ -2346,7 +2340,7 @@ msgstr "Vis udkast til fakturaadvarsel"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__display_product_images_on_so
@@ -2357,7 +2351,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
-#, fuzzy
 msgid "Display Qty Widget"
 msgstr "Vis mængdewidget"
 
@@ -5916,7 +5909,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Values set here are company-specific."
 msgstr "Værdier angivet her er specifikke for virksomheden."
 
@@ -6227,11 +6219,6 @@ msgid "sale order"
 msgstr "salgsordre"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "for at oprette tilbud automatisk."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "for at lære om alle muligheder for at integrere din software med"
@@ -6240,11 +6227,6 @@ msgstr "for at lære om alle muligheder for at integrere din software med"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "enheder"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "med"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6284,3 +6266,12 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid "Connect your software"
+#~ msgstr "Opret forbindelse med software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "for at oprette tilbud automatisk."
+
+#~ msgid "with"
+#~ msgstr "med"

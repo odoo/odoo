@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-09 01:43+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-17 06:09+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-4/account/zh_Hans/>\n"
@@ -8245,6 +8245,11 @@ msgid "Electronic Data Interchange"
 msgstr "电子数据交换"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "电子格式"
@@ -9772,7 +9777,7 @@ msgstr "突出显示传送按钮"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "持有者名称"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -12676,7 +12681,7 @@ msgstr "从不"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__never_unfolded
 msgid "Never Unfolded"
-msgstr ""
+msgstr "从未展开"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -13712,11 +13717,6 @@ msgstr "PDF文件"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "未付款的PDF"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "PEPPOL 电子发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -15181,7 +15181,7 @@ msgstr "对账部分"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__reference
 msgid "Record Reference"
-msgstr ""
+msgstr "记录参考"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
@@ -17435,7 +17435,7 @@ msgstr "需提供税务识别号"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "含税"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -19807,7 +19807,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "未分类"
 
 #. module: account
 #. odoo-python
@@ -20944,7 +20944,7 @@ msgstr "您不能在所选国家/地区组别之外的国家/地区，创建应�
 msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
-msgstr ""
+msgstr "若未指定所属省/州，则无法在本国财税辖区内创建带有境外税号的财税科目。"
 
 #. module: account
 #. odoo-python
@@ -21169,7 +21169,7 @@ msgstr "不能减少已用于进行会计分录的币别的小数位数."
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
-msgstr ""
+msgstr "无法对已锁定发票进行收款登记。"
 
 #. module: account
 #. odoo-python
@@ -22016,6 +22016,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助开票发票（参考号 {{ object.name or 'n/"
 "a' }}）"
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "PEPPOL 电子发票"
 
 #~ msgid "%s, or / if not applicable"
 #~ msgstr "%s，或 / 如不适用"

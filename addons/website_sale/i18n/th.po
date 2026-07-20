@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-07-07 10:11+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-14 10:24+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "website_sale/th/>\n"
@@ -1093,6 +1093,73 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<t t-set=\"website\" t-value=\"object.website_id or "
+"object.website_id.get_current_website()\"/>\n"
+"                <div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-if=\"website\" t-set=\"logo_src\" t-"
+"value=\"website.image_url(website, 'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display:block; "
+"height:50px; margin:0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p>\n"
+"                        เรียนคุณ <t t-out=\"ctx.get('customer_name')\">ลูกค้า</"
+"t>,\n"
+"                    </p>\n"
+"                    <p>สินค้าที่คุณรอคอยกลับมาวางจำหน่ายอีกครั้งแล้ว!</p>\n"
+"                    <div t-if=\"not is_html_empty(user.signature)\" "
+"style=\"font-size: 14px; margin: 0 0 16px;\">\n"
+"                        <t t-out=\"user.signature or ''\">Mitchell Admin</"
+"t>\n"
+"                    </div>\n"
+"                    <div t-attf-style=\"margin-bottom: 22px; font-size: 14px;"
+"\">\n"
+"                        <a t-att-href=\"object.website_url\" t-attf-"
+"style=\"background-color: {{website.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
+"                            สั่งซื้อเลย\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"margin-bottom: 12px;\">\n"
+"                        <table role=\"presentation\" width=\"100%\" "
+"style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;\">\n"
+"                            <tr>\n"
+"                                <td width=\"24%\" style=\"max-width: 120px; "
+"padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                    <img t-att-"
+"src=\"website.image_url(object, 'image_1920')\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding-bottom: 8px; vertical-"
+"align: top;\">\n"
+"                                    <h2 t-att-style=\"'margin:0; font-"
+"size:14px; color:%s;' % ((website and "
+"website.company_id.email_secondary_color) or '#875A7B')\">\n"
+"                                        <strong t-out=\"object.name or "
+"''\">โต๊ะทำงานแบบประกอบได้</strong>\n"
+"                                    </h2>\n"
+"                                    <p t-"
+"if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px "
+"0;\">\n"
+"                                        ( <t t-out=\"', "
+"'.join(object.product_template_attribute_value_ids.mapped('name'))\">ไม้</"
+"t> )\n"
+"                                    </p>\n"
+"                                    <t t-out=\"object.description_ecommerce "
+"or ''\">รายละเอียดโต๊ะทำงาน</t>\n"
+"                                </td>\n"
+"                                <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100%; vertical-align: top;\">\n"
+"                                    <t t-"
+"out=\"format_amount(object.list_price, object.currency_id)\">15,000 บาท</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -3340,24 +3407,24 @@ msgstr "รายละเอียดสำหรับเว็บไซต์
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Descriptions"
-msgstr ""
+msgstr "รายละเอียด"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model:product.attribute.category,name:website_sale.product_attribute_category_design
 msgid "Design"
-msgstr ""
+msgstr "ออกแบบ"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_design_and_planning
 msgid "Design and Planning"
-msgstr ""
+msgstr "การออกแบบและการวางแผน"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_desk
 msgid "Desk Lamps"
-msgstr ""
+msgstr "โคมไฟตั้งโต๊ะ"
 
 #. module: website_sale
 #. odoo-python
@@ -3371,19 +3438,19 @@ msgstr "โต๊ะ"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "เดสก์ท็อป"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Desktop Ratio"
-msgstr ""
+msgstr "อัตราส่วนหน้าจอเดสก์ท็อป"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Desktop ratio in enforced with this design"
-msgstr ""
+msgstr "อัตราส่วนหน้าจอเดสก์ท็อปถูกกำหนดไว้ในดีไซน์นี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3404,7 +3471,7 @@ msgstr "ไดเจส"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_dimensions
 msgid "Dimensions"
-msgstr ""
+msgstr "มิติ"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3491,7 +3558,7 @@ msgstr "แสดงชื่อ"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Display Options"
-msgstr ""
+msgstr "ตัวเลือกการแสดงผล"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3507,14 +3574,14 @@ msgstr "ประเภทการแสดง"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Display estimated date to your customer. Editable if range is defined."
-msgstr ""
+msgstr "แสดงวันที่คาดการณ์ให้ลูกค้าเห็น สามารถแก้ไขได้หากกำหนดช่วงวันที่ไว้แล้ว"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_description
 msgid ""
 "Display the category description on the shop page. Corresponds to the 'Show "
 "Description' editor option."
-msgstr ""
+msgstr "แสดงคำอธิบายหมวดหมู่บนหน้าร้านค้า ซึ่งสอดคล้องกับตัวเลือก 'แสดงคำอธิบาย' ในตัวแก้ไข"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_title
@@ -4444,7 +4511,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr ""
 
@@ -4765,7 +4832,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Long Description"
-msgstr ""
+msgstr "คำอธิบายแบบยาว"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_luxury
@@ -5545,6 +5612,12 @@ msgstr "กรุณาดำเนินการรถเข็นปัจจ
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
 msgstr ""
 
 #. module: website_sale
@@ -6585,7 +6658,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "ขายเมื่อสินค้าหมดสต็อก"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
@@ -6840,7 +6913,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "แสดงจำนวนที่มีอยู่"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7465,6 +7538,12 @@ msgstr "สินค้านี้ไม่มีจำหน่ายแล้
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale
@@ -8263,7 +8342,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "เช่น 'จะเติมสินค้าเร็วๆ นี้'"
 
 #. module: website_sale
 #. odoo-javascript

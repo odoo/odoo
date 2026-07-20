@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
@@ -2793,6 +2793,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
+msgid ""
+"If active, registering production on a work order will automatically unblock "
+"the next work order if it is blocked."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__message_needaction
@@ -5149,13 +5156,6 @@ msgstr ""
 msgid ""
 "Select to customise operation dependencies. When checked, operations will be "
 "in parallel by default."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
-msgid ""
-"Select to enable continuous production. When checked, operations will start "
-"as soon as some quantities are ready."
 msgstr ""
 
 #. module: mrp

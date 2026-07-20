@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-07-08 11:46+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -79,8 +79,8 @@ msgstr "%s has requested electronic invoices reception on Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>Autentique-se com o itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -450,11 +450,6 @@ msgid "Activate"
 msgstr "Ativar"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Ativar o faturamento eletrônico"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -462,6 +457,7 @@ msgstr "Ativar o faturamento eletrônico (via Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Ativar Peppol"
 
@@ -642,6 +638,12 @@ msgstr "Aprovado"
 msgid "At least one reason must be given when rejecting a Peppol invoice."
 msgstr ""
 "É necessário indicar pelo menos um motivo ao rejeitar uma fatura Peppol."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1099,11 +1101,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
 msgstr "Envio de faturas"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
@@ -2400,6 +2397,12 @@ msgid "Use Parent Connection Selection"
 msgstr "Use a seleção de conexão da matriz"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "Verificar"
@@ -2601,6 +2604,14 @@ msgstr ""
 "Certifique-se de reconectar a base de dados correta."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2705,3 +2716,12 @@ msgstr "para enviar faturas, mas este"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>Autentique-se com o itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Ativar o faturamento eletrônico"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"

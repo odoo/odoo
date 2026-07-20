@@ -18,9 +18,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-06-13 13:35+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-3/stock/"
+"PO-Revision-Date: 2026-07-17 14:09+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -178,7 +178,6 @@ msgstr "# Returneringer"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s (copy)(%(id)s)"
 msgstr "%(name)s (kopi)(%(id)s)"
 
@@ -220,7 +219,6 @@ msgstr "%(name)s Pakkesekvens"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence picking"
 msgstr "%(name)s Plukkesekvens"
 
@@ -266,7 +264,6 @@ msgstr "%(warehouse)s Sekvens %(code)s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
-#, fuzzy
 msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
@@ -307,10 +304,8 @@ msgstr "%s dage"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
-"%s: Kan ikke opdeles: Udførte mængder kan ikke overstige efterspørgslen"
+msgstr "%s: Kan ikke opdeles: Udførte mængder kan ikke overstige efterspørgslen"
 
 #. module: stock
 #. odoo-python
@@ -326,7 +321,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
@@ -413,7 +407,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
-#, fuzzy
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
@@ -780,14 +773,13 @@ msgstr "<span class=\"o_stat_text\">Sporbarhed</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_value text-muted\">\n"
 "                                            Forecasted\n"
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_value text-muted\">\n"
-"                                            Prognosticeret\n"
+"                                            Forventet\n"
 "                                       </span>"
 
 #. module: stock
@@ -1223,8 +1215,8 @@ msgid ""
 "incoming products into specific child locations straight away (e.g. specific "
 "bins, racks)."
 msgstr ""
-"Tilføj og tilpas rute operationer for at behandle produkt bevægelser i "
-"din(e) varehus(e): f.eks. losning > kvalitets kontrol > lager, for indgående "
+"Tilføj og tilpas rute operationer for at behandle produkt bevægelser i din"
+"(e) varehus(e): f.eks. losning > kvalitets kontrol > lager, for indgående "
 "produkter, pluk > pakning > afsendelse, for udgående produkter.\n"
 "Du kan altså angive videresendings strategier for varehuse, og sende "
 "indgående produkter til et bestemt under-lager med det samme (f.eks. "
@@ -1239,12 +1231,12 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Tilføj og tilpas rute operationer for at behandle produkt bevægelser i "
-"din(e) varehus(e): f.eks. losse > kvalitets kontrol > lager, for indgående "
+"Tilføj og tilpas rute operationer for at behandle produkt bevægelser i din"
+"(e) varehus(e): f.eks. losse > kvalitets kontrol > lager, for indgående "
 "produkter, pluk > pakning > afsendelse, for udgående produkter. Du kan altså "
 "angive videresendings strategier for varehuse, og sende indgående produkter "
-"til et specifikt under-lager med det samme (f.eks. specifikke kasser, "
-"hylder)."
+"til et specifikt under-lager med det samme (f.eks. specifikke kasser, hylder)"
+"."
 
 #. module: stock
 #. odoo-javascript
@@ -1816,7 +1808,6 @@ msgstr "Stregkode"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-#, fuzzy
 msgid "Barcode Demo"
 msgstr "Stregkodedemo"
 
@@ -1837,7 +1828,6 @@ msgstr "Stregkode scanner"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__valid_ean
-#, fuzzy
 msgid "Barcode is valid EAN"
 msgstr "Stregkoden er en gyldig EAN"
 
@@ -2774,7 +2764,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
-#, fuzzy
 msgid "Date for next planned inventory based on cyclic schedule."
 msgstr "Dato for næste planlagte lageropgørelse baseret på cyklisk tidsplan."
 
@@ -2785,7 +2774,6 @@ msgstr "Dato for overførsel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__last_inventory_date
-#, fuzzy
 msgid "Date of the last inventory at this location."
 msgstr "Dato for sidste lageropgørelse på denne lokation."
 
@@ -2804,7 +2792,6 @@ msgstr "Dag i måneden"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__annual_inventory_day
 #: model:ir.model.fields,help:stock.field_res_config_settings__annual_inventory_day
-#, fuzzy
 msgid ""
 "Day of the month when the annual inventory should occur. If zero or "
 "negative, then the first day of the month will be selected instead.\n"
@@ -2943,7 +2930,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
-#, fuzzy
 msgid ""
 "Defines the default method used for suggesting the exact location (shelf) "
 "where to take the products from, which lot etc. for this location. This "
@@ -2991,7 +2977,6 @@ msgstr "Forsinkelse på %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
-#, fuzzy
 msgid ""
 "Deleting product moves after the transfer is done?\n"
 "\n"
@@ -3147,13 +3132,11 @@ msgstr "Beskrivelse"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
-#, fuzzy
 msgid "Description Of Picking"
 msgstr "Beskrivelse af plukning"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
-#, fuzzy
 msgid "Description Picking Manual"
 msgstr "Beskrivelse af manual for plukning"
 
@@ -3211,7 +3194,6 @@ msgstr "Destinationspakke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
-#, fuzzy
 msgid "Dest Package Id Domain"
 msgstr "Området for destinationspakke-ID"
 
@@ -3490,7 +3472,6 @@ msgstr "Udført"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
-#, fuzzy
 msgid "Done By"
 msgstr "Udført af"
 
@@ -3513,7 +3494,6 @@ msgstr "Dropshipping"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-#, fuzzy
 msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
@@ -3850,13 +3830,13 @@ msgstr "Forudsete leveringer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr "Prognosticeret Forventet dato"
+msgstr "Forventet på dato"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
-msgstr "Forudset inventar"
+msgstr "Forventet lagerbeholdning"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
@@ -3870,7 +3850,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecasted_quantity
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 msgid "Forecasted Quantity"
-msgstr "Forecasted antal"
+msgstr "Forventet mængde"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
@@ -3893,9 +3873,8 @@ msgstr "Forudset lager"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
-#, fuzzy
 msgid "Forecasted Weight"
-msgstr "Prognosticeret vægt"
+msgstr "Forventet vægt"
 
 #. module: stock
 #. odoo-javascript
@@ -3918,14 +3897,13 @@ msgstr "Gratis mængde"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.js:0
 msgid "Free Stock"
-msgstr "Fri Lager"
+msgstr "Tilgængelig lagerbeholdning"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Free Stock in Transit"
-msgstr "Gratis lagerbeholdning under transport"
+msgstr "Tilgængelig lagerbeholdning under transport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -4132,7 +4110,6 @@ msgstr "Skjul indtil næste planlægning."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__hide_reservation_method
-#, fuzzy
 msgid "Hide Reservation Method"
 msgstr "Skjul reserveringsmetode"
 
@@ -4238,7 +4215,6 @@ msgstr "Ikon for uventet aktivitet."
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
-#, fuzzy
 msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date, My Company (Chicago) reserves the right to call on the "
@@ -4296,7 +4272,6 @@ msgstr "Hvis sat, handlingerne pakkes i denne pakke"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
-#, fuzzy
 msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and "
 "only one label will be printed for this lot."
@@ -4458,7 +4433,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
-#, fuzzy
 msgid ""
 "If this picking was created as a return of another picking, this field links "
 "to the original picking."
@@ -4538,7 +4512,6 @@ msgstr "Ind type"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
-#, fuzzy
 msgid ""
 "In case of outgoing flow, validate the transfer before this date to allow to "
 "deliver at promised date to the customer.\n"
@@ -4559,7 +4532,6 @@ msgstr "På interne lagersteder"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
-#, fuzzy
 msgid ""
 "In order for it to be admissible, My Company (Chicago) must be notified of "
 "any claim by means of a letter sent by recorded delivery to its registered "
@@ -4604,7 +4576,6 @@ msgstr "Indkommende leverancer"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
-#, fuzzy
 msgid "Incorrect type of action submitted as a report, skipping action"
 msgstr "Fejlagtig handlingstype indsendt som rapport; handlingen springes over"
 
@@ -4663,7 +4634,6 @@ msgstr "Inter-varehus transit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
-#, fuzzy
 msgid "Intermediate Location"
 msgstr "Midlertidig placering"
 
@@ -4752,7 +4722,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
-#, fuzzy
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
@@ -5250,13 +5219,11 @@ msgstr "Sidst opdateret den"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__last_used
-#, fuzzy
 msgid "Last Used"
 msgstr "Sidst anvendt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
-#, fuzzy
 msgid "Last time the Quantity was Updated"
 msgstr "Sidste gang, mængden blev opdateret"
 
@@ -5288,7 +5255,6 @@ msgstr "Forsinkede flytninger"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
-#, fuzzy
 msgid "Latest product availability status of the picking"
 msgstr "Seneste status for produktets tilgængelighed ved plukning"
 
@@ -5335,8 +5301,7 @@ msgstr "Lad være tom for at oprette en ny"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr ""
-"Lad dette felt stå tomt, hvis denne rute deles mellem alle virksomheder"
+msgstr "Lad dette felt stå tomt, hvis denne rute deles mellem alle virksomheder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -5488,7 +5453,6 @@ msgstr "Lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
-#, fuzzy
 msgid "Lot Label Format to auto-print"
 msgstr "Format for de plukningsetiketter, der skal udskrives automatisk"
 
@@ -5737,7 +5701,6 @@ msgstr "Maksimale vægt skal være et positivt tal."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before_priority
-#, fuzzy
 msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
@@ -5949,7 +5912,6 @@ msgstr "Deadline på mine aktiviteter"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
-#, fuzzy
 msgid ""
 "My Company (Chicago) undertakes to do its best to supply performant services "
 "in due time in accordance with the agreed timeframes. However, none of its "
@@ -5988,7 +5950,6 @@ msgstr "Navn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-#, fuzzy
 msgid "Name Demo"
 msgstr "Demonavn"
 
@@ -6009,7 +5970,7 @@ msgstr "Antal udgående bevægelser"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Negative Forecasted Quantity"
-msgstr "Negativ prognose kvantitet"
+msgstr "Negativ forventet mængde"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -6630,7 +6591,6 @@ msgstr "Anden information"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
-#, fuzzy
 msgid ""
 "Our invoices are payable within 21 working days, unless another payment "
 "timeframe is indicated on either the invoice or the order. In the event of "
@@ -6746,7 +6706,6 @@ msgstr "Dato for emballering"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-#, fuzzy
 msgid "Pack Date Demo"
 msgstr "Demo for pakkedato"
 
@@ -6890,7 +6849,6 @@ msgstr "Pakke type"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-#, fuzzy
 msgid "Package Type Demo"
 msgstr "Demopakketype"
 
@@ -6927,7 +6885,6 @@ msgstr "Pakken er flyttet manuelt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__valid_sscc
-#, fuzzy
 msgid "Package name is valid SSCC"
 msgstr "Pakkenavnet er et gyldigt SSCC-nummer"
 
@@ -7008,7 +6965,6 @@ msgstr "Pakke Antal"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
-#, fuzzy
 msgid "Packaging Width"
 msgstr "Pakkebredde"
 
@@ -7110,7 +7066,6 @@ msgstr "Pluk"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
-#, fuzzy
 msgid "Pick From"
 msgstr "Pluk fra"
 
@@ -7121,20 +7076,17 @@ msgstr "Pluk type"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
-#, fuzzy
 msgid "Pick then Deliver (2 steps)"
 msgstr "Pluk og levér dernæst (2 trin)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
-#, fuzzy
 msgid "Pick, Pack, then Deliver (3 steps)"
 msgstr "Pluk, pak og levér (3 trin)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
-#, fuzzy
 msgid "Picked"
 msgstr "Plukket"
 
@@ -7147,7 +7099,6 @@ msgstr "Plukning"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
-#, fuzzy
 msgid "Picking Instructions"
 msgstr "Plukkeinstruktioner"
 
@@ -7170,7 +7121,6 @@ msgstr "Afhentningspolitik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
-#, fuzzy
 msgid "Picking Properties"
 msgstr "Plukkeegenskaber"
 
@@ -7299,7 +7249,6 @@ msgstr "Udskriv ved \"Læg i pakke\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-#, fuzzy
 msgid "Print on Validation"
 msgstr "Udskriv ved validering"
 
@@ -7422,7 +7371,6 @@ msgstr "Produktkategori"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
-#, fuzzy
 msgid "Product Display Name"
 msgstr "Produktets visningsnavn"
 
@@ -7589,7 +7537,6 @@ msgstr "Udbred annuller og del"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_carrier
-#, fuzzy
 msgid "Propagation of carrier"
 msgstr "Udvidelse af transportør"
 
@@ -7816,7 +7763,6 @@ msgstr "For få varer på lager"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__is_outdated
-#, fuzzy
 msgid "Quantity has been moved since last count"
 msgstr "Mængden er ændret siden sidste optælling"
 
@@ -8067,7 +8013,6 @@ msgstr "Etiketter til modtagelsesrapport"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
-#, fuzzy
 msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
 "                        locations management traceability, quality control, "
@@ -8305,7 +8250,6 @@ msgstr "Rapporter handling"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
-#, fuzzy
 msgid "Report Printing Error"
 msgstr "Fejl ved udskrivning af rapporten"
 
@@ -8568,7 +8512,6 @@ msgstr "Ruter kan vælges for dette produkt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
-#, fuzzy
 msgid "Routes propagated from the package type"
 msgstr "Ruter udvidet fra pakketypen"
 
@@ -8657,7 +8600,6 @@ msgstr "Fejl ved SMS-levering"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-#, fuzzy
 msgid "SSCC Demo"
 msgstr "SSCC-demo"
 
@@ -8729,7 +8671,6 @@ msgstr "Planlægt eller behandligns dato"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
-#, fuzzy
 msgid "Scheduled time for the first part of the shipment to be processed."
 msgstr "Forventet tid til redigering af første del af forsendelsen."
 
@@ -9015,7 +8956,6 @@ msgstr "Angiv varehus ruter"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
-#, fuzzy
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category.\n"
@@ -9174,7 +9114,6 @@ msgstr "Vis lot tekst"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_next_pickings
-#, fuzzy
 msgid "Show Next Pickings"
 msgstr "Vis næste plukninger"
 
@@ -9193,7 +9132,6 @@ msgstr "Vis operation i oversigten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
-#, fuzzy
 msgid "Show Picking Type"
 msgstr "Vis plukningstype"
 
@@ -9236,7 +9174,6 @@ msgstr "Vis oplysninger"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
-#, fuzzy
 msgid "Show lot_id"
 msgstr "Vis lot_id"
 
@@ -9876,7 +9813,6 @@ msgstr "Parti-/serienummeret (%s) er tilknyttet et andet produkt."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
-#, fuzzy
 msgid ""
 "The Serial Number (%(serial_number)s) is already used in location(s): %"
 "(location_list)s.\n"
@@ -9909,7 +9845,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
-#, fuzzy
 msgid "The barcode for a location must be unique per company!"
 msgstr "Stregkoden for et lagersted i en virksomhed skal være entydig!"
 
@@ -9929,7 +9864,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
-#, fuzzy
 msgid ""
 "The combination of lot/serial number and product must be unique within a "
 "company including when no company is defined.\n"
@@ -9985,9 +9919,8 @@ msgstr "Følgende genopfyldningsordre er blevet genereret"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
-#, fuzzy
 msgid "The forecasted quantity of"
-msgstr "Den prognosticerede mængde af"
+msgstr "Den forventede mængde af"
 
 #. module: stock
 #. odoo-python
@@ -10122,7 +10055,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, fuzzy
 msgid "The quantity per lot should always be a positive value."
 msgstr "Mængden pr. parti skal altid være en positiv værdi."
 
@@ -10139,7 +10071,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
-#, fuzzy
 msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
@@ -10159,7 +10090,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
-#, fuzzy
 msgid "The short name of the warehouse must be unique per company!"
 msgstr "Det korte navn på lageret skal være unikt for hver virksomhed!"
 
@@ -10241,7 +10171,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picked
-#, fuzzy
 msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
@@ -10411,7 +10340,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
-#, fuzzy
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
@@ -10422,7 +10350,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
-#, fuzzy
 msgid ""
 "This product's company cannot be changed as long as there are stock moves of "
 "it belonging to another company."
@@ -10447,7 +10374,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "This sequence prefix is already being used by another operation type. It is "
 "recommended that you select a unique prefix to avoid issues and/or repeated "
@@ -10471,16 +10397,14 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
-#, fuzzy
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
-"Dette vil medføre, at alle ikke-anvendte optællinger slettes. Vil du "
+"Dette vil medføre, at alle ikke-anvendte optællinger slettes. Ønsker du at "
 "fortsætte?"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
-#, fuzzy
 msgid "Time Horizon"
 msgstr "Tidshorisont"
 
@@ -10636,9 +10560,8 @@ msgstr "Efterspurgt i alt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#, fuzzy
 msgid "Total Forecasted"
-msgstr "Prognosticeret i alt"
+msgstr "Forventet i alt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -10794,7 +10717,6 @@ msgstr "Overfør til"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "Transfer trouble alert! Validating a zero quantity transfer? You're not "
 "moving invisible goods around are you?\n"
@@ -11013,7 +10935,6 @@ msgstr "Opdater kvantitet"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "Updating the location of this transfer will result in unreservation of the "
 "currently assigned items. An attempt to reserve items at the new location "
@@ -11098,7 +11019,6 @@ msgstr "Validér"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
-#, fuzzy
 msgid "Validate Inventory"
 msgstr "Validér lagerbeholdning"
 
@@ -11465,7 +11385,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
-#, fuzzy
 msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
@@ -11490,7 +11409,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
-#, fuzzy
 msgid "When ticked, carrier of shipment will be propagated."
 msgstr "Når dette felt er markeret, udvides transportfirmaet."
 
@@ -11511,7 +11429,6 @@ msgstr "Hvornår skal forsendelsen igangsættes"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
-#, fuzzy
 msgid ""
 "When validating a transfer:\n"
 " * Ask: users are asked to choose if they want to make a backorder for "
@@ -11695,7 +11612,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
-#, fuzzy
 msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
@@ -11723,7 +11639,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
-#, fuzzy
 msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse "
 "by company"
@@ -11776,7 +11691,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, fuzzy
 msgid "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
 "Du kan ikke ændre måleenheden for en lagerpost, der er markeret som 'Udført'."
@@ -11784,7 +11698,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
-#, fuzzy
 msgid ""
 "You cannot change the company of a lot/serial number currently in a location "
 "belonging to another company."
@@ -11847,7 +11760,6 @@ msgstr "Du kan ikke splitte en kladdeoverførsel. Den skal først bekræftes."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, fuzzy
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
 "Du kan ikke opdele en lagerbevægelse, der er markeret som 'Udført' eller "
@@ -11884,7 +11796,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
@@ -11966,7 +11877,6 @@ msgstr "Du bør opdatere dette dokument til at reflektere dit T&amp;C."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
-#, fuzzy
 msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
@@ -12282,7 +12192,6 @@ msgstr "stregkodeappen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
-#, fuzzy
 msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."

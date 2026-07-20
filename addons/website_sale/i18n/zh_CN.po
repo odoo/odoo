@@ -18,11 +18,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-06-10 06:18+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-20 04:10+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-3/website_sale/zh_Hans/>\n"
+"projects/odoo-s19-4/website_sale/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4467,7 +4467,7 @@ msgstr "无效的电子邮件"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr "无效电子邮件"
 
@@ -5068,14 +5068,14 @@ msgstr "未找到遗弃的购物车"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "No delivery method is selected."
-msgstr ""
+msgstr "尚未选择配送方式。"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "No previous products available for reorder."
-msgstr ""
+msgstr "无可供补货的过往产品。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -5122,7 +5122,7 @@ msgstr "无"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product/product.xml:0
 msgid "Not available for sale"
-msgstr ""
+msgstr "不适用于销售"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5133,18 +5133,18 @@ msgstr "%s不可用"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__not_in_shop
 msgid "Not in Shop"
-msgstr ""
+msgstr "不在商店中"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/reorder.py:0
 msgid "Nothing can be reordered in this order"
-msgstr ""
+msgstr "此订单没有商品可以重新订购。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Number"
-msgstr ""
+msgstr "数量"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
@@ -5160,12 +5160,12 @@ msgstr "操作数量"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_mobile_columns
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
-msgstr ""
+msgstr "愿望清单页面在移动端显示的列数（1 或 2）"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_grid_columns
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "愿望清单页面上显示的列数"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error_counter
@@ -5210,7 +5210,7 @@ msgstr "办公桌"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "On Hover"
-msgstr ""
+msgstr "鼠标经过时"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
@@ -5220,12 +5220,12 @@ msgstr "在产品卡"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__sale
 msgid "On Sale"
-msgstr ""
+msgstr "减价"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "On sale"
-msgstr ""
+msgstr "减价"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -5247,7 +5247,7 @@ msgstr "一旦您点击<b>保存</b>，将会更新您的产品。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, etc.)"
-msgstr ""
+msgstr "同一款产品可能具有不同的属性（例如尺寸、颜色等）。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
@@ -5568,6 +5568,12 @@ msgstr "请继续使用当前购物车。"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
 msgstr ""
 
 #. module: website_sale
@@ -7487,6 +7493,12 @@ msgstr "此产品已停产。"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale

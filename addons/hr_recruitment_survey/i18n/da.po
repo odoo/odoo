@@ -7,14 +7,15 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-06-13 12:18+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-14 10:27+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_recruitment_survey/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,6 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -60,8 +60,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hej <t t-out=\"object.partner_id.name or "
-"'applicant'\">[ansøgernavn]</t><br/><br/>\n"
+"        Hej <t t-out=\"object.partner_id.name or 'applicant'\">"
+"[ansøgernavn]</t><br/><br/>\n"
 "        <t>\n"
 "            Du er rykket videre i rekrutteringsprocessen, og vi vil gerne "
 "bede dig om at besvare nogle spørgsmål.\n"
@@ -69,8 +69,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t>\n"
 "                    Start den skriftlige samtale nu\n"
@@ -78,8 +78,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Besvar venligst interviewet for <t t-"
-"out=\"format_date(object.deadline)\">[dato for deadline]</t>.<br/><br/>\n"
+"            Besvar venligst interviewet for <t t-out=\"format_date"
+"(object.deadline)\">[dato for deadline]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            Vi ønsker dig held og lykke og takker på forhånd for din "
@@ -211,13 +211,11 @@ msgstr "Indhold"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_uid
-#, fuzzy
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_date
-#, fuzzy
 msgid "Created on"
 msgstr "Oprettet den"
 
@@ -233,7 +231,7 @@ msgstr "Vis interview skema"
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -254,7 +252,6 @@ msgstr "Eksisterende emails"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
-#, fuzzy
 msgid "From which university did or will you graduate?"
 msgstr ""
 "Fra hvilket universitet er du dimitteret, eller forventer du at dimittere?"
@@ -311,7 +308,6 @@ msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
-#, fuzzy
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
@@ -399,13 +395,11 @@ msgstr "Sprog"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_uid
-#, fuzzy
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_date
-#, fuzzy
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
@@ -447,7 +441,6 @@ msgstr "Udgående mail server"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
-#, fuzzy
 msgid "Participate to {{ object.survey_id.display_name }} interview"
 msgstr "Deltag i samtalen: {{ object.survey_id.display_name }}"
 
@@ -495,7 +488,6 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-#, fuzzy
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
@@ -672,7 +664,6 @@ msgstr "Spørgeskeamet %(survey_link)s er blevet sendt til %(partner_link)s"
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
-#, fuzzy
 msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
@@ -741,13 +732,11 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
-#, fuzzy
 msgid "id"
 msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
-#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."

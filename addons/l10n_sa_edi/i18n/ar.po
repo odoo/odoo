@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 18:23+0000\n"
+"POT-Creation-Date: 2026-07-17 18:27+0000\n"
 "PO-Revision-Date: 2026-01-17 12:51+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
@@ -50,6 +50,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "%(code)s Server returned an unexpected error: %(error)s"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/controllers/portal.py:0
+msgid "%s needs to be filled since the VAT is filled"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/controllers/portal.py:0
+msgid "%s needs to be four digits"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -181,6 +193,7 @@ msgstr "الفاتورة المعطلة"
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_building_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_building_number
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
 msgid "Building Number"
@@ -512,6 +525,11 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
+msgid "Identification Number"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_number
@@ -519,9 +537,18 @@ msgid "Identification Number (SA)"
 msgstr "رقم التعريف (المملكة العربية السعودية)"
 
 #. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/controllers/portal.py:0
+msgid ""
+"Identification Number needs to be filled since the Identification Scheme is "
+"filled"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_scheme
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_scheme
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_scheme
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
 msgid "Identification Scheme"
 msgstr "خطة التعريف"
 
@@ -956,6 +983,11 @@ msgid "Please set the following on %(company_name)s: %(fields)s"
 msgstr "يُرجى تعيين ما يلي في %(company_name)s: %(fields)s"
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
+msgid "Plot Identification"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
 msgid "Process"
 msgstr ""
@@ -1031,6 +1063,11 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.constraint,message:l10n_sa_edi.constraint_res_partner_check_l10n_sa_edi_plot_number
 msgid "Secondary Number must contain 4 numeric digits."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.address_form_fields
+msgid "Select Scheme..."
 msgstr ""
 
 #. module: l10n_sa_edi

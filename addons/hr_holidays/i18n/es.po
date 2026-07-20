@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-06 14:44+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -191,6 +191,14 @@ msgstr "%(name)s (%(time)g restantes de %(maximum)g horas)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -280,28 +288,6 @@ msgstr "- Resumen ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "- Resumen de este periodo"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)"
-msgstr "(s)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(s)\n"
-"                                     y hay un límite de saldo definido en"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr "(s)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3952,12 +3938,6 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "No hay ninguna asignación válida para cubrir esa solicitud."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "There is no valid allocation to cover this request for the following "
 "employees: %s"
@@ -5149,6 +5129,12 @@ msgstr "fecha de asignación"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "y el"
@@ -5179,6 +5165,12 @@ msgstr "haga clic aquí"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "fechas"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5268,6 +5260,12 @@ msgstr "desde el inicio de la asignación"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5289,6 +5287,12 @@ msgid ""
 msgstr ""
 "las ausencias de tipo «Tiempo trabajado» siempre deben ser elegibles para la "
 "tasa de acumulación."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5397,3 +5401,25 @@ msgstr "indefinido"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validar"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr ""
+
+#~ msgid "(s)"
+#~ msgstr "(s)"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(s)\n"
+#~ "                                     y hay un límite de saldo definido en"
+
+#~ msgid "(s)."
+#~ msgstr "(s)."
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "No hay ninguna asignación válida para cubrir esa solicitud."

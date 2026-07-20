@@ -21,10 +21,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 13:24+0000\n"
+"PO-Revision-Date: 2026-07-20 04:09+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/stock/th/"
-">\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/stock/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -412,6 +412,16 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* ผู้ขาย: คลังเสมือนที่เป็นตัวแทนของสถานที่ต้นทางสำหรับสินค้าที่รับมาจากผู้ขายของคุณ\n"
+"* เสมือน: คลังเสมือนที่ใช้สำหรับการสร้างโครงสร้างลำดับขั้นให้กับคลังสินค้า โดยการรวมกลุ่มคลังสินค้า"
+"ย่อยเข้าด้วยกัน ซึ่งคลังประเภทนี้จะไม่สามารถจัดเก็บสินค้าได้โดยตรง\n"
+"* ภายใน: คลังสินค้าจริงที่อยู่ภายในคลังสินค้าของคุณเอง\n"
+"* ลูกค้า: คลังเสมือนที่เป็นตัวแทนของสถานที่ปลายทางสำหรับสินค้าที่จัดส่งไปยังลูกค้าของคุณ\n"
+"* สินค้าสูญหาย: คลังเสมือนที่ทำหน้าที่เป็นพื้นที่คู่ตรงข้ามสำหรับการดำเนินงานปรับยอดสต็อกให้ถูกต้อง เช่"
+"น การตรวจนับสต็อกประจำปี\n"
+"* การผลิต: คลังคู่ตรงข้ามแบบเสมือนสำหรับกระบวนการผลิต กล่าวคือ คลังนี้จะทำหน้าที่เบิกใช้ชิ้นส่วน/วั"
+"ตถุดิบและตัดยอดเพื่อผลิตออกมาเป็นสินค้าสำเร็จรูป\n"
+"* ระหว่างทาง: คลังคู่ตรงข้ามที่ใช้สำหรับการโอนย้ายสินค้าระหว่างบริษัทหรือระหว่างคลังสินค้าต่างสาขา"
 
 #. module: stock
 #. odoo-python
@@ -2304,7 +2314,7 @@ msgstr "จำนวนปริมาณ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 msgid "Counterpart Locations"
-msgstr "สถานที่ของคู่สัญญา"
+msgstr "สถานที่ตั้งคู่ขนาน"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__counting_date
@@ -2559,7 +2569,7 @@ msgstr "กำหนดเอง"
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "หมายเลขล็อต/หมายเลขซีเรียลที่กำหนดเอง"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
@@ -2976,7 +2986,7 @@ msgstr "ต้องการ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
-msgstr ""
+msgstr "ความต้องการในหน่วยวัดของสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3694,7 +3704,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecasted_quantity
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 msgid "Forecasted Quantity"
-msgstr "ปริมาณพยากรณ์"
+msgstr "ปริมาณที่คาดการณ์"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
@@ -9751,6 +9761,7 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by an inventory adjustment."
 msgstr ""
+"ตำแหน่งนี้จะถูกใช้เป็นตำแหน่งต้นทางสำหรับการเคลื่อนย้ายคลังสินค้าที่เกิดจากการปรับสมดุลสินค้าคงคลัง"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9759,6 +9770,7 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by a manufacturing order."
 msgstr ""
+"ตำแหน่งนี้จะถูกใช้เป็นตำแหน่งต้นทางสำหรับการเคลื่อนย้ายสินค้าที่เกิดจากคำสั่งผลิต"
 
 #. module: stock
 #. odoo-python

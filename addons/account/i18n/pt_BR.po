@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-09 11:12+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-15 16:11+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/account/pt_BR/>\n"
@@ -6297,12 +6297,12 @@ msgstr "Não foi possível recarregar os dados."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
 msgid "Count Reconciled Lines"
-msgstr ""
+msgstr "Contagem de linhas reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Contar linhas reconciliadas, excluindo as diferenças de câmbio"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -8505,6 +8505,11 @@ msgid "Electronic Data Interchange"
 msgstr "Intercâmbio Eletrônico de Dados (EDI)"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "Formato eletrônico"
@@ -9183,12 +9188,12 @@ msgstr "Primeira nova sequência"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
 msgid "First Reconciled Lines"
-msgstr ""
+msgstr "Primeiras linhas reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
 msgid "First Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Primeiras linhas reconciliadas, excluindo as diferenças de troca"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -14145,11 +14150,6 @@ msgid "PDF without Payment"
 msgstr "PDF sem pagamento"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "Faturamento eletrônico PEPPOL"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
 msgid "PEPPOL Invoicing"
 msgstr "Fatura PEPPOL"
@@ -15285,7 +15285,7 @@ msgstr "Apropriação de Lucros ou Perdas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "Rentabilidade"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -19851,7 +19851,7 @@ msgstr "Este lançamento foi duplicado a partir de %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr ""
+msgstr "Este lançamento foi revertido de %s"
 
 #. module: account
 #. odoo-python
@@ -20531,7 +20531,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Sem categoria"
 
 #. module: account
 #. odoo-python
@@ -21547,7 +21547,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "Você pode usar '/' para indicar que o cliente não possui CNPJ."
 
 #. module: account
 #. odoo-python
@@ -22015,7 +22015,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
-msgstr ""
+msgstr "Não é possível registrar pagamentos para notas fiscais bloqueadas."
 
 #. module: account
 #. odoo-python
@@ -22928,6 +22928,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fatura de autofaturamento (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "Faturamento eletrônico PEPPOL"
 
 #~ msgid "%s, or / if not applicable"
 #~ msgstr "%s, ou/se não for aplicável"

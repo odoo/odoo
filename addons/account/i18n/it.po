@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-07 07:13+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-07-17 08:09+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/it/>\n"
@@ -1225,6 +1225,10 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"move_type != 'in_refund'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_type != 'out_refund'\">Fattura</"
+"span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'in_refund'\">Fattura fornitore</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1300,7 +1304,7 @@ msgstr "<span class=\"o_stat_text\">Registrazione contabile</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Movimenti contabili</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2742,6 +2746,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account '%s' is of payable type, but is used in a sale operation."
 msgstr ""
+"Il conto'%s' è un conto di debito ma viene utilizzato in un'operazione di "
+"vendita."
 
 #. module: account
 #. odoo-python
@@ -2749,6 +2755,8 @@ msgstr ""
 msgid ""
 "Account '%s' is of receivable type, but is used in a purchase operation."
 msgstr ""
+"Il conto '%s' è un conto di credito ma viene utilizzato in un'operazione "
+"d'acquisto."
 
 #. module: account
 #. odoo-python
@@ -6261,7 +6269,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__consolidation_credit
 msgid "Converted credit"
-msgstr ""
+msgstr "Credito convertito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__consolidation_debit
@@ -8183,7 +8191,7 @@ msgstr "Digitalizzazione documento"
 #: model:ir.model.fields,field_description:account.field_account_move__document_tax_mode
 #: model:ir.model.fields,field_description:account.field_account_move_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Modalità imposte documento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__document_sequence_editable
@@ -8197,7 +8205,7 @@ msgstr "Sequenza del documento modificabile"
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "Documents"
-msgstr ""
+msgstr "Documenti"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -8579,6 +8587,11 @@ msgid "Electronic Data Interchange"
 msgstr "Interscambio dati elettronici"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "Formato elettronico"
@@ -8687,7 +8700,7 @@ msgstr "Abilita istantanee"
 #. module: account
 #: model:ir.model,name:account.model_res_currency_rate_consolidation_mixin
 msgid "Enable multi company consolidation"
-msgstr ""
+msgstr "Abilita il consolidamento multiazienda"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -9258,12 +9271,12 @@ msgstr "Inizio nuova sequenza"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
 msgid "First Reconciled Lines"
-msgstr ""
+msgstr "Prime righe riconciliate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
 msgid "First Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Prime righe riconciliate esclusa differenza di ccambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -10582,7 +10595,7 @@ msgstr "Tasse di importazione"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__import_source_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__import_source_attachment_id
 msgid "Import Source Attachment"
-msgstr ""
+msgstr "Importa allegato di origine"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10825,7 +10838,7 @@ msgstr "Informazioni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Initial Setup"
-msgstr ""
+msgstr "Configurazione iniziale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11063,7 +11076,7 @@ msgstr "Valore di magazzino"
 #: model:account.account,name:account.21_stock_variation
 #: model:account.account,name:account.22_account_account_us_inventory_variation
 msgid "Inventory Variation"
-msgstr ""
+msgstr "Variazioni magazzino"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
@@ -12237,7 +12250,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices on your portal"
-msgstr ""
+msgstr "Permetti ai clienti di pagare le fatture dal portale"
 
 #. module: account
 #. odoo-javascript
@@ -13323,7 +13336,7 @@ msgstr "Non è stato fornito alcun allegato"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "No files found to download"
-msgstr ""
+msgstr "Nessun file trovato da scaricare"
 
 #. module: account
 #. odoo-python
@@ -14236,11 +14249,6 @@ msgstr "File PDF"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "PDF senza pagamento"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "Fatturazione elettronica PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -15378,7 +15386,7 @@ msgstr "Destinazione degli utili o delle perdite"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "Redditività"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15581,7 +15589,7 @@ msgstr "Spese RD"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__consolidation_rate
 #: model:ir.model.fields,field_description:account.field_res_currency_rate_consolidation_mixin__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Tasso"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__rating_ids
@@ -15892,7 +15900,7 @@ msgstr "Ricarica"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reload Data"
-msgstr ""
+msgstr "Ricarica dati"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15992,7 +16000,7 @@ msgstr "Riga rendiconto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_line_comparison
 msgid "Report Line Comparison"
-msgstr ""
+msgstr "Confronto righe resoconto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_name
@@ -16156,7 +16164,7 @@ msgstr "Movimento di storno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_count
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_count
 msgid "Reversal Move Count"
-msgstr ""
+msgstr "Numero movimenti di inversione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -16380,7 +16388,7 @@ msgstr "Addebito diretto SEPA (SDD)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA QR Codes"
-msgstr ""
+msgstr "Codici QR SEPA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
@@ -18004,7 +18012,7 @@ msgstr "Ripartizione imposte"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "Imponibile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
@@ -18058,7 +18066,7 @@ msgstr "Partita IVA richiesta"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "Tasse incl."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -18990,7 +18998,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_check_document_tax_mode_set
 msgid "The document tax mode must be set."
-msgstr ""
+msgstr "È necessario impostare la modalità fiscale del documento."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19970,7 +19978,7 @@ msgstr "La voce è stata duplicata da %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr ""
+msgstr "La registrazione è stata stornata da %s"
 
 #. module: account
 #. odoo-python
@@ -20650,7 +20658,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Senza categoria"
 
 #. module: account
 #. odoo-python
@@ -21297,7 +21305,7 @@ msgstr "Fornitore:"
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "VendorBills"
-msgstr ""
+msgstr "Fatture fornitori"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -21609,6 +21617,8 @@ msgstr ""
 msgid ""
 "You can only generate sales documents or purchase documents for self-billing."
 msgstr ""
+"È possibile generare solo documenti di vendita o di acquisto per "
+"l’autofatturazione."
 
 #. module: account
 #. odoo-python
@@ -21635,6 +21645,7 @@ msgstr "Possono essere riordinati solo movimenti dello stesso registro"
 #: code:addons/account/models/account_move.py:0
 msgid "You can only switch the type of a draft document."
 msgstr ""
+"È possibile modificare il tipo di documento solo se si tratta di una bozza."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -21660,6 +21671,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"È possibile utilizzare '/' per indicare che il cliente non possiede un "
+"codice fiscale."
 
 #. module: account
 #. odoo-python
@@ -22129,7 +22142,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
-msgstr ""
+msgstr "Non è possibile registrare pagamenti relativi a fatture bloccate."
 
 #. module: account
 #. odoo-python
@@ -23036,6 +23049,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fattura in autofatturazione (Rif {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "Fatturazione elettronica PEPPOL"
 
 #~ msgid "%s, or / if not applicable"
 #~ msgstr "%s, o/se non applicabile"

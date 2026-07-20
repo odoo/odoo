@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 00:49+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3299,6 +3299,13 @@ msgstr ""
 "mahsulot uchun mavjud bo‘ladi."
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
+msgid ""
+"If active, registering production on a work order will automatically unblock "
+"the next work order if it is blocked."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__message_needaction
@@ -6063,13 +6070,6 @@ msgstr "Nusxalash uchun amallarni tanlang"
 msgid ""
 "Select to customise operation dependencies. When checked, operations will be "
 "in parallel by default."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
-msgid ""
-"Select to enable continuous production. When checked, operations will start "
-"as soon as some quantities are ready."
 msgstr ""
 
 #. module: mrp
