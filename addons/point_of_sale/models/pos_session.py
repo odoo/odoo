@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, plaintext2html
+from odoo.tools import float_is_zero, format_datetime, plaintext2html
 
 _logger = logging.getLogger(__name__)
 
@@ -151,6 +151,14 @@ class PosSession(models.Model):
                     'session_id': record.id,
                 }))
         return super().write(vals)
+
+    @api.depends_context('display_start_at')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if not self.env.context.get('display_start_at'):
+            return
+        for rec in self:
+            rec.display_name += f" - {format_datetime(self.env, rec.start_at, dt_format='short')}"
 
     @api.model
     def _load_pos_data_models(self, config):
