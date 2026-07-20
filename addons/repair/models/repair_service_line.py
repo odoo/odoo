@@ -99,7 +99,7 @@ class RepairServiceLine(models.Model):
         lines_to_recreate.invoice_line_ids.unlink()
         lines_to_recreate._create_repair_invoice_line()
         if self.repair_id.under_warranty:
-            self.price_unit = 0.0
+            self.invoice_line_ids.price_unit = 0.0
 
     def _update_repair_sale_order_line(self):
         lines_to_recreate = self.env['repair.service.line']
@@ -117,7 +117,7 @@ class RepairServiceLine(models.Model):
         lines_to_recreate.sale_line_id.unlink()
         lines_to_recreate._create_repair_sale_order_line()
         if self.repair_id.under_warranty:
-            self.price_unit = 0.0
+            self.sale_line_id.price_unit = 0.0
 
     def _prepare_repair_service_line_common_vals(self):
         self.ensure_one()
