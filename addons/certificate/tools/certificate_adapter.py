@@ -1,7 +1,9 @@
 from ssl import SSLError
 
 import requests
-from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.x509 import load_pem_x509_certificate
+from OpenSSL.crypto import FILETYPE_PEM, load_certificate
 from OpenSSL.crypto import Error as CryptoError
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from urllib3.util.ssl_ import create_urllib3_context
@@ -37,8 +39,8 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
             certificate = certificate.sudo()
             pem = certificate.pem_certificate.content
             key = certificate.private_key_id.pem_key.content
-            context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
-            context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
+            context._ctx.use_certificate(load_pem_x509_certificate(pem))
+            context._ctx.use_privatekey(load_pem_private_key(key, password=None))
 
         context.load_cert_chain = patched_load_cert_chain
 
