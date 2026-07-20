@@ -16,10 +16,16 @@ class TestMultiCompany(TransactionCase):
 
         cls.company_a = cls.env['res.company'].create({'name': 'Company A'})
         cls.company_b = cls.env['res.company'].create({'name': 'Company B'})
+        cls.branch_company_a = cls.env['res.company'].create({
+            'name': 'Branch of company A',
+            'parent_id': cls.company_a.id,
+        })
         cls.warehouse_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_a.id)], limit=1)
         cls.warehouse_b = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_b.id)], limit=1)
+        cls.warehouse_branch_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.branch_company_a.id)], limit=1)
         cls.stock_location_a = cls.warehouse_a.lot_stock_id
         cls.stock_location_b = cls.warehouse_b.lot_stock_id
+        cls.stock_location_branch_a = cls.warehouse_branch_a.lot_stock_id
 
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
@@ -739,3 +745,24 @@ class TestMultiCompany(TransactionCase):
         quants_company_b = self.env['stock.quant'].with_company(self.company_b).search(domain_b)
         self.assertTrue(quants_company_a)
         self.assertFalse(quants_company_b)
+
+    def test_quants_visibility_in_branch_company(self):
+        '''
+        Ensure quants present in a branch company are visible in its' report, even when the product
+        is set for the parent company.
+        '''
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'type': 'consu',
+            'is_storable': True,
+            'company_id': self.company_a.id,
+        })
+        self.env['stock.quant'].create([{
+            'location_id': self.stock_location_branch_a.id,
+            'product_id': product.id,
+            'inventory_quantity': 10,
+        }])
+        base_domain = [('product_id', '=', product.id)]
+        domain = expression.AND([base_domain, self.env['stock.quant'].with_company(self.branch_company_a)._get_quants_action()['domain']])
+        quants_branch = self.env['stock.quant'].with_company(self.branch_company_a).search(domain)
+        self.assertTrue(quants_branch)

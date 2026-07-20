@@ -1327,7 +1327,11 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         if not domain:
             domain = []
-        domain += [('product_id.company_id', 'in', ctx.get('allowed_company_ids', []) + [False])]
+        domain += [
+            '|',
+            ('product_id.company_id', 'parent_of', ctx.get('allowed_company_ids', [])),
+            ('product_id.company_id', '=', False)
+        ]
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
         action = {
