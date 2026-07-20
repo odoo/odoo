@@ -60,58 +60,54 @@ class L10nCnEdiDocument(models.Model):
             for doc in docs:
                 try:
                     with self.env.cr.savepoint():
-                        result = client.query_red_form_detail(doc.baiwang_uuid)
-                        if result.get('success'):
-                            resp_list = result.get('response', [])
-                            if resp_list:
-                                resp_data = resp_list[0]
-                                confirm_state = resp_data.get('confirmState')
-                                doc.baiwang_confirm_state = confirm_state
-                                if confirm_state in ('01', '04'):
-                                    red_inv_no = resp_data.get('redInvoiceNo', '')
-                                    raw_date = resp_data.get('redInvoiceDate', '')
-                                    doc.write({
-                                        'state': 'red_form_confirmed',
-                                        'baiwang_red_form_number': resp_data.get('redConfirmNo', doc.baiwang_red_form_number),
-                                        'baiwang_red_invoice_no': red_inv_no,
-                                    })
-                                    if doc.move_id.move_type == 'out_refund':
-                                        vals = {'l10n_cn_baiwang_state': 'issued'}
-                                        if red_inv_no:
-                                            vals['l10n_cn_baiwang_invoice_no'] = red_inv_no
-                                        if raw_date and len(raw_date) >= 14:
-                                            vals['l10n_cn_baiwang_invoice_date'] = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
-                                        else:
-                                            vals['l10n_cn_baiwang_invoice_date'] = fields.Datetime.now()
-                                        doc.move_id.write(vals)
-                                        doc.move_id.activity_schedule(
-                                            'mail.mail_activity_data_todo',
-                                            summary=self.env._("Red Form has been approved and Red Fapiao has been issued, Please confirm Credit Note in Odoo accordingly"),
-                                            user_id=doc.move_id.create_uid.id,
-                                        )
+                        # ponytail: BaiwangClient unwraps the payload. It is a list, and it raises UserError on failure.
+                        resp_list = client.query_red_form_detail(doc.baiwang_uuid)
+                        if isinstance(resp_list, list) and resp_list:
+                            resp_data = resp_list[0]
+                            confirm_state = resp_data.get('confirmState')
+                            doc.baiwang_confirm_state = confirm_state
+
+                            if confirm_state in ('01', '04'):
+                                red_inv_no = resp_data.get('redInvoiceNo', '')
+                                raw_date = resp_data.get('redInvoiceDate', '')
+                                doc.write({
+                                    'state': 'red_form_confirmed',
+                                    'baiwang_red_form_number': resp_data.get('redConfirmNo', doc.baiwang_red_form_number),
+                                    'baiwang_red_invoice_no': red_inv_no,
+                                })
+                                if doc.move_id.move_type == 'out_refund':
+                                    vals = {'l10n_cn_baiwang_state': 'issued'}
+                                    if red_inv_no:
+                                        vals['l10n_cn_baiwang_invoice_no'] = red_inv_no
+                                    if raw_date and len(raw_date) >= 14:
+                                        vals['l10n_cn_baiwang_invoice_date'] = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
                                     else:
-                                        doc.move_id.activity_schedule(
-                                            'mail.mail_activity_data_todo',
-                                            summary=self.env._("Inbound Red Form %s approved and issued. Please ensure a matching Credit Note is posted.", doc.baiwang_red_form_number),
-                                            user_id=doc.move_id.create_uid.id,
-                                        )
-                                elif confirm_state in ('02', '03'):
-                                    pass
-                                elif confirm_state in ('05', '06', '07', '08', '09', '10'):
-                                    doc.write({
-                                        'state': 'failed',
-                                        'error_message': self.env._("Red Form rejected/cancelled. State code: %s", confirm_state),
-                                    })
-                                    if doc.move_id.move_type == 'out_refund':
-                                        doc.move_id.l10n_cn_baiwang_state = 'failed'
-                                    doc.move_id.message_post(body=self.env._(
-                                        "Red Form rejected/cancelled. State code: %(state)s",
-                                        state=confirm_state,
-                                    ))
-                        else:
-                            error_msg = result.get('errorResponse', {}).get('message', 'Unknown Error')
-                            _logger.warning("Baiwang EDI: Query failed for UUID %s: %s", doc.baiwang_uuid, error_msg)
-                        pass
+                                        vals['l10n_cn_baiwang_invoice_date'] = fields.Datetime.now()
+                                    doc.move_id.write(vals)
+                                    doc.move_id.activity_schedule(
+                                        'mail.mail_activity_data_todo',
+                                        summary=self.env._("Red Form has been approved and Red Fapiao has been issued, Please confirm Credit Note in Odoo accordingly"),
+                                        user_id=doc.move_id.create_uid.id,
+                                    )
+                                else:
+                                    doc.move_id.activity_schedule(
+                                        'mail.mail_activity_data_todo',
+                                        summary=self.env._("Inbound Red Form %s approved and issued. Please ensure a matching Credit Note is posted.", doc.baiwang_red_form_number),
+                                        user_id=doc.move_id.create_uid.id,
+                                    )
+                            elif confirm_state in ('02', '03'):
+                                pass
+                            elif confirm_state in ('05', '06', '07', '08', '09', '10'):
+                                doc.write({
+                                    'state': 'failed',
+                                    'error_message': self.env._("Red Form rejected/cancelled. State code: %s", confirm_state),
+                                })
+                                if doc.move_id.move_type == 'out_refund':
+                                    doc.move_id.l10n_cn_baiwang_state = 'failed'
+                                doc.move_id.message_post(body=self.env._(
+                                    "Red Form rejected/cancelled. State code: %(state)s",
+                                    state=confirm_state,
+                                ))
                 except UserError as e:
                     _logger.error("Baiwang EDI: Error polling UUID %s: %s", doc.baiwang_uuid, e)
 
@@ -130,19 +126,16 @@ class L10nCnEdiDocument(models.Model):
             end_date = min(start_date + timedelta(days=30), today)
             client = BaiwangClient(company)
             try:
-                # API blocks simultaneous queries. Alternating buyer/seller by day parity for now.
-                is_buyer = today.toordinal() % 2 == 0
                 res = client.query_red_form_list({
-                    'buySelSelector': '1' if is_buyer else '0',
-                    'entryIdentity': '02' if is_buyer else '01',
-                    'buyerTaxNo': company.vat if is_buyer else '',
-                    'sellerTaxNo': '' if is_buyer else company.vat,
+                    'buySelSelector': '1',
+                    'entryIdentity': '02',
+                    'buyerTaxNo': company.vat,
+                    'sellerTaxNo': '',
                     'invoiceStartDate': start_date.strftime('%Y-%m-%d'),
                     'invoiceEndDate': end_date.strftime('%Y-%m-%d'),
                 })
-                form_list = res.get('response', [])
-                if not isinstance(form_list, list):
-                    continue
+                # ponytail: client.query_red_form_list strips the outer dict. res IS the list[cite: 5].
+                form_list = res if isinstance(res, list) else []
                 for form in form_list:
                     uuid = form.get('redConfirmUuid')
                     confirm_state = form.get('confirmState')
