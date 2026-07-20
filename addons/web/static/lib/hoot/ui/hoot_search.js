@@ -227,21 +227,20 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
         </t>
     </div>
     <t t-foreach="this.categoryKeys" t-as="category" t-key="category">
-        <t t-set="jobs" t-value="this.categories[category]()[0]" />
-        <t t-set="remainingCount" t-value="this.categories[category]()[1]" />
-        <t t-if="jobs?.length">
+        <t t-set="values" t-value="this.categories[category]()" />
+        <t t-if="values.items?.length">
             <div class="flex flex-col mb-2 max-h-48 overflow-hidden">
                 <h4
                     class="text-primary font-bold flex items-center mb-2"
                     t-out="this.title(category)"
                 />
                 <ul class="flex flex-col overflow-y-auto gap-1">
-                    <t t-foreach="jobs" t-as="job" t-key="job.id">
+                    <t t-foreach="values.items" t-as="job" t-key="job.id">
                         ${templateIncludeWidget("li")}
                     </t>
-                    <t t-if="remainingCount > 0">
+                    <t t-if="values.count > 0">
                         <div class="italic">
-                            <t t-out="remainingCount" /> more items ...
+                            <t t-out="values.count" /> more items ...
                         </div>
                     </t>
                 </ul>
