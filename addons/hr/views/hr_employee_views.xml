@@ -918,5 +918,21 @@ if employees:
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
             <field name="binding_view_types">list,kanban</field>
         </record>
+
+        <record id="action_view_resource_calendar_employees" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('resource_calendar_id', '=', active_id)]</field>
+            <field name="context">{
+                'default_resource_calendar_id': active_id,
+                'search_default_resource_calendar_id': active_id
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No employees are assigned to this working schedule yet.
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>
