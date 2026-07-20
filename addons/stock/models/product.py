@@ -371,14 +371,114 @@ class Product(models.Model):
         if not isinstance(value, (float, int)):
             raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
-        # TODO: Still optimization possible when searching virtual quantities
-        ids = []
-        # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
-            if OPERATORS[operator](product[field], value):
-                ids.append(product.id)
-        return [('id', 'in', ids)]
+        # Aggregate the underlying quants/moves once and evaluate the operator per
+        # product, instead of computing `field` for every product in the database and
+        # filtering in Python. The context keys that scope or time-shift the quantity
+        # (lot_id/owner_id/package_id/from_date/to_date) are applied to the aggregation
+        # domains exactly as `_compute_quantities_dict` does, so the result matches the
+        # computed field. Like that method's raw aggregates this ignores per-UoM rounding,
+        # and (as the search already did) it does not expand kit BoMs, which only
+        # `_compute_quantities_dict` (mrp) handles.
+        op = OPERATORS[operator]
+        lot_id = self.env.context.get('lot_id')
+        owner_id = self.env.context.get('owner_id')
+        package_id = self.env.context.get('package_id')
+        from_date = self.env.context.get('from_date')
+        to_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        dates_in_the_past = bool(to_date and to_date < fields.Datetime.now())
+
+        need_quant = field in ('qty_available', 'free_qty', 'virtual_available')
+        need_in = field in ('incoming_qty', 'virtual_available')
+        need_out = field in ('outgoing_qty', 'virtual_available')
+        # `qty_available` back in time needs the moves done after `to_date` (see below).
+        need_past = dates_in_the_past and need_quant
+
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        # Scope filters, mirroring `_compute_quantities_dict`: lot/package restrict quants
+        # only, owner restricts quants and both move sets, dates restrict moves only.
+        domain_quant = domain_quant_loc
+        domain_move_in = domain_move_in_loc
+        domain_move_out = domain_move_out_loc
+        if lot_id is not None:
+            domain_quant = domain_quant + [('lot_id', '=', lot_id)]
+        if owner_id is not None:
+            domain_quant = domain_quant + [('owner_id', '=', owner_id)]
+            domain_move_in = domain_move_in + [('restrict_partner_id', '=', owner_id)]
+            domain_move_out = domain_move_out + [('restrict_partner_id', '=', owner_id)]
+        if package_id is not None:
+            domain_quant = domain_quant + [('package_id', '=', package_id)]
+        # Snapshot the (owner-scoped) move domains before the date window is added; the
+        # back-in-time calculation reuses them to undo the moves done after `to_date`.
+        domain_move_in_done = list(domain_move_in)
+        domain_move_out_done = list(domain_move_out)
+        if from_date:
+            domain_move_in = domain_move_in + [('date', '>=', from_date)]
+            domain_move_out = domain_move_out + [('date', '>=', from_date)]
+        if to_date:
+            domain_move_in = domain_move_in + [('date', '<=', to_date)]
+            domain_move_out = domain_move_out + [('date', '<=', to_date)]
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        Quant = self.env['stock.quant'].with_context(active_test=False)
+        todo_states = ('waiting', 'confirmed', 'assigned', 'partially_available')
+
+        quants = {}
+        if need_quant:
+            for product, quantity, reserved in Quant._read_group(
+                domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'],
+            ):
+                quants[product.id] = (quantity, reserved)
+        moves_in = {}
+        if need_in:
+            for product, quantity in Move._read_group(
+                [('state', 'in', todo_states)] + domain_move_in, ['product_id'], ['product_qty:sum'],
+            ):
+                moves_in[product.id] = quantity
+        moves_out = {}
+        if need_out:
+            for product, quantity in Move._read_group(
+                [('state', 'in', todo_states)] + domain_move_out, ['product_id'], ['product_qty:sum'],
+            ):
+                moves_out[product.id] = quantity
+
+        # Back in time: `qty_available` at a past `to_date` is the current stock minus the
+        # incoming (plus the outgoing) moves done after that date, converted to the product UoM.
+        moves_in_past = defaultdict(float)
+        moves_out_past = defaultdict(float)
+        if need_past:
+            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
+            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
+            for product, uom, quantity in Move._read_group(
+                domain_move_in_done, ['product_id', 'product_uom'], ['quantity:sum'],
+            ):
+                moves_in_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, uom, quantity in Move._read_group(
+                domain_move_out_done, ['product_id', 'product_uom'], ['quantity:sum'],
+            ):
+                moves_out_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+
+        def product_value(product_id):
+            quantity, reserved = quants.get(product_id, (0.0, 0.0))
+            if need_past:
+                quantity = quantity - moves_in_past.get(product_id, 0.0) + moves_out_past.get(product_id, 0.0)
+            if field == 'qty_available':
+                return quantity
+            if field == 'free_qty':
+                return quantity - reserved
+            if field == 'incoming_qty':
+                return moves_in.get(product_id, 0.0)
+            if field == 'outgoing_qty':
+                return moves_out.get(product_id, 0.0)
+            return quantity + moves_in.get(product_id, 0.0) - moves_out.get(product_id, 0.0)  # virtual_available
+
+        processed_product_ids = set(quants) | set(moves_in) | set(moves_out) | set(moves_in_past) | set(moves_out_past)
+        product_ids = {pid for pid in processed_product_ids if op(product_value(pid), value)}
+
+        # Products with neither quant nor move have a value of 0 in the current domain.
+        if op(0.0, value):
+            return [('id', 'not in', list(processed_product_ids - product_ids))]
+
+        return [('id', 'in', list(product_ids))]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
