@@ -5,9 +5,9 @@ import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
-const { astToFormula } = spreadsheet;
-const { isEvaluationError } = spreadsheet.helpers;
 const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
+const { astToFormula, invalidateEvaluationCommands } = spreadsheet;
+const { isEvaluationError, PositionMap } = spreadsheet.helpers;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -37,6 +37,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
 
         this.custom = config.custom;
         this._pendingAddDomains = false;
+        this.listPositionCache = new PositionMap();
+        this.shouldInvalidateCache = false;
     }
 
     beforeHandle(cmd) {
@@ -54,6 +56,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {Object} cmd Command
      */
     handle(cmd) {
+        if (invalidateEvaluationCommands.has(cmd.type)) {
+            this.shouldInvalidateCache = true;
+        }
+        if (cmd.type === "UPDATE_CELL" && !this.shouldInvalidateCache) {
+            this.shouldInvalidateCache = true;
+        }
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
                 const { listId, linesNumber } = cmd;
@@ -124,6 +132,10 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     finalize() {
+        if (this.shouldInvalidateCache) {
+            this.listPositionCache = new PositionMap();
+            this.shouldInvalidateCache = false;
+        }
         if (this._pendingAddDomains) {
             this._addDomains();
             this._pendingAddDomains = false;
@@ -295,16 +307,22 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {string|undefined}
      */
     getListIdFromPosition(position) {
-        const cell = this.getters.getCorrespondingFormulaCell(position);
-        const sheetId = position.sheetId;
-        if (cell && cell.isFormula) {
-            const listFunction = getFirstListFunction(cell.compiledFormula, this.getters);
-            if (listFunction) {
-                const content = astToFormula(listFunction.args[0]);
-                return this.getters.evaluateFormula(sheetId, content)?.toString();
+        if (!this.listPositionCache.has(position)) {
+            const cell = this.getters.getCorrespondingFormulaCell(position);
+            const sheetId = position.sheetId;
+            if (cell && cell.isFormula) {
+                const listFunction = getFirstListFunction(cell.compiledFormula, this.getters);
+                if (listFunction) {
+                    const content = astToFormula(listFunction.args[0]);
+                    const listId =
+                        this.getters.evaluateFormula(sheetId, content)?.toString() || false;
+                    this.listPositionCache.set(position, listId);
+                    return listId;
+                }
             }
+            this.listPositionCache.set(position, undefined);
         }
-        return undefined;
+        return this.listPositionCache.get(position) || undefined;
     }
 
     getListFieldFromPosition(position) {
