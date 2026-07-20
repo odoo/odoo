@@ -18,7 +18,7 @@ export const autoCompleteProps = {
     ),
     placeholder: t.string().optional(""),
     title: t.string().optional(""),
-    autocomplete: t.string().optional("new-password"),
+    autocomplete: t.string().optional("off"),
     autoSelect: t.boolean().optional(false),
     resetOnSelect: t.boolean().optional(),
     onInput: t.function().optional(() => () => {}),
