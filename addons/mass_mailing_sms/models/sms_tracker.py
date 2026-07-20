@@ -46,6 +46,8 @@ class SmsTracker(models.Model):
             # TDE note: check to use set_sent / ... tools updating marketing automation bits
             if trace_status == 'bounce':
                 traces.set_bounced(failure_reason=failure_reason, failure_type=failure_type)
+            elif trace_status == 'error':
+                traces.set_failed(failure_reason=failure_reason, failure_type=failure_type)
             else:
                 traces_values = {
                     'trace_status': trace_status,
