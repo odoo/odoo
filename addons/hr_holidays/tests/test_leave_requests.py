@@ -39,89 +39,100 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
         HrWorkEntryType = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager_id)
 
-        cls.holidays_type_1 = HrWorkEntryType.create({
-            'name': 'NotLimitedHR',
-            'code': 'NotLimitedHR',
-            'requires_allocation': False,
-            'leave_validation_type': 'hr',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_2 = HrWorkEntryType.create({
-            'name': 'Limited',
-            'code': 'Limited',
-            'requires_allocation': True,
-            'employee_requests': True,
-            'leave_validation_type': 'hr',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_3 = HrWorkEntryType.create({
-            'name': 'TimeNotLimited',
-            'code': 'TimeNotLimited',
-            'requires_allocation': False,
-            'leave_validation_type': 'manager',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-
-        cls.holidays_type_4 = HrWorkEntryType.create({
-            'name': 'Limited with 2 approvals',
-            'code': 'Limited with 2 approvals',
-            'requires_allocation': True,
-            'employee_requests': True,
-            'leave_validation_type': 'both',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-        cls.holidays_support_document = HrWorkEntryType.create({
-            'name': 'Time off with support document',
-            'code': 'Time off with support document',
-            'support_document': True,
-            'requires_allocation': False,
-            'leave_validation_type': 'no_validation',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_half = HrWorkEntryType.create({
-            'name': 'Time off in half-days',
-            'code': 'Time off in half-days',
-            'requires_allocation': False,
-            'leave_validation_type': 'no_validation',
-            'request_unit': 'half_day',
-            'unit_of_measure': 'day',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_hours = HrWorkEntryType.create({
-            'name': 'Time off in hours',
-            'code': 'Time off in hours',
-            'requires_allocation': False,
-            'leave_validation_type': 'no_validation',
-            'request_unit': 'hour',
-            'unit_of_measure': 'hour',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_half_with_alloc = HrWorkEntryType.create({
-            'name': 'Limited time off in half-days',
-            'code': 'Limited time off in half-days',
-            'requires_allocation': True,
-            'leave_validation_type': 'no_validation',
-            'request_unit': 'half_day',
-            'count_as': 'absence',
-        })
-        cls.holidays_type_hours_with_alloc = HrWorkEntryType.create({
-            'name': 'Limited time off in hours',
-            'code': 'Limited time off in hours',
-            'requires_allocation': True,
-            'leave_validation_type': 'no_validation',
-            'request_unit': 'hour',
-            'count_as': 'absence',
-        })
+        (
+            cls.holidays_type_1,
+            cls.holidays_type_2,
+            cls.holidays_type_3,
+            cls.holidays_type_4,
+            cls.holidays_support_document,
+            cls.holidays_type_half,
+            cls.holidays_type_hours,
+            cls.holidays_type_half_with_alloc,
+            cls.holidays_type_hours_with_alloc,
+        ) = HrWorkEntryType.create([
+            {
+                'name': 'NotLimitedHR',
+                'code': 'NotLimitedHR',
+                'requires_allocation': False,
+                'leave_validation_type': 'hr',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Limited',
+                'code': 'Limited',
+                'requires_allocation': True,
+                'employee_requests': True,
+                'leave_validation_type': 'hr',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'TimeNotLimited',
+                'code': 'TimeNotLimited',
+                'requires_allocation': False,
+                'leave_validation_type': 'manager',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Limited with 2 approvals',
+                'code': 'Limited with 2 approvals',
+                'requires_allocation': True,
+                'employee_requests': True,
+                'leave_validation_type': 'both',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Time off with support document',
+                'code': 'Time off with support document',
+                'support_document': True,
+                'requires_allocation': False,
+                'leave_validation_type': 'no_validation',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Time off in half-days',
+                'code': 'Time off in half-days',
+                'requires_allocation': False,
+                'leave_validation_type': 'no_validation',
+                'request_unit': 'half_day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Time off in hours',
+                'code': 'Time off in hours',
+                'requires_allocation': False,
+                'leave_validation_type': 'no_validation',
+                'request_unit': 'hour',
+                'unit_of_measure': 'hour',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Limited time off in half-days',
+                'code': 'Limited time off in half-days',
+                'requires_allocation': True,
+                'leave_validation_type': 'no_validation',
+                'request_unit': 'half_day',
+                'count_as': 'absence',
+            },
+            {
+                'name': 'Limited time off in hours',
+                'code': 'Limited time off in hours',
+                'requires_allocation': True,
+                'leave_validation_type': 'no_validation',
+                'request_unit': 'hour',
+                'count_as': 'absence',
+            },
+        ])
 
         cls.irregular_calendar = cls.env['resource.calendar'].create({
             'name': 'Irregular Calendar With Gaps',

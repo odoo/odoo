@@ -10,29 +10,31 @@ class TestResourceCalendarLeaves(TestHrHolidaysCommon):
         """Test the computation of associated_leaves_count, ensuring it correctly sums
         leaves specific to the calendar (calendar_id=self.id) and global leaves (calendar_id=False).
         """
-        calendar_a = self.env['resource.calendar'].create({'name': 'Calendar A'})
-        calendar_b = self.env['resource.calendar'].create({'name': 'Calendar B'})
+        calendar_a, calendar_b = self.env['resource.calendar'].create([
+            {'name': 'Calendar A'},
+            {'name': 'Calendar B'},
+        ])
 
-        leave_a_1 = self.env['resource.calendar.leaves'].create({
-            'name': 'CalendarA Specific Leave_1',
-            'calendar_id': calendar_a.id,
-            'date_from': datetime(2025, 1, 1),
-            'date_to': datetime(2025, 1, 1),
-        })
-
-        leave_b_1 = self.env['resource.calendar.leaves'].create({
-            'name': 'CalendarB Specific Leave_1',
-            'calendar_id': calendar_b.id,
-            'date_from': datetime(2025, 2, 1),
-            'date_to': datetime(2025, 2, 1),
-        })
-
-        global_leave_1 = self.env['resource.calendar.leaves'].create({
-            'name': 'Global Leave 1',
-            'calendar_id': False,
-            'date_from': datetime(2025, 3, 1),
-            'date_to': datetime(2025, 3, 1),
-        })
+        leave_a_1, leave_b_1, global_leave_1 = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'CalendarA Specific Leave_1',
+                'calendar_id': calendar_a.id,
+                'date_from': datetime(2025, 1, 1),
+                'date_to': datetime(2025, 1, 1),
+            },
+            {
+                'name': 'CalendarB Specific Leave_1',
+                'calendar_id': calendar_b.id,
+                'date_from': datetime(2025, 2, 1),
+                'date_to': datetime(2025, 2, 1),
+            },
+            {
+                'name': 'Global Leave 1',
+                'calendar_id': False,
+                'date_from': datetime(2025, 3, 1),
+                'date_to': datetime(2025, 3, 1),
+            },
+        ])
 
         # 1. Initial check: calendar_a (1 specific + 1 global = 2), calendar_b (1 specific + 1 global = 2)
         (calendar_a | calendar_b)._compute_associated_leaves_count()

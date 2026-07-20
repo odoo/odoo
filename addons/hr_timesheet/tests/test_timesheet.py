@@ -60,57 +60,71 @@ class TestCommonTimesheet(TransactionCase):
             'partner_id': cls.partner.id,
             'account_id': cls.analytic_account.id,
         })
-        cls.task1 = cls.env['project.task'].create({
-            'name': 'Task One',
-            'priority': '0',
-            'state': '01_in_progress',
-            'project_id': cls.project_customer.id,
-            'partner_id': cls.partner.id,
-        })
-        cls.task2 = cls.env['project.task'].create({
-            'name': 'Task Two',
-            'priority': '1',
-            'state': '1_done',
-            'project_id': cls.project_customer.id,
-        })
+        cls.task1, cls.task2 = cls.env['project.task'].create([
+            {
+                'name': 'Task One',
+                'priority': '0',
+                'state': '01_in_progress',
+                'project_id': cls.project_customer.id,
+                'partner_id': cls.partner.id,
+            },
+            {
+                'name': 'Task Two',
+                'priority': '1',
+                'state': '1_done',
+                'project_id': cls.project_customer.id,
+            },
+        ])
         # users
-        cls.user_employee = cls.env['res.users'].create({
-            'name': 'User Employee',
-            'login': 'user_employee',
-            'email': 'useremployee@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
-        })
-        cls.user_employee2 = cls.env['res.users'].create({
-            'name': 'User Employee 2',
-            'login': 'user_employee2',
-            'email': 'useremployee2@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
-        })
-        cls.user_approver = cls.env['res.users'].create({
-            'name': 'User Approver',
-            'login': 'user_timesheet_approver',
-            'email': 'userapprover@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id])],
-        })
-        cls.user_manager = cls.env['res.users'].create({
-            'name': 'User Officer',
-            'login': 'user_manager',
-            'email': 'usermanager@test.com',
-            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_timesheet_manager').id])],
-        })
+        group_timesheet_user = cls.env.ref('hr_timesheet.group_hr_timesheet_user').id
+        group_timesheet_approver = cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id
+        group_timesheet_manager = cls.env.ref('hr_timesheet.group_timesheet_manager').id
+        (
+            cls.user_employee,
+            cls.user_employee2,
+            cls.user_approver,
+            cls.user_manager,
+        ) = cls.env['res.users'].create([
+            {
+                'name': 'User Employee',
+                'login': 'user_employee',
+                'email': 'useremployee@test.com',
+                'group_ids': [(6, 0, [group_timesheet_user])],
+            },
+            {
+                'name': 'User Employee 2',
+                'login': 'user_employee2',
+                'email': 'useremployee2@test.com',
+                'group_ids': [(6, 0, [group_timesheet_user])],
+            },
+            {
+                'name': 'User Approver',
+                'login': 'user_timesheet_approver',
+                'email': 'userapprover@test.com',
+                'group_ids': [(6, 0, [group_timesheet_approver])],
+            },
+            {
+                'name': 'User Officer',
+                'login': 'user_manager',
+                'email': 'usermanager@test.com',
+                'group_ids': [(6, 0, [group_timesheet_manager])],
+            },
+        ])
         # employees
-        cls.empl_employee = cls.env['hr.employee'].create({
-            'name': 'User Empl Employee',
-            'user_id': cls.user_employee.id,
-        })
-        cls.empl_employee2 = cls.env['hr.employee'].create({
-            'name': 'User Empl Employee 2',
-            'user_id': cls.user_employee2.id,
-        })
-        cls.empl_manager = cls.env['hr.employee'].create({
-            'name': 'User Empl Officer',
-            'user_id': cls.user_manager.id,
-        })
+        cls.empl_employee, cls.empl_employee2, cls.empl_manager = cls.env['hr.employee'].create([
+            {
+                'name': 'User Empl Employee',
+                'user_id': cls.user_employee.id,
+            },
+            {
+                'name': 'User Empl Employee 2',
+                'user_id': cls.user_employee2.id,
+            },
+            {
+                'name': 'User Empl Officer',
+                'user_id': cls.user_manager.id,
+            },
+        ])
         cls.project = cls.env['project.project'].create({
             'name': 'Test Project',
             'privacy_visibility': 'followers',

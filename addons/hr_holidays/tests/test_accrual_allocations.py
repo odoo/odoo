@@ -21,33 +21,39 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         cls.department = cls.env['hr.department'].create({
             'name': 'Test Department',
         })
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off',
-            'code': 'Paid Time Off',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'hr',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
-        cls.work_entry_type_hour = cls.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off hours',
-            'code': 'Paid Time Off hours',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'hr',
-            'request_unit': 'hour',
-            'unit_of_measure': 'hour',
-        })
-        cls.work_entry_type_hour_day = cls.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off hours',
-            'code': 'Paid Time Off hours Test',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'hr',
-            'request_unit': 'day',
-            'unit_of_measure': 'hour',
-        })
+        (
+            cls.work_entry_type,
+            cls.work_entry_type_hour,
+            cls.work_entry_type_hour_day,
+        ) = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Paid Time Off',
+                'code': 'Paid Time Off',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'hr',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            },
+            {
+                'name': 'Paid Time Off hours',
+                'code': 'Paid Time Off hours',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'hr',
+                'request_unit': 'hour',
+                'unit_of_measure': 'hour',
+            },
+            {
+                'name': 'Paid Time Off hours',
+                'code': 'Paid Time Off hours Test',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'hr',
+                'request_unit': 'day',
+                'unit_of_measure': 'hour',
+            },
+        ])
         accrual_plan1_levels_fields = {
             'added_value_type': 'day',
             'frequency': 'monthly',
@@ -70,22 +76,24 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value': 2,
             }),
         ]
-        cls.accrual_plan_start1 = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan 1 start',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'start',
-            'carryover_date': 'allocation',
-            'can_be_carryover': True,
-            'level_ids': accrual_plan1_levels,
-        })
-        cls.accrual_plan_end1 = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan 1 end',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'end',
-            'carryover_date': 'allocation',
-            'can_be_carryover': True,
-            'level_ids': accrual_plan1_levels,
-        })
+        cls.accrual_plan_start1, cls.accrual_plan_end1 = cls.env['hr.leave.accrual.plan'].create([
+            {
+                'name': 'Accrual Plan 1 start',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'start',
+                'carryover_date': 'allocation',
+                'can_be_carryover': True,
+                'level_ids': accrual_plan1_levels,
+            },
+            {
+                'name': 'Accrual Plan 1 end',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'end',
+                'carryover_date': 'allocation',
+                'can_be_carryover': True,
+                'level_ids': accrual_plan1_levels,
+            },
+        ])
         cls.work_entry_type_day = cls.env['hr.work.entry.type'].create({
             'name': 'Test Leave Type Days',
             'code': 'Test Leave Type Days',
@@ -181,43 +189,47 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'action_with_unused_accruals': 'all',
         })
 
-        cls.accrual_plan_monthly_end_carryover_year_start = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan For Test',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'start',
-            'can_be_carryover': True,
-            'carryover_date': 'year_start',
-            'level_ids': [first_accrual_plan_level],
-        })
-
-        cls.accrual_plan_monthly_end_carryover_year_end = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan For Test',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'end',
-            'can_be_carryover': True,
-            'carryover_date': 'year_start',
-            'level_ids': [first_accrual_plan_level],
-        })
-
-        cls.accrual_plan_monthly_end_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan For Test',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'end',
-            'can_be_carryover': True,
-            'carryover_date': 'year_start',
-            'transition_mode': 'immediately',
-            'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
-        })
-
-        cls.accrual_plan_monthly_start_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Accrual Plan For Test',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'start',
-            'can_be_carryover': True,
-            'carryover_date': 'year_start',
-            'transition_mode': 'immediately',
-            'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
-        })
+        (
+            cls.accrual_plan_monthly_end_carryover_year_start,
+            cls.accrual_plan_monthly_end_carryover_year_end,
+            cls.accrual_plan_monthly_end_carryover_year_start_2_lvls,
+            cls.accrual_plan_monthly_start_carryover_year_start_2_lvls,
+        ) = cls.env['hr.leave.accrual.plan'].create([
+            {
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'start',
+                'can_be_carryover': True,
+                'carryover_date': 'year_start',
+                'level_ids': [first_accrual_plan_level],
+            },
+            {
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'end',
+                'can_be_carryover': True,
+                'carryover_date': 'year_start',
+                'level_ids': [first_accrual_plan_level],
+            },
+            {
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'end',
+                'can_be_carryover': True,
+                'carryover_date': 'year_start',
+                'transition_mode': 'immediately',
+                'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+            },
+            {
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'start',
+                'can_be_carryover': True,
+                'carryover_date': 'year_start',
+                'transition_mode': 'immediately',
+                'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+            },
+        ])
 
     def setAllocationCreateDate(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date

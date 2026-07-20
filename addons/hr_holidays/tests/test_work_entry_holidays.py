@@ -35,31 +35,35 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
 
         cls.work_entry_type.requires_allocation = False
 
-        cls.work_entry_type_remote = cls.env['hr.work.entry.type'].create({
-            'name': 'Remote Work',
-            'code': 'WORKTEST100',
-            'count_as': 'working_time',
-            'requires_allocation': False,
-            'allow_request_on_top': True,
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
-
-        cls.half_day_work_entry_type = cls.env['hr.work.entry.type'].create({
-            'name': 'Half-Day Leaves',
-            'code': 'Half-Day Leaves',
-            'count_as': 'absence',
-            'request_unit': 'half_day',
-            'requires_allocation': False,
-        })
-
-        cls.hours_work_entry_type = cls.env['hr.work.entry.type'].create({
-            'name': 'Hours Leaves',
-            'code': 'Hours Leaves',
-            'count_as': 'absence',
-            'request_unit': 'hour',
-            'requires_allocation': False,
-        })
+        (
+            cls.work_entry_type_remote,
+            cls.half_day_work_entry_type,
+            cls.hours_work_entry_type,
+        ) = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Remote Work',
+                'code': 'WORKTEST100',
+                'count_as': 'working_time',
+                'requires_allocation': False,
+                'allow_request_on_top': True,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            },
+            {
+                'name': 'Half-Day Leaves',
+                'code': 'Half-Day Leaves',
+                'count_as': 'absence',
+                'request_unit': 'half_day',
+                'requires_allocation': False,
+            },
+            {
+                'name': 'Hours Leaves',
+                'code': 'Hours Leaves',
+                'count_as': 'absence',
+                'request_unit': 'hour',
+                'requires_allocation': False,
+            },
+        ])
 
         cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')

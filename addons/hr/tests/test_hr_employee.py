@@ -50,18 +50,22 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_smart_button_multi_company(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})
-        company_A = self.env['res.company'].create({'name': 'company_A'})
-        company_B = self.env['res.company'].create({'name': 'company_B'})
-        self.env['hr.employee'].create({
-            'name': 'employee_A',
-            'work_contact_id': partner.id,
-            'company_id': company_A.id,
-        })
-        self.env['hr.employee'].create({
-            'name': 'employee_B',
-            'work_contact_id': partner.id,
-            'company_id': company_B.id
-        })
+        company_A, company_B = self.env['res.company'].create([
+            {'name': 'company_A'},
+            {'name': 'company_B'},
+        ])
+        self.env['hr.employee'].create([
+            {
+                'name': 'employee_A',
+                'work_contact_id': partner.id,
+                'company_id': company_A.id,
+            },
+            {
+                'name': 'employee_B',
+                'work_contact_id': partner.id,
+                'company_id': company_B.id,
+            },
+        ])
 
         partner.with_context(allowed_company_ids=[company_A.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 1)

@@ -29,17 +29,19 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         cls.user_emp_leave_manager = new_test_user(cls.env, login='employee_leave_manager', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.hr_user = new_test_user(cls.env, login='HR_user', groups='hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
 
-        cls.leave_manager = cls.env['hr.employee'].create({
-            'name': 'timeoff_officer',
-            'company_id': cls.company.id,
-            'user_id': cls.user_emp_leave_manager.id,
-            'resource_calendar_id': cls.default_calendar.id,
-        })
-        cls.manager_emp = cls.env['hr.employee'].create({
-            'name': 'Toto Mananger',
-            'company_id': cls.company.id,
-            'user_id': cls.manager_user.id,
-        })
+        cls.leave_manager, cls.manager_emp = cls.env['hr.employee'].create([
+            {
+                'name': 'timeoff_officer',
+                'company_id': cls.company.id,
+                'user_id': cls.user_emp_leave_manager.id,
+                'resource_calendar_id': cls.default_calendar.id,
+            },
+            {
+                'name': 'Toto Mananger',
+                'company_id': cls.company.id,
+                'user_id': cls.manager_user.id,
+            },
+        ])
         cls.employee_emp = cls.env['hr.employee'].create({
             'name': 'Toto Employee',
             'company_id': cls.company.id,
@@ -60,22 +62,24 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'country_id': False,
         })
 
-        cls.mandatory_day = cls.env['hr.leave.mandatory.day'].create({
-            'name': 'Super Event',
-            'company_id': cls.company.id,
-            'start_date': datetime(2021, 11, 2),
-            'end_date': datetime(2021, 11, 2),
-            'color': 1,
-            'resource_calendar_id': cls.default_calendar.id,
-        })
-        cls.mandatory_week = cls.env['hr.leave.mandatory.day'].create({
-            'name': 'Super Event End Of Week',
-            'company_id': cls.company.id,
-            'start_date': datetime(2021, 11, 8),
-            'end_date': datetime(2021, 11, 12),
-            'color': 2,
-            'resource_calendar_id': cls.default_calendar.id,
-        })
+        cls.mandatory_day, cls.mandatory_week = cls.env['hr.leave.mandatory.day'].create([
+            {
+                'name': 'Super Event',
+                'company_id': cls.company.id,
+                'start_date': datetime(2021, 11, 2),
+                'end_date': datetime(2021, 11, 2),
+                'color': 1,
+                'resource_calendar_id': cls.default_calendar.id,
+            },
+            {
+                'name': 'Super Event End Of Week',
+                'company_id': cls.company.id,
+                'start_date': datetime(2021, 11, 8),
+                'end_date': datetime(2021, 11, 12),
+                'color': 2,
+                'resource_calendar_id': cls.default_calendar.id,
+            },
+        ])
 
     @freeze_time('2021-10-15')
     def test_request_mandatory_days(self):
@@ -163,33 +167,35 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         })
 
         # Create one mandatory day for each department
-        self.env['hr.leave.mandatory.day'].create({
-            'name': 'Last Rush Before Launch (production)',
-            'company_id': self.company.id,
-            'start_date': datetime(2021, 11, 3),
-            'end_date': datetime(2021, 11, 3),
-            'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
-            'department_ids': [production_department.id],
-        })
-        self.env['hr.leave.mandatory.day'].create({
-            'name': 'Last Rush Before Launch (post-production)',
-            'company_id': self.company.id,
-            'start_date': datetime(2021, 11, 4),
-            'end_date': datetime(2021, 11, 4),
-            'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
-            'department_ids': [post_production_department.id],
-        })
-        self.env['hr.leave.mandatory.day'].create({
-            'name': 'Last Rush Before Launch (deployment)',
-            'company_id': self.company.id,
-            'start_date': datetime(2021, 11, 5),
-            'end_date': datetime(2021, 11, 5),
-            'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
-            'department_ids': [deployment_department.id],
-        })
+        self.env['hr.leave.mandatory.day'].create([
+            {
+                'name': 'Last Rush Before Launch (production)',
+                'company_id': self.company.id,
+                'start_date': datetime(2021, 11, 3),
+                'end_date': datetime(2021, 11, 3),
+                'color': 1,
+                'resource_calendar_id': self.default_calendar.id,
+                'department_ids': [production_department.id],
+            },
+            {
+                'name': 'Last Rush Before Launch (post-production)',
+                'company_id': self.company.id,
+                'start_date': datetime(2021, 11, 4),
+                'end_date': datetime(2021, 11, 4),
+                'color': 1,
+                'resource_calendar_id': self.default_calendar.id,
+                'department_ids': [post_production_department.id],
+            },
+            {
+                'name': 'Last Rush Before Launch (deployment)',
+                'company_id': self.company.id,
+                'start_date': datetime(2021, 11, 5),
+                'end_date': datetime(2021, 11, 5),
+                'color': 1,
+                'resource_calendar_id': self.default_calendar.id,
+                'department_ids': [deployment_department.id],
+            },
+        ])
 
         # The employee should only be able to create a time off on mandatory days
         # that do not include his department

@@ -31,22 +31,23 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Standard 40h/week',
         })
 
-        cls.bank_holiday = cls.env['hr.work.entry.type'].create({
-            'name': 'Bank Holiday',
-            'code': 'Bank Holiday',
-            'requires_allocation': False,
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
-
-        cls.paid_time_off = cls.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off',
-            'code': 'Paid Time Off',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-            'leave_validation_type': 'both',
-            'requires_allocation': False,
-        })
+        cls.bank_holiday, cls.paid_time_off = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Bank Holiday',
+                'code': 'Bank Holiday',
+                'requires_allocation': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            },
+            {
+                'name': 'Paid Time Off',
+                'code': 'Paid Time Off',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'leave_validation_type': 'both',
+                'requires_allocation': False,
+            },
+        ])
 
         cls.employee = cls.env['hr.employee'].create({
             'name': 'My Employee',
