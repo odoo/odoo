@@ -225,3 +225,21 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.l10n_cn_baiwang_red_form_status, 'red_form_confirmed')
         self.assertEqual(credit_note.l10n_cn_baiwang_state, 'issued')
         self.assertEqual(credit_note.l10n_cn_baiwang_invoice_no, 'mock-red-fapiao-789')
+
+    def test_13_proportional_global_discount(self):
+        # ponytail: Combined test. Moving this here eliminates two duplicate files testing the exact same preparation math.
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 600.0, 'quantity': 1.0}),
+                (0, 0, {'product_id': self.product_b.id, 'price_unit': 900.0, 'quantity': 2.0}),
+                (0, 0, {'name': 'Global Discount', 'price_unit': -240.0, 'quantity': 1.0}),
+            ],
+        })
+        payload_lines = invoice._l10n_cn_baiwang_prepare_lines()
+        self.assertEqual(len(payload_lines), 4)
+        self.assertEqual(payload_lines[1]['invoiceLineNature'], '1')
+        self.assertEqual(payload_lines[3]['invoiceLineNature'], '1')
+        self.assertAlmostEqual(payload_lines[1]['goodsTotalPrice'], -60.0)
+        self.assertAlmostEqual(payload_lines[3]['goodsTotalPrice'], -180.0)
