@@ -1,10 +1,10 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv, render } from "@web/owl2/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-
-import { Component } from "@odoo/owl";
-const { registries, stores, constants } = spreadsheet;
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+const { registries, stores, constants, helpers } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;
+const { isMobileOS } = helpers;
 
 const EMPTY_FIGURE = { tag: "empty" };
 const { DARK_MODE_FILTER_STRING } = constants;
@@ -18,10 +18,19 @@ export class MobileFigureContainer extends Component {
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
+        const onUpdate = () => render(this, true);
+        onMounted(() => {
+            stores.on("store-updated", this, onUpdate);
+        });
+        onWillUnmount(() => {
+            stores.off("store-updated", this, onUpdate);
+        });
+
         useSubEnv({
             model: this.props.spreadsheetModel,
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
             openSidePanel: () => {},
+            isMobile: isMobileOS,
         });
     }
 
