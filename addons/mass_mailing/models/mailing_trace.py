@@ -153,7 +153,12 @@ class MailingTrace(models.Model):
 
     def set_sent(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'sent', 'sent_datetime': fields.Datetime.now(), 'failure_type': False})
+        traces.write({
+            'failure_reason': False,
+            'failure_type': False,
+            'sent_datetime': fields.Datetime.now(),
+            'trace_status': 'sent',
+        })
         return traces
 
     def set_opened(self, domain=None):
@@ -161,7 +166,12 @@ class MailingTrace(models.Model):
         open, click implies open. Let us avoid status override by skipping traces
         that are not already opened or replied. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
+        traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({
+            'failure_reason': False,
+            'failure_type': False,
+            'open_datetime': fields.Datetime.now(),
+            'trace_status': 'open',
+        })
         if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
             # Apply side effects on `mailing.contact`
             contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
@@ -170,25 +180,34 @@ class MailingTrace(models.Model):
 
     def set_clicked(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'links_click_datetime': fields.Datetime.now()})
+        traces.write({
+            'failure_reason': False,
+            'failure_type': False,
+            'links_click_datetime': fields.Datetime.now(),
+        })
         if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
             # Apply side effects on `mailing.contact`
             contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
             contacts.write({
                 'last_clicked_datetime': fields.Datetime.now(),
-                'last_opened_datetime': fields.Datetime.now()}
-            )
+                'last_opened_datetime': fields.Datetime.now(),
+            })
         return traces
 
     def set_replied(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
-        traces.write({'trace_status': 'reply', 'reply_datetime': fields.Datetime.now()})
+        traces.write({
+            'failure_reason': False,
+            'failure_type': False,
+            'reply_datetime': fields.Datetime.now(),
+            'trace_status': 'reply',
+        })
         if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
             # Apply side effects on `mailing.contact`
             contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
             contacts.write({
                 'last_replied_datetime': fields.Datetime.now(),
-                'last_opened_datetime': fields.Datetime.now()
+                'last_opened_datetime': fields.Datetime.now(),
             })
         return traces
 
