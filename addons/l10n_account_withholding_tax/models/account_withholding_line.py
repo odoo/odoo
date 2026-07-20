@@ -163,7 +163,7 @@ class AccountWithholdingLine(models.AbstractModel):
             company = line.company_id
             date = line.comodel_date
             comp_curr = line.comodel_company_currency_id
-            line_curr = line.comodel_currency_id
+            line_curr = line.comodel_currency_id or comp_curr
             if not source_curr:
                 rate = 1.0
                 base_amount = line.base_amount
@@ -214,7 +214,7 @@ class AccountWithholdingLine(models.AbstractModel):
         support installments, early payment discounts,...
         """
         for line in self:
-            line_curr = line.comodel_currency_id
+            line_curr = line.comodel_currency_id or line.comodel_company_currency_id
             if line.source_currency_id:
                 percentage_paid_factor = line.comodel_percentage_paid_factor
                 line.base_amount = line_curr.round(line.original_base_amount * percentage_paid_factor)
@@ -226,7 +226,7 @@ class AccountWithholdingLine(models.AbstractModel):
         a ratio calculated from the current base amount and the original base amount.
         """
         for line in self:
-            line_curr = line.comodel_currency_id
+            line_curr = line.comodel_currency_id or line.comodel_company_currency_id
             if line.original_base_amount:
                 line.amount = line_curr.round(line.original_tax_amount * line.base_amount / line.original_base_amount)
             else:

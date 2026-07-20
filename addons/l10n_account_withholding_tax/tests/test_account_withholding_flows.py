@@ -1179,3 +1179,21 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .create({})
 
         self.assertRecordValues(payment_register, [{'amount': 1020.0, 'withholding_net_amount': 970.0}])
+
+    def test_payment_register_with_empty_currency(self):
+        withholding_tax = self.percent_tax(
+            -1,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id
+        )
+
+        invoice = self._create_invoice_one_line(tax_ids=withholding_tax, price_unit=1000.0)
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})
+
+        payment_register_form = Form(payment_register)
+        payment_register_form.currency_id = self.env['res.currency']
+
+        self.assertEqual(payment_register.withholding_line_ids.original_base_amount, 1000.0)
