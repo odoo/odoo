@@ -1,4 +1,5 @@
 from . import common
+from . import test_addresses
 from . import test_autopost_bills
 from . import test_multilevel_constraints
 from . import test_partner_peppol_fields
