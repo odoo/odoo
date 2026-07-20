@@ -103,10 +103,8 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
             all(orders.mapped("access_token")), "All tokens should have been generated."
         )
 
-        sent_mail = {}
-        for order in orders:
-            mail = self.env["mail.mail"].search([("res_id", "=", order["id"])])
-            sent_mail.update({order: mail})
+        all_mails = self.env["mail.mail"].search([("res_id", "in", orders.ids)])
+        sent_mail = {order: all_mails.filtered(lambda m: m.res_id == order.id) for order in orders}
 
         self.assertTrue(
             all(len(sent_mail[order]) == 1 for order in orders),
