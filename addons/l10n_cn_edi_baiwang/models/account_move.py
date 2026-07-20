@@ -546,7 +546,9 @@ class AccountMove(models.Model):
         # Determine invoice type code
         orig_type = original_move.l10n_cn_baiwang_invoice_type_code or '02'
         origin_invoice_type = '01' if orig_type in ('01', '004', '028') else '02'
-        raw_phone = original_move.partner_id.phone or original_move.partner_id.mobile or ''
+
+        # ponytail: res.partner.mobile requires the 'sms' addon. Use getattr to survive environments where it is absent.
+        raw_phone = original_move.partner_id.phone or getattr(original_move.partner_id, 'mobile', '') or ''
         clean_phone = ''.join(c for c in raw_phone if c.isdigit())
         valid_phone = clean_phone if clean_phone and clean_phone[0] in ('0', '1') and 10 <= len(clean_phone) <= 12 else ''
 
