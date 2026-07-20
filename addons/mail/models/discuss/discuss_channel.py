@@ -792,7 +792,11 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
         for member, store in new_members._get_member_store_list():
-            store.add(member.channel_id, "_store_channel_fields").add(
+            store.add(
+                member.channel_id,
+                "_store_channel_fields",
+                fields_params={"prefetch_members": False},
+            ).add(
                 member,
                 lambda res: (
                     res.from_method("_store_persona_default_fields"),
@@ -1582,7 +1586,7 @@ class DiscussChannel(models.Model):
         if removed:
             res.many("rtc_session_ids", [], mode="DELETE", value=removed)
 
-    def _store_channel_fields(self, res: Store.FieldList):
+    def _store_channel_fields(self, res: Store.FieldList, *, prefetch_members=True):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is
         # best to prefetch these computed fields once to avoid doing partial queries multiple times,
         # especially because these 2 fields are used in ACL too.
@@ -1609,12 +1613,16 @@ class DiscussChannel(models.Model):
         # sudo : discuss.channel.member - prefetching member fields as sudo is acceptable,
         # and its necessary to get channel_role in the same query as the other fields.
         all_members.sudo().mapped("channel_role")
-        # prefetch in batch, including nested relations (member, guest, ...).
-        # `_build_result` must be called as store is lazy.
-        Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel).add(
-            all_members,
-            "_store_member_fields",
-        )._build_result()
+        if prefetch_members:
+            # prefetch in batch, including nested relations (member, guest, ...).
+            # `_build_result` must be called as store is lazy.
+            Store(
+                bus_channel=res.target.channel,
+                bus_subchannel=res.target.subchannel,
+            ).add(
+                all_members,
+                "_store_member_fields",
+            )._build_result()
         res.attr("avatar_cache_key")
         res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token())
         # sudo: discuss.category - guests can read categories of accessible channels
