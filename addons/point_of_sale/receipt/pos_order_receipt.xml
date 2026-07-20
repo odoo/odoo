@@ -152,7 +152,7 @@
                                 <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
                             </div>
                         </t>
-                        <t t-elif="order.get('floating_order_name')">
+                        <t t-elif="order.get('floating_order_name') and order.get('floating_order_name') != order.get('tracking_number')">
                             <span t-out="order['floating_order_name']"/>
                         </t>
                     </div>
