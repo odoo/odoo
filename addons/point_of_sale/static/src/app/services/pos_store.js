@@ -2042,8 +2042,22 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
+<<<<<<< e930596baa5b33c2ad2098cb08823cb7f62776b6
                     onSave: async (record) => {
                         await this.loadNewProducts([["id", "=", record.evalContext.id]]);
+||||||| 901498bd1974ee1d72f453a4928e4b6cb104bee1
+                    onSave: (record) => {
+                        this.data.read("product.template", [record.evalContext.id]);
+                        this.data.searchRead("product.product", [
+                            ["product_tmpl_id", "=", record.evalContext.id],
+                        ]);
+=======
+                    onSave: async (record) => {
+                        await this.data.read("product.template", [record.evalContext.id]);
+                        await this.data.searchRead("product.product", [
+                            ["product_tmpl_id", "=", record.evalContext.id],
+                        ]);
+>>>>>>> 0af26ffe6cdf42b55a4293a23c978550d5087af8
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
