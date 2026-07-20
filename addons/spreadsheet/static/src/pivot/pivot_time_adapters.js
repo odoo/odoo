@@ -102,8 +102,7 @@ const odooWeekAdapter = {
         return `"${normalizedValue}"`;
     },
     normalizeServerValue(groupBy, field, readGroupResult) {
-        const weekValue = readGroupResult[groupBy];
-        const { week, year } = parseServerWeekHeader(weekValue);
+        const { week, year } = parseServerWeekHeader(field, groupBy, readGroupResult);
         return `${week}/${year}`;
     },
     increment(normalizedValue, step) {
@@ -321,14 +320,22 @@ function getGroupStartingDay(field, groupBy, group) {
 
 /**
  * Parses a pivot week header value.
- * @param {Array} value
+ * @param {object} field
+ * @param {string} groupBy
+ * @param {object} group
  * @example
- * parseServerWeekHeader(['2016-04-11', 'W15 2016']) // { week: 15, year: 2016 }
+ * // group[groupBy] = ['2016-04-10', '#15, Apr 10 → Apr 16, 2016']
+ * parseServerWeekHeader(field, groupBy, group) // { week: 15, year: 2016 }
  */
-function parseServerWeekHeader(value) {
-    // Value is always formatted as "W15 2016", no matter the language.
-    // Parsing this formatted value is the only way to ensure we get the same
-    // locale aware week number as the one used in the server.
-    const [week, year] = value[1].split(" ");
-    return { week: Number(week.slice(1)), year: Number(year) };
+function parseServerWeekHeader(field, groupBy, group) {
+    // The label always starts with the week number ("#15, ..."), no matter the
+    // language. Parsing it is the only way to ensure we get the same locale
+    // aware week number as the one used in the server.
+    const week = Number(group[groupBy][1].match(/^#(\d+)/)[1]);
+    // The label doesn't always contain the year, deduce it from the first day
+    // of the week: a week starting in December is the first week of the next
+    // year if it contains January 1st.
+    const firstDay = DateTime.fromISO(getGroupStartingDay(field, groupBy, group));
+    const year = week === 1 && firstDay.month === 12 ? firstDay.year + 1 : firstDay.year;
+    return { week, year };
 }
