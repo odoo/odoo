@@ -1,7 +1,8 @@
 import { onRendered, useComponent, useRef } from "@web/owl2/utils";
-import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo/owl";
+import { effect, onMounted, onPatched, onWillDestroy, proxy } from "@odoo/owl";
 
 /**
+ * @typedef {import("@html_editor/core/dom_reference_map_plugin").NodeId} NodeId
  * @typedef {HTMLElement} HostElement host element for an embedded component
  * @typedef {Object} State state obtained from `useState` usage
  * @typedef {Record<string, HTMLElement>} EditableDescendants
@@ -286,29 +287,17 @@ export function replaceProperty(container, key, value) {
 
 export class StateChangeManager {
     /**
-     * @param {StateChangeManagerConfig} config
-     * @param {HostElement} config.host
-     * @param {Function} config.commitChanges notify the host that we can commit
-     *                                        changes
+     * @param {StateChangeManagerConfig & {
+     *   host: HostElement,
+     *   stageStateChange: (previous: Object, next: Object) => void,
+     *   commitStateChanges: () => void,
+     * }} config
      */
     constructor(config) {
         this.config = config;
         this.effects = new WeakMap();
     }
     setup() {
-        const defaultState = sortedCopy(this.getEmbeddedState());
-        const defaultStateChange = {
-            stateChangeId: null,
-            previous: defaultState,
-            next: defaultState,
-        };
-        // Used in case `data-embedded-state` is removed (i.e. when reverting
-        // the first mutation setting that attribute)
-        this.defaultStateChange = defaultStateChange;
-        // Used to keep track of the last applied stateChange, to avoid
-        // applying it multiple times (i.e. revertMutations + stageRecords
-        // during undo)
-        this.previousStateChange = defaultStateChange;
         // Used to discard batch changes when a component is destroyed,
         // pending state changes should not be applied
         this.batchId = 0;
@@ -372,59 +361,31 @@ export class StateChangeManager {
     }
 
     /**
-     * Called when `data-embedded-state` attribute is being changed. This
-     * will update the state, the embedded state, the embedded props and
-     * recompute a new expression when necessary.
-     * @param {string} attrState JSON representation of a stateChange
-     * @param { Object } options
-     * @param {boolean} options.reverse whether to read the stateChange from
-     *        next to previous
-     * @param {boolean} options.ensureNewMutations whether the attribute change is being
-     *        used to create a new commit.
-     * @returns {string} new JSON representation of a stateChange, in case
-     *          it needs to be represented under another form to be shared
-     *          in collaboration (a local peer doing revertMutations implies
-     *          that collaborators will do applyMutations, so the stateChange
-     *          must be expressed with another form for them).
+     * Commit a state change and update the resulting embedded state and props.
+     *
+     * @param {Object} previous
+     * @param {Object} next
+     * @returns {{before: Object, after: Object}}
      */
-    onStateChanged(attrState, { reverse = false, ensureNewMutations = false } = {}) {
-        const stateChange = attrState ? JSON.parse(attrState) : this.defaultStateChange;
+    applyStateChange(previous, next) {
         const state = this.getState();
-        if (reverse) {
-            this.reverseStateChange(stateChange);
+
+        const before = JSON.parse(JSON.stringify(sortedCopy(state)));
+        this.commitStateChange(state, previous, next);
+        const after = JSON.parse(JSON.stringify(sortedCopy(state)));
+
+        const sortedState = sortedCopy(after);
+        this.config.host.dataset.embeddedProps = JSON.stringify(
+            this.stateToEmbeddedProps(this.config.host, sortedState)
+        );
+        if (this.isLiveComponent && !this.previousEmbeddedState) {
+            // Update the embeddedState only if there is no pending change.
+            // If there is a pending change, it will be updated when the
+            // pending change is applied in `changeState`.
+            this.assignDeepProxyCopy(this.embeddedState, sortedState);
         }
-        if (!this.areStateChangesEqual(this.previousStateChange, stateChange)) {
-            const previous = JSON.stringify(sortedCopy(state));
-            this.commitStateChange(state, stateChange.previous, stateChange.next);
-            const sortedState = sortedCopy(state);
-            this.config.host.dataset.embeddedProps = JSON.stringify(
-                this.stateToEmbeddedProps(this.config.host, sortedState)
-            );
-            if (this.isLiveComponent && !this.previousEmbeddedState) {
-                // Update the embeddedState only if there is no pending change.
-                // If there is a pending change, it will be updated when the
-                // pending change is applied in `changeState`.
-                this.assignDeepProxyCopy(toRaw(this.embeddedState), sortedState);
-            }
-            if (!ensureNewMutations) {
-                this.previousStateChange = stateChange;
-            } else {
-                // If mutations are being applied to create a new commit, the
-                // state change must be expressed under another form for
-                // collaborators, since the collaborator will always
-                // "applyMutations" and never "revertMutations" when receiving
-                // remote commits.
-                const next = JSON.stringify(sortedState);
-                if (previous !== next) {
-                    this.previousStateChange = {
-                        stateChangeId: this.generateId(),
-                        previous: JSON.parse(previous),
-                        next: JSON.parse(next),
-                    };
-                    return JSON.stringify(this.previousStateChange);
-                }
-            }
-        }
+
+        return { before, after };
     }
 
     /**
@@ -449,10 +410,9 @@ export class StateChangeManager {
     }
 
     /**
-     * Apply a stateChange that was done on the embeddedState to the state,
-     * to trigger a re-rendering, and write the stateChange in
-     * `data-embedded-state` for the history and collaboration. Also
-     * recompute `data-embedded-props` for the next mounting operation.
+     * Apply a stateChange that was done on the embeddedState to the state, to
+     * trigger a re-rendering. Also recompute `data-embedded-props` for the next
+     * mounting operation.
      */
     changeState() {
         if (!this.previousEmbeddedState) {
@@ -470,34 +430,15 @@ export class StateChangeManager {
         );
         const sortedState = sortedCopy(this.state);
         const next = JSON.stringify(sortedState);
-        this.assignDeepProxyCopy(toRaw(this.embeddedState), sortedState);
+        this.assignDeepProxyCopy(this.embeddedState, sortedState);
         if (previous !== next) {
-            this.previousStateChange = {
-                stateChangeId: this.generateId(),
-                previous: JSON.parse(previous),
-                next: JSON.parse(next),
-            };
-            this.config.host.dataset.embeddedState = JSON.stringify(this.previousStateChange);
             this.config.host.dataset.embeddedProps = JSON.stringify(
                 this.stateToEmbeddedProps(this.config.host, sortedState)
             );
+            this.config.stageStateChange(JSON.parse(previous), JSON.parse(next));
             this.config.commitStateChanges();
         }
         observeAllKeys(this.embeddedStateProxy);
-    }
-
-    areStateChangesEqual(sc1, sc2) {
-        return (
-            sc1.stateChangeId === sc2.stateChangeId &&
-            JSON.stringify(sc1.previous) === JSON.stringify(sc2.previous) &&
-            JSON.stringify(sc1.next) === JSON.stringify(sc2.next)
-        );
-    }
-
-    reverseStateChange(stateChange) {
-        const previous = stateChange.previous;
-        stateChange.previous = stateChange.next;
-        stateChange.next = previous;
     }
 
     /**
@@ -533,10 +474,6 @@ export class StateChangeManager {
             return new Proxy(copy, embeddedStateProxyHandler(value, this));
         }
         return value;
-    }
-
-    generateId() {
-        return Math.floor(Math.random() * Math.pow(2, 52));
     }
 
     /**
@@ -609,17 +546,14 @@ export class StateChangeManager {
  * That state can be modified through 2 channels:
  * - By the component itself, as with any normal state.
  * - By the embedded_component_plugin, during history or collaborative
- *   operations (undo/redo/insertRemoteCommit). The attribute
- *   `data-embedded-state` will be used to contain a serialized representation
- *   of a state change.
+ *   operations (undo/redo/insertRemoteCommit).
  *
  * While the embedded state evolves, the `data-embedded-props` attribute is
  * always maintained to its relative value.
  *
- * `data-embedded-state` and `data-embedded-props` attributes are maintained
- * even if the related component is in a destroyed state, in order to prepare
- * the next mount operation if the host is re-inserted in the DOM through an
- * history operation.
+ * The `data-embedded-props` attributes is maintained even if the related
+ * component is in a destroyed state, in order to prepare the next mount
+ * operation if the host is re-inserted in the DOM through a history operation.
  * If the component is currently mounted/being mounted, state changes are
  * applied to the attribute and the embeddedState object.
  *
