@@ -252,3 +252,18 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.l10n_cn_baiwang_red_form_status, 'red_form_confirmed')
         self.assertEqual(credit_note.l10n_cn_baiwang_state, 'issued')
         self.assertEqual(credit_note.l10n_cn_baiwang_invoice_no, 'mock-red-fapiao-789')
+
+    def test_12_pull_inbound_red_forms_parity(self):
+        with patch('odoo.addons.l10n_cn_edi_baiwang.models.l10n_cn_edi_document.fields.Date.context_today') as mock_today, \
+             patch('odoo.addons.l10n_cn_edi_baiwang.models.baiwang_client.BaiwangClient.query_red_form_list', return_value={}) as mock_query:
+
+            # Even day -> buyer ('1')
+            mock_today.return_value.toordinal.return_value = 2
+            self.env['l10n_cn_edi.document']._pull_inbound_red_forms()
+            self.assertEqual(mock_query.call_args[0][0]['buySelSelector'], '1')
+
+            # Odd day -> seller ('0')[cite: 5]
+            mock_query.reset_mock()
+            mock_today.return_value.toordinal.return_value = 1
+            self.env['l10n_cn_edi.document']._pull_inbound_red_forms()
+            self.assertEqual(mock_query.call_args[0][0]['buySelSelector'], '0')
