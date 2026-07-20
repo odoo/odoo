@@ -30,6 +30,10 @@ services:
       PASSWORD: odoo
     volumes:
       - .:/opt/odoo
+      # Mount our custom_addons (our own customization modules) into the
+      # container's custom_addons path (created in the Dockerfile).
+      # Listed on addons_path in docker/odoo.conf.
+      - ./custom_addons:/mnt/custom_addons
       - odoo-web-data:/var/lib/odoo
     # No `reload`: it needs inotify, which cannot see Windows host writes through the
     # bind mount and hangs boot watching ~620 addons. Restart the container after .py edits.
