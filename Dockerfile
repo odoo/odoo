@@ -42,8 +42,8 @@ RUN curl -sSL -o /tmp/wkhtmltox.deb \
     && rm -rf /var/lib/apt/lists/* /tmp/wkhtmltox.deb
 
 RUN useradd --create-home --home-dir /var/lib/odoo --shell /bin/bash odoo \
-    && mkdir -p /etc/odoo /mnt/extra-addons /var/log/odoo \
-    && chown -R odoo:odoo /etc/odoo /mnt/extra-addons /var/lib/odoo /var/log/odoo
+    && mkdir -p /etc/odoo /mnt/custom_addons /var/log/odoo \
+    && chown -R odoo:odoo /etc/odoo /mnt/custom_addons /var/lib/odoo /var/log/odoo
 
 WORKDIR /opt/odoo
 
