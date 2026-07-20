@@ -145,7 +145,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             )
             self.assertTrue(
                 len(trace) == 1,
-                'SMS: found %s notification for number %s (res_id: %s) (status: %s) (1 expected)\n--MOCKED DATA\n%s' % (
+                'SMS: found %s trace for number %s (res_id: %s) (status: %s) (1 expected)\n--MOCKED DATA\n%s' % (
                     len(trace), number, record.id,
                     status, debug_info
                 )
