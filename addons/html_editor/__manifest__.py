@@ -35,8 +35,8 @@ This addon provides an extensible, maintainable editor.
         ],
         'web._assets_bootstrap_backend': [
             # Inject editor-common style before backend customizations, so it can be overridden.
-            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.cc.scss' ),
-            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.scss' ),
+            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.cc.scss'),
+            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.scss'),
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
