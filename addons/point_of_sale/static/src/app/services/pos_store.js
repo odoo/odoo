@@ -196,6 +196,7 @@ export class PosStore extends WithLazyGetterTrap {
         initLNA(this.notification, (type, message) => {
             this.lnaState = { type, message };
         });
+        await this.checkAccessRight();
     }
 
     async posBackOnline() {
@@ -2376,8 +2377,22 @@ export class PosStore extends WithLazyGetterTrap {
         await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
         await this.reloadData(true);
     }
+
+    async checkAccessRight() {
+        try {
+            this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
+        } catch {
+            this.canUserCreateProduct = false;
+        }
+    }
+
+    get hasProductCreationAccess() {
+        return this.canUserCreateProduct;
+    }
+
+    // TODO: Remove in master. Use `hasProductCreationAccess` instead.
     async allowProductCreation() {
-        return await user.checkAccessRight("product.product", "create");
+        return this.hasProductCreationAccess;
     }
     orderDetailsProps(order) {
         return {
