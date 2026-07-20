@@ -1,5 +1,4 @@
-from collections import Counter
-
+from collections import defaultdict
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 
@@ -38,30 +37,56 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         sending_methods['manual'] = _('Manually')  # in batch sending, everything is done asynchronously, we never "Download"
 
         for wizard in self:
-            edi_counter = Counter()
-            sending_method_counter = Counter()
+            moves = wizard.move_ids._origin
+            summary_data = defaultdict(lambda: {'count': 0, 'label': '', 'moves': []})
 
-            for move in wizard.move_ids._origin:
-                edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
-                sending_settings = self._get_default_sending_settings(move)
-                sending_method_counter += Counter([
-                    sending_method
-                    for sending_method in self._get_default_sending_methods(move)
-                    if self._is_applicable_to_move(sending_method, move, **sending_settings)
-                ])
+            if not moves:
+                wizard.summary_data = summary_data
+                continue
 
-            summary_data = dict()
-            for edi, edi_count in edi_counter.items():
-                summary_data[edi] = {'count': edi_count, 'label': _("by %s", extra_edis[edi]['label'])}
-            for sending_method, sending_method_count in sending_method_counter.items():
-                summary_data[sending_method] = {'count': sending_method_count, 'label': sending_methods[sending_method]}
+            for move in moves:
+                move_info = {
+                    'id': move.id,
+                    'name': move.name or _("Draft"),
+                    'partner_name': move.partner_id.name or _("No Partner"),
+                }
+
+                for edi in self._get_default_extra_edis(move):
+                    summary_data[edi]['count'] += 1
+                    summary_data[edi]['moves'].append(move_info)
+                    if not summary_data[edi]['label']:
+                        summary_data[edi]['label'] = _("by %s", extra_edis[edi]['label'])
+
+                sending_methods_for_move = self._get_default_sending_methods(move)
+                lightweight_settings = {
+                    'sending_methods': sending_methods_for_move,
+                    'extra_edis': self._get_default_extra_edis(move),
+                    'invoice_edi_format': self._get_default_invoice_edi_format(move, sending_methods=sending_methods_for_move),
+                }
+                if 'email' in sending_methods_for_move:
+                    lightweight_settings['mail_partner_ids'] = move.partner_id.ids if move.partner_id.email else []
+
+                for sending_method in sending_methods_for_move:
+                    if self._is_applicable_to_move(sending_method, move, **lightweight_settings):
+                        summary_data[sending_method]['count'] += 1
+                        summary_data[sending_method]['moves'].append(move_info)
+                        if not summary_data[sending_method]['label']:
+                            summary_data[sending_method]['label'] = sending_methods[sending_method]
 
             wizard.summary_data = summary_data
 
     @api.depends('summary_data')
     def _compute_alerts(self):
+
         for wizard in self:
-            moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids._origin}
+            moves_data = {}
+            for move in wizard.move_ids._origin:
+                sending_methods_for_move = self._get_default_sending_methods(move)
+                moves_data[move] = {
+                    'sending_methods': sending_methods_for_move,
+                    'extra_edis': self._get_default_extra_edis(move),
+                    'invoice_edi_format': self._get_default_invoice_edi_format(move, sending_methods=sending_methods_for_move),
+                }
             wizard.alerts = self._get_alerts(wizard.move_ids._origin, moves_data)
 
     # -------------------------------------------------------------------------

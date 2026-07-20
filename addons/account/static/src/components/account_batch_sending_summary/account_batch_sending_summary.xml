@@ -2,14 +2,33 @@
 <template>
 
     <t t-name="account.BatchSendingSummary">
-        <p>You are about to send</p>
-        <ul>
-            <li t-foreach="this.data" t-as="summary_entry" t-key="summary_entry">
-                <t t-out="summary_entry_value.count"/> invoice(s)
-                <t t-out="summary_entry_value.label"/>
-                <t t-if="summary_entry_value.extra" t-out="summary_entry_value.extra"/>
-            </li>
-        </ul>
+        <div class="o_account_batch_sending_summary">
+            <ul class="list-unstyled ms-2">
+                <t t-foreach="this.data" t-as="summary_entry" t-key="summary_entry">
+                    <li class="mb-2">
+                        <details class="cursor-pointer">
+                            <summary class="fw-bold user-select-none">
+                                <span t-out="summary_entry_value.count"/> invoice(s)
+                                <span t-out="summary_entry_value.label" class="fw-normal"/>
+                            </summary>
+
+                            <div class="ps-3 pt-1 pb-1 border-start ms-2 mt-1">
+                                <ul class="list-unstyled mb-0 small text-muted">
+                                    <t t-foreach="summary_entry_value.moves" t-as="move" t-key="move.id">
+                                        <li class="py-1">
+                                            <i class="oi me-1" data-icon="doc-text" title="Invoice"/>
+                                            <strong class="text-dark" t-out="move.name"/>
+                                            <span> - </span>
+                                            <span t-out="move.partner_name"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </details>
+                    </li>
+                </t>
+            </ul>
+        </div>
     </t>
 
 </template>
