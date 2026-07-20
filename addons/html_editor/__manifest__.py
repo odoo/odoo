@@ -33,14 +33,17 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/scss/base_style.scss',
             'html_editor/static/src/main/selection_placeholder_plugin.scss',
         ],
+        'web._assets_bootstrap_backend': [
+            # Inject editor-common style before backend customizations, so it can be overridden.
+            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.cc.scss' ),
+            ('before', 'web/static/src/scss/bootstrap_review_backend.scss', 'html_editor/static/src/scss/html_editor.common.scss' ),
+        ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
             'html_editor/static/lib/vkbeautify/**/*',
             'html_editor/static/src/scss/base_style.scss',
-            'html_editor/static/src/scss/html_editor.common.cc.scss',
-            'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.backend.scss',
         ],
         'html_editor.assets_editor': [
