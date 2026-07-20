@@ -83,7 +83,8 @@ class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
         self.pos_admin.write({
             "group_ids": [
-                (4, self.env.ref('account.group_account_invoice').id)
+                (4, self.env.ref('account.group_account_invoice').id),
+                (4, self.env.ref("product.group_product_manager").id),
             ]
         })
         self.main_pos_config.update({
