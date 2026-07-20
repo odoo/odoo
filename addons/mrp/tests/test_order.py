@@ -4156,6 +4156,18 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         self.assertEqual(production.workorder_ids.duration_expected, round(init_duration_expected + 5, 2))
 
+    def test_workorder_duration_recomputed_after_changing_mo_uom(self):
+        """Ensure that workorder expected duration is recomputed when changing the MO UoM.
+        """
+        # Remove the workcenter capacity so _get_capacity() falls back to the default BoM capacity.
+        self.workcenter_2.capacity_ids.unlink()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
+        self.assertEqual(mo.workorder_ids.duration_expected, 60, "Initial workorder duration should be 60 minutes.")
+        mo.uom_id = self.uom_dozen
+        self.assertEqual(mo.workorder_ids.duration_expected, 720, "Workorder duration should be 720 minutes after changing the MO UoM.")
+
     def test_multi_edit_start_date_wo(self):
         """
         Test setting the start date for multiple workorders, checking if the finish date

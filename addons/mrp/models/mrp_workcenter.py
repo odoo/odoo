@@ -425,7 +425,8 @@ class MrpWorkcenter(models.Model):
             }
         return res
 
-    def _get_capacity(self, product, unit, default_capacity=1):
+    def _get_capacity(self, product, unit, bom):
+        default_capacity = bom.uom_id._compute_quantity(bom.product_qty, unit) or 1
         capacity = self.capacity_ids.sorted(lambda c: (
             not (c.product_id == product and c.uom_id == product.uom_id),
             not (not c.product_id and c.uom_id == unit),
