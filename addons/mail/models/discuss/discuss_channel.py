@@ -626,7 +626,8 @@ class DiscussChannel(models.Model):
                         env = api.Environment(new_cr, SUPERUSER_ID, {})
                         synced = env["discuss.channel"]._sync_last_interest_dt(channel_ids)
                         if len(synced) == len(channel_ids):
-                            env["ir.cron.trigger"].browse(trigger.id).unlink()
+                            with tools.mute_logger('odoo.models.unlink'):
+                                env["ir.cron.trigger"].browse(trigger.id).unlink()
                 except psycopg2.OperationalError:  # transient (serialization/lock/connection): leave the trigger so the cron drains the durable rows
                     pass
         channel_ids.update(self.ids)
@@ -658,7 +659,8 @@ class DiscussChannel(models.Model):
             max_dt = max_by_channel_id.get(channel.id)
             if max_dt and (not channel.last_interest_dt or channel.last_interest_dt < max_dt):
                 channel.last_interest_dt = max_dt
-        pending.unlink()
+        with tools.mute_logger('odoo.models.unlink'):
+            pending.unlink()
         return lockable
 
     def _cron_sync_last_interest_dt(self, batch_size=1000):
@@ -673,7 +675,8 @@ class DiscussChannel(models.Model):
         """
         LastInterestUpdate = self.env["discuss.channel.last.interest.update"]
         cron = self.env.ref("mail.ir_cron_discuss_channel_sync_last_interest_dt")
-        self.env["ir.cron.trigger"].search([("cron_id", "=", cron.id)]).unlink()
+        with tools.mute_logger('odoo.models.unlink'):
+            self.env["ir.cron.trigger"].search([("cron_id", "=", cron.id)]).unlink()
         channel_ids = LastInterestUpdate.search_fetch([], limit=batch_size).channel_id.ids
         if not channel_ids:
             return
