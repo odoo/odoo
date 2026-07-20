@@ -11,7 +11,7 @@ from odoo.addons.web.controllers.binary import Binary
 class BinaryController(Binary):
     @http.route(
         "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>",
-        methods=["GET"],
+        methods=["GET", "POST"],
         type="http",
         auth="public",
         readonly=True,
@@ -37,7 +37,7 @@ class BinaryController(Binary):
             "/discuss/channel/<int:channel_id>/image/<int:attachment_id>",
             "/discuss/channel/<int:channel_id>/image/<int:attachment_id>/<int:width>x<int:height>",
         ],
-        methods=["GET"],
+        methods=["GET", "POST"],
         type="http",
         auth="public",
         readonly=True,
