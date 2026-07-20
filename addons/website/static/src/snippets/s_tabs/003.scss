@@ -47,11 +47,23 @@
             }
         }
 
-        .s_tabs_nav:has(.nav-tabs), .s_tabs_nav:has(.nav-buttons) {
-            background: var(--tabs-bg-color, $gray-100);
+        .s_tabs_nav:not(.o_cc) {
+            &:where(:has(.nav-tabs, .nav-buttons)) {
+                background: var(--tabs-bg-color, $gray-100);
+            }
 
-            .nav .nav-item a.nav-link {
+            .nav:where(.nav-tabs, .nav-buttons) .nav-link {
                 color: var(--tabs-link-color, $body-color);
+
+                &.active {
+                    background-color: var(--tabs-active-bg-color, $white);
+                }
+            }
+        }
+
+        .s_tabs_nav.o_cc {
+            .nav:where(.nav-tabs, .nav-buttons) .nav-link:not(.active) {
+                color: var(--tabs-link-color);
             }
         }
 
