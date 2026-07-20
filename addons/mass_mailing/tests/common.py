@@ -106,6 +106,22 @@ class MassMailCase(MailCase, MockLinkTracker):
         self.assertTrue(all(s.model == records._name for s in traces))
         self.assertEqual(set(s.res_id for s in traces), set(records.ids))
 
+        # hoist per-record cancel checks: search once over all records
+        if is_cancel_not_sent:
+            cancel_mail_res_ids = set(self.env['mail.mail'].sudo().search([
+                ('model', '=', records._name),
+                ('res_id', 'in', records.ids),
+                ('id', 'in', self._new_mails.ids),
+            ]).mapped('res_id'))
+            cancel_message_res_ids = set(self.env['mail.message'].sudo().search([
+                ('model', '=', records._name),
+                ('res_id', 'in', records.ids),
+                ('id', 'in', self._new_mails.mail_message_id.ids),
+            ]).mapped('res_id'))
+        else:
+            cancel_mail_res_ids = set()
+            cancel_message_res_ids = set()
+
         # check each traces
         if not mail_links_info:
             mail_links_info = [None] * len(recipients_info)
@@ -166,12 +182,8 @@ class MassMailCase(MailCase, MockLinkTracker):
                 self.assertEqual(recipient_trace.failure_reason, failure_reason)
             if mail_not_created:
                 self.assertFalse(recipient_trace.mail_mail_id_int)
-                self.assertFalse(self.env['mail.mail'].sudo().search(
-                    [('model', '=', record._name), ('res_id', '=', record.id),
-                     ('id', 'in', self._new_mails.ids)]))
-                self.assertFalse(self.env['mail.message'].sudo().search(
-                    [('model', '=', record._name), ('res_id', '=', record.id),
-                     ('id', 'in', self._new_mails.mail_message_id.ids)]))
+                self.assertFalse(record.id in cancel_mail_res_ids)
+                self.assertFalse(record.id in cancel_message_res_ids)
             if recipient_info.get('trace_values'):
                 for fname, fvalue in recipient_info['trace_values'].items():
                     self.assertEqual(recipient_trace[fname], fvalue)
