@@ -20,16 +20,23 @@ class SmsSms(models.Model):
     _rec_name = 'number'
     _order = 'id DESC'
 
-    IAP_TO_SMS_STATE_SUCCESS = {
-        'processing': 'process',
-        'success': 'pending',
-        # These below are not returned in responses from IAP API in _send but are received via webhook events.
-        'sent': 'pending',
-        'delivered': 'sent',
-    }
+    @property
+    def IAP_TO_SMS_STATE_SUCCESS(self):
+        return {
+            'processing': 'process',
+            'success': 'pending',
+            # These below are not returned in responses from IAP API in _send but are received via webhook events.
+            'sent': 'pending',
+            'delivered': 'sent',
+        }
 
-    BOUNCE_DELIVERY_ERRORS = {'sms_invalid_destination', 'sms_not_allowed', 'sms_rejected'}
-    DELIVERY_ERRORS = {'sms_expired', 'sms_not_delivered', *BOUNCE_DELIVERY_ERRORS}
+    @property
+    def BOUNCE_DELIVERY_ERRORS(self):
+        return {'sms_invalid_destination', 'sms_not_allowed', 'sms_rejected'}
+
+    @property
+    def DELIVERY_ERRORS(self):
+        return {'sms_expired', 'sms_not_delivered', *self.BOUNCE_DELIVERY_ERRORS}
 
     uuid = fields.Char('UUID', copy=False, readonly=True, default=lambda self: uuid4().hex,
                        help='Alternate way to identify a SMS record, used for delivery reports')

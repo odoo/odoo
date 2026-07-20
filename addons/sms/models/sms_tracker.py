@@ -19,14 +19,16 @@ class SmsTracker(models.Model):
     _name = 'sms.tracker'
     _description = "Link SMS to mailing/sms tracking models"
 
-    SMS_STATE_TO_NOTIFICATION_STATUS = {
-        'canceled': 'canceled',
-        'process': 'process',
-        'error': 'exception',
-        'outgoing': 'ready',
-        'sent': 'sent',
-        'pending': 'pending',
-    }
+    @property
+    def SMS_STATE_TO_NOTIFICATION_STATUS(self):
+        return {
+            'canceled': 'canceled',
+            'process': 'process',
+            'error': 'exception',
+            'outgoing': 'ready',
+            'sent': 'sent',
+            'pending': 'pending',
+        }
 
     sms_uuid = fields.Char('SMS uuid', required=True)
     mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade', index='btree_not_null')
