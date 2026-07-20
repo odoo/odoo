@@ -268,19 +268,19 @@ class TestWebsocketCaryall(WebsocketCase):
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
 
-    @patch('odoo.addons.bus.websocket.Registry')
-    def test_propagates_caller_pool_error(self, mock_registry):
+    @patch('odoo.addons.bus.websocket.db_connect')
+    def test_propagates_caller_pool_error(self, mock_db_connect):
         fake_cursor = MagicMock()
-        cr_ctx_manager = mock_registry.return_value.cursor.return_value
+        cr_ctx_manager = mock_db_connect.return_value.cursor.return_value
         cr_ctx_manager.__enter__.return_value = fake_cursor
         cr_ctx_manager.__exit__.return_value = False
 
         with self.assertRaises(PoolError) as cm:
-            with acquire_cursor(None) as cr:
+            with acquire_cursor(self.env.cr.dbname) as cr:
                 self.assertIs(cr, fake_cursor)
                 raise PoolError("from_caller")
 
         # Ensure the caller pool error propagated, not the "Failed to acquire cursor
         # after..." raised by the acquire_cursor fn.
         self.assertEqual(str(cm.exception), "from_caller")
-        mock_registry.return_value.cursor.assert_called_once()  # Ensure acquire_cursor didn't retry either.
+        mock_db_connect.return_value.cursor.assert_called_once()  # Ensure acquire_cursor didn't retry either.
