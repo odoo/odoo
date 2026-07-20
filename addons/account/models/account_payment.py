@@ -57,10 +57,23 @@ class AccountPayment(models.Model):
         comodel_name='res.partner.bank',
         compute='_compute_available_partner_bank_ids',
     )
+    available_return_partner_bank_ids = fields.Many2many(
+        comodel_name='res.partner.bank',
+        compute='_compute_available_partner_bank_ids',
+    )
     partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
         readonly=False, store=True, tracking=True,
         compute='_compute_partner_bank_id',
         domain="[('id', 'in', available_partner_bank_ids)]",
+        check_company=True,
+        ondelete='restrict',
+    )
+    return_partner_bank_id = fields.Many2one(
+        comodel_name='res.partner.bank',
+        string="Returns Bank Account",
+        compute='_compute_return_partner_bank_id',
+        readonly=False, store=True,
+        domain="[('id', 'in', available_return_partner_bank_ids)]",
         check_company=True,
         ondelete='restrict',
     )
@@ -216,6 +229,7 @@ class AccountPayment(models.Model):
         currency_field='company_currency_id', compute='_compute_amount_company_currency_signed', store=True)
     # used to get and display duplicate move warning if partner, amount and date match existing payments
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_payment_ids')
+    alerts = fields.Json(compute='_compute_alerts')
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
     _check_amount_not_negative = models.Constraint(
@@ -587,11 +601,16 @@ class AccountPayment(models.Model):
     @api.depends('partner_id', 'company_id', 'payment_type')
     def _compute_available_partner_bank_ids(self):
         for pay in self:
+            company_banks = pay.journal_id.bank_account_id
+            partner_banks = pay.commercial_partner_id.bank_ids.filtered(lambda x:
+                x.company_id.id in (False, pay.company_id.id)
+            )._origin
             if pay.payment_type == 'inbound':
-                pay.available_partner_bank_ids = pay.journal_id.bank_account_id
+                pay.available_partner_bank_ids = company_banks
+                pay.available_return_partner_bank_ids = partner_banks
             else:
-                pay.available_partner_bank_ids = pay.commercial_partner_id.bank_ids\
-                        .filtered(lambda x: x.company_id.id in (False, pay.company_id.id))._origin
+                pay.available_partner_bank_ids = partner_banks
+                pay.available_return_partner_bank_ids = company_banks
 
     @api.depends('available_partner_bank_ids', 'journal_id')
     def _compute_partner_bank_id(self):
@@ -599,6 +618,12 @@ class AccountPayment(models.Model):
         for pay in self:
             if pay.partner_bank_id not in pay.available_partner_bank_ids:
                 pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+
+    @api.depends('available_return_partner_bank_ids', 'journal_id')
+    def _compute_return_partner_bank_id(self):
+        for pay in self:
+            if pay.return_partner_bank_id not in pay.available_return_partner_bank_ids:
+                pay.return_partner_bank_id = pay.available_return_partner_bank_ids[:1]._origin
 
     @api.depends('available_payment_method_line_ids')
     def _compute_payment_method_line_id(self):
@@ -822,6 +847,11 @@ class AccountPayment(models.Model):
         for payment in self:
             # Uses payment._origin.id to handle records in edition/existing records and 0 for new records
             payment.duplicate_payment_ids = payment_to_duplicate_move.get(payment._origin.id, self.env['account.payment'])
+
+    @api.depends('company_id')
+    def _compute_alerts(self):
+        # TO OVERRIDE
+        self.alerts = {}
 
     def _search_reconciled_invoice_ids(self, operator, value):
         if operator not in ('in', '='):

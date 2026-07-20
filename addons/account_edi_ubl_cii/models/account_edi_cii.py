@@ -608,12 +608,16 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_applicable_header_trade_settlement_node(self, vals):
         invoice = vals['invoice']
+        has_sepa_mandate = (
+            self.module_installed('account_sepa_direct_debit')
+            and invoice.reconciled_payment_ids.mandate_id.filtered(lambda m: m.mandate_type == 'sepa')
+        )
         return {
             'ram:PaymentReference': {'_text': invoice.payment_reference},
             'ram:InvoiceCurrencyCode': {'_text': vals['currency_id'].name},
             'ram:SpecifiedTradeSettlementPaymentMeans': {
                 'ram:TypeCode': {'_text': PAYMENT_MEAN_CODES['SEPA direct debit']
-                    if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id
+                    if has_sepa_mandate
                     else PAYMENT_MEAN_CODES['Payment to bank account'],
                 },
                 'ram:PayeePartyCreditorFinancialAccount': self._cii_get_payee_party_creditor_financial_account_node(vals),

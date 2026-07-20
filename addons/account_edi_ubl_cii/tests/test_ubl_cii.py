@@ -535,7 +535,8 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             self.partner_a.country_id = self.env.ref('base.nl').id
             company_bank_journal.bank_account_id.allow_out_payment = True
 
-            mandate = self.env['sdd.mandate'].create({
+            mandate = self.env['account.direct.debit.mandate'].create({  # noqa: OLS03001
+                'mandate_type': 'sepa',
                 'name': 'mandate ' + (self.partner_a.name or ''),
                 'partner_bank_id': partner_bank.id,
                 'one_off': True,

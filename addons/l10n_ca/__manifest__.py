@@ -42,11 +42,12 @@ position.
         'data/tax_report.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
+        'views/res_config_settings_views.xml',
         'views/report_invoice.xml',
         'views/report_template.xml',
     ],
     'demo': [
-        'demo/demo_company.xml',
+        'demo/demo.xml',
     ],
     'license': 'LGPL-3',
 }

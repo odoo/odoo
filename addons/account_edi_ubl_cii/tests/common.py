@@ -347,8 +347,10 @@ class TestUblBis3Common(TestUblCiiCommon):
             'account_number': account_number,
             'partner_id': partner.id,
             'company_id': self.env.company.id,
+            'allow_out_payment': True,
         })
-        mandate = self.env['sdd.mandate'].create({  # noqa: OLS03001
+        mandate = self.env['account.direct.debit.mandate'].create({  # noqa: OLS03001
+            'mandate_type': 'sepa',
             'name': f'mandate_{partner.name}_{account_number[-4:]}',
             'partner_id': partner.id,
             'partner_bank_id': partner_bank.id,

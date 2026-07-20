@@ -162,6 +162,9 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid,reconciled" invisible="outstanding_account_type == 'asset_cash'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid" invisible="outstanding_account_type != 'asset_cash'"/>
                     </header>
+                    <div class="m-0" id="alerts" invisible="not alerts">
+                        <field name="alerts" class="o_field_html" widget="actionable_errors"/>
+                    </div>
                     <div class="alert alert-warning mb-2" role="alert" invisible="not duplicate_payment_ids or state!='draft'">
                         <span>This payment has the same partner, amount and date as </span>
                         <field name="duplicate_payment_ids" widget="x2many_buttons" string="Duplicated Payments"/>
