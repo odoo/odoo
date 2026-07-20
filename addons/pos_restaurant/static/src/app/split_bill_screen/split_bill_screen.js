@@ -164,7 +164,10 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
 
-        await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
+        await this.pos.syncAllOrders({
+            orders: [originalOrder, newOrder],
+            context: { notify_preparation: this.pos.shouldNotifyPreparation() },
+        });
         originalOrder.customer_count -= 1;
         await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });

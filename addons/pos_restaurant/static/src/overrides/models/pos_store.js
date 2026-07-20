@@ -348,7 +348,10 @@ patch(PosStore.prototype, {
             await this.deleteOrders([order]);
         }
 
-        await this.syncAllOrders({ orders: [destinationOrder || order] });
+        await this.syncAllOrders({
+            orders: [destinationOrder || order],
+            context: { notify_preparation: this.shouldNotifyPreparation() },
+        });
         await this.setTable(destinationTable);
     },
     getCustomerCount(tableId) {
@@ -366,5 +369,8 @@ patch(PosStore.prototype, {
     },
     get showSaveOrderButton() {
         return super.showSaveOrderButton && !this.config.module_pos_restaurant;
+    },
+    shouldNotifyPreparation() {
+        return false;
     },
 });
