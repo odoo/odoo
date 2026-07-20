@@ -115,9 +115,16 @@ describe("Pivot custom groups", () => {
     });
 
     test("Can have both the grouped field and the base field at the same time in the pivot", async function () {
-        const { model, pivotId } = await createSpreadsheetWithPivot();
+        const { model, pivotId } = await createSpreadsheetWithPivot({
+            mockRPC: (route, { model, method, kwargs }) => {
+                if (method === "formatted_read_grouping_sets") {
+                    expect.step(kwargs.order);
+                }
+            }
+        });
+        expect.verifySteps(["foo,bar"]);
         updatePivot(model, pivotId, {
-            columns: [{ fieldName: "GroupedProducts", order: "asc" }],
+            columns: [{ fieldName: "GroupedProducts" }],
             rows: [{ fieldName: "product_id", order: "asc" }],
             measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
             customFields: {
@@ -144,6 +151,7 @@ describe("Pivot custom groups", () => {
             A6: "table",         B6: "",             C6: "50.00",        D6: "50.00",
             A7: "Total",         B7: "131.00",       C7: "150.00",       D7: "281.00",
         });
+        expect.verifySteps(["product_id asc"])
     });
 
     test("Custom groups handle None values", async function () {
