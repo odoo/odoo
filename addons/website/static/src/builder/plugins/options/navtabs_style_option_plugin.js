@@ -1,9 +1,13 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getContrastingColor } from "@html_builder/utils/utils_css";
+import { COLOR_COMBINATION_CLASSES } from "@html_editor/main/font/color_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
+import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 /**
  * @typedef { Object } NavTabsStyleOptionShared
@@ -14,6 +18,7 @@ import { localization } from "@web/core/l10n/localization";
 
 export class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
+    static dependencies = ["color"];
     static shared = ["isNavItem", "getActiveOverlayButtons", "moveNavItem"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -35,6 +40,7 @@ export class NavTabsStyleOptionPlugin extends Plugin {
             selector: ".s_tabs, .s_tabs_images",
             excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
         },
+        apply_custom_css_style_overrides: this.applyColorStyle.bind(this),
     };
 
     setup() {
@@ -119,6 +125,62 @@ export class NavTabsStyleOptionPlugin extends Plugin {
             node.closest(".s_tabs, .s_tabs_images") &&
             node.closest("li")?.classList.contains("nav-item")
         );
+    }
+
+    /**
+     * Adapts the active tab background color to contrast with the link color on
+     * "buttons" and "tabs" tabs, when the background is not an o_cc.
+     *
+     * @param {HTMLElement} editingElement
+     * @param {string} linksColor
+     */
+    setActiveNavBtnBackground(editingElement, linksColor) {
+        if (!linksColor) {
+            linksColor = this.window
+                .getComputedStyle(editingElement.closest(".s_tabs_common"))
+                .getPropertyValue("--tabs-link-color");
+        }
+        const contrastColor = convertCSSColorToRgba(
+            getContrastingColor(linksColor, getHtmlStyle(this.document))
+        );
+        editingElement.style.setProperty(
+            "--tabs-active-bg-color",
+            `rgba(${contrastColor.red}, ${contrastColor.green}, ${contrastColor.blue}, 0.5)`
+        );
+    }
+
+    applyColorStyle({ editingElement, styleName, value }) {
+        if (styleName === "--tabs-bg-color") {
+            editingElement.style.removeProperty(styleName);
+            this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
+            // In case of a theme, keep only the background-color in the CSS
+            // custom property so the color picker state is synced.
+            const bgColor =
+                this.dependencies.color.getElementColors(editingElement)["backgroundColor"];
+            editingElement.style.setProperty(styleName, bgColor);
+            if (!value.startsWith("o_cc")) {
+                // Defaults on a link color that contrasts with the background.
+                const contrastColor = convertCSSColorToRgba(
+                    getContrastingColor(bgColor, getHtmlStyle(this.document))
+                );
+                const linksColor = `rgba(${contrastColor.red}, ${contrastColor.green}, ${contrastColor.blue})`;
+                for (const tabLinkEl of editingElement.querySelectorAll(".s_tabs_nav .nav-link")) {
+                    tabLinkEl.style.setProperty("--tabs-link-color", linksColor);
+                }
+                this.setActiveNavBtnBackground(editingElement, linksColor);
+            } else {
+                editingElement.style.removeProperty("--tabs-active-bg-color");
+            }
+            return true;
+        } else if (styleName === "--tabs-link-color") {
+            const tabsNavEl = editingElement.closest(".s_tabs_nav");
+            if (!tabsNavEl.style.getPropertyValue("--tabs-bg-color")) {
+                tabsNavEl.style.removeProperty("--tabs-active-bg-color");
+            } else {
+                this.setActiveNavBtnBackground(tabsNavEl, value);
+            }
+        }
+        return false;
     }
 }
 
@@ -219,6 +281,18 @@ class SetStyleAction extends BaseNavtabsStyleOption {
 
         if (isTabs || isBtns) {
             this.applyDirection(editingElement, "horizontal");
+        } else {
+            const tabsNavEl = editingElement.querySelector(".s_tabs_nav");
+            tabsNavEl.classList.remove("o_cc", ...COLOR_COMBINATION_CLASSES);
+            for (const cssProp of [
+                "background-color",
+                "background-image",
+                "--tabs-bg-color",
+                "--tabs-link-color",
+                "--tabs-active-bg-color",
+            ]) {
+                tabsNavEl.style.removeProperty(cssProp);
+            }
         }
 
         if (isTabs) {

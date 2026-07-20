@@ -55,6 +55,14 @@ export function removeStyle(node, styleName, item) {
  * @returns {string}
  */
 export function getCSSVariableValue(key, htmlStyle) {
+    if (!key) {
+        return "";
+    }
+    if (key.startsWith("var(--")) {
+        key = key.substring(6, key.length - 1);
+    } else if (key.startsWith("--")) {
+        key = key.substring(2);
+    }
     // Get trimmed value from the HTML element
     let value = htmlStyle.getPropertyValue(`--${key}`).trim();
     // If it is a color value, it needs to be normalized
