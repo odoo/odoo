@@ -1098,17 +1098,42 @@ class BaseCase(case.TestCase):
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
 
+        try:
+            from odoo.addons.bus import websocket as bus_websocket  # noqa: PLC0415
+        except ImportError:
+            additional_patches = ()
+        else:
+            og_db_connect = bus_websocket.db_connect
+
+            def _patched_ws_db_connect(to, allow_uri=False, readonly=False):
+                # acquire_cursor() opens a cursor via db_connect(db_name) directly instead
+                # of going through Registry(db_name).cursor(), bypassing the patch above.
+                # Redirect it to the test's cursor too.
+                if to == cr.dbname:
+
+                    class _TestConnection:
+                        def cursor(self):
+                            return _patched_cursor(readonly)
+
+                    return _TestConnection()
+                return og_db_connect(to, allow_uri=allow_uri, readonly=readonly)
+
+            additional_patches = (
+                patch.object(bus_websocket, 'db_connect', _patched_ws_db_connect),
+            )
+
         def get_sequences(cr):
             return registry.registry_sequence, registry.cache_sequences.copy()
 
-        with (
-            patch.object(cls, '_registry_patched', True),
+        with ExitStack() as stack:
+            for additional_patch in additional_patches:
+                stack.enter_context(additional_patch)
+            stack.enter_context(patch.object(cls, '_registry_patched', True))
             # New cursor should point to the test's cursor
-            patch.object(registry, 'cursor', _patched_cursor),
+            stack.enter_context(patch.object(registry, 'cursor', _patched_cursor))
             # Disable locking and signaling
-            patch.object(Registry, '_lock', DummyRLock()),
-            patch.object(registry, 'setup_signaling', return_value=None),  # noop
-        ):
+            stack.enter_context(patch.object(Registry, '_lock', DummyRLock()))
+            stack.enter_context(patch.object(registry, 'setup_signaling', return_value=None))  # noop
             yield
 
     @classmethod
