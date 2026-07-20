@@ -19,7 +19,7 @@
                                 Immediately
                             </t>
                                 <t t-else="">
-                                After <t t-out="level.data.start_count"/> <t t-out="durationTypes[level.data.start_type] || level.data.start_type"/>
+                                After <t t-out="level.data.start_count"/> <t t-out="this.durationTypes[level.data.start_type] || level.data.start_type"/>
                             </t>
                         </span>
                     </span>
@@ -33,7 +33,7 @@
                 <div class="content o_accrual_bg align-self-center w-100 h-100 px-3 py-2 my-3 ms-2 border rounded-3" role="button" t-on-click="this.editMilestone.bind(this, level.data.id)">
                     <span class="text">
                         <h4 class="header m-0" name="header">
-                            Accrual frequency : <t t-out="level.data.added_value"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
+                            Accrual frequency : <t t-out="level.data.added_value"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
                             <t t-if="level.data.frequency == 'hourly'">
                                 every hour.
                                 <br/>
@@ -83,22 +83,22 @@
                                     <br/>
                                 </t>
                                 <t t-else="">
-                                    Unused days will be transferred with a max of <t t-out="level.data.postpone_max_days"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
+                                    Unused days will be transferred with a max of <t t-out="level.data.postpone_max_days"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
                                     on each <t t-out="this.state.carryOverDate"/>.
                                     <br/>
                                 </t>
                             </t>
                             <t t-if="level.data.cap_accrued_time_yearly">
                                 <t t-if="level.data.cap_accrued_time">
-                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
-                                    and a balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
+                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
+                                    and a balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
                                 </t>
                                 <t t-else="">
-                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
+                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
                                 </t>
                             </t>
                             <t t-elif="level.data.maximum_leave">
-                                A balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
+                                A balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="this.durationTypes[level.data.added_value_type] || level.data.added_value_type"/>.
                             </t>
                         </div>
                     </span>
