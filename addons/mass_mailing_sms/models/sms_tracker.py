@@ -6,14 +6,16 @@ from odoo import fields, models
 class SmsTracker(models.Model):
     _inherit = "sms.tracker"
 
-    SMS_STATE_TO_TRACE_STATUS = {
-        'error': 'error',
-        'process': 'process',
-        'outgoing': 'outgoing',
-        'canceled': 'cancel',
-        'pending': 'pending',
-        'sent': 'sent',
-    }
+    @property
+    def SMS_STATE_TO_TRACE_STATUS(self):
+        return {
+            'error': 'error',
+            'process': 'process',
+            'outgoing': 'outgoing',
+            'canceled': 'cancel',
+            'pending': 'pending',
+            'sent': 'sent',
+        }
 
     mailing_trace_id = fields.Many2one('mailing.trace', ondelete='cascade', index='btree_not_null')
 
