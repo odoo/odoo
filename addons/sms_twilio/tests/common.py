@@ -207,16 +207,24 @@ class MockSmsTwilioApi(SMSCase):
         ):
             yield
 
-    def simulate_sms_twilio_status(self, sms_batch, company):
+    def simulate_sms_twilio_status(self, sms_batch, company, sms_status=None, error_code=None, error_message=None):
         """ Simulate callback webhook called by Twilio """
+        call_params = self.webhook_ok_response.copy()
+        # Handle known errors (the ones that we have already mapped)
+        if sms_status:
+            call_params['SmsStatus'] = sms_status
+        if error_code:
+            call_params['ErrorCode'] = error_code
+        if error_message:
+            call_params['ErrorMessage'] = error_message
         for sms in sms_batch:
             expected_signature = twilio_tools.generate_twilio_sms_callback_signature(
                 self.user_admin.company_id,
                 sms.uuid,
-                self.webhook_ok_response,
+                call_params,
             )
             _response = self.url_open(
-                f"/sms_twilio/status/{sms.uuid}", self.webhook_ok_response,
+                f"/sms_twilio/status/{sms.uuid}", call_params,
                 headers={
                     "X-Twilio-Signature": expected_signature,
                 },
