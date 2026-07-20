@@ -55,7 +55,22 @@ class SmsTracker(models.Model):
 
     def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
         notification_status = self.SMS_STATE_TO_NOTIFICATION_STATUS[sms_state]
+        self._update_sms_sms(sms_state, failure_type=failure_type, failure_reason=failure_reason)
         self._update_sms_notifications(notification_status, failure_type=failure_type, failure_reason=failure_reason)
+
+    def _update_sms_sms(self, sms_state, failure_type=False, failure_reason=False):
+        """ Update SMS state based on externdal update (provider, IAP). Currently
+        only updates pending sms that are sent to correctly mark them as done
+        until potential deletion. """
+        if sms_state == 'sent':
+            if unsent := self.env['sms.sms'].sudo().search([
+                ('state', '!=', 'sent'),
+                ('uuid', 'in', self.mapped('sms_uuid')),
+            ]):
+                unsent.write({
+                    'failure_type': failure_type,
+                    'state': sms_state,
+                })
 
     def _update_sms_notifications(self, notification_status, failure_type=False, failure_reason=False):
         # canceled is a state which means that the SMS sending order should not be sent to the SMS service.
