@@ -223,7 +223,7 @@ class SmsSms(models.Model):
                 if failure_type != 'unknown':
                     sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type, failure_reason=failure_reason)
                 else:
-                    sms_sudo.sms_tracker_id.with_context(sms_known_failure_reason=failure_reason)._action_update_from_provider_error(iap_state)
+                    sms_sudo.sms_tracker_id._action_update_from_provider_error(iap_state, failure_reason=failure_reason)
                 to_delete = {'to_delete': True} if unlink_failed else {}
                 sms_sudo.write({'state': 'error', 'failure_type': failure_type, **to_delete})
 

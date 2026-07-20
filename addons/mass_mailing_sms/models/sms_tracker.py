@@ -17,8 +17,8 @@ class SmsTracker(models.Model):
 
     mailing_trace_id = fields.Many2one('mailing.trace', ondelete='cascade', index='btree_not_null')
 
-    def _action_update_from_provider_error(self, provider_error):
-        error_status, failure_type, failure_reason = super()._action_update_from_provider_error(provider_error)
+    def _action_update_from_provider_error(self, provider_error, failure_reason=False):
+        error_status, failure_type, failure_reason = super()._action_update_from_provider_error(provider_error, failure_reason=failure_reason)
         self._update_sms_traces(error_status or 'error', failure_type=failure_type, failure_reason=failure_reason)
         return error_status, failure_type, failure_reason
 
