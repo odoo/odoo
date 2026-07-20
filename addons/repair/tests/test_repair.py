@@ -1098,6 +1098,17 @@ class TestRepair(TestRepairCommon):
         self.assertEqual(so_part_line.product_uom_qty, 0)
         self.assertEqual(so_service_line.product_uom_qty, 0)
 
+    def test_warranty_sets_repair_service_sale_order_line_price_to_zero(self):
+        repair_order = self._create_repair_order_with_moves_and_services()
+        repair_order.action_create_sale_order()
+        repair_order.under_warranty = True
+
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+
+        self.assertEqual(repair_order.repair_service_line_ids.sale_line_id.price_unit, 0.0)
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
