@@ -816,18 +816,13 @@ class TestChannelInternals(MailCommon, HttpCase):
         # sending normal message
         with self.with_user("employee"):
             channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
-        all_notif = self.env["mail.notification"].search([
+        notifs = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "in", [all_test_user.partner_id.id, mentions_test_user.partner_id.id, nothing_test_user.partner_id.id]),
         ])
-        mentions_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
-        ])
-        nothing_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
-        ])
+        all_notif = notifs.filtered(lambda n: n.res_partner_id == all_test_user.partner_id)
+        mentions_notif = notifs.filtered(lambda n: n.res_partner_id == mentions_test_user.partner_id)
+        nothing_notif = notifs.filtered(lambda n: n.res_partner_id == nothing_test_user.partner_id)
         self.assertEqual(len(all_notif), 0, "all + normal message = no needaction")
         self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
@@ -844,18 +839,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                     message_type="comment",
                     subtype_xmlid="mail.mt_comment",
                 )
-        all_notif = self.env["mail.notification"].search([
+        notifs = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "in", [all_test_user.partner_id.id, mentions_test_user.partner_id.id, nothing_test_user.partner_id.id]),
         ])
-        mentions_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
-        ])
-        nothing_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
-        ])
+        all_notif = notifs.filtered(lambda n: n.res_partner_id == all_test_user.partner_id)
+        mentions_notif = notifs.filtered(lambda n: n.res_partner_id == mentions_test_user.partner_id)
+        nothing_notif = notifs.filtered(lambda n: n.res_partner_id == nothing_test_user.partner_id)
         self.assertEqual(len(all_notif), 1, "all + mention message = needaction")
         self.assertEqual(len(mentions_notif), 1, "mentions + mention message = needaction")
         self.assertEqual(len(nothing_notif), 1, "nothing + mention message = no needaction")
@@ -871,18 +861,13 @@ class TestChannelInternals(MailCommon, HttpCase):
         # sending normal message
         with self.with_user("employee"):
             channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
-        all_notif = self.env["mail.notification"].search([
+        notifs = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "in", [all_test_user.partner_id.id, mentions_test_user.partner_id.id, nothing_test_user.partner_id.id]),
         ])
-        mentions_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
-        ])
-        nothing_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
-        ])
+        all_notif = notifs.filtered(lambda n: n.res_partner_id == all_test_user.partner_id)
+        mentions_notif = notifs.filtered(lambda n: n.res_partner_id == mentions_test_user.partner_id)
+        nothing_notif = notifs.filtered(lambda n: n.res_partner_id == nothing_test_user.partner_id)
         self.assertEqual(len(all_notif), 0, "mute + all + normal message = no needaction")
         self.assertEqual(len(mentions_notif), 0, "mute + mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "mute + nothing + normal message = needaction")
@@ -890,18 +875,13 @@ class TestChannelInternals(MailCommon, HttpCase):
         # sending mention message
         with self.with_user("employee"):
             channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
-        all_notif = self.env["mail.notification"].search([
+        notifs = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "in", [all_test_user.partner_id.id, mentions_test_user.partner_id.id, nothing_test_user.partner_id.id]),
         ])
-        mentions_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
-        ])
-        nothing_notif = self.env["mail.notification"].search([
-            ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
-        ])
+        all_notif = notifs.filtered(lambda n: n.res_partner_id == all_test_user.partner_id)
+        mentions_notif = notifs.filtered(lambda n: n.res_partner_id == mentions_test_user.partner_id)
+        nothing_notif = notifs.filtered(lambda n: n.res_partner_id == nothing_test_user.partner_id)
         self.assertEqual(len(all_notif), 1, "mute + all + mention message = needaction")
         self.assertEqual(len(mentions_notif), 1, "mute + mentions + mention message = needaction")
         self.assertEqual(len(nothing_notif), 1, "mute + nothing + mention message = needaction")
