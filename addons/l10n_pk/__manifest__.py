@@ -22,6 +22,7 @@ Activates:
         'account',
         'account_tax_python',
         'l10n_account_withholding_tax',
+        'product',
     ],
     'auto_install': ['account'],
     'data': [
