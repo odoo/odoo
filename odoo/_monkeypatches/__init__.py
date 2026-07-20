@@ -41,5 +41,7 @@ def patch_all():
     patch_markup()
     from .requests import patch_requests
     patch_requests()
+    from .pyopenssl import patch_pyopenssl
+    patch_pyopenssl()
     from ._cpython import patch_cpython
     patch_cpython()
