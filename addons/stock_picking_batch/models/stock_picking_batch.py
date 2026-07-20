@@ -312,7 +312,7 @@ class StockPickingBatch(models.Model):
                 'target': 'new',
                 'context': {'default_picking_ids': self.picking_ids.ids},
             }
-        return self.move_line_ids.action_open_label_layout()
+        return self.move_ids.action_open_label_layout()
 
     def action_merge(self):
         if not self:
