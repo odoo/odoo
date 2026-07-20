@@ -9,11 +9,11 @@
                     <templates>
                         <t t-name="card" class="flex-row">
                             <div>
-                                <div>
+                                <div class="d-flex align-items-baseline">
                                     <field name="name" class="fw-bold fs-5"/>
-                                    <field name="create_date" class="ms-2 text-muted"/>
+                                    <field name="scope" class="ms-2 text-uppercase" widget="badge"/>
                                 </div>
-                                <small class="d-block" invisible="not scope">Scope: <field name="scope"/></small>
+                                <small class="d-block">Created on: <field name="create_date"/></small>
                                 <small class="d-block" invisible="expiration_date == False">Expires on: <field name="expiration_date"/></small>
                             </div>
                             <button name="remove" type="object" string="Delete" class="btn btn-secondary ms-auto mb-auto my-auto"/>
