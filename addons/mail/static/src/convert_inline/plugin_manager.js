@@ -45,18 +45,14 @@ export class PluginManager {
     /**
      * @param { PluginManagerConfig } config
      */
-    constructor(config = {}, services = {}) {
+    constructor(services = {}) {
         this.pluginPropertyName = "__pluginManager";
         this.isReady = false;
         this.isDestroyed = false;
-        this.config = config;
+        this.config = {};
         this.services = services;
-        this.setup();
-    }
-
-    setup() {
-        this.resources = null;
         this.plugins = [];
+        this.resources = null;
         this.shared = {};
     }
 
@@ -317,6 +313,9 @@ export class PluginManager {
     }
 
     destroy() {
+        if (this.isDestroyed) {
+            return;
+        }
         this.isReady = false;
         let plugin;
         while ((plugin = this.plugins.pop())) {

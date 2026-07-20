@@ -212,29 +212,18 @@ export class HtmlField extends Component {
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 
+    /**
+     * @param {HTMLElement} content
+     * @returns {Promise<Array>}
+     */
     savePendingImages(content) {
-        return this.editor.shared.imageSave?.savePendingImages(content);
+        return Promise.all(this.editor.trigger("on_save_pending_images_handlers", content));
     }
 
     async getEditorContent() {
-        const editor = this.editor;
-        const content = editor.getElContent();
-        const oldSrcToNewSrcMap = await this.savePendingImages(content);
-        // Update the actual editable if the editor was not destroyed
-        if (!editor.isDestroyed && oldSrcToNewSrcMap) {
-            editor.editable
-                .querySelectorAll(".o_b64_image_to_save, .o_modified_image_to_save")
-                .forEach((unsavedImage) => {
-                    const oldSrc = unsavedImage.getAttribute("src");
-                    if (oldSrcToNewSrcMap.has(oldSrc)) {
-                        unsavedImage.setAttribute("src", oldSrcToNewSrcMap.get(oldSrc));
-                    }
-                    unsavedImage.classList.remove(
-                        "o_b64_image_to_save",
-                        "o_modified_image_to_save"
-                    );
-                });
-        }
+        this.editor.trigger("before_clean_for_save_with_pending_images_handlers");
+        const content = this.editor.getElContent();
+        await this.savePendingImages(content);
         return content;
     }
 

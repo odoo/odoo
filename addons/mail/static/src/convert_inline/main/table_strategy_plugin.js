@@ -13,6 +13,7 @@ import { isAllowedContent } from "@html_editor/utils/dom_info";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
+// align-items|self -> verticalAlign map
 const VERTICAL_ALIGN = {
     start: "top",
     end: "bottom",
@@ -35,6 +36,7 @@ export class TableStrategyPlugin extends Plugin {
         "referenceNode",
         "rules",
         "spacing",
+        "style",
     ];
     static shared = [
         "addTableOuterSpacingFacts",
@@ -54,6 +56,7 @@ export class TableStrategyPlugin extends Plugin {
         element_layout_analysis_processors: [
             this.analyzeElementLayout.bind(this),
             this.addBottomUpConstraintsForTables.bind(this),
+            this.addAlignSelfConstraint.bind(this),
         ],
         merge_layout_overrides: [this.mergeCellDescendant.bind(this)],
         should_discard_reference_node_predicates: this.isUnsupportedTableElement.bind(this),
@@ -68,6 +71,7 @@ export class TableStrategyPlugin extends Plugin {
             withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
             this.applyDescendantBackground.bind(this),
             this.applyDescendantBorder.bind(this),
+            this.forceVerticalAlign.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         merge_fact_overrides: this.mergeTableStrategyReport.bind(this),
@@ -225,6 +229,39 @@ export class TableStrategyPlugin extends Plugin {
             }),
             emailNode.layout.ancestorTag
         );
+    }
+
+    addAlignSelfConstraint(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return defaultEmailNodeArguments;
+        }
+        const rawStyle = this.getRawStyleInfo(referenceNode);
+        const alignSelf = rawStyle.getPropertyValue("align-self");
+        if (!(alignSelf in VERTICAL_ALIGN)) {
+            return defaultEmailNodeArguments;
+        }
+        const verticalAlign = VERTICAL_ALIGN[alignSelf];
+        const { analysis } = defaultEmailNodeArguments;
+        analysis.bottomUpConstraints.push((emailNode) => {
+            if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
+                return;
+            }
+            return { facts: { forceVerticalAlign: verticalAlign } };
+        });
+        return defaultEmailNodeArguments;
+    }
+
+    forceVerticalAlign(layout, { emailNode }) {
+        const verticalAlign = emailNode.analysis.facts.forceVerticalAlign;
+        if (!verticalAlign) {
+            return layout;
+        }
+        const rootRef = layout.getRef();
+        rootRef.styleInfo.setProperty("vertical-align", verticalAlign);
+        if (rootRef.attributes.valign) {
+            rootRef.attributes.valign = verticalAlign;
+        }
+        return layout;
     }
 
     applyCellNewWidth(layout, { emailNode }) {
@@ -569,7 +606,14 @@ export class TableStrategyPlugin extends Plugin {
                 "root",
                 parentEmailNode
             );
-            parentEmailNode.layout.setAttributes(layout.getRef(), refName);
+            const ref = layout.getRef();
+            const styleInfo = ref.style;
+            // TODO EGGMAIL: handle the following properly with rules, evaluate
+            // what other properties should be removed
+            // Only the resulting layout (from parentEmailNode) can determine
+            // the display mode.
+            styleInfo.removeProperty("display");
+            parentEmailNode.layout.setAttributes(ref, refName);
             return true;
         }
     }
@@ -808,6 +852,7 @@ export class TableStrategyPlugin extends Plugin {
         });
         const layout = new cell.Layout({ refs });
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
+        analysis.facts.isCell = true;
         const cellEmailNode = new EmailNode({ layout, analysis });
         if (!verticalAlign) {
             if (!isLast) {

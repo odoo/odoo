@@ -66,6 +66,20 @@ export class ImageStrategyPlugin extends Plugin {
         // height and width attributes are specified through applyLayoutStrategy
         rules.block("height", { when: this.isImg.bind(this) });
         rules.block("width", { when: this.isImg.bind(this) });
+        const srcWhen = [
+            this.isImg.bind(this),
+            ({ referenceNode }) => referenceNode.dataset?.emailImageSrc,
+        ];
+        // block src when emailImageSrc is found
+        rules.block("src", { when: srcWhen });
+        // force emailImageSrc as src
+        rules.require("src", {
+            when: srcWhen,
+            how: ({ referenceNode }) => ({
+                attributeName: "src",
+                attributeValue: referenceNode.dataset.emailImageSrc,
+            }),
+        });
     }
 
     provideStyleRules(rules) {
@@ -82,6 +96,22 @@ export class ImageStrategyPlugin extends Plugin {
         rules.block(/^border(-.*)?$/, { when: this.isImg.bind(this) });
         // padding is handled by refineImage
         rules.block(/^padding(-(top|right|bottom|left))?$/, { when: this.isImg.bind(this) });
+        // background
+        rules.allow("background");
+        rules.allow("background-position");
+        // TODO EGGMAIL: not restrictive enough (eg linear gradient on background images)
+        rules.allow("background-image");
+        const hasEmailImageSrc = ({ referenceNode }) => referenceNode.dataset?.emailImageSrc;
+        rules.fix("background-image", {
+            when: hasEmailImageSrc,
+            how: ({ referenceNode }) => ({
+                propertyValue: `url('${referenceNode.dataset.emailImageSrc}')`,
+            }),
+        });
+        rules.require("background-size", {
+            when: hasEmailImageSrc,
+            how: () => ({ propertyValue: "cover" }),
+        });
     }
 
     refineImage(layout, { emailNode }) {
@@ -283,7 +313,11 @@ export class ImageStrategyPlugin extends Plugin {
      * <i>/<span> fa + circle should be centered properly when the icon is converted into an image
      *
      */
-    // TODO EGGMAIL: implement the parsing variant to support OI icons (vs FA icons)
+    // TODO EGGMAIL: create an attachment with the resulting icon, that can
+    // be reused for multiple distinct emails, instead of using the route.
+    // refactor the python function to be able to construct the image data,
+    // and return a route result, but for newer mails, convert the result to
+    // a shared attachment
     buildFontIconImageRef({ imageNode: fontIcon, shouldBeBlock }) {
         // TODO EGGMAIL: rgba is an alias for rgb
         // rgb can also have an alpha channel

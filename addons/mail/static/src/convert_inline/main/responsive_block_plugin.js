@@ -5,7 +5,7 @@ import { Band, Block, Cluster } from "./responsive_block_models";
 
 export class ResponsiveBlockPlugin extends Plugin {
     static id = "responsiveBlock";
-    static dependencies = ["measurementSnapshot", "math", "referenceNode"];
+    static dependencies = ["measurementSnapshot", "math", "referenceNode", "render"];
     static shared = ["getLayoutBlock"];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.computeBlocks.bind(this),
@@ -78,9 +78,13 @@ export class ResponsiveBlockPlugin extends Plugin {
      * any style that disregard the DOM hierarchy (eg position: absolute) is not
      * supported
      */
-    computeClusters(parent, ignoredInlineNodes) {
+    computeClusters(parent, ignoredNodes) {
         const clusters = [];
         this.processChildNodes(parent, (child) => {
+            if (this.checkPredicates("should_discard_reference_node_predicates", child)) {
+                ignoredNodes.add(child);
+                return false;
+            }
             const isBlock = this.isBlock(child);
             const prevCluster = clusters.at(-1);
             const cluster =
@@ -88,7 +92,7 @@ export class ResponsiveBlockPlugin extends Plugin {
                     ? new Cluster([child], isBlock)
                     : prevCluster;
             if (!isBlock) {
-                ignoredInlineNodes.add(child);
+                ignoredNodes.add(child);
             }
             if (cluster !== prevCluster) {
                 clusters.push(cluster);

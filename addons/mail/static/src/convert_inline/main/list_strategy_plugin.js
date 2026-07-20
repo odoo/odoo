@@ -10,6 +10,7 @@ export class ListStrategyPlugin extends Plugin {
     resources = {
         element_layout_analysis_processors: this.analyzeFakeListLayout.bind(this),
         cell_ref_name_processors: [this.getCellRefName.bind(this)],
+        style_rules_processors: [[this.provideStyleRules.bind(this), ListStrategyPlugin.id]],
     };
 
     // Multiple approaches here: either try to support "list-group"
@@ -41,6 +42,17 @@ export class ListStrategyPlugin extends Plugin {
             return { layout, analysis };
         }
         return defaultEmailNodeArguments;
+    }
+
+    provideStyleRules(rules) {
+        // block existing margin-top
+        rules.block("margin-top", {
+            when: ({ referenceNode }) => isListElement(referenceNode),
+        });
+        rules.require("margin-top", {
+            when: ({ referenceNode }) => isListElement(referenceNode),
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
     }
 
     detectFakeListContainer(referenceNode) {

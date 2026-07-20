@@ -8,7 +8,7 @@ export class ResponsivePlugin extends Plugin {
     static id = "responsive";
     static shared = ["callWithDimensions"];
     resources = {
-        on_reference_content_loaded_handlers: this.responsiveParsing.bind(this),
+        on_measure_reference_content_handlers: this.responsiveParsing.bind(this),
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
     };
 

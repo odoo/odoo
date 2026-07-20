@@ -56,7 +56,7 @@ export class MeasurementSnapshotPlugin extends Plugin {
             "width",
         ],
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
-        on_will_load_reference_content_handlers: () => this.config.updateLayoutDimensions(),
+        on_will_start_conversion_handlers: () => this.config.updateLayoutDimensions(),
     };
 
     setup() {

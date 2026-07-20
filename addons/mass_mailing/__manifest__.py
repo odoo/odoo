@@ -151,6 +151,10 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web.assets_backend': [
+            # Operation is needed when saving pending
+            # images using the basic editor (without the html_builder).
+            'html_builder/static/src/core/operation.js',
+
             'mass_mailing/static/src/action/**/*',
             'mass_mailing/static/src/components/**/*',
             'mass_mailing/static/src/views/mailing_preview_form_view.js',

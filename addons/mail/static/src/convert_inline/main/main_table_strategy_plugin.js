@@ -21,7 +21,7 @@ export class MainTableStrategyPlugin extends Plugin {
         // which would also match but is less relevant.
         element_layout_analysis_processors: withSequence(1, this.analyzeElementLayout.bind(this)),
         cell_ref_name_processors: [this.getCellRefName.bind(this)],
-        on_reference_content_loaded_handlers: this.identifyLayout.bind(this),
+        on_measure_reference_content_handlers: this.identifyLayout.bind(this),
         refine_layout_processors: withSequence(
             DEFAULT_SPACING_SEQUENCE - 1,
             this.discardMarginInfo.bind(this)

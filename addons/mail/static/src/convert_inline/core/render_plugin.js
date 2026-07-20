@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { Analysis, ElementLayout, EmailNode, LayoutModel, TextNodeLayout } from "./render_models";
 import { isSelfClosingElement } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -23,8 +24,8 @@ export class RenderPlugin extends Plugin {
     static dependencies = ["math", "measurementSnapshot", "referenceNode", "rules"];
     static shared = ["attemptMerge", "isDiscarded"];
     resources = {
-        on_build_render_tree_handlers: this.buildRenderTree.bind(this),
-        on_render_email_template_handlers: this.renderEmailHtml.bind(this),
+        build_render_tree_processors: withSequence(1, this.buildRenderTree.bind(this)),
+        render_email_template_processors: this.renderEmailHtml.bind(this),
     };
 
     setup() {
@@ -193,6 +194,12 @@ export class RenderPlugin extends Plugin {
         // Build a dummy to aggregate the child layout properties onto the
         // parent layout properties
         const dummyLayout = new LayoutModel({ refs: parentEmailNode.layout.getRefs() });
+        const styleInfo = dummyLayout.getRef().styleInfo;
+        // TODO EGGMAIL: handle the following properly with rules, evaluate
+        // what other properties should be removed
+        // Only the resulting layout (from emailNode) can determine the display
+        // mode.
+        styleInfo.removeProperty("display");
         for (const refName of layout.getRefNames()) {
             dummyLayout.setAttributes(layout.getRef(refName), refName);
         }
@@ -461,6 +468,7 @@ export class RenderPlugin extends Plugin {
             template.content.appendChild(fragment);
         }
         this.ensureTemplateContent(template);
+        return template;
     }
 }
 

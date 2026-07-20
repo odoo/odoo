@@ -2,7 +2,13 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
 
-const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = ["font-size", "font-weight", "text-align"];
+const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = [
+    "color",
+    "font-size",
+    "font-style",
+    "font-weight",
+    "text-align",
+];
 const TEXT_ALIGN_ALLOWED_VALUES = new Set(["right", "left", "center", "justify"]);
 const TEXT_ALIGN_FIXABLE_VALUES = new Set(["start", "end"]);
 
@@ -28,8 +34,10 @@ export class ContextStylePlugin extends Plugin {
     provideTableContextStyleRules() {
         const tableContextRules = this.tableContextStyleRules.forPlugin(ContextStylePlugin.id);
         tableContextRules.allow("font-size");
+        tableContextRules.allow("font-style");
         tableContextRules.allow("font-weight");
         tableContextRules.allow("line-height");
+        tableContextRules.allow("color");
         tableContextRules.allow("text-align", {
             when: ({ propertyValue }) => TEXT_ALIGN_ALLOWED_VALUES.has(propertyValue),
         });

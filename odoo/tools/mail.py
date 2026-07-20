@@ -74,7 +74,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-oe-role', 'data-oe-aria-label', 'data-o-datetime',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
-     'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype', 'data-email-image-src', 'data-email-image-checksum',
      'data-attachment-id', 'data-format-mimetype',
      'data-ai-field', 'data-ai-record-id',
      'data-heading-link-id',

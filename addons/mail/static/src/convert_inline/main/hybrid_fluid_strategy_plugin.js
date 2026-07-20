@@ -45,6 +45,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
             withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
             this.applyDescendantBackground.bind(this),
             this.applyDescendantBorder.bind(this),
+            this.forcePercentWidth.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
     };
@@ -137,6 +138,18 @@ export class HybridFluidStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         } else if (isResponsiveElement) {
             analysis.facts.isResponsiveElement = true;
+            // add constraint to propagate from the responsive element (cell)
+            // if the element inside the cell has a %width, it should be
+            // elevated to 100%, because spacing will have been handled
+            // around the responsive element
+            const percentWidthConstraint = (emailNode) => {
+                if (emailNode.analysis.facts["useHybridFluidTableStrategy"]) {
+                    return { shouldPropagate: true };
+                } else {
+                    return { facts: { forcePercentWidth: 100 } };
+                }
+            };
+            analysis.topDownConstraints.push(percentWidthConstraint);
         }
         Object.assign(analysis.parsingFacts, {
             canMerge: false,
@@ -149,6 +162,24 @@ export class HybridFluidStrategyPlugin extends Plugin {
         analysis.facts.isHybridFluidContainer = true;
         layout.pluginIds.add(HybridFluidStrategyPlugin.id);
         return defaultEmailNodeArguments;
+    }
+
+    forcePercentWidth(layout, { emailNode }) {
+        // TODO EGGMAIL: move this function in another plugin?
+        const forcedPercentWidth = emailNode.analysis.facts.forcePercentWidth;
+        if (forcedPercentWidth !== undefined) {
+            const styleInfo = layout.getRef().styleInfo;
+            const widthInfo = styleInfo.get("width");
+            if (!widthInfo) {
+                return layout;
+            }
+            const { value } = widthInfo;
+            const parsed = parseCssValue(value);
+            if (parsed.unit === "%" && parsed.number !== forcedPercentWidth) {
+                widthInfo.value = `${forcedPercentWidth}%`;
+            }
+        }
+        return layout;
     }
 
     acceptTableStrategyReport(emailNode) {
@@ -257,6 +288,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         });
         const layout = new cell.Layout({ refs });
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
+        analysis.facts.isCell = true;
         const cellEmailNode = new EmailNode({ layout, analysis });
         cellEmailNode.analysis.facts[strategy] = true;
         for (const child of clusterEmailNodes) {

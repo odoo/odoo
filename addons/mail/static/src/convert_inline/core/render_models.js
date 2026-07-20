@@ -146,8 +146,8 @@ export class LayoutModel {
         return {
             attributes: this.refToAttributes.get(ref),
             classNames: this.refToClassNames.get(ref),
-            styleInfo,
-            style: styleInfo,
+            styleInfo, // mutable source
+            style: StyleInfo.from(styleInfo), // copy
         };
     }
 

@@ -17,7 +17,7 @@ export class RulesPlugin extends Plugin {
     ];
     resources = {
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
-        on_will_load_reference_content_handlers: this.specifyRules.bind(this),
+        on_will_start_conversion_handlers: this.specifyRules.bind(this),
     };
 
     setup() {
@@ -156,13 +156,10 @@ export class RulesPlugin extends Plugin {
             onPass: (propertyName, propertyInfo, fixedArgs = {}) => {
                 const name = fixedArgs.propertyName ?? propertyName;
                 const value = fixedArgs.propertyValue ?? propertyInfo?.value;
+                const priority = fixedArgs.propertyPriority ?? propertyInfo?.priority ?? "";
+                const sequence = fixedArgs.propertySequence ?? propertyInfo?.sequence ?? 0;
                 if (value !== undefined) {
-                    filteredStyleInfo.setProperty(
-                        name,
-                        value,
-                        fixedArgs.propertyPriority ?? propertyInfo?.priority ?? "",
-                        propertyInfo.sequence
-                    );
+                    filteredStyleInfo.setProperty(name, value, priority, sequence);
                 }
             },
             onMiss: (propertyName) => {

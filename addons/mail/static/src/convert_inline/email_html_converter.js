@@ -6,18 +6,11 @@ export class EmailHtmlConverter extends PluginManager {
      * @param {MailHtmlConversionConfig} config
      */
     async convertToEmailHtml(config) {
-        if (this.isDestroyed) {
+        if (!(await this.measureReference(config))) {
             return null;
         }
-        this.setup();
-        this.config = config;
-
-        this.preparePlugins();
-        this.startPlugins();
-        this.isReady = true;
-
-        await this.buildEmailModel();
-        const inlineTemplate = this.renderEmailTemplate();
+        this.triggerTreeBuildingPhase();
+        const inlineTemplate = this.triggerRenderingPhase();
         if (!inlineTemplate) {
             return null;
         }
@@ -30,36 +23,56 @@ export class EmailHtmlConverter extends PluginManager {
         // return this.config.reference.innerHTML;
     }
 
-    /**
-     * Can be called multiple times to render new copies
-     *
-     * @returns {HTMLTemplateElement}
-     */
-    renderEmailTemplate() {
-        const template = this.config.referenceDocument.createElement("TEMPLATE");
-        this.trigger("on_render_email_template_handlers", template);
-        return template;
+    async measureReference(config) {
+        if (this.isDestroyed) {
+            return false;
+        } else if (this.measureCompleted) {
+            return this.isReady;
+        }
+        this.config = config;
+        this.preparePlugins();
+        this.startPlugins();
+        this.isReady = true;
+        await this.triggerMeasuringPhase();
+        if (this.isDestroyed) {
+            return false;
+        }
+        this.measureCompleted = true;
+        return true;
     }
 
-    async buildEmailModel() {
+    async triggerMeasuringPhase() {
         // 1 prepare working environment, this is the only phase where reference
         // can be modified
-        this.trigger("on_will_load_reference_content_handlers");
+        this.trigger("on_will_start_conversion_handlers");
 
         // TODO EGGMAIL: evaluate if we need another async step to communicate
         // with the server (eg to handle attachments) => instead of doing it
         // in the reference prior to calling htmlConversion.
 
-        // 2 load async content (e.g. images) for final dimensions
+        // 2 load async content (e.g. fonts and images) for final dimensions
         await Promise.all(this.trigger("on_load_reference_content_handlers").flat());
         if (this.isDestroyed) {
-            return null;
+            return;
         }
         // 3 notify plugins that the reference is ready to be used as such (e.g. for style computations)
-        this.trigger("on_reference_content_loaded_handlers");
+        this.trigger("on_measure_reference_content_handlers");
+    }
 
+    triggerTreeBuildingPhase() {
         // 4 build the render tree
-        this.trigger("on_build_render_tree_handlers");
+        this.processThrough("build_render_tree_processors");
+    }
+
+    /**
+     * Can be called multiple times to render new copies
+     *
+     * @returns {HTMLTemplateElement}
+     */
+    triggerRenderingPhase() {
+        const template = this.config.referenceDocument.createElement("TEMPLATE");
+        // 5 render the tree
+        return this.processThrough("render_email_template_processors", template);
     }
 
     onLayoutDimensionsUpdated(dimensions) {

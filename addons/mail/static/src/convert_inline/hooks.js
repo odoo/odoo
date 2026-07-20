@@ -5,6 +5,7 @@ import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { EmailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 import { loadIframeBundles, loadIframe } from "@mail/convert_inline/iframe_utils";
 import { useService } from "@web/core/utils/hooks";
+import { Mutex } from "@web/core/utils/concurrency";
 
 export const DIMENSIONS = {
     DESKTOP: Object.freeze({
@@ -31,6 +32,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     let converter, reference, referenceDocument; // Element and Document in which the conversion takes place.
     let currentConfig = {};
     let isReady = false;
+    const mutex = new Mutex();
     const scope = useScope();
     const convertInlineIframeService = useService("convert_inline_iframe");
     const referenceIframe = renderToElement("mail.EmailHtmlConverterReferenceIframe", {
@@ -76,7 +78,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
             converter.onLayoutDimensionsUpdated(dimensions);
         }
     };
-    const cleanupEmailHtmlConversion = () => {
+    const cleanupConverter = () => {
         if (reference?.isConnected) {
             reference.remove();
             reference = undefined;
@@ -88,14 +90,14 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     };
     const unmountConverter = () => {
         isReady = false;
-        cleanupEmailHtmlConversion();
+        cleanupConverter();
     };
-    const prepareEmailHtmlConversion = async (fragment) => {
+    const resetConverter = async (fragment) => {
         if (!(await iframeSetup)) {
             return false;
         }
-        cleanupEmailHtmlConversion();
-        converter = new EmailHtmlConverter(undefined, services);
+        cleanupConverter();
+        converter = new EmailHtmlConverter(services);
         reference = renderToElement("mail.EmailHtmlConverterReference");
         reference.append(fragment);
         referenceDocument.body.append(reference);
@@ -116,12 +118,18 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
             updateLayoutDimensions,
         };
     };
-    const convertToEmailHtml = async (fragment, config) => {
-        if (!isReady || !(await prepareEmailHtmlConversion(fragment))) {
-            return null;
+    const prepareConverter = async (fragment) => {
+        if (!isReady || !(await resetConverter(fragment))) {
+            return false;
         }
         if (!referenceIframe.isConnected) {
             unmountConverter();
+            return false;
+        }
+        return true;
+    };
+    const convertToEmailHtml = async (fragment, config) => {
+        if (!(await prepareConverter(fragment))) {
             return null;
         }
         const htmlConverted = Promise.resolve(
@@ -129,10 +137,19 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
         );
         if (!isVisible) {
             return htmlConverted.finally(() => {
-                cleanupEmailHtmlConversion();
+                cleanupConverter();
             });
         }
         return htmlConverted;
+    };
+    const measureReference = async (fragment, config) => {
+        if (!(await prepareConverter(fragment))) {
+            return null;
+        }
+        await converter.measureReference(getCurrentConfig(config));
+        return {
+            ...converter.shared.measurementSnapshot,
+        };
     };
 
     if (targetRef) {
@@ -165,7 +182,14 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
          * @param {Object} [config]
          * @returns {Promise<string|null>} email compliant HTML.
          */
-        convertToEmailHtml,
+        convertToEmailHtml: (...args) => mutex.exec(() => convertToEmailHtml(...args)),
+        /**
+         * @param {DocumentFragment} fragment reference content to measure
+         * @param {Object} [config]
+         * @returns {Promise<Object|null>} shared functions of measurementSnapshot plugin,
+         *          after measurement setup is done.
+         */
+        measureReference: (...args) => mutex.exec(() => measureReference(...args)),
         /**
          * @param {Object} dimensions
          * @param {Number} dimensions.width

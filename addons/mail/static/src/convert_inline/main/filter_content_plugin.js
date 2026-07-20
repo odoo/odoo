@@ -24,6 +24,7 @@ const ALLOWED_CSS_DISPLAY_VALUES = new Set(["block", "inline", "inline-block", "
 // TODO EGGMAIL: investigate if some more node should bypass the invisible rule
 const ALLOWED_IF_INVISIBLE_ELEMENT = new Set(["BR", "T"]);
 const { DESKTOP, MOBILE } = DIMENSIONS;
+const BLOCKED_POSITION_VALUES = new Set(["absolute", "sticky", "fixed"]);
 
 export class FilterContentPlugin extends Plugin {
     static id = "filterContent";
@@ -41,14 +42,19 @@ export class FilterContentPlugin extends Plugin {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), FilterContentPlugin.id],
         ],
-        element_layout_analysis_processors: withSequence(1, this.analyzeElementLayout.bind(this)),
+        element_layout_analysis_processors: [
+            withSequence(1, this.analyzeParentMergeability.bind(this)),
+        ],
         style_rules_processors: [[this.provideStyleRules.bind(this), FilterContentPlugin.id]],
         is_blocked_rule_selector_predicates: this.blockUserContextSelectors.bind(this),
-        should_discard_reference_node_predicates: this.isInvisible.bind(this),
+        should_discard_reference_node_predicates: [
+            this.isInvisible.bind(this),
+            this.isPositionAbsolute.bind(this),
+        ],
         reference_node_tag_name_processors: this.defineEffectiveTagName.bind(this),
     };
 
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+    analyzeParentMergeability(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { analysis } = defaultEmailNodeArguments;
         const node = referenceNode;
         let parentNode;
@@ -118,6 +124,7 @@ export class FilterContentPlugin extends Plugin {
             when: ({ attributeName, referenceNode }) =>
                 referenceNode.nodeName === "T" && !attributeName.startsWith("t-"),
         });
+        rules.block("srcset");
     }
 
     provideStyleRules(rules) {
@@ -148,6 +155,22 @@ export class FilterContentPlugin extends Plugin {
             when: ({ propertyName }) =>
                 propertyName !== "border-spacing" && propertyName !== "border-collapse",
         });
+
+        // blockquote (remove margin against useragent)
+        const isBlockquote = ({ referenceNode }) => referenceNode.nodeName === "BLOCKQUOTE";
+        rules.block(/^margin-(left|top|right)$/, { when: isBlockquote });
+        rules.require("margin-left", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-right", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-top", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
     }
 
     genericTextAndFontStyleRules(rules) {
@@ -174,7 +197,8 @@ export class FilterContentPlugin extends Plugin {
 
     genericBackgroundStyleRules(rules) {
         // TODO EGGMAIL: maybe not restrictive enough
-        rules.allow(/^background(-.*)?$/);
+        rules.allow("background");
+        rules.allow("background-color");
     }
 
     genericLayoutStyleRules(rules) {
@@ -220,6 +244,15 @@ export class FilterContentPlugin extends Plugin {
             rect[isBlock ? "height" : "width"] === 0 &&
             (referenceNode.nodeType !== Node.ELEMENT_NODE || !this.hasVisibleBorder(referenceNode))
         ) {
+            return true;
+        }
+    }
+
+    isPositionAbsolute(referenceNode) {
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        if (BLOCKED_POSITION_VALUES.has(this.getStylePropertyValue(referenceNode, "position"))) {
             return true;
         }
     }
