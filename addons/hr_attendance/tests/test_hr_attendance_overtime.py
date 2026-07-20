@@ -100,6 +100,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'hours_per_day': 8,
             'flexible_hours': True,
             'full_time_required_hours': 40,
+            'tz': 'UTC'
         })
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
@@ -762,7 +763,8 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_overtime_hours_flexible_resource_with_tz(self):
         """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day for an employee with a timezone
         """
-        self.flexible_employee.tz = "Europe/Brussels"
+        self.flexible_employee.tz = 'Europe/Brussels'
+        self.flexible_employee.resource_calendar_id.tz = 'Europe/Brussels'
         # 1) 8:00 - 16:00 should contain 0 hours of overtime
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.flexible_employee.id,
