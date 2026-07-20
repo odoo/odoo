@@ -467,6 +467,21 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.headers['Date'].count(' GMT'), 1,
             "There must be only 1 Date header, not 2")
 
+    def test_static25_x_robots_tag(self):
+        # CASE: real attachment served via /web/image
+        res = self.assertDownloadGizeh('/web/image/test_http.gizeh_png')
+        self.assertEqual(
+            res.headers.get('X-Robots-Tag'), 'noindex',
+            "X-Robots-Tag: noindex must be set on /web/image responses",
+        )
+
+        # CASE: real attachment served via /web/content
+        res = self.assertDownloadGizeh('/web/content/test_http.gizeh_png')
+        self.assertEqual(
+            res.headers.get('X-Robots-Tag'), 'noindex',
+            "X-Robots-Tag: noindex must be set on /web/content responses",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):

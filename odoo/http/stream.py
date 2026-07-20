@@ -209,6 +209,7 @@ class Stream:
                 res.headers['Content-Length'] = '0'
 
         res.headers['X-Content-Type-Options'] = 'nosniff'
+        res.headers['X-Robots-Tag'] = 'noindex'
 
         if content_security_policy:  # see also Application.set_csp()
             res.headers['Content-Security-Policy'] = content_security_policy
