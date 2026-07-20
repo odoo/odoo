@@ -9,6 +9,10 @@ class TestAuthLDAP(HttpCase):
 
     def test_auth_ldap(self):
         def _get_ldap_dicts(self):
+            template_user = self.env["res.users"].create({
+                "name": "User Template",
+                "login": "user_template",
+            })
             template_user = self.env.ref("base.template_portal_user_id")
             return [
                 {
