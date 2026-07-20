@@ -50,10 +50,15 @@ export class CopyClipboardButtonField extends CopyClipboardField {
     props = useProps({
         ...copyClipboardFieldProps,
         btnClass: t.string().optional("primary"),
+        icon: t.string().optional(),
     });
 
     get copyButtonClassName() {
         return `o_btn_${this.type}_copy btn-${this.props.btnClass} rounded-2`;
+    }
+
+    get copyButtonIcon() {
+        return this.props.icon;
     }
 }
 
@@ -88,6 +93,7 @@ export const copyClipboardButtonField = {
     extractProps: (fieldInfo) => ({
         ...extractProps(fieldInfo),
         btnClass: fieldInfo.options.btn_class,
+        icon: fieldInfo.options.icon,
     }),
 };
 
