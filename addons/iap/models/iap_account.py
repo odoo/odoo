@@ -268,6 +268,23 @@ class IapAccount(models.Model):
             'target': 'self',
         }
 
+<<<<<<< b7069e73697ab86920276240798a51d239a873d8
+||||||| 0837ee80c2f7af263d7b92b98bc378f7f8b2d84a
+    def action_manage_payment_method(self):
+        return {
+            "type": "ir.actions.act_url",
+            "url": self.env['ir.config_parameter'].sudo().get_str("iap.endpoint", DEFAULT_ENDPOINT) + "/iap/1/update-auto-refill-payment-methods?%s" % werkzeug.urls.url_encode({
+                "account_token": self.sudo().account_token,
+                "dbuuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
+                "client_iap_account_id": self.id,
+            }),
+        }
+
+=======
+    def action_manage_payment_method(self):
+        raise UserError(_('This feature will be available in version 20.0'))
+
+>>>>>>> ff5abe97a324c24f2e4eb6a556f4cb53e5572ba5
     @api.model
     def get_config_account_url(self):
         """ Called notably by ajax partner_autocomplete. """
