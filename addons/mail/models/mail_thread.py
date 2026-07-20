@@ -1567,7 +1567,11 @@ class MailThread(models.AbstractModel):
         attachments = []
         body = ''
         if save_original:
-            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
+            try:
+                content = message.as_string()
+            except UnicodeDecodeError:
+                content = message.as_bytes()
+            attachments.append(self._Attachment('original_email.eml', content, {}))
 
         # Be careful, content-type may contain tricky content like in the
         # following example so test the MIME type with startswith()
