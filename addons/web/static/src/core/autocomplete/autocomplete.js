@@ -45,7 +45,7 @@ export class AutoComplete extends Component {
     static defaultProps = {
         value: "",
         placeholder: "",
-        autocomplete: "new-password",
+        autocomplete: "off",
         autoSelect: false,
         dropdown: true,
         onInput: () => {},

@@ -836,3 +836,29 @@ test("items are selected only when the mouse moves, not just on enter", async ()
         "ui-state-active"
     );
 });
+
+test("input disables browser autocomplete by default", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static props = [];
+
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete--input").toHaveAttribute("autocomplete", "off");
+});
+
+test("browser autocomplete attribute can be overridden via prop", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="'Hello'" sources="sources" autocomplete="'name'"/>`;
+        static props = [];
+
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete--input").toHaveAttribute("autocomplete", "name");
+});
