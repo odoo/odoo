@@ -409,46 +409,46 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
-    def test_efaktur_xml_trx_01(self):
-        """ Test that with transaction code 01, OtherTaxBase should equal to TaxBase."""
+    def test_efaktur_xml_other_tax_base_per_tax_group(self):
+        """ Test that OtherTaxBase is reduced to 11/12 of the tax base for non-luxury goods """
 
-        out_invoice = self.env["account.move"].create({
+        # Non-luxury goods: OtherTaxBase is 11/12 of the tax base.
+        non_luxury_invoice = self.env["account.move"].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
             ],
             'l10n_id_kode_transaksi': '01',
         })
+        non_luxury_invoice.action_post()
+        non_luxury_invoice.download_efaktur()
 
-        out_invoice.action_post()
-        out_invoice.download_efaktur()
+        result_tree = etree.fromstring(non_luxury_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        self.assertEqual(result_tree.findtext('.//TaxBase'), '100000.00')
+        self.assertEqual(result_tree.findtext('.//OtherTaxBase'), '91666.67')
+        self.assertEqual(result_tree.findtext('.//VAT'), '11000.00')
 
-        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
-        expected_tree = self.with_applied_xpath(
-            etree.fromstring(self.sample_xml),
-            '''
-            <xpath expr="//TrxCode" position="replace">
-                <TrxCode>01</TrxCode>
-            </xpath>
-            <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.00</OtherTaxBase>
-            </xpath>
-            <xpath expr="//TaxBase" position="replace">
-                <TaxBase>100000.00</TaxBase>
-            </xpath>
-            <xpath expr="//VATRate" position="replace">
-                <VATRate>12</VATRate>
-            </xpath>
-            <xpath expr="//VAT" position="replace">
-                <VAT>12000.00</VAT>
-            </xpath>
-            '''
-        )
+        # Luxury goods: OtherTaxBase equals the tax base.
+        luxury_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '01',
+        })
+        luxury_invoice.action_post()
+        luxury_invoice.download_efaktur()
 
-        self.assertXmlTreeEqual(result_tree, expected_tree)
+        result_tree = etree.fromstring(luxury_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        self.assertEqual(result_tree.findtext('.//TaxBase'), '100000.00')
+        self.assertEqual(result_tree.findtext('.//OtherTaxBase'), '100000.00')
+        self.assertEqual(result_tree.findtext('.//VAT'), '12000.00')
 
     def test_efaktur_xml_trx_07(self):
         """ Test that with transaction code 07, if we fill in the AddInfo, FacilityStamp, and
@@ -488,13 +488,13 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <FacilityStamp>TD.01105</FacilityStamp>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>91666.67</OtherTaxBase>
+                <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>12</VATRate>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>11000.00</VAT>
+                <VAT>12000.00</VAT>
             </xpath>
             <xpath expr="//CustomDoc" position="replace">
                 <CustomDoc>custom doc</CustomDoc>
@@ -770,10 +770,10 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             etree.fromstring(self.sample_xml),
             '''
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>91666.67</OtherTaxBase>
+                <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>11000.00</VAT>
+                <VAT>12000.00</VAT>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>12</VATRate>
@@ -846,6 +846,12 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             <xpath expr="//Price" position="replace">
                 <Price>100000.00</Price>
             </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>100000.00</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>12000.00</VAT>
+            </xpath>
             '''
         )
 
@@ -882,10 +888,10 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <TaxBase>90000.00</TaxBase>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>82500.00</OtherTaxBase>
+                <OtherTaxBase>90000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>9900.00</VAT>
+                <VAT>10800.00</VAT>
             </xpath>
             '''
         )

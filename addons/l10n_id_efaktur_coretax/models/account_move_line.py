@@ -38,10 +38,9 @@ class AccountMoveLine(models.Model):
         ppn_tax_groups = regular_tax_groups | {luxury_tax_group, stlg_tax_group} | zero_tax_groups
         ppn_tax_groups.discard(False)
 
-        zero_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in zero_tax_groups)
         stlg_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == stlg_tax_group)
-        regular_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in regular_tax_groups)
         ppn_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in ppn_tax_groups)
+        non_luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == non_luxury_tax_group)
 
         # "Price" is unit price calculation excluding tax and discount
         # "TotalDiscount" is total of "Price" * quantity * discount
@@ -60,10 +59,10 @@ class AccountMoveLine(models.Model):
             "STLGRate": stlg_tax.amount if stlg_tax else 0.0,
         }
         if ppn_tax:
-            if self.move_id.l10n_id_kode_transaksi == "01" or (not regular_tax and not zero_tax):
-                line_val['OtherTaxBase'] = line_val['TaxBase']
+            if non_luxury_tax:
+                line_val['OtherTaxBase'] = idr.round(line_val['TaxBase'] * 11 / 12)
             else:
-                line_val['OtherTaxBase'] = idr.round(self.price_subtotal * 11 / 12)
+                line_val['OtherTaxBase'] = line_val['TaxBase']
         else:
             line_val['OtherTaxBase'] = 0
 
