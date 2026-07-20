@@ -12,9 +12,8 @@ from email.utils import make_msgid
 from socket import gaierror, timeout
 
 import idna
-import OpenSSL
-from OpenSSL import crypto as SSLCrypto
-from OpenSSL.crypto import FILETYPE_PEM
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.x509 import load_pem_x509_certificate
 from OpenSSL.crypto import Error as SSLCryptoError
 from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext
@@ -28,22 +27,7 @@ from odoo.tools import (
     encapsulate_email,
     formataddr,
     human_size,
-    parse_version,
 )
-
-if parse_version(OpenSSL.__version__) >= parse_version('24.3.0'):
-    from cryptography.hazmat.primitives.serialization import load_pem_private_key
-    from cryptography.x509 import load_pem_x509_certificate
-else:
-    from OpenSSL import crypto as SSLCrypto
-    from OpenSSL.crypto import FILETYPE_PEM
-    from OpenSSL.crypto import Error as SSLCryptoError
-
-    def load_pem_private_key(pem_key, password):
-        return SSLCrypto.load_privatekey(FILETYPE_PEM, pem_key)
-
-    def load_pem_x509_certificate(pem_cert):
-        return SSLCrypto.load_certificate(FILETYPE_PEM, pem_cert)
 
 
 _logger = logging.getLogger(__name__)
