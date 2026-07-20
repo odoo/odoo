@@ -186,7 +186,6 @@ export class CallPreview extends Component {
         const callAudioActions = [
             new Action({
                 id: "toggle-microphone",
-                owner: this,
                 definition: muteActionUpdated,
                 store: this.store,
             }),
@@ -194,7 +193,6 @@ export class CallPreview extends Component {
         const callVideoActions = [
             new Action({
                 id: "toggle-camera",
-                owner: this,
                 definition: cameraOnActionUpdated,
                 store: this.store,
             }),
@@ -203,7 +201,6 @@ export class CallPreview extends Component {
             callVideoActions.push(
                 new Action({
                     id: "video-blur",
-                    owner: this,
                     definition: videoBlurAction,
                     store: this.store,
                 })
@@ -212,7 +209,6 @@ export class CallPreview extends Component {
             callAudioActions.push(
                 new Action({
                     id: "audio-settings",
-                    owner: this,
                     definition: quickActionSettings,
                     store: this.store,
                 })
@@ -220,7 +216,6 @@ export class CallPreview extends Component {
             callVideoActions.push(
                 new Action({
                     id: "video-settings",
-                    owner: this,
                     definition: quickVideoSettings,
                     store: this.store,
                 })

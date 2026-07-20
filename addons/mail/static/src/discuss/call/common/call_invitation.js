@@ -68,23 +68,21 @@ export class CallInvitation extends Component {
             new CallAction({
                 id: "accept-with-camera",
                 definition: acceptWithCameraUpdated,
-                owner: this,
                 store: this.store,
                 channel: this.props.channel,
             }),
             new CallAction({
                 id: "join",
                 definition: joinUpdated,
-                owner: this,
                 store: this.store,
                 channel: this.props.channel,
             }),
             new CallAction({
                 id: "reject",
                 definition: rejectAction,
-                owner: this,
                 store: this.store,
                 channel: this.props.channel,
+                inCallInvitation: this.env.inCallInvitation,
             }),
         ];
     }

@@ -116,7 +116,12 @@ export class CallActionList extends Component {
     }
 
     get callActionsParams() {
-        return { channel: () => this.props.channel };
+        return {
+            channel: () => this.props.channel,
+            inComponent: true,
+            inMeetingView: () => Boolean(this.env.inMeetingView),
+            pipWindow: () => this.env.pipWindow,
+        };
     }
 
     get MORE() {

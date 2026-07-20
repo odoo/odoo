@@ -18,8 +18,12 @@ export class CallMenu extends Component {
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
-        this.callActions = useCallActions({ channel: () => this.rtc.channel });
         useSubEnv({ inCallMenu: true });
+        this.callActions = useCallActions({
+            channel: () => this.rtc.channel,
+            inCallMenu: this.env.inCallMenu,
+            inComponent: true,
+        });
         this.dropdownState = useDropdownState();
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
