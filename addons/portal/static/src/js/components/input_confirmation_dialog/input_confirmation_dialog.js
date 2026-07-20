@@ -26,7 +26,11 @@ export class InputConfirmationDialog extends ConfirmationDialog {
             }
         };
         onMounted(() => {
-            this.inputEl = this.modalRef()?.querySelector("input");
+            if (!this.modalRef()) return;
+            this.inputEl = this.modalRef().querySelector("input");
+            for (const input of this.modalRef().querySelectorAll("input[default-checked]")) {
+                input.checked = true;
+            }
             if (this.inputEl) {
                 this.inputEl.focus();
                 this.inputEl.addEventListener("keydown", onKeydown);
