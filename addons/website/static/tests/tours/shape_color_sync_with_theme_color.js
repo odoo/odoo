@@ -69,7 +69,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Wait for no loading",
-            trigger: "body:not(:has(.o_we_ui_loading)) :iframe body:not(:has(.o_we_ui_loading))",
+            trigger: ":iframe body:not(:has(.o_loading_screen))",
         },
         verifyShapeColorsUpdated(":iframe .s_company_team"),
         clickOnElement("any image in the snippet", ":iframe .s_company_team img[data-shape]"),
