@@ -43,16 +43,18 @@ export class TableOfContentManager {
         const { target } = heading;
         let offset = 0;
         const scrollable = closestScrollableY(target);
-        for (const el of scrollable.children) {
-            const { position, top, height } = getComputedStyle(el);
-            if (position === "sticky" && parseInt(top) === 0) {
-                offset = Math.max(offset, parseInt(height));
+        if (scrollable) {
+            for (const el of scrollable.children) {
+                const { position, top, height } = getComputedStyle(el);
+                if (position === "sticky" && parseInt(top) === 0) {
+                    offset = Math.max(offset, parseInt(height));
+                }
             }
+            scrollTo(target, { behavior: "smooth", offset: -offset }).then(() => {
+                // Scroll again in case we actually went downwards.
+                scrollTo(target, { behavior: "smooth" });
+            });
         }
-        scrollTo(target, { behavior: "smooth", offset: -offset }).then(() => {
-            // Scroll again in case we actually went downwards.
-            scrollTo(target, { behavior: "smooth" });
-        });
         target.classList.add("o_embedded_toc_header_highlight");
         window.setTimeout(() => {
             target.classList.remove("o_embedded_toc_header_highlight");
