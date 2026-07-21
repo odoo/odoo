@@ -663,10 +663,10 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
 
 @tests.tagged('mail_activity')
-@freeze_time("2024-01-01 09:00:00")
 class TestActivitySystrayBusNotify(TestActivityCommon):
 
     @classmethod
+    @freeze_time("2024-01-01 09:00:00")
     def setUpClass(cls):
         super().setUpClass()
         cls.user_employee_2 = cls.user_employee.copy(default={'login': 'employee_2', 'email': 'user_employee_2@test.lan'})
@@ -685,6 +685,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
         ]
 
     @users('employee')
+    @freeze_time("2024-01-01 09:00:00")
     def test_notify_create_unlink_activities(self):
         """Check creating and unlinking activities notifies of the change in 'to be done' activity count per user."""
         for user in self.env.user + self.user_employee_2:
@@ -695,6 +696,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
                 activities.unlink()
 
     @users('employee')
+    @freeze_time("2024-01-01 09:00:00")
     def test_notify_update_activities(self):
         def format_notif(user, count_diff):
             return BusResult(
