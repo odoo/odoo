@@ -876,9 +876,10 @@ class TestTimesheet(TestCommonTimesheet):
             })
 
         def create_project_update():
-            update_form = Form(self.env['project.update'].with_context({'default_project_id': self.project_customer.id}))
-            update_form.name = "Test"
-            update_project = update_form.save()
+            update_project = self.env['project.update'].create({
+                'name': 'Test',
+                'project_id': self.project_customer.id,
+            })
 
             return [update_project.allocated_time, update_project.timesheet_time, update_project.timesheet_percentage]
 

@@ -550,11 +550,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Standard 40h/week',
         })
         employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
-        leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'])
-        leave_wizard_form.work_entry_type_id = self.holidays_type_1
-        leave_wizard_form.date_from = date(2019, 5, 6)
-        leave_wizard_form.date_to = date(2019, 5, 6)
-        leave_wizard = leave_wizard_form.save()
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'work_entry_type_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 6),
+            'date_to': date(2019, 5, 6),
+        })
         leave_wizard.company_id = company
         leave_wizard.action_generate_time_off()
         employee_leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])

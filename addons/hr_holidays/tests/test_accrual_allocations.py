@@ -2406,14 +2406,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-03-01'):
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.date_from = '2024-01-01'
-                f.employee_id = self.employee_emp
-                f.work_entry_type_id = self.work_entry_type
-                f.name = "Employee Allocation"
-
-            accrual_allocation = f.record
+            accrual_allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': '2024-01-01',
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'name': 'Employee Allocation',
+            })
             accrual_allocation.action_approve()
             self.assertAlmostEqual(accrual_allocation.number_of_days, 3.0, places=0)
 
@@ -2637,15 +2636,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'remaining_leaves']
 
         with freeze_time("2024-03-01"):
-            # Simulate creating an allocation from frontend interface
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.employee_id = self.employee_emp
-                f.work_entry_type_id = work_entry_type
-                f.date_from = '2024-02-01'
-                f.name = "Accrual allocation for employee"
-
-            allocation = f.record
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': work_entry_type.id,
+                'date_from': '2024-02-01',
+                'name': 'Accrual allocation for employee',
+            })
 
             first_result = get_remaining_leaves(2024, 2, 21)
             self.assertEqual(get_remaining_leaves(2024, 2, 21), first_result, "Function return result should persist")
@@ -2683,13 +2680,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'remaining_leaves']
 
         with freeze_time("2024-03-01"):
-            # Simulate creating an allocation from frontend interface
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.employee_id = self.employee_emp
-                f.work_entry_type_id = work_entry_type
-                f.date_from = '2024-02-01'
-                f.name = "Accrual allocation for employee"
+            self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': work_entry_type.id,
+                'date_from': '2024-02-01',
+                'name': 'Accrual allocation for employee',
+            })
 
             self.assertEqual(get_remaining_leaves(2024, 3, 1), 10, "The cap is reached, no more leaves should be accrued")
 
@@ -2800,14 +2797,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.employee_hrmanager.resource_calendar_id = calendar_emp.id
 
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.date_from = '2024-08-07'
-                f.work_entry_type_id = self.work_entry_type
-                f.employee_id = self.employee_emp
-                f.name = "Employee Allocation"
-
-            accrual_allocation = f.record
+            accrual_allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': '2024-08-07',
+                'work_entry_type_id': self.work_entry_type.id,
+                'employee_id': self.employee_emp.id,
+                'name': 'Employee Allocation',
+            })
             allocation_days = accrual_allocation.number_of_days
             self.assertEqual(accrual_allocation.number_of_days, 7.0)
 
@@ -4009,14 +4005,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-11-25'):
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.date_from = '2024-01-01'
-                f.employee_id = self.employee_emp
-                f.work_entry_type_id = self.work_entry_type
-                f.name = "Employee Allocation"
-
-            allocation = f.record
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': '2024-01-01',
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'name': 'Employee Allocation',
+            })
             allocation.action_approve()
 
             # take 15 days, left with 6 days on the alloc
@@ -4059,14 +4054,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             f.action_with_unused_accruals = 'lost'
 
         with freeze_time('2024-11-25'):
-            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
-                f.accrual_plan_id = accrual_plan
-                f.date_from = '2024-01-01'
-                f.employee_id = self.employee_emp
-                f.work_entry_type_id = self.work_entry_type
-                f.name = "Employee Allocation"
-
-            allocation = f.record
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': '2024-01-01',
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'name': 'Employee Allocation',
+            })
             allocation.action_approve()
 
             # take 15 days, left with 6 days on the alloc

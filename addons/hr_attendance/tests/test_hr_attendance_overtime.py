@@ -1308,10 +1308,10 @@ class TestHrAttendanceOvertime(HttpCase):
                 {'name': 'Odoo DE'},
             ])
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0),
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',
@@ -1378,10 +1378,10 @@ class TestHrAttendanceOvertime(HttpCase):
                 'resource_calendar_id': self.calendar_40h.id
             })
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0),
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',
