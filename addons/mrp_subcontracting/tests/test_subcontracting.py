@@ -1797,3 +1797,34 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         ])
         receipt.button_validate()
         self.assertEqual(receipt.move_line_ids.lot_id, mo._get_subcontract_move().lot_ids)
+
+    @freeze_time('2025-08-06')
+    def test_subcontracting_receipt_skip_expired_serials(self):
+        """Test that only non-expired serials are processed when validating a
+        subcontracting receipt."""
+        if 'product_expiry' not in self.env['ir.module.module']._installed():
+            self.skipTest('product expiry is required for this test case skipping the test case')
+        self.finished.write({
+            'use_expiration_date': True,
+            'expiration_time': 10,
+            'removal_time': 8,
+        })
+        receipt = self.generate_subcontracting_receipt_and_mo(2)[0]
+        sn1, sn2 = self.env['stock.lot'].create([
+            {
+                'name': f"SN{serial}",
+                'product_id': self.finished.id,
+            } for serial in range(1, 3)
+        ])
+        receipt.move_line_ids[0].lot_id = sn1.id
+        receipt.move_line_ids[1].write({
+            'quantity': 1,
+            'expiration_date': '2025-08-10',
+            'removal_date': '2025-08-02',
+            'lot_id': sn2.id,
+        })
+        expiry_action = receipt.button_validate()
+        backorder_action = self.env[expiry_action['res_model']].with_context(expiry_action['context']).create({}).process_no_expired()
+        self.env[backorder_action['res_model']].with_context(backorder_action['context']).create({}).process()
+        self.assertTrue(sn1 in receipt._get_subcontract_production().lot_producing_ids)
+        self.assertFalse(sn2 in receipt.backorder_ids._get_subcontract_production().lot_producing_ids)
