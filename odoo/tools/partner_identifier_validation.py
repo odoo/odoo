@@ -9,6 +9,8 @@ NL_KVK_RE = re.compile(r'\d{8}')
 NL_OIN_RE = re.compile(r'\d{20}')
 # TH Branch Code: 5-digit
 TH_BRANCH_CODE_RE = re.compile(r'\d{5}')
+# PK Consumer Identification: 13-digit CNIC
+PK_CN_RE = re.compile(r'\d{13}')
 
 
 # ===========================================================
@@ -35,6 +37,14 @@ def th_branch_code_validate(value):
     if not TH_BRANCH_CODE_RE.fullmatch(value):
         raise InvalidFormat()
     return value
+
+
+def pk_cn_validate(value):
+    """Normalize and validate a Pakistani Consumer Identification (a 13-digit CNIC)."""
+    value = value.replace('-', '').replace(' ', '')
+    if not PK_CN_RE.fullmatch(value):
+        raise InvalidFormat()
+    return f'{value[:5]}-{value[5:12]}-{value[12]}'
 
 
 def validate_email(value):

@@ -23,5 +23,18 @@
         <field name="email">support@islamabadvendor.odoo.com</field>
         <field name="phone">+92 1234567890</field>
         <field name="website">http://islamabadvendor.odoo.com</field>
+            <field name="vat">1234567-8</field>
+        </record>
+
+        <record id="res_partner_adil_khan" model="res.partner">
+            <field name="name">Adil Khan</field>
+            <field name="street">Tarnab Farm</field>
+            <field name="city">Peshawar</field>
+            <field name="state_id" ref='base.state_pk_kp'/>
+            <field name="zip">24620</field>
+            <field name="country_id" ref="base.pk"/>
+            <field name="email">adilkhan@demoemail.odoo.com</field>
+            <field name="phone">+92 333123456</field>
+            <field name="additional_identifiers" eval="{'PK_CN': '21201-7654321-9'}"/>
     </record>
 </odoo>
