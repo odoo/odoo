@@ -606,8 +606,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(picking.location_dest_id.id, self.stock_location.id, 'Wrong destination location in picking')
 
         # Transfer it
-        for ml in picking.move_ids:
-            ml.write({'quantity': 1, 'picked': True})
+        picking.move_ids.write({'quantity': 1, 'picked': True})
         picking._action_done()
 
         # Check the available quantity of components and final product in stock

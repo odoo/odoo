@@ -1463,15 +1463,14 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product
         mo = mo_form.save()
-        for i in range(2):
-            move = self.env['stock.move'].create({
-                'product_id': self.product_2.id,
-                'uom_id': self.uom_unit.id,
-                'production_id': mo.id,
-                'location_id': self.stock_location.id,
-                'location_dest_id': self.output_location.id,
-            })
-            mo.move_raw_ids |= move
+        moves = self.env['stock.move'].create([{
+            'product_id': self.product_2.id,
+            'uom_id': self.uom_unit.id,
+            'production_id': mo.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
+        }] * 2)
+        mo.move_raw_ids |= moves
         mo.action_confirm()
         self.assertEqual(len(mo.move_raw_ids), 2)
 
@@ -2946,14 +2945,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'alternative_workcenter_ids': [workcenter_1.id]
         })
 
-        for workcenter in [workcenter_1, workcenter_2]:
-            self.env['mrp.workcenter.capacity'].create({
-                'workcenter_id': workcenter.id,
-                'uom_id': self.uom_unit.id,
-                'capacity': 2,
-                'time_start': workcenter.time_start,
-                'time_stop': workcenter.time_stop,
-            })
+        self.env['mrp.workcenter.capacity'].create([{
+            'workcenter_id': wc.id,
+            'uom_id': self.uom_unit.id,
+            'capacity': 2,
+            'time_start': wc.time_start,
+            'time_stop': wc.time_stop,
+        } for wc in [workcenter_1, workcenter_2]])
 
         product_to_build = self.env['product.product'].create({
             'name': 'final product',
@@ -3835,12 +3833,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             move.product_id = self.product_1
             move.product_uom_qty = 50
         mo2 = mo2_form.save()
-        for move in mo2.move_raw_ids:
-            if move.product_id == p2:
-                move.unlink()
-            elif move.product_id == p1:
-                # p1 = qty_base_1 = 12 => now 12 dozens instead of units
-                move.uom_id = self.uom_dozen
+        mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).unlink()
+        # p1 = qty_base_1 = 12 => now 12 dozens instead of units
+        mo2.move_raw_ids.filtered(lambda m: m.product_id == p1).write({'uom_id': self.uom_dozen.id})
         mo2.action_confirm()
         mo2_form = Form(mo2)
         mo2_form.qty_producing = 4

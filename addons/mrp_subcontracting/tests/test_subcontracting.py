@@ -1240,17 +1240,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
         })
-        serials_finished = []
-        serials_comp1 = []
-        for i in range(todo_nb):
-            serials_finished.append(self.env['stock.lot'].create({
-                'name': 'serial_fin_%s' % i,
-                'product_id': self.finished.id,
-            }))
-            serials_comp1.append(self.env['stock.lot'].create({
-                'name': 'serials_comp1_%s' % i,
-                'product_id': self.comp1.id,
-            }))
+        serials_finished = list(self.env['stock.lot'].create([
+            {'name': 'serial_fin_%s' % i, 'product_id': self.finished.id}
+            for i in range(todo_nb)
+        ]))
+        serials_comp1 = list(self.env['stock.lot'].create([
+            {'name': 'serials_comp1_%s' % i, 'product_id': self.comp1.id}
+            for i in range(todo_nb)
+        ]))
 
         # Final product
         action = picking_receipt.move_ids.action_show_details()

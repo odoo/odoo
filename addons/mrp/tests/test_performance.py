@@ -26,13 +26,11 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
 
         _logger.info('setting up environment')
 
-        raw_materials = []
-        for i in range(raw_materials_count):
-            raw_materials.append(self.env['product.product'].create({
-                'name': '@raw_material#' + str(i + 1),
-                'is_storable': True,
-                'tracking': trackings[i % len(trackings)]
-            }))
+        raw_materials = self.env['product.product'].create([{
+            'name': '@raw_material#' + str(i + 1),
+            'is_storable': True,
+            'tracking': trackings[i % len(trackings)],
+        } for i in range(raw_materials_count)])
         finished = self.env['product.product'].create({
             'name': '@finished',
             'is_storable': True,

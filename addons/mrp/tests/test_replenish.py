@@ -121,12 +121,11 @@ class TestMrpReplenish(TestMrpCommon):
         on the MO. """
         self.warehouse_1.manufacture_steps = 'pbm'
         basic_mo, dummy1, dummy2, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
-        for product in (product_to_scrap, other_product):
-            self.env['stock.quant'].create({
-                'product_id': product.id,
-                'location_id': self.stock_location.id,
-                'quantity': 2
-            })
+        self.env['stock.quant'].create([{
+            'product_id': p.id,
+            'location_id': self.stock_location.id,
+            'quantity': 2,
+        } for p in (product_to_scrap, other_product)])
         self.assertEqual(basic_mo.move_raw_ids.location_id, self.warehouse_1.pbm_loc_id)
         basic_mo.action_confirm()
         self.assertEqual(len(basic_mo.picking_ids), 1)
@@ -151,12 +150,11 @@ class TestMrpReplenish(TestMrpCommon):
         is re-assigned to the component for the final manufacturing product. """
         self.warehouse_1.manufacture_steps = 'pbm'
         basic_mo, _, _, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=10, qty_base_2=10)
-        for product in (product_to_scrap, other_product):
-            self.env['stock.quant'].create({
-                'product_id': product.id,
-                'location_id': self.stock_location.id,
-                'quantity': 20
-            })
+        self.env['stock.quant'].create([{
+            'product_id': p.id,
+            'location_id': self.stock_location.id,
+            'quantity': 20,
+        } for p in (product_to_scrap, other_product)])
         self.assertEqual(basic_mo.move_raw_ids.location_id, self.warehouse_1.pbm_loc_id)
         basic_mo.action_confirm()
         self.assertEqual(len(basic_mo.picking_ids), 1)
