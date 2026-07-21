@@ -40,9 +40,6 @@ export class ControlPanel extends Component {
         this.actionService = useService("action");
         this.offlinePlugin = plugin(OfflinePlugin);
         this.uiService = useService("ui");
-        this.pagerProps = this.env.config.pagerProps
-            ? proxy(this.env.config.pagerProps)
-            : undefined;
         this.breadcrumbs = proxy(this.env.config.breadcrumbs);
 
         this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
