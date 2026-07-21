@@ -565,20 +565,14 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
         }
 
-        for uom_name in allocated_hours_for_uom:
-            uom_id = self.env.ref('uom.product_uom_%s' % uom_name)
-
-            product_vals.update({
-                'name': uom_name,
-            })
-            product = Product.create(product_vals)
-
-            sol_vals.update({
-                'name': uom_name,
-                'product_id': product.id,
-                'product_uom_id': uom_id.id,
-            })
-            SaleOrderLine.create(sol_vals)
+        uom_ids = {uom_name: self.env.ref('uom.product_uom_%s' % uom_name) for uom_name in allocated_hours_for_uom}
+        products = Product.create([{**product_vals, 'name': uom_name} for uom_name in allocated_hours_for_uom])
+        SaleOrderLine.create([{
+            **sol_vals,
+            'name': uom_name,
+            'product_id': product.id,
+            'product_uom_id': uom_ids[uom_name].id,
+        } for uom_name, product in zip(allocated_hours_for_uom, products)])
 
         self.sale_order.action_confirm()
 
