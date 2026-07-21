@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 from odoo.fields import Date
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
-from odoo.addons.hr_holidays.tests.common import TestHolidayContract
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHolidayContract
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -67,7 +67,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
 
         cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
-        cls.employee_external = cls.env['hr.employee'].create({
+        cls.employee_external = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'external Employee',
             'user_id': cls.external_user_employee.id,
             'company_id': cls.external_company.id,

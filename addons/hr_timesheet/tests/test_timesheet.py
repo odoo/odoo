@@ -8,6 +8,13 @@ from odoo.fields import Command
 from odoo.tests import tagged, Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestCommonTimesheet(TransactionCase):
 
@@ -37,7 +44,7 @@ class TestCommonTimesheet(TransactionCase):
             rule.active = False
 
         # customer partner
-        cls.partner = cls.env['res.partner'].create({
+        cls.partner = cls.env['res.partner'].with_context(**MAIL_OFF).create({
             'name': 'Customer Task',
             'email': 'customer@task.com',
             'phone': '42',
@@ -54,13 +61,13 @@ class TestCommonTimesheet(TransactionCase):
         })
 
         # project and tasks
-        cls.project_customer = cls.env['project.project'].create({
+        cls.project_customer = cls.env['project.project'].with_context(**MAIL_OFF).create({
             'name': 'Project X',
             'allow_timesheets': True,
             'partner_id': cls.partner.id,
             'account_id': cls.analytic_account.id,
         })
-        cls.task1, cls.task2 = cls.env['project.task'].create([
+        cls.task1, cls.task2 = cls.env['project.task'].with_context(**MAIL_OFF).create([
             {
                 'name': 'Task One',
                 'priority': '0',
@@ -111,7 +118,7 @@ class TestCommonTimesheet(TransactionCase):
             },
         ])
         # employees
-        cls.empl_employee, cls.empl_employee2, cls.empl_manager = cls.env['hr.employee'].create([
+        cls.empl_employee, cls.empl_employee2, cls.empl_manager = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': 'User Empl Employee',
                 'user_id': cls.user_employee.id,
@@ -125,7 +132,7 @@ class TestCommonTimesheet(TransactionCase):
                 'user_id': cls.user_manager.id,
             },
         ])
-        cls.project = cls.env['project.project'].create({
+        cls.project = cls.env['project.project'].with_context(**MAIL_OFF).create({
             'name': 'Test Project',
             'privacy_visibility': 'followers',
             'task_ids': [Command.create({

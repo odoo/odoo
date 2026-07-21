@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHrHolidaysCommon
 from odoo.tests import tagged
 
 from odoo.exceptions import AccessError, UserError
@@ -103,7 +103,7 @@ class TestAccessRightsEmployeeManager(TestAllocationRights):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.managed_employee = cls.env['hr.employee'].create({
+        cls.managed_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Jolly Jumper',
             'leave_manager_id': cls.user_employee.id,
         })

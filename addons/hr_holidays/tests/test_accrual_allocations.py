@@ -10,7 +10,7 @@ from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHrHolidaysCommon
 
 
 @tagged('post_install', '-at_install', 'accruals')
@@ -18,7 +18,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocations, cls).setUpClass()
-        cls.department = cls.env['hr.department'].create({
+        cls.department = cls.env['hr.department'].with_context(**MAIL_OFF).create({
             'name': 'Test Department',
         })
         (

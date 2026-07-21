@@ -5,6 +5,13 @@ from odoo.exceptions import AccessError
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('post_install', '-at_install')
 class TestAttendanceManager(TransactionCase):
@@ -17,7 +24,7 @@ class TestAttendanceManager(TransactionCase):
 
         # Create a normal user
         cls.marc = new_test_user(cls.env, login='marc', groups='base.group_user')
-        cls.marc_employee = cls.env['hr.employee'].create({
+        cls.marc_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Marc Employee',
             'user_id': cls.marc.id,
         })
@@ -26,7 +33,7 @@ class TestAttendanceManager(TransactionCase):
         cls.ryan = new_test_user(cls.env, login='ryan', groups='hr_attendance.group_hr_attendance_own_reader')
 
         # Create another employee
-        cls.abigail_employee, cls.ryan_employee = cls.env['hr.employee'].create([
+        cls.abigail_employee, cls.ryan_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': 'Abigail Employee',
                 'attendance_manager_id': cls.marc.id,

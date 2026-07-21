@@ -7,6 +7,13 @@ from freezegun import freeze_time
 from odoo import tests
 from odoo.tests import TransactionCase
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tests.tagged('access_rights', 'post_install', '-at_install')
 class TestMemberOfDepartment(TransactionCase):
@@ -20,12 +27,12 @@ class TestMemberOfDepartment(TransactionCase):
             'group_ids': cls.env.ref('hr.group_hr_manager').ids,
         })
 
-        cls.duck_department, cls.other_department = cls.env["hr.department"].create([
+        cls.duck_department, cls.other_department = cls.env["hr.department"].with_context(**MAIL_OFF).create([
             {"name": "DUCK"},
             {"name": "OTHER"},
         ])
 
-        cls.duck_guy_emp, cls.other_dep_emp = cls.env["hr.employee"].create([
+        cls.duck_guy_emp, cls.other_dep_emp = cls.env["hr.employee"].with_context(**MAIL_OFF).create([
             {
                 "name": "DUCK GUY",
                 "department_id": cls.duck_department.id,

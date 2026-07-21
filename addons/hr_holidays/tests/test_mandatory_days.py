@@ -8,6 +8,13 @@ from odoo import tests
 from odoo.tests import Form, new_test_user, TransactionCase
 from odoo.exceptions import ValidationError
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tests.tagged('access_rights', 'post_install', '-at_install')
 class TestHrLeaveMandatoryDays(TransactionCase):
@@ -29,7 +36,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         cls.user_emp_leave_manager = new_test_user(cls.env, login='employee_leave_manager', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.hr_user = new_test_user(cls.env, login='HR_user', groups='hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
 
-        cls.leave_manager, cls.manager_emp = cls.env['hr.employee'].create([
+        cls.leave_manager, cls.manager_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': 'timeoff_officer',
                 'company_id': cls.company.id,
@@ -42,7 +49,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
                 'user_id': cls.manager_user.id,
             },
         ])
-        cls.employee_emp = cls.env['hr.employee'].create({
+        cls.employee_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Toto Employee',
             'company_id': cls.company.id,
             'user_id': cls.employee_user.id,

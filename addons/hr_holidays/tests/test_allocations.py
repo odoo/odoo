@@ -7,7 +7,7 @@ from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
 from odoo.tools import format_date
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHrHolidaysCommon
 
 
 @tagged('allocation')
@@ -24,13 +24,13 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.department = cls.env['hr.department'].create({
+        cls.department = cls.env['hr.department'].with_context(**MAIL_OFF).create({
             'name': 'Test Department',
         })
         cls.category_tag = cls.env['hr.employee.category'].create({
             'name': 'Test category'
         })
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'My Employee',
             'company_id': cls.company.id,
             'department_id': cls.department.id,

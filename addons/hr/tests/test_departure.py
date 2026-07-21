@@ -11,6 +11,13 @@ from odoo.exceptions import ValidationError
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import Form
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 class TestDeparture(TestHrCommon):
 
@@ -18,12 +25,12 @@ class TestDeparture(TestHrCommon):
     @freeze_time('2025-01-01')
     def setUpClass(cls):
         super().setUpClass()
-        cls.emp_boss = cls.env['hr.employee'].create({
+        cls.emp_boss = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': "Nice boss",
             'contract_date_start': date.today(),
         })
 
-        cls.emp_A, cls.emp_B, cls.emp_C = cls.env['hr.employee'].create([
+        cls.emp_A, cls.emp_B, cls.emp_C = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': f'Employee {code}',
                 'parent_id': cls.emp_boss.id,

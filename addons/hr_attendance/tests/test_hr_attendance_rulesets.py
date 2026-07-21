@@ -6,6 +6,13 @@ from odoo import Command
 from odoo.tests import new_test_user, Form
 from odoo.tests.common import tagged, TransactionCase
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('hr_attendance_overtime_ruleset')
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
@@ -65,7 +72,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
 
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': "Marie-Edouard De La Court",
             'user_id': cls.user.id,
             'company_id': cls.company.id,

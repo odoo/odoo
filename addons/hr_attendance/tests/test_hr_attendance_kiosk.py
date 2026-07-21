@@ -5,6 +5,13 @@ from unittest.mock import patch
 from odoo.http.requestlib import Request
 from odoo.tests.common import HttpCase, tagged
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('post_install', '-at_install', 'hr_attendance_overtime')
 class TestHrAttendanceKiosk(HttpCase):
@@ -16,14 +23,14 @@ class TestHrAttendanceKiosk(HttpCase):
         cls.company_A = cls.env['res.company'].create({'name': 'company_A'})
         cls.company_B = cls.env['res.company'].create({'name': 'company_B'})
 
-        cls.department_A = cls.env['hr.department'].create({'name': 'department_A', 'company_id': cls.company_B.id})
+        cls.department_A = cls.env['hr.department'].with_context(**MAIL_OFF).create({'name': 'department_A', 'company_id': cls.company_B.id})
 
-        cls.employee_A = cls.env['hr.employee'].create({
+        cls.employee_A = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'employee_A',
              'company_id': cls.company_B.id,
              'department_id': cls.department_A.id,
         })
-        cls.employee_B = cls.env['hr.employee'].create({
+        cls.employee_B = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'employee_B',
             'company_id': cls.company_A.id,
             'department_id': cls.department_A.id,

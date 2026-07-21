@@ -8,6 +8,13 @@ from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 from odoo.tools import float_compare
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('hr_attendance_overtime')
 class TestHrAttendanceOvertime(HttpCase):
@@ -58,7 +65,7 @@ class TestHrAttendanceOvertime(HttpCase):
             cls.other_employee,
             cls.jpn_employee,
             cls.honolulu_employee,
-        ) = cls.env['hr.employee'].create([
+        ) = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': "Marie-Edouard De La Court",
                 'user_id': cls.user.id,
@@ -100,7 +107,7 @@ class TestHrAttendanceOvertime(HttpCase):
         cls.jpn_employee.tz = 'Asia/Tokyo'
         cls.honolulu_employee.tz = 'Pacific/Honolulu'
 
-        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).with_context(**MAIL_OFF).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
@@ -115,7 +122,7 @@ class TestHrAttendanceOvertime(HttpCase):
             cls.no_contract_employee,
             cls.future_contract_employee,
             cls.flexible_employee,
-        ) = cls.env['hr.employee'].create([
+        ) = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
             {
                 'name': 'No Contract',
                 'company_id': cls.company.id,
