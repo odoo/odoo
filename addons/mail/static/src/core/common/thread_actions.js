@@ -16,7 +16,18 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
 /**
  * @typedef {Object} ThreadActionSpecificParams
  * @property {import("models").DiscussChannel} channel
+ * @property {import("models").ChatWindow} [chatWindow]
+ * @property {() => void} [close]
+ * @property {string} [discussDropdownMenuClass]
+ * @property {boolean} [hasHomeMenu]
+ * @property {boolean} [inChatWindow]
+ * @property {boolean} [inDiscussApp]
+ * @property {object} [inMeetingView]
+ * @property {boolean} [isDiscussContent]
+ * @property {boolean} [isDiscussSidebarChannelActions]
+ * @property {Window} [pipWindow]
  * @property {Thread} thread
+ * @property {() => void} [toggleFold]
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<ThreadAction, UseThreadActions_Def> & ThreadActionSpecificParams} ThreadActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<ThreadActionParams, ThreadAction>} ThreadActionDefinition */
@@ -31,11 +42,11 @@ export function registerThreadAction(id, definition) {
 
 registerThreadAction("fold-chat-window", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ chatWindow }) => Boolean(chatWindow),
     icon: "oi oi-fw oi-minus",
-    name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
-    onSelected: ({ owner }) => owner.toggleFold(),
-    displayActive: ({ owner }) => !owner.props.chatWindow?.isOpen,
+    name: ({ chatWindow }) => (!chatWindow?.isOpen ? _t("Open") : _t("Fold")),
+    onSelected: ({ toggleFold }) => toggleFold(),
+    displayActive: ({ chatWindow }) => !chatWindow?.isOpen,
     sequence: 99,
     sequenceQuick: 20,
 });
@@ -50,10 +61,10 @@ registerThreadAction("rename-thread", {
 });
 registerThreadAction("close", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ chatWindow }) => Boolean(chatWindow),
     icon: "oi fa-fw oi-close",
     name: _t("Close Chat Window (ESC)"),
-    onSelected: ({ owner }) => owner.close(),
+    onSelected: ({ close }) => close(),
     sequence: 100,
     sequenceQuick: 10,
 });
@@ -61,10 +72,8 @@ registerThreadAction("search-messages", {
     actionPanelComponent: SearchMessagesPanel,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
-    condition: ({ owner, channel }) =>
-        channel &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, chatWindow, isDiscussSidebarChannelActions }) =>
+        channel && (!chatWindow || chatWindow.isOpen) && !isDiscussSidebarChannelActions,
     hotkey: "f",
     icon: "oi oi-fw oi-search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
@@ -89,7 +98,7 @@ registerThreadAction("meeting-chat", {
     badgeIcon: ({ channel }) => !channel.importantCounter && "fa fa-circle o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
     btnAttrs: { "data-available-offline": true },
-    condition: ({ owner }) => owner.env.inMeetingView,
+    condition: ({ inMeetingView }) => inMeetingView,
     icon: "fa fa-fw fa-comments",
     name: _t("Chat"),
     sequence: 30,
@@ -103,21 +112,92 @@ registerThreadAction("meeting-chat", {
 });
 
 export class ThreadAction extends Action {
+    /** @type {() => import("models").ChatWindow} */
+    chatWindowFn;
+    /** @type {() => void} */
+    close;
+    /** @type {() => string} */
+    discussDropdownMenuClass;
+    /** @type {() => boolean} */
+    hasHomeMenuFn;
+    /** @type {boolean} */
+    inChatWindow;
+    /** @type {boolean} */
+    inDiscussApp;
+    /** @type {object} */
+    inMeetingView;
+    /** @type {boolean} */
+    isDiscussContent;
+    /** @type {boolean} */
+    isDiscussSidebarChannelActions;
+    /** @type {() => Window} */
+    pipWindow;
     /** @type {() => Thread} */
     threadFn;
+    /** @type {() => void} */
+    toggleFold;
 
     /**
      * @param {Object} param0
-     * @param {Thread|() => Thread} thread
+     * @param {() => import("models").ChatWindow} [param0.chatWindow]
+     * @param {() => void} [param0.close]
+     * @param {() => string} [param0.discussDropdownMenuClass]
+     * @param {() => boolean} [param0.hasHomeMenu]
+     * @param {boolean} [param0.inChatWindow]
+     * @param {boolean} [param0.inDiscussApp]
+     * @param {object} [param0.inMeetingView]
+     * @param {boolean} [param0.isDiscussContent]
+     * @param {boolean} [param0.isDiscussSidebarChannelActions]
+     * @param {() => Window} [param0.pipWindow]
+     * @param {Thread|() => Thread} param0.thread
+     * @param {() => void} [param0.toggleFold]
      */
-    constructor({ thread }) {
+    constructor({
+        chatWindow,
+        close,
+        discussDropdownMenuClass,
+        hasHomeMenu,
+        inChatWindow,
+        inDiscussApp,
+        inMeetingView,
+        isDiscussContent,
+        isDiscussSidebarChannelActions,
+        pipWindow,
+        thread,
+        toggleFold,
+    }) {
         super(...arguments);
+        this.chatWindowFn = chatWindow;
+        this.close = close;
+        this.discussDropdownMenuClass = discussDropdownMenuClass;
+        this.hasHomeMenuFn = hasHomeMenu;
+        this.inChatWindow = inChatWindow;
+        this.inDiscussApp = inDiscussApp;
+        this.inMeetingView = inMeetingView;
+        this.isDiscussContent = isDiscussContent;
+        this.isDiscussSidebarChannelActions = isDiscussSidebarChannelActions;
+        this.pipWindow = pipWindow;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
+        this.toggleFold = toggleFold;
     }
 
     get params() {
         const thread = this.threadFn();
-        return Object.assign(super.params, { channel: thread?.channel, thread });
+        return Object.assign(super.params, {
+            channel: thread?.channel,
+            chatWindow: this.chatWindowFn?.(),
+            close: this.close,
+            discussDropdownMenuClass: this.discussDropdownMenuClass?.(),
+            hasHomeMenu: this.hasHomeMenuFn?.(),
+            inChatWindow: this.inChatWindow,
+            inDiscussApp: this.inDiscussApp,
+            inMeetingView: this.inMeetingView,
+            isDiscussContent: this.isDiscussContent,
+            isDiscussSidebarChannelActions: this.isDiscussSidebarChannelActions,
+            pipWindow: this.pipWindow?.(),
+            thread,
+            toggleFold: this.toggleFold,
+        });
     }
 }
 
@@ -127,9 +207,50 @@ export class UseThreadActions extends UseActions {
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {thread?: Thread|() => Thread}} [params0={}]
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {
+ *   chatWindow?: () => import("models").ChatWindow,
+ *   close?: () => void,
+ *   discussDropdownMenuClass?: () => string,
+ *   hasHomeMenu?: () => boolean,
+ *   inChatWindow?: boolean,
+ *   inDiscussApp?: boolean,
+ *   inMeetingView?: object,
+ *   isDiscussContent?: boolean,
+ *   isDiscussSidebarChannelActions?: boolean,
+ *   pipWindow?: () => Window,
+ *   thread?: Thread|() => Thread,
+ *   toggleFold?: () => void,
+ * }} [params0={}]
  * @returns {UseThreadActions_Def}
  */
-export function useThreadActions({ thread, rootRef } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
+export function useThreadActions({
+    chatWindow,
+    close,
+    discussDropdownMenuClass,
+    hasHomeMenu,
+    inChatWindow,
+    inDiscussApp,
+    inMeetingView,
+    isDiscussContent,
+    isDiscussSidebarChannelActions,
+    pipWindow,
+    rootRef,
+    thread,
+    toggleFold,
+} = {}) {
+    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, {
+        chatWindow,
+        close,
+        discussDropdownMenuClass,
+        hasHomeMenu,
+        inChatWindow,
+        inDiscussApp,
+        inMeetingView,
+        isDiscussContent,
+        isDiscussSidebarChannelActions,
+        pipWindow,
+        rootRef,
+        thread,
+        toggleFold,
+    });
 }

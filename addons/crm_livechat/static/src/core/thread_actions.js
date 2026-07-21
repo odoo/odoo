@@ -27,8 +27,8 @@ registerThreadAction("create-lead", {
     name: _t("Create Lead"),
     sequence: 10,
     sequenceGroup: 25,
-    setup({ owner }) {
-        if (!owner.env.inChatWindow) {
+    setup({ inChatWindow }) {
+        if (!inChatWindow) {
             this.popover = usePopover(LivechatCommandDialog, {
                 onClose: () => this.actionPanelClose(),
                 popoverClass: this.actionPanelOuterClass,
