@@ -1594,9 +1594,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     @warmup
     def test_store_add_message_group_thread_name_by_model(self):
         """Ensures the fetch of multiple thread names is grouped by model."""
-        records = []
-        for _i in range(5):
-            records.append(self.env['mail.test.simple'].create({'name': 'Test'}))
+        records = list(self.env['mail.test.simple'].create([{'name': 'Test'}] * 5))
         records.append(self.env['mail.test.track'].create({'name': 'Test'}))
 
         messages = self.env['mail.message'].create([{

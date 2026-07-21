@@ -427,16 +427,15 @@ class TestWebPushNotification(SMSCommon):
     @patch.object(odoo.addons.mail.models.mail_push, 'push_to_end_point')
     def test_push_notifications_cron(self, push_to_end_point):
         # Add 4 more devices to force sending via cron queue
-        for index in range(10, 14):
-            self.env['mail.push.device'].sudo().create([{
-                'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
-                'expiration_time': None,
-                'keys': json.dumps({
-                    'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
-                    'auth': 'DJFdtAgZwrT6yYkUMgUqow'
-                }),
-                'partner_id': self.user_inbox.partner_id.id,
-            }])
+        self.env['mail.push.device'].sudo().create([{
+            'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
+            'expiration_time': None,
+            'keys': json.dumps({
+                'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
+                'auth': 'DJFdtAgZwrT6yYkUMgUqow'
+            }),
+            'partner_id': self.user_inbox.partner_id.id,
+        } for index in range(10, 14)])
 
         self.record_simple.with_user(self.user_email).message_notify(
             partner_ids=self.user_inbox.partner_id.ids,
@@ -519,16 +518,15 @@ class TestWebPushNotification(SMSCommon):
     @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', side_effect=ConnectionError("Oops, network error"))
     def test_push_notifications_device_raise_exception(self, post):
         # Add 4 more devices to force sending via cron queue
-        for index in range(10, 14):
-            self.env['mail.push.device'].sudo().create([{
-                'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
-                'expiration_time': None,
-                'keys': json.dumps({
-                    'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
-                    'auth': 'DJFdtAgZwrT6yYkUMgUqow'
-                }),
-                'partner_id': self.user_inbox.partner_id.id,
-            }])
+        self.env['mail.push.device'].sudo().create([{
+            'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
+            'expiration_time': None,
+            'keys': json.dumps({
+                'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
+                'auth': 'DJFdtAgZwrT6yYkUMgUqow'
+            }),
+            'partner_id': self.user_inbox.partner_id.id,
+        } for index in range(10, 14)])
 
         self.record_simple.with_user(self.user_email).message_notify(
             partner_ids=self.user_inbox.partner_id.ids,
