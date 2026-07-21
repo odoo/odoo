@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_move_form_discount_column_visible" model="ir.ui.view">
+        <field name="name">account.move.form.discount.column.visible</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']//list[@name='journal_items']/field[@name='discount']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
