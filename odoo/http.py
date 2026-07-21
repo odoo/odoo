@@ -486,6 +486,7 @@ class Stream:
     immutable = False
     size = None
     public = False
+    x_robots_tag = None
 
     def __init__(self, **kwargs):
         # Remove class methods from the instances
@@ -673,6 +674,8 @@ class Stream:
                 res.headers['Content-Length'] = '0'
 
         res.headers['X-Content-Type-Options'] = 'nosniff'
+        if self.x_robots_tag:
+            res.headers['X-Robots-Tag'] = self.x_robots_tag
 
         if content_security_policy:  # see also Application.set_csp()
             res.headers['Content-Security-Policy'] = content_security_policy

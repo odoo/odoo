@@ -221,3 +221,10 @@ class TestHttp(http.Controller):
     @http.route('/test_http/httprequest_environ', type='http', auth='none')
     def request_environ(self):
         return json.dumps(list(request.httprequest.environ.keys()))
+
+    @http.route('/test_http/x_robots_tag', type='http', auth='public')
+    def x_robots_tag(self):
+        record = request.env['ir.binary']._find_record('test_http.gizeh_png')
+        stream = request.env['ir.binary']._get_stream_from(record)
+        stream.x_robots_tag = 'noindex'
+        return stream.get_response()

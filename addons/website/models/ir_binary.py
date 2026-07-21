@@ -38,4 +38,8 @@ class IrBinary(models.AbstractModel):
             and record.sudo().website_published
         ):
             record = record.sudo()
-        return super()._record_to_stream(record, field_name)
+
+        stream = super()._record_to_stream(record, field_name)
+        if 'website_published' in record._fields and record.sudo().website_published:
+            stream.x_robots_tag = 'noindex'
+        return stream

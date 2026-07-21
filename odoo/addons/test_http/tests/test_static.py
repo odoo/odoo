@@ -432,6 +432,13 @@ class TestHttpStatic(TestHttpStaticCommon):
             assert_content=b'non base64 value',
         )
 
+    def test_static26_x_robots_tag(self):
+        res = self.assertDownloadGizeh('/test_http/x_robots_tag')
+        self.assertEqual(
+            res.headers.get('X-Robots-Tag'), 'noindex',
+            "A stream with x_robots_tag set should send it as the X-Robots-Tag response header",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):

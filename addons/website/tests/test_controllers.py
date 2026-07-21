@@ -197,6 +197,37 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
 
+    def test_07_image_x_robots_tag(self):
+        """ A published record image is served with the `X-Robots-Tag: noindex`
+        header so search engines do not index the raw image URL. """
+        png_data = (
+            'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
+            'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
+            'AElFTkSuQmCC'
+        )
+        partner = self.env['res.partner'].create({
+            'name': "Jack O'Neill",
+            'image_1920': png_data,
+            'website_published': True,
+        })
+
+        with self.subTest(published=True):
+            res = self.url_open(f'/web/image/res.partner/{partner.id}/image_128')
+            res.raise_for_status()
+            self.assertEqual(
+                res.headers.get('X-Robots-Tag'), 'noindex',
+                "Published record images carry X-Robots-Tag: noindex",
+            )
+
+        with self.subTest(published=False):
+            partner.website_published = False
+            res = self.url_open(f'/web/image/res.partner/{partner.id}/image_128')
+            res.raise_for_status()
+            self.assertIsNone(
+                res.headers.get('X-Robots-Tag'),
+                "Unpublished record images must not carry X-Robots-Tag: noindex",
+            )
+
     def test_website_force_domain_redirect(self):
         """
         Test that /website/force/{website.id} redirects domain correctly
