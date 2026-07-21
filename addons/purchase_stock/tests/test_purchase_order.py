@@ -10,13 +10,13 @@ from odoo.tests import Form, tagged, freeze_time
 from odoo.tools import mute_logger
 
 
-@freeze_time("2021-01-14 09:12:15")
 @tagged('post_install', '-at_install')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    @freeze_time("2021-01-14 09:12:15")
     def setUpClass(cls):
         super().setUpClass()
 
@@ -87,6 +87,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_02_po_return(self):
         """
         Test a PO with a product on Incoming shipment. Validate the PO, then do a return
@@ -162,6 +163,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_03_po_return_and_modify(self):
         """Change the picking code of the delivery to internal. Make a PO for 10 units, go to the
         picking and return 5, edit the PO line to 15 units.
@@ -223,6 +225,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             "Lowering product qty below invoiced qty should schedule an activity",
         )
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
         tomorrow = datetime.today().replace(hour=9, microsecond=0) + timedelta(days=1)
@@ -346,6 +349,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # 4. Check both are equals.
         self.assertEqual(partner_on_time_rate, po_on_time_rate)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_04_multi_uom(self):
         yards_uom = self.env['uom.uom'].create({
             'name': 'Yards',
@@ -710,6 +714,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(picking.move_ids.location_dest_id, sub_location)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_foreign_bill_autocomplete_with_payment_term(self):
         """ Test the bill auto-complete with a PO having a payment term in a foreign currency """
         currency = self.env['res.currency'].create({
@@ -749,6 +754,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(line.amount_currency, 100.0)
         self.assertEqual(line.balance, 66.67)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_bill_on_ordered_qty_correct_converted_amount_on_bill(self):
         """ Ensure bill line balance is correctly calculated from a purchase order line."""
         product1, product2 = self.test_product_order, self.test_product_delivery
@@ -804,6 +810,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             places=self.env.company.currency_id.decimal_places,
         )
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_foreign_bill_tax_included(self):
         """ Test the bill values with a PO having tax included in price """
         currency = self.env['res.currency'].create({
@@ -861,6 +868,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             },
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_log_activity_in_po_with_receipt_without_backorders(self):
         """
         Checks if a warning note is created in a PO in case a transfer is validated with
@@ -1013,6 +1021,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             {'product_id': self.product_id_1.id, 'quantity': 3}
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_retrieve_purchase_stock_dashboard(self):
         """Tests that the OTD for the purchase order dashboard is based on the date without the time"""
         now = fields.Datetime.now()
@@ -1029,6 +1038,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         dashboard = self.env['purchase.order'].retrieve_dashboard()
         self.assertEqual(dashboard['global']['otd'], '67 %')
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_cogs_no_taxes(self):
         """Taxes should not be set on COGS lines."""
         vendor = self.env['res.partner'].create({
@@ -1083,6 +1093,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_po_late_receipt_ignores_cancelled_receipts(self):
         """Tests that a cancelled backorder doesn't comes under the PO late"""
         po = self.env['purchase.order'].create({

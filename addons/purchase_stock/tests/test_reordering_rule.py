@@ -16,7 +16,6 @@ from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
-@freeze_time("2021-01-14 09:12:15")
 class TestReorderingRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -297,6 +296,7 @@ class TestReorderingRule(TransactionCase):
                 'product_max_qty': 1,
             })
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_reordering_rule_triggered_two_times(self):
         """
         A product P wth RR 0-0-1.
@@ -558,6 +558,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint_product.trigger, 'manual')
         self.assertEqual(orderpoint_product.create_uid.id, SUPERUSER_ID)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_procure_not_default_partner(self):
         """Define a product with 2 vendors. First run a "standard" procurement,
         default vendor should be used. Then, call a procurement with
@@ -639,6 +640,7 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(po_line)
         self.assertEqual(po_line.partner_id, secondary_vendor)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_procure_multi_lingual(self):
         """
         Define a product with description in English and French.
@@ -1009,6 +1011,7 @@ class TestReorderingRule(TransactionCase):
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_reordering_rule_horizon_days(self):
         """
             Test the horizon days on the reordering rule update the qty_to_order but do not
@@ -1060,6 +1063,7 @@ class TestReorderingRule(TransactionCase):
         self.product_01.virtual_available = -1
         self.assertEqual(op.qty_to_order, 1, 'sale order is ignored')
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_reordering_rule_horizon_days_display(self):
         """ Checks that the horizon days are properly shown on the info wizard & the orderpoint forecast. """
         self.env.company.horizon_days = 3
@@ -1219,6 +1223,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
         self.assertTrue(po_line.tax_ids)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_forbid_snoozing_auto_trigger_orderpoint(self):
         """
         Check that you can not snooze an auto-trigger reoredering rule
@@ -1252,6 +1257,7 @@ class TestReorderingRule(TransactionCase):
         with self.assertRaises(UserError):
             orderpoint.snoozed_until = add(Date.today(), days=1)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_supplierinfo_last_purchase_date(self):
         """
         Test that the last_purchase_date on the replenishment information is correctly computed
@@ -1298,6 +1304,7 @@ class TestReorderingRule(TransactionCase):
         supplier_info = replenishment_info.supplierinfo_ids
         self.assertEqual(supplier_info.last_purchase_date, dt.today().date(), "The last_purhchase_date should be set to the most recent date_order from the purchase orders")
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_reordering_rule_multicurrency(self):
         """
             trigger a reordering rule in foreign currency
@@ -1477,6 +1484,7 @@ class TestReorderingRule(TransactionCase):
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_replenish_expired_seller(self):
         self.product_01.standard_price = 50.0
         self.product_01.seller_ids.price = 100.0
