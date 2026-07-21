@@ -1122,7 +1122,6 @@ class TestMrpWorkorderBackorder(TransactionCase):
             ],
         })
 
-    @freeze_time('2025-10-27 12:00:00')
     def test_mrp_backorder_operations(self):
         """
         Checks that the operations'data are correclty set on a backorder:

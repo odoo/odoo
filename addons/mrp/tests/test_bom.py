@@ -11,7 +11,6 @@ from odoo.tools import float_compare, float_repr, float_round, format_date
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-@freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
     _test_user_groups = (
@@ -833,6 +832,7 @@ class TestBoM(TestMrpCommon):
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
         self.assertEqual(report_values['lines']['operations_time'], 660.0, 'Operation time should be the same for 1 unit or for the batch')
 
+    @freeze_time(fields.Date.today())
     def test_bom_report_planning_with_producible_qty(self):
         """ Simulate a BoM of a pickaxe, and test that the BoM structure report
             respects the hardcoded limit of 700 planning days (mocked as 28 days).
@@ -2754,6 +2754,7 @@ class TestBoM(TestMrpCommon):
         copied_operation.action_archive()
         self.assertFalse(copied_bom.bom_line_ids.operation_id | copied_bom.byproduct_ids.operation_id)
 
+    @freeze_time(fields.Date.today())
     def test_bom_overview_forecasted_component_status(self):
         """This test case is for verifying that BoM overview availability respects forecasted stock and future
         replenishments, and ensures that when the availability state is 'expected', the status column shows "Expected + date".
