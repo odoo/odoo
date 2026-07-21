@@ -17,7 +17,6 @@ from odoo.addons.account_peppol.tests.common import (
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     _test_user_groups = None  # FIXME list needed groups
@@ -113,6 +112,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard.action_send_and_print()
         self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:')
 
+    @freeze_time('2023-01-01')
     @mock_lookup_success('0208:0428759497')
     def test_attachment_placeholders(self):
         move = self.create_move(self.valid_partner)
