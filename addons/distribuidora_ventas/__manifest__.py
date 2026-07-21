@@ -4,7 +4,7 @@
     'category': 'Sales/Sales',
     'summary': "Captura de pedidos y precios por cliente para la distribuidora",
     'author': "Distribuidora",
-    'depends': ['sale'],
+    'depends': ['sale', 'account'],
     'data': [
         'data/res_partner_category_data.xml',
         'views/sale_order_views.xml',
