@@ -289,3 +289,19 @@ class TestFloatPrecision(TransactionCase):
         amount_test = currency.amount_to_text(0.28)
         self.assertNotEqual(amount_test, amount_target,
                             "Amount in text should not depend on float representation")
+
+    def test_amount_to_text_thai_20(self):
+        """ Thai monetary amounts are read without a conjunction between the
+        integer (Baht) and fractional (Satang) parts. """
+        self.env['res.lang']._activate_lang('th_TH')
+        currency = self.env.ref('base.THB').with_context(lang='th_TH')
+
+        amount_words = currency.amount_to_text(150.25)
+        self.assertNotIn('และ', amount_words,
+                         "Thai amount in words must not contain a conjunction")
+        self.assertIn('หนึ่งร้อยห้าสิบ', amount_words)
+        self.assertIn('ยี่สิบห้า', amount_words)
+
+        currency_en = currency.with_context(lang='en_US')
+        self.assertEqual(currency_en.amount_to_text(150.25),
+                         'One Hundred And Fifty Baht and Twenty-Five Satang')
