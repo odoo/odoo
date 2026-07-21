@@ -1,20 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.tools.float_utils import float_repr, float_compare
-from odoo.exceptions import ValidationError
 
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    def _l10n_id_coretax_build_invoice_line_vals(self, vals):
+    def _l10n_id_coretax_is_negative_line(self):
+        """ Whether this line must be absorbed as a discount by the other lines (e.g. a global discount).
+
+        Intentionally catches any negative line, since Coretax rejects negative <GoodService> amounts.
+        """
+        self.ensure_one()
+        return float_compare(self.price_subtotal, 0.0, precision_rounding=self.currency_id.rounding) < 0
+
+    def _l10n_id_coretax_build_invoice_line_vals(self, vals, base_line):
         """ Fill in the vals['lines'] with some information regarding each invoice line"""
         self.ensure_one()
         idr = self.env.ref('base.IDR')
-
-        if float_compare(self.price_subtotal, 0.0, precision_rounding=self.currency_id.rounding) < 0:
-            raise ValidationError(_("Price for line '%s' cannot be a negative amount. Please check again.", self.name))
 
         # initialize
         if not vals.get('lines'):
@@ -42,19 +46,17 @@ class AccountMoveLine(models.Model):
         ppn_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in ppn_tax_groups)
         non_luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == non_luxury_tax_group)
 
-        # "Price" is unit price calculation excluding tax and discount
-        # "TotalDiscount" is total of "Price" * quantity * discount
-        tax_res = self.tax_ids.compute_all(self.price_unit, quantity=1, currency=self.currency_id, product=self.product_id, partner=self.partner_id, is_refund=self.is_refund)
+        tax_details = base_line['tax_details']
 
         line_val = {
             "Opt": "B" if product.type == "service" else "A",  # A: goods, B: service
             "Code": product.l10n_id_product_code.code or self.env.ref('l10n_id_efaktur_coretax.product_code_000000_goods').code,
             "Name": (self.name or '').replace('\n', ' '),
             "Unit": self.product_uom_id.l10n_id_uom_code.code or self.env.ref('l10n_id_efaktur_coretax.uom_code_0018').code,
-            "Price": idr.round(tax_res['total_excluded']),
+            "Price": tax_details['raw_gross_price_unit'],  # excluding tax, before discount
             "Qty": self.quantity,
-            "TotalDiscount": idr.round(self.discount * tax_res['total_excluded'] * self.quantity / 100),
-            "TaxBase": idr.round(self.price_subtotal),  # DPP
+            "TotalDiscount": tax_details['discount_amount'],  # line discount + absorbed negative lines
+            "TaxBase": tax_details['total_excluded'],  # the tax base, after discount
             "VATRate": 12 if ppn_tax else 0.0,
             "STLGRate": stlg_tax.amount if stlg_tax else 0.0,
         }
@@ -66,6 +68,8 @@ class AccountMoveLine(models.Model):
         else:
             line_val['OtherTaxBase'] = 0
 
+        # VAT and STLG are computed from the rounded 'OtherTaxBase' on purpose, so that recomputing
+        # them from the amounts reported in the XML gives back the very same values.
         line_val['VAT'] = idr.round(line_val['OtherTaxBase'] * line_val['VATRate'] / 100)
         line_val['STLG'] = idr.round(line_val['STLGRate'] * line_val['OtherTaxBase'] / 100)
         # for numerical attributes in line_val, use float_repr to ensure proper formatting

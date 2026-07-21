@@ -241,6 +241,19 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(ValidationError, r".*must always have tax amount 0"):
             out_invoice_zero_tax_2.download_efaktur()
 
+    def test_download_efaktur_down_payment(self):
+        """ Test that downloading the e-Faktur is blocked for invoices containing a down payment
+        line, since Coretax does not support XML uploads for these transactions. """
+        self.ensure_installed('sale')
+        self.env.user.group_ids |= self.env.ref('sales_team.group_sale_manager')
+
+        sale_order = self._create_sale_order_one_line(price_unit=100000, product_id=self.product_a.id, tax_ids=self.tax_sale_a.ids)
+        down_payment_invoice = self._create_down_payment_invoice(sale_order, 'fixed', 50000, post=True)
+        down_payment_invoice.l10n_id_kode_transaksi = '04'
+
+        with self.assertRaisesRegex(ValidationError, r"does not support XML uploads for transactions involving down payments"):
+            down_payment_invoice.download_efaktur()
+
     def test_download_efaktur_invalid_customer(self):
         """ Test to ensure conditions related to customers are enforced when downloading E-Faktur """
         # Create general partner and change information one by one
@@ -857,6 +870,29 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
+    def test_efaktur_document_tax_mode_excluded(self):
+        """The e-Faktur export must respect a document forced to tax excluded."""
+        self.company_data['company'].account_price_include = 'tax_included'
+
+        move = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'document_tax_mode': 'tax_excluded',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        move.action_post()
+        move.download_efaktur()
+
+        result_tree = etree.fromstring(move.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = etree.fromstring(self.sample_xml)
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
     def test_efaktur_tax_include_with_discount(self):
         """ Test when tax configuration is tax included in price and we also invovle discount in price calculation """
 
@@ -1152,6 +1188,267 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                     <STLGRate>0.0</STLGRate>
                     <STLG>0.00</STLG>
                 </GoodService>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_global_discount(self):
+        """ Test that a global (order-level) discount line is excluded from the generated
+        <GoodService> list and distributed proportionally into the regular lines """
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 200000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 33333.336, 'quantity': 3, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -30000,
+                    'quantity': 1,
+                    'tax_ids': [self.non_luxury_tax.id],
+                    'extra_tax_data': {'computation_key': 'global_discount,1'},
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()  # should not raise ValidationError
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+
+        # Only the three regular lines should be present, not the discount line.
+        self.assertEqual(len(result_tree.findall('.//GoodService')), 3)
+
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>7500.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>92500.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>84791.67</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>10175.00</VAT>
+            </xpath>
+            <xpath expr="//ListOfGoodService" position="inside">
+                <GoodService>
+                    <Opt>A</Opt>
+                    <Code>000000</Code>
+                    <Name>product_a</Name>
+                    <Unit>UM.0018</Unit>
+                    <Price>200000.00</Price>
+                    <Qty>1.0</Qty>
+                    <TotalDiscount>15000.00</TotalDiscount>
+                    <TaxBase>185000.00</TaxBase>
+                    <OtherTaxBase>169583.33</OtherTaxBase>
+                    <VATRate>12</VATRate>
+                    <VAT>20350.00</VAT>
+                    <STLGRate>0.0</STLGRate>
+                    <STLG>0.00</STLG>
+                </GoodService>
+                <GoodService>
+                    <Opt>A</Opt>
+                    <Code>000000</Code>
+                    <Name>product_a</Name>
+                    <Unit>UM.0018</Unit>
+                    <Price>33333.34</Price>
+                    <Qty>3.0</Qty>
+                    <TotalDiscount>7500.00</TotalDiscount>
+                    <TaxBase>92500.01</TaxBase>
+                    <OtherTaxBase>84791.68</OtherTaxBase>
+                    <VATRate>12</VATRate>
+                    <VAT>10175.00</VAT>
+                    <STLGRate>0.0</STLGRate>
+                    <STLG>0.00</STLG>
+                </GoodService>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_global_discount_no_rounding_leak(self):
+        """ Test that the shares of the global discount always add back up to the discount itself,
+        even when the proportional split does not fall on round amounts. """
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -10000,
+                    'quantity': 1,
+                    'tax_ids': [self.non_luxury_tax.id],
+                    'extra_tax_data': {'computation_key': 'global_discount,1'},
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+
+        # An even split of 10,000.00 over 3 lines does not round evenly; the residual cent has to
+        # end up on one of the lines instead of being dropped.
+        discount_nodes = result_tree.findall('.//GoodService/TotalDiscount')
+        self.assertEqual([node.text for node in discount_nodes], ['3333.34', '3333.33', '3333.33'])
+        self.assertEqual(sum(float(node.text) for node in discount_nodes), 10000.00)
+
+    def test_efaktur_global_discount_not_spread_across_different_taxes(self):
+        """ Test that a global discount is only absorbed by the lines carrying the same taxes. """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.stlg_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 300000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -40000,
+                    'quantity': 1,
+                    'tax_ids': [self.luxury_tax.id],
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        good_services = [
+            {child.tag: child.text for child in node}
+            for node in result_tree.findall('.//GoodService')
+        ]
+
+        # The whole discount goes to the line sharing its taxes; the STLG line keeps its tax base.
+        self.assertEqual(len(good_services), 2)
+        self.assertEqual(
+            [(gs['TotalDiscount'], gs['TaxBase'], gs['VAT'], gs['STLG']) for gs in good_services],
+            [
+                ('0.00', '100000.00', '12000.00', '20000.00'),
+                ('40000.00', '260000.00', '31200.00', '0.00'),
+            ],
+        )
+
+    def test_efaktur_global_discount_unmatched_taxes(self):
+        """ Test that downloading is blocked when a negative line carries taxes that no other line
+        has, since there is no line able to absorb it. """
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 200000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -30000,
+                    'quantity': 1,
+                    'tax_ids': [self.luxury_tax.id, self.stlg_tax.id],
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+
+        with self.assertRaisesRegex(ValidationError, r"could not be distributed over the other lines"):
+            out_invoice.download_efaktur()
+
+    def test_efaktur_global_discount_exceeding_matching_lines(self):
+        """ Test that downloading is blocked when a negative line exceeds the total of the lines
+        sharing its taxes, which would result in a negative tax base. """
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 500000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id, self.stlg_tax.id]}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -200000,
+                    'quantity': 1,
+                    'tax_ids': [self.luxury_tax.id],
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+
+        with self.assertRaisesRegex(ValidationError, r"could not be distributed over the other lines"):
+            out_invoice.download_efaktur()
+
+    def test_efaktur_xml_foreign_currency(self):
+        """ Test that foreign-currency amounts and global discount are converted using the invoice rate. """
+        foreign_currency = self.setup_other_currency('USD', rates=[('2019-01-01', 2.0)])
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': foreign_currency.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'name': 'Discount',
+                    'price_unit': -30,
+                    'quantity': 1,
+                    'tax_ids': [self.non_luxury_tax.id],
+                    'extra_tax_data': {'computation_key': 'global_discount,1'},
+                }),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        self.assertEqual(out_invoice.invoice_currency_rate, 2.0)
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//Price" position="replace">
+                <Price>50.00</Price>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>15.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>35.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>32.08</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>3.85</VAT>
             </xpath>
             '''
         )

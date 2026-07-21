@@ -315,6 +315,17 @@ class AccountMove(models.Model):
             if record.l10n_id_kode_transaksi == "08":
                 if not (record.l10n_id_coretax_add_info_08 and record.l10n_id_coretax_facility_info_08):
                     err_messages.append(_("Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode 08)", record.name))
+            if record.invoice_line_ids._get_downpayment_lines():
+                err_messages.append(_("Coretax e-Faktur does not support XML uploads for transactions involving down payments. Please enter these transactions manually into the Coretax system"))
+            if record.invoice_line_ids.filtered(lambda line: line.tax_ids and line._l10n_id_coretax_is_negative_line()):
+                _base_lines, remaining_negative_base_lines = record._l10n_id_coretax_dispatch_negative_lines()
+                if remaining_negative_base_lines:
+                    err_messages.append(_(
+                        "Invoice %s contains a negative line that could not be distributed over the other lines, "
+                        "because no other line carries the same taxes or because it exceeds their total. Please "
+                        "align the taxes or enter this transaction manually into the Coretax system",
+                        record.name,
+                    ))
 
         # Check tax groups
         err_messages.extend(self._validate_tax_groups())
@@ -394,18 +405,44 @@ class AccountMove(models.Model):
             vals['AddInfo'] = self.l10n_id_coretax_add_info_08
             vals['FacilityStamp'] = self.l10n_id_coretax_facility_info_08
 
+    def _l10n_id_coretax_dispatch_negative_lines(self):
+        """ Distribute the invoice's negative lines into the positive ones sharing the same taxes."""
+        self.ensure_one()
+
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
+        base_lines = [
+            base_line for base_line in base_lines
+            if base_line['tax_ids'] and base_line['record'].display_type == 'product'
+        ]
+        # Coretax rejects any negative amount, so every negative line is treated as a global
+        # discount, not only the ones coming from the Global Discount feature.
+        for base_line in base_lines:
+            if not base_line['special_type'] and base_line['record']._l10n_id_coretax_is_negative_line():
+                base_line['special_type'] = 'global_discount'
+
+        base_lines = self.env['account.tax']._dispatch_global_discount_lines(base_lines, self.company_id)
+        self.env['account.tax']._squash_global_discount_lines(base_lines, self.company_id)
+        self.env['account.tax']._add_and_round_raw_gross_total_excluded_and_discount(base_lines, self.company_id, in_foreign_currency=False, account_discount_base_lines=True)
+        self.env['account.tax']._round_raw_gross_total_excluded_and_discount(base_lines, self.company_id, in_foreign_currency=False)
+
+        remaining_negative_base_lines = [
+            base_line for base_line in base_lines
+            if self.company_currency_id.compare_amounts(base_line['tax_details']['total_excluded'], 0.0) < 0
+        ]
+        return base_lines, remaining_negative_base_lines
+
     def prepare_efaktur_vals(self):
         """ Get information required from invoice and lines to generate E-Faktur that will be used
         to load in the XML template later on"""
         invoice_vals = []
-        idr = self.env.ref('base.IDR')
 
         for move in self.filtered(lambda m: m.state == 'posted'):
             vals = {}
             move._l10n_id_coretax_build_invoice_vals(vals)
 
-            for line in move.invoice_line_ids.filtered(lambda ml: ml.tax_ids):
-                line._l10n_id_coretax_build_invoice_line_vals(vals)
+            base_lines, _remaining = move._l10n_id_coretax_dispatch_negative_lines()
+            for base_line in base_lines:
+                base_line['record']._l10n_id_coretax_build_invoice_line_vals(vals, base_line)
 
             invoice_vals.append(vals)
 
