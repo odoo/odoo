@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models, _
+from odoo.tools.misc import clean_context
 
 
 class ExpiryPickingConfirmation(models.TransientModel):
@@ -48,4 +49,4 @@ class ExpiryPickingConfirmation(models.TransientModel):
         self.picking_ids.move_line_ids.filtered(
             lambda ml: ml.use_expiration_date and ml.removal_date and ml.removal_date < datetime.now()
         ).unlink()
-        return pickings_to_validate.button_validate()
+        return pickings_to_validate.with_context(clean_context(self.env.context)).button_validate()
