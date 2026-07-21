@@ -236,9 +236,10 @@ git commit -m "feat(distribuidora_ventas): wizard de descuento general para fact
 
 ---
 
-## Task 2: Botón en la factura y columna de descuento visible por defecto
+## Task 2: Permisos, botón en la factura y columna de descuento visible por defecto
 
 **Files:**
+- Create: `addons/distribuidora_ventas/security/ir.model.access.csv`
 - Create: `addons/distribuidora_ventas/wizards/factura_descuento_wizard_views.xml`
 - Create: `addons/distribuidora_ventas/views/account_move_views.xml`
 - Create: `addons/distribuidora_ventas/tests/test_factura_descuento_wizard_view.py`
@@ -248,6 +249,8 @@ git commit -m "feat(distribuidora_ventas): wizard de descuento general para fact
 **Interfaces:**
 - Consumes: `distribuidora.factura.descuento.wizard` y su método `action_aplicar()` (Task 1).
 - Produces: acción `distribuidora_ventas.action_factura_descuento_wizard`, botón "Descuento general" en el formulario de factura.
+
+**Nota agregada tras la revisión de la Task 1:** el modelo `distribuidora.factura.descuento.wizard` (Task 1) es el primer modelo nuevo de este addon — `distribuidora_ventas` todavía no tiene carpeta `security/`. Sin una entrada en `ir.model.access.csv`, un usuario normal (no superusuario) no podría usar el wizard desde el botón que agrega esta task — se agrega ahora, con acceso total para `base.group_user`, mismo patrón que ya se usó para el wizard de `distribuidora_compras`.
 
 - [ ] **Step 1: Escribir los tests que fallan (la vista/acción todavía no existe)**
 
@@ -282,10 +285,11 @@ from . import test_customer_pricelist
 from . import test_invoice_from_order_quantity
 from . import test_sale_order_accepts_any_delivery_date
 from . import test_sale_order_form_hides_commitment_date
-from . import test_pricelist_menu
 from . import test_factura_descuento_wizard
 from . import test_factura_descuento_wizard_view
 ```
+
+**Nota:** la lista de arriba tiene 7 imports, no 8 — este addon todavía no tiene `test_pricelist_menu` en esta rama (esa prueba vive en la rama sin mergear `feat/menu-lista-precios`; la Task 1 de este mismo plan ya lo confirmó y ajustó igual). Si al implementar este archivo ya existe con `test_pricelist_menu` importado (porque para entonces esa rama ya se mergeó), dejalo — solo agregá el import de `test_factura_descuento_wizard_view` al final sin quitar nada de lo que ya esté.
 
 - [ ] **Step 2: Correr los tests para confirmar que fallan**
 
@@ -293,7 +297,15 @@ Run: `MSYS_NO_PATHCONV=1 docker exec erp-odoo-1 odoo -d odoo --db_host=db --db_u
 
 Expected: FAIL — `ValueError: External ID not found: distribuidora_ventas.action_factura_descuento_wizard`.
 
-- [ ] **Step 3: Crear la vista del wizard, la acción y el botón en la factura**
+- [ ] **Step 3: Crear el archivo de permisos del wizard**
+
+```csv
+# addons/distribuidora_ventas/security/ir.model.access.csv
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_distribuidora_factura_descuento_wizard,distribuidora.factura.descuento.wizard,model_distribuidora_factura_descuento_wizard,base.group_user,1,1,1,1
+```
+
+- [ ] **Step 4: Crear la vista del wizard, la acción y el botón en la factura**
 
 ```xml
 <!-- addons/distribuidora_ventas/wizards/factura_descuento_wizard_views.xml -->
@@ -356,33 +368,36 @@ Expected: FAIL — `ValueError: External ID not found: distribuidora_ventas.acti
 </odoo>
 ```
 
-- [ ] **Step 4: Registrar los dos XML nuevos en el manifest**
+- [ ] **Step 5: Registrar los archivos nuevos en el manifest**
+
+El manifest actual (después de la Task 1) tiene `'depends': ['sale', 'account']` y `'data': ['data/res_partner_category_data.xml', 'views/sale_order_views.xml']` — leerlo primero para confirmar, y agregar sobre eso (no asumir que ya tiene otros archivos de otras ramas sin mergear):
 
 ```python
 # addons/distribuidora_ventas/__manifest__.py
     'data': [
+        'security/ir.model.access.csv',
         'data/res_partner_category_data.xml',
         'views/sale_order_views.xml',
-        'views/pricelist_menu.xml',
         'views/account_move_views.xml',
         'wizards/factura_descuento_wizard_views.xml',
     ],
 ```
 
-- [ ] **Step 5: Actualizar el módulo y correr los tests para confirmar que pasan**
+- [ ] **Step 6: Actualizar el módulo y correr los tests para confirmar que pasan**
 
 Run: `MSYS_NO_PATHCONV=1 docker exec erp-odoo-1 odoo -d odoo --db_host=db --db_user=odoo --db_password=odoo --http-port=8099 --gevent-port=8101 -u distribuidora_ventas --test-enable --test-tags /distribuidora_ventas --stop-after-init`
 
 Expected: PASS — `0 failed, 0 error(s) of 12 tests` (10 de Task 1 + 2 nuevos).
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add addons/distribuidora_ventas/wizards/factura_descuento_wizard_views.xml \
+git add addons/distribuidora_ventas/security/ir.model.access.csv \
+        addons/distribuidora_ventas/wizards/factura_descuento_wizard_views.xml \
         addons/distribuidora_ventas/views/account_move_views.xml \
         addons/distribuidora_ventas/__manifest__.py \
         addons/distribuidora_ventas/tests/__init__.py addons/distribuidora_ventas/tests/test_factura_descuento_wizard_view.py
-git commit -m "feat(distribuidora_ventas): boton de descuento general y columna Disc.% visible en factura"
+git commit -m "feat(distribuidora_ventas): permisos, boton de descuento general y columna Disc.% visible en factura"
 ```
 
 ---
