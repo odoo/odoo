@@ -1,88 +1,97 @@
 # -*- coding: utf-8 -*-
-"""Postlog import wizard — SF Workflow 22 (Workato replacement).
+"""Postlog import wizard."""
 
-Upload a Wide Orbit postlog CSV → create mv.spot_data + mv.spot_data_mirror rows.
-
-CSV expected headers (case-insensitive):
-  Week, Network, ISCI, Air_Date, Air_Time, Units, Rate, Total_Dollars
-"""
-import base64
-import csv
-import io
-from datetime import datetime
-from odoo import models, fields, api, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+from ..services.postlog_import.engine import PostlogImportEngine
 
 
 class MvPostlogImportWizard(models.TransientModel):
-    _name = 'mv.postlog.import.wizard'
-    _description = 'Postlog Import Wizard'
+    _name = "mv.postlog.import.wizard"
+    _description = "Postlog Import Wizard"
 
-    csv_file = fields.Binary(string='CSV File', required=True)
-    csv_filename = fields.Char(string='Filename')
-    program_id = fields.Many2one('mv.programs', string='Program (default)')
-    week_default = fields.Date(string='Week (default)')
-    create_mirror = fields.Boolean(string='Also create Spot Data Mirror rows', default=True)
-    dry_run = fields.Boolean(string='Dry-run', default=False)
+    upload_file = fields.Binary(string="Upload", required=True)
+    upload_filename = fields.Char(string="Filename")
+    program_id = fields.Many2one("mv.programs", string="Program Record", required=True)
+    program_choice = fields.Selection(
+        selection="_get_program_selection",
+        string="Program",
+        required=True,
+    )
+    import_week = fields.Date(string="Import Week", readonly=True)
+
+    @api.model
+    def _get_program_selection(self):
+        programs = self.env["mv.programs"].search([], order="name")
+        return [(str(program.id), program.display_name) for program in programs]
+
+    @api.onchange("program_choice")
+    def _onchange_program_choice(self):
+        for wizard in self:
+            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
+
+    @api.onchange("program_id")
+    def _onchange_program_id(self):
+        for wizard in self:
+            wizard.program_choice = str(wizard.program_id.id) if wizard.program_id else False
+
+    @api.onchange("program_choice", "upload_file", "upload_filename")
+    def _onchange_import_defaults(self):
+        for wizard in self:
+            wizard.import_week = False
+            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
+            if not wizard.program_id or not wizard.upload_file:
+                continue
+
+            try:
+                _, detected_week = wizard._build_import_engine().extract_rows_and_week()
+            except UserError:
+                continue
+
+            wizard.import_week = detected_week
+
+    def _build_import_engine(self):
+        self.ensure_one()
+        return PostlogImportEngine(
+            self.env,
+            program=self.program_id,
+            upload_file=self.upload_file,
+            upload_filename=self.upload_filename,
+        )
 
     def action_import(self):
         self.ensure_one()
-        if not self.csv_file:
-            raise UserError(_("Pick a CSV file first."))
-        try:
-            raw = base64.b64decode(self.csv_file).decode('utf-8-sig', errors='replace')
-        except Exception as e:
-            raise UserError(_("Could not decode the file as UTF-8 CSV: %s") % e) from e
+        if self.program_choice and not self.program_id:
+            self.program_id = int(self.program_choice)
+        if not self.program_id:
+            raise UserError(_("Program is required."))
 
-        reader = csv.DictReader(io.StringIO(raw))
-        rows = list(reader)
-        if not rows:
-            raise UserError(_("The CSV is empty (no data rows)."))
+        engine = self._build_import_engine()
+        rows, import_week = engine.extract_rows_and_week()
+        self.import_week = import_week
+        summary = engine.import_rows(rows, import_week)
 
-        SpotData = self.env['mv.spot_data']
-        SpotMirror = self.env['mv.spot_data_mirror']
+        message = _(
+            "Imported %(spots)s Spot Data rows for %(program)s, week %(week)s. "
+            "Matched: %(matched)s. Unmatched: %(unmatched)s."
+        ) % {
+            "program": self.program_id.display_name,
+            "week": import_week,
+            "spots": summary["spot_created"],
+            "matched": summary["matched"],
+            "unmatched": summary["unmatched"],
+        }
+        if summary["errors"]:
+            message += _("\n\nFirst issues:\n%s") % "\n".join(summary["errors"][:5])
 
-        def get(row, *candidates):
-            for c in candidates:
-                if c in row and row[c] not in (None, ''):
-                    return row[c]
-                for k in row:
-                    if k and k.lower() == c.lower():
-                        return row[k]
-            return None
-
-        created_main, created_mirror, skipped = 0, 0, 0
-        errors = []
-        for i, row in enumerate(rows, start=2):
-            isci = get(row, 'ISCI', 'isci') or ''
-            air_time = get(row, 'Air_Time', 'air_time') or ''
-            vals = {
-                'isci': isci,
-            }
-            if self.dry_run:
-                created_main += 1
-                continue
-            try:
-                sd = SpotData.create(vals)
-                created_main += 1
-                if self.create_mirror:
-                    SpotMirror.create({
-                        'isci': isci,
-                        'air_time': air_time,
-                        'status': 'aired',
-                    })
-                    created_mirror += 1
-            except Exception as e:
-                skipped += 1
-                errors.append(f'row {i}: {e}')
-
-        msg = _(
-            "Postlog import complete.\nSpot Data rows: %(m)d\nMirror rows: %(x)d\nSkipped: %(s)d"
-        ) % {'m': created_main, 'x': created_mirror, 's': skipped}
-        if errors:
-            msg += '\n\nFirst errors:\n' + '\n'.join(errors[:5])
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {'title': _('Postlog Import'), 'message': msg, 'sticky': True, 'type': 'success' if not errors else 'warning'},
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Postlog Import"),
+                "message": message,
+                "sticky": bool(summary["errors"]),
+                "type": "success" if not summary["errors"] else "warning",
+            },
         }

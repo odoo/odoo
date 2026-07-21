@@ -1,107 +1,188 @@
 # -*- coding: utf-8 -*-
-"""Prelog import wizard — SF Workflow 21 (Workato replacement).
+"""Prelog import wizard.
 
-Marathon's existing pipeline is Wide Orbit CSV → Dropbox → Workato → Salesforce.
-We replace the Workato step with this wizard: upload a CSV and create
-mv.prelog_data + mv.prelog_data_mirror rows.
-
-CSV expected headers (case-insensitive, order-insensitive):
-  Week, Network, ISCI, Advertiser, Brand, Product, Air_Date, Air_Time,
-  Units, Booked_Rate, Booked_Dollars, Version
+Supports CSV, XLS and XLSX uploads for a selected Program + Prelog Version.
+The upload currently replaces an existing Program/week/version wholesale when
+the user confirms; appending or partial uploads are intentionally unsupported.
 """
-import base64
-import csv
-import io
-from datetime import datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+
+from ..services.prelog_import.engine import PrelogImportEngine
 
 
 class MvPrelogImportWizard(models.TransientModel):
     _name = 'mv.prelog.import.wizard'
     _description = 'Prelog Import Wizard'
 
-    csv_file = fields.Binary(string='CSV File', required=True)
-    csv_filename = fields.Char(string='Filename')
-    program_id = fields.Many2one('mv.programs', string='Program (default)',
-                                 help='If your CSV has no Program/Network column, every row will be assigned this program.')
-    week_default = fields.Date(string='Week (default)',
-                               help='If your CSV has no Week column, every row will use this Monday.')
-    create_mirror = fields.Boolean(string='Also create Prelog Data Mirror rows', default=True)
-    dry_run = fields.Boolean(string='Dry-run (no records created)', default=False)
+    _VERSION_SELECTION = [(str(i), str(i)) for i in range(1, 7)]
 
-    def action_import(self):
-        self.ensure_one()
-        if not self.csv_file:
-            raise UserError(_("Pick a CSV file first."))
-        try:
-            raw = base64.b64decode(self.csv_file).decode('utf-8-sig', errors='replace')
-        except Exception as e:
-            raise UserError(_("Could not decode the file as UTF-8 CSV: %s") % e) from e
+    upload_file = fields.Binary(string='Upload', required=True)
+    upload_filename = fields.Char(string='Filename')
+    program_id = fields.Many2one('mv.programs', string='Program Record', required=True)
+    program_choice = fields.Selection(
+        selection='_get_program_selection',
+        string='Program',
+        required=True,
+    )
+    prelog_version = fields.Selection(
+        selection=_VERSION_SELECTION,
+        string='Prelog Version',
+        required=True,
+        default='1',
+    )
+    import_week = fields.Date(string='Import Week', readonly=True)
 
-        reader = csv.DictReader(io.StringIO(raw))
-        rows = list(reader)
-        if not rows:
-            raise UserError(_("The CSV is empty (no data rows)."))
+    @api.model
+    def _get_program_selection(self):
+        programs = self.env['mv.programs'].search([], order='name')
+        return [(str(program.id), program.display_name) for program in programs]
 
-        # Normalise column keys
-        def get(row, *candidates):
-            for c in candidates:
-                if c in row and row[c] not in (None, ''):
-                    return row[c]
-                # Try case-insensitive
-                for k in row:
-                    if k and k.lower() == c.lower():
-                        return row[k]
-            return None
+    @api.onchange('program_choice')
+    def _onchange_program_choice(self):
+        for wizard in self:
+            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
 
-        Prelog = self.env['mv.prelog_data']
-        Mirror = self.env['mv.prelog_data_mirror']
+    @api.onchange('program_id')
+    def _onchange_program_id(self):
+        for wizard in self:
+            wizard.program_choice = str(wizard.program_id.id) if wizard.program_id else False
 
-        created_main, created_mirror, skipped = 0, 0, 0
-        errors = []
-        for i, row in enumerate(rows, start=2):  # row 1 is header
-            week_raw = get(row, 'Week', 'week')
+    @api.onchange('program_choice', 'upload_file', 'upload_filename')
+    def _onchange_import_defaults(self):
+        for wizard in self:
+            wizard.import_week = False
+            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
+            if not wizard.program_id or not wizard.upload_file:
+                if not wizard.prelog_version:
+                    wizard.prelog_version = '1'
+                continue
+
             try:
-                week = (
-                    datetime.strptime(week_raw, '%Y-%m-%d').date()
-                    if week_raw else self.week_default
-                )
-            except Exception:
-                try:
-                    week = datetime.strptime(week_raw, '%m/%d/%Y').date()
-                except Exception:
-                    week = self.week_default
+                _, detected_week = wizard._build_import_engine().extract_rows_and_week()
+            except UserError:
+                continue
 
-            isci = get(row, 'ISCI', 'isci') or ''
-            version = int(get(row, 'Version', 'version') or 1)
-            vals = {
-                'isci': isci,
-                'version': version,
+            wizard.import_week = detected_week
+            wizard.prelog_version = str(wizard._get_next_prelog_version(detected_week))
+
+    def _build_import_engine(self):
+        self.ensure_one()
+        return PrelogImportEngine(
+            self.env,
+            program=self.program_id,
+            upload_file=self.upload_file,
+            upload_filename=self.upload_filename,
+        )
+
+    def _get_next_prelog_version(self, import_week):
+        self.ensure_one()
+        if not self.program_id or not import_week:
+            return 1
+        existing_versions = self.env['mv.prelog_data'].search([
+            '|',
+            '&',
+            ('import_program', '=', self.program_id.id),
+            ('import_week_value', '=', import_week),
+            '&',
+            ('schedule.deal_parent.program', '=', self.program_id.id),
+            ('schedule.week', '=', import_week),
+        ]).mapped('version')
+        existing_versions = {int(version) for version in existing_versions if version}
+        next_version = len(existing_versions) + 1
+        if next_version > 6:
+            return 1
+        return max(next_version, 1)
+
+    @staticmethod
+    def _validate_prelog_version(version):
+        if version < 1 or version > 6:
+            raise ValidationError(_("Prelog Version must be between 1 and 6."))
+
+    def _existing_prelogs(self, import_week, version):
+        self.ensure_one()
+        return self.env['mv.prelog_data'].search([
+            ('version', '=', version),
+            '|',
+            '&',
+            ('import_program', '=', self.program_id.id),
+            ('import_week_value', '=', import_week),
+            '&',
+            ('schedule.deal_parent.program', '=', self.program_id.id),
+            ('schedule.week', '=', import_week),
+        ])
+
+    def _run_import(self, *, force_replace=False):
+        self.ensure_one()
+        if self.program_choice and not self.program_id:
+            self.program_id = int(self.program_choice)
+        if not self.program_id:
+            raise UserError(_("Program is required."))
+        engine = self._build_import_engine()
+        rows, import_week = engine.extract_rows_and_week()
+        self.import_week = import_week
+        version = int(self.prelog_version or 0)
+        self._validate_prelog_version(version)
+
+        existing_prelogs = self._existing_prelogs(import_week, version)
+        if existing_prelogs and not force_replace:
+            wizard = self.env['mv.prelog.import.confirm.wizard'].create({
+                'import_wizard_id': self.id,
+                'version_number': version,
+            })
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'mv.prelog.import.confirm.wizard',
+                'res_id': wizard.id,
+                'view_mode': 'form',
+                'target': 'new',
             }
-            if self.dry_run:
-                created_main += 1
-            else:
-                try:
-                    prelog = Prelog.create(vals)
-                    created_main += 1
-                    if self.create_mirror:
-                        Mirror.create({
-                            # mirror minimal payload — extend mappings here as needed
-                            'sf_external_id': prelog.sf_external_id or False,
-                        })
-                        created_mirror += 1
-                except Exception as e:
-                    skipped += 1
-                    errors.append(f'row {i}: {e}')
 
-        msg = _(
-            "Prelog import complete.\nMain rows created: %(m)d\nMirror rows created: %(x)d\nSkipped: %(s)d"
-        ) % {'m': created_main, 'x': created_mirror, 's': skipped}
-        if errors:
-            msg += '\n\nFirst errors:\n' + '\n'.join(errors[:5])
+        vals_list, import_summary = engine.build_prelog_vals(rows, import_week, version)
+        if existing_prelogs:
+            existing_prelogs.unlink()
+
+        created = self.env['mv.prelog_data'].create(vals_list)
+        self.program_id.prelog_version = version
+
+        message = _(
+            "Imported %(count)s Prelogs for %(program)s, week %(week)s, version %(version)s. "
+            "Matched: %(matched)s. Created without schedule: %(without_schedule)s."
+        ) % {
+            'count': len(created),
+            'program': self.program_id.display_name,
+            'week': import_week,
+            'version': version,
+            'matched': import_summary['matched'],
+            'without_schedule': import_summary['created_without_schedule'],
+        }
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {'title': _('Prelog Import'), 'message': msg, 'sticky': True, 'type': 'success' if not errors else 'warning'},
+            'params': {'title': _('Prelog Import'), 'message': message, 'sticky': False, 'type': 'success'},
         }
+
+    def action_import(self):
+        self.ensure_one()
+        return self._run_import(force_replace=False)
+
+
+class MvPrelogImportConfirmWizard(models.TransientModel):
+    _name = 'mv.prelog.import.confirm.wizard'
+    _description = 'Prelog Import Replace Confirmation'
+
+    import_wizard_id = fields.Many2one('mv.prelog.import.wizard', required=True)
+    version_number = fields.Integer(string='Version', required=True)
+    confirmation_message = fields.Text(
+        string='Message',
+        compute='_compute_confirmation_message',
+    )
+
+    @api.depends('version_number')
+    def _compute_confirmation_message(self):
+        for wizard in self:
+            wizard.confirmation_message = _("Are you sure you want to delete version %s and re-upload?") % wizard.version_number
+
+    def action_confirm(self):
+        self.ensure_one()
+        return self.import_wizard_id._run_import(force_replace=True)
