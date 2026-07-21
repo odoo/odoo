@@ -530,12 +530,11 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].create({
+            purchase_orders |= self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
-            purchase_order.button_confirm()
-            purchase_orders |= purchase_order
+        purchase_orders.button_confirm()
 
         action = purchase_orders.action_create_invoice()
         invoice = self.env['account.move'].browse(action['res_id'])
@@ -564,12 +563,11 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].create({
+            purchase_orders |= self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
-            purchase_order.button_confirm()
-            purchase_orders |= purchase_order
+        purchase_orders.button_confirm()
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         PurchaseBillUnion = self.env['purchase.bill.union']
