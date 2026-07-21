@@ -20,11 +20,13 @@ Activates:
     'depends': [
         'account',
         'account_tax_python',
+        'base_vat',
         'l10n_account_withholding_tax',
         'product',
     ],
     'auto_install': ['account'],
     'data': [
+        'data/res_country_data.xml',
         'views/account_tax_views.xml',
     ],
     'demo': [

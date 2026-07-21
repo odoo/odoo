@@ -22,7 +22,7 @@ from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
+from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, pk_cn_validate, th_branch_code_validate
 
 from odoo.addons.base.models.res_country import (
     FR_AND_OVERSEAS_TERRITORIES,
@@ -808,6 +808,14 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'help': _lt('Peruvian unique taxpayer registry number (RUC).'),
         'placeholder': '101174102',
         'countries': ['PE'],
+    },
+    'PK_CN': {
+        'label': _lt('Consumer Identification'),
+        'help': _lt('Pakistani Computerized National Identity Card number (CNIC), 13 digits.'),
+        'placeholder': '12345-1234567-8',
+        'category': 'CN',
+        'validation_function': pk_cn_validate,
+        'countries': ['PK'],
     },
     'PT_EN': {
         'label': _lt('Company ID'),
