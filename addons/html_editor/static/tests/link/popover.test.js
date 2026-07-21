@@ -283,7 +283,10 @@ describe("Link creation", () => {
             expect(".active .o-we-command-name").toHaveText("Link");
 
             await click(".o-we-command-name:first");
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>[]</a></p>");
+            // ZWS (\u200B) is inserted as a placeholder when the selection is
+            // collapsed so that the link has tangible content until the user
+            // applies a label via the popover.
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>\u200b[]</a></p>");
             await expectElementCount(".o-we-linkpopover", 1);
             expect(".o-we-linkpopover input.o_we_label_link").toBeFocused({
                 message: "should focus label input by default, when we don't have a label",
@@ -308,7 +311,8 @@ describe("Link creation", () => {
             await animationFrame();
             await click(".o-we-command-name:first");
             await expectElementCount(".o-we-linkpopover", 1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a></a></p>");
+            // ZWS is present as placeholder content until user applies a label.
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab<a>\u200b</a></p>");
 
             const pNode = queryOne("p");
             setSelection({
@@ -411,6 +415,108 @@ describe("Link creation", () => {
             insertLineBreak(editor);
             await insertText(editor, "D");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>a<a href="#">link</a><br>D[]b</p>');
+        });
+
+        describe("Creation by powerbox inside decoration wrappers", () => {
+            test("should create a link with ZWS placeholder when cursor is collapsed inside <s>", async () => {
+                // Collapsed selection inside <s>: a ZWS placeholder is inserted,
+                // then <s> is split and preserved inside the new link.
+                const { editor, el } = await setupEditor("<p><s>ab[]cd</s></p>");
+                await insertText(editor, "/link");
+                await animationFrame();
+                await click(".o-we-command-name:first");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    "<p><s>ab</s><a><s>\u200b[]</s></a><s>cd</s></p>"
+                );
+                await expectElementCount(".o-we-linkpopover", 1);
+                expect(".o-we-linkpopover input.o_we_label_link").toBeFocused();
+            });
+
+            test("should apply label inside <s> wrapper when collapsed and label is changed", async () => {
+                // Label must replace the ZWS inside the <s> wrapper, not land
+                // in the surrounding FEFF padding node (getDeepestPosition offset=1).
+                const { editor, el } = await setupEditor("<p><s>ab[]cd</s></p>");
+                await insertText(editor, "/link");
+                await animationFrame();
+                await click(".o-we-command-name:first");
+                await contains(".o-we-linkpopover input.o_we_label_link").fill("mylink");
+                await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    '<p><s>ab</s><a href="#"><s>mylink[]</s></a><s>cd</s></p>'
+                );
+            });
+
+            test("should preserve <s> wrapper when selection is not collapsed", async () => {
+                // Not-collapsed: content is split out of <s> and placed inside
+                // the link with the <s> wrapper intact.
+                const { el } = await setupEditor("<p><s>[hello]</s></p>");
+                await waitFor(".o-we-toolbar");
+                await click(".o-we-toolbar .fa-link");
+                await contains(".o-we-linkpopover input.o_we_href_input_link", {
+                    timeout: 1500,
+                }).edit("#");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    '<p><a href="#"><s>hello[]</s></a></p>'
+                );
+            });
+
+            test("should apply label inside <s> wrapper when not-collapsed and label is changed", async () => {
+                const { el } = await setupEditor("<p><s>[hello]</s></p>");
+                await waitFor(".o-we-toolbar");
+                await click(".o-we-toolbar .fa-link");
+                await waitFor(".o-we-linkpopover", { timeout: 1500 });
+                await contains(".o-we-linkpopover input.o_we_label_link").edit("newlabel");
+                await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    '<p><a href="#"><s>newlabel[]</s></a></p>'
+                );
+            });
+
+            test("should preserve both <s> and <u> wrappers when collapsed inside nested <s><u>", async () => {
+                // Outermost decoration (<s>) is used as the split boundary so
+                // both wrappers are preserved inside the link.
+                const { editor, el } = await setupEditor("<p><s><u>ab[]cd</u></s></p>");
+                await insertText(editor, "/link");
+                await animationFrame();
+                await click(".o-we-command-name:first");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    "<p><s><u>ab</u></s><a><s><u>\u200b[]</u></s></a><s><u>cd</u></s></p>"
+                );
+                await expectElementCount(".o-we-linkpopover", 1);
+            });
+
+            test("should apply label inside nested <s><u> wrappers when label is changed", async () => {
+                const { editor, el } = await setupEditor("<p><s><u>ab[]cd</u></s></p>");
+                await insertText(editor, "/link");
+                await animationFrame();
+                await click(".o-we-command-name:first");
+                await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
+                await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    '<p><s><u>ab</u></s><a href="#"><s><u>label[]</u></s></a><s><u>cd</u></s></p>'
+                );
+            });
+
+            test("should remove the link when clicking away without URL inside <s>", async () => {
+                const { editor, el } = await setupEditor("<p><s>ab[]cd</s></p>");
+                await insertText(editor, "/link");
+                await animationFrame();
+                await click(".o-we-command-name:first");
+                await expectElementCount(".o-we-linkpopover", 1);
+                const pNode = queryOne("p");
+                setSelection({
+                    anchorNode: pNode,
+                    anchorOffset: 0,
+                    focusNode: pNode,
+                    focusOffset: 0,
+                });
+                await animationFrame();
+                // <s> is split at the insertion point; two siblings remain
+                // after the empty link is removed on click-away.
+                expect(cleanLinkArtifacts(getContent(el))).toBe(
+                    "<p>[]<s>ab</s><s>cd</s></p>"
+                );
+            });
         });
     });
     describe("Creation by toolbar", () => {
