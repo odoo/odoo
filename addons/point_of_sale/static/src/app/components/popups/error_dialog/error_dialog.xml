@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="point_of_sale.ErrorDialog" t-inherit="web.ErrorDialog" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='footer']" position="inside">
+            <button t-if="this.isDisplayStandalone" class="btn btn-secondary" t-on-click="this.reloadData">
+                Reload Data
+            </button>
+        </xpath>
+    </t>
+</templates>
