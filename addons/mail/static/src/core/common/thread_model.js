@@ -840,6 +840,71 @@ export class Thread extends Record {
             }
         }
     }
+<<<<<<< 5694c4bac92172e2ae4a544fd8e8a2f7cab1b8d6
+||||||| b4f01111807a12977991d28acb3bf482bc05d248
+
+    async leaveChannel({ force = false } = {}) {
+        if (
+            this.channel_type !== "group" &&
+            this.create_uid?.eq(this.store.self.main_user_id) &&
+            !force
+        ) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        await this.closeChatWindow();
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
+    }
+
+    _getActualModelName() {
+        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
+    }
+=======
+
+    async leaveChannel({ force = false } = {}) {
+        if (
+            this.channel_type !== "group" &&
+            this.create_uid?.eq(this.store.self.main_user_id) &&
+            !force
+        ) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        await this.closeChatWindow();
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
+        if (this.exists()) {
+            this.update({
+                self_member_id: undefined,
+                isLocallyPinned: false,
+                close_chat_window: true,
+            });
+        }
+    }
+
+    _getActualModelName() {
+        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
+    }
+>>>>>>> b74191f6babbe481eb8cfe299296e0b20ddbb130
 }
 
 Thread.register();

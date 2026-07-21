@@ -2685,3 +2685,28 @@ test("Show typing icon on group chat in sidebar", async () => {
         ".o-mail-DiscussSidebar-item .o-discuss-Typing-icon[title='Marc Demo is typing...']"
     );
 });
+
+test("leaveChannel closed the channel on RPC success with simulated SH websocket traffic", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "SH leaveChannel test",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss();
+    // simulate websocket traffic failing to reach the browser 
+    onRpc("discuss.channel", "action_unfollow", () => {
+        asyncStep("action_unfollow_called");
+        return true; 
+    });
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('SH leaveChannel test'))");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click("button:contains(Leave Conversation)");
+    await waitForSteps(["action_unfollow_called"]);
+    // ensure the channel has been fully closed 
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "SH leaveChannel test" });
+});
