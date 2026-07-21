@@ -15,7 +15,7 @@ Features:
 - Periodic status polling for pending red form confirmations
 - Support for both digital (01/02) and tax-controlled (004/007/026/028) invoice types
     """,
-    'depends': ['l10n_cn', 'account', 'iap', 'account_edi_proxy_client'],
+    'depends': ['l10n_cn', 'account', 'iap', 'account_edi_proxy_client', 'phone_validation'],
     'auto_install': ['l10n_cn'],
     'data': [
         'data/ir_cron.xml',

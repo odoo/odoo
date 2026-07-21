@@ -60,7 +60,7 @@ class L10nCnEdiDocument(models.Model):
             for doc in docs:
                 try:
                     with self.env.cr.savepoint():
-                        # ponytail: BaiwangClient unwraps the payload. It is a list, and it raises UserError on failure.
+                        # BaiwangClient returns unwrapped response rows; failures raise UserError.
                         resp_list = client.query_red_form_detail(doc.baiwang_uuid)
                         if isinstance(resp_list, list) and resp_list:
                             resp_data = resp_list[0]
@@ -134,7 +134,7 @@ class L10nCnEdiDocument(models.Model):
                     'invoiceStartDate': start_date.strftime('%Y-%m-%d'),
                     'invoiceEndDate': end_date.strftime('%Y-%m-%d'),
                 })
-                # ponytail: client.query_red_form_list strips the outer dict. res IS the list[cite: 5].
+                # query_red_form_list already returns the inner list payload.
                 form_list = res if isinstance(res, list) else []
                 for form in form_list:
                     uuid = form.get('redConfirmUuid')
@@ -148,19 +148,21 @@ class L10nCnEdiDocument(models.Model):
                     blue_move = self.env['account.move'].search([
                         ('l10n_cn_baiwang_invoice_no', '=', form.get('originalInvoiceNo')),
                         ('company_id', '=', company.id),
-                        ('move_type', '=', 'in_invoice' if is_buyer else 'out_invoice'),
+                        ('move_type', '=', 'in_invoice'),
                     ], limit=1)
                     is_pending = confirm_state == '02'
+                    amt_total = float(form.get('invoiceTotalPrice', 0.0))
+                    amt_tax = float(form.get('invoiceTotalTax', 0.0))
                     self.create({
                         'move_id': blue_move.id,
-                        'state': odoo_state,
+                        'state': 'red_form_pending' if is_pending else 'red_form_confirmed',
                         'baiwang_uuid': uuid,
                         'baiwang_red_form_number': form.get('redConfirmNo'),
                         'baiwang_red_invoice_no': form.get('redInvoiceNo'),
-                        'baiwang_confirm_state': api_state,
-                        'baiwang_red_form_amount_total': float(form.get('invoiceTotalPrice', 0.0)),
-                        'baiwang_red_form_amount_tax': float(form.get('invoiceTotalTax', 0.0)),
-                        'baiwang_red_form_type': form.get('redInvoiceLabel'),  # <--- Map the JSON key here
+                        'baiwang_confirm_state': confirm_state,
+                        'baiwang_red_form_amount_total': amt_total,
+                        'baiwang_red_form_amount_tax': amt_tax,
+                        'baiwang_red_form_type': form.get('redInvoiceLabel'),
                     })
 
                     if blue_move:
@@ -183,5 +185,5 @@ class L10nCnEdiDocument(models.Model):
                         summary=summary,
                         user_id=blue_move.create_uid.id,
                     )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 _logger.error("Baiwang EDI: Error pulling inbound red forms for company %s: %s", company.name, e)
