@@ -1,5 +1,4 @@
-import { proxy } from "@odoo/owl";
-import { onWillRender, useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 
 /**
  * @typedef PagerUpdateParams
@@ -22,15 +21,11 @@ import { onWillRender, useEnv, useSubEnv } from "@web/owl2/utils";
  */
 export function usePager(getProps) {
     const env = useEnv();
-    const pagerState = proxy({});
 
     useSubEnv({
         config: {
             ...env.config,
-            pagerProps: pagerState,
+            getPagerProps: () => getProps() || { total: 0 },
         },
-    });
-    onWillRender(() => {
-        Object.assign(pagerState, getProps() || { total: 0 });
     });
 }
