@@ -8,6 +8,7 @@ from odoo.tests import HttpCase, tagged
 class TestSitemap(HttpCase):
     def setUp(self):
         super().setUp()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
 
         self.cats = self.env["product.public.category"].create([
             {"name": "Level 0"},
@@ -19,7 +20,7 @@ class TestSitemap(HttpCase):
         self.cats[2].parent_id = self.cats[1].id
         self.cats[1].parent_id = self.cats[0].id
         # 'Level 2' cetegory must have at least one published product to be visible by public users
-        self.env["product.product"].create({
+        self.env["product.product"].with_context(**MAIL_OFF).create({
             "name": "Dummy product",
             "list_price": 100.0,
             "public_categ_ids": [Command.link(self.cats[2].id)],
@@ -27,7 +28,7 @@ class TestSitemap(HttpCase):
         })
         # 'Level 2A' category will contains only archived products, so should be hidden to public
         # users
-        prodA = self.env["product.product"].create({
+        prodA = self.env["product.product"].with_context(**MAIL_OFF).create({
             "name": "Dummy product A",
             "list_price": 100.0,
             "public_categ_ids": [Command.link(self.cats[3].id)],

@@ -51,7 +51,7 @@ class TestWebsiteSequence(BaseCommon):
                 SQL("UPDATE product_template SET active = false WHERE id = %s", dp.id)
             )
         product_templates.write({"active": False})
-        cls.product_tmpls = cls.p1, cls.p2, cls.p3, cls.p4 = ProductTemplate.create([
+        cls.product_tmpls = cls.p1, cls.p2, cls.p3, cls.p4 = ProductTemplate.with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create([
             {"name": "First Product", "website_sequence": 100},
             {"name": "Second Product", "website_sequence": 180},
             {"name": "Third Product", "website_sequence": 225},

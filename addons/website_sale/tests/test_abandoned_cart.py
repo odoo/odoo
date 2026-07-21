@@ -30,13 +30,14 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
         now = datetime.utcnow()
-        cls.customer = cls.env["res.partner"].create({"name": "a", "email": "a@example.com"})
-        cls.public_partner = cls.env["res.partner"].create({
+        cls.customer = cls.env["res.partner"].with_context(**MAIL_OFF).create({"name": "a", "email": "a@example.com"})
+        cls.public_partner = cls.env["res.partner"].with_context(**MAIL_OFF).create({
             "name": "public",
             "email": "public@example.com",
         })
-        cls.public_user = cls.env["res.users"].create({
+        cls.public_user = cls.env["res.users"].with_context(**MAIL_OFF).create({
             "name": "Foo",
             "login": "foo",
             "partner_id": cls.public_partner.id,
@@ -54,7 +55,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "cart_abandoned_delay": 24.0,  # 1 day
             "user_id": cls.public_user.id,  # specific public user
         })
-        product = cls.env["product.product"].create({"name": "The Product"})
+        product = cls.env["product.product"].with_context(**MAIL_OFF).create({"name": "The Product"})
         add_order_line = [
             [0, 0, {"name": "The Product", "product_id": product.id, "product_uom_qty": 1}]
         ]
@@ -65,49 +66,49 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             .create({"name": "Payment method", "code": "unknown", "provider_id": provider.id})
             .id
         )
-        cls.so0before = cls.env["sale.order"].create({
+        cls.so0before = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website0.id,
             "state": "draft",
             "date_order": (now - relativedelta(hours=1)) - relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so0after = cls.env["sale.order"].create({
+        cls.so0after = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website0.id,
             "state": "draft",
             "date_order": (now - relativedelta(hours=1)) + relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so1before = cls.env["sale.order"].create({
+        cls.so1before = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website1.id,
             "state": "draft",
             "date_order": (now - relativedelta(minutes=30)) - relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so1after = cls.env["sale.order"].create({
+        cls.so1after = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website1.id,
             "state": "draft",
             "date_order": (now - relativedelta(minutes=30)) + relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so2before = cls.env["sale.order"].create({
+        cls.so2before = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website2.id,
             "state": "draft",
             "date_order": (now - relativedelta(hours=24)) - relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so2after = cls.env["sale.order"].create({
+        cls.so2after = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website2.id,
             "state": "draft",
             "date_order": (now - relativedelta(hours=24)) + relativedelta(minutes=1),
             "order_line": add_order_line,
         })
-        cls.so2before_but_public = cls.env["sale.order"].create({
+        cls.so2before_but_public = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.public_partner.id,
             "website_id": cls.website2.id,
             "state": "draft",
@@ -116,7 +117,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
         })
 
         # Must behave like so1before because public partner is not the one of website1
-        cls.so1before_but_other_public = cls.env["sale.order"].create({
+        cls.so1before_but_other_public = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.public_partner.id,
             "website_id": cls.website1.id,
             "state": "draft",

@@ -13,15 +13,16 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
         cls.website = cls.env.company.website_id
         cls.size_attribute.create_variant = "no_variant"
-        cls.product_tmpl_1 = cls.env["product.template"].create({
+        cls.product_tmpl_1 = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "website_sale_cart_notification_product_1",
             "type": "consu",
             "website_published": True,
             "list_price": 1000,
         })
-        cls.product_tmpl_2 = cls.env["product.template"].create({
+        cls.product_tmpl_2 = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "website_sale_cart_notification_product_2",
             "type": "consu",
             "website_published": True,

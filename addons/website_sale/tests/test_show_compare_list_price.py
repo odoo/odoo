@@ -13,8 +13,9 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
         cls.pricelist = cls._enable_pricelists()
-        ProductTemplate = cls.env["product.template"]
+        ProductTemplate = cls.env["product.template"].with_context(**MAIL_OFF)
         Pricelist = cls.env["product.pricelist"]
 
         cls.env["website"].search([]).write({"sequence": 1000})

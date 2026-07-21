@@ -18,7 +18,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.tx = cls.env["payment.transaction"].create({
+        cls.tx = cls.env["payment.transaction"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "payment_method_id": cls.payment_method_id,
             "amount": cls.amount,
             "currency_id": cls.currency.id,

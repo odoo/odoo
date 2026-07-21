@@ -21,7 +21,8 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.storage_box = cls.env["product.product"].create({
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        cls.storage_box = cls.env["product.product"].with_context(**MAIL_OFF).create({
             "name": "Storage Box",
             "standard_price": 70.0,
             "list_price": 79.0,
@@ -35,7 +36,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
                 Command.create({"name": "Aluminium", "sequence": 2}),
             ],
         })
-        cls.conference_chair = cls.env["product.template"].create({
+        cls.conference_chair = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Conference Chair",
             "list_price": 16.50,
             "website_published": True,
@@ -48,7 +49,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             ],
         })
 
-        cls.chair_floor_protection = cls.env["product.template"].create({
+        cls.chair_floor_protection = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Chair floor protection",
             "list_price": 12.0,
         })

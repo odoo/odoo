@@ -25,8 +25,9 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
 
-        cls.customer = cls.env["res.partner"].create({"name": "a", "email": "a@example.com"})
+        cls.customer = cls.env["res.partner"].with_context(**MAIL_OFF).create({"name": "a", "email": "a@example.com"})
         cls.recovery_template_default = cls.env.ref("website_sale.mail_template_sale_cart_recovery")
         cls.recovery_template_custom1 = cls.recovery_template_default.copy()
         cls.recovery_template_custom2 = cls.recovery_template_default.copy()
@@ -43,19 +44,19 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
             "name": "web2",
             "cart_recovery_mail_template_id": cls.recovery_template_custom2.id,
         })
-        cls.so0 = cls.env["sale.order"].create({
+        cls.so0 = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website0.id,
             "is_abandoned_cart": True,
             "cart_recovery_email_sent": False,
         })
-        cls.so1 = cls.env["sale.order"].create({
+        cls.so1 = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website1.id,
             "is_abandoned_cart": True,
             "cart_recovery_email_sent": False,
         })
-        cls.so2 = cls.env["sale.order"].create({
+        cls.so2 = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.customer.id,
             "website_id": cls.website2.id,
             "is_abandoned_cart": True,

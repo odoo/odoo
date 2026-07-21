@@ -16,7 +16,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         super().setUpClass()
 
         # Product with 9 variants
-        cls.heavy_product = cls.env["product.template"].create({
+        cls.heavy_product = cls.env["product.template"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Multi-variants product",
             "categ_id": cls.product_category.id,
             "attribute_line_ids": [

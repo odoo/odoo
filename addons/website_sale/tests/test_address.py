@@ -81,7 +81,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         Have 1 website 1 which company is B.
         Have admin on company A.
         """
-        self.company_a, self.company_b, self.company_c = self.env["res.company"].create([
+        self.company_a, self.company_b, self.company_c = self.env["res.company"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create([
             {"name": "Company A"},
             {"name": "Company B"},
             {"name": "Company C"},

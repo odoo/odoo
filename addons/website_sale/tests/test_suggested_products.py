@@ -19,6 +19,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
 
         # Create product categories
         cls.category_desks, cls.category_chairs = cls.env["product.public.category"].create([
@@ -26,19 +27,19 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             {"name": "Chairs"},
         ])
         # Create product templates
-        cls.template_desk = cls.env["product.template"].create({
+        cls.template_desk = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Desk",
             "list_price": 100,
             "public_categ_ids": [Command.link(cls.category_desks.id)],
             "is_published": True,
         })
-        cls.template_chair = cls.env["product.template"].create({
+        cls.template_chair = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Chair",
             "list_price": 50,
             "public_categ_ids": [Command.link(cls.category_chairs.id)],
             "is_published": True,
         })
-        cls.template_combo_desk_chair = cls.env["product.template"].create({
+        cls.template_combo_desk_chair = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Desk + Chair",
             "public_categ_ids": [
                 Command.link(cls.category_desks.id),
@@ -47,7 +48,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             "is_published": True,
         })
         # Create sale orders
-        cls.so_1 = cls.env["sale.order"].create({
+        cls.so_1 = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.partner.id,
             "order_line": [
                 Command.create({"product_id": cls.template_desk.product_variant_id.id}),
@@ -55,7 +56,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             ],
             "state": "sale",
         })
-        cls.so_2 = cls.env["sale.order"].create({
+        cls.so_2 = cls.env["sale.order"].with_context(**MAIL_OFF).create({
             "partner_id": cls.partner.id,
             "order_line": [
                 Command.create({"product_id": cls.template_desk.product_variant_id.id}),

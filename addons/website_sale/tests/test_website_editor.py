@@ -35,7 +35,7 @@ class TestProductPictureController(HttpCase):
         super().setUpClass()
         cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
-        cls.product = cls.env["product.product"].create({
+        cls.product = cls.env["product.product"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Storage Test Box",
             "standard_price": 70.0,
             "list_price": 79.0,
@@ -291,7 +291,7 @@ class TestProductVideoUpload(HttpCase):
         super().setUpClass()
         cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
-        cls.product = cls.env["product.product"].create({
+        cls.product = cls.env["product.product"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Test Video Product",
             "standard_price": 100.0,
             "list_price": 120.0,

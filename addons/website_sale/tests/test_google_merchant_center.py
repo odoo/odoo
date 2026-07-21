@@ -312,7 +312,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.env.user.group_ids |= self.env.ref("uom.group_uom")
         uom_litre = self.env.ref("uom.product_uom_pack_6")
         base_unit_litre = self.env["product.base.unit"].create({"name": "L"})
-        six_pack = self.env["product.product"].create([
+        six_pack = self.env["product.product"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create([
             {
                 "name": "Water Pack 6L",
                 "list_price": 12.0,

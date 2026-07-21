@@ -13,7 +13,7 @@ class TestProductPublicCategory(TransactionCase):
         def create_multi(vals_list):
             return list(map(Command.create, vals_list))
 
-        cls.published_product, cls.unpublished_product = cls.env["product.template"].create([
+        cls.published_product, cls.unpublished_product = cls.env["product.template"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create([
             {"name": "Published Product", "is_published": True},
             {"name": "Unpublished Product", "is_published": False},
         ])

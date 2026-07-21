@@ -24,7 +24,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
             "name": "Child category",
             "parent_id": self.category1.id,
         })
-        self.env["product.template"].create({
+        self.env["product.template"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Test Product",
             "public_categ_ids": [
                 Command.link(self.category1.id),

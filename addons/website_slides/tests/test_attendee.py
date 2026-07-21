@@ -291,7 +291,7 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             'completion_time': 2.0,
             'sequence': 1,
         })
-        self.partner_no_user = self.env['res.partner'].create({
+        self.partner_no_user = self.env['res.partner'].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             'country_id': self.env.ref('base.be').id,
             'email': 'partner_no_user@example.com',
             'name': 'Partner Without User',

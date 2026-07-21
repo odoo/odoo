@@ -15,7 +15,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         super().setUpClass()
         cls.storable_product.name = "Test CAC Product"
         cls.provider.write({"is_live": True, "is_published": True})
-        cls.in_store_dm.warehouse_ids[0].partner_id = cls.env["res.partner"].create({
+        cls.in_store_dm.warehouse_ids[0].partner_id = cls.env["res.partner"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             **cls.dummy_partner_address_values,
             "name": "Shop 1",
             "partner_latitude": 1.0,

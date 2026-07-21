@@ -14,7 +14,7 @@ class TestKarmaGain(common.SlidesCase):
     def setUp(self):
         super(TestKarmaGain, self).setUp()
 
-        self.channel_2 = self.env['slide.channel'].with_user(self.user_officer).create({
+        self.channel_2 = self.env['slide.channel'].with_user(self.user_officer).with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             'name': 'Test Channel 2',
             'channel_type': 'training',
             'promote_strategy': 'most_voted',
