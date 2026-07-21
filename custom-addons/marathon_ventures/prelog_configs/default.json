@@ -1,0 +1,28 @@
+{
+  "acceptedExtensions": [".csv", ".xls", ".xlsx"],
+  "sheetIndex": 0,
+  "headerRow": 1,
+  "fieldMap": {
+    "week": ["Week"],
+    "isci": ["ISCI"],
+    "airdate": ["Air_Date", "Air Date"],
+    "scheduletime": ["Air_Time", "Air Time"],
+    "broadcast_network": ["Network"],
+    "agency": ["Advertiser"],
+    "materialdescription": ["Brand"],
+    "orderproductdescription": ["Product"],
+    "rate": ["Booked_Rate", "Booked Rate"]
+  },
+  "requiredFields": ["week", "isci"],
+  "transforms": {
+    "week": ["parse_date"],
+    "airdate": ["parse_date"],
+    "scheduletime": ["normalize_time"],
+    "rate": ["to_float"],
+    "isci": ["trim"],
+    "broadcast_network": ["trim"],
+    "agency": ["trim"],
+    "materialdescription": ["trim"],
+    "orderproductdescription": ["trim"]
+  }
+}

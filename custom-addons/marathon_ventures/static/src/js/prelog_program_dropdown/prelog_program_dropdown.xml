@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="marathon_ventures.MvNativeSelectField">
+    <t t-if="props.readonly">
+      <span t-esc="options.find((option) => option[0] === value)?.[1] || ''"/>
+    </t>
+    <t t-else="">
+      <select class="o_input" t-att-value="value" t-on-change="onChange">
+        <option value="">Select a program</option>
+        <option t-foreach="options" t-as="option" t-key="option[0]" t-att-value="option[0]">
+          <t t-esc="option[1]"/>
+        </option>
+      </select>
+    </t>
+  </t>
+</templates>

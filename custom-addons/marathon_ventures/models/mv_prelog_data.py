@@ -49,7 +49,8 @@ class MvPrelogData(models.Model):
     main_network = fields.Boolean(string='Main Network')  # SF: Main_Network__c
     materialdescription = fields.Char(string='Material Description', size=255)  # SF: MaterialDescription__c
     max_per_day_count = fields.Integer(string='Max Per Day Count', compute='_compute_max_per_day_count', store=True)  # SF: Max_Per_Day_Count__c
-    network = fields.Char(string='Network', compute='_compute_network', store=True)  # SF: Network__c
+    network = fields.Char(string='Network', size=120)  # SF: Network__c
+    network_deal_number = fields.Char(string='Network Deal Number', size=30, index=True)
     orderproductdescription = fields.Char(string='Order Product Description', size=255)  # SF: OrderProductDescription__c
     pod = fields.Char(string='Pod', size=155)  # SF: Pod__c
     prelogdatamirrorreference = fields.Char(string='Prelog Data Mirror Reference', size=255)  # SF: PrelogDataMirrorReference__c
@@ -62,13 +63,25 @@ class MvPrelogData(models.Model):
     schedulelength = fields.Char(string='Schedule Length', size=255)  # SF: ScheduleLength__c
     scheduletime = fields.Char(string='Schedule Time', size=255)  # SF: ScheduleTime__c
     schedule_week = fields.Date(string='Schedule Week', compute='_compute_schedule_week', store=True)  # SF: Schedule_Week__c
-    schedule = fields.Many2one(string='Schedule', comodel_name='mv.schedules', ondelete='cascade', required=True)  # SF: Schedule__c
+    schedule = fields.Many2one(string='Schedule', comodel_name='mv.schedules', ondelete='cascade')  # SF: Schedule__c
     segment = fields.Integer(string='Segment')  # SF: Segment__c
     series = fields.Char(string='Series', size=255)  # SF: Series__c
     snowflake_transferred = fields.Boolean(string='Snowflake Transferred')  # SF: Snowflake_Transferred__c
     split = fields.Many2one(string='Split', comodel_name='mv.split', ondelete='set null')  # SF: Split__c
     timeperiod = fields.Char(string='Time Period', size=255)  # SF: TimePeriod__c
     title = fields.Char(string='Title', size=255)  # SF: Title__c
+    import_match_status = fields.Selection(
+        string='Import Match Status',
+        selection=[
+            ('matched', 'Matched'),
+            ('created_without_schedule', 'Created Without Schedule'),
+            ('failed_to_create', 'Failed to Create'),
+        ],
+        index=True,
+    )
+    import_match_detail = fields.Text(string='Import Match Detail')
+    import_program = fields.Many2one(string='Import Program', comodel_name='mv.programs', ondelete='restrict', index=True)
+    import_week_value = fields.Date(string='Import Week', index=True)
     total_000_primary_demo = fields.Integer(string='Total (000) - Primary Demo', compute='_compute_total_000_primary_demo', store=True)  # SF: Total_000_Primary_Demo__c
     total_dollars_earned = fields.Monetary(string='Total Dollars - Earned', currency_field='currency_id', compute='_compute_total_dollars_earned', store=True)  # SF: Total_Dollars_Earned__c
     type = fields.Selection(string='Type', selection=[('media', 'Media'), ('episode', 'Episode')])  # SF: Type__c
@@ -298,14 +311,6 @@ class MvPrelogData(models.Model):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.max_per_day_count = False
-
-    @api.depends('sf_external_id')
-    def _compute_network(self):
-        # SF formula (verbatim, may need translation):
-        #   PrelogDataMirror__r.Network__c
-        for rec in self:
-            # TODO: translate SF formula to Python
-            rec.network = False
 
     @api.depends('sf_external_id')
     def _compute_prelog_equiv_30(self):

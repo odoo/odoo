@@ -134,6 +134,8 @@
             'marathon_ventures/static/src/js/capping_grid/capping_grid.js',
             'marathon_ventures/static/src/js/capping_grid/capping_grid.xml',
             'marathon_ventures/static/src/js/chatter_collapsible/mv_chatter_collapsible.js',
+            'marathon_ventures/static/src/js/prelog_program_dropdown/prelog_program_dropdown.js',
+            'marathon_ventures/static/src/js/prelog_program_dropdown/prelog_program_dropdown.xml',
             'marathon_ventures/static/src/scss/report_builder.scss',
             'marathon_ventures/static/src/js/report_builder/report_builder.js',
             'marathon_ventures/static/src/js/report_builder/report_builder.xml',

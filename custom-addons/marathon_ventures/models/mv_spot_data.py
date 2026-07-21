@@ -27,6 +27,8 @@ class MvSpotData(models.Model):
     air_date_yyyy = fields.Char(string='Air Date YYYYMMDD', compute='_compute_air_date_yyyy', store=True)  # SF: Air_Date_YYYY__c
     air_date = fields.Date(string='Air Date')  # SF: Air_Date__c
     air_time = fields.Char(string='Air Time', size=50)  # SF: Air_Time__c
+    agency = fields.Char(string='Agency', size=255)
+    aired_ad_id = fields.Char(string='Aired Ad ID', size=255)
     availability = fields.Boolean(string='Availability')  # SF: Availability__c
     brand = fields.Char(string='Brand', compute='_compute_brand', store=True)  # SF: Brand__c
     broadcast_network = fields.Char(string='Broadcast Network', size=120)  # SF: Broadcast_Network__c
@@ -51,13 +53,15 @@ class MvSpotData(models.Model):
     long_form = fields.Char(string='Long Form', size=255)  # SF: Long_Form__c
     main_broadcast_program = fields.Char(string='Main Broadcast Program', size=18)  # SF: Main_Broadcast_Program__c
     main_network = fields.Integer(string='Main Network', compute='_compute_main_network', store=True)  # SF: Main_Network__c
+    materialdescription = fields.Char(string='Material Description', size=255)
     net_total = fields.Monetary(string='Net Total', currency_field='currency_id', compute='_compute_net_total', store=True)  # SF: Net_Total__c
     network_deal_number = fields.Char(string='Network Deal Number', compute='_compute_network_deal_number', store=True)  # SF: Network_Deal_Number__c
+    orderproductdescription = fields.Char(string='Order Product Description', size=255)
     pod = fields.Char(string='Pod', size=155)  # SF: Pod__c
     prelog_data = fields.Many2one(string='Prelog Data', comodel_name='mv.prelog_data', ondelete='set null')  # SF: Prelog_Data__c
     product = fields.Char(string='Product', compute='_compute_product', store=True)  # SF: Product__c
     program_id = fields.Char(string='Program ID', size=255)  # SF: Program_ID__c
-    program = fields.Char(string='Program', compute='_compute_program', store=True)  # SF: Program__c
+    program = fields.Char(string='Program', size=255)  # SF: Program__c
     rate_check = fields.Char(string='Rate Check', compute='_compute_rate_check', store=True)  # SF: Rate_Check__c
     raycom_invoice_number = fields.Char(string='Invoice Number', size=100)  # SF: Raycom_Invoice_Number__c
     raycom_order_account_brand = fields.Char(string='Order + Account + Brand', compute='_compute_raycom_order_account_brand', store=True)  # SF: Raycom_Order_Account_Brand__c
@@ -65,7 +69,7 @@ class MvSpotData(models.Model):
     sdm_created_by = fields.Char(string='SDM Created By', compute='_compute_sdm_created_by', store=True)  # SF: SDM_Created_By__c
     schedule_id = fields.Char(string='Schedule ID', compute='_compute_schedule_id', store=True)  # SF: Schedule_ID__c
     schedule_rate = fields.Monetary(string='Schedule Rate', currency_field='currency_id', compute='_compute_schedule_rate', store=True)  # SF: Schedule_Rate__c
-    schedule = fields.Many2one(string='Schedule', comodel_name='mv.schedules', ondelete='cascade', required=True)  # SF: Schedule__c
+    schedule = fields.Many2one(string='Schedule', comodel_name='mv.schedules', ondelete='cascade')  # SF: Schedule__c
     snowflake_transferred = fields.Boolean(string='Snowflake Transferred')  # SF: Snowflake_Transferred__c
     spotdatamirror_reference = fields.Char(string='SpotDataMirror Reference', size=255)  # SF: SpotDataMirror_Reference__c
     spotdatamirror = fields.Many2one(string='SpotDataMirror', comodel_name='mv.spot_data_mirror', ondelete='set null')  # SF: SpotDataMirror__c
