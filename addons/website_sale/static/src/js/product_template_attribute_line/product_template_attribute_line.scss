@@ -1,0 +1,11 @@
+.o_sale_product_configurator_ptav_image {
+    padding: $border-width * 5;
+    border: none;
+    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+    border-radius: MIN(var(--o-wsale-opt-border-radius, var(--border-radius)), 20%);
+    outline: none;
+
+    &.custom_value, &.transparent {
+        background-image: none;
+    }
+}
