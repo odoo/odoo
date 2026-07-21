@@ -7,10 +7,10 @@
                 'overtime_deductible': True,
             }"/>
         </function>
-        <record id="hr_attendance.hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
+        <record id="hr_attendance.hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule" forcecreate="0">
             <field name="compensable_as_leave" eval="True"/>
         </record>
-        <record id="hr_attendance.hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule">
+        <record id="hr_attendance.hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule" forcecreate="0">
             <field name="compensable_as_leave" eval="True"/>
         </record>
     </data>
