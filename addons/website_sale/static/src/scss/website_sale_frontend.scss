@@ -34,6 +34,8 @@
             li > div > img.o_wsale_image_viewer_thumbnail {
                 aspect-ratio: var(--o-wsale-product-image-ratio, 1/1);
                 border: 4px solid transparent;
+                border-radius: var(--o-wsale-product-image-radius, var(--o-wsale-opt-border-radius, var(--border-radius)));
+                background-color: var(--wsale-product-thumb-bg, #{$gray-100});
                 height: 128px;
 
                 &:not(.active, :hover) {

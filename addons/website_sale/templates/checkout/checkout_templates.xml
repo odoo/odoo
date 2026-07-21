@@ -357,14 +357,14 @@
                                     >
                                         <img
                                             t-att-src="image_data_uri(line.product_id.image_128)"
-                                            class="img rounded"
+                                            class="img o_wsale_product_thumb"
                                             t-att-alt="line.name_short"
                                         />
                                     </span>
                                     <span
                                         t-else=""
                                         t-field="line.product_id.image_128"
-                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded'}"
+                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_wsale_product_thumb'}"
                                     />
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
