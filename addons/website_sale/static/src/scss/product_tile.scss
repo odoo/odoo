@@ -91,8 +91,9 @@
         min-width: var(--o-wsale-card-thumb-size);
         width: var(--o-wsale-card-thumb-size);
         border-radius: var(--o-wsale-card-thumb-border-radius, inherit);
+        overflow: hidden;
         box-shadow: var(--o-wsale-card-thumb-shadow);
-        background: var(--o-wsale-card-thumb-background, #{$gray-100});
+        background: var(--o-wsale-card-thumb-background, var(--wsale-product-thumb-bg, #{$gray-100}));
         transform: var(--o-wsale-card-thumb-transform);
         transition: var(--o-wsale-card-thumb-transition);
         flex-shrink: 0;
@@ -215,14 +216,11 @@
 
         // Only visible in /shop page
         .css_attribute_preview_thumbnail {
-            border: $border-width solid $border-color;
-            border-radius: var(--o-wsale-card-attribute-previewer-thumbnail-border-radius, #{$border-radius-sm});
+            background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+            border: $border-width solid var(--wsale-product-thumb-bg, #{$gray-100});
+            border-radius: MIN(var(--o-wsale-card-attribute-previewer-thumbnail-border-radius, var(--o-wsale-opt-border-radius, var(--border-radius))), 20%);
             aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
             transition: border-color 0.05s ease-in-out;
-
-            &:hover {
-                border-color: map-get($theme-colors, "primary");
-            }
         }
         .btn {
             border: $border-width solid $border-color;
@@ -1377,6 +1375,11 @@ $_wsale_products_roundness_map: (
     }
 }
 
+.o_wsale_product_thumb {
+    border: none;
+    border-radius: MIN(var(--o-wsale-opt-border-radius, var(--border-radius)), 20%);
+    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+}
 
 // ==== Card Hover Effects
 .o_wsale_products_opt_hover_background, .o_wsale_products_opt_hover_background_zoom {

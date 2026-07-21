@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="sale.Product" t-inherit-mode="extension">
+        <img name="product_configurator_image" position="attributes">
+            <attribute name="class" remove="border rounded" add="o_wsale_product_thumb" separator=" "/>
+        </img>
         <QuantityButtons position="attributes">
             <attribute name="t-if" add="this.props.can_be_sold" separator=" &amp;&amp; "/>
         </QuantityButtons>

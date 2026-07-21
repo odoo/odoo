@@ -71,7 +71,7 @@
                             <img
                                 t-if="not line._is_sellable() and line.product_id.image_128"
                                 t-att-src="image_data_uri(line.product_id.image_128)"
-                                class="img border rounded"
+                                class="img o_wsale_product_thumb"
                                 t-att-alt="line.name_short"
                             />
                             <div
@@ -80,7 +80,7 @@
                                 t-options="{
                                     'widget': 'image',
                                     'qweb_img_responsive': False,
-                                    'class': 'border rounded',
+                                    'class': 'o_wsale_product_thumb',
                                 }"
                             />
                         </t>
@@ -419,7 +419,7 @@
                                     t-options="{
                                         'widget': 'image',
                                         'qweb_img_responsive': False,
-                                        'class': 'border rounded',
+                                        'class': 'o_wsale_product_thumb',
                                     }"
                                 />
                             </div>
@@ -501,7 +501,7 @@
             >
                 <div class="o_cart_product_image">
                     <a t-att-href="product.website_url">
-                        <div t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'border rounded'}"/>
+                        <div t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_wsale_product_thumb'}"/>
                     </a>
                 </div>
                 <div class="flex-grow-1">

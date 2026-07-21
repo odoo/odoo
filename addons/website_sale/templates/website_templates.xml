@@ -64,6 +64,18 @@
                 t-set="body_classname"
                 t-value="product_image_ratio_classes + (' ' + body_classname if body_classname else '')"
             />
+            <t
+                t-set="product_thumb_roundness_class"
+                t-value="website._get_product_thumb_roundness_class()"
+            />
+            <t
+                t-if="product_thumb_roundness_class"
+                t-set="body_classname"
+                t-value="product_thumb_roundness_class + (' ' + body_classname if body_classname else '')"
+            />
+        </body>
+        <body position="attributes">
+            <attribute name="t-attf-style">#{website.shop_opt_products_thumb_bg and ('--wsale-product-thumb-bg: ' + website.shop_opt_products_thumb_bg + ';') or ''}</attribute>
         </body>
     </template>
 

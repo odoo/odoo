@@ -13,7 +13,8 @@
             t-value="'o_wsale_products_opt_name_color_regular
                 o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show
                 o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_cc1
-                o_wsale_products_opt_rounded_2 o_wsale_products_opt_layout_catalog
+                ' + (env.website._get_product_thumb_roundness_class() or 'o_wsale_products_opt_rounded_2') + '
+                o_wsale_products_opt_layout_catalog
                 o_wsale_products_opt_design_thumbs o_wsale_products_opt_has_description
                 o_wsale_products_opt_name_size_body o_wsale_products_opt_actions_onhover
                 o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme

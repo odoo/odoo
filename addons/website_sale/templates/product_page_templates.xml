@@ -230,7 +230,7 @@
                                 <label
                                     name="o_wsale_attribute_thumbnail_selector"
                                     t-attf-style="background-image: url(#{img_url}); background-size: cover;"
-                                    t-attf-class="css_attribute_thumbnail oe_img_bg o_bg_img_center position-relative d-block bg-body cursor-pointer #{'active' if ptav in combination else ''}"
+                                    t-attf-class="css_attribute_thumbnail oe_img_bg o_bg_img_center position-relative d-block cursor-pointer #{'active' if ptav in combination else ''}"
                                 >
                                     <input
                                         type="radio"
@@ -379,7 +379,7 @@
                                 <label
                                     name="o_wsale_attribute_image_selector"
                                     t-attf-style="#{'background-image: url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''}"
-                                    t-attf-class="css_attribute_image oe_img_bg o_bg_img_center position-relative d-inline-block rounded-3 bg-body text-center cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                    t-attf-class="css_attribute_image oe_img_bg o_bg_img_center position-relative d-inline-block text-center cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                     <input
                                         type="radio"
