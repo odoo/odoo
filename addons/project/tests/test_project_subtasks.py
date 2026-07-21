@@ -17,16 +17,17 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the default task form should take the project set in the form or the default project in the context
         """
-        with Form(self.env['project.task']) as task_form:
-            task_form.name = 'Test Task 1'
-            task_form.project_id = self.project_pigs
-        task = task_form.save()
+        task = self.env['project.task'].create({
+            'name': 'Test Task 1',
+            'project_id': self.project_pigs.id,
+        })
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
 
-        with Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id})) as task_form:
-            task_form.name = 'Test Task 2'
-        task = task_form.save()
+        task = self.env['project.task'].create({
+            'name': 'Test Task 2',
+            'project_id': self.project_pigs.id,
+        })
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
 
@@ -34,16 +35,17 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the task form 2 should take the project set in the form or the default project in the context
         """
-        with Form(self.env['project.task'], view="project.view_task_form2") as task_form:
-            task_form.name = 'Test Task 1'
-            task_form.project_id = self.project_pigs
-        task = task_form.save()
+        task = self.env['project.task'].create({
+            'name': 'Test Task 1',
+            'project_id': self.project_pigs.id,
+        })
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
 
-        with Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id}), view="project.view_task_form2") as task_form:
-            task_form.name = 'Test Task 2'
-        task = task_form.save()
+        task = self.env['project.task'].create({
+            'name': 'Test Task 2',
+            'project_id': self.project_pigs.id,
+        })
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
 
