@@ -1,4 +1,4 @@
-import { advanceTime, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { advanceTime, click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { setSelection } from "./_helpers/selection";
 import { deleteBackward, insertText } from "./_helpers/user_actions";
@@ -51,4 +51,19 @@ test("should update table of contents when heading is converted to paragraph", a
     // TOC update is debounced
     await advanceTime(500);
     expect(queryAll(".o_embedded_toc_link")).toHaveCount(0);
+});
+
+test("should highlight corresponding heading when clicking on a heading in toc", async () => {
+    const { el, editor } = await setupEditor("<p>[]first</p><h1>second</h1>", {
+        config: configWithEmbeddedTableOfContent,
+    });
+    await insertText(editor, "/tableofcontent");
+    await expectElementCount(".o-we-powerbox", 1);
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Table of Contents");
+    await press("Enter");
+    // TOC update is debounced
+    await advanceTime(500);
+    expect(".o_embedded_toc_link").toHaveCount(1);
+    await click(".o_embedded_toc_link");
+    expect(el.lastElementChild).toHaveClass("o_embedded_toc_header_highlight");
 });
