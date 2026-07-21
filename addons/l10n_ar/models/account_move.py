@@ -455,6 +455,7 @@ class AccountMove(models.Model):
             .filtered(lambda tax_group: (
                 self._l10n_ar_is_tax_group_other_national_ind_tax(tax_group)
                 or self._l10n_ar_is_tax_group_vat(tax_group)
+                or (self._l10n_ar_is_transparency_document() and self._l10n_ar_is_tax_group_iibb_perception(tax_group))
             )).ids
         if tax_group_ids_to_exclude:
             tax_totals = self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
@@ -462,7 +463,7 @@ class AccountMove(models.Model):
 
     def _l10n_ar_get_invoice_custom_tax_summary_for_report(self):
         """ Get a new tax details for RG 5614/2024 to show ARCA VAT and Other National Internal Taxes. """
-        if self.l10n_latam_document_type_id.code not in ('6', '7', '8'):
+        if not self._l10n_ar_is_transparency_document():
             return []
 
         base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
@@ -477,6 +478,8 @@ class AccountMove(models.Model):
                 name = _("Other National Ind. Taxes %s", base_line['currency_id'].symbol)
             elif self._l10n_ar_is_tax_group_vat(tax_group):
                 name = _("VAT Content %s", base_line['currency_id'].symbol)
+            elif self._l10n_ar_is_tax_group_iibb_perception(tax_group):
+                name = tax_data['tax'].invoice_label or tax_data['tax'].name
             else:
                 skip = True
             return {
@@ -504,6 +507,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']
 
+    def _l10n_ar_is_transparency_document(self):
+        self.ensure_one()
+        return self.l10n_latam_document_type_id.code in ('6', '7', '8')
+
     @api.model
     def _l10n_ar_is_tax_group_other_national_ind_tax(self, tax_group):
         return tax_group.l10n_ar_tribute_afip_code in ('01', '04')
@@ -511,3 +518,7 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_ar_is_tax_group_vat(self, tax_group):
         return bool(tax_group.l10n_ar_vat_afip_code)
+
+    @api.model
+    def _l10n_ar_is_tax_group_iibb_perception(self, tax_group):
+        return tax_group.l10n_ar_tribute_afip_code == '07'
