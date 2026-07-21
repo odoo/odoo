@@ -53,3 +53,19 @@ class TestAccountMoveDE(AccountTestInvoicingCommon):
         self.assertRecordValues(move.line_ids, expected_lines_vals)
         move.action_post()
         self.assertRecordValues(move.line_ids, expected_lines_vals)
+
+    def test_public_user_invoice_creation_with_product_record_rule(self):
+        public_user = self.env['res.users'].create({'name': 'Public User test', 'login': 'blablabla', 'is_public': True})
+        self.product_a.write({'property_account_income_id': False, 'property_account_expense_id': False})
+        model = self.env['ir.model']._get('product.template')
+        self.env['ir.rule'].create({
+            'name': "Only The Lone Wanderer allowed",
+            'model_id': model.id,
+            'domain_force': [('name', '=', 'coucou')],
+        })
+        move = self.env['account.move'].with_user(public_user).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        self.assertTrue(move)

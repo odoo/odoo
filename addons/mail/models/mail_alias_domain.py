@@ -133,7 +133,11 @@ class AliasDomain(models.Model):
         """ Should match a sanitized version of itself, otherwise raise to warn
         user (do not dynamically change it, would be confusing). """
         for domain in self:
-            if not dot_atom_text.match(domain.name):
+            if not domain.name:
+                raise exceptions.ValidationError(
+                    _("You cannot assign an empty domain name.")
+                )
+            elif not dot_atom_text.match(domain.name):
                 raise exceptions.ValidationError(
                     _("You cannot use anything else than unaccented latin characters in the domain name %(domain_name)s.",
                       domain_name=domain.name)
@@ -164,13 +168,15 @@ class AliasDomain(models.Model):
         return alias_domains
 
     def write(self, vals):
-        """ Sanitize bounce_alias / catchall_alias / default_from """
+        """ Sanitize name / bounce_alias / catchall_alias / default_from """
         self._sanitize_configuration(vals)
         return super().write(vals)
 
     @api.model
     def _sanitize_configuration(self, config_values):
         """ Tool sanitizing configuration values for domains """
+        if config_values.get('name'):
+            config_values['name'] = self.env['mail.alias']._sanitize_alias_name(config_values['name'])
         if config_values.get('bounce_alias'):
             config_values['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['bounce_alias'])
         if config_values.get('catchall_alias'):

@@ -46,11 +46,11 @@ export class BasePrinter {
     }
 
     async sendPrintingJob() {
-        throw new Error("Not implemented");
+        throw new Error(_t("Not implemented"));
     }
 
     openCashbox() {
-        throw new Error("Not implemented");
+        throw new Error(_t("Not implemented"));
     }
 
     /**

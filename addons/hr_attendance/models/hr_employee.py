@@ -76,6 +76,15 @@ class HrEmployee(models.Model):
 
         return res
 
+    def action_archive(self):
+        super().action_archive()
+        self.env['hr.attendance'].sudo().search([
+            ('employee_id', 'in', self.ids),
+            ('check_out', '=', False),
+        ]).write({
+            'check_out': fields.Datetime.now(),
+        })
+
     @api.depends('overtime_ids.duration', 'attendance_ids', 'attendance_ids.overtime_status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(self.env['hr.attendance']._read_group(
@@ -147,9 +156,11 @@ class HrEmployee(models.Model):
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
+        current_datetime = fields.Datetime.now()
         for employee in self:
             employee.last_attendance_id = self.env['hr.attendance'].search([
                 ('employee_id', 'in', employee.ids),
+                ('check_in', '<=', current_datetime),
             ], order="check_in desc", limit=1)
 
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')

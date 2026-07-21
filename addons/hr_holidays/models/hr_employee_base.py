@@ -87,6 +87,11 @@ class HrEmployeeBase(models.AbstractModel):
         return self.env.user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
+        """
+        :context precomputed_allocations: context variable (recordset) can be used to pass allocation that are considered to be already computed.
+        This method won't call `_get_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
+        the`number_of_days` of the allocation, alias `number_of_hours_display`)
+        """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('holiday_status_id', 'in', leave_types.ids),
@@ -162,10 +167,16 @@ class HrEmployeeBase(models.AbstractModel):
                 'to_recheck_leaves': self.env['hr.leave']
             })
         )
+        precomputed_allocations = self.env.context.get('precomputed_allocations')
         for allocation in allocations:
             allocation_data = allocations_leaves_consumed[allocation.employee_id][allocation.holiday_status_id][allocation]
+            precomputed = False
+            if precomputed_allocations:
+                if allocation.id in precomputed_allocations.ids:
+                    allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
+                    precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual':
+            if allocation.allocation_type == 'accrual' and not precomputed:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
@@ -189,7 +200,11 @@ class HrEmployeeBase(models.AbstractModel):
                         allocations_with_date_to |= leave_allocation
                     else:
                         allocations_without_date_to |= leave_allocation
-                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + allocations_without_date_to
+                # Defines the order in which allocation will be used to take the leaves in priority
+                sorted_leave_allocations = (
+                    allocations_with_date_to.sorted(key='date_to') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'accrual') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'regular'))
 
                 if leave_type.request_unit in ['day', 'half_day']:
                     leave_duration_field = 'number_of_days'
@@ -356,6 +371,7 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 for period in periods[self]:
                     start, end, calendar = period
+                    calendar = calendar or self.company_id.resource_calendar_id
                     work_intervals = calendar._work_intervals_batch(
                         start, end, resources=self.resource_id)
             if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
@@ -473,6 +489,26 @@ class HrEmployeeBase(models.AbstractModel):
                 raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
                                         "leaves allocated to accomodate for their leaves already taken in the future. Please "
                                         "review this employee's leaves and adjust their allocation accordingly."))
+
+            # Hour-based allocations store their duration in number_of_days, from
+            # which the accrued hours (number_of_hours_display) are derived using
+            # the employee's hours per day. When the schedule changes number_of_days
+            # is left stale: the next accrual adds to it and number_of_hours_display
+            # is then recomputed at the new hours per day, revaluing the hours
+            # accrued under the old schedule and losing part of the balance.
+            # Recompute number_of_days now from the still-correct
+            # number_of_hours_display so the accrued hours are preserved. It is set
+            # explicitly rather than through the compute graph because number_of_days
+            # and number_of_hours_display depend on each other and the recomputation
+            # order is not guaranteed.
+            allocations = self.env['hr.leave.allocation'].search([
+                ('employee_id', 'in', self.ids),
+            ])
+            hour_allocations = allocations.filtered(lambda a: a.type_request_unit == 'hour')
+            for allocation in hour_allocations:
+                hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                if hours_per_day:
+                    allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
 
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()

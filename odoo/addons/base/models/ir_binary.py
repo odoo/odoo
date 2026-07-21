@@ -145,6 +145,9 @@ class IrBinary(models.AbstractModel):
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
             stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
+            ext = get_extension(stream.download_name)
+            stream.download_name = stream.download_name.removesuffix(ext)[:100] + ext
+
             if (not get_extension(stream.download_name)
                 and stream.mimetype != 'application/octet-stream'):
                 stream.download_name += guess_extension(stream.mimetype) or ''
@@ -205,7 +208,7 @@ class IrBinary(models.AbstractModel):
                 default_mimetype
             )
         except UserError:
-            if request.params.get('download'):
+            if record.env.context.get('download_attachments'):
                 raise
 
         if not stream or stream.size == 0:

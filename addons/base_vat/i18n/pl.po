@@ -6,14 +6,14 @@
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
 #
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 10:32+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-07-03 16:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/base_vat/"
 "pl/>\n"
@@ -22,9 +22,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -32,6 +32,12 @@ msgstr ""
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "10XXXXXXXXY lub 20XXXXXXXXY lub 15XXXXXXXXY lub 16XXXXXXXXY lub 17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr "11111111111 (NIN) lub 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -44,20 +50,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr "17291716060 (NIN) lub 1729171602 (VKN)"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 lub 1792060346"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -76,6 +70,11 @@ msgstr "49-098-576 lub 49098576"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 lub 20055361682"
+
+#. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr "Podstawowa stawka VAT: Zsynchronizuj aktualizacje z IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -97,16 +96,7 @@ msgstr "Firmy"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Nie udało się połączyć z serwerem VIES. Nie można zweryfikować numeru VAT %s."
+msgstr "Konfiguracja ustawień"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -176,6 +166,12 @@ msgstr "Ważne wewnątrz Wspólnoty"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr "Nieprawidłowy punkt końcowy IAP VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 lub GODE561231GR8"
 
@@ -215,8 +211,22 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "Numer VAT %s nie mógł zostać zinterpretowany przez serwer VIES."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "Zaktualizowano ważność wewnątrzwspólnotową na: %s."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+"Kontrola VIES zakończyła się niepowodzeniem. Sprawdź numer identyfikacji "
+"podatkowej ręcznie."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr "Kontrola VIES jest w toku. Status zostanie zaktualizowany wkrótce."
 
 #. module: base_vat
 #. odoo-python
@@ -237,16 +247,6 @@ msgid ""
 msgstr ""
 "Kraj tego obcego numeru VAT nie został wykryty. Przypisz kraj do obszaru "
 "podatkowego, lub skonfiguruj grupę krajów."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"Wniosek o weryfikację VAT nie został przetworzony. Usługa VIES zwróciła "
-"następujący błąd: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -281,8 +281,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "11 cyfr dla CPF lub 14 cyfr dla CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "albo 11 cyfr dla CPF, albo 14 znaków dla CNPJ"
 
 #. module: base_vat
 #. odoo-python
@@ -295,3 +295,32 @@ msgstr "pozycja fiskalna [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "Zaktualizowano ważność wewnątrzwspólnotową."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "11 cyfr dla CPF lub 14 cyfr dla CNPJ"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Nie udało się połączyć z serwerem VIES. Nie można zweryfikować numeru VAT "
+#~ "%s."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "Numer VAT %s nie mógł zostać zinterpretowany przez serwer VIES."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Wniosek o weryfikację VAT nie został przetworzony. Usługa VIES zwróciła "
+#~ "następujący błąd: %s"
+
+#~ msgid "3101012009"
+#~ msgstr "3101012009"
+
+#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
+#~ msgstr "17291716060 (NIN) lub 1729171602 (VKN)"

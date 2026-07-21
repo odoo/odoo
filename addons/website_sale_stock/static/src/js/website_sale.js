@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { WebsiteSale } from '@website_sale/js/website_sale';
-import { rpc } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { isEmail } from '@web/core/utils/strings';
+import { _t } from "@web/core/l10n/translation";
+import { WebsiteSale } from '@website_sale/js/website_sale';
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 
 WebsiteSale.include({
@@ -37,7 +38,7 @@ WebsiteSale.include({
         const email = stockNotificationEl.querySelector('#stock_notification_input').value.trim();
 
         if (!isEmail(email)) {
-            return this._displayEmailIncorrectMessage(stockNotificationEl);
+            return this._displayErrorMessage(_t('Invalid email'), stockNotificationEl);
         }
 
         rpc("/shop/add/stock_notification", {
@@ -49,13 +50,27 @@ WebsiteSale.include({
             message.classList.remove('d-none');
             formEl.classList.add('d-none');
         }).catch((error) => {
-            this._displayEmailIncorrectMessage(stockNotificationEl);
+            if (error instanceof RPCError) {
+                this._displayErrorMessage(error.data.message, stockNotificationEl);
+            } else {
+                return Promise.reject(error);
+            }
         });
     },
 
-    _displayEmailIncorrectMessage(stockNotificationEl) {
+    _displayErrorMessage(message, stockNotificationEl) {
         const incorrectIconEl = stockNotificationEl.querySelector('#stock_notification_input_incorrect');
         incorrectIconEl.classList.remove('d-none');
+
+        const errorMessageEl = stockNotificationEl.querySelector('#stock_notification_error_message');
+        if (errorMessageEl) {
+            errorMessageEl.textContent = message;
+        } else {
+            const span = document.createElement('span');
+            span.id = 'stock_notification_error_message';
+            span.textContent = message;
+            incorrectIconEl.appendChild(span);
+        }
     },
 
     /**
@@ -66,6 +81,7 @@ WebsiteSale.include({
         this._super.apply(this, arguments);
         VariantMixin._onChangeCombinationStock.apply(this, arguments);
     },
+
     /**
      * Recomputes the combination after adding a product to the cart
      * @override
@@ -76,7 +92,7 @@ WebsiteSale.include({
                 this._getCombinationInfo(ev);
             }
         });
-    }
+    },
 });
 
 export default WebsiteSale;

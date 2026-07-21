@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import certifi
 import configparser
 import contextlib
 import datetime
@@ -147,7 +148,7 @@ def check_version_upgrades(local_branch, db_branch):
         # 1. Check if the upgrade script needs to be ran
         # Needed if local branch is < 19.1 and db branch is >= 19.1 + python version < 3.12
         _logger.info("Checking for version upgrades for local branch %s / db_branch %s", local_branch, db_branch)
-        version_db = db_branch[-4:] if db_branch != 'master' else db_branch  # master is currently always >= 19.1
+        version_db = db_branch[-4:]
         version_local = local_branch[-4:] if local_branch != 'master' else local_branch
         local_python_version = tuple(int(x) for x in platform.python_version_tuple()[:2])
         if version_local >= '19.1' or version_db < '19.1' or local_python_version >= (3, 12):
@@ -158,6 +159,8 @@ def check_version_upgrades(local_branch, db_branch):
             subprocess.run(
                 ['/home/pi/odoo/addons/hw_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
             )
+            # If we reach this point, we are about to reboot. Sleep to prevent git checkout.
+            time.sleep(30)
     except subprocess.CalledProcessError:
         _logger.exception("Failed to upgrade to debian Trixie. Check /home/pi/upgrade.log file for more details")
 
@@ -186,7 +189,8 @@ def check_git_branch():
 
             db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
             if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-                db_branch = 'master'
+                _logger.warning("Connected database is a development branch, skipping as it's likely an error.")
+                return
             local_branch = (
                 subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
             )
@@ -503,7 +507,7 @@ def download_iot_handlers(auto=True):
     server = get_odoo_server_url()
     if server:
         urllib3.disable_warnings()
-        pm = urllib3.PoolManager()
+        pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)

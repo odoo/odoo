@@ -203,6 +203,8 @@ if magic:
 
     def guess_mimetype(bin_data, default=None):
         mimetype = _guesser(bin_data[:MIMETYPE_HEAD_SIZE])
+        if mimetype == 'application/octet-stream':
+            mimetype = _odoo_guess_mimetype(bin_data)
         # upgrade incorrect mimetype to official one, fixed upstream
         # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
         if mimetype == 'image/svg':

@@ -54,11 +54,37 @@ export function OrderButtonNotContain(data) {
     return steps;
 }
 
+export function OrderButtonCategoryQty(category, qty) {
+    return [
+        {
+            isActive: ["desktop"],
+            content: "Check quantity for category on order button",
+            trigger: `.product-screen .submit-order div:contains("${category}") label:contains("${qty}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: "Check total quantity order button",
+            trigger: `.btn-switchpane.pay-button small:contains("${qty}")`,
+        },
+    ];
+}
+
 export function bookOrReleaseTable() {
     return [
         {
             content: "click book or release table button",
             trigger: ".table-booking button",
+            run: "click",
+        },
+    ];
+}
+
+export function clickBookTable() {
+    return [
+        ProductScreen.clickReview(),
+        {
+            content: "click book table",
+            trigger: ".product-screen .book-table",
             run: "click",
         },
     ];

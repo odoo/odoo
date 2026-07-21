@@ -59,7 +59,6 @@ export class PosScaleService extends Reactive {
     async readWeight() {
         this.loading = true;
         try {
-            this._checkScaleIsConnected();
             this.weight = await this._getWeightFromScale();
             this._clearLastWeightIfValid();
         } catch (error) {
@@ -153,15 +152,6 @@ export class PosScaleService extends Reactive {
 
     get _roundingDecimalPlaces() {
         return Math.ceil(Math.log(1.0 / this.product.rounding) / Math.log(10));
-    }
-
-    _checkScaleIsConnected() {
-        if (this.hardwareProxy.connectionInfo.status !== "connected") {
-            throw new Error(_t("Cannot weigh product - IoT Box is disconnected"));
-        }
-        if (this.hardwareProxy.connectionInfo.drivers.scale?.status !== "connected") {
-            throw new Error(_t("Cannot weigh product - Scale is not connected to IoT Box"));
-        }
     }
 }
 

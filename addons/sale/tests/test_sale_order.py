@@ -288,6 +288,48 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(so2.order_line.product_packaging_id, company2_pack_of_10)
         self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
 
+    def test_compute_packaging_02(self):
+        """Create a SO and use packaging. Check product_qty and product_packaging
+        are correctly calculated when packaging_qty is manually changed.
+        """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        packaging_one, packaging_four = self.env['product.packaging'].create([{
+            'name': "One pack",
+            'product_id': self.product.id,
+            'qty': 1.0,
+        }, {
+            'name': "Four pack",
+            'product_id': self.product.id,
+            'qty': 4.0,
+        }])
+
+        so = self.empty_order
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 1.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 4.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_uom_qty, 4.0)
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 5.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_one)
+        self.assertEqual(so.order_line.product_packaging_qty, 5.0)
+
+        with so_form.order_line.edit(0) as line:
+            line.product_uom_qty = 4.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_four)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""
         return self.env['sale.order'].with_context(
@@ -1132,7 +1174,8 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         cls.env['mail.alias.domain'].create({'name': 'example.com'})
         cls.partner = cls.env['res.partner'].create({
             'name': 'test customer',
-            'email': 'dummy@example.com'
+            'lang': 'en_US',
+            'email': 'en@example.com',
         })
         cls.quotation = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
@@ -1146,3 +1189,54 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
                 "mail_attachment_removal_tour",
                 login="admin",
             )
+
+    def test_mail_button_translation(self):
+        """Test the final rendering context to ensure the button is properly translated
+        for each recipient's language, checking both the 'View' and the type_name. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.partner_fr = self.env['res.partner'].create({
+            'name': 'French Customer',
+            'lang': 'fr_FR',
+            'email': 'fr@example.com',
+        })
+        # Quotation -> SO
+        self.quotation.action_confirm()
+        self.message = self.env['mail.message'].create({
+            'model': 'sale.order',
+            'res_id': self.quotation.id,
+            'body': 'Testing button translation',
+            'message_type': 'comment',
+        })
+        recipients_data = [
+            {'id': self.partner.id, 'lang': 'en_US', 'type': 'customer', 'notif': 'email',
+             'groups': []},
+            {'id': self.partner_fr.id, 'lang': 'fr_FR', 'type': 'follower', 'notif': 'email',
+             'groups': []},
+        ]
+
+        iterator = self.quotation._notify_get_classified_recipients_iterator(
+            message=self.message,
+            recipients_data=recipients_data,
+            msg_vals={'model': 'sale.order'}
+        )
+        results = {lang: group for lang, render_values, group in iterator}
+
+        button_en = results['en_US'].get('button_access', {}).get('title', '')
+        button_fr = results['fr_FR'].get('button_access', {}).get('title', '')
+
+        self.assertNotEqual(
+            button_en,
+            button_fr,
+            "The button text is identical, the context language was not fetched correctly."
+        )
+
+        self.assertEqual(
+            button_en,
+            "View Sales Order",
+            f"Expected 'View Sales Order', got '{button_en}'"
+        )
+        self.assertEqual(
+            button_fr,
+            "Voir Commande client",
+            f"Expected 'Voir Commande client', got '{button_fr}'"
+        )

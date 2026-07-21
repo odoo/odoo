@@ -586,7 +586,7 @@ class MrpProduction(models.Model):
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.ids)]
             relevant_boms = [exploded_boms[0] for exploded_boms in production.bom_id.explode(production.product_id, 1.0, picking_type=production.bom_id.picking_type_id)[0]]
             # we don't delete wo's that are not bom related nor related to a subom
-            deleted_workorders_ids = production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id not in relevant_boms).ids
+            deleted_workorders_ids = production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id not in relevant_boms).mapped('id')
             workorders_list += [Command.delete(wo_id) for wo_id in deleted_workorders_ids]
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
@@ -622,7 +622,7 @@ class MrpProduction(models.Model):
                             'state': 'pending',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
-                    lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
+                    lambda wo: wo.operation_id and wo.id not in deleted_workorders_ids)}
                 for workorder_values in workorders_values:
                     if workorder_values['operation_id'] in workorders_dict:
                         # update existing entries
@@ -632,7 +632,7 @@ class MrpProduction(models.Model):
                         workorders_list += [Command.create(workorder_values)]
                 production.workorder_ids = workorders_list
             else:
-                production.workorder_ids = [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)]
+                production.workorder_ids = [Command.delete(wo_id) for wo_id in production.workorder_ids.filtered(lambda wo: wo.operation_id).mapped('id')]
 
     @api.depends('state', 'move_raw_ids.state')
     def _compute_reservation_state(self):
@@ -972,7 +972,10 @@ class MrpProduction(models.Model):
                     production.name = picking_type.sequence_id.next_by_id()
                     moves_to_reassign |= production.move_raw_ids
 
-        res = super().write(vals)
+        if 'qty_producing' in vals:
+            res = super(MrpProduction, self.with_context(auto_conso=True)).write(vals)
+        else:
+            res = super().write(vals)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
@@ -1317,6 +1320,9 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
+    def _mark_byproducts_as_produced(self):
+        self.move_byproduct_ids.picked = True
+
     def _set_qty_producing(self, pick_manual_consumption_moves=True):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1331,8 +1337,9 @@ class MrpProduction(models.Model):
             self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
+            is_byproduct = move in self.move_byproduct_ids  # Never update already produced by-product moves.
             # picked + manual means the user set the quantity manually
-            if move.manual_consumption and move.picked:
+            if move.picked and (is_byproduct or move.manual_consumption):
                 continue
 
             # sudo needed for portal users
@@ -1343,7 +1350,8 @@ class MrpProduction(models.Model):
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
-                    and (move.product_id != self.product_id or not move.production_id or move.product_id.tracking != 'serial'):
+                    and not is_byproduct \
+                    and (move.raw_material_production_id or move.product_id.tracking != 'serial'):
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2230,7 +2238,7 @@ class MrpProduction(models.Model):
 
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
-        productions_auto = set()
+        production_auto_ids = set()
         for production in self:
             if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production.move_raw_ids.filtered(
@@ -2238,12 +2246,15 @@ class MrpProduction(models.Model):
                 ).picked = True
                 continue
             if production._auto_production_checks():
-                productions_auto.add(production.id)
+                production_auto_ids.add(production.id)
             else:
                 return production.action_mass_produce()
 
-        for production in self.env['mrp.production'].browse(productions_auto):
+        productions_auto = self.env['mrp.production'].browse(production_auto_ids)
+        for production in productions_auto:
             production._set_quantities()
+        # Produce by-products also for not auto productions.
+        (self - productions_auto)._mark_byproducts_as_produced()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2284,7 +2295,7 @@ class MrpProduction(models.Model):
         return True
 
     def do_unreserve(self):
-        (self.move_finished_ids | self.move_raw_ids).filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
+        (self.move_finished_ids | self.move_raw_ids).filtered(lambda m: m.state not in ('done', 'cancel') and not m.byproduct_id)._do_unreserve()
 
     def button_scrap(self):
         self.ensure_one()
@@ -2509,6 +2520,8 @@ class MrpProduction(models.Model):
             moves_to_unlink = self.move_raw_ids
             workorders_to_unlink = self.workorder_ids
             if self.bom_id == bom:
+                # Only remove manual lines (not coming from BoM)
+                workorders_to_unlink = workorders_to_unlink.filtered(lambda w: not w.operation_id)
                 # Empty the `bom_id` field so that, when the BoM is reassigned to this field, depending
                 # computes are re-triggered (it doesn't happen if the value of the field doesn't change).
                 self.bom_id = False
@@ -2826,6 +2839,7 @@ class MrpProduction(models.Model):
         else:
             self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
+        self._mark_byproducts_as_produced()
 
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:

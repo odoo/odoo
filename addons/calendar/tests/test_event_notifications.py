@@ -24,6 +24,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.partner = cls.user.partner_id
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -51,6 +52,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'partner_ids': [(4, self.partner.id)],
             }])
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite_email_notif_mass_queued(self):
         """Check that more than 20 notified attendees means mails are queued."""
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
@@ -142,6 +144,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with self.assertNoNotifications():
             self.event.start_date += relativedelta(days=-1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {

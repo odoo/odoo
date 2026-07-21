@@ -82,7 +82,8 @@ class TestCloudStorageAttachmentController(
                             ],
                         },
                         "upload_info": {
-                            "headers": {"x-ms-blob-type": "BlockBlob"},
+                            "headers": {"Content-Type": "text/x-python",
+                                        "x-ms-blob-type": "BlockBlob"},
                             "method": "PUT",
                             "response_status": 201,
                             "url": "[url]",

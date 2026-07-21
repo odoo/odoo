@@ -7,6 +7,7 @@ from . import test_point_of_sale_ui
 from . import test_anglo_saxon
 from . import test_point_of_sale
 from . import test_pos_controller
+from . import test_pos_cash_difference_tax
 from . import test_pos_cash_rounding
 from . import test_pos_setup
 from . import test_pos_simple_orders
@@ -24,3 +25,4 @@ from . import test_report_session
 from . import test_res_config_settings
 from . import test_generic_localization
 from . import test_stock_product_updates
+from . import test_pos_picking_backorder

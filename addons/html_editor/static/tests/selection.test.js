@@ -1138,6 +1138,9 @@ describe("getTargetedNodes", () => {
                 const { el: editable, editor } = await setupEditor(
                     "<table><tbody><tr><td>abcd[e</td><td>f]g</td></tr></tbody></table>"
                 );
+                // Table selection happens on selectionchange
+                // event which is fired in the next tick.
+                await tick();
                 // The special table selection implies the two table cells are
                 // fully marked as selected.
                 const td1 = editable.querySelector("td"); // The selection crossed `</td>` -> include it.
@@ -1152,6 +1155,9 @@ describe("getTargetedNodes", () => {
                 const { el: editable, editor } = await setupEditor(
                     "<table><tbody><tr><td>abcd<br>[<br>e</td><td>f]g</td></tr></tbody></table>"
                 );
+                // Table selection happens on selectionchange
+                // event which is fired in the next tick.
+                await tick();
                 // The special table selection implies the two table cells are
                 // fully marked as selected.
                 const td1 = editable.querySelector("td"); // The selection crossed `</td>` -> include it.
@@ -1743,5 +1749,16 @@ describe("crash fixes", () => {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
         });
         expect(getContent(el)).toBe("<p>x[]</p>");
+    });
+});
+
+describe("Focus changes", () => {
+    test("Should not lose selection on focus change from the command palette", async () => {
+        const { el } = await setupEditor("<p>ab[]cd</p>");
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        await press(["Escape"]);
+        await animationFrame();
+        expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
 });

@@ -156,13 +156,19 @@ class SaleOrderLine(models.Model):
             :param start_date: the start date of the period
             :param end_date: the end date of the period
         """
-        lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
+        lines_by_timesheet = self.filtered(
+            lambda sol:
+            sol.product_id
+            and sol.product_id._is_delivered_timesheet()
+            and sol.invoice_status == 'to invoice')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
         timesheet_domain = [
             '|',
-            ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_id.state', '=', 'cancel')]
+                ('timesheet_invoice_id', '=', False),
+                '&',
+                    ('timesheet_invoice_id.state', '=', 'cancel'),
+                    ('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy')]
         if refund_account_moves:
             credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
             timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
@@ -174,10 +180,21 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
+            invoice_lines_to_calculate = line._get_invoice_lines().filtered(lambda inv: inv.move_id in refund_account_moves or inv.move_id.reversed_entry_id in refund_account_moves)
             qty_to_invoice = mapping.get(line.id, 0.0)
+            if refund_account_moves:
+                invoiced_qty = 0.0
+                for invoice_line in invoice_lines_to_calculate:
+                    qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                    if invoice_line.move_id.move_type == 'out_invoice':
+                        invoiced_qty += qty
+                    elif invoice_line.move_id.move_type == 'out_refund':
+                        invoiced_qty -= qty
+                qty_to_invoice -= invoiced_qty
+
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
-            else:
+            elif start_date or end_date:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice
                 line.invoice_status = prev_inv_status

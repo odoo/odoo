@@ -40,7 +40,7 @@
                         <textarea t-if="(columnIsProductAndLabel.value and label) or (!columnIsProductAndLabel.value and !productName and label)"
                             class="o_input d-print-none border-0 fst-italic"
                             placeholder="Enter a description"
-                            readonly="1"
+                            t-att-readonly="sectionAndNoteIsReadonly"
                             rows="1"
                             type="text"
                             t-att-class="sectionAndNoteClasses"

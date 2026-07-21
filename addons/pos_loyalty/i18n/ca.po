@@ -18,14 +18,16 @@
 # Ivan Espinola, 2025
 # Noemi Pla, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Jaime Ruiz Maccione <jaime.ruiz@sygel.es>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-17 10:30+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"PO-Revision-Date: 2026-05-21 13:00+0000\n"
+"Last-Translator: Jaime Ruiz Maccione <jaime.ruiz@sygel.es>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/"
 "pos_loyalty/ca/>\n"
 "Language: ca\n"
@@ -33,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
@@ -44,8 +46,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Camp tècnic utilitzat per enllaçar múltiples línies de recompensa de la "
-"mateixa recompensa junts."
+"        Camp tècnic utilitzat per enllaçar múltiples línies de recompensa de "
+"la mateixa recompensa junts.\n"
+"    "
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -79,7 +82,7 @@ msgstr "Un cupó/targeta de fidelització ha de tenir un codi únic."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 msgid "A reward could not be loaded"
-msgstr ""
+msgstr "No s'ha pogut carregar una recompensa."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -132,7 +135,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "Available rewards"
-msgstr ""
+msgstr "Recompenses disponibles"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -221,7 +224,7 @@ msgstr "Introdueix el número de la targeta regal"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/utils/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Enter amount"
-msgstr ""
+msgstr "Introdueix l'import"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -253,6 +256,8 @@ msgid ""
 "Gift Card: %s\n"
 "Balance: %s"
 msgstr ""
+"Targeta regal: %s\n"
+"Saldo: %s"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -305,6 +310,11 @@ msgid "Is Reward Line"
 msgstr "És una línia de reenviament"
 
 #. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunt comptable"
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
 msgstr "Comunicació de fidelització"
@@ -351,13 +361,13 @@ msgstr "No es pot reclamar cap recompensa amb aquest cupó."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "No valid eWallet found"
-msgstr ""
+msgstr "No s'ha trobat cap moneder electrònic vàlid."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid "Onsite %s"
-msgstr ""
+msgstr "In situ  %s"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -494,13 +504,13 @@ msgstr "Selecciona el programa"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.xml:0
 msgid "Sell physical gift card?"
-msgstr ""
+msgstr "Vendre una targeta regal física?"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
 msgid "Sell/Manage physical gift card"
-msgstr ""
+msgstr "Vendre/Gestionar targetes regal físiques"
 
 #. module: pos_loyalty
 #: model:product.template,name:pos_loyalty.simple_pen_product_template
@@ -544,24 +554,24 @@ msgstr "Aquest programa de codi promocional ja s'ha activat."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 msgid "That promo code program is expired."
-msgstr ""
+msgstr "Aquest programa de codi promocional ha caducat."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 msgid "That promo code program is not yet valid."
-msgstr ""
+msgstr "Aquest programa de codi promocional encara no és vàlid."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 msgid "That promo code program requires a specific pricelist."
-msgstr ""
+msgstr "Aquest programa de codi promocional requereix una tarifa específica."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
 msgid "The coupon used to claim that reward."
-msgstr "El cupó solia reclamar aquesta recompensa."
+msgstr "El cupó que es va utilitzar per obtindre la recompensa."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -591,6 +601,8 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
+"La recompensa \"%s\" conté un error en el seu domini; el domini ha de ser "
+"compatible amb el client de TPV"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -650,7 +662,7 @@ msgstr "Aquests són els productes vàlids per a aquesta norma."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/order_summary/order_summary.js:0
 msgid "This Gift card has already been sold."
-msgstr ""
+msgstr "Aquesta targeta regal ja ha estat venuda."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -668,13 +680,13 @@ msgstr "Aquest cupó no és vàlid (%s)."
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "This coupon is not available with the current pricelist."
-msgstr ""
+msgstr "Aquest cupó no està disponible amb la llista de preus actual."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "This coupon is not yet valid (%s)."
-msgstr ""
+msgstr "Aquest cupó encara no és vàlid (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -696,7 +708,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "This programs requires a code to be applied."
-msgstr ""
+msgstr "Aquest programa requereix aplicar un codi."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -784,6 +796,8 @@ msgstr ""
 msgid ""
 "You either have not created an eWallet or all your eWallets have expired."
 msgstr ""
+"No has creat cap moneder electrònic o bé tots els teus moneders electrònics "
+"han caducat."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -825,4 +839,4 @@ msgstr "sense venciment"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_order.js:0
 msgid "the gift cards"
-msgstr ""
+msgstr "les targetes regal"

@@ -74,10 +74,6 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
                 context.default_image_1920 = data.logo;
             }
 
-            const unspsc_codes = data.company.unspsc_codes;
-            if(unspsc_codes){
-                context.default_category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_add_tags", [[], unspsc_codes]);
-            }
             return this.openMany2X({ context });
         }
         else {

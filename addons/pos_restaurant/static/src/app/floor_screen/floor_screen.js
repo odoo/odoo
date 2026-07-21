@@ -169,7 +169,7 @@ export class FloorScreen extends Component {
                     }
                     const potentialParentElem = findIntersectingTableElem(element);
                     if (!potentialParentElem) {
-                        this.alert.add("Link Table");
+                        this.alert.add(_t("Link Table"));
                         return;
                     }
                     this.state.potentialLink = {
@@ -178,7 +178,10 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                        _t("Link Table %(sourceTable)s with %(destinationTable)s", {
+                            sourceTable: table.table_number,
+                            destinationTable: this.state.potentialLink.parent.table_number,
+                        })
                     );
                     return;
                 }
@@ -626,6 +629,7 @@ export class FloorScreen extends Component {
                     [
                         {
                             name: newName,
+                            active: true,
                             background_color: "#FFFFFF",
                             pos_config_ids: [this.pos.config.id],
                         },
@@ -652,6 +656,7 @@ export class FloorScreen extends Component {
         const copyFloor = await this.pos.data.create("restaurant.floor", [
             {
                 name: newFloorName,
+                active: true,
                 background_color: "#ACADAD",
                 pos_config_ids: [this.pos.config.id],
             },
@@ -828,8 +833,9 @@ export class FloorScreen extends Component {
 
         activeFloor.delete();
 
-        if (this.pos.models["restaurant.floor"].length > 0) {
-            this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
+        const remainingFloors = this.pos.config.floor_ids.filter((f) => f.active);
+        if (remainingFloors.length > 0) {
+            this.selectFloor(remainingFloors[0]);
         } else {
             this.pos.isEditMode = false;
             this.pos.floorPlanStyle = "default";

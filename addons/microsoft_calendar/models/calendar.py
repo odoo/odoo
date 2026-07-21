@@ -12,7 +12,6 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_normalize
-from odoo.osv import expression
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -170,11 +169,18 @@ class Meeting(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
 
         # Forbid recurrence updates through Odoo and suggest user to update it in Outlook.
-        if self._check_microsoft_sync_status():
+        if not notify_context:
             recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
             recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
-            if not notify_context and recurrence_update_attempt and not 'active' in values:
-                self._forbid_recurrence_update()
+            # Check if this is an Outlook recurring event with active sync
+            if recurrence_update_attempt and 'active' not in values:
+                recurring_events = self.filtered('microsoft_recurrence_master_id')
+                if recurring_events and any(
+                    event.with_user(organizer)._check_microsoft_sync_status()
+                    for event in recurring_events
+                    if (organizer := event._get_organizer())
+                ):
+                    self._forbid_recurrence_update()
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
         # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
@@ -391,7 +397,7 @@ class Meeting(models.Model):
 
         microsoft_attendees = microsoft_event.attendees or []
         emails = [
-            a.get('emailAddress').get('address')
+            email_normalize(a.get('emailAddress').get('address'))
             for a in microsoft_attendees
             if email_normalize(a.get('emailAddress').get('address'))
         ]
@@ -399,16 +405,16 @@ class Meeting(models.Model):
         if microsoft_event.match_with_odoo_events(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
                 ('event_id', '=', microsoft_event.odoo_id(self.env)),
-                ('email', 'in', emails)])
-        elif self.env.user.partner_id.email not in emails:
+                ('partner_id.email_normalized', 'in', emails)])
+        elif self.env.user.partner_id.email_normalized not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
-        attendees_by_emails = {a.email: a for a in existing_attendees}
+        attendees_by_emails = {a.partner_id.email_normalized: a for a in existing_attendees}
         for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
             # Responses from external invitations are stored in the 'responseStatus' field.
             # This field only carries the current user's event status because Microsoft hides other user's status.
-            if self.env.user.email == email and microsoft_event.responseStatus:
+            if self.env.user.email_normalized == email and microsoft_event.responseStatus:
                 attendee_microsoft_status = microsoft_event.responseStatus.get('response', 'none')
             else:
                 attendee_microsoft_status = attendee_info.get('status').get('response')
@@ -425,7 +431,7 @@ class Meeting(models.Model):
                     partner.name = attendee_info.get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
-            if odoo_attendee.email not in emails:
+            if odoo_attendee.partner_id.email_normalized not in emails:
                 commands_attendee += [(2, odoo_attendee.id)]
                 commands_partner += [(3, odoo_attendee.partner_id.id)]
         return commands_attendee, commands_partner

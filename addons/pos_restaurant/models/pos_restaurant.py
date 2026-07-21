@@ -27,7 +27,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
+        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image', 'active']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -46,8 +46,12 @@ class RestaurantFloor(models.Model):
             for config in floor.pos_config_ids:
                 if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
                     raise UserError(
-                        'Please close and validate the following open PoS Session before modifying this floor.\n'
-                        'Open session: %s' % (' '.join(config.mapped('name')),))
+                        _(
+                            "Please close and validate the following open PoS Session before modifying this floor.\n"
+                            "Open session: %(config_name)s",
+                            config_name=' '.join(config.mapped('name')),
+                        )
+                    )
         return super(RestaurantFloor, self).write(vals)
 
     def rename_floor(self, new_name):

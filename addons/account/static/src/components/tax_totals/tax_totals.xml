@@ -23,14 +23,14 @@
                     </t>
                     <t t-else="">
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
-                            <span class="o_tax_group_amount_value o_list_monetary">
+                            <span class="o_tax_group_amount_value o_list_monetary" dir="ltr">
                                 <i class="fa fa-pencil me-2"/> <t t-out="formatMonetary(props.taxGroup.tax_amount_currency)"/>
                             </span>
                         </span>
                     </t>
                 </t>
                 <t t-else="">
-                    <span class="o_tax_group_amount_value o_list_monetary">
+                    <span class="o_tax_group_amount_value o_list_monetary" dir="ltr">
                         <t t-out="formatMonetary(props.taxGroup.tax_amount_currency)" style="white-space: nowrap;"/>
                     </span>
                 </t>
@@ -50,6 +50,7 @@
                         <td class="o_list_monetary">
                             <span t-att-name="subtotal.name"
                                   style="white-space: nowrap; font-weight: bold;"
+                                  dir="ltr"
                                   t-out="formatMonetary(subtotal.base_amount_currency)"/>
                         </td>
                     </tr>
@@ -72,6 +73,7 @@
                     </td>
                     <td class="o_list_monetary">
                         <span
+                            dir="ltr"
                             t-out="formatMonetary(totals.cash_rounding_base_amount_currency)"
                         />
                     </td>
@@ -87,6 +89,7 @@
                         <span
                             name="amount_total"
                             t-att-class="{'oe_subtotal_footer_separator': totals.has_tax_groups}"
+                            dir="ltr"
                             t-out="formatMonetary(totals.total_amount_currency)"
                             style="font-size: 1.3em; font-weight: bold; white-space: nowrap;"
                         />

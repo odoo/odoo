@@ -1105,6 +1105,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         // Wait for the popover to appear
         await nextTick();
         a.click();
+        setSelection(a, 0, a, 0); // Selection must be in the link otherwise the popover will close.
         await nextTick();
         // Click on the edit link icon
         document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();

@@ -1,12 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { delay } from "@web/core/utils/concurrency";
+import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -136,6 +137,26 @@ test("should not preserve image styles when replacing an image with an icon", as
     );
 });
 
+test("should not preserve image shape classes when replacing an image with an icon", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const { el } = await setupEditor(
+        `<p><img class="img-fluid rounded rounded-circle shadow img-thumbnail" src="/web/static/img/logo.png"></p>`
+    );
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    await click("img");
+    await tick(); // selectionchange
+    await expectElementCount(".o-we-toolbar button[name='replace_image']", 1);
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".nav-link:contains('Icons')");
+    await animationFrame();
+    await click(".fa-glass");
+    await animationFrame();
+    expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>[]\ufeff</p>`
+    );
+});
+
 test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -201,13 +222,13 @@ test("cropper should not open for external image", async () => {
     await setupEditor(
         `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
     );
-    await waitFor('div[name="image_transform"]');
+    const imageTransform = await waitFor('div[name="image_transform"] > .btn');
+    imageTransform.click();
 
-    await click('div[name="image_transform"] > .btn');
-    await animationFrame();
+    const imageCrop = await waitFor('.btn[name="image_crop"]');
+    imageCrop.click();
 
-    await click('.btn[name="image_crop"]');
-    await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    await waitFor(".o_notification_manager .o_notification", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
 
@@ -223,12 +244,41 @@ test("Image cropper disappear on backspace", async () => {
     });
 
     await setupEditor(`<p>[<img src="#">]</p>`);
-    await waitFor(".o-we-toolbar");
-
-    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
-    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    const cropButton = await waitFor(".o-we-toolbar .btn[name='image_crop']");
+    cropButton.click();
+    await waitFor(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(1);
     press("backspace");
-    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
+    await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("double-click on image in Media Dialog executes onClickAttachment only once", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+
+    let executionCount = 0;
+    patchWithCleanup(ImageSelector.prototype, {
+        selectAttachment(attachment) {
+            executionCount++;
+            return super.selectAttachment(attachment);
+        },
+    });
+
+    const env = await makeMockEnv();
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`, { env });
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await dblclick(".o_existing_attachment_cell");
+    expect(executionCount).toBe(1);
 });

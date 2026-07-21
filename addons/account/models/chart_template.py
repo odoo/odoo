@@ -12,7 +12,7 @@ import re
 
 from odoo import Command, api, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, RedirectWarning
 from odoo.modules import get_resource_from_path
 from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
 from odoo.tools.translate import _, code_translations, TranslationImporter
@@ -252,8 +252,8 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
-            self.sudo()._load_data(self._get_demo_data(company), ignore_duplicates=True)
-            self._post_load_demo_data(company)
+            self.with_context(install_mode=True).sudo()._load_data(self._get_demo_data(company), ignore_duplicates=True)
+            self.with_context(install_mode=True)._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -299,36 +299,31 @@ class AccountChartTemplate(models.AbstractModel):
                         'noupdate': True,
                     }])
 
-        account_group_count = self.env['account.group'].search_count([])
+        account_group_count = self.env['account.group'].search_count(
+            [] if company.parent_id else [('company_id', '=', company.id)],
+        )
         if account_group_count:
             data.pop('account.group', None)
 
-        current_taxes = self.env['account.tax'].with_context(active_test=False).search([
-            *self.env['account.tax']._check_company_domain(company),
-        ])
+        def get_records_and_xmlid_mapping(model):
+            current_records = self.env[model].with_context(active_test=False).search([
+                *self.env[model]._check_company_domain(company),
+            ])
+            xmlid2records = {
+                xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env[model].browse(record)
+                for record, xml_id in current_records.get_external_id().items()
+                if xml_id.startswith('account.')
+            }
+            return current_records, xmlid2records
 
-        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
-            *self.env['account.fiscal.position']._check_company_domain(company),
-        ])
-
-        current_tax_groups = self.env['account.tax.group'].with_context(active_test=False).search([
-            *self.env['account.tax.group']._check_company_domain(company)
-        ])
+        current_taxes, xmlid2tax = get_records_and_xmlid_mapping('account.tax')
+        _current_fiscal_positions, xmlid2fiscal_position = get_records_and_xmlid_mapping('account.fiscal.position')
+        _current_tax_groups, xmlid2tax_group = get_records_and_xmlid_mapping('account.tax.group')
+        _current_accounts, xmlid2account = get_records_and_xmlid_mapping('account.account')
 
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
-        xmlid2tax = {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
-            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
-        }
-        xmlid2fiscal_position= {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.fiscal.position'].browse(record)
-            for record, xml_id in current_fiscal_positions.get_external_id().items() if xml_id.startswith('account.')
-        }
-        xmlid2tax_group = {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax.group'].browse(res_id)
-            for res_id, xml_id in current_tax_groups.get_external_id().items() if xml_id.startswith('account.')
-        }
+
         def tax_template_changed(tax, template):
             template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
             return (
@@ -372,6 +367,10 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2tax_group and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
+                    if xmlid in xmlid2tax_group:
+                        for field_name in ["tax_payable_account_id", "tax_receivable_account_id"]:
+                            if field_name in values and self.ref(values[field_name], raise_if_not_found=False):
+                                values.pop(field_name, None)
 
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
@@ -411,7 +410,7 @@ class AccountChartTemplate(models.AbstractModel):
                         skip_update.add((model_name, xmlid))
                         continue
                     # Point or create xmlid to existing record to avoid duplicate code
-                    account = self.ref(xmlid, raise_if_not_found=False)
+                    account = xmlid2account.get(xmlid)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
@@ -1214,11 +1213,26 @@ class AccountChartTemplate(models.AbstractModel):
                     if not mapped_tag:
                         country = self.env['res.country'].browse(country_id)
                         if not self._context.get('ignore_missing_tags'):
-                            raise UserError(self.env._(
-                                'Error while loading the localization: missing tax tag %(tag_name)s for country %(country_name)s.'
-                                ' You should probably update your localization app first.',
-                                tag_name=format_tag, country_name=country.name
-                            ))
+                            raise RedirectWarning(
+                                message=self.env._(
+                                    'Error while loading the localization: missing tax tag %(tag_name)s for country %(country_name)s.'
+                                    ' You should probably update your localization app first.',
+                                    tag_name=format_tag, country_name=country.name
+                                ),
+                                action={
+                                    'name': self.env._('Need to update'),
+                                    'res_model': 'ir.module.module',
+                                    'type': 'ir.actions.act_window',
+                                    'views': [(self.env.ref('base.module_view_kanban').id, 'kanban')],
+                                    'context': {
+                                        'search_default_name': country.name,
+                                        'search_default_category_id': self.env.ref(
+                                            'base.module_category_accounting_localizations_account_charts'
+                                        ).id,
+                                    },
+                                },
+                                button_text=self.env._("Update app"),
+                            )
                         else:
                             _logger.error(
                                 'Error while loading the localization: missing tax tag %s for country %s.'

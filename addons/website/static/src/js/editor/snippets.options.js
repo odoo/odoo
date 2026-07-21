@@ -443,7 +443,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 let shortestNamedFont;
                 for (const font of this.state.uploadedFonts) {
                     if (!shortestNamedFont || font.name.length < shortestNamedFont.name.length) {
-                        shortestNamedFont = font;
+                        // Create a copy of the font to not mangle the original font
+                        // when setting the weight and style later
+                        shortestNamedFont = JSON.parse(JSON.stringify(font));
                     }
                     font.isItalic = /italic/i.test(font.name);
                     font.isLight = /light|300/i.test(font.name);
@@ -462,7 +464,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                     }
                 }
                 if (!Object.values(targetFonts).filter((font) => font.isRegular).length) {
-                    // Keep font with shortest name.
+                    // Keep font with the shortest name.
                     shortestNamedFont.weight = 400;
                     shortestNamedFont.style = "normal";
                     targetFonts["400"] = shortestNamedFont;
@@ -470,7 +472,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 const fontFaces = [];
                 for (const font of Object.values(targetFonts)) {
                     fontFaces.push(`@font-face{
-                        font-family: ${baseFontName};
+                        font-family: "${baseFontName}";
                         font-style: ${font.style};
                         font-weight: ${font.weight};
                         src:url("${font.url}");
@@ -1418,6 +1420,32 @@ options.registry.ReplaceMedia.include({
 });
 
 options.registry.ImageTools.include({
+    /**
+     * Compute and set default shape colors for images that have a data-shape
+     * but are missing data-shape-colors (e.g. s_cta_mockups, s_closer_look).
+     *
+     * @override
+     */
+    async _applyOptions() {
+        const img = await this._super(...arguments);
+        // TODO remove in master: kept for stable.
+        if (!img) {
+            return img;
+        }
+        const { shape: shapePath, shapeColors } = img.dataset;
+        if (shapePath && (!shapeColors || shapeColors === ";;;;")) {
+            const shapeName = shapePath.split("/")[2];
+            const shape = this.shapeCache[shapeName];
+            if (shape) {
+                const palette = Object.values(weUtils.DEFAULT_PALETTE);
+                const defaultColors = palette.map((color) =>
+                    shape.includes(color) ? color : null
+                );
+                img.dataset.shapeColors = defaultColors.join(";");
+            }
+        }
+        return img;
+    },
     async _computeWidgetVisibility(widgetName, params) {
         if (params.optionsPossibleValues.selectStyle
                 && params.cssProperty === 'width'

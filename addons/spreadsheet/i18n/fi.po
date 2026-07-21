@@ -30,13 +30,14 @@
 # Jessica Jakara, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 18:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-07-17 11:26+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/fi/>\n"
 "Language: fi\n"
@@ -44,7 +45,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -281,39 +282,28 @@ msgstr "%s vastaavuuksia kaikissa arkeissa"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) Tarkka vastaavuus.\n"
-"        (-1) Palauttaa seuraavaksi pienemmän kohteen, jos ei löydy "
-"vastaavuutta.\n"
-"        (1) Palauttaa seuraavan suuremman kohteen, jos ei löydy "
-"vastaavuutta.\n"
-"        (2) Jokerimerkkivastaavuus."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) Haku alkaa ensimmäisestä kohdasta.\n"
-"      (-1) Haku alkaa viimeisestä kohteesta.\n"
-"      (2) Suorita binäärihaku, joka perustuu siihen, että lookup_array on "
-"lajiteltu nousevaan järjestykseen. Jos hakua ei ole lajiteltu, palautetaan "
-"virheellisiä tuloksia.\n"
-"      (-2) Suorita binäärihaku, joka perustuu siihen, että lookup_array on "
-"lajiteltu laskevaan järjestykseen. Jos hakua ei ole lajiteltu, palautetaan "
-"virheellisiä tuloksia.\n"
-"      "
+"(1) Haku alkaa ensimmäisestä kohteesta.      (-1) Haku alkaa viimeisestä "
+"kohteesta.      (2) Suorita binäärihaku, joka perustuu siihen, että "
+"lookup_array on lajiteltu nousevaan järjestykseen. Jos hakua ei ole "
+"lajiteltu, palautettavat tulokset ovat virheellisiä.      (-2) Suorita "
+"binäärihaku, joka perustuu siihen, että lookup_array on lajiteltu laskevaan "
+"järjestykseen. Jos hakua ei ole lajiteltu, palautettavat tulokset ovat "
+"virheellisiä.      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -374,6 +364,12 @@ msgstr "2 saraketta"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "2 rows"
 msgstr "2 riviä"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr "A"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1070,17 +1066,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Kuvansiirron aikana tapahtui odottamaton virhe"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Sisällön liittämisessä tapahtui odottamaton virhe.\n"
-"          Tämä johtuu luultavasti taulukkolaskentataulukon versiosta, joka "
-"ei vastaa toisiaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2037,7 +2022,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Compute from totals"
-msgstr ""
+msgstr "Laske kokonaissummista"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2352,7 +2337,7 @@ msgstr "Luo uuden sarjan olemassa olevan alueen valituista riveistä."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Criteria"
-msgstr "Kriteeri"
+msgstr "Kriteerit"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3409,13 +3394,13 @@ msgstr "Suodatin-painike"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
 msgid "Filters"
-msgstr "Suotimet"
+msgstr "Suodattimet"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Financial"
-msgstr "Taloushallinto"
+msgstr "Taloudellinen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3707,26 +3692,9 @@ msgstr "Funktio [[FUNCTION_NAME]] ei löytänyt tulosta."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funktio [[FUNCTION_NAME]] odottaa, että criteria_range ja criterion ovat "
-"pareittain."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funktio [[FUNCTION_NAME]] odottaa, että kriteerialueella on sama ulottuvuus"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
+"Toiminto [[FUNCTION_NAME]] odottaa numeroarvoja %s, mutta sai boolean-arvon."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3734,6 +3702,7 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
 msgstr ""
+"Toiminto [[FUNCTION_NAME]] odottaa numeroarvoja %s, mutta sai merkkijonon."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3742,6 +3711,7 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
 "value."
 msgstr ""
+"Toiminto [[FUNCTION_NAME]] odottaa numeroarvoja %s, mutta sai tyhjän arvon."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4165,12 +4135,8 @@ msgstr "Arvioinnissa [[FUNCTION_NAME]] ei löydy '%s':ta '%s':n sisältä."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"Kohdassa [[FUNCTION_NAME]] ensimmäisen matriisin (%s) sarakkeiden lukumäärän "
-"on oltava yhtä suuri kuin arvo\n"
-"        toisen matriisin (%s) rivien lukumäärä."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4204,8 +4170,8 @@ msgid ""
 "specified range) is sorted, in which case the closest match for search_key "
 "will be returned."
 msgstr ""
-"Ilmaisee, onko etsittävä sarake (määritetyn alueen ensimmäinen sarake) "
-"lajiteltu, jolloin hakuavainta lähin vastaavuus palautetaan."
+"Ilmaisee, onko haettava sarake (määritetyn alueen ensimmäinen sarake) "
+"lajiteltu. Siinä tapauksessa hakuavainta search_key lähin osuma palautetaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4215,8 +4181,8 @@ msgid ""
 "range) is sorted, in which case the closest match for search_key will be "
 "returned."
 msgstr ""
-"Ilmaisee, onko etsittävä rivi (määritetyn alueen ensimmäinen rivi) "
-"lajiteltu, jolloin hakuavainta lähin vastaavuus palautetaan."
+"Ilmaisee, onko haettava rivi (määritetyn alueen ensimmäinen rivi) lajiteltu. "
+"Siinä tapauksessa hakuavainta search_key lähin osuma palautetaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5338,6 +5304,12 @@ msgstr "Seuraava kuponkipäivä selvityspäivän jälkeen."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Ei"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No Color"
 msgstr "Ei väriä"
@@ -5577,12 +5549,12 @@ msgid ""
 "returned from the last row or column in the array. If search_key is not "
 "found, a non-exact match may be returned."
 msgstr ""
-"Yksi tapa käyttää tätä funktiota on antaa yksittäinen lajiteltu rivi tai "
-"sarake search_array, jonka läpi etsitään hakuavainta toisen argumentin "
+"Yksi tapa käyttää tätä funktiota on antaa yksi lajiteltu rivi tai sarake "
+"search_array hakuavaimen search_key etsimiseksi toisen argumentin "
 "result_range kanssa. Toinen tapa on yhdistää nämä kaksi argumenttia yhdeksi "
-"search_array-joukoksi, jossa ensimmäinen rivi tai sarake etsitään ja arvo "
-"palautetaan joukon viimeiseltä riviltä tai sarakkeelta. Jos search_key-"
-"avainta ei löydy, voidaan palauttaa epätarkka vastaavuus."
+"search_array:ksi, jossa ensimmäinen rivi tai sarake etsitään ja arvo "
+"palautetaan taulukon viimeiseltä riviltä tai sarakkeelta. Jos search_key ei "
+"löydy, voidaan palauttaa epätarkka osuma."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8024,6 +7996,8 @@ msgid ""
 "The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
 "matrices."
 msgstr ""
+"[[FUNCTION_NAME]] ensimmäinen ja toinen argumentti eivät saa olla tyhjiä "
+"matriiseja."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8319,7 +8293,7 @@ msgstr "Future_valuen (%s) on oltava ehdottomasti positiivinen."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The header row of a table can't be moved."
-msgstr ""
+msgstr "Taulukon otsikkoriviä ei voi siirtää."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11114,7 +11088,7 @@ msgstr "Arvon muutos avainarvosta"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
-msgstr ""
+msgstr "Parametrin %s arvo puuttuu [[FUNCTION_NAME]]:sta."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11327,7 +11301,7 @@ msgstr "Pystysuora haku."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "View"
-msgstr "Näytä"
+msgstr "Katso"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11478,14 +11452,12 @@ msgstr "Jaetaanko teksti jokaisen rajausmerkin ympärille vai ei."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. "
-"Oletuskäyttäytyminen on käsitellä\n"
-"        peräkkäisiä erottimia yhtenä (jos TRUE). Jos FALSE, tyhjien solujen "
-"arvot lisätään peräkkäisten erottimien väliin."
+"Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. Oletuksena        "
+"peräkkäisiä erottimia käsitellään yhtenä (jos TRUE). Jos FALSE, tyhjien "
+"solujen arvot lisätään peräkkäisten erottimien väliin."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11499,12 +11471,8 @@ msgstr "Onko maksut suoritettava kunkin jakson lopussa (0) vai alussa (1)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
-"Pitäisikö joukko skannata sarakkeittain. True skannaa joukon sarakkeittain "
-"ja false (oletusarvo)\n"
-"      skannaa joukon riveittäin."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11667,6 +11635,12 @@ msgstr "Vuosi tähän mennessä"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Kyllä"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "Et voi yhdistää soluja olemassa olevan suodattimen sisällä."
@@ -11676,6 +11650,14 @@ msgstr "Et voi yhdistää soluja olemassa olevan suodattimen sisällä."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Et voi luoda päällekkäisiä taulukoita."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11717,6 +11699,8 @@ msgid ""
 "[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
 "empty matrix."
 msgstr ""
+"[[FUNCTION_NAME]] odottaa, etteivät annetut %(argName)s-arvot ole tyhjiä "
+"matriiseja."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11959,6 +11943,12 @@ msgstr "huomenna"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr "x"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "eilen"
@@ -11968,6 +11958,91 @@ msgstr "eilen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nolla"
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) Tarkka vastaavuus.\n"
+#~ "        (-1) Palauttaa seuraavaksi pienemmän kohteen, jos ei löydy "
+#~ "vastaavuutta.\n"
+#~ "        (1) Palauttaa seuraavan suuremman kohteen, jos ei löydy "
+#~ "vastaavuutta.\n"
+#~ "        (2) Jokerimerkkivastaavuus."
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) Haku alkaa ensimmäisestä kohdasta.\n"
+#~ "      (-1) Haku alkaa viimeisestä kohteesta.\n"
+#~ "      (2) Suorita binäärihaku, joka perustuu siihen, että lookup_array on "
+#~ "lajiteltu nousevaan järjestykseen. Jos hakua ei ole lajiteltu, "
+#~ "palautetaan virheellisiä tuloksia.\n"
+#~ "      (-2) Suorita binäärihaku, joka perustuu siihen, että lookup_array "
+#~ "on lajiteltu laskevaan järjestykseen. Jos hakua ei ole lajiteltu, "
+#~ "palautetaan virheellisiä tuloksia.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Sisällön liittämisessä tapahtui odottamaton virhe.\n"
+#~ "          Tämä johtuu luultavasti taulukkolaskentataulukon versiosta, "
+#~ "joka ei vastaa toisiaan."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funktio [[FUNCTION_NAME]] odottaa, että criteria_range ja criterion ovat "
+#~ "pareittain."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funktio [[FUNCTION_NAME]] odottaa, että kriteerialueella on sama "
+#~ "ulottuvuus"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "Kohdassa [[FUNCTION_NAME]] ensimmäisen matriisin (%s) sarakkeiden "
+#~ "lukumäärän on oltava yhtä suuri kuin arvo\n"
+#~ "        toisen matriisin (%s) rivien lukumäärä."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. "
+#~ "Oletuskäyttäytyminen on käsitellä\n"
+#~ "        peräkkäisiä erottimia yhtenä (jos TRUE). Jos FALSE, tyhjien "
+#~ "solujen arvot lisätään peräkkäisten erottimien väliin."
+
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "Pitäisikö joukko skannata sarakkeittain. True skannaa joukon "
+#~ "sarakkeittain ja false (oletusarvo)\n"
+#~ "      skannaa joukon riveittäin."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

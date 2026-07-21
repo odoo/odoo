@@ -24,7 +24,7 @@ class Project(models.Model):
         return [
             ('move_type', 'in', ['in_invoice', 'in_refund']),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0),
+            ('price_subtotal', '!=', 0),
             ('id', 'not in', purchase_order_line_invoice_line_ids),
         ]
 

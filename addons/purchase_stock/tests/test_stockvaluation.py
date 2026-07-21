@@ -3957,3 +3957,258 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'quantity': 20.0, 'unit_cost': 1.0, 'value': 20},
             {'quantity': 30.0, 'unit_cost': 1.0, 'value': 30},
         ])
+
+    def test_multiple_move_same_prod_svl(self):
+        """Check that when a picking has multiple move of the same product
+        the svls are created with correct values.
+        """
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+        self.product1.standard_price = 1.0
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 100.0,
+                    'price_unit': 1.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        self._bill(po)
+        receipt_1 = po.picking_ids[0]
+        receipt_1.move_ids.description_picking = "some other descr"
+        po.order_line.product_qty = 105
+        receipt_1.button_validate()
+        self.assertRecordValues(receipt_1.move_ids.stock_valuation_layer_ids.sorted('quantity'), [
+            {'quantity': 5.0, 'unit_cost': 1.0, 'value': 5},
+            {'quantity': 100.0, 'unit_cost': 1.0, 'value': 100},
+        ])
+
+    def test_pdiff_no_reset_tax(self):
+        """ Check that confirming a Bill for a perpetual product from a PO with a different price
+        where some quantities are already out stock (so in a situation where pdiff
+        compensation amls are created) does not reset a manually set total tax on the Bill."""
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.supplier_taxes_id = self.company.account_purchase_tax_id
+
+        # PO for 30 @ 0
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 30.0,
+                    'price_unit': 0.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 30
+        receipt.button_validate()
+
+        # deliver 10
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product1.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 10.0
+        delivery.button_validate()
+
+        # create bill with price 100
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        bill.invoice_line_ids.price_unit = 100
+
+        # set tax amount as 500 and confirm bill
+        bill.line_ids.filtered(lambda l: l.display_type == "tax").balance = 500
+        bill.action_post()
+
+        # check bill total tax has not changed
+        self.assertEqual(bill.amount_tax, 500)
+
+    def test_svl_account_move_analytic_account_model_change_from_PO(self):
+        """ Tests whether, when an analytic account rule is set, and user changes manually the analytic account on
+        the po, it is the same that is mentioned in the account move created by the svl.
+        """
+        # Required for `analytic.group_analytic_accounting` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan.id})
+        self.product1.standard_price = 10
+
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
+            'product_id': self.product1.id,
+        })
+        analytic_distribution_manual = {str(analytic_account_manual.id): 100}
+
+        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.name = self.product1.name
+            po_line_form.product_id = self.product1
+            po_line_form.product_qty = 1.0
+            po_line_form.price_unit = 10
+            po_line_form.analytic_distribution = analytic_distribution_manual
+
+        purchase_order = po_form.save()
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+
+        amls = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.account_move_id.line_ids
+        self.assertEqual(amls[0].analytic_distribution, analytic_distribution_manual)
+        self.assertEqual(amls[1].analytic_distribution, analytic_distribution_manual)
+
+    def test_bill_price_diff_cost_no_reset_tax(self):
+        """ Check that confirming a Bill for a standard perpetual product with price different
+        than the product's cost (so in a situation where price difference compensation amls are created)
+        does not reset a manually set total tax on the Bill."""
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.supplier_taxes_id = self.company.account_purchase_tax_id
+        self.product1.standard_price = 10
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'price_unit': 20.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+
+        bill.line_ids.filtered(lambda l: l.display_type == "tax").balance = 100
+        bill.action_post()
+
+        self.assertEqual(bill.amount_tax, 100)
+        self.assertRecordValues(bill.line_ids.sorted('balance'), [
+            {'account_id': self.company_data['default_account_payable'].id,        'credit': 120.0,   'debit': 0.0},
+            {'account_id': self.stock_input_account.id,                            'credit': 10.0,    'debit': 0.0},
+            {'account_id': self.company_data['default_account_expense'].id,        'credit': 0.0,     'debit': 10.0},
+            {'account_id': self.stock_input_account.id,                            'credit': 0.0,     'debit': 20.0},
+            {'account_id': self.company_data['default_account_tax_purchase'].id,   'credit': 0.0,     'debit': 100.0},
+        ])
+
+    def test_fifo_multi_currency_bill_before_receive_backorder(self):
+        """
+        FIFO auto, anglo-saxon accounting
+        PO in EUR, company currency USD
+        Two different EUR/USD rates: one at bill date, one at receipt date
+        Bill posted before any receipt (invoice before receive)
+        Receive half the qty, create backorder, receive the rest
+        Both receipts should have identical unit cost in USD
+        """
+        self.env['res.currency.rate'].search([]).unlink()
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+        self.env.ref('base.EUR').active = True
+        euro_id = self.env.ref('base.EUR').id
+
+        # Bill date rate: 1 EUR = 1 USD (rate=1.0)
+        # Receipt date rate: 1 EUR = 2 USD (rate=0.5)
+        today = fields.Date.today()
+        bill_date = today - timedelta(days=30)
+        receipt_date = today - timedelta(days=15)
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': euro_id,
+                'rate': 1.0,
+                'name': bill_date,
+                'company_id': self.env.company.id,
+            },
+            {
+                'currency_id': euro_id,
+                'rate': 0.5,
+                'name': receipt_date,
+                'company_id': self.env.company.id,
+            },
+        ])
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro_id,
+            'order_line': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 20,
+                'price_unit': 10000.0,
+                'taxes_id': False,
+            })],
+        })
+        purchase_order.button_confirm()
+
+        # Create and post bill before receipt
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = bill_date
+        bill.action_post()
+
+        # Receive first 10 and create a backorder
+        receipt01 = purchase_order.picking_ids
+        receipt01.move_ids.quantity = 10
+        with freeze_time(receipt_date):
+            action = receipt01.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        # Receive the remaining 10 from the backorder
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_ids.quantity = 10
+        with freeze_time(receipt_date):
+            receipt02.button_validate()
+
+        # Both receipts: 10 units @ 10,000 EUR at bill date rate (1:1) = $100,000 each
+        in_stock_amls = self.env['account.move.line'].search(
+            [('account_id', '=', self.stock_input_account.id)], order='id'
+        )
+        self.assertRecordValues(in_stock_amls, [
+            # Bill: 20,000 EUR @ 1.0 = $200,000
+            {'debit': 200000.0, 'credit': 0.0},
+            # Receipt 1: 10 units @ $10,000 = $100,000
+            {'debit': 0.0, 'credit': 100000.0},
+            # Receipt 2 (backorder): should also be $100,000, not $150,000
+            {'debit': 0.0, 'credit': 100000.0},
+        ])
+
+        # SVL unit costs should also be identical
+        svl1 = receipt01.move_ids.stock_valuation_layer_ids
+        svl2 = receipt02.move_ids.stock_valuation_layer_ids
+        self.assertEqual(
+            svl1.unit_cost, svl2.unit_cost)

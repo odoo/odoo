@@ -24,7 +24,7 @@ class TestUBLNL(TestUBLCommon):
             'phone': '+31 180 6 225789',
             'email': 'info@outlook.nl',
             'country_id': cls.env.ref('base.nl').id,
-            'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
+            'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57', 'allow_out_payment': True})],
             'peppol_eas': '0106',
             'peppol_endpoint': '77777677',
             'ref': 'ref_partner_1',
@@ -38,7 +38,7 @@ class TestUBLNL(TestUBLCommon):
             'city': "Rotterdam",
             'vat': 'NL41452B11',
             'country_id': cls.env.ref('base.nl').id,
-            'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
+            'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167', 'allow_out_payment': True})],
             'peppol_eas': '9944',
             'peppol_endpoint': 'NL41452B11',
             'company_registry': '123456789',
@@ -93,6 +93,10 @@ class TestUBLNL(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -155,6 +159,10 @@ class TestUBLNL(TestUBLCommon):
         self.test_export_import_invoice()
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,

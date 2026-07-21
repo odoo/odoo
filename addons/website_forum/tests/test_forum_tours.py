@@ -25,3 +25,6 @@ class TestUi(HttpCaseGamification):
         self.start_tour("/", 'forum_question', login="demo")
         tags = self.env['forum.tag'].search([('name', 'in', ['Tag', 'tag', 'test tag'])])
         self.assertEqual(len(tags), 3)
+
+    def test_03_admin_forum_cover_dropzone(self):
+        self.start_tour('/', 'forum_cover_dropzone', login='admin')

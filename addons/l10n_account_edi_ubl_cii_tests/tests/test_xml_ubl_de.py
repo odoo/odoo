@@ -24,7 +24,7 @@ class TestUBLDE(TestUBLCommon):
             'phone': '+49 180 6 225789',
             'email': 'info@legoland.de',
             'country_id': cls.env.ref('base.de').id,
-            'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921'})],
+            'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'xrechnung',
         })
@@ -36,9 +36,9 @@ class TestUBLDE(TestUBLCommon):
             'city': "Rust",
             'vat': 'DE186775212',
             'country_id': cls.env.ref('base.de').id,
-            'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743'})],
+            'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
-            'invoice_edi_format': 'xrechnung',
+            'invoice_edi_format': 'zugferd',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -112,6 +112,53 @@ class TestUBLDE(TestUBLCommon):
         )
         attachment = self._assert_invoice_attachment(
             invoice.ubl_cii_xml_id,
+            xpaths=None,
+            expected_file_path='from_odoo/zugferd_out_invoice.xml',
+        )
+        self.assertEqual(attachment.name[-11:], "zugferd.xml")
+        self._assert_imported_invoice_from_etree(invoice, attachment)
+
+    def test_export_import_invoice_xrechnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
+        self.partner_2.write({
+            'peppol_eas': '0204',
+            'peppol_endpoint': '123456789',
+            'invoice_edi_format': 'xrechnung'
+        })
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': 990.0,
+                    'discount': 10.0,
+                    'tax_ids': [(6, 0, self.tax_19.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_7.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_7.ids)],
+                },
+            ],
+        )
+        attachment = self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
@@ -135,7 +182,7 @@ class TestUBLDE(TestUBLCommon):
             ''',
             expected_file_path='from_odoo/xrechnung_ubl_out_invoice.xml',
         )
-        self.assertEqual(attachment.name[-10:], "ubl_de.xml")
+        self.assertEqual(attachment.name[-13:], "xrechnung.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_without_vat_and_peppol_endpoint(self):
@@ -159,22 +206,8 @@ class TestUBLDE(TestUBLCommon):
         )
         attachment = self._assert_invoice_attachment(
             invoice.ubl_cii_xml_id,
-            xpaths=f'''
-                <xpath expr="./*[local-name()='ID']" position="replace">
-                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
-                </xpath>
-                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
-                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
-                </xpath>
-                <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
-                    <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
-                </xpath>
-                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
-                    <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
-                </xpath>
-            ''',
-            expected_file_path='from_odoo/xrechnung_ubl_out_invoice_without_vat.xml',
+            xpaths=None,
+            expected_file_path='from_odoo/zugferd_out_invoice_without_vat.xml',
         )
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
@@ -183,6 +216,54 @@ class TestUBLDE(TestUBLCommon):
         self.test_export_import_invoice_without_vat_and_peppol_endpoint()
 
     def test_export_import_refund(self):
+        refund = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_refund',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': 990.0,
+                    'discount': 10.0,
+                    'tax_ids': [(6, 0, self.tax_19.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_7.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_7.ids)],
+                },
+            ],
+        )
+        attachment = self._assert_invoice_attachment(
+            refund.ubl_cii_xml_id,
+            xpaths=None,
+            expected_file_path='from_odoo/zugferd_out_refund.xml',
+        )
+        self.assertEqual(attachment.name[-11:], "zugferd.xml")
+        self._assert_imported_invoice_from_etree(refund, attachment)
+
+    def test_export_import_refund_xrehnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
+        self.partner_2.write({
+            'peppol_eas': '0204',
+            'peppol_endpoint': '123456789',
+            'invoice_edi_format': 'xrechnung'
+        })
+
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -237,7 +318,7 @@ class TestUBLDE(TestUBLCommon):
             ''',
             expected_file_path='from_odoo/xrechnung_ubl_out_refund.xml',
         )
-        self.assertEqual(attachment.name[-10:], "ubl_de.xml")
+        self.assertEqual(attachment.name[-13:], "xrechnung.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_export_import_refund_new(self):
@@ -268,6 +349,7 @@ class TestUBLDE(TestUBLCommon):
         acc_bank = self.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627232',
             'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         invoice = self._generate_move(
@@ -315,11 +397,13 @@ class TestUBLDE(TestUBLCommon):
         partner.write({
             'peppol_eas': '0204',
             'peppol_endpoint': '123456789',
+            'invoice_edi_format': 'xrechnung',
         })
 
         acc_bank = self.env['res.partner.bank'].create({
             'acc_number': 'DE15001559627232',
             'partner_id': partner.id,
+            'allow_out_payment': True,
         })
 
         invoice = self._generate_move(
@@ -338,3 +422,32 @@ class TestUBLDE(TestUBLCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '123456789')
+
+    def test_leitweg_id_for_child_contact(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+
+        self.partner_2.write({
+            'peppol_eas': '0204',
+            'peppol_endpoint': '13075957-K000-52',
+            'invoice_edi_format': 'xrechnung',
+        })
+
+        child_contact = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'parent_id': self.partner_2.id,
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            child_contact,
+            move_type='out_invoice',
+            partner_id=child_contact.id,
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_etree = self.get_xml_tree_from_string(xml_content)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, '13075957-K000-52')

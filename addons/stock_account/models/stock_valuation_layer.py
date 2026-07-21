@@ -179,8 +179,11 @@ class StockValuationLayer(models.Model):
             if float_is_zero(candidate.quantity, precision_rounding=rounding):
                 continue
             candidate_quantity = abs(candidate.quantity)
-            returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
-                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done'])
+            returned_qty = sum(
+                sm.product_uom._compute_quantity(sm.quantity, candidate.uom_id)
+                for sm in candidate.stock_move_id.returned_move_ids
+                if sm.state == 'done'
+            )
             candidate_quantity -= returned_qty
             if float_is_zero(candidate_quantity, precision_rounding=rounding):
                 continue
@@ -220,8 +223,11 @@ class StockValuationLayer(models.Model):
             if float_is_zero(svl.quantity, precision_rounding=rounding):
                 continue
             relevant_qty = abs(svl.quantity)
-            returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
-                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done'])
+            returned_qty = sum(
+                sm.product_uom._compute_quantity(sm.quantity, svl.uom_id)
+                for sm in svl.stock_move_id.returned_move_ids
+                if sm.state == 'done'
+            )
             relevant_qty -= returned_qty
             if float_is_zero(relevant_qty, precision_rounding=rounding):
                 continue
@@ -280,6 +286,7 @@ class StockValuationLayer(models.Model):
                     'credit': 0,
                     'product_id': product.id,
                     'quantity': 0,
+                    'tax_ids': [],
                 }), (0, 0, {
                     'name': name,
                     'account_id': credit_account_id,
@@ -287,6 +294,7 @@ class StockValuationLayer(models.Model):
                     'credit': abs(value),
                     'product_id': product.id,
                     'quantity': 0,
+                    'tax_ids': [],
                 })],
             }
             am_vals_list.append(move_vals)

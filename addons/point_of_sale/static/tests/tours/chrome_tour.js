@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { change: "18.0" }),
+            PaymentScreen.enterPaymentLineAmount("Cash", "20", true, { change: "-18.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             ReceiptScreen.totalAmountContains("2.0"),
@@ -208,6 +208,26 @@ registry.category("web_tour.tours").add("test_limited_categories", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_limited_categories_child_product_search", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // The product in the child category is not pre-loaded (limited product count = 1).
+            // Typing its name should not show it in the local list.
+            ProductScreen.searchProduct("Child Cat Product"),
+            ProductScreen.productIsDisplayed("Child Cat Product").map(negateStep),
+            // Clicking "Search more" triggers loadProductFromDB which queries the server.
+            // With the fix, the domain now includes child category IDs so the product is found.
+            {
+                content: "Click 'Search more' to search for unloaded product on the server",
+                trigger: ".search-more-button button",
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Child Cat Product"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
     steps: () =>
         [
@@ -221,6 +241,11 @@ registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
                     customerNote: "Test customer note",
                 }),
             ]),
+            {
+                content: "Wait for the debouncedSync to be complete",
+                trigger: "body",
+                run: async () => await new Promise((resolve) => setTimeout(resolve, 250)),
+            },
             Utils.refresh(),
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
@@ -287,5 +312,19 @@ registry.category("web_tour.tours").add("test_ctrl_number_ignored", {
                 { ...ProductScreen.clickLine("Whiteboard Pen")[0], isActive: ["mobile"] },
                 ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "1", "6.0"),
             ]),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_set_opening_note_without_cash_method", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            {
+                content: "Add Opening Notes",
+                trigger: ".opening-notes",
+                run: "edit Opening Notes",
+            },
+            Dialog.confirm("Open Register"),
+            Chrome.waitRequest(),
         ].flat(),
 });

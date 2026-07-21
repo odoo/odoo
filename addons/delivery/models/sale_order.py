@@ -124,9 +124,10 @@ class SaleOrder(models.Model):
             carrier = self.carrier_id
         else:
             name = _('Add a shipping method')
+            partner_id = self.with_company(self.company_id).partner_shipping_id
             carrier = (
-                self.with_company(self.company_id).partner_shipping_id.property_delivery_carrier_id
-                or self.with_company(self.company_id).partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+                partner_id.property_delivery_carrier_id.filtered("active")
+                or partner_id.commercial_partner_id.property_delivery_carrier_id.filtered("active")
             )
         return {
             'name': name,
@@ -166,7 +167,7 @@ class SaleOrder(models.Model):
             phone = order.partner_shipping_id.phone
 
             # Check if the current partner has a partner of type 'delivery' with the same address.
-            existing_partner = order.env['res.partner'].search([
+            existing_partner = order.env['res.partner'].with_context(active_test=False).search([
                 ('street', '=', street),
                 ('city', '=', city),
                 ('state_id', '=', state),
@@ -186,6 +187,8 @@ class SaleOrder(models.Model):
                 'country_id': country,
                 'email': email,
                 'phone': phone,
+                # Archive partner to prevent selection from the UI for Click&Collect.
+                'active': order.carrier_id.delivery_type != 'in_store',
             })
             order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
         return super()._action_confirm()

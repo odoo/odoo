@@ -37,3 +37,9 @@ def patch_all():
     patch_werkzeug()
     from .zeep import patch_zeep
     patch_zeep()
+    from .markupsafe import patch_markup
+    patch_markup()
+    from .requests import patch_requests
+    patch_requests()
+    from ._cpython import patch_cpython
+    patch_cpython()

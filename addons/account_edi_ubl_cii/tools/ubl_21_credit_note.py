@@ -2,6 +2,7 @@
 # It can be passed as the `template` argument to `dict_to_xml` to enforce the order of nodes.
 
 import odoo.addons.account_edi_ubl_cii.tools.ubl_21_common as cac
+import odoo.addons.account_edi_ubl_cii.tools.ubl_21_extensions as ext
 
 CreditNoteLine = {
     'cbc:ID': {},
@@ -25,7 +26,7 @@ CreditNoteLine = {
 
 CreditNote = {
     '_tag': 'CreditNote',
-    'ext:UBLExtensions': {},
+    'ext:UBLExtensions': ext.UBLExtensions,
     'cbc:UBLVersionID': {},
     'cbc:CustomizationID': {},
     'cbc:ProfileID': {},
@@ -34,11 +35,13 @@ CreditNote = {
     'cbc:CopyIndicator': {},
     'cbc:UUID': {},
     'cbc:IssueDate': {},
+    'cbc:TaxPointDate': {},
     'cbc:IssueTime': {},
     'cbc:CreditNoteTypeCode': {},
     'cbc:Note': {},
     'cbc:DocumentCurrencyCode': {},
     'cbc:TaxCurrencyCode': {},
+    'cbc:AccountingCost': {},
     'cbc:PricingCurrencyCode': {},
     'cbc:LineCountNumeric': {},
     'cbc:BuyerReference': {},
@@ -46,6 +49,8 @@ CreditNote = {
     'cac:DiscrepancyResponse': cac.DiscrepancyResponse,
     'cac:OrderReference': cac.OrderReference,
     'cac:BillingReference': cac.BillingReference,
+    'cac:DespatchDocumentReference': cac.DespatchDocumentReference,
+    'cac:ContractDocumentReference': cac.ContractDocumentReference,
     'cac:AdditionalDocumentReference': cac.DocumentReference,
     'cac:Signature': cac.Signature,
     'cac:AccountingSupplierParty': cac.SupplierParty,

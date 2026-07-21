@@ -1,5 +1,10 @@
+import base64
+import textwrap
+import uuid
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tools import config, file_open
 
 
 class TestUblCiiCommon(AccountTestInvoicingCommon):
@@ -9,6 +14,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.partner_be = cls._create_partner_be()
         cls.partner_lu_dig = cls._create_partner_lu_dig()
+        cls.partner_nl = cls._create_partner_nl()
         cls.partner_au = cls._create_partner_au()
 
     @classmethod
@@ -38,7 +44,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'company_registry': '0477472701',
-            'bank_ids': [Command.create({'acc_number': 'BE90735788866632'})],
+            'bank_ids': [Command.create({'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.be').id,
             **kwargs,
         })
@@ -52,9 +58,26 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'zip': "L-1528",
             'city': "Luxembourg",
             'vat': None,
+            'company_registry': None,
             'country_id': cls.env.ref('base.lu').id,
             'peppol_eas': '9938',
             'peppol_endpoint': '00005000041',
+            **kwargs,
+        })
+
+    @classmethod
+    def _create_partner_nl(cls, **kwargs):
+        return cls.env['res.partner'].create({
+            **cls._create_partner_default_values(),
+            'name': "partner_nl",
+            'street': "Kunststraat, 3",
+            'zip': "1000",
+            'city': "Amsterdam",
+            'vat': 'NL000099998B57',
+            'company_registry': None,
+            'country_id': cls.env.ref('base.nl').id,
+            'peppol_eas': '0106',
+            'peppol_endpoint': '77777677',
             **kwargs,
         })
 
@@ -68,7 +91,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'city': "Canberra",
             'vat': '53 930 548 027',
             'country_id': cls.env.ref('base.au').id,
-            'bank_ids': [Command.create({'acc_number': '93999574162167'})],
+            'bank_ids': [Command.create({'acc_number': '93999574162167', 'allow_out_payment': True})],
             **kwargs,
         })
 
@@ -107,33 +130,114 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             **kwargs,
         })
 
+    @classmethod
+    def subfolders(cls):
+        return None, None, None
+
     # -------------------------------------------------------------------------
     # EXPORT HELPERS
     # -------------------------------------------------------------------------
 
-    def subfolder(self):
-        return 'export'
-
     @classmethod
-    def _generate_invoice_ubl_file(cls, invoice):
-        cls.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+    def _generate_invoice_ubl_file(cls, invoice, **kwargs):
+        cls.env['account.move.send']._generate_and_send_invoices(invoice, **{'sending_methods': ['manual'], **kwargs})
 
     def _assert_invoice_ubl_file(self, invoice, filename):
+        subfolder_format, subfolder_document, subfolder_country = self.subfolders()
+        subfolder = f'export/{subfolder_format}/{subfolder_document}/{subfolder_country}'
+
         self.assertTrue(invoice.ubl_cii_xml_id)
-        self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=self.subfolder())
+
+        if 'EXTERNAL_MODE' in config['test_tags']:
+            self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
+
+        self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
 
     # -------------------------------------------------------------------------
     # IMPORT HELPERS
     # -------------------------------------------------------------------------
 
     @classmethod
-    def _import_as_attachment_on(cls, file_path=None, attachment=None, journal=None):
-        assert file_path or attachment
-        assert not file_path or not attachment
+    def _import_file_content(cls, test_name, extension):
+        subfolder_format, subfolder_document, subfolder_country = cls.subfolders()
+        subfolder = f'import/{subfolder_format}/{subfolder_document}/{subfolder_country}'
+        filename = f"{test_name}.{extension}"
+        full_file_path = cls._get_test_file_path(cls, filename, subfolder=subfolder)
+        with file_open(full_file_path, 'rb') as file:
+            return filename, file.read()
+
+    @classmethod
+    def _import_invoice_as_attachment(cls, test_name):
+        """ Import a test file as an attachment.
+
+        :param test_name:   The name of the test file to import.
+        :return:            The newly created attachment with the content of the targeted file.
+        """
+        filename, file_content = cls._import_file_content(test_name, 'xml')
+        return cls.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': filename,
+            'raw': file_content,
+        })
+
+    @classmethod
+    def _import_invoice_as_attachment_on(cls, test_name=None, attachment=None, journal=None):
+        """ Import an attachment on an accounting journal to create a brand new invoice.
+
+        :param test_name:   The name of the test file to import (mutually exclusive with 'attachment').
+        :param attachment:  OR an attachment containing the file to be imported  (mutually exclusive with 'test_name').
+        :param journal:     An optional specific accounting journal. Will be the default purchase journal if not specified.
+        :return:            The newly created invoice/vendor bill.
+        """
+        assert bool(test_name) ^ bool(attachment), "Either `filename` or `attachment` must be provided, but not both."
         journal = journal or cls.company_data["default_journal_purchase"]
-        if file_path:
-            attachment = cls._import_as_attachment(file_path)
+        if test_name:
+            attachment = cls._import_invoice_as_attachment(test_name)
         return journal._create_document_from_attachment(attachment.id)
+
+    @classmethod
+    def _get_raw_mail_message_str(self, attachments, email_to, message_id=None):
+        """ Mock an incoming mail message
+        :param attachments: Odoo recordset of ir.attachment.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
 
 
 class TestUblCiiBECommon(TestUblCiiCommon):
@@ -149,12 +253,35 @@ class TestUblCiiBECommon(TestUblCiiCommon):
             'vat': 'BE0202239951',
             'company_registry': '0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [Command.create({'acc_number': 'BE15001559627230'})],
+            'bank_ids': [Command.create({'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
         })
         return company
 
-    def subfolder(self):
-        return f'{super().subfolder()}/be'
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, subfolder_document, _subfolder_country = super().subfolders()
+        return subfolder_format, subfolder_document, 'be'
+
+
+class TestUblCiiFRCommon(TestUblCiiCommon):
+
+    @classmethod
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
+
+        company.partner_id.write({
+            'street': "Rue Grand Port 1",
+            'zip': "35400",
+            'city': "Saint-Malo",
+            'vat': 'FR23334175221',
+            'country_id': cls.env.ref('base.fr').id,
+        })
+        return company
+
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, subfolder_document, _subfolder_country = super().subfolders()
+        return subfolder_format, subfolder_document, 'fr'
 
 
 class TestUblBis3Common(TestUblCiiCommon):
@@ -169,5 +296,7 @@ class TestUblBis3Common(TestUblCiiCommon):
     # EXPORT HELPERS
     # -------------------------------------------------------------------------
 
-    def subfolder(self):
-        return super().subfolder().replace('export', 'export/bis3/invoice')
+    @classmethod
+    def subfolders(cls):
+        _subfolder_format, subfolder_document, subfolder_country = super().subfolders()
+        return 'bis3', subfolder_document, subfolder_country

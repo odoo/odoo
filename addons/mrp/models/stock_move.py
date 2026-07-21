@@ -77,6 +77,16 @@ class StockMoveLine(models.Model):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
         return super(StockMoveLine, self).write(vals)
 
+    def _get_aggregated_description(self, move):
+        desc = super()._get_aggregated_description(move)
+        if bom_desc := move.description_bom_line:
+            return desc + bom_desc
+        return desc
+
+    def _get_aggregated_line_key(self, move, product, uom, description):
+        line_key = f"{product.id}_{product.display_name}_{description or ''}_{uom.id}_{move.product_packaging_id or ''}"
+        return line_key
+
     def _get_aggregated_properties(self, move_line=False, move=False):
         aggregated_properties = super()._get_aggregated_properties(move_line, move)
         bom = aggregated_properties['move'].bom_line_id.bom_id
@@ -243,7 +253,7 @@ class StockMove(models.Model):
     order_finished_lot_id = fields.Many2one('stock.lot', string="Finished Lot/Serial Number", related="raw_material_production_id.lot_producing_id", store=True, index='btree_not_null')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
     cost_share = fields.Float(
-        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
+        "Cost Share (%)", digits=0,
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available', depends=['product_id'])
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available', depends=['product_id'])
@@ -454,7 +464,7 @@ class StockMove(models.Model):
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
                 if not values.get('location_final_id'):
-                    values['location_final_id'] = mo.warehouse_id.lot_stock_id.id
+                    values['location_final_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -471,6 +481,13 @@ class StockMove(models.Model):
                 self = other_move + updated_product_move
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
+        if (
+            not self.env.context.get("auto_conso")
+            and any(cmd[0] == Command.CREATE for cmd in vals.get("move_line_ids", []))
+            and all(move.raw_material_production_id for move in self)
+        ):
+            vals['manual_consumption'] = True
+            vals['picked'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
@@ -605,6 +622,32 @@ class StockMove(models.Model):
                 mo_to_cancel._action_cancel()
         return res
 
+    def _log_cancel_activity(self):
+        super()._log_cancel_activity()
+        if not self:
+            return
+
+        def _render_note_exception_cancel_dest(moves):
+            values = {
+                'origin_moves': moves,
+                'origin_picking': moves.picking_id[0],
+                'moves_information': ((move, (0.0, move.product_qty)) for move in moves),
+            }
+            return self.env['ir.qweb']._render('stock.exception_on_picking', values)
+
+        cancelled_ids = set(self.ids)
+        impacted_origins = self.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        documents = {}
+        for move in impacted_origins:
+            production = move.production_id
+            if not production:
+                continue
+            cancelled_dests = move.move_dest_ids.filtered(lambda m: m.id in cancelled_ids)
+            if not cancelled_dests.picking_id:
+                continue
+            documents[move.production_id, move.production_id.user_id or self.env.user] = cancelled_dests
+        return self.env['stock.picking']._log_activity(_render_note_exception_cancel_dest, documents)
+
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
         defaults['workorder_id'] = False
@@ -671,7 +714,7 @@ class StockMove(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):
-            return [(self.production_id, self.production_id.user_id, visited)]
+            return [(self.production_id, self.production_id.user_id or self.env.user, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
@@ -759,8 +802,13 @@ class StockMove(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
-                incoming_qty = sum(bom_line_moves.filtered(filters['incoming_moves']).mapped(get_qty))
-                outgoing_qty = sum(bom_line_moves.filtered(filters['outgoing_moves']).mapped(get_qty))
+                # Due to multi-step only the last move of each chain should be considered
+                incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
+                final_incoming_moves = incoming_moves - incoming_moves.move_orig_ids
+                incoming_qty = sum(final_incoming_moves.mapped(get_qty))
+                outgoing_moves = bom_line_moves.filtered(filters['outgoing_moves'])
+                final_outgoing_moves = outgoing_moves - outgoing_moves.move_orig_ids
+                outgoing_qty = sum(final_outgoing_moves.mapped(get_qty))
                 qty_processed = incoming_qty - outgoing_qty
                 # We compute a ratio to know how many kits we can produce with this quantity of that specific component
                 qty_ratios.append(float_round(qty_processed / qty_per_kit, precision_rounding=bom_line.product_id.uom_id.rounding))

@@ -93,4 +93,17 @@ publicWidget.registry.WebsiteSaleCheckout.include({
         }
     },
 
+    /**
+     * Reload the page after setting an in-store pickup location to refresh all cart values.
+     *
+     * @override method from `@website_sale/js/checkout`
+     */
+    async _setPickupLocation(pickupLocationData) {
+        await this._super.apply(this, arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
+    },
+
 });

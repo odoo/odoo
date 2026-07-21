@@ -297,6 +297,11 @@
                         <h1 class="w-100"><field name="name" nolabel="1" placeholder="Add title" colspan="2"/></h1>
                     </div>
                     <group>
+                        <!--when "stop" is set manually, "duration" is computed. When "start" is changed
+                        "stop" is computed based on the previously-computed "duration". Hence we need to
+                        keep the last computed duration in the front-end model and send it with "start"
+                        when it changes-->
+                        <field name="duration" invisible="1" force_save="1"/>
                         <field name="start_date" widget="daterange" options="{'end_date_field': 'stop_date'}" invisible="not allday" required="allday"/>
                         <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday"/>
                         <field name="stop_date" invisible="1" />

@@ -212,3 +212,82 @@ div#total {
         }
     }
 }
+
+// Stable fix for sale_management 18 up to 18.4
+
+// The table styling is not applied due to the table missing the
+// table-borderless and the thead using td instead of th.
+
+// Applied here to avoid having to update the module and keep it close to the
+// table styling. Everything stays scoped under the table with
+// table_optional_products name so it doesn't affect other tables.
+
+table[name="table_optional_products"] {
+    // Copy of the table-borderless class
+    > :not(caption) > * > * {
+        border-bottom-width: 0;
+    }
+
+    > :not(:first-child) {
+        border-top-style: none;
+        border-top-width: 0;
+    }
+
+    tbody, thead, tfoot, tr, td, th {
+        border: 0 none;
+    }
+
+    > :not(:first-child) {
+        border-top-style: none;
+    }
+
+    // Overrides the table-sm class
+    td {
+        padding: $table-cell-padding-y $table-cell-padding-x;
+    }
+
+    td[name="td_option_price_unit"] strong, thead {
+        font-weight: normal !important;
+    }
+}
+
+.o_table_boxed, .o_table_boxed-rounded {
+    table[name="table_optional_products"] {
+        thead {
+            text-transform: uppercase;
+
+            td:not(:last-child) {
+                border-right: $border-width solid $gray-700;
+            }
+
+            td {
+                border-bottom: $border-width solid $border-color;
+            }
+        }
+    }
+}
+
+.o_table_bold {
+    table[name="table_optional_products"] {
+        thead td {
+            border-top: $border-width * 3 solid $o-default-report-secondary-color;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.o_table_boxed-rounded {
+    table[name="table_optional_products"] thead {
+        td:first-child {
+            border-radius: $border-radius-lg 0 0 0;
+        }
+
+        td:last-child {
+            border-radius: 0 $border-radius-lg 0 0;
+        }
+
+        td {
+            border-color: $gray-300 !important;
+        }
+    }
+}

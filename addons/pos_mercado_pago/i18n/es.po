@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-07-03 17:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -23,13 +23,14 @@ msgstr ""
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
-msgid "1494126963"
-msgstr "1494126963"
-
-#. module: pos_mercado_pago
-#: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "APP_USR-..."
 msgstr "APP_USR-..."
+
+#. module: pos_mercado_pago
+#. odoo-python
+#: code:addons/pos_mercado_pago/models/mercado_pago_pos_request.py:0
+msgid "Cannot decode Mercado Pago POS response. Error: %s"
+msgstr ""
 
 #. module: pos_mercado_pago
 #. odoo-python
@@ -50,6 +51,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "Force PDV"
 msgstr "Forzar PDV"
+
+#. module: pos_mercado_pago
+#. odoo-javascript
+#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+msgid "Mercado Pago %s"
+msgstr ""
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
@@ -137,6 +144,12 @@ msgid "Production user token"
 msgstr "Token de usuario de producción"
 
 #. module: pos_mercado_pago
+#. odoo-javascript
+#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+msgid "System error"
+msgstr ""
+
+#. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
 msgid "Terminal S/N"
 msgstr "Número de serie del terminal"
@@ -163,3 +176,6 @@ msgstr "Estado de pago desconocido"
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "c2f3662..."
 msgstr "c2f3662..."
+
+#~ msgid "1494126963"
+#~ msgstr "1494126963"

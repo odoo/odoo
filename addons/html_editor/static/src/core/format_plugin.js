@@ -13,6 +13,7 @@ import {
     isZwnbsp,
     isZWS,
     previousLeaf,
+    PROTECTED_QWEB_SELECTOR,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -153,7 +154,9 @@ export class FormatPlugin extends Plugin {
     };
 
     removeFormat() {
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const targetedNodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter(this.dependencies.selection.isNodeEditable);
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 !formatsSpecs[format].removeStyle ||
@@ -176,7 +179,11 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(isTextNode);
+        const targetedTextNodes = targetedNodes.filter(
+            (node) =>
+                node.matches?.(PROTECTED_QWEB_SELECTOR) ||
+                (isTextNode(node) && (isVisibleTextNode(node) || isZWS(node)))
+        );
         const isFormatted = formatsSpecs[format].isFormatted;
         return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
@@ -190,14 +197,19 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const isFormatted = formatsSpecs[format].isFormatted;
+        const isNonFormattedWhiteSpaces = (node) =>
+            /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
                 isTextNode(node) &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
-                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node)))
+                !isNonFormattedWhiteSpaces(node) &&
+                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node))) &&
+                this.dependencies.selection.isNodeEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
         );
-        const isFormatted = formatsSpecs[format].isFormatted;
         return (
             targetedTextNodes.length &&
             targetedTextNodes.every((node) => isFormatted(node, { editable: this.editable }))
@@ -208,17 +220,20 @@ export class FormatPlugin extends Plugin {
     // - the calls to hasAnyColor should probably be replaced by calls to predicates
     //   registered as resources (e.g. by the ColorPlugin).
     hasAnyFormat(targetedNodes) {
+        const editableTargetedNodes = targetedNodes.filter(
+            this.dependencies.selection.isNodeEditable
+        );
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, targetedNodes)
+                this.hasSelectionFormat(format, editableTargetedNodes)
             ) {
                 return true;
             }
         }
         return (
-            hasAnyNodesColor(targetedNodes, "color") ||
-            hasAnyNodesColor(targetedNodes, "backgroundColor")
+            hasAnyNodesColor(editableTargetedNodes, "color") ||
+            hasAnyNodesColor(editableTargetedNodes, "backgroundColor")
         );
     }
 
@@ -230,6 +245,16 @@ export class FormatPlugin extends Plugin {
 
     // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
+        const deepSelection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const anchorElement = deepSelection.anchorNode;
+        const focusElement = deepSelection.focusNode;
+        if (
+            anchorElement === focusElement &&
+            !isContentEditable(anchorElement) &&
+            !closestElement(anchorElement, PROTECTED_QWEB_SELECTOR)
+        ) {
+            return;
+        }
         // note: does it work if selection is in opposite direction?
         const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
@@ -268,14 +293,18 @@ export class FormatPlugin extends Plugin {
                 )
         );
 
+        const textNodesToFormat = selectedTextNodes.filter(
+            (n) => this.checkPredicates("is_formattable_node_predicates", n) ?? true
+        );
+
         const tagetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
-                .filter(Boolean)
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
+                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
         );
         const formatSpec = formatsSpecs[formatName];
-        for (const node of selectedTextNodes) {
+        for (const node of textNodesToFormat) {
             const inlineAncestors = [];
             /** @type { Node } */
             let currentNode = node;
@@ -375,7 +404,14 @@ export class FormatPlugin extends Plugin {
             selectedTextNodes[0] &&
             selectedTextNodes[0].textContent === "\u200B"
         ) {
-            this.dependencies.selection.setCursorStart(selectedTextNodes[0]);
+            // We set the cursor at the end of the selected ZWS text node, to
+            // avoid an issue on ios safari where the selection is collapsed,
+            // and set the format as bold/italic, the cursor is not properly
+            // updated. Even though the selection is properly set, safari seems
+            // to force the cursor to stay at the old position at rendering
+            // if there's no node between the old and new cursor position,
+            // e.g. <div>[]<p>\u200B</p></div> -> <div><p>[]\u200B</p></div>.
+            this.dependencies.selection.setCursorEnd(selectedTextNodes[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];

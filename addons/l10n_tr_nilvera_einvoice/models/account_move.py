@@ -1,4 +1,5 @@
 import uuid
+from base64 import b64decode
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
 
@@ -71,7 +72,7 @@ class AccountMove(models.Model):
         for move in self:
             if move.l10n_tr_nilvera_uuid and move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
-        super().button_draft()
+        return super().button_draft()
 
     def _l10n_tr_nilvera_submit_einvoice(self, xml_file, customer_alias):
         self._l10n_tr_nilvera_submit_document(
@@ -152,33 +153,49 @@ class AccountMove(models.Model):
         )
 
     def _l10n_tr_nilvera_get_submitted_document_status(self):
-        with _get_nilvera_client(self.env.company) as client:
-            for invoice in self:
-                invoice_channel = invoice.partner_id.l10n_tr_nilvera_customer_status
-                document_category = invoice._l10n_tr_get_document_category(invoice_channel)
-                if not document_category or not invoice_channel:
-                    continue
+        for company, invoices in self.grouped('company_id').items():
+            with _get_nilvera_client(company) as client:
+                for invoice in invoices:
+                    invoice_channel = invoice.partner_id.l10n_tr_nilvera_customer_status
+                    document_category = invoice._l10n_tr_get_document_category(
+                        invoice_channel
+                    )
+                    if not document_category or not invoice_channel:
+                        continue
 
-                response = client.request(
-                    "GET",
-                    f"/{invoice_channel}/{quote(document_category)}/{invoice.l10n_tr_nilvera_uuid}/Status",
-                )
+                    response = client.request(
+                        "GET",
+                        f"/{invoice_channel}/{quote(document_category)}/{invoice.l10n_tr_nilvera_uuid}/Status",
+                    )
 
-                nilvera_status = response.get('InvoiceStatus', {}).get('Code') or response.get('StatusCode')
-                if nilvera_status in dict(invoice._fields['l10n_tr_nilvera_send_status'].selection):
-                    invoice.l10n_tr_nilvera_send_status = nilvera_status
-                    if nilvera_status == 'error':
+                    nilvera_status = response.get("InvoiceStatus", {}).get(
+                        "Code"
+                    ) or response.get("StatusCode")
+                    if nilvera_status in dict(
+                        invoice._fields["l10n_tr_nilvera_send_status"].selection
+                    ):
+                        invoice.l10n_tr_nilvera_send_status = nilvera_status
+                        if nilvera_status == 'error':
+                            invoice.message_post(
+                                body=Markup("%s<br/>%s - %s<br/>")
+                                % (
+                                    self.env._(
+                                        "The invoice couldn't be sent to the recipient."
+                                    ),
+                                    response.get("InvoiceStatus", {}).get("Description")
+                                    or response.get("StatusDetail"),
+                                    response.get("InvoiceStatus", {}).get(
+                                        "DetailDescription"
+                                    )
+                                    or response.get("ReportStatus"),
+                                )
+                            )
+                    else:
                         invoice.message_post(
-                            body=Markup(
-                                "%s<br/>%s - %s<br/>"
-                            ) % (
-                                _("The invoice couldn't be sent to the recipient."),
-                                response.get('InvoiceStatus', {}).get('Description') or response.get('StatusDetail'),
-                                response.get('InvoiceStatus', {}).get('DetailDescription') or response.get('ReportStatus'),
+                            body=self.env._(
+                                "The invoice status couldn't be retrieved from Nilvera."
                             )
                         )
-                else:
-                    invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
         with _get_nilvera_client(self.env.company) as client:
@@ -284,7 +301,7 @@ class AccountMove(models.Model):
             'name': filename,
             'res_id': invoice.id,
             'res_model': 'account.move',
-            'datas': response,
+            'raw': b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
@@ -351,7 +368,7 @@ class AccountMove(models.Model):
 
     def _cron_nilvera_get_invoice_status(self):
         invoices_to_update = self.env['account.move'].search([
-            ('l10n_tr_nilvera_send_status', 'in', ['waiting', 'sent']),
+            ('l10n_tr_nilvera_send_status', 'in', ['waiting', 'sent', 'unknown']),
             ('move_type', 'in', self._l10n_tr_types_to_update_status()),
         ])
         invoices_to_update._l10n_tr_nilvera_get_submitted_document_status()

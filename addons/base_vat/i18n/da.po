@@ -7,13 +7,14 @@
 # Martin Trigaux, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 10:31+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-06-23 17:28+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/base_vat/"
 "da/>\n"
 "Language: da\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -30,6 +31,12 @@ msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "10XXXXXXXXY eller 20XXXXXXXXY eller 15XXXXXXXXY eller 16XXXXXXXXY eller "
 "17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr "11111111111 (NIN) eller 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -43,20 +50,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr "17291716060 (NIN) eller 1729171602 (VKN)"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 eller 1792060346"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -75,6 +70,11 @@ msgstr "49-098-576 eller 49098576"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 eller 20055361682"
+
+#. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr "Basis-moms: Synkronisér opdateringer fra IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -97,17 +97,7 @@ msgstr "Virksomheder"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Det var ikke muligt at oprette forbindelse til VIES-serveren. Momsnummeret "
-"%s kunne derfor ikke valideres."
+msgstr "Konfigurationsindstillinger"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -175,6 +165,12 @@ msgstr "Gyldig inden for EU"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr "Ugyldigt IAP VIES-slutpunkt"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 eller GODE561231GR8"
 
@@ -187,7 +183,7 @@ msgstr "Udfør VIES-validering"
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
-msgstr "Moms ID"
+msgstr "Skatte-ID"
 
 #. module: base_vat
 #. odoo-python
@@ -209,8 +205,21 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "Skattenummeret %s kunne ikke fortolkes af VIES-serveren."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "Gyldigheden inden for fællesskabet er blevet opdateret til: %s."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+"VIES-kontrollen mislykkedes. Kontrollér skatteregistreringsnummeret manuelt."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr "VIES-kontrollen er under behandling. Status vil snart blive opdateret."
 
 #. module: base_vat
 #. odoo-python
@@ -231,16 +240,6 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"Anmodningen om momsvalidering kunne ikke behandles. VIES-ydelsen svarede med "
-"følgende fejl: %s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "VAT"
 msgstr "Moms"
 
@@ -248,12 +247,12 @@ msgstr "Moms"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Bekræft CVR nummer"
+msgstr "Bekræft momsnummer"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Bekræft CVR numre ved hjælp af European VIES"
+msgstr "Bekræft momsnumre med European VIES"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
@@ -271,8 +270,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "enten 11 cifre for CPF eller 14 cifre for CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "enten 11 cifre for CPF eller 14 tegn for CNPJ"
 
 #. module: base_vat
 #. odoo-python
@@ -285,3 +284,29 @@ msgstr "bogføringsgruppe [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "Gyldigheden inden for Community er blevet opdateret."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "enten 11 cifre for CPF eller 14 cifre for CNPJ"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Det var ikke muligt at oprette forbindelse til VIES-serveren. "
+#~ "Momsnummeret %s kunne derfor ikke valideres."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "Skattenummeret %s kunne ikke fortolkes af VIES-serveren."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Anmodningen om momsvalidering kunne ikke behandles. VIES-ydelsen svarede "
+#~ "med følgende fejl: %s"
+
+#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
+#~ msgstr "17291716060 (NIN) eller 1729171602 (VKN)"

@@ -21,7 +21,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-    def _dropship_product1(self):
+    def _dropship_product1(self, bill_price=None, qty_SO=1, qty_delivery=1):
         # enable the dropship route on the product
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         self.product1.write({'route_ids': [(6, 0, [dropshipping_route.id])]})
@@ -43,7 +43,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {
                 'name': self.product1.name,
                 'product_id': self.product1.id,
-                'product_uom_qty': 1,
+                'product_uom_qty': qty_SO,
                 'product_uom': self.product1.uom_id.id,
                 'price_unit': 12,
                 'tax_id': [(6, 0, [])],
@@ -58,8 +58,13 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         # validate the dropshipping picking
         self.assertEqual(len(self.sale_order1.picking_ids), 1)
-        self.sale_order1.picking_ids.button_validate()
-        self.assertEqual(self.sale_order1.picking_ids.state, 'done')
+        if qty_SO > qty_delivery:
+            dropship = self.sale_order1.picking_ids
+            dropship.move_ids.quantity = qty_delivery
+            Form.from_action(self.env, dropship.button_validate()).save().process_cancel_backorder()
+        else:
+            self.sale_order1.picking_ids.button_validate()
+            self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 
         # create the vendor bill
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -69,6 +74,8 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         for i in range(len(self.purchase_order1.order_line)):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
+                if bill_price:
+                    line_form.price_unit = bill_price
         self.vendor_bill1 = move_form.save()
         self.vendor_bill1.action_post()
 
@@ -429,3 +436,34 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertEqual(dropship3_layers[0].value, 24)
         dropship3_cogs_line = customer_invoice3.line_ids.filtered(lambda aml: aml.account_id.id == account_output.id)
         self.assertEqual(dropship3_cogs_line.balance, -24)
+
+    def test_dropship_avco_anglo_saxon_price_diff_bill(self):
+        """ Check that the correction amls from expense to stock interim receipt
+        is created for a dropshipped avco product with automated valuation
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        all_amls = self._dropship_product1(bill_price=6)
+
+        expected_aml = {
+            self.company_data['default_account_payable'].id:        (0.0, 6.0),
+            self.company_data['default_account_expense'].id:        (8.0, 2.0),
+            self.company_data['default_account_stock_in'].id:       (8.0, 8.0),
+            self.company_data['default_account_stock_out'].id:      (8.0, 8.0),
+        }
+
+        self._check_results(expected_aml, 12, all_amls)
+
+    def test_dropship_partial_quantity(self):
+        """ check that when the dropship delivery is validated with a partial quantity
+        the svl created has the same quantity
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        all_amls = self._dropship_product1(qty_SO=2, qty_delivery=1)
+        svls_qty = all_amls.sale_line_ids.order_id.picking_ids.filtered(lambda p: p.state == 'done').move_ids.stock_valuation_layer_ids.mapped('quantity')
+        self.assertEqual(svls_qty, [1.0, -1.0])

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_peppol.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//a[@name='peppol_get_message_status']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
+                </xpath>
+                <xpath expr="//a[@name='peppol_get_message_status']" position="after">
+                    <a type="object" name="peppol_get_message_status" groups="account.group_account_invoice" invisible="country_code != 'FR'">Fetch E-Invoicing Status</a>
+                </xpath>
+
+                <xpath expr="//a[@name='action_peppol_ready_moves']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
+                </xpath>
+                <xpath expr="//a[@name='action_peppol_ready_moves']" position="after">
+                    <a type="object" name="action_peppol_ready_moves" groups="account.group_account_invoice" invisible="country_code != 'FR'">E-Invoicing ready invoices</a>
+                </xpath>
+
+                <xpath expr="//a[@name='peppol_get_new_documents']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'FR'" separator="or"/>
+                </xpath>
+                <xpath expr="//a[@name='peppol_get_new_documents']" position="after">
+                    <a type="object" name="peppol_get_new_documents" groups="account.group_account_invoice" invisible="country_code != 'FR'">Fetch E-Invoicing Documents</a>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

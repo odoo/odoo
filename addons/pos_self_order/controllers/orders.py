@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import timedelta
-from odoo import http, fields, _
+from odoo import Command, http, _
 from odoo.http import request
-from odoo.tools import float_round
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
@@ -20,33 +18,26 @@ class PosSelfOrderController(http.Controller):
         pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
         pos_session = pos_config.current_session_id
 
-        # Create the order
-        ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        sequence_number = order.get('sequence_number')
-        if not sequence_number:
-            sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
-        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
-        fiscal_position = (
-            pos_config.takeaway_fp_id
-            if is_takeaway
-            else pos_config.default_fiscal_position_id
-        )
+        existing_order = pos_config.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+        if not existing_order.exists():
+            ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
+            sequence_number = order.get('sequence_number')
+            if not sequence_number:
+                sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
+            order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
+            order['pos_reference'] = order_reference
+            order['sequence_number'] = sequence_number
+            order['name'] = order_reference
 
-        if 'picking_type_id' in order:
-            del order['picking_type_id']
-
-        order['name'] = order_reference
-        order['pos_reference'] = order_reference
-        order['sequence_number'] = sequence_number
-        order['user_id'] = request.session.uid
-        order['date_order'] = str(fields.Datetime.now())
-        order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
-
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
-        line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
+        # Create a safe copy of the order with only the necessary fields for order creation to
+        # avoid potential security issues and to reduce the payload size
+        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, table)
+        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
-        self._verify_line_price(line_ids, pos_config)
+        # Recompute all prices from newly created lines to ensure price correctness and
+        # avoid potential manipulation from the frontend
+        order_ids.recompute_prices()
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
@@ -62,8 +53,14 @@ class PosSelfOrderController(http.Controller):
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config_id):
+        orders = order.read(order._load_pos_data_fields(config_id.id), load=False)
+
+        for o in orders:
+            del o['email']
+            del o['mobile']
+
         return {
-            'pos.order': order.read(order._load_pos_data_fields(config_id.id), load=False),
+            'pos.order': orders,
             'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
             'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
             'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
@@ -71,49 +68,7 @@ class PosSelfOrderController(http.Controller):
         }
 
     def _verify_line_price(self, lines, pos_config, takeaway=False):
-        pricelist = pos_config.pricelist_id
-        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
-
-        for line in lines:
-            product = line.product_id
-            lst_price = pricelist._get_product_price(product, quantity=line.qty) if pricelist else product.lst_price
-            selected_attributes = line.attribute_value_ids
-            lst_price += sum(selected_attributes.mapped('price_extra'))
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
-            lst_price += price_extra
-
-            fiscal_pos = pos_config.default_fiscal_position_id
-            if takeaway and pos_config.takeaway_fp_id:
-                fiscal_pos = pos_config.takeaway_fp_id
-
-            if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
-                remaining_total = lst_price
-                factor = lst_price / original_total if original_total > 0 else 1
-
-                for i, pos_order_line in enumerate(line.combo_line_ids):
-                    child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
-                    remaining_total -= price_unit
-
-                    if i == len(line.combo_line_ids) - 1:
-                        price_unit += remaining_total
-
-                    selected_attributes = pos_order_line.attribute_value_ids
-                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
-
-                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
-                    pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
-
-                    pos_order_line.write({
-                        'price_unit': price_unit,
-                        'price_subtotal': pdetails.get('total_excluded'),
-                        'price_subtotal_incl': pdetails.get('total_included'),
-                        'price_extra': price_extra_child,
-                        'tax_ids': child_product.taxes_id,
-                    })
-                lst_price = 0
+        lines.order_id.recompute_prices()
 
     @http.route('/pos-self-order/remove-order', auth='public', type='json', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
@@ -238,3 +193,49 @@ class PosSelfOrderController(http.Controller):
         user = pos_config.self_ordering_default_user_id
         table = table_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
         return pos_config, table
+
+    def _check_records(self, pos_config, order):
+        dynamic_models = pos_config._get_dynamic_models()
+        pos_order_model = pos_config.env['pos.order']
+
+        def check_vals_dict(vals, parent_model):
+            """Recursively check a values dictionary for whitelisted models."""
+            for field_name, value in vals.items():
+                # Skip if not a list or empty
+                if not isinstance(value, list) or not value:
+                    continue
+
+                # Check if first item is a command tuple
+                if not isinstance(value[0], (list, tuple)):
+                    continue
+
+                # Skip if field doesn't exist
+                field = parent_model._fields.get(field_name)
+                if not field or not field.relational:
+                    continue
+
+                # Get comodel_name
+                comodel_name = field.comodel_name
+                for command in value:
+                    if not isinstance(command, (list, tuple)) or not command:
+                        continue
+
+                    cmd_type = command[0]
+
+                    # Only validate create (0), update (1), and delete (2) commands
+                    # Link (4), unlink (3), unlink all (5), and replace (6) are allowed for any model
+                    if cmd_type in (Command.CREATE, Command.UPDATE, Command.DELETE) and comodel_name not in dynamic_models:
+                        raise Unauthorized(_(
+                            "You are not authorized to create, update, or delete records of type '%(model)s'. "
+                            "Only the following models are allowed: %(allowed)s",
+                            model=comodel_name,
+                            allowed=', '.join(dynamic_models),
+                        ))
+
+                    # For create (0) and update (1), recursively check nested values
+                    if cmd_type in (Command.CREATE, Command.UPDATE) and len(command) >= 3 and isinstance(command[2], dict):
+                        nested_model = pos_config.env[comodel_name] if comodel_name else parent_model
+                        check_vals_dict(command[2], nested_model)
+
+        # Start validation from the order dict
+        check_vals_dict(order, pos_order_model)

@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 from odoo import fields, models
 
@@ -75,11 +76,24 @@ class AccountMoveSend(models.AbstractModel):
                     move.write({
                         'l10n_pl_edi_status': 'sent',
                         'l10n_pl_edi_ref': l10n_pl_edi_ref,
-                        'l10n_pl_edi_session_id': move.company_id.l10n_pl_edi_session_id,
+                        'l10n_pl_edi_session_id': move.company_id.sudo().l10n_pl_edi_session_id,
                         'l10n_pl_edi_header': False,
+                        'l10n_pl_edi_attachment_id': self.env['ir.attachment'].sudo().create({
+                            'description': self.env._('KSeF Sent Invoice XML'),
+                            'name': f"FA3-{move.name.replace('/', '_')}.xml",
+                            'type': 'binary',
+                            'mimetype': 'application/xml',
+                            'raw': xml_content,
+                            'res_id': move.id,
+                            'res_model': move._name,
+                            'res_field': 'l10n_pl_edi_attachment_file',
+                        }).id,
                     })
-                    # Will be linked in _link_invoice_documents
-                    invoices_data[move]['l10n_pl_edi_attachment_file'] = xml_content
+                    move.sudo().with_context(no_new_invoice=True).message_post(
+                        body=self.env._("The KSeF XML has been attached."),
+                        attachment_ids=move.l10n_pl_edi_attachment_id.ids,
+                    )
+                    move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
 
                 except Exception as errors:  # noqa: BLE001
                     set_error(move, str(errors))
@@ -89,30 +103,35 @@ class AccountMoveSend(models.AbstractModel):
 
         # Check the status already
         if moves_by_company:
+            self._l10n_pl_edi_try_status_fetch_from_ksef(invoices_data)
+
+    def _l10n_pl_edi_try_status_fetch_from_ksef(self, invoices_data):
+        moves_to_update = self.env['account.move'].union(*invoices_data).filtered(lambda m: m.l10n_pl_edi_ref and not m.l10n_pl_edi_number)
+        attempts = 5
+        while attempts > 0 and moves_to_update:
+            sleep(2)  # We sleep first as it always fails on the first iteration
+            updated = self.env['account.move']
+
+            for move in moves_to_update:
+                move.action_l10n_pl_edi_update_invoice_status()
+                if move.l10n_pl_edi_status != 'sent':
+                    updated |= move
+                else:
+                    # If a move failed, it's probably too early for all moves, not just this one, and we're going to sleep anyways. Therefore we break.
+                    break
+
+            moves_to_update -= updated
+            attempts -= 1
+
+        if moves_to_update:
+
+            for move in moves_to_update:
+                invoices_data[move]['error'] = {
+                    'error_title': self.env._("Warning: KSeF status check failed"),
+                    'errors': [self.env._(
+                        "The invoice was successfully sent to KSeF but the status check failed and will be retried later,"
+                        " 'Check Sending' to retry immediately.",
+                    )],
+                }
+
             self.env.ref('l10n_pl_edi.cron_auto_checks_the_polish_invoice_status')._trigger()
-
-    def _link_invoice_documents(self, invoices_data):
-        # EXTENDS 'account'
-        super()._link_invoice_documents(invoices_data)
-
-        for move, invoice_data in invoices_data.items():
-            if 'l10n_pl_edi_attachment_file' in invoice_data:
-                move.l10n_pl_edi_attachment_id = self.env['ir.attachment'].sudo().create({
-                    'description': self.env._('KSeF Sent Invoice XML'),
-                    'name': f"FA3-{move.name.replace('/', '_')}.xml",
-                    'type': 'binary',
-                    'mimetype': 'application/xml',
-                    'raw': invoice_data['l10n_pl_edi_attachment_file'],
-                    'res_id': move.id,
-                    'res_model': move._name,
-                    'res_field': 'l10n_pl_edi_attachment_file',
-                })
-                move.sudo().with_context(no_new_invoice=True).message_post(
-                    body=self.env._("The KSeF XML has been attached."),
-                    attachment_ids=move.l10n_pl_edi_attachment_id.ids,
-                )
-
-        self.env['account.move'].union(*invoices_data).invalidate_recordset(fnames=[
-            'l10n_pl_edi_attachment_id',
-            'l10n_pl_edi_attachment_file',
-        ])

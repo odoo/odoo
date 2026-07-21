@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', {  steps: 
         run: "click",
     },
     {
-        trigger: ".fa-list",
+        trigger: ".o_list_renderer .fa-list",
         run: "click",
     },
     {
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
         run: "click",
     },
     {
-        trigger: ".fa-list",
+        trigger: ".o_list_renderer .fa-list",
         run: "click",
     },
     {
@@ -188,7 +188,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         run: "click",
     },
     {
-        trigger: ".fa-list",
+        trigger: ".o_list_renderer .fa-list",
         run: "click",
     },
     {
@@ -210,7 +210,10 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
     },
     {
         trigger: ".modal div[name=next_serial_count] input",
-        run: "edit 7.5",
+        run() {
+            //input type number not supported by tour helpers.
+            this.anchor.value = "7.5";
+        }
     },
     {
         trigger: ".modal div[name=total_received] input",
@@ -381,7 +384,7 @@ registry.category("web_tour.tours").add('test_add_new_line', {
             run: "click",
         },
         {
-            trigger: ".fa-list:eq(1)",
+            trigger: ".o_list_renderer .fa-list:eq(1)",
             run: "click",
         },
         {
@@ -424,7 +427,7 @@ registry.category("web_tour.tours").add("test_edit_existing_line", {
             run: "edit 2",
         },
         {
-            trigger: ".fa-list",
+            trigger: ".o_list_renderer .fa-list",
             run: "click",
         },
         {

@@ -32,6 +32,7 @@ class MrpProduction(models.Model):
             production.bom_product_ids = production.bom_id.bom_line_ids.product_id
 
     def _inverse_move_line_raw_ids(self):
+        line_ids_to_delete = set()
         for production in self:
             line_by_product = defaultdict(lambda: self.env['stock.move.line'])
             for line in production.move_line_raw_ids:
@@ -39,14 +40,15 @@ class MrpProduction(models.Model):
             for move in production.move_raw_ids:
                 lines = line_by_product.pop(move.product_id, self.env['stock.move.line'])
                 lines_to_delete = move.move_line_ids - lines
+                line_ids_to_delete.update(lines_to_delete.ids)
                 move.move_line_ids = lines
-                lines_to_delete.unlink()
             for product_id, lines in line_by_product.items():
                 qty = sum(line.product_uom_id._compute_quantity(line.quantity, product_id.uom_id) for line in lines)
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+        self.env['stock.move.line'].browse(line_ids_to_delete).unlink()
 
     def write(self, vals):
         if self.env.user._is_portal() and not self.env.su:

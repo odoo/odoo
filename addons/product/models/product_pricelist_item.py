@@ -408,7 +408,9 @@ class PricelistItem(models.Model):
     def _onchange_rule_content(self):
         if not self.env.context.get('default_applied_on', False):
             # If we aren't coming from a specific product template/variant.
-            variants_rules = self.filtered('product_id')
+            variants_rules = self.filtered(
+                lambda r: bool(r.product_id) and bool(r.product_tmpl_id)
+            )
             template_rules = (self-variants_rules).filtered('product_tmpl_id')
             category_rules = self.filtered(lambda cat: cat.categ_id and cat.categ_id.name != 'All')
             variants_rules.update({'applied_on': '0_product_variant'})

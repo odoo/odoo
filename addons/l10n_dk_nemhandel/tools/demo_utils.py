@@ -5,8 +5,6 @@ from decorator import decorator
 from odoo import _, modules
 from odoo.exceptions import ValidationError
 
-DEMO_PRIVATE_KEY = 'l10n_dk_nemhandel/tools/private_key.pem'
-
 # -------------------------------------------------------------------------
 # HELPERS
 # -------------------------------------------------------------------------
@@ -29,7 +27,11 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
 
     def _mock_get_document(user, args, kwargs):
         message_uuid = args[1]['message_uuids'][0]
-        return {message_uuid: {'state': 'done'}}
+        return {message_uuid: {
+            'state': 'done',
+            'origin_message_uuid': message_uuid,
+            'document_type': 'Invoice'
+        }}
 
     def _mock_send_document(user, args, kwargs):
         # Trigger the reception of vendor bills

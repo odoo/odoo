@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
+from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode, url_join
 
 from odoo.tests import tagged
@@ -121,6 +122,23 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             self._make_json_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
+
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    def test_reject_notification_when_missing_secret(self):
+        self.stripe.stripe_webhook_secret = False
+        tx = self._create_transaction('redirect')
+        self.assertRaises(Forbidden, StripeController()._verify_notification_signature, tx)
+
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    def test_reject_notification_with_missing_timestamp(self):
+        tx = self._create_transaction("redirect")
+        signature_header = 'v1=Test_Signature'
+        mock_request = MagicMock()
+        mock_request.httprequest.data = b''
+        mock_request.httprequest.headers = {'Stripe-Signature': signature_header}
+        controller = StripeController()
+        with patch('odoo.addons.payment_stripe.controllers.main.request', new=mock_request):
+            self.assertRaises(Forbidden, controller._verify_notification_signature, tx)
 
     def test_onboarding_action_redirect_to_url(self):
         """ Test that the action generate and return an URL when the provider is disabled. """

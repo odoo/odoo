@@ -24,8 +24,7 @@ import { Transition } from "@web/core/transition";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
-export const PRESENT_VIEWPORT_THRESHOLD = 3;
-const PRESENT_MESSAGE_THRESHOLD = 10;
+export const PRESENT_VIEWPORT_THRESHOLD = 1;
 
 /**
  * @typedef {Object} Props
@@ -73,6 +72,12 @@ export class Thread extends Component {
         this.state = useState({
             isReplyingTo: false,
             mountedAndLoaded: false,
+            /**
+             * Bumped by `reset()`. Used as a dependency of the effect mirroring
+             * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after
+             * a reset without making `mountedAndLoaded` depend on itself.
+             */
+            resetCount: 0,
             showJumpPresent: false,
             scrollTop: null,
         });
@@ -92,6 +97,9 @@ export class Thread extends Component {
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
         this.root = useRef("messages");
+        this.visibleState = useVisible("messages", () => {
+            this.updateShowJumpPresent();
+        });
         /**
          * This is the reference element with the scrollbar. The reference can
          * either be the chatter scrollable (if chatter) or the thread
@@ -221,11 +229,15 @@ export class Thread extends Component {
                 this.state.mountedAndLoaded = isLoaded;
             },
             /**
-             * Observe `mountedAndLoaded` as well because it might change from
-             * other parts of the code without `useEffect` detecting any change
-             * for `isLoaded`, and it should still be reset when patching.
+             * `reset()` forces `mountedAndLoaded` false and this effect writes
+             * it too, so it can't be its own dependency: `useEffect` records
+             * dependencies before running the body, hence a `reset()` landing
+             * while this effect is being applied would leave the recorded value
+             * matching the current one and strand `mountedAndLoaded` at false.
+             * Depend on `resetCount`, bumped by `reset()`, so every reset
+             * re-syncs `mountedAndLoaded` with `isLoaded`.
              */
-            () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
+            () => [this.props.thread.isLoaded, this.state.resetCount]
         );
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
@@ -261,7 +273,7 @@ export class Thread extends Component {
             this.env.inChatter ? 22 : width - ps - pe - 22
         }px, ${
             this.env.inChatter && !this.env.inChatter.aside
-                ? 0
+                ? -22
                 : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
         }px)`;
     }
@@ -329,6 +341,15 @@ export class Thread extends Component {
         let loadNewer;
         const reset = () => {
             this.state.mountedAndLoaded = false;
+            // Bump `resetCount` (a mirror-effect dependency) so the effect re-runs
+            // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
+            // `applyScroll` resets on every patch, so an unconditional bump would
+            // spin the render loop until the fetch resolves. When loaded the bump
+            // re-renders once, the mirror sets `mountedAndLoaded` true and
+            // `applyScroll` stops resetting, so it converges.
+            if (this.props.thread.isLoaded) {
+                this.state.resetCount++;
+            }
             this.loadOlderState.ready = false;
             this.loadNewerState.ready = false;
             lastSetValue = undefined;
@@ -494,13 +515,7 @@ export class Thread extends Component {
     }
 
     get PRESENT_THRESHOLD() {
-        const viewportHeight = (this.getViewportEl?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
-        const messagesHeight = [...this.props.thread.nonEmptyMessages]
-            .reverse()
-            .slice(0, PRESENT_MESSAGE_THRESHOLD)
-            .map((message) => this.refByMessageId.get(message.id))
-            .reduce((totalHeight, message) => totalHeight + (message?.el?.clientHeight ?? 0), 0);
-        const threshold = Math.max(viewportHeight, messagesHeight);
+        const threshold = (this.viewportEl?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
         return this.state.showJumpPresent ? threshold - 200 : threshold;
     }
 
@@ -521,7 +536,8 @@ export class Thread extends Component {
 
     updateShowJumpPresent() {
         this.state.showJumpPresent =
-            this.props.thread.loadNewer || this.presentThresholdState.isVisible === false;
+            this.visibleState.isVisible &&
+            (this.props.thread.loadNewer || this.presentThresholdState.isVisible === false);
     }
 
     onClickLoadOlder() {
@@ -532,6 +548,22 @@ export class Thread extends Component {
         const actionDescription = await this.orm.call("res.users", "action_get");
         actionDescription.res_id = this.store.self.userId;
         this.env.services.action.doAction(actionDescription);
+    }
+
+    async onParentMessageClick(parentMessage) {
+        if (!parentMessage) {
+            return;
+        }
+        const targetThread = parentMessage.thread;
+        if (!targetThread) {
+            return;
+        }
+        if (targetThread.eq(this.props.thread)) {
+            this.env.messageHighlight?.highlightMessage(parentMessage, targetThread);
+        } else {
+            targetThread.highlightMessage = parentMessage;
+            await targetThread.open({ focus: true });
+        }
     }
 
     getMessageClassName(message) {

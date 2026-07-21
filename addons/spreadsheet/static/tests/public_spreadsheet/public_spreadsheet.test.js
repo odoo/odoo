@@ -7,6 +7,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_fi
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { freezeOdooData } from "@spreadsheet/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { setCellContent } from "../helpers/commands";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -65,6 +66,14 @@ test("click close button in filter panel will close the panel", async function (
     await contains(".o-public-spreadsheet-filters-close-button").click();
     expect(fixture.querySelector(".o-public-spreadsheet-filter-button")).toBeVisible();
     expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
+});
+
+test("Internal links converted to neutralized are not clickable", async function (assert) {
+    const model = await createModelWithDataSource();
+    setCellContent(model, "A1", "[label](odoo://ir_menu_xml_id/test_menu)");
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    expect(fixture.querySelector(".o-dashboard-clickable-cell")).toBe(null);
 });
 
 test("Hides the download button when the downloadExcelUrl is not provided", async function () {

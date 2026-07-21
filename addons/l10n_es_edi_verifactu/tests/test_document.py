@@ -588,3 +588,13 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             self.user.groups_id = self.env.ref(group)
             # Should not raise an error for accounting users
             move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+
+    def test_verifactu_sequence_with_prefix(self):
+        """Ensure a non-numeric sequence value surfaces a user-friendly error."""
+        sequence = self.env.company._l10n_es_edi_verifactu_get_chain_sequence()
+
+        sequence.sudo().write({'prefix': 'F2T', 'suffix': False, 'padding': 6})
+        invoice = self._create_dummy_invoice(name='INV/2019/00027', invoice_date='2024-12-30')
+        document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        self.assertFalse(document.chain_index)
+        self.assertIn("prefix or suffix", document.errors)

@@ -15,6 +15,8 @@ MANIFEST_KEYS = {
     'name', 'icon', 'addons_path', 'license',  # mandatory keys
     *_DEFAULT_MANIFEST,                        # optional keys
     'contributors', 'maintainer', 'url',       # unused "informative" keys
+    # for odoo apps store
+    'price', 'currency', 'support', 'live_test_url'
 }
 
 

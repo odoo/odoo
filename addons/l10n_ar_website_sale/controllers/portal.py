@@ -26,8 +26,13 @@ class L10nARCustomerPortal(CustomerPortal):
 
         if self._is_argentine_company():
             partner = request.env.user.partner_id
+            is_vat_info_missing = (
+                not partner.l10n_ar_afip_responsibility_type_id or
+                not partner.l10n_latam_identification_type_id or
+                not partner.vat
+            )
             portal_layout_values.update({
-                'can_edit_vat': partner.can_edit_vat(),
+                'can_edit_vat': partner.can_edit_vat() or is_vat_info_missing,
                 'responsibility': partner.l10n_ar_afip_responsibility_type_id,
                 'identification': partner.l10n_latam_identification_type_id,
                 'partner_sudo': partner,

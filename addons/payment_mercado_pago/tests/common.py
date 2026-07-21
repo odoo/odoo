@@ -25,7 +25,9 @@ class MercadoPagoCommon(PaymentCommon):
         }
         cls.verification_data = {
             'status': 'approved',
+            'external_reference': cls.reference,
         }
         cls.verification_data_for_error_state = {
             'status': 404,
+            'external_reference': cls.reference,
         }

@@ -3,20 +3,24 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
-import { expect, getFixture, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
     edit,
+    expect,
+    getFixture,
+    mockDate,
     press,
     queryAll,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
     queryFirst,
+    runAllTimers,
     select,
+    test,
     waitFor,
-} from "@odoo/hoot-dom";
-import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import {
     getPickerApplyButton,
     getPickerCell,
@@ -528,12 +532,10 @@ test("properties: selection", async () => {
         "Selection"
     );
 
-    const getOptions = () => {
-        return queryAll(".o_property_field_popover .o_field_property_selection_option");
-    };
-    const getOptionsValues = () => {
-        return queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
-    };
+    const getOptions = () =>
+        queryAll(".o_property_field_popover .o_field_property_selection_option");
+    const getOptionsValues = () =>
+        queryAllValues(".o_property_field_popover .o_field_property_selection_option input");
 
     // Create a new selection option
     await click(".o_field_property_selection .fa-plus");
@@ -590,13 +592,12 @@ test("properties: selection", async () => {
         message: "Should have added a new option at the correct spot",
     });
 
-    const getOptionDraggableElement = (index) => {
-        return queryFirst(
+    const getOptionDraggableElement = (index) =>
+        queryFirst(
             `.o_field_property_selection_option:nth-child(${
                 index + 1
             }) .o_field_property_selection_drag`
         );
-    };
 
     await contains(getOptionDraggableElement(0)).dragAndDrop(getOptionDraggableElement(2));
     expect(getOptionsValues()).toEqual(["C", "New option 2", "A", "New option"]);
@@ -2123,11 +2124,8 @@ test("properties: separators move properties", async () => {
     await makePropertiesGroupView([false, true, true, false, true, true, false]);
 
     // return true if the given separator is folded
-    const foldState = (separatorName) => {
-        return !queryFirst(
-            `div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`
-        );
-    };
+    const foldState = (separatorName) =>
+        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
 
     const assertFolded = (values) => {
         expect(values.length).toBe(4);
@@ -2308,9 +2306,8 @@ test("properties: separators drag and drop", async () => {
         ],
     ]);
 
-    const getPropertyHandleElement = (propertyName) => {
-        return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
-    };
+    const getPropertyHandleElement = (propertyName) =>
+        queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
 
     // if we move properties inside the same column, do not generate the group
     await contains(getPropertyHandleElement("property_1"), { visible: false }).dragAndDrop(
@@ -2617,5 +2614,52 @@ test("properties: split, moving property from 1st group to 2nd", async () => {
             ["Property 3", "property_3"],
             ["Property 6", "property_6"],
         ],
+    ]);
+});
+
+test.tags("desktop");
+test("properties: Create a property with an onchange methods", async () => {
+    expect.errors(0);
+    for (const record of Partner._records) {
+        record.properties = {};
+    }
+    ResCompany._records[0].definitions = [];
+    Partner._onChanges.properties = () => {};
+    onRpc("onchange", async () => {
+        expect.step("on_change_called");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
+    onRpc("has_access", () => true);
+    patchWithCleanup(PropertiesField.prototype, {
+        onPropertyCreate() {
+            expect.step("onPropertyCreate");
+            return super.onPropertyCreate(...arguments);
+        },
+        _openPropertyDefinition() {
+            expect.step("_openPropertyDefinition");
+            return super._openPropertyDefinition(...arguments);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+        actionMenus: {},
+    });
+    await toggleActionMenu();
+    await contains(".o_popover span .fa-cogs").click();
+    await runAllTimers();
+    await closePopover();
+    expect.verifySteps([
+        "onPropertyCreate",
+        "on_change_called",
+        "_openPropertyDefinition",
+        "on_change_called",
     ]);
 });

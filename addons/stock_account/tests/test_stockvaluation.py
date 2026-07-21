@@ -4074,8 +4074,22 @@ class TestStockValuation(TestStockValuationBase):
         res = self.env['stock.quant'].read_group([('product_id', '=', self.product1.id)], ['value:sum'], ['product_id'])
         self.assertEqual(res[0]['value'], 5 * 5 + 2 * 6)
 
+        # Ensure account tax is not applied for manual valuation changes
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'Tax Group',
+            'company_id': self.env.company.id,
+        })
+        basic_tax = self.env['account.tax'].create({
+            'name': 'Basic 15% tax',
+            'amount': 15,
+            'tax_group_id': tax_group.id,
+            'country_id': self.env.company.country_id.id or self.ref('base.us'),
+        })
+        self.env.company.anglo_saxon_accounting = False
+        self.product1.property_account_expense_id.tax_ids = basic_tax
         self.product1.write({'standard_price': 7})
         self.assertEqual(self.product1.value_svl, 49)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids[-1].account_move_id.line_ids), 2)
 
     def test_average_manual_revaluation(self):
         self.product1.categ_id.property_cost_method = 'average'

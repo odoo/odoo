@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
 from odoo.tests import Form, new_test_user
@@ -63,6 +63,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'tz': 'UTC',
             'resource_calendar_id': cls.calendar_flex_40h.id,
         })
+        cls.is_module_hr_contract_installed = hasattr(cls.env['hr.employee'], 'contract_id')
 
     def test_overtime_company_settings(self):
         self.company.write({
@@ -527,6 +528,38 @@ class TestHrAttendanceOvertime(TransactionCase):
             self.assertEqual(morning.worked_hours + afternoon.worked_hours, 9)  # 8 hours from calendar's attendances + 1 hour of tolerance
             self.assertEqual(afternoon.check_out, datetime(2024, 1, 1, 18, 0))
 
+    def test_auto_check_out_employee_time_off(self):
+        Attendance = self.env['hr.attendance']
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 0.1,
+        })
+        calendar = self.company.resource_calendar_id.copy({'tz': 'UTC'})
+        self.employee.resource_calendar_id = calendar
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Time Off',
+            'calendar_id': calendar.id,
+            'resource_id': self.employee.resource_id.id,
+            'date_from': datetime(2024, 1, 1, 15, 0),
+            'date_to': datetime(2024, 1, 1, 17, 0),
+            'company_id': self.company.id,
+        })
+        attendance = Attendance.create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),
+        })
+
+        with freeze_time('2024-01-01 17:06:00'):
+            Attendance._cron_auto_check_out()
+
+        self.assertEqual(attendance.check_out, datetime(2024, 1, 1, 15, 6))
+        self.assertAlmostEqual(attendance.worked_hours, 6.1)
+        overtime = self.env['hr.attendance.overtime'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2024, 1, 1)),
+        ])
+        self.assertFalse(overtime)
+
     def test_auto_check_out_two_weeks_calendar(self):
         """Test case: two weeks calendar with different attendances depending on the week. No morning attendance on
         wednesday of the first week."""
@@ -614,10 +647,12 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         self.env['hr.attendance']._cron_absence_detection()
 
+        overtime_assertion = -8 if not self.is_module_hr_contract_installed else 0
+
         # Check that absences were correctly attributed
-        self.assertAlmostEqual(self.other_employee.total_overtime, -8, 2)
-        self.assertAlmostEqual(self.jpn_employee.total_overtime, -8, 2)
-        self.assertAlmostEqual(self.honolulu_employee.total_overtime, -8, 2)
+        self.assertAlmostEqual(self.other_employee.total_overtime, overtime_assertion, 2)
+        self.assertAlmostEqual(self.jpn_employee.total_overtime, overtime_assertion, 2)
+        self.assertAlmostEqual(self.honolulu_employee.total_overtime, overtime_assertion, 2)
 
         # Employee Checked in yesterday, no absence found
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
@@ -639,25 +674,48 @@ class TestHrAttendanceOvertime(TransactionCase):
         # 1) 8:00 - 16:00 should contain 0 hours of overtime
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.flexible_employee.id,
-            'check_in': datetime(2023, 1, 2, 8, 0),
-            'check_out': datetime(2023, 1, 2, 16, 0)
+            'check_in': datetime(2023, 1, 5, 8, 0),
+            'check_out': datetime(2023, 1, 5, 16, 0)
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
 
         # 2) 12:00 - 18:00 should contain -2 hours of overtime
         # as we expect the employee to work 8 hours per day
-        attendance.write({
-            'check_in': datetime(2023, 1, 3, 12, 0),
-            'check_out': datetime(2023, 1, 3, 18, 0)
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 10, 12, 0),
+            'check_out': datetime(2023, 1, 10, 18, 0)
         })
         self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
 
         # 3) 10:00 - 22:00 should contain 4 hours of overtime
-        attendance.write({
-            'check_in': datetime(2023, 1, 4, 10, 0),
-            'check_out': datetime(2023, 1, 4, 22, 0)
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 11, 10, 0),
+            'check_out': datetime(2023, 1, 11, 22, 0)
         })
         self.assertAlmostEqual(attendance.overtime_hours, 4, 2, 'There should be 4 hours of overtime for the flexible resource.')
+
+    def test_overtime_hours_flexible_resource_with_tz(self):
+        """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day for an employee with a timezone
+        """
+        self.flexible_employee.tz = "Europe/Brussels"
+        # 1) 8:00 - 16:00 should contain 0 hours of overtime
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 3, 8, 0),
+            'check_out': datetime(2023, 1, 3, 16, 0)
+        })
+        self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+
+        # 2) 8:00 - 18:00 should contain 2 hours of overtime
+        # as we expect the employee to work 8 hours per day
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 9, 8, 0),
+            'check_out': datetime(2023, 1, 9, 18, 0)
+        })
+        self.assertAlmostEqual(attendance.overtime_hours, 2, 2, 'There should be 2 hours of overtime for the flexible resource.')
         
     def test_overtime_hours_multiple_flexible_resources(self):
         """ Test the computation of overtime hours for multiple flexible resources on a single workday with 8 hours_per_day.
@@ -857,3 +915,48 @@ class TestHrAttendanceOvertime(TransactionCase):
             (attendance_1.overtime_hours, attendance_2.overtime_hours, attendance_3.overtime_hours, attendance_4.overtime_hours, attendance_5.overtime_hours, attendance_6.overtime_hours),
             (0.0, -0.5, 0.0, 0.0, 0.0, -0.5)
         )
+
+    def test_weekly_expected_hours_limit(self):
+        calendar_flex_32h = self.env['resource.calendar'].create({
+            'name': 'Flexible 32 hours/week',
+            'company_id': self.company.id,
+            'hours_per_day': 8,
+            'flexible_hours': True,
+            'full_time_required_hours': 32,
+        })
+        flexible_employee = self.env['hr.employee'].create({
+            'name': 'Monkey D. Luffy',
+            'company_id': self.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': calendar_flex_32h.id,
+        })
+
+        base_date = datetime(2024, 4, 1)  # Monday
+
+        # Create attendances for Tuesday to Friday first
+        for i in range(1, 5):
+            self.env['hr.attendance'].create({
+                'employee_id': flexible_employee.id,
+                'check_in': base_date + timedelta(days=i, hours=9),
+                'check_out': base_date + timedelta(days=i, hours=17),
+                'worked_hours': 8,
+                'overtime_hours': 0,
+            })
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        expected_values = [8, 8, 8, 8]
+        for attendance, expected in zip(attendances, expected_values):
+            self.assertEqual(attendance.expected_hours, expected, f"Day {attendance.check_in.date()} should have {expected} expected hours")
+
+        # Add Monday (first day) afterward
+        self.env['hr.attendance'].create({
+            'employee_id': flexible_employee.id,
+            'check_in': base_date + timedelta(hours=9),
+            'check_out': base_date + timedelta(hours=17),
+            'worked_hours': 8,
+            'overtime_hours': 0,
+        })
+        # Still only first 4 days should count
+        attendances = self.env['hr.attendance'].search([('employee_id', '=', flexible_employee.id)], order='check_in')
+        expected_values = [8, 8, 8, 8, 0]
+        for attendance, expected in zip(attendances, expected_values):
+            self.assertEqual(attendance.expected_hours, expected, f"Day {attendance.check_in.date()} should have {expected} expected hours")

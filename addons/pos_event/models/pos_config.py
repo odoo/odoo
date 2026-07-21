@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import api, models
 
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
+
+    @api.model
+    def _get_dynamic_models(self):
+        models = super()._get_dynamic_models()
+        return models + ['event.registration', 'event.registration.answer']
 
     def _update_events_seats(self, events):
         data = []

@@ -532,7 +532,9 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _setPickupLocation(pickupLocationData) {
-        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
+        await rpc(
+            '/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData}
+        );
     },
 
     // #=== GETTERS & SETTERS ===#

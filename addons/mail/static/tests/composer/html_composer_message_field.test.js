@@ -1,4 +1,4 @@
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { getContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { FileSelector } from "@html_editor/main/media/media_dialog/file_selector";
 import { uploadService } from "@html_editor/main/media/media_dialog/upload_progress_toast/upload_service";
@@ -150,8 +150,8 @@ test("mention a partner", async () => {
         </form>`,
     });
 
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
-    setSelection({ anchorNode, anchorOffset: 0 });
+    const editable = queryOne(`[name='body'] .odoo-editor-editable`);
+    setSelection({ anchorNode: editable.firstChild, anchorOffset: 0 });
     await insertText(htmlEditor, "@");
     await animationFrame();
     expect(".overlay .search input[placeholder='Search for a user...']").toBeFocused();
@@ -165,12 +165,10 @@ test("mention a partner", async () => {
     expect.verifySteps(["get_mention_suggestions: a"]);
 
     await press("enter");
-    expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
-    <div class="o-paragraph">
-        <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
-            @Mitchell Admin
-        </a>
-    </div>`);
+    await animationFrame();
+    expect(getContent(editable)).toBe(
+        '<div class="o-paragraph">\uFEFF<a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">@Mitchell Admin</a>\uFEFF[]</div>'
+    );
 });
 
 test("mention a channel", async () => {

@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2025
 # Larisa_nexterp, 2025
-#
+# Alexandru Vajda <vajdasanyi2002@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-07-03 10:32+0000\n"
+"Last-Translator: Alexandru Vajda <vajdasanyi2002@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/"
+"stock_account/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -83,11 +85,6 @@ msgstr ""
 "                            <small class=\"mx-2 fst-italic\">Utilizați o "
 "valoare adăugată negativă pentru a înregistra o scădere a valorii "
 "produsului</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -660,6 +657,14 @@ msgstr ""
 "evaluarea pe lot."
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -1022,7 +1027,7 @@ msgid ""
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
 "Această operațiune poate duce la pierderea datelor. Evaluarea va fi identică "
-"pentru toate loturile/numerele de serie. Doriți să continuați?"
+"pentru toate loturile/numerele de serie. Doriți să continuați? "
 
 #. module: stock_account
 #. odoo-python
@@ -1424,3 +1429,6 @@ msgstr "unități"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "grafic evaluare"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"

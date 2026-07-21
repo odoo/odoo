@@ -54,3 +54,20 @@ class TestAccountCZ(AccountTestInvoicingCommon):
 
         inv_line = self.env['account.move'].search([('statement_line_id', '=', st_line.id)])
         self.assertNotEqual(inv_line.taxable_supply_date, st_line.date)
+
+    def test_cz_taxable_supply_date_updates_when_reversing_invoice(self):
+        self.invoice_a.taxable_supply_date = '2024-03-31'
+        self.invoice_a.partner_id = self.partner_a
+        self.invoice_a.action_post()
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=self.invoice_a.ids
+        ).create({
+            'date': '2024-07-15',
+            'reason': 'Test',
+            'journal_id': self.invoice_a.journal_id.id,
+        })
+        action = reversal_wizard.reverse_moves()
+        refund_move = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(refund_move.taxable_supply_date, fields.Date.to_date('2024-07-15'))
+        self.assertEqual(refund_move.date, fields.Date.to_date('2024-07-15'))

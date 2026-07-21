@@ -1,5 +1,14 @@
 import { expect, test } from "@odoo/hoot";
-import { click, hover, queryAllAttributes, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryAllAttributes,
+    queryOne,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
@@ -126,6 +135,121 @@ test("should not display the resizeCursor if the table element isContentEditable
     expect(".o_col_resize").toHaveCount(0);
 });
 
+test("should not resize a table with a non-primary mouse button", async () => {
+    const content = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td>
+                        <p>[]<br></p>
+                    </td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    const { el } = await setupEditor(content);
+
+    const firstTd = el.querySelector("td");
+    const initialCellWidth = firstTd.clientWidth;
+
+    const cellRect = firstTd.getBoundingClientRect();
+    const clientX = cellRect.right;
+    const clientY = cellRect.top + cellRect.height / 2;
+
+    // Simulate mousedown at the right border of first cell.
+    await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+        button: 2,
+        clientX,
+        clientY,
+    });
+
+    // Simulate mousemove.
+    manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+        clientX: clientX + 100,
+        clientY,
+    });
+    manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+        button: 2,
+        clientX: clientX + 100,
+        clientY,
+    });
+    await animationFrame();
+
+    expect(firstTd.clientWidth).toBe(initialCellWidth); // Not resized.
+});
+
+test("should stop resize after table removal", async () => {
+    const content = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td>
+                        <p>[<br></p>
+                    </td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br>]</p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    const { el } = await setupEditor(content);
+
+    const firstTd = el.querySelector("td");
+    const cellRect = firstTd.getBoundingClientRect();
+    const clientX = cellRect.right;
+    const clientY = cellRect.top + cellRect.height / 2;
+
+    // Simulate mousedown at the right border of first cell.
+    await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+        button: 0,
+        clientX,
+        clientY,
+    });
+
+    // Simulate mousemove.
+    manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+        clientX: clientX + 100,
+        clientY,
+    });
+    expect(el).toHaveClass("o_col_resize");
+    // Remove table
+    await press("backspace");
+
+    manuallyDispatchProgrammaticEvent(el, "mousemove", {
+        clientX: clientX + 110,
+        clientY,
+    });
+    expect(el).not.toHaveClass("o_col_resize");
+});
+
+test("should show the table UI menus when hovering a list inside a table cell", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul><li>1</li><li>2</li><li>3</li></ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("ul"));
+    // Should display both the row and column menus
+    await expectElementCount(".o-we-table-menu", 2);
+});
+
 test("list of table commands in first column", async () => {
     const { el } = await setupEditor(`
         <p><br></p>
@@ -192,6 +316,70 @@ test("list of table commands in last column", async () => {
     // check list of commands on last column
     await hover(el.querySelector("td.c"));
     await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_left",
+        // no move right
+        "insert_left",
+        "insert_right",
+        "delete",
+    ]);
+});
+
+test("list of commands updates when hovering different table columns", async () => {
+    const { el } = await setupEditor(`
+        <p><br></p>
+        <table>
+            <tbody>
+            <tr><td class="a">1[]</td><td class="b">2</td><td class="c">3</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // check list of commands on first column
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await hover(el);
+    await animationFrame();
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(0);
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        // no move left
+        "move_right",
+        "insert_left",
+        "insert_right",
+        "delete",
+    ]);
+    // Close menu
+    await click("[data-type='column'].o-we-table-menu");
+    await animationFrame();
+
+    // check list of commands on second column
+    await hover(el.querySelector("td.b"));
+    await animationFrame();
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_left",
+        "move_right",
+        "insert_left",
+        "insert_right",
+        "delete",
+    ]);
+    // Close menu
+    await click("[data-type='column'].o-we-table-menu");
+    await animationFrame();
+
+    // check list of commands on last column
+    await hover(el.querySelector("td.c"));
+    await animationFrame();
     expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
     await click("[data-type='column'].o-we-table-menu");
     await waitFor(".dropdown-menu");
@@ -287,6 +475,71 @@ test("list of table commands in last row", async () => {
     ]);
 });
 
+test("list of commands updates when hovering different table rows", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+            <tr><td class="a">1[]</td></tr>
+            <tr><td class="b">2</td></tr>
+            <tr><td class="c">3</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // check list of commands on first row
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await hover(el);
+    await animationFrame();
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(0);
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        // no move up
+        "move_down",
+        "insert_above",
+        "insert_below",
+        "delete",
+    ]);
+    // Close menu
+    await click("[data-type='row'].o-we-table-menu");
+    await animationFrame();
+
+    // check list of commands on second row
+    await hover(el.querySelector("td.b"));
+    await animationFrame();
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_up",
+        "move_down",
+        "insert_above",
+        "insert_below",
+        "delete",
+    ]);
+    // Close menu
+    await click("[data-type='row'].o-we-table-menu");
+    await animationFrame();
+
+    // check list of commands on last row
+    await hover(el.querySelector("td.c"));
+    await animationFrame();
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_up",
+        // no move down
+        "insert_above",
+        "insert_below",
+        "delete",
+    ]);
+});
+
 test("open/close table menu", async () => {
     const { el } = await setupEditor(`
         <table>
@@ -346,7 +599,7 @@ test("basic delete column operation", async () => {
         unformat(`
         <table>
             <tbody>
-                <tr><td class="a">[]1</td></tr>
+                <tr><td class="a">1[]</td></tr>
                 <tr><td class="c">3</td></tr>
             </tbody>
         </table>`)
@@ -391,7 +644,7 @@ test("basic delete row operation", async () => {
         unformat(`
         <table>
             <tbody>
-                <tr><td class="a">[]1</td><td class="b">2</td></tr>
+                <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
         </table>`)
     );
@@ -406,6 +659,41 @@ test("basic delete row operation", async () => {
             </tbody>
         </table>`)
     );
+});
+
+test("editable should be focused after delete operation", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <p><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td><p>[]<br></p></td><td class="a"><p><br></p></td></tr>
+                <tr><td><p><br></p></td><td><p><br></p></td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    // click on it to open dropdown
+    await click(".o-we-table-menu");
+    await waitFor("div[name='delete']");
+
+    // delete column
+    await click("div[name='delete']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(document.activeElement).toBe(el);
 });
 
 test("insert column left operation", async () => {

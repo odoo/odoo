@@ -3,7 +3,10 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
 import { isZWS } from "@html_editor/utils/dom_info";
-import { nodeSize } from "@html_editor/utils/position";
+import { leftPos, rightPos } from "@html_editor/utils/position";
+import { normalizeCursorPosition } from "@html_editor/utils/selection";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { computeBackgroundColorForElement } from "@html_editor/utils/color";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -118,6 +121,11 @@ export class IconPlugin extends Plugin {
         ],
         /** Handlers */
         selectionchange_handlers: this.normalizeIconSelection.bind(this),
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
 
     /**
@@ -129,7 +137,7 @@ export class IconPlugin extends Plugin {
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        return targetedNodes.find((node) => node.classList?.contains?.("fa"));
+        return targetedNodes.map((node) => closestElement(node, ".fa")).find(Boolean);
     }
 
     isSelectingOnlyIcons(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
@@ -149,12 +157,17 @@ export class IconPlugin extends Plugin {
         const { anchorNode, focusNode } = this.document.getSelection();
         if (this.isSelectingOnlyIcons() && (isZWS(anchorNode) || isZWS(focusNode))) {
             const selectedIcon = this.getSelectedIcon();
+            const [anchorNode, anchorOffset] = normalizeCursorPosition(
+                ...leftPos(selectedIcon),
+                "left"
+            );
+            const [focusNode, focusOffset] = normalizeCursorPosition(...rightPos(selectedIcon));
             this.dependencies.selection.setSelection(
                 {
-                    anchorNode: selectedIcon,
-                    anchorOffset: 0,
-                    focusNode: selectedIcon,
-                    focusOffset: nodeSize(selectedIcon),
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
                 },
                 { normalize: false }
             );
@@ -205,5 +218,19 @@ export class IconPlugin extends Plugin {
             return;
         }
         return selectedIcon.classList.contains("fa-spin");
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return computeBackgroundColorForElement(el);
     }
 }

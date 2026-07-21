@@ -66,8 +66,9 @@ export class AddSnippetDialog extends Component {
 
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
-            if (isFirefox) {
-                // Make sure empty preview iframe is loaded.
+            if (isFirefox && !(this.iframeDocument.readyState === "complete")) {
+                // Make sure empty preview iframe is loaded. This was necessary
+                // in Firefox < 148 as it created and parsed a new document.
                 // This event is never triggered on Chrome.
                 await new Promise(resolve => {
                     this.iframeDocument.body.onload = resolve;
@@ -220,6 +221,9 @@ export class AddSnippetDialog extends Component {
                     originalSnippet = [...this.props.snippets.values()].filter(snip =>
                         !snip.isCustom && snip.name === snippet.name
                     )[0];
+                    if (!originalSnippet) {
+                        return;
+                    }
                     if (originalSnippet.baseBody.querySelector(".s_dialog_preview")
                         || originalSnippet.imagePreview
                         // Specific case for "s_countdown" because it's hybrid (also
@@ -339,6 +343,9 @@ export class AddSnippetDialog extends Component {
             const leftColElements = [];
             const rightColElements = [];
             for (const itemEl of itemEls) {
+                if (!itemEl) {
+                    continue;
+                }
                 const size = itemEl.getBoundingClientRect().height;
                 if (leftColSize <= rightColSize) {
                     leftColElements.push(itemEl);

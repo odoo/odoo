@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
 # MAHAMADASIF ANSARI, 2025
 #
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: MAHAMADASIF ANSARI, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-07-09 14:23+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
+"stock_account/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -80,11 +83,6 @@ msgstr ""
 ")\n"
 "<small class=\"mx-2 fst-italic\">Użyj ujemnej wartości dodanej, aby "
 "odnotować spadek wartości produktu.</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -289,7 +287,7 @@ msgstr "Firma"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: stock_account
 #. odoo-python
@@ -547,6 +545,8 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"Partia %(lot)s ma ujemną ilość w magazynie.\n"
+"Należy skorygować tę ilość przed włączeniem/wyłączeniem wyceny partii."
 
 #. module: stock_account
 #. odoo-python
@@ -651,6 +651,19 @@ msgid ""
 "lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"Produkt %(product)s zawiera ilość w lokalizacji wyceny %(location)s bez "
+"żadnej partii.\n"
+"Przed włączeniem wyceny partii należy przypisać partie do wszystkich ilości."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+"Produkt %(product)s jest wyceniany wg. partii: wymagany jest wyraźny numer "
+"partii/numer seryjny."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -766,7 +779,7 @@ msgstr "Pozycja pobrania zwrotnego"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Revaluation of %(name)s (negative inventory)"
-msgstr ""
+msgstr "Ponowna wycena %(name)s (negatywne zapasy)"
 
 #. module: stock_account
 #. odoo-python
@@ -1035,6 +1048,8 @@ msgid ""
 "This product is valuated by lot: an explicit Lot/Serial number is required "
 "when adding quantity"
 msgstr ""
+"Ten produkt jest wyceniany wg. partii: wymagany jest wyraźny numer partii/"
+"numer seryjny"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1414,3 +1429,6 @@ msgstr "jednostki"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "graf wyceny"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"

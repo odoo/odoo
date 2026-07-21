@@ -627,14 +627,14 @@ test("correct sequence of blur, focus and select", async () => {
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
     await contains(".o-autocomplete--dropdown-item:last").click();
-    expect.verifySteps(["change", "select Hello"]);
+    expect.verifySteps(["select Hello"]);
     expect(".o-autocomplete input").toBeFocused();
 
     // Clear input and focus out
     await contains(".o-autocomplete input").edit("", { confirm: false });
     await runAllTimers();
     await contains(document.body).click();
-    expect.verifySteps(["blur", "change"]);
+    expect.verifySteps(["change", "blur"]);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 

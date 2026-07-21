@@ -41,7 +41,7 @@ class ProjectProject(models.Model):
     vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', export_string_translation=False)
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
-    sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
+    sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False, tracking=False)
     reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
@@ -278,12 +278,13 @@ class ProjectProject(models.Model):
             return action
 
         if section_name == 'cost_of_goods_sold':
+            move_ids = [res_id] if res_id else self.env['account.move'].search(domain).ids
             action = {
                 'name': _('Cost of Goods Sold Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move.line',
                 'views': [[False, 'list'], [False, 'form']],
-                'domain': [('move_id', '=', res_id), ('display_type', '=', 'cogs')],
+                'domain': [('move_id', 'in', move_ids), ('display_type', '=', 'cogs')],
                 'context': {'create': False, 'edit': False},
             }
             return action

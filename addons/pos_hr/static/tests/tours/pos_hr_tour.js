@@ -56,6 +56,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
             ProductScreen.isShown(),
+            Chrome.notExistMenuOption("Create Product"),
 
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
@@ -107,9 +108,11 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.existMenuOption("Create Product"),
             PosHr.refreshPage(),
             ProductScreen.isShown(),
             PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.existMenuOption("Create Product"),
             Chrome.clickMenuButton(),
             PosHr.clickLockButton(),
             PosHr.refreshPage(),
@@ -316,5 +319,60 @@ registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_
             scan_barcode("041123"),
             Chrome.clickBtn("Open Register"),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_switch_cashier_with_badge", {
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            scan_barcode("041222"),
+            ProductScreen.isShown(),
+            PosHr.cashierNameIs("Pos Employee2"),
+            scan_barcode("041333"),
+            PosHr.cashierNameIs("Test Employee 3"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+            },
+            Dialog.confirm("Ok"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cost_and_margin_visibility_no_access", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
+            Dialog.confirm("Ok"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
         ].flat(),
 });

@@ -8,13 +8,13 @@
 # Jaisal Shah <jaisal13shah@gmail.com>, 2025
 # Manav Shah, 2025
 # Ujjawal Pathak, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-31 16:33+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-06-25 21:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/hi/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -75,11 +75,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr ""
-
-#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
 msgstr ""
@@ -88,7 +83,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
 #: model_terms:ir.ui.view,arch_db:stock_account.view_production_lot_form_stock_account
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">वैल्यूएशन</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -130,7 +125,7 @@ msgstr "अकाउंटिंग की तारीख"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr ""
+msgstr "अकाउंटिंग एंट्रीज़"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -375,7 +370,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "स्टॉक से जुड़े सभी कामों के लिए इस्तेमाल होने वाली बेसिक यूनिट।"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -442,7 +437,7 @@ msgstr "इनकमिंग"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "इन्वेंट्री लोकेशन"
 
 #. module: stock_account
 #. odoo-python
@@ -522,13 +517,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "लॉट/सीरियल"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__lot_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "लॉट/सीरियल नंबर"
 
 #. module: stock_account
 #. odoo-python
@@ -614,6 +609,14 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -623,7 +626,7 @@ msgstr "उत्पाद श्रेणी"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "प्रॉडक्ट मूव्स (स्टॉक मूव लाइन)"
 
 #. module: stock_account
 #. odoo-python
@@ -674,7 +677,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "क्वांट"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -719,7 +722,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "रिटर्न पिकिंग लाइन"
 
 #. module: stock_account
 #. odoo-python
@@ -763,6 +766,13 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"स्टैंडर्ड प्राइस : प्रॉडक्ट का मूल्य उस मानक लागत पर आंका जाता है जो प्रॉडक्ट पर तय किया "
+"जाता है.\n"
+"        एवरेज कॉस्ट (AVCO): प्रॉडक्ट का मूल्य हर बार पुरानी और नई कीमत को मिलाकर एक "
+"'औसत' रेट निकाला जाता है.\n"
+"        फर्स्ट इन फर्स्ट आउट (FIFO): यह मानकर प्रॉडक्ट का मूल्य आंका जाता है कि जो "
+"स्टॉक कंपनी में पहले आता है, वही पहले बाहर भी जाता है.\n"
+"        "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -800,7 +810,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "स्टॉक रिप्लिनिशमेंट रिपोर्ट"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
@@ -841,7 +851,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "स्टॉक वैल्युएशन लेयर"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1045,10 +1055,10 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"रियल-टाइम इन्वेंट्री वैल्यूएशन के लिए इस्तेमाल किया जाता है. जब इसे किसी वर्चुअल लोकेशन (नॉन-इंटरनल टाइप) "
-"पर सेट किया जाता है, तो इस खाते का इस्तेमाल इंटरनल लोकेशन से इस लोकेशन में ले जाए जा रहे प्रॉडक्ट के मूल्य को"
-" रखने के लिए किया जाएगा, न कि प्रॉडक्ट पर सेट सामान्य स्टॉक आउटपुट अकाउंट का. इंटरनल लोकेशन के लिए इसका "
-"कोई असर नहीं पड़ता है।"
+"रियल-टाइम इन्वेंट्री वैल्यूएशन के लिए इस्तेमाल किया जाता है. जब इसे किसी वर्चुअल लोकेशन "
+"(नॉन-इंटरनल टाइप) पर सेट किया जाता है, तो इस खाते का इस्तेमाल इंटरनल लोकेशन से इस "
+"लोकेशन में ले जाए जा रहे प्रॉडक्ट के मूल्य को रखने के लिए किया जाएगा, न कि प्रॉडक्ट पर सेट "
+"सामान्य स्टॉक आउटपुट अकाउंट का. इंटरनल लोकेशन के लिए इसका कोई असर नहीं पड़ता है।"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -1059,6 +1069,9 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"रियल-टाइम इन्वेंट्री वैल्यूएशन के लिए उपयोग करें. वर्चुअल लोकेशन (नॉन-इंटरनल) पर सेट होने "
+"पर, यह अकाउंट प्रॉडक्ट के सामान्य स्टॉक आउटपुट अकाउंट के बजाय, यहां से इंटरनल लोकेशन में आने "
+"वाले प्रॉडक्ट की वैल्यू रखेगा. इंटरनल लोकेशन पर इसका कोई असर नहीं होता।"
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation

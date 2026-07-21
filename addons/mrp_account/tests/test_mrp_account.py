@@ -6,9 +6,11 @@ from datetime import timedelta
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
+
+from odoo import fields, Command
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
-from odoo import fields, Command
 
 
 class TestMrpAccount(TestMrpCommon, MailCase):
@@ -380,6 +382,30 @@ class TestMrpAccount(TestMrpCommon, MailCase):
         self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
             0.01, 0.01
         ])
+
+    def test_lot_valuation_remove_lot_from_MO(self):
+        self.product_table_leg.write({'lot_valuated': True})
+        leg_lot = self.env['stock.lot'].create({
+            'name': 'leg lot',
+            'product_id': self.product_table_leg.id,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_table_leg.id,
+            'product_qty': 1,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': self.product_bolt.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+            'lot_producing_id': leg_lot.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        with self.assertRaises(UserError, msg='Product Table Leg is valuated by lot: an explicit Lot/Serial number is required.'):
+            mo.lot_producing_id = False
+        self.assertEqual(mo.lot_producing_id, leg_lot)
+        self.assertEqual(mo.move_finished_ids.lot_ids, leg_lot)
 
     def test_parent_after_child_done(self):
         """
@@ -821,3 +847,54 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             {'credit': 0.01, 'debit': 0.00},
             {'credit': 0.00, 'debit': 0.01},
         ])
+
+    def test_labor_move_not_duplicated_when_backorder_always(self):
+        """ Ensure labor accounting entry is not duplicated when create backorder is set to always. """
+        # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
+
+        picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        self.assertTrue(picking_type, "Manufacturing operation type not found")
+        picking_type.create_backorder = 'always'
+
+        self.workcenter.write({'costs_hour': 20})
+        self.bom.write({
+            'operation_ids': [
+                Command.create({
+                    'name': 'work',
+                    'workcenter_id': self.workcenter.id,
+                    'time_cycle': 60,
+                    'sequence': 1,
+                }),
+            ],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 100
+        production = production_form.save()
+        production.action_confirm()
+
+        workorder = production.workorder_ids
+        workorder.duration = 1.0
+        workorder.time_ids.write({'duration': 1.0})
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 50
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        labour_moves = self.env['account.move'].search([
+            ('ref', '=', production.name + ' - Labour'),
+            ('state', '=', 'posted'),
+            ('company_id', '=', production.company_id.id),
+        ])
+        self.assertEqual(len(labour_moves), 1, "Labor entry should not be duplicated when backorder=always")

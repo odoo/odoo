@@ -127,7 +127,7 @@ class AccountMove(models.Model):
                 # button_cancel calls button_draft.
                 # Draft button does not appear for user.
                 raise UserError(_("You cannot reset to draft an entry that has been posted to TicketBAI's chain"))
-        super().button_draft()
+        return super().button_draft()
 
     @api.ondelete(at_uninstall=False)
     def _l10n_es_tbai_unlink_except_in_chain(self):
@@ -206,6 +206,8 @@ class AccountMove(models.Model):
 
     def l10n_es_tbai_cancel(self):
         for invoice in self:
+            if invoice.inalterable_hash:
+                raise UserError(_('You cannot reset to draft a locked journal entry.'))
             invoice._l10n_es_tbai_lock_move()
 
             if invoice.l10n_es_tbai_cancel_document_id and invoice.l10n_es_tbai_cancel_document_id.state == 'rejected':
@@ -340,7 +342,7 @@ class AccountMove(models.Model):
         if intracom:
             values['regime_key'] = ['09']
         elif reagyp:
-            values['regime_key'] = ['19']
+            values['regime_key'] = ['02']
         else:
             values['regime_key'] = ['01']
         # Credit notes (factura rectificativa)

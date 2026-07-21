@@ -6,7 +6,7 @@ from lxml import etree
 from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import SUPPORTED_FILE_TYPES
+from odoo.addons.account.models.ir_attachment import SUPPORTED_FILE_TYPES
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
@@ -97,7 +97,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_ubl_available_attachments(self, mail_attachments_widget, invoice_edi_format):
         if not invoice_edi_format or not mail_attachments_widget:
             return self.env['ir.attachment'], self.env['ir.attachment']
-        attachment_ids = [values['id'] for values in mail_attachments_widget if values.get('manual')]
+        attachment_ids = [values['id'] for values in mail_attachments_widget if values.get('manual') or values.get('mail_template_id')]
         attachments = self.env['ir.attachment'].browse(attachment_ids)
 
         ubl_format_info = self.env['res.partner']._get_ubl_cii_formats_info().get(invoice_edi_format, {})
@@ -117,7 +117,11 @@ class AccountMoveSend(models.AbstractModel):
 
         if invoice._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-            xml_content, errors = builder._export_invoice(invoice)
+            xml_content, errors = (
+                builder
+                .with_context(from_peppol='peppol' in invoice_data['sending_methods'])
+                ._export_invoice(invoice)
+            )
             filename = builder._export_invoice_filename(invoice)
 
             # Failed.
@@ -146,11 +150,11 @@ class AccountMoveSend(models.AbstractModel):
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Add PDF to XML
-        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
+        if self._needs_ubl_postprocessing(invoice_data):
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
         # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx':
+        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd'):
             xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
@@ -175,11 +179,14 @@ class AccountMoveSend(models.AbstractModel):
         writer = OdooPdfFileWriter()
         writer.cloneReaderDocumentRoot(reader)
 
-        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
+        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml', afrelationship='/Alternative')
 
         # PDF-A.
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
-                and not writer.is_pdfa:
+        if ((invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
+                or (invoice.commercial_partner_id.country_code in ('FR', 'DE') and invoice.commercial_partner_id.peppol_eas != '0204'))
+                and invoice.country_code in ('FR', 'DE')
+                and not writer.is_pdfa
+            ):
             try:
                 writer.convert_to_pdfa()
             except Exception:
@@ -205,10 +212,15 @@ class AccountMoveSend(models.AbstractModel):
         writer_buffer.close()
 
     @api.model
+    def _needs_ubl_postprocessing(self, invoice_data):
+        return 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] not in ('facturx', 'zugferd')
+
+    @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
         # Adding the PDF to the XML
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-        anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
+        project_refs = tree.xpath("//*[local-name()='ProjectReference']")
+        anchor_elements = project_refs if project_refs else tree.xpath("//*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
             return
 
@@ -243,6 +255,8 @@ class AccountMoveSend(models.AbstractModel):
         })
 
         for attachment_values in attachments_to_embed:
+            # Some XML validator need a strict embed content without ligne break and whitespace
+            embed_content = base64.b64encode(attachment_values['raw']).decode()
             to_inject = f'''
                 <cac:AdditionalDocumentReference
                     {attachment_values.get("xmlns", "")}
@@ -253,9 +267,7 @@ class AccountMoveSend(models.AbstractModel):
                     <cac:Attachment>
                         <cbc:EmbeddedDocumentBinaryObject
                             mimeCode={quoteattr(attachment_values["mimetype"])}
-                            filename={quoteattr(attachment_values['filename'])}>
-                            {base64.b64encode(attachment_values['raw']).decode()}
-                        </cbc:EmbeddedDocumentBinaryObject>
+                            filename={quoteattr(attachment_values['filename'])}>{embed_content}</cbc:EmbeddedDocumentBinaryObject>
                     </cac:Attachment>
                 </cac:AdditionalDocumentReference>
             '''

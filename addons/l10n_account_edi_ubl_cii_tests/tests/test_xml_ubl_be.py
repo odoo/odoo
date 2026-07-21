@@ -26,7 +26,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -39,7 +39,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -93,6 +93,11 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
         })
 
+        cls.env['res.partner.bank'].sudo().create({
+            'acc_number': 'BE15001559627230',
+            'partner_id': cls.company_data['company'].partner_id.id,
+        })
+
         cls.pay_term = cls.env['account.payment.term'].create({
             'name': "2/7 Net 30",
             'note': "Payment terms: 30 Days, 2% Early Payment Discount under 7 days",
@@ -108,6 +113,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         invoice = self._generate_move(
             self.partner_1,
@@ -168,6 +177,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         refund = self._generate_move(
             self.partner_1,
@@ -225,94 +238,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
-
-    def test_export_import_cash_rounding(self):
-        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
-        cash_rounding_line = self.env['account.cash.rounding'].create({
-            'name': '1.0 Line',
-            'rounding': 1.00,
-            'strategy': 'add_invoice_line',
-            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
-            'loss_account_id': self.company_data['default_account_expense'].copy().id,
-            'rounding_method': 'HALF-UP',
-        })
-
-        cash_rounding_tax = self.env['account.cash.rounding'].create({
-            'name': '1.0 Tax',
-            'rounding': 1.00,
-            'strategy': 'biggest_tax',
-            'rounding_method': 'HALF-UP',
-        })
-
-        test_data = [
-            {
-                'invoice_cash_rounding_id': False,
-                'expected_rounding_invoice_line_values': None,
-            },
-            {
-                'invoice_cash_rounding_id': cash_rounding_tax,
-                'expected_rounding_invoice_line_values': None,
-            },
-            {
-                'invoice_cash_rounding_id': cash_rounding_line,
-                # We create an invoice line for the rounding amount.
-                # (This adjusts the base amount of the invoice.)
-                'expected_rounding_invoice_line_values': {
-                    'display_type': 'product',
-                    'name': 'Rounding',
-                    'quantity': 1,
-                    'product_id': False,
-                    'price_unit': 0.30,
-                    'amount_currency': -0.30,
-                    'balance': -0.15,
-                    'currency_id': self.other_currency.id,
-                }
-            },
-        ]
-        for test in test_data:
-            cash_rounding_method = test['invoice_cash_rounding_id']
-            with self.subTest(sub_test_name=f"cash rounding method: {cash_rounding_method.name if cash_rounding_method else 'None'}"):
-                invoice = self._generate_move(
-                    seller=self.partner_1,
-                    buyer=self.partner_2,
-                    move_type='out_invoice',
-                    currency_id=self.other_currency.id,
-                    invoice_cash_rounding_id=cash_rounding_method.id if cash_rounding_method else False,
-                    invoice_line_ids=[
-                        {
-                            'product_id': self.product_a.id,
-                            'quantity': 1,
-                            'price_unit': 70.00,
-                            'tax_ids': [Command.set([self.tax_21.id])],
-                        },
-                    ],
-                )
-
-                attachment = invoice.ubl_cii_xml_id
-                self.assertTrue(attachment)
-
-                # Check that importing yields the expected results.
-
-                # For the 'add_invoice_line' strategy we create a dedicated invoice line for the cash rounding.
-                rounding_invoice_line_values = test['expected_rounding_invoice_line_values']
-                if rounding_invoice_line_values:
-                    invoice.button_draft()
-                    invoice.invoice_cash_rounding_id = False  # Do not round twice
-                    invoice.invoice_line_ids.create([{
-                        'company_id': invoice.company_id.id,
-                        'move_id': invoice.id,
-                        'partner_id': invoice.partner_id.id,
-                        **rounding_invoice_line_values,
-                    }])
-                    invoice.action_post()
-
-                self._assert_imported_invoice_from_etree(invoice, attachment)
-
-                # Check that importing a bill yields the expected results.
-
-                bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
-                self.assertTrue(bill)
-                self.assert_same_invoice(invoice, bill, partner_id=self.partner_1.id)
 
     def test_encoding_in_attachment_ubl(self):
         invoice = self._generate_move(
@@ -380,6 +305,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         acc_bank = self.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         invoice = self._generate_move(
@@ -420,6 +346,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
         # Import:
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})
+        self.env['res.partner'].search([('vat', '=', 'BE0246697724'), ('id', '!=', self.company_data['company'].id)]).vat = False  # clean demo company to avoid picking it as a partner
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)
 
@@ -442,6 +369,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_file(filename='bis3_out_invoice_no_prices.xml', **kwargs)
 
     def test_import_invoice_xml_open_peppol_examples(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'IBAN32423940',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
@@ -451,7 +382,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             invoice_vals={
                 'amount_total': 7125,
                 'amount_tax': 1225,
-                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 3999, 1, 1000, 899, 1)],
+                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 4000, 1000, 900)],
             },
         )
         # source: base-creditnote-correction.xml
@@ -476,6 +407,16 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
             },
         )
+        # source: base-creditnote-correction.xml with ignored LineExtensionAmount
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_invoice_ignore_lineextensionamount.xml',
+            invoice_vals={
+                'amount_total': 1000,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': 1000}],
+            }
+        )
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(
             subfolder=subfolder,
@@ -484,7 +425,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'currency_id': self.env.ref('base.GBP').id,
                 'amount_total': 1200,
                 'amount_tax': 0,
-                'invoice_lines': [{'price_subtotal': 1200}],
+                'invoice_lines': [{'price_subtotal': 1200.0}],
             },
         )
 
@@ -595,11 +536,11 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                         'discount': 0,
                         'tax_ids': tax.ids,
                     } for (price_unit, tax) in [
-                        (-4, self.tax_6),
-                        (-48, tax_21),
-                        (52, self.tax_0),
-                        (200, self.tax_6),
-                        (2400, tax_21),
+                        (52.0, self.tax_0),
+                        (-4.0, self.tax_6),
+                        (-48.0, tax_21),
+                        (200.0, self.tax_6),
+                        (2400.0, tax_21),
                     ]
                 ]
             },
@@ -694,8 +635,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             filename='bis3_out_invoice_quantity_and_or_unit_price_zero.xml',
             move_type='out_invoice',
             invoice_vals={
-                'amount_total': 3630,
-                'amount_tax': 630,
+                'amount_total': 3630.0,
+                'amount_tax': 630.0,
                 'currency_id': self.other_currency.id,
                 'invoice_lines': [
                     {

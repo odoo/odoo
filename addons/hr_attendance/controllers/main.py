@@ -2,6 +2,7 @@
 
 from odoo.service.common import exp_version
 from odoo import http, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_round, py_to_js_locale, SQL
@@ -129,13 +130,16 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/attendance_barcode_scanned', type="json", auth="public")
     def scan_barcode(self, token, barcode):
+        return self.scan_barcode_with_geolocation(token, barcode)
+
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="json", auth="public")
+    def scan_barcode_with_geolocation(self, token, barcode, latitude=False, longitude=False):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
-                employee._attendance_action_change(self._get_geoip_response('kiosk'))
+                employee._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude))
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -154,6 +158,16 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/employees_infos', type="json", auth="public")
     def employees_infos(self, token, limit, offset, domain):
+        for condition in domain:
+            if not isinstance(condition, (list, tuple)) or len(condition) != 3:
+                continue
+            field_name, operator, _value = condition  # Force '&' implicit syntax
+            if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
+                raise UserError(_(
+                    "Invalid domain, use 'name' and/or 'department_id' fields "
+                    "with '=' and/or 'ilike' operators.",
+                ))
+
         company = self._get_company(token)
         if company:
             domain = expression.AND([domain, [('company_id', '=', company.id)]])

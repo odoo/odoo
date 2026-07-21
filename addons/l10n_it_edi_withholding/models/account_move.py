@@ -187,6 +187,11 @@ class AccountMove(models.Model):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len=0))
         return errors
 
+    def _l10n_it_edi_get_max_limit_per_tax(self, kind_code):
+        if kind_code == 'pension_fund':
+            return 2
+        return super()._l10n_it_edi_get_max_limit_per_tax(kind_code)
+
     # -------------------------------------------------------------------------
     # Import
     # -------------------------------------------------------------------------
@@ -221,20 +226,34 @@ class AccountMove(models.Model):
                 importo_ritenuta = get_float(withholding, './/ImportoRitenuta')
                 withholding_percentage = -float_round((importo_ritenuta / prezzo_totale) * 100, 1)
 
-            withholding_tax = self._l10n_it_edi_search_tax_for_import(
-                company,
-                withholding_percentage,
-                ([('l10n_it_withholding_type', '=', withholding_type),
-                  ('l10n_it_withholding_reason', '=', withholding_reason)]
-                 + type_tax_use_domain),
-                vat_only=False)
-            if withholding_tax:
-                withholding_taxes.append(withholding_tax)
+            # Some bills involving ENASARCO come in with a wrong withholding_reason
+            # so we defend ourselves by searching with exact type and reason first,
+            # then with just the type
+            for extra_domain, message in ([(
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    ('l10n_it_withholding_reason', '=', withholding_reason),
+                    *type_tax_use_domain
+                ],
+                None
+            ), (
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    *type_tax_use_domain
+                ],
+                _("ENASARCO tax (type %(wtype)s) has wrong reason %(reason)s",
+                  wtype=withholding_type, reason=withholding_reason))
+            ]):
+                if withholding_tax := self._l10n_it_edi_search_tax_for_import(
+                    company, withholding_percentage, extra_domain, vat_only=False
+                ):
+                    withholding_taxes.append(withholding_tax)
+                    break
             else:
-                message_to_log.append(Markup("%s<br/>%s") % (
-                    _("Withholding tax not found"),
-                    self.env['account.move']._compose_info_message(body_tree, '.'),
-                ))
+                message = _("Withholding tax not found")
+            if message:
+                message_to_log.append(Markup("%s<br/>%s") % (message, self._compose_info_message(body_tree, '.')))
+
         extra_info["withholding_taxes"] = withholding_taxes
 
         pension_fund_elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiCassaPrevidenziale')
@@ -243,17 +262,23 @@ class AccountMove(models.Model):
             pension_fund_type = pension_fund.find("TipoCassa")
             tax_factor_percent = pension_fund.find("AlCassa")
             vat_tax_factor_percent = pension_fund.find("AliquotaIVA")
+            pension_fund_natura = pension_fund.find("Natura")
             pension_fund_type = pension_fund_type.text if pension_fund_type is not None else ""
             tax_factor_percent = float(tax_factor_percent.text or "0.0")
             vat_tax_factor_percent = float(vat_tax_factor_percent.text or "0.0")
+            pension_fund_natura = pension_fund_natura.text if pension_fund_natura is not None else False
             pension_fund_tax = self._l10n_it_edi_search_tax_for_import(
                 company,
                 tax_factor_percent,
                 ([('l10n_it_pension_fund_type', '=', pension_fund_type)]
                  + type_tax_use_domain),
+                l10n_it_exempt_reason=pension_fund_natura,
                 vat_only=False)
             if pension_fund_tax:
-                pension_fund_taxes[vat_tax_factor_percent] = pension_fund_tax
+                if vat_tax_factor_percent not in pension_fund_taxes:
+                    pension_fund_taxes[vat_tax_factor_percent] = pension_fund_tax
+                else:
+                    pension_fund_taxes[vat_tax_factor_percent] |= pension_fund_tax
             else:
                 message_to_log.append(Markup("%s<br/>%s") % (
                     _("Pension Fund tax not found"),
@@ -285,7 +310,9 @@ class AccountMove(models.Model):
         """
         pension_fund_map = extra_info.get('pension_fund_taxes', {})
         tax_rate_tag = self.get_tag(element, './/AliquotaIVA')
-        if tax_rate_tag is None:
+        exemption_reason_tag = self.get_tag(element, "Natura")
+        l10n_it_exemption_reason = exemption_reason_tag.text if exemption_reason_tag is not None else None
+        if tax_rate_tag is None and not l10n_it_exemption_reason:
             return None
 
         tax_rate = float(tax_rate_tag.text)
@@ -293,20 +320,34 @@ class AccountMove(models.Model):
         if not pension_fund_tax:
             return None
 
+        pension_fund_tax_candidates = pension_fund_map.get(tax_rate)
+        if not pension_fund_tax_candidates:
+            return None
+
+        if l10n_it_exemption_reason:
+            pension_fund_tax_candidates = pension_fund_tax_candidates.filtered(lambda t: t.l10n_it_exempt_reason == l10n_it_exemption_reason)
+        pension_fund_tax = pension_fund_tax_candidates[:1]
+
+        if not pension_fund_tax:
+            return None
+
         if not extra_info.get('pension_fund_assosoftware_tags'):
             return pension_fund_tax
 
-        selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]/RiferimentoTesto"
-        reference_tag = self.get_tag(element, selector)
-        if reference_tag is None:
+        parent_selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]"
+        parent_tag = self.get_tag(element, parent_selector)
+        if parent_tag is None:
             return None
 
-        if match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag.text):
+        reference_tag = self.get_tag(parent_tag, "./RiferimentoTesto")
+        if reference_tag is not None and (match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag.text)):
             rate = float(match.group("tax_rate"))
             match_kind = (match.group("kind") == pension_fund_tax.l10n_it_pension_fund_type)
             match_rate = (float_compare(rate, pension_fund_tax.amount, precision_digits=2) == 0)
             if match_kind and match_rate:
                 return pension_fund_tax
+        elif reference_tag is None:
+            return pension_fund_tax
 
         return None
 

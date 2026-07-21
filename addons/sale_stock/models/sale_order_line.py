@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 
@@ -230,6 +230,7 @@ class SaleOrderLine(models.Model):
                 and line.product_id.invoice_policy == 'delivery'
                 and line.move_ids
                 and check_moves_state(line.move_ids)
+                and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom.rounding)
             ):
                 line.invoice_status = 'invoiced'
 
@@ -345,7 +346,7 @@ class SaleOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
 
         for move in moves:
-            if not move._is_dropshipped_returned() and (
+            if (not move._is_dropshipped_returned() or move._is_dropshipped()) and (
                 (strict and move.location_dest_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
                 (move.location_final_id or move.location_dest_id)._is_outgoing()

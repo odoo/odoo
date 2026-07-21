@@ -3,7 +3,7 @@ import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
@@ -99,7 +99,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
-const DELAY_TOOLBAR_OPEN = 300;
+export const DELAY_TOOLBAR_OPEN = 300;
 
 /**
  * @typedef { Object } ToolbarShared
@@ -167,7 +167,7 @@ export class ToolbarPlugin extends Plugin {
                 if (ev.detail >= 2) {
                     // Delayed open, waiting for a possible triple click.
                     this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 } else {
                     // Fast open, just wait for a possible selection change due
                     // to mouseup.
@@ -182,18 +182,35 @@ export class ToolbarPlugin extends Plugin {
             // Close toolbar on keydown Arrows and prevent it from opening until
             // keyup. Opening is debounced to avoid open/close between
             // sequential keystrokes.
+            // On macOS, keyup is not triggered when Cmd is held down (e.g. Cmd+Shift+Arrow),
+            // so we use selectionchange as a fallback to re-enable the toolbar.
             this.addDomListener(this.editable, "keydown", (ev) => {
                 if (ev.key?.startsWith("Arrow")) {
                     this.overlay.close();
                     this.onSelectionChangeActive = false;
+                    if (isMacOS() && ev.metaKey) {
+                        this.pendingArrowKey = true;
+                    }
                 }
             });
             this.addDomListener(this.editable, "keyup", (ev) => {
                 if (ev.key?.startsWith("Arrow")) {
+                    this.pendingArrowKey = false;
                     this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 }
             });
+            if (isMacOS()) {
+                this.addDomListener(this.document, "selectionchange", () => {
+                    if (this.pendingArrowKey && !this.isMouseDown) {
+                        this.pendingArrowKey = false;
+                        this.onSelectionChangeActive = true;
+                        this.triggerDebouncedUpdateToolbar();
+                    }
+                });
+                this.addDomListener(this.editable, "mousedown", () => (this.isMouseDown = true));
+                this.addDomListener(this.document, "mouseup", () => (this.isMouseDown = false));
+            }
         }
     }
 
@@ -201,6 +218,13 @@ export class ToolbarPlugin extends Plugin {
         this.debouncedUpdateToolbar.cancel();
         this.overlay.close();
         super.destroy();
+    }
+
+    /**
+     * Schedules a debounced toolbar update.
+     */
+    triggerDebouncedUpdateToolbar() {
+        this.debouncedUpdateToolbar();
     }
 
     /**
@@ -285,6 +309,7 @@ export class ToolbarPlugin extends Plugin {
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
+                    (this.checkPredicates("toolbar_visibility_predicates", node) ?? true) &&
                     (!isTextNode(node) || (node.textContent.trim().length && !isZWS(node)))
             );
     }

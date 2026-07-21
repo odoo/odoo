@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import unittest
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as FieldsDatetime
@@ -9,6 +11,14 @@ from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.event.tests.common import EventCase
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
 
 
 class TestEventData(EventCase, MockVisitor):
@@ -22,6 +32,38 @@ class TestEventData(EventCase, MockVisitor):
             'website_published': True,
         } for website_visibility in ['public', 'link', 'logged_users']])
         cls.events_visibility_test = cls.event_public | cls.event_link_only | cls.event_logged_users
+
+    @users('public_test')
+    def test_ics_file_html_description(self):
+        """Verify that _get_ics_file returns a valid .ics description
+        that will be rendered correctly for the user.
+        """
+        if not vobject:
+            raise unittest.SkipTest("Skip test when `vobject` Python module is not found.")
+
+        event = self.event_public
+        event.write({
+            'date_begin': FieldsDatetime.to_string(datetime(2022, 12, 31, 10, 0, 0)),
+            'date_end': FieldsDatetime.to_string(datetime(2022, 12, 31, 12, 0, 0)),
+            'description': '<p>This is <b>HTML</b> description</p>',
+            'event_register_url': 'https://www.example.com',
+        })
+
+        ics_map = event._get_ics_file()
+        ics_bytes = ics_map[event.id]
+        ics_str = ics_bytes.decode('utf-8')
+
+        cal = vobject.readOne(ics_str)
+        vevent = cal.vevent
+
+        external_description = event._get_external_description()
+        self.assertIn('This is HTML description', external_description)
+        self.assertEqual(vevent.description.value, external_description)
+
+        self.assertIn('x-alt-desc', vevent.contents)
+        xalt = vevent.contents['x-alt-desc'][0]
+        self.assertEqual(xalt.params.get('FMTTYPE'), ['text/html'])
+        self.assertEqual(xalt.value, external_description)
 
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({

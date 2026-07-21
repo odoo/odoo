@@ -18,9 +18,11 @@ const getIframeViewerParams = () =>
 
 class Partner extends models.Model {
     document = fields.Binary({ string: "Binary" });
+    document_name = fields.Char({ string: "Filename" });
     _records = [
         {
             document: "coucou==\n",
+            document_name: "test.pdf",
         },
     ];
 }
@@ -75,4 +77,31 @@ test("PdfViewerField: upload rendering", async () => {
     expect(getIframeProtocol()).toBe("blob");
     await clickSave();
     expect(getIframeProtocol()).toBe("blob");
+});
+
+test("PdfViewerField: upload also sets filename", async () => {
+    expect.assertions(1);
+
+    onRpc("web_save", ({ args }) => {
+        expect(args[1]).toEqual({
+            document: btoa("test"),
+            document_name: "test.pdf",
+        });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="document" widget="pdf_viewer" filename="document_name"/>
+            </form>
+        `,
+    });
+
+    const file = new File(["test"], "test.pdf", { type: "application/pdf" });
+    await click(".o_field_pdf_viewer input[type=file]");
+    await setInputFiles(file);
+    await waitFor("iframe.o_pdfview_iframe");
+    await clickSave();
 });

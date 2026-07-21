@@ -384,9 +384,9 @@ class ResourceCalendar(models.Model):
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
-                    start_date = start_datetime.date()
+                    start_date = start_datetime
                     end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
-                    end_date = end_datetime_adjusted.date()
+                    end_date = end_datetime_adjusted
 
                     calendar = resource_calendars[resource] if resource else self
 
@@ -394,7 +394,7 @@ class ResourceCalendar(models.Model):
                     max_hours_per_day = calendar.hours_per_day
 
                     intervals = []
-                    current_start_day = start_date
+                    current_start_day = start_date - timedelta(days=start_date.weekday())
 
                     while current_start_day <= end_date:
                         current_end_of_week = current_start_day + timedelta(days=6)
@@ -559,7 +559,10 @@ class ResourceCalendar(models.Model):
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources, domain, tz)
         result = {}
         for resource in resources_list:
-            if resource and resource._is_fully_flexible():
+            if resource and resource._is_flexible():
+                leaves = self._leave_intervals_batch(start_dt, end_dt, resource, domain, tz=tz)
+                if res_leaves := leaves.get(resource.id, []):
+                    result[resource.id] = [(i[0], i[1]) for i in res_leaves]
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end

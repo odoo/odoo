@@ -418,8 +418,12 @@ class AccountMove(models.Model):
         if (self.l10n_tw_edi_is_print or self.partner_id.vat) and not self.partner_id.contact_address:
             errors.append(self.env._("Please fill in the customer address for printing Ecpay invoice."))
 
-        if not self.partner_id.email and not self.partner_id.phone:
-            errors.append(self.env._("Please fill in the customer email or phone number for Ecpay invoice creation."))
+        if self.l10n_tw_edi_is_b2b:
+            if not self.partner_id.email and not self.partner_id.phone:
+                errors.append(self.env._("Please fill in the customer email or phone number for Ecpay invoice creation."))
+        else:
+            if not self.partner_id.mobile and not self.partner_id.phone and not self.partner_id.email:
+                errors.append(self.env._("Please fill in the customer mobile, phone, or email for Ecpay invoice creation."))
 
         if self.partner_id.phone:
             formatted_phone = self._reformat_phone_number(self.partner_id.phone)
@@ -496,6 +500,7 @@ class AccountMove(models.Model):
             if not is_allowance:
                 line.l10n_tw_edi_ecpay_item_sequence = index
 
+            # ItemRemark is in TW Chinese Characters because the official document uses TW Chinese Characters
             if self.l10n_tw_edi_is_b2b and is_allowance:
                 item_list.append({
                     "OriginalInvoiceNumber": self.l10n_tw_edi_ecpay_invoice_id,
@@ -515,6 +520,7 @@ class AccountMove(models.Model):
                     "ItemPrice": item_price,
                     "ItemTaxType": line.tax_ids[0].l10n_tw_edi_tax_type if tax_type != "4" and line.tax_ids else "",
                     "ItemAmount": item_amount,
+                    "ItemRemark": f"商品單位: {line.product_uom_id.name[:6]}" if line.product_uom_id else ""
                 })
             if self.l10n_tw_edi_is_b2b:
                 sale_amount += item_amount
@@ -567,7 +573,10 @@ class AccountMove(models.Model):
         self._l10n_tw_edi_check_before_generate_invoice_json()
         tax_type, special_tax_type, is_zero_tax_rate = self._l10n_tw_edi_determine_tax_types()
         self.l10n_tw_edi_related_number = base64.urlsafe_b64encode(uuid.uuid4().bytes)[:20]
-        formatted_phone = self._reformat_phone_number(self.partner_id.phone) if self.partner_id.phone else ""
+        raw_phone = self.partner_id.phone
+        if not self.l10n_tw_edi_is_b2b and self.partner_id.mobile:  # B2C prioritzes mobile
+            raw_phone = self.partner_id.mobile
+        formatted_phone = self._reformat_phone_number(raw_phone) if raw_phone else ""
         product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")
         vat = "1" if product_lines[0].tax_ids and product_lines[0].tax_ids[0].price_include else "0"
 

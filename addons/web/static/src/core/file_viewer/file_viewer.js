@@ -1,4 +1,5 @@
 import { Component, useRef, useState } from "@odoo/owl";
+import { download } from "@web/core/network/download";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -53,12 +54,19 @@ export class FileViewer extends Component {
             imageLoaded: false,
             scale: 1,
             angle: 0,
+            isIframeLoaded: false,
         });
         this.ui = useState(useService("ui"));
     }
 
     onImageLoaded() {
         this.state.imageLoaded = true;
+    }
+
+    onIframeLoaded(ev) {
+        requestAnimationFrame(() => {
+            this.state.isIframeLoaded = true;
+        });
     }
 
     close() {
@@ -226,25 +234,18 @@ export class FileViewer extends Component {
     }
 
     onClickPrint() {
-        const printWindow = window.open("about:blank", "_new");
-        printWindow.document.open();
-        printWindow.document.write(`
-                <html>
-                    <head>
-                        <script>
-                            function onloadImage() {
-                                setTimeout('printImage()', 10);
-                            }
-                            function printImage() {
-                                window.print();
-                                window.close();
-                            }
-                        </script>
-                    </head>
-                    <body onload='onloadImage()'>
-                        <img src="${this.state.file.defaultSource}" alt=""/>
-                    </body>
-                </html>`);
-        printWindow.document.close();
+        const printWindow = window.open();
+        const image = printWindow.document.createElement("img");
+        image.setAttribute("onload", "window.print(); setTimeout(window.close, 10)");
+        image.setAttribute("onerror", "window.print(); setTimeout(window.close, 10)");
+        image.src = this.state.file.defaultSource;
+        printWindow.document.body.appendChild(image);
+    }
+
+    onClickDownload() {
+        download({
+            data: {},
+            url: this.state.file.downloadUrl,
+        });
     }
 }

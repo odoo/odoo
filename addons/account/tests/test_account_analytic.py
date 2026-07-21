@@ -479,12 +479,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         # Priority: m2 > m1 > m3 : A2, B3, C2
         m1.sequence, m2.sequence, m3.sequence = 2, 1, 3
         distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm2 fills A, ignore m1')
+        self.assertEqual(distribution, {f'{aa_A2.id},{aa_C2.id},{aa_B3.id}': 100}, 'm2 fills A, ignore m1')
 
         # Priority: m3 > m1 > m2 : A2, B3, C2
         m1.sequence, m2.sequence, m3.sequence = 2, 3, 1
         distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm3 fills B, ignore m1')
+        self.assertEqual(distribution, {f'{aa_B3.id},{aa_A2.id},{aa_C2.id}': 100}, 'm3 fills B, ignore m1')
 
     def test_analytic_distribution_multiple_prefixes(self):
         self.env['account.analytic.distribution.model'].create([{
@@ -1161,3 +1161,38 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         self.analytic_account_a.active = False
         with self.assertRaisesRegex(UserError, "archived analytic account"):
             invoice._post()
+
+    def test_exchange_move_with_mandatory_analytic_plan(self):
+        """ Ensure no mandatory analytic plan validation error is raised when an exchange move is auto-created."""
+
+        # Multi-currency setup
+        test_currency = self.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
+
+        # Analytic plan setup
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'general',
+            'applicability': 'mandatory',
+            'analytic_plan_id': self.default_plan.id,
+        })
+
+        # Create an invoice in foreign currency
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': test_currency.id,
+            'invoice_date': '2016-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'quantity': 1,
+                'price_unit': 100,
+                'analytic_distribution': {self.analytic_account_a.id: 100},
+            })],
+        })
+        invoice.action_post()
+
+        # Create a credit note at a different rate
+        credit_note = invoice._reverse_moves([{'invoice_date': '2017-01-01'}])
+        # Post the credit note with the validate_analytic context key to mimic posting behavior from the form view.
+        credit_note.with_context(validate_analytic=True).action_post()
+
+        self.assertEqual(credit_note.state, 'posted')

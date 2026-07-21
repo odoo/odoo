@@ -160,3 +160,32 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             ]
             expected_values = get_expected_values(base_expected_values, tax_7)
             self.assert_base_lines_tax_details(document, expected_values)
+
+    def test_global_discount_raw_gross_total_excluded(self):
+        """ Tests to ensure expected raw_gross_total_excluded is calculated
+        correctly with both line discounts and global discounts
+        """
+        AccountTax = self.env['account.tax']
+        company = self.env.company
+
+        document = self.populate_document(self.init_document(lines=[
+            {'price_unit': 100.0, 'quantity': 1.0, 'discount': 10.0},
+            {'price_unit': -10.0, 'quantity': 1.0, 'special_type': 'global_discount'},
+        ]))
+        base_lines = document['lines']
+
+        base_lines = AccountTax._dispatch_global_discount_lines(base_lines, company)
+        AccountTax._squash_global_discount_lines(base_lines, company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(
+            base_lines, company, account_discount_base_lines=True,
+        )
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(
+            base_lines, company, in_foreign_currency=False, account_discount_base_lines=True,
+        )
+
+        self.assertEqual(len(base_lines), 1)
+        tax_details = base_lines[0]['tax_details']
+
+        self.assertEqual(tax_details['raw_gross_total_excluded'], 100)
+        self.assertEqual(tax_details['raw_gross_price_unit'], 100)
+        self.assertEqual(tax_details['raw_discount_amount'], 20)

@@ -202,7 +202,7 @@ will update the cost of every lot/serial number in stock."),
             "value_svl": value_svl,
             "quantity_svl": quantity_sum,
             "avg_cost": avg_cost,
-            "total_value": avg_cost * self.sudo(False).qty_available if avg_cost else 0
+            "total_value": avg_cost * self.with_context(allowed_company_ids=self.env.company.ids).qty_available if avg_cost else 0
         }
 
     @api.depends('stock_valuation_layer_ids')
@@ -347,7 +347,7 @@ will update the cost of every lot/serial number in stock."),
             }
             svl_vals_list.append(svl_vals)
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
-        stock_valuation_layers._change_standart_price_accounting_entries(new_price)
+        stock_valuation_layers.sudo(False)._change_standart_price_accounting_entries(new_price)
 
     def _get_fifo_candidates_domain(self, company, lot=False):
         return [

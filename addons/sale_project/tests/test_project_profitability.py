@@ -1160,3 +1160,58 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
+
+    def test_bills_without_purchase_order_and_negative_amls(self):
+        downpayment_invoice = self.env['account.move'].create({
+            "name": "Downpayment Bill",
+            "move_type": "in_invoice",
+            "state": "draft",
+            "partner_id": self.partner.id,
+            "invoice_date": datetime.today(),
+            "invoice_line_ids": [Command.create({
+                "analytic_distribution": {self.analytic_account.id: 100},
+                "name": "Downpayment 50%",
+                "quantity": 1,
+                "price_unit": 500,
+                "currency_id": self.env.company.currency_id.id,
+            })],
+        })
+
+        downpayment_invoice.action_post()
+
+        final_invoice = self.env['account.move'].create({
+            "name": "Final Bill",
+            "move_type": "in_invoice",
+            "state": "draft",
+            "partner_id": self.partner.id,
+            "invoice_date": datetime.today(),
+            "invoice_line_ids": [Command.create({
+                "analytic_distribution": {self.analytic_account.id: 100},
+                "name": "Downpayment 50%",
+                "quantity": 1,
+                "price_unit": -500,
+                "currency_id": self.env.company.currency_id.id,
+            }), Command.create({
+                "analytic_distribution": {self.analytic_account.id: 100},
+                "name": "Product",
+                "quantity": 1,
+                "price_unit": 1000,
+                "currency_id": self.env.company.currency_id.id,
+            })],
+        })
+
+        final_invoice.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'other_purchase_costs',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'],
+                    'billed': -1000.0,
+                    'to_bill': 0.0,
+                }],
+                'total': {'billed': -1000.0, 'to_bill': 0.0},
+            },
+            'Bill lines with a negative subtotal should count toward purchase costs'
+        )

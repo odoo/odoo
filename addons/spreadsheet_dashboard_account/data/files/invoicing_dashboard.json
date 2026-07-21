@@ -728,7 +728,7 @@
         "B1": { "content": "=PIVOT.VALUE(5,\"price_subtotal\")" },
         "B2": { "content": "=IFERROR(PIVOT.VALUE(6,\"price_subtotal\")/B3)" },
         "B3": { "content": "=PIVOT.VALUE(6,\"move_id\")" },
-        "B4": { "content": "=YEAR(TODAY())" },
+        "B4": { "content": "=YEAR(ODOO.FISCALYEAR.START(TODAY()))" },
         "B5": {
           "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_receivable\"),$B$4)"
         },

@@ -198,6 +198,14 @@ export function receiptTotalIs(amount) {
         },
     ];
 }
+export function receiptTotalAmountIs(amount) {
+    return [
+        {
+            trigger: `.receipt-total .pos-receipt-right-align:contains("${amount}")`,
+        },
+    ];
+}
+
 export function receiptChangeIs(amount) {
     return [
         {

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from difflib import SequenceMatcher
+
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import format_amount
+from odoo.tools import format_amount, frozendict, split_every
 
 ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
+
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
@@ -61,9 +64,22 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         return {
-            'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
-            'expense': self.property_account_expense_id or self.categ_id.property_account_expense_categ_id
+            'income': self.property_account_income_id or self._get_category_account('property_account_income_categ_id'),
+            'expense': self.property_account_expense_id or self._get_category_account('property_account_expense_categ_id')
         }
+
+    def _get_category_account(self, field_name):
+        """
+        Return the first account defined on the product category hierarchy
+        for the given field.
+        """
+        categ = self.categ_id
+        while categ:
+            account = categ[field_name]
+            if account:
+                return account
+            categ = categ.parent_id
+        return self.env['account.account']
 
     def _get_asset_accounts(self):
         res = {}
@@ -228,9 +244,11 @@ class ProductProduct(models.Model):
                 return 0.0
         if product_taxes is None:
             if document_type == 'sale':
-                product_taxes = product.taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.taxes_id
             elif document_type == 'purchase':
-                product_taxes = product.supplier_taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.supplier_taxes_id
+        if product_taxes:
+            product_taxes = product_taxes._filter_taxes_by_company(company)
         # Apply unit of measure.
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
@@ -280,6 +298,186 @@ class ProductProduct(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
+    def _import_retrieve_product_from_barcode(self, product_values):
+        barcode = product_values.get('barcode')
+        if barcode:
+            return {'criteria': [{'domain': [('barcode', '=', barcode)]}]}
+
+    def _import_retrieve_product_from_default_code(self, product_values):
+        default_code = product_values.get('default_code')
+        if default_code:
+            return {'criteria': [{'domain': [('default_code', '=', default_code)]}]}
+
+    def _import_retrieve_product_from_name(self, product_values):
+
+        name = product_values.get('name')
+        if not name:
+            return
+
+        def find_product_by_name_similarity(values):
+            """ Returns the first product whose name similarity ratio with the provided name is at least 90%. """
+
+            # Get similarity threshold from system parameter, fallback to 0.9 if missing, invalid, or out of range (0, 1].
+            try:
+                similarity_threshold = float(
+                    self.env['ir.config_parameter'].sudo().get_param('account.product_name_similarity_threshold', '0.9')
+                )
+                if similarity_threshold <= 0.0 or similarity_threshold > 1.0:
+                    similarity_threshold = 0.9
+            except ValueError:
+                similarity_threshold = 0.9
+
+            all_product_ids = self.search(
+                expression.AND([
+                    [('name', 'ilike', name)],
+                    values['static_domain'],
+                ]),
+            ).ids
+            lowered_name = name.lower()
+            for products in split_every(models.PREFETCH_MAX, all_product_ids, self.browse):
+                products.fetch(['product_tmpl_id'])
+                templates = products.product_tmpl_id
+                templates.fetch(['name'])
+                for product in products:
+                    if SequenceMatcher(None, lowered_name, product.name.lower()).ratio() >= similarity_threshold:
+                        return product
+                products.invalidate_recordset()
+                templates.invalidate_recordset()
+            return self.env['product.product']
+
+        if name and '\n' in name:
+            # cut Sales Description from the name
+            name = name.split('\n')[0]
+        if name:
+            return {'criteria': [
+                {'domain': [('name', '=', name)]},
+                {'search_method': find_product_by_name_similarity, 'cache_key': str([('name', '=', name)])},
+            ]}
+
+    @api.model
+    def _import_retrieve_product_from_invoice_predictive(self, product_values):
+        # Check if 'account_accountant' is installed.
+        if 'payment_state_before_switch' not in self.env['account.move']._fields:
+            return
+
+        invoice_predictive = product_values.get('invoice_predictive')
+        if not invoice_predictive:
+            return
+
+        def search_predictive(values):
+            static_domain = values['static_domain']
+            predicted_product_id = self.env['account.move.line']._predict_specific_product(
+                move=invoice_predictive['invoice'],
+                name=invoice_predictive['name'],
+                partner=invoice_predictive['partner'],
+            )
+            return self.env['product.product'].browse(predicted_product_id).filtered_domain(static_domain)[:1]
+
+        return {
+            'criteria': [{
+                'search_method': search_predictive,
+                'cache_key': frozendict(invoice_predictive),
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_product(self, search_plan, company, product_values_list):
+        cache = {}
+
+        static_domain = expression.OR([
+            [*self._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ])
+        for product_values in product_values_list:
+            product = None
+            for plan in search_plan:
+                plan_values = plan(product_values)
+                if not plan_values:
+                    continue
+
+                for criteria in plan_values['criteria']:
+                    domain = criteria.get('domain')
+                    search_method = criteria.get('search_method')
+                    if domain:
+                        domain = list(domain)
+                        cache_key = str(domain)
+                    else:
+                        cache_key = criteria.get('cache_key')
+
+                    cache_key = frozendict({
+                        'cache_key': cache_key,
+                        'intrastat_code': product_values.get('intrastat_code'),
+                        'unspsc_code': product_values.get('unspsc_code'),
+                        'l10n_ro_cpv_code': product_values.get('l10n_ro_cpv_code'),
+                        'cg_item_classification_code': product_values.get('cg_item_classification_code'),
+                    })
+
+                    # Look at the cache if the value has already been tested with this key.
+                    if cache_key in cache:
+                        if product := cache[cache_key]:
+                            product_values['product'] = product
+                            break
+                        else:
+                            continue
+
+                    orders = ['company_id', 'id DESC']
+                    product_extra_domain = []
+                    if (
+                        (intrastat_code := product_values.get('intrastat_code'))
+                        and 'intrastat_code_id' in self._fields
+                        and (intrastat_code_record := self.env['account.intrastat.code'].search([('code', '=', intrastat_code)], limit=1))
+                    ):
+                        product_extra_domain.append(('intrastat_code_id', 'in', (intrastat_code_record.id, False)))
+                        orders.insert(1, 'intrastat_code_id')
+                    if (
+                        (unspsc_code := product_values.get('unspsc_code'))
+                        and 'unspsc_code_id' in self._fields
+                        and (unspsc_code_record := self.env['product.unspsc.code'].search([('code', '=', unspsc_code)], limit=1))
+                    ):
+                        product_extra_domain.append(('unspsc_code_id', 'in', (unspsc_code_record.id, False)))
+                        orders.insert(1, 'unspsc_code_id')
+                    if (
+                        (l10n_ro_cpv_code := product_values.get('l10n_ro_cpv_code'))
+                        and 'cpv_code_id' in self._fields
+                        and (cpv_code_record := self.env['l10n_ro.cpv.code'].search([('code', '=', l10n_ro_cpv_code)], limit=1))
+                    ):
+                        product_extra_domain.append(('cpv_code_id', 'in', (cpv_code_record.id, False)))
+                        orders.insert(1, 'cpv_code_id')
+                    if (
+                        (cg_item_classification_code := product_values.get('cg_item_classification_code'))
+                        and 'l10n_hr_kpd_category_id' in self._fields
+                        and (cpv_code_record := self.env['l10n_hr.kpd.category'].search([('name', '=', cg_item_classification_code)], limit=1))
+                    ):
+                        product_extra_domain.append(('l10n_hr_kpd_category_id', 'in', (cpv_code_record.id, False)))
+                        orders.insert(1, 'l10n_hr_kpd_category_id')
+
+                    product_domain = expression.AND([
+                        static_domain,
+                        product_extra_domain
+                    ])
+
+                    if domain:
+                        full_domain = expression.AND([product_domain, domain])
+                        product = self.search(
+                            full_domain,
+                            order=', '.join(orders),
+                            limit=1,
+                        )
+                    elif search_method:
+                        product = search_method({
+                            **criteria,
+                            'static_domain': product_domain,
+                        })
+
+                    if product:
+                        if cache_key:
+                            cache[cache_key] = product
+                        product_values['product'] = product
+                        break
+
+                if product:
+                    break
+
     def _retrieve_product(self, name=None, default_code=None, barcode=None, company=None, extra_domain=None):
         '''Search all products and find one that matches one of the parameters.
 
@@ -290,35 +488,18 @@ class ProductProduct(models.Model):
         :param extra_domain:    Any extra domain to add to the search.
         :returns:               A product or an empty recordset if not found.
         '''
-        if name and '\n' in name:
-            # cut Sales Description from the name
-            name = name.split('\n')[0]
-        domains = []
-        if barcode:
-            domains.append([('barcode', '=', barcode)])
-        if default_code:
-            domains.append([('default_code', '=', default_code)])
-        if name:
-            domains.append([('name', '=', name)])
-            # avoid matching unrelated products whose names merely contain that short string
-            if len(name) > 4:
-                domains.append([('name', 'ilike', name)])
-
-        company = company or self.env.company
-        for company_domain in (
-            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
-            [('company_id', '=', False)],
-        ):
-            for domain in domains:
-                product = self.env['product.product'].search(
-                    expression.AND([
-                        domain,
-                        company_domain,
-                        extra_domain or [],
-                    ]),
-                    limit=1
-                )
-                # We need a single product. Exit early if one is found (implements the priority logic).
-                if product:
-                    return product
-        return self.env['product.product']
+        product_values = {
+            'name': name,
+            'default_code': default_code,
+            'barcode': barcode,
+        }
+        self._import_retrieve_product(
+            search_plan=[
+                self._import_retrieve_product_from_barcode,
+                self._import_retrieve_product_from_default_code,
+                self._import_retrieve_product_from_name,
+            ],
+            company=company or self.env.company,
+            product_values_list=[product_values],
+        )
+        return product_values.get('product') or self.env['product.product']

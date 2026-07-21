@@ -48,6 +48,10 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
+            if tx_sudo.reference != payment_intent["description"]:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
+
             secret_keys = tx_sudo._get_specific_secret_keys()
             logged_intent = {k: v for k, v in payment_intent.items() if k not in secret_keys}
             _logger.info("Received payment_intents response:\n%s", pprint.pformat(logged_intent))
@@ -115,6 +119,9 @@ class StripeController(http.Controller):
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_notification_data(stripe_object, data)
                 elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
+                    if not stripe_object['captured']:  # The charge was authorized and then voided
+                        return request.make_json_response('')  # Don't process void-related events
+
                     refunds = stripe_object['refunds']['data']
 
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
@@ -204,7 +211,7 @@ class StripeController(http.Controller):
         webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.provider_id)
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
-            return
+            raise Forbidden()
 
         notification_payload = request.httprequest.data.decode('utf-8')
         signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')

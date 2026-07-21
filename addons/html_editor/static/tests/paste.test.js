@@ -3181,6 +3181,16 @@ describe("link", () => {
                 contentAfter: "<pre>http://www.xyz.com[]</pre>",
             });
         });
+
+        test("should paste and transform an URL between backticks", async () => {
+            await testEditor({
+                contentBefore: "<p>ab[]cd</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "`http://www.xyz.com`");
+                },
+                contentAfter: '<p>ab`<a href="http://www.xyz.com">http://www.xyz.com</a>`[]cd</p>',
+            });
+        });
     });
 
     describe("range not collapsed", () => {
@@ -4531,7 +4541,11 @@ describe("onDrop", () => {
                 offset: defTextNode.textContent.length,
             }),
         });
-
+        setSelection({
+            anchorNode: iconElement,
+            anchorOffset: 0,
+        });
+        await animationFrame();
         const dragdata = new DataTransfer();
         await dispatch(iconElement, "dragstart", { dataTransfer: dragdata });
 

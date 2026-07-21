@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 10:34+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"PO-Revision-Date: 2026-06-14 21:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "hr_timesheet/uk/>\n"
 "Language: uk\n"
@@ -20,11 +20,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
-"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
-"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
-" ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -112,11 +111,6 @@ msgid "2 hours"
 msgstr "2 години"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
-msgid "2021-09-01"
-msgstr "2021-09-01"
-
-#. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr "<b class=\"tip_title\">Порада: Записуйте ваші табелі швидше</b>"
@@ -149,34 +143,11 @@ msgstr "<span class=\"text-nowrap\">Час витрачений на підза�
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        You cannot delete employees who have timesheets.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first "
-"delete all of their timesheets.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Please first delete all of their timesheets.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
+"<span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Ви не можете видалити співробітників, у яких є "
-"табелі.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            Ви можете або архівувати цих співробітників, або "
-"спершу видалити всі їхні табелі.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Видаліть спершу всі їхні табелі.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
+"<span invisible=\"has_timesheet\">\n"
 "                        Ви впевнені, що хочете видалити цих співробітників?\n"
 "                    </span>"
 
@@ -332,7 +303,7 @@ msgstr "По співробітникам"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "За проектом"
+msgstr "За проєктом"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
@@ -342,12 +313,12 @@ msgstr "За завданням"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Call client and discuss project"
-msgstr "Зателефонуйте клієнту та обговоріть проект"
+msgstr "Зателефонуйте клієнту та обговоріть проєкт"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "Співучасники проекту поділилися"
+msgstr "Співучасники проєкту поділилися"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -419,7 +390,7 @@ msgstr "Деактивувати рахунок."
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
-"Значення проекту за замовчуванням для табеля, створеного з типу відпустки."
+"Значення проєкту за замовчуванням для табеля, створеного з типу відпустки."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -523,6 +494,11 @@ msgid "Employee Termination"
 msgstr "Звільнення працівника"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "Employee's image"
+msgstr "Зображення співробітника"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
@@ -581,7 +557,7 @@ msgstr "Внутрішнє"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__internal_project_id
 msgid "Internal Project"
-msgstr "Внутрішній проект"
+msgstr "Внутрішній проєкт"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -751,6 +727,11 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Please first delete all of their timesheets."
+msgstr "Будь ласка, спочатку видаліть усі їхні табелі обліку робочого часу."
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "Одиниця вимірювання товару"
@@ -775,28 +756,28 @@ msgstr "Прогрес"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Project"
-msgstr "Проект"
+msgstr "Проєкт"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__account_id
 msgid "Project Account"
-msgstr "Рахунок проекту"
+msgstr "Рахунок проєкту"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
-msgstr "Одиниця часу проекту"
+msgstr "Одиниця часу проєкту"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_update
 msgid "Project Update"
-msgstr "Оновлення проекту"
+msgstr "Оновлення проєкту"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Табелі проекту"
+msgstr "Табелі проєкту"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -831,7 +812,7 @@ msgstr "Дослідження та розробки/Нова система п�
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr "Перегляньте всі табелі, пов’язані з вашими проектами"
+msgstr "Перегляньте всі табелі, пов’язані з вашими проєктами"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -855,7 +836,7 @@ msgstr "Пошук у завданні партнера"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Project"
-msgstr "Пошук у проектах"
+msgstr "Пошук у проєктах"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -935,7 +916,7 @@ msgstr "Аналіз завдань"
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "The Internal Project of a company should be in that company."
-msgstr "Внутрішній проект компанії повинен бути у тій же компанії."
+msgstr "Внутрішній проєкт компанії повинен бути у тій же компанії."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -959,8 +940,8 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing "
 "these projects, you have to remove these timesheet entries."
 msgstr ""
-"У цих проектах є кілька записів табелів робочого часу. Перш ніж видаляти ці "
-"проекти, вам слід видалити ці записи у табелі."
+"У цих проєктах є кілька записів табелів робочого часу. Перш ніж видаляти ці "
+"проєкти, вам слід видалити ці записи у табелі."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1010,8 +991,8 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this "
 "project, you have to remove these timesheet entries."
 msgstr ""
-"Цей проект має декілька записів табелів обліку робочого часу. Перш ніж "
-"видаляти цей проект, вам слід видалити записи у табелі."
+"Цей проєкт має декілька записів табелів обліку робочого часу. Перш ніж "
+"видаляти цей проєкт, вам слід видалити записи у табелі."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1254,7 +1235,7 @@ msgstr "Табелі за співробітником"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "Табелі за проектом"
+msgstr "Табелі за проєктом"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
@@ -1432,6 +1413,21 @@ msgid "You cannot delete employees who have timesheets."
 msgstr "Ви не можете видалити користувачів, які мають табелі."
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"You cannot delete employees who have timesheets.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
+"                        </span>"
+msgstr ""
+"Ви не можете видалити співробітників, які мають табелі.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Ви можете або архівувати цих співробітників, або "
+"спочатку видалити всі їхні табелі.\n"
+"                        </span>"
+
+#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
@@ -1492,3 +1488,39 @@ msgstr ""
 "на\n"
 "                        <span class=\"fw-bold text-dark\"> Підзавданнях</"
 "span>)"
+
+#~ msgid "2021-09-01"
+#~ msgstr "2021-09-01"
+
+#~ msgid ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        You cannot delete employees who have timesheets.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            You can either archive these employees or "
+#~ "first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            Please first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        Are you sure you want to delete these employees?\n"
+#~ "                    </span>"
+#~ msgstr ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        Ви не можете видалити співробітників, у яких є "
+#~ "табелі.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            Ви можете або архівувати цих співробітників, "
+#~ "або спершу видалити всі їхні табелі.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            Видаліть спершу всі їхні табелі.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        Ви впевнені, що хочете видалити цих "
+#~ "співробітників?\n"
+#~ "                    </span>"

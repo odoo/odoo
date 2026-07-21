@@ -18,6 +18,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         cls.acc_sepa_iban = cls.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627230',
             'partner_id': cls.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         cls.acc_non_sepa_iban = cls.env['res.partner.bank'].create({
@@ -102,7 +103,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
                 '',
                 'company_1_data',
                 'BE15001559627230',
-                'EUR100.0',
+                'EUR100.00',
                 '',
                 '',
                 'A free communication',
@@ -128,7 +129,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
                 '',
                 'company_1_data',
                 'BE15001559627230',
-                'EUR100.0',
+                'EUR100.00',
                 '',
                 '5000056789012345',
                 '',

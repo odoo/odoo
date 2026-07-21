@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.enterPaymentLineAmount("Cash", "70", true, { remaining: "2.0" }),
             PaymentScreen.clickNumpad("0"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "700"),
-            PaymentScreen.changeIs("628.0"),
+            PaymentScreen.changeIs("-628.0"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.totalAmountContains("72.0"),
@@ -304,5 +304,18 @@ registry.category("web_tour.tours").add("test_receipt_screen_edit_payment_lines"
                 trigger:
                     ".pos-receipt .paymentlines:contains('Bank'):contains('4.28') ~ .paymentlines:contains('Cash'):contains('1.00')",
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_amount_total_is_rounded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
         ].flat(),
 });

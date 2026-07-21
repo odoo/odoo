@@ -929,6 +929,11 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         due_datetime = Record.attr(undefined, { type: "datetime" });
         messages = Record.many("Message");
         team = Record.one("Team");
+        isDiscuss = Record.attr(false, {
+            compute() {
+                return this.team === "Discuss";
+            },
+        });
     }).register(localRegistry);
     (class Message extends Record {
         static id = "body";
@@ -952,13 +957,23 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
-    const data = JSON.parse(JSON.stringify(p.toData()));
+    const expectedData = {
+        id: 1,
+        due_datetime: "2024-08-28 10:19:44",
+        names: ["John", "Marc"],
+        messages: [{ body: "1" }, { body: "2" }],
+        team: { name: "Discuss" },
+    };
+    const data = p.toData();
+    // ensure no computed field or env
+    expect(data).toEqual(expectedData);
+    const serializedData = JSON.parse(JSON.stringify(data));
     p.delete();
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
     expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
-    const p2 = store.Person.insert(data);
+    const p2 = store.Person.insert(serializedData);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
@@ -1210,4 +1225,53 @@ test("Record exists is reactive", async () => {
     await expect.waitForSteps(["thread exists"]);
     thread.delete();
     await expect.waitForSteps(["thread does not exist"]);
+});
+
+test("record.delete() while used in a 'on-sort' sorted field should properly delete this record from relation", async () => {
+    // 'on-sort' flag marks the lazy relational field to sort-on-the-fly when 'in-need', i.e. when next accessed.
+    // When a record is deleted, internal code also deletes the records from relational fields.
+    // Internal code should make sure to avoid re-triggering a sort-on-the-fly while deleting the record from relation.
+    // For example, finding index of record and splice / internal slice should mistakenly delete the wrong records!
+    // Let's say relational fields is [1, 2, 3], 'sort-on-need' to become [3, 1, 2]
+    // We wouldn't want 2 step deletion of 3 as:
+    // - index: 2
+    // - internal array.slice() => sort-on-the-fly to [3, 1, 2]
+    // - delete record at index 2 => resulting list is [3, 1] instead of [1, 2]!
+    (class Message extends Record {
+        static id = "id";
+        id;
+        sequence;
+        thread_name;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        description;
+        messages = Record.many("Message", {
+            // intentional combine of `compute` and `sort` so that the `compute` sets the `on-sort` flag
+            compute() {
+                return Object.values(this.store.Message.records).filter(
+                    (msg) => msg.thread_name === this.name
+                );
+            },
+            sort: (m1, m2) => (m1.sequence ?? 0) - (m2.sequence ?? 0),
+        });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    store.Message.insert([
+        { id: 1, sequence: 10, thread_name: "General" },
+        { id: 2, sequence: 20, thread_name: "General" },
+    ]);
+    void thread.messages; // intentional read to have computed and sorted list
+    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2"]);
+    store.Thread.insert({ name: "General", description: "This is the general channel" });
+    store.Message.insert({ id: 3, sequence: 30, thread_name: "General" });
+    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2", "Message,3"]);
+    store.Message.get(3).sequence = 5; // intentional sequence change to trigger sort again, as the 'in-need' flag persists at least once
+    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,3", "Message,1", "Message,2"]);
+    store.Message.get(3).sequence = 15;
+    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,3", "Message,1", "Message,2"]); // still hasn't re-sorted yet
+    store.Message.get(3).delete();
+    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2"]);
 });

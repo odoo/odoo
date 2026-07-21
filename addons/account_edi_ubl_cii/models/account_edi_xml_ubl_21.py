@@ -51,10 +51,8 @@ class AccountEdiXmlUBL21(models.AbstractModel):
             'ubl_sg': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0',
             'xrechnung': 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
             'ubl_a_nz': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0',
-            'pint_jp': 'urn:peppol:pint:billing-1@jp-1',
-            'pint_sg': 'urn:peppol:pint:billing-1@sg-1',
-            'pint_my': 'urn:peppol:pint:billing-1@my-1',
             'oioubl_21': 'OIOUBL-2.1',
+            'ubl_21_fr': 'urn:cen.eu:en16931:2017#compliant#urn:peppol:france:billing:cius:1.0',
         }
 
     def _get_selfbilling_customization_ids(self):
@@ -104,17 +102,7 @@ class AccountEdiXmlUBL21(models.AbstractModel):
                     )
 
     def _add_invoice_line_period_nodes(self, line_node, vals):
-        base_line = vals['base_line']
-
-        # deferred_start_date & deferred_end_date are enterprise-only fields
-        if (
-            vals['document_type'] in {'invoice', 'credit_note'}
-            and (base_line.get('deferred_start_date') or base_line.get('deferred_end_date'))
-        ):
-            line_node['cac:InvoicePeriod'] = {
-                'cbc:StartDate': {'_text': base_line['deferred_start_date']},
-                'cbc:EndDate': {'_text': base_line['deferred_end_date']},
-            }
+        pass
 
     def _add_document_line_allowance_charge_nodes(self, line_node, vals):
         line_node['cac:AllowanceCharge'] = [self._get_line_discount_allowance_charge_node(vals)]

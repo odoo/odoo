@@ -4,7 +4,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
@@ -396,3 +396,21 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             partner_ids=self.operators[0].partner_id.ids
         )
         self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
+
+    def test_livechat_conversation_history(self):
+        self.authenticate(self.operators[0].login, self.password)
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "test",
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[0].partner_id.id,
+                "channel_member_ids": [
+                    Command.create({"partner_id": self.operators[0].partner_id.id}),
+                    Command.create({"partner_id": self.visitor_user.partner_id.id}),
+                ],
+            }
+        )
+        channel.message_post(author_id=self.operators[0].partner_id.id, body="Operator Here")
+        channel.with_user(self.visitor_user).message_post(author_id=self.visitor_user.partner_id.id, body="Visitor Here")
+        channel_history = channel._get_channel_history()
+        self.assertEqual(channel_history, "Michel: Operator Here<br/>Rajesh: Visitor Here<br/>")

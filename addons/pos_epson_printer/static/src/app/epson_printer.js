@@ -2,6 +2,7 @@ import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
+import { getLNATargetAddressSpace } from "@point_of_sale/app/utils/init_lna";
 
 function ePOSPrint(children) {
     let ePOSLayout = getTemplate("pos_epson_printer.ePOSLayout");
@@ -26,6 +27,9 @@ export class EpsonPrinter extends BasePrinter {
         const protocol = odoo.use_lna ? "http:" : window.location.protocol;
         this.url = protocol + "//" + ip;
         this.address = this.url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+        if (odoo.use_lna) {
+            this.lnaTargetAddressSpace = getLNATargetAddressSpace(this.address);
+        }
     }
 
     /**
@@ -66,8 +70,8 @@ export class EpsonPrinter extends BasePrinter {
             body: img,
         };
 
-        if (odoo.use_lna) {
-            params.targetAddressSpace = "local";
+        if (this.lnaTargetAddressSpace) {
+            params.targetAddressSpace = this.lnaTargetAddressSpace;
         }
 
         const res = await fetch(this.address, params);

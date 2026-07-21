@@ -1283,7 +1283,7 @@ export class SearchModel extends EventBus {
      */
     _createCategoryTree(sectionId, result) {
         const category = this.sections.get(sectionId);
-
+        delete category.errorMsg;
         let { error_msg, parent_field: parentField, values } = result;
         if (error_msg) {
             category.errorMsg = error_msg;
@@ -1326,7 +1326,7 @@ export class SearchModel extends EventBus {
      */
     _createFilterTree(sectionId, result) {
         const filter = this.sections.get(sectionId);
-
+        delete filter.errorMsg;
         let { error_msg, values } = result;
         if (error_msg) {
             filter.errorMsg = error_msg;

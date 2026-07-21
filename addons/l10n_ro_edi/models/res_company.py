@@ -4,11 +4,9 @@ import requests
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_join
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
 from odoo.tools.safe_eval import json
 
 
@@ -30,7 +28,7 @@ class ResCompany(models.Model):
         """ Callback URLs are used for generating client_id and client_secret from l10n_ro_edi's setting. """
         for company in self:
             if company.country_code == 'RO':
-                company.l10n_ro_edi_callback_url = url_join(request.httprequest.url_root, 'l10n_ro_edi/callback/%s' % company.id)
+                company.l10n_ro_edi_callback_url = company.get_base_url() + ('/l10n_ro_edi/callback/%s' % company.id)
             else:
                 company.l10n_ro_edi_callback_url = False
 

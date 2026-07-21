@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import base_partner_merge
 from . import gamification_challenge
 from . import gamification_karma_tracking
 from . import ir_binary
+from . import mail_message
 from . import slide_slide
 from . import slide_question
 from . import slide_embed

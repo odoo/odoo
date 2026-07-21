@@ -28,6 +28,10 @@ export class PaymentVivaWallet extends PaymentInterface {
         return this._viva_wallet_cancel(order, uuid);
     }
 
+    getCashRegisterId() {
+        return this.pos.get_cashier().name?.trim() || this.pos.config.name;
+    }
+
     _call_viva_wallet(data, action, paymentLine) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
@@ -76,10 +80,11 @@ export class PaymentVivaWallet extends PaymentInterface {
         }
 
         line.uiState.vivaSessionId = order.uuid + " - " + uuidv4();
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
             sessionId: line.uiState.vivaSessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId,
             amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.uiState.vivaSessionId + "/" + this.pos.session.id,
@@ -102,9 +107,10 @@ export class PaymentVivaWallet extends PaymentInterface {
         super.send_payment_cancel(...arguments);
         const line = order.get_paymentline_by_uuid(uuid);
 
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
             sessionId: line.uiState.vivaSessionId,
-            cashRegisterId: this.pos.get_cashier().name,
+            cashRegisterId,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel", line).then(
             (data) => {
@@ -185,9 +191,10 @@ export class PaymentVivaWallet extends PaymentInterface {
     }
 
     handleSuccessResponse(line, notification) {
-        line.transaction_id = notification.transaction_id;
-        line.card_type = notification.card_type;
-        line.cardholder_name = notification.cardholder_name;
+        line.transaction_id = notification.transactionId;
+        line.card_type = notification.cardType;
+        line.card_brand = notification.applicationLabel;
+        line.card_no = notification.primaryAccountNumberMasked;
     }
 
     _show_error(msg, title) {

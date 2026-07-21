@@ -73,7 +73,7 @@ class IrConfigParameter(models.Model):
     #     configuration parameters when using web push notifications;
     #   * 'mail.use_twilio_rtc_servers', 'mail.sfu_server_url' and 'mail.
     #     sfu_server_key': rtc server usage and configuration;
-    #   * 'discuss.tenor_api_key', 'discuss.tenor_gif_limit' and 'discuss.
+    #   * 'discuss.klipy_api_key', 'discuss.tenor_gif_limit' and 'discuss.
     #     tenor_content_filter' used for gif fetch service;
     _inherit = 'ir.config_parameter'
 
@@ -95,3 +95,24 @@ class IrConfigParameter(models.Model):
             value = self.env['mail.alias']._sanitize_allowed_domains(value)
 
         return super().set_param(key, value)
+
+    def _sanitize_param_value(self, key, value):
+        """ Dispatcher for sanitization logic """
+        if key == 'mail.catchall.domain.allowed' and value:
+            return self.env['mail.alias']._sanitize_allowed_domains(value)
+        return value
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('key') and 'value' in vals:
+                vals['value'] = self._sanitize_param_value(vals['key'], vals['value'])
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if 'value' in vals:
+            for record in self:
+                # Determine the key: from vals if changing, otherwise from the record
+                key = vals.get('key', record.key)
+                vals['value'] = self._sanitize_param_value(key, vals['value'])
+        return super().write(vals)

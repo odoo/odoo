@@ -21,3 +21,8 @@ class PosConfig(models.Model):
         payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
         res['pos_payment_methods'] += payment_methods
         return res
+
+    @api.model
+    def _load_pos_self_data_fields(self, pos_config_id):
+        fields = super()._load_pos_self_data_fields(pos_config_id)
+        return fields + ['self_order_online_payment_method_id']

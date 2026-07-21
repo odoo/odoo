@@ -17,3 +17,21 @@ registry.category("web_tour.tours").add("LoyaltyHistoryTour", {
             PosLoyalty.finalizeOrder("Cash", "10"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_loyalty_history_earn_and_spend", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Select the partner first so their pre-loaded points are visible
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Test Partner"),
+            // Buy a $10 product — this earns 10 points
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            // Claim the reward that costs 5 points (10% discount on the order)
+            PosLoyalty.claimReward("10% on your order"),
+            // $10 - 10% = $9.00
+            PosLoyalty.orderTotalIs("9.00"),
+            PosLoyalty.finalizeOrder("Cash", "9"),
+        ].flat(),
+});

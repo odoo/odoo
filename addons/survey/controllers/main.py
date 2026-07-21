@@ -243,7 +243,9 @@ class Survey(http.Controller):
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
-        return request.redirect('/survey/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token))
+        response = request.redirect('/survey/%s' % survey_sudo.access_token)
+        response.set_cookie('survey_%s' % survey_sudo.access_token, answer_sudo.access_token, max_age=60 * 60 * 24)
+        return response
 
     def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
         """ This method prepares all the data needed for template rendering, in function of the survey user input state.
@@ -387,8 +389,13 @@ class Survey(http.Controller):
             'background_image_url': background_image_url
         }
 
-    @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
-    def survey_display_page(self, survey_token, answer_token, **post):
+    @http.route([
+        '/survey/<string:survey_token>',
+        '/survey/<string:survey_token>/<string:answer_token>',
+    ], type='http', auth='public', website=True)
+    def survey_display_page(self, survey_token, answer_token=None, **post):
+        if not answer_token:
+            answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
@@ -638,7 +645,7 @@ class Survey(http.Controller):
             'is_html_empty': is_html_empty,
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
+            'answer': answer_sudo,
             'questions_to_display': answer_sudo._get_print_questions(),
             'scoring_display_correction': survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),

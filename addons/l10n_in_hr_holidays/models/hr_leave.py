@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import api, fields, models
 
@@ -40,7 +40,7 @@ class HolidaysRequest(models.Model):
         linked_after = self.env["hr.leave"]
 
         for leave in self:
-            public_holiday_dates = public_holidays_date_by_company.get(leave.company_id, {})
+            public_holiday_dates = leave._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
             leaves_by_date = leaves_dates_by_employee.get(leave.employee_id, {})
             linked_before |= self._l10n_in_find_linked_leave(
                 leave.request_date_from, public_holiday_dates, leave.resource_calendar_id, leaves_by_date, reverse=True
@@ -57,6 +57,10 @@ class HolidaysRequest(models.Model):
             - Filters Indian, full-day, sandwich-enabled leaves.
             - Prepares dicts for sibling employee leaves and company public holidays.
         """
+        def _to_local_date(datetime, tz):
+            datetime = pytz.utc.localize(datetime, is_dst=False)
+            return datetime.astimezone(tz).date()
+
         indian_leaves = self.filtered(
             lambda leave: leave.company_id.country_id.code == "IN"
             and leave.holiday_status_id.l10n_in_is_sandwich_leave
@@ -87,22 +91,23 @@ class HolidaysRequest(models.Model):
         }
 
         tz = pytz.timezone(self.env.context.get("tz") or self.env.user.tz or "UTC")
-        public_holidays_dates_by_company = {
-            company_id: {
-                (datetime.date(holiday.date_from.astimezone(tz)) + timedelta(days=offset)): holiday
-                for holiday in recs
-                for offset in range((holiday.date_to.date() - holiday.date_from.date()).days + 1)
-            }
-            for company_id, recs in self.env['resource.calendar.leaves']._read_group(
-                domain=[
-                    ('resource_id', '=', False),
-                    ('company_id', 'in', indian_leaves.company_id.ids),
-                ],
-                groupby=['company_id'],
-                aggregates=['id:recordset'],
-            )
-        }
-
+        public_holidays_dates_by_company = {}
+        for company_id, recs in self.env['resource.calendar.leaves']._read_group(
+            domain=[
+                ('resource_id', '=', False),
+                ('company_id', 'in', indian_leaves.company_id.ids),
+            ],
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
+        ):
+            company_dates = {}
+            tz = pytz.timezone(company_id.resource_calendar_id.tz or self.env.context.get("tz") or self.env.user.tz or "UTC")
+            for holiday in recs:
+                local_start = _to_local_date(holiday.date_from, tz)
+                local_end = _to_local_date(holiday.date_to, tz)
+                for offset in range((local_end - local_start).days + 1):
+                    company_dates[local_start + timedelta(days=offset)] = holiday
+            public_holidays_dates_by_company[company_id] = company_dates
         return indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company
 
     def _l10n_in_apply_sandwich_rule(self, public_holidays_date_by_company, leaves_dates_by_employee):
@@ -112,7 +117,7 @@ class HolidaysRequest(models.Model):
 
         date_from = self.request_date_from
         date_to = self.request_date_to
-        public_holiday_dates = public_holidays_date_by_company.get(self.company_id, {})
+        public_holiday_dates = self._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
         is_non_working_from = not self._l10n_in_is_working(date_from, public_holiday_dates, self.resource_calendar_id)
         is_non_working_to = not self._l10n_in_is_working(date_to, public_holiday_dates, self.resource_calendar_id)
 
@@ -172,11 +177,17 @@ class HolidaysRequest(models.Model):
                 leave.l10n_in_contains_sandwich_leaves = False
         return result
 
+    def _l10n_in_get_public_holiday_dates(self, public_holidays_date_by_company):
+        if self.holiday_status_id.include_public_holidays_in_duration:
+            return {}
+        return public_holidays_date_by_company.get(self.company_id, {})
+
     def _l10n_in_update_neighbors_duration_after_change(self):
         indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company = self._l10n_in_prepare_sandwich_context()
         if not indian_leaves:
             return
-        self.l10n_in_contains_sandwich_leaves = False
+        if all(state in ['refuse', 'cancel'] for state in self.mapped('state')):
+            self.l10n_in_contains_sandwich_leaves = False
 
         linked_before, linked_after = indian_leaves._l10n_in_get_linked_leaves(
             leaves_dates_by_employee, public_holidays_dates_by_company
@@ -185,6 +196,8 @@ class HolidaysRequest(models.Model):
         if not neighbors:
             return
 
+        if any(state in ['validate', 'validate1', 'confirm'] for state in self.mapped('state')):
+            neighbors |= self
         # Recompute neighbor durations with the baseline (non-sandwich) logic.
         base_map = super(HolidaysRequest, neighbors)._get_durations(
             check_leave_type=True,
@@ -218,6 +231,16 @@ class HolidaysRequest(models.Model):
 
     def action_refuse(self):
         res = super().action_refuse()
+        self._l10n_in_update_neighbors_duration_after_change()
+        return res
+
+    def action_approve(self, check_state=True):
+        res = super().action_approve(check_state)
+        self._l10n_in_update_neighbors_duration_after_change()
+        return res
+
+    def action_reset_confirm(self):
+        res = super().action_reset_confirm()
         self._l10n_in_update_neighbors_duration_after_change()
         return res
 

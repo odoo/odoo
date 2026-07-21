@@ -7,14 +7,14 @@
 # Junko Augias, 2025
 #
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Ryoko Tsuda <ryoko@quartile.co>, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 10:36+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-07-07 08:10+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/project/"
 "ja/>\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #. odoo-python
@@ -313,10 +313,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</"
 "b> to reach an entire team."
 msgstr ""
-"<b>メモを記録</b>、社内コミュニケーション用 <i>(このタスクをフォローしている"
-"人たちには、特にタグを付けない限り、あなたがログに記録しているメモは通知され"
-"ません)</i>。同僚をピン付するには@ <b>メンション</b>を使用、またはチーム全体"
-"に知らせるには# <b>メンション</b>を使用して下さい。"
+"<b>ログメモ</b>は社内向けのコミュニケーションに使用します<i>(このタスクを"
+"フォローしている人には、明示的にタグ付けしない限り、記録したメモは通知されま"
+"せん)</i>。同僚に通知するには @<b>メンション</b> を、チーム全体に連絡するに"
+"は #<b>メンション</b> を使用します。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1463,7 +1463,7 @@ msgstr "取消済"
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 msgid "Changes Requested"
-msgstr "変更要求済"
+msgstr "修正依頼"
 
 #. module: project
 #. odoo-javascript
@@ -1972,7 +1972,7 @@ msgstr "期日"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
-msgstr "Dear"
+msgstr "　"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2354,7 +2354,7 @@ msgstr "財務"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr "かんばんで折り込む"
+msgstr "かんばんで折りたたむ"
 
 #. module: project
 #. odoo-javascript
@@ -2922,7 +2922,7 @@ msgstr "最終更新日"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3437,7 +3437,7 @@ msgstr "配信エラーが発生されたメッセージ数"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr "オフトラック"
+msgstr "遅延"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_10
@@ -4344,7 +4344,7 @@ msgstr "保存"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5363,7 +5363,7 @@ msgstr "件名"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "To Bill"
-msgstr "請求する"
+msgstr "未請求"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -5416,7 +5416,7 @@ msgstr "今日"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr "本日の活動"
+msgstr "今日の活動"
 
 #. module: project
 #. odoo-javascript
@@ -5496,7 +5496,7 @@ msgstr "2つのタスクは互いに依存し合うことはできません。"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外活動の種類。"
+msgstr "レコード上の例外の活動タイプ。"
 
 #. module: project
 #. odoo-python
@@ -5932,7 +5932,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "You must be"
-msgstr "すべきです"
+msgstr "要件(You must be):"
 
 #. module: project
 #. odoo-javascript

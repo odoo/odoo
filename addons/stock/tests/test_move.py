@@ -7105,6 +7105,53 @@ class StockMove(TransactionCase):
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
 
+    def test_tracked_move_quantity_lot_ids_combined_write(self):
+        """ Writing both `quantity` and `lot_ids` on a tracked move in the
+        same call must keep `move.quantity` in sync with the resulting
+        `move.move_line_ids`. Otherwise the picking can be validated to
+        'done' with a positive `quantity` but no move line and no serial
+        number recorded (phantom delivery, broken traceability).
+        """
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_existing_lots = True
+        picking_type_out.use_create_lots = False
+        lots = self.env['stock.lot'].create([
+            {'name': 'SN-PHANTOM-%d' % i, 'product_id': self.product_serial.id}
+            for i in range(1, 7)
+        ])
+        for lot in lots:
+            self.env['stock.quant']._update_available_quantity(
+                self.product_serial, self.stock_location, 1.0, lot_id=lot,
+            )
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'product_uom_qty': 6.0,
+                'product_uom': self.product_serial.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        move = picking.move_ids
+        self.assertEqual(move.state, 'assigned')
+        self.assertEqual(len(move.move_line_ids), 6)
+        self.assertEqual(move.quantity, 6.0)
+        # The exact write the form sends when the user typed "1" in the
+        # Quantity column AND cleared every lot in the Serial Numbers
+        # widget on the same form save
+        move.write({
+            'quantity': 1.0,
+            'lot_ids': [Command.set([])],
+        })
+        self.assertFalse(move.move_line_ids)
+        self.assertEqual(move.quantity, 0.0)
+
     def test_move_is_picked_when_quantity_set_after_empty_pick(self):
         """
         Verify that a stock move remains marked as picked when the quantity
@@ -7145,7 +7192,10 @@ class StockMove(TransactionCase):
                 'location_dest_id': self.supplier_location.id,
             })]
         })
+        self.assertEqual(picking.move_ids.forecast_availability, -10)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+        self.env.invalidate_all()
+        self.assertEqual(picking.move_ids.forecast_availability, 10)
         picking.action_confirm()
         self.assertEqual(picking.move_ids.state, 'assigned')
         picking.move_ids.quantity = 4
@@ -7204,3 +7254,79 @@ class StockMove(TransactionCase):
         tracked_move = picking.move_ids.filtered(lambda m: m.product_id == self.product_serial)
         self.assertEqual(tracked_move.lot_ids, sn_2)
         self.assertEqual(tracked_move.quantity, 1.00)
+
+    def test_modifying_lots_id_in_outgoing_picking(self):
+        """ Ensure that after setting the quantity of the move to zero, manually add serial
+        number will not add unexpected serial number to the lots_id field and cause a mismatch
+        of quantity and the number of the serial number. This test also ensures that if we change
+        the quantity back to another number, the lot_ids will be autopopulated as usual with no issue.
+        """
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'SN-001',
+            'product_id': self.product_serial.id,
+        })
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'SN-002',
+            'product_id': self.product_serial.id,
+        })
+        lot_3 = self.env['stock.lot'].create({
+            'name': 'SN-003',
+            'product_id': self.product_serial.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_2)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_3)
+
+        form = Form(self.env['stock.picking'].with_context(restricted_picking_type_code="outgoing"))
+        with form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 3.0
+            move.quantity = 0
+        picking = form.save()
+        self.assertEqual(len(picking.move_ids_without_package[0].lot_ids), 0)
+
+        form = Form(picking)
+        with form.move_ids_without_package.edit(0) as move:
+            move.quantity = 2
+            move.lot_ids = lot_2 | lot_3
+        picking = form.save()
+        self.assertNotIn(lot_1, picking.move_ids_without_package[0].lot_ids)
+        self.assertEqual(len(picking.move_ids_without_package[0].lot_ids), 2)
+        self.assertIn(lot_2, picking.move_ids_without_package[0].lot_ids)
+        self.assertIn(lot_3, picking.move_ids_without_package[0].lot_ids)
+
+        form = Form(picking)
+        with form.move_ids_without_package.edit(0) as move:
+            move.quantity = 3
+        picking = form.save()
+        self.assertEqual(len(picking.move_ids_without_package[0].lot_ids), 3)
+        self.assertIn(lot_1, picking.move_ids_without_package[0].lot_ids)
+        self.assertIn(lot_2, picking.move_ids_without_package[0].lot_ids)
+        self.assertIn(lot_3, picking.move_ids_without_package[0].lot_ids)
+
+    def test_picking_deadline_excludes_cancelled_move(self):
+        """ Picking deadline must recompute on move cancellation and must not include cancelled moves. """
+        today = fields.Datetime.now()
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [
+                Command.create({
+                    'name': 'move1',
+                    'product_id': self.product_consu.id,
+                    'product_uom_qty': 1,
+                    'date_deadline': today,
+                }),
+                Command.create({
+                    'name': 'move2',
+                    'product_id': self.product_consu.id,
+                    'product_uom_qty': 1,
+                    'date_deadline': today + relativedelta(days=2),
+                }),
+            ],
+        })
+        move1, move2 = picking.move_ids
+        self.assertEqual(picking.date_deadline, move1.date_deadline, 'Picking deadline should be the earliest move deadline')
+        move1._action_cancel()
+        self.assertEqual(picking.date_deadline, move2.date_deadline, 'Picking deadline should update to the remaining move after cancellation')

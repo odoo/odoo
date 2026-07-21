@@ -206,7 +206,22 @@ export class ProductProduct extends Base {
 
     getPricelistRule(pricelist, quantity) {
         const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
-        return rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        const applicableRules = rules.filter(
+            (rule) => !rule.min_quantity || quantity >= rule.min_quantity
+        );
+        if (!applicableRules) {
+            return undefined;
+        }
+        const productIdRule = applicableRules?.find(
+            (rule) => rule.product_id && rule.product_id.id === this.id
+        );
+        const productTmplIdRule = applicableRules?.find(
+            (rule) => rule.product_tmpl_id && rule.product_tmpl_id.id === this.raw.product_tmpl_id
+        );
+        const categoryRule = applicableRules?.find(
+            (rule) => rule.categ_id && this.parentCategories.includes(rule.categ_id.id)
+        );
+        return productIdRule || productTmplIdRule || categoryRule || applicableRules[0];
     }
     getImageUrl() {
         return (

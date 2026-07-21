@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 19:06+0000\n"
-"PO-Revision-Date: 2026-02-05 19:06+0000\n"
+"POT-Creation-Date: 2026-07-17 18:07+0000\n"
+"PO-Revision-Date: 2026-07-17 18:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "Authentication with KSeF failed."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "Bill Fetched Successfully from KSeF"
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -81,6 +87,12 @@ msgstr ""
 msgid ""
 "Could not find all required KSeF public keys ('SymmetricKeyEncryption' and "
 "'KsefTokenEncryption')."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "Currency '%s' from the KSeF bill was not found."
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -190,6 +202,33 @@ msgid "Failed to start token authentication: %s"
 msgstr ""
 
 #. module: l10n_pl_edi
+#: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetch_failed
+msgid "Fetch Failed"
+msgstr ""
+
+#. module: l10n_pl_edi
+#: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetch_ready
+msgid "Fetch Ready"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-javascript
+#: code:addons/l10n_pl_edi/static/src/components/import_from_ksef/import_from_ksef.xml:0
+msgid "Fetch e-Invoices"
+msgstr ""
+
+#. module: l10n_pl_edi
+#: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__fetched
+msgid "Fetched"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "Fetching Bill from KSeF ..."
+msgstr ""
+
+#. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -229,6 +268,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_certificate
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_certificate
 msgid "KSeF Certificate"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF Fetched Invoice XML"
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -356,6 +401,18 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF XML failed. Reason: %s"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF XML failed. Something went wrong"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "KSeF certificate and private key are not set."
 msgstr ""
@@ -412,6 +469,11 @@ msgid "Odoo"
 msgstr ""
 
 #. module: l10n_pl_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
+msgid "PL"
+msgstr ""
+
+#. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "Please complete the address of your company\n"
@@ -429,8 +491,26 @@ msgid "Polish FA3"
 msgstr ""
 
 #. module: l10n_pl_edi
+#: model:ir.actions.server,name:l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills_ir_actions_server
+msgid "Polish eInvoice: Download vendor bills from KSeF"
+msgstr ""
+
+#. module: l10n_pl_edi
+#: model:ir.actions.server,name:l10n_pl_edi.cron_l10n_pl_edi_refresh_tokens_ir_actions_server
+msgid "Polish eInvoice: Refresh KSeF tokens"
+msgstr ""
+
+#. module: l10n_pl_edi
 #: model:ir.actions.server,name:l10n_pl_edi.cron_auto_checks_the_polish_invoice_status_ir_actions_server
 msgid "Polish eInvoice: automatically check the status of the invoice in ksef"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
+"Purchase tax corresponding to '%s' required for the KSeF import was not "
+"found in the system."
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -470,6 +550,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid ""
+"Tax corresponding to '%s' required to derive the net unit price from gross "
+"price during KSeF import could not be interpreted."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
 "The KSeF Official Confirmation of Receipt (UPO) has been downloaded and "
 "attached."
 msgstr ""
@@ -481,9 +569,22 @@ msgid "The KSeF XML has been attached."
 msgstr ""
 
 #. module: l10n_pl_edi
+#: model:ir.model.constraint,message:l10n_pl_edi.constraint_account_move_unique_l10n_pl_edi_number_company_id_move_type
+msgid "The KSeF number must be unique per company per move_type"
+msgstr ""
+
+#. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "The KSeF service returned empty UPO content."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move_send.py:0
+msgid ""
+"The invoice was successfully sent to KSeF but the status check failed and "
+"will be retried later, 'Check Sending' to retry immediately."
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -523,6 +624,12 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_pl_edi.field_account_move__l10n_pl_edi_header
 msgid ""
 "User description of the current state, with hints to make the flow progress"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move_send.py:0
+msgid "Warning: KSeF status check failed"
 msgstr ""
 
 #. module: l10n_pl_edi

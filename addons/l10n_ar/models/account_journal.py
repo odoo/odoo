@@ -57,7 +57,7 @@ class AccountJournal(models.Model):
         letters_data = {
             'issued': {
                 '1': ['A', 'B', 'E', 'M'],
-                '4': ['C'],
+                '4': ['C', 'E'],
                 '5': [],
                 '6': ['C', 'E'],
                 '7': ['B', 'C', 'I'],

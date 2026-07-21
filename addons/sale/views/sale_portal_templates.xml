@@ -246,7 +246,10 @@
                                                     t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
                                                     class="fw-bold"
                                                 />
-                                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                                (<b
+                                                    t-esc="sale_order.prepayment_percent * 100"
+                                                    t-options="{'widget': 'float'}"
+                                                />%),
                                             </span>
                                             <span id="o_sale_portal_use_amount_total">
                                                 By paying,
@@ -585,7 +588,8 @@
                                             <span t-out="', '.join(map(lambda x: (x.name), line.tax_id))"/>
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
-                                        <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
+                                            <span t-if="sale_order.company_price_include == 'tax_included'" class="oe_order_line_price_subtotal" t-field="line.price_total"/>
+                                            <span t-else="" class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                         </td>
                                     </t>
                                     <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">

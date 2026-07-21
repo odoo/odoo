@@ -59,6 +59,15 @@ class IrEmbeddedActions(models.Model):
                     del vals["python_method"]
         return super().create(vals_list)
 
+    @api.depends('action_id.display_name', 'name')
+    def _compute_display_name(self):
+        for record in self:
+            if record.action_id:
+                # User might not have access to the linked action, so we need to use sudo to read the display_name.
+                record.display_name = record.action_id.sudo().display_name
+            else:
+                record.display_name = record.name
+
     # The record is deletable if it hasn't been created from a xml record (i.e. is not a default embedded action)
     def _compute_is_deletable(self):
         external_ids = self._get_external_ids()

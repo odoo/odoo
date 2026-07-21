@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 18:00+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-07-09 16:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/ar/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -258,35 +258,21 @@ msgstr "%s مطابق في كافة الأوراق "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) مطابق تماماً. \n"
-"        (-1) أصغر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
-"        (1) أكبر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
-"        (2) مطابقة Wildcard. "
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) البحث بدءاً بأول عنصر. \n"
-"      (-1) البحث بدءاً بآخر عنصر. \n"
-"      (2) إجراء بحث ثنائي يعتمد على أن يكون lookup_array مرتباً بترتيب "
-"تصاعدي. إذا لم يتم ترتيبه، سيتم إظهار نتائج غير صالحة\n"
-"      (-2) إجراء بحث ثنائي يعتمد على أن يكون lookup_array مرتباً بترتيب "
-"تنازلي. إذا لم يتم ترتيبه، سيتم إظهار نتائج غير صالحة.\n"
-"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -347,6 +333,12 @@ msgstr "عمودان 2 "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "2 rows"
 msgstr "صفان 2 "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr "A"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1020,16 +1012,6 @@ msgstr "نطاق من التواريخ المقابلة للتدفقات الن�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "حدث خطأ غير متوقع أثناء نقل الصورة. "
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"حدث خطأ غير متوقع أثناء لصق المحتوى.\n"
-"          ربما يرجع ذلك إلى عدم تطابق إصدار جدول البيانات. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1970,7 +1952,7 @@ msgstr "مقارنة قيمتين عدديتين ببعضهما، تكون ال�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Compute from totals"
-msgstr ""
+msgstr "الحساب من المجاميع الإجمالية"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3616,24 +3598,10 @@ msgstr "لم تعثر الوظيفة [[FUNCTION_NAME]] على أي نتائج. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"تتوقع الدالة  [[FUNCTION_NAME]] من criteria_range والفئة أن يكونوا في أزواج. "
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr "تتوقع الدالة [[FUNCTION_NAME]] أن يكون لـ criteria_range نفس الأبعاد "
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
+"تتوقع الدالة [[FUNCTION_NAME]] قيمًا رقمية لـ %s ، ولكنها حصلت على قيمة "
+"منطقية."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3641,6 +3609,7 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
 msgstr ""
+"تتوقع الدالة [[FUNCTION_NAME]] قيمًا رقمية لـ %s ، ولكنها حصلت على سلسلة."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3649,6 +3618,7 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
 "value."
 msgstr ""
+"تتوقع الدالة [[FUNCTION_NAME]] قيمًا رقمية لـ %s ، ولكنها حصلت على قيمة فارغة."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4065,12 +4035,8 @@ msgstr "في تقييم [[FUNCTION_NAME]] لم نتمكن من العثور عل
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"في [[FUNCTION_NAME]]، يجب أن يكون عدد الأعمدة في المصفوفة الأولى (%s) مساوياً "
-"لعدد\n"
-"        الصفوف ف يالمصفوفة الثانية (%s). "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5235,6 +5201,12 @@ msgstr "تاريخ الكوبون التالي بعد تاريخ التسوية.
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "لا"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No Color"
 msgstr "بلا لون "
@@ -5691,7 +5663,7 @@ msgstr "متعدد الحدود "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Population Pyramid"
-msgstr ""
+msgstr "الهرم السكاني"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11291,14 +11263,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "ما إذا كان يجب إزالة رسالة الرسالة النصية الفارغة من نتائج التقسيم. التصرف "
 "الافتراضي هو التعامل مع \n"
-"        المحددات المتتابعة كواحدة (إذا كانت القيمة صحيحة). إذا كانت القيمة "
-"خاطئة، تتم إضافة قيم الخلايا الفارغة بين المحددات المتتابعة. "
+"         المحددات المتتابعة كواحدة (إذا كانت القيمة صحيحة). إذا كانت القيمة "
+"خاطئة، تتم إضافة قيم الخلايا الفارغة بين المحددات المتتابعة."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11312,12 +11283,8 @@ msgstr "ما إذا كانت المدفوعات مستحقة في نهاية (0)
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
-"ما إذا كان يجب مسح المجموعة حسب الأعمدة أم لا. إذا كانت القيمة صحيحة، سيتم "
-"مسح المجموعة حسب الأعمدة، \n"
-"      وإذا كانت القيمة خطأ (الافتراضي)، سيتم المسح حسب الصفوف. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11476,6 +11443,12 @@ msgstr "السنة حتى تاريخه "
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "نعم"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "لا يمكنك دمج خلايا ضمن عامل تصفية موجود بالفعل. "
@@ -11485,6 +11458,14 @@ msgstr "لا يمكنك دمج خلايا ضمن عامل تصفية موجود 
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "لا يمكنك إنشاء جداول متداخلة. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11763,6 +11744,12 @@ msgstr "غدًا"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr "x"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "بالأمس "
@@ -11772,6 +11759,85 @@ msgstr "بالأمس "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "صفر "
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) مطابق تماماً. \n"
+#~ "        (-1) أصغر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
+#~ "        (1) أكبر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
+#~ "        (2) مطابقة Wildcard. "
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) البحث بدءاً بأول عنصر. \n"
+#~ "      (-1) البحث بدءاً بآخر عنصر. \n"
+#~ "      (2) إجراء بحث ثنائي يعتمد على أن يكون lookup_array مرتباً بترتيب "
+#~ "تصاعدي. إذا لم يتم ترتيبه، سيتم إظهار نتائج غير صالحة\n"
+#~ "      (-2) إجراء بحث ثنائي يعتمد على أن يكون lookup_array مرتباً بترتيب "
+#~ "تنازلي. إذا لم يتم ترتيبه، سيتم إظهار نتائج غير صالحة.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "حدث خطأ غير متوقع أثناء لصق المحتوى.\n"
+#~ "          ربما يرجع ذلك إلى عدم تطابق إصدار جدول البيانات. "
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "تتوقع الدالة  [[FUNCTION_NAME]] من criteria_range والفئة أن يكونوا في "
+#~ "أزواج. "
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "تتوقع الدالة [[FUNCTION_NAME]] أن يكون لـ criteria_range نفس الأبعاد "
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "في [[FUNCTION_NAME]]، يجب أن يكون عدد الأعمدة في المصفوفة الأولى (%s) "
+#~ "مساوياً لعدد\n"
+#~ "        الصفوف ف يالمصفوفة الثانية (%s). "
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "ما إذا كان يجب إزالة رسالة الرسالة النصية الفارغة من نتائج التقسيم. "
+#~ "التصرف الافتراضي هو التعامل مع \n"
+#~ "        المحددات المتتابعة كواحدة (إذا كانت القيمة صحيحة). إذا كانت "
+#~ "القيمة خاطئة، تتم إضافة قيم الخلايا الفارغة بين المحددات المتتابعة. "
+
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "ما إذا كان يجب مسح المجموعة حسب الأعمدة أم لا. إذا كانت القيمة صحيحة، "
+#~ "سيتم مسح المجموعة حسب الأعمدة، \n"
+#~ "      وإذا كانت القيمة خطأ (الافتراضي)، سيتم المسح حسب الصفوف. "
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

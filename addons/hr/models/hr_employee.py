@@ -95,6 +95,7 @@ class HrEmployeePrivate(models.Model):
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
+        copy=False,
         help='Employee bank account to pay salaries')
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
@@ -686,6 +687,11 @@ We can redirect you to the public employee list."""
         if demo_tag:
             return
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
+
+    def filter_valid(self, checked_date):
+        # A method that can be overridden
+        # to get the valid employees with running contracts.
+        return self
 
     # ---------------------------------------------------------
     # Business Methods

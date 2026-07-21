@@ -133,7 +133,7 @@ class WebsiteSlides(WebsiteProfile):
             'next_slide': next_slide,
             'category_data': category_data,
             # rating and comments
-            'comments': slide.website_message_ids or [],
+            'comments': request.env["mail.message"].search(slide._get_comments_domain()),
         })
 
         # allow rating and comments

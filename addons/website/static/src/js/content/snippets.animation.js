@@ -464,14 +464,15 @@ window.SelectorEngine.find = function (...args) {
 registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
-    edit_events: {
-        'content_changed': '_onContentChanged',
-    },
 
     /**
      * @override
      */
     start: function () {
+        if (this.editableMode) {
+            window.top.$(this.$el[0]).on('content_changed', () => this._onContentChanged());
+            window.top.$(this.$el[0]).on('image_changed', () => this._onContentChanged());
+        }
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));

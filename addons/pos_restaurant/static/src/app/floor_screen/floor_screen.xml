@@ -8,7 +8,7 @@
             <div class="d-flex flex-row flex-wrap justify-content-between border-bottom bg-light">
                 <!-- Left Side Div -->
                 <div class="floor-selector d-flex gap-2 p-2 align-items-center overflow-auto">
-                    <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
+                    <t t-foreach="pos.config.floor_ids.filter((f) => f.active)" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
                             <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>

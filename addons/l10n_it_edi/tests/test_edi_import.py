@@ -24,12 +24,40 @@ class TestItEdiImport(TestItEdi):
         xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
         <FatturaElettronicaHeader>
           <DatiTrasmissione>
+            <IdTrasmittente>
+                <IdPaese>IT</IdPaese>
+                <IdCodice>01234560157</IdCodice>
+            </IdTrasmittente>
             <ProgressivoInvio>TWICE_TEST</ProgressivoInvio>
           </DatiTrasmissione>
+          <CedentePrestatore>
+            <DatiAnagrafici>
+              <CodiceFiscale>10062090963</CodiceFiscale>
+              <Anagrafica>
+                <Denominazione>DITTA ALPHA</Denominazione>
+              </Anagrafica>
+            </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>VIALE ROMA 543</Indirizzo>
+                <CAP>07100</CAP>
+                <Comune>SASSARI</Comune>
+                <Provincia>SS</Provincia>
+                <Nazione>IT</Nazione>
+            </Sede>
+          </CedentePrestatore>
           <CessionarioCommittente>
             <DatiAnagrafici>
               <CodiceFiscale>01234560157</CodiceFiscale>
+              <Anagrafica>
+                <Denominazione>DITTA BETA</Denominazione>
+              </Anagrafica>
             </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>Via Teulada</Indirizzo>
+                <CAP>20100</CAP>
+                <Comune>Milano</Comune>
+                <Nazione>IT</Nazione>
+            </Sede>
           </CessionarioCommittente>
           </FatturaElettronicaHeader>
           <FatturaElettronicaBody>
@@ -91,6 +119,56 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_vendor_bill_applies_fiscal_position(self):
+        """ The fiscal position set on the bill remaps the taxes decoded from
+            the XML, matching what a manual line entry produces.
+        """
+        company = self.company
+        # The tax the importer decodes from a 22% line, before any mapping. The
+        # search is the same one _l10n_it_edi_search_tax_for_import runs.
+        source_tax = self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(company),
+            ('amount_type', '=', 'percent'),
+            ('amount', '=', 22.0),
+            ('type_tax_use', '=', 'purchase'),
+            ('l10n_it_exempt_reason', '=', False),
+        ]).filtered(
+            lambda tax: all(rl.factor_percent >= 0 for rl in tax.invoice_repartition_line_ids)
+        )[0]
+        # A distinct rate so the importer's search can never select it directly:
+        # it can only land on the line through the fiscal position mapping.
+        mapped_tax = self.env['account.tax'].with_company(company).create({
+            'name': '10% mapped by fiscal position',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+        })
+        fiscal_position = self.env['account.fiscal.position'].with_company(company).create({
+            'name': 'Remap 22% purchase',
+            'tax_ids': [Command.create({
+                'tax_src_id': source_tax.id,
+                'tax_dest_id': mapped_tax.id,
+            })],
+        })
+        self.env['res.partner'].with_company(company).create({
+            'name': 'SELLER FP SRL',
+            'vat': 'IT12345670017',
+            'l10n_it_codice_fiscale': '12345670017',
+            'country_id': self.env.ref('base.it').id,
+            'is_company': True,
+            'property_account_position_id': fiscal_position.id,
+        })
+
+        invoice = self._assert_import_invoice('IT01234567890_FPMAP.xml', [{
+            'move_type': 'in_invoice',
+            'amount_untaxed': 100.0,
+            'invoice_line_ids': [{
+                'price_unit': 100.0,
+                'tax_ids': mapped_tax.ids,
+            }],
+        }])
+        self.assertEqual(invoice.fiscal_position_id, fiscal_position)
+
     def test_receive_vendor_bill_sconto_maggiorazione(self):
         """ Test a sample e-invoice file with
         ScontoMaggiorazione on lines
@@ -99,7 +177,7 @@ class TestItEdiImport(TestItEdi):
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 28.75,
-            'amount_tax': 6.32,
+            'amount_tax': 6.33,
             'invoice_line_ids': [{
                 'quantity': 5.0,
                 'price_unit': 1.0,
@@ -217,6 +295,15 @@ class TestItEdiImport(TestItEdi):
                 'amount_tax': 3.95,
             }])
 
+    def test_import_simplified_invoice(self):
+        self.italian_partner_a.update({
+            'vat': "IT06655971007",
+            'l10n_it_codice_fiscale': '06655971007',
+        })
+        self._assert_import_invoice('IT01234567892_FPR01.xml', [{
+            'partner_id': self.italian_partner_a.id,
+        }], move_type="out_invoice")
+
     def test_receive_bill_sequence(self):
         """ Ensure that the received bill gets assigned the right sequence. """
         def mock_commit(self):
@@ -265,7 +352,7 @@ class TestItEdiImport(TestItEdi):
         })
         self.env['ir.attachment'].with_company(other_company).create({
             'name': filename,
-            'datas': self.fake_test_content,
+            'raw': self.fake_test_content,
             'res_model': 'account.move',
             'res_id': invoice.id,
             'res_field': 'l10n_it_edi_attachment_file',
@@ -355,6 +442,124 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_bill_bank_account_01(self):
+        """ When importing a vendor bill, if IBAN is present and the partner's found,
+            the related bank account must be linked or created.
+        """
+        banksy_partner = self.env['res.partner'].create({
+            'name': 'Banksy',
+            'vat': 'IT00313371213',
+            'l10n_it_codice_fiscale': '00313371213',
+            'country_id': self.env.ref('base.it').id,
+            'company_id': self.company.id,
+            'invoice_edi_format': 'it_edi_xml',
+            'is_company': False,
+        })
+
+        iban = "IT75F0200839061000400xxxxx"
+        applied_xml = f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """
+
+        # Import but don't check yet
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], applied_xml)
+
+        # Check the created bank account
+        partner_bank_account = self.env['res.partner.bank'].search([
+            ('acc_number', '=', iban),
+            ('partner_id', '=', banksy_partner.id),
+            ('company_id', '=', self.company.id),
+        ])
+        self.assertEqual(partner_bank_account, banksy_partner.bank_ids)
+        self.assertFalse(partner_bank_account.allow_out_payment)
+
+        # Check the bank account being correct and linked to the invoice
+        self.assertRecordValues(invoice, [{
+            'partner_id': banksy_partner.id,
+            'partner_bank_id': partner_bank_account.id,
+            'invoice_date_due': fields.Date.from_string('2015-02-28'),
+        }])
+
+        banksy_partner.invalidate_recordset(['is_company'])
+        self.assertFalse(invoice.partner_id.is_company)
+
+    def test_receive_bill_bank_account_02(self):
+        """ When importing a vendor bill, if IBAN is present but the partner's not found, then:
+            - Partner is created
+            - Account is created
+        """
+        self.italian_partner_a.l10n_it_codice_fiscale = '00465840031'
+        existing_partners = self.env['res.partner'].search([])
+        iban = "IT75F0200839061000400xxxxx"
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """)
+        self.assertRecordValues(invoice.partner_id, [{
+            'name': "SOCIETA' ALPHA SRL",
+            'street': 'Viale Roma 543',
+            'city': 'Sassari',
+            'zip': '07100',
+            'phone': '321321312',
+            'email': 'vacinna@tulullu.it',
+            'is_company': True,
+        }])
+        self.assertTrue(invoice.partner_id not in existing_partners)
+        self.assertRecordValues(invoice.partner_bank_id, [{'acc_number': iban, 'allow_out_payment': False}])
+
+    def test_receive_bill_bank_account_03(self):
+        """Partner retrieved by ``name``, not ``l10n_it_codice_fiscale``
+           ``is_company`` must stay False, and not be updated to True
+        """
+        self.italian_partner_a.l10n_it_codice_fiscale = '00465840031'
+        alpha_partner = self.env['res.partner'].create({
+            'name': "SOCIETA' ALPHA SRL",
+            'country_id': self.env.ref('base.it').id,
+            'company_id': self.company.id,
+            'invoice_edi_format': 'it_edi_xml',
+            'is_company': False,
+        })
+
+        # Import but don't check yet
+        self._assert_import_invoice('IT01234567889_FPR03.xml', [{}])
+
+        alpha_partner.invalidate_recordset(['is_company'])
+        self.assertFalse(alpha_partner.is_company)
+
+    def test_import_due_date_on_issued_invoice(self):
+        """ DataScadenzaPagamento and CodicePagamento populate
+        invoice_date_due and payment_reference on out_invoice and
+        in_refund too. The bank account block stays incoming-only
+        and never writes the XML IBAN on res.partner.bank.
+        """
+        iban = "IT75F0200839061000400xxxxx"
+        applied_xml = f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento" position="replace">
+                <DataScadenzaPagamento>2020-02-29</DataScadenzaPagamento>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <CodicePagamento>REF-OUT-2020-001</CodicePagamento>
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """
+        self._assert_import_invoice(
+            'IT01234567890_FPR01.xml',
+            [{
+                'invoice_date_due': fields.Date.from_string('2020-02-29'),
+                'payment_reference': 'REF-OUT-2020-001',
+            }],
+            applied_xml,
+            move_type='out_invoice',
+        )
+        # Bank account block stays incoming-only: no res.partner.bank
+        # carries the XML IBAN.
+        self.assertFalse(self.env['res.partner.bank'].search([
+            ('acc_number', '=', iban),
+        ]))
+
     def test_receive_bill_with_multiple_discounts_in_line(self):
         applied_xml = """
             <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
@@ -420,6 +625,40 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_bill_with_discount_rounding_issue(self):
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]" position="inside">
+                <ScontoMaggiorazione>
+                    <Tipo>SC</Tipo>
+                    <Percentuale>50.00</Percentuale>
+                </ScontoMaggiorazione>
+            </xpath>
+
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoUnitario" position="replace">
+                <PrezzoUnitario>11.85</PrezzoUnitario>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/Quantita" position="replace">
+                <Quantita>3</Quantita>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale" position="replace">
+                <PrezzoTotale>17.78</PrezzoTotale>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 17.78,
+            'amount_tax': 3.91,
+            'invoice_line_ids': [
+                {
+                    'quantity': 3.0,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'price_unit': 11.85,
+                    'discount': 50.0,
+                },
+            ],
+        }], applied_xml)
+
     def test_invoice_user_can_compute_is_self_invoice(self):
         """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
         user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
@@ -447,3 +686,147 @@ class TestItEdiImport(TestItEdi):
             'amount_untaxed': 25.0,
             'amount_tax': 5.5,
         }])
+
+    def test_cron_import_bill_from_another_company_without_conflicts(self):
+        """
+        Ensure that in a multi-company environment, importing a bill containing products
+        restricted to another company does not fail due to company inconsistencies.
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'TEST',
+            'barcode': 'TEST',
+            'standard_price': 75.0,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': test_product.id,
+            'product_code': 'TEST',
+            'partner_id': self.company_data_2["company"].partner_id.id,
+        })
+
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" position="after">
+                <DettaglioLinee>
+                    <NumeroLinea>2</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>1.00</Quantita>
+                    <PrezzoUnitario>5.00</PrezzoUnitario>
+                    <PrezzoTotale>5.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+                <DettaglioLinee>
+                    <NumeroLinea>3</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>2.00</Quantita>
+                    <PrezzoUnitario>4.00</PrezzoUnitario>
+                    <PrezzoTotale>8.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 18.0,
+            'amount_tax': 3.96,
+            'invoice_line_ids': [
+                {
+                    "product_id": False,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'quantity': 5.0,
+                    'price_unit': 1.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 1.0,
+                    'price_unit': 5.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 2.0,
+                    'price_unit': 4.0,
+                    'debit': 8.0,
+                },
+            ],
+        }], applied_xml)
+
+    def test_import_simplified_invoice_zero_base(self):
+        """Test the import of a xml bill where the total amount equals the tax amount (Importo == Imposta)."""
+
+        self._assert_import_invoice('IT01234567890_FPR05.xml', [{
+            'move_type': 'in_refund',
+            'amount_untaxed': 0.0,
+            'invoice_line_ids': [
+                {
+                    'name': 'IVA ANNO PRECEDENTE',
+                    'quantity': 1.0,
+                    'price_unit': 9.20,
+                },
+                {
+                    'name': 'TOTALE IMPORTO IN ADDEBITO',
+                    'quantity': 1.0,
+                    'price_unit': -9.20,
+                }
+            ],
+        }])
+
+    def test_bills_transaction_id(self):
+        invoices_data = {}
+        transaction_ids = [f'{1:0>11}', f'{2:0>11}']
+        for filename, transaction_id in zip(('IT01234567890_FPR03.xml', 'IT01234567890_FPR02.xml.p7m'), transaction_ids):
+            invoices_data.update({
+                transaction_id: {
+                    'filename': filename,
+                    'file': '',
+                    'key': str(uuid.uuid4()),
+            }})
+
+        # import the xml
+        path = f'{self.module}/tests/import_xmls/IT01234567890_FPR03.xml'
+        with tools.file_open(path, mode='rb') as fd:
+            import_content = fd.read()
+
+        def mock_commit(self):
+            pass
+
+        super_create = self.env.registry['account.move'].create
+        created_moves = []
+
+        def mock_create(self, vals_list):
+            moves = super_create(self, vals_list)
+            created_moves.extend(moves)
+            return moves
+
+        with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=import_content),
+              patch.object(sql_db.Cursor, "commit", mock_commit),
+              patch.object(self.env.registry['account.move'], 'create', mock_create),
+              freeze_time('2019-01-01')):
+            self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads(
+                invoices_data,
+                self.proxy_user,
+            )
+        moves = self.env['account.move']
+        for m in created_moves:
+            moves |= m
+        self.assertRecordValues(moves, [
+            {'l10n_it_edi_transaction': f'{1:0>11}'},
+            {'l10n_it_edi_transaction': f'{2:0>11}'},
+        ])
+        self.assertListEqual(
+            moves.l10n_it_edi_attachment_id.mapped('name'),
+            ['IT01234567890_FPR03.xml', 'IT01234567890_FPR02.xml.p7m']
+        )

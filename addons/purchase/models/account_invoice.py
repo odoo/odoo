@@ -195,6 +195,8 @@ class AccountMove(models.Model):
 
     def _add_purchase_order_lines(self, purchase_order_lines):
         """ Creates new invoice lines from purchase order lines """
+        if not purchase_order_lines:
+            return
         self.ensure_one()
         new_line_ids = self.env['account.move.line']
 
@@ -540,6 +542,6 @@ class AccountMoveLine(models.Model):
     def _related_analytic_distribution(self):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
-        if self.purchase_line_id and not self.analytic_distribution:
+        if self.purchase_line_id:
             vals |= self.purchase_line_id.analytic_distribution or {}
         return vals

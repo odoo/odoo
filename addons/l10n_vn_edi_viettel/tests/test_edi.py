@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+import io
+import zipfile
 from datetime import datetime
 from unittest import mock
 from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -113,7 +116,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                     'buyerName': 'partner_a',
                     'buyerLegalName': 'partner_a',
                     'buyerTaxCode': '0100109106-505',
-                    'buyerAddressLine': '121 Hang Bac Street',
+                    'buyerAddressLine': '121 Hang Bac Street, Hà Nội, Hà Nội Vietnam',
                     'buyerPhoneNumber': '38257670',
                     'buyerEmail': 'partner_a@gmail.com',
                     'buyerCityName': 'Hà Nội',
@@ -123,7 +126,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 'sellerInfo': {
                     'sellerLegalName': 'company_1_data',
                     'sellerTaxCode': '0100109106-506',
-                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward',
+                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward, Hà Nội Vietnam',
                     'sellerPhoneNumber': '62661275',
                     'sellerEmail': 'test_company@gmail.com',
                     'sellerDistrictName': 'Hà Nội',
@@ -183,7 +186,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                     'buyerName': 'partner_a',
                     'buyerLegalName': 'partner_a',
                     'buyerTaxCode': '0100109106-505',
-                    'buyerAddressLine': '121 Hang Bac Street',
+                    'buyerAddressLine': '121 Hang Bac Street, Hà Nội, Hà Nội Vietnam',
                     'buyerPhoneNumber': '38257670',
                     'buyerEmail': 'partner_a@gmail.com',
                     'buyerCityName': 'Hà Nội',
@@ -193,7 +196,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 'sellerInfo': {
                     'sellerLegalName': 'company_1_data',
                     'sellerTaxCode': '0100109106-506',
-                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward',
+                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward, Hà Nội Vietnam',
                     'sellerPhoneNumber': '62661275',
                     'sellerEmail': 'test_company@gmail.com',
                     'sellerDistrictName': 'Hà Nội',
@@ -455,6 +458,226 @@ class TestVNEDI(AccountTestInvoicingCommon):
             self.env['account.move.send.wizard'].with_context(active_model=invoice._name, active_ids=invoice.ids).create({}).action_send_and_print()
 
     @freeze_time('2024-01-01')
+    def test_line_note_in_json(self):
+        """
+        Test that a line_note display_type line generates a stripped-down itemInfo entry
+        containing only 'selection' (=2) and 'itemName', with no price/quantity fields.
+        """
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=False,
+        )
+        invoice.write({
+            'invoice_line_ids': [Command.create({
+                'display_type': 'line_note',
+                'name': 'This is a note line',
+            })]
+        })
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        note_items = [item for item in json_data['itemInfo'] if item.get('selection') == 2]
+        self.assertEqual(len(note_items), 1, "Expected exactly one note line in itemInfo.")
+        note_item = note_items[0]
+        # Should only have 'selection' and 'itemName' — all price/quantity fields must be stripped
+        self.assertEqual(set(note_item.keys()), {'selection', 'itemName'})
+        self.assertEqual(note_item['itemName'], 'This is a note line')
+
+    @freeze_time('2024-01-01')
+    def test_sale_discount_product_in_json(self):
+        """
+        When a line's product matches the company's sale_discount_product_id, it should be
+        treated as a discount line: selection=3, isIncreaseItem=False, all amounts absolute.
+        Requires the 'sale' module to be installed.
+        """
+        self.ensure_installed('sale')
+        discount_product = self.env['product.product'].create({
+            'name': 'Test Discount Product',
+            'type': 'service',
+        })
+        self.env.company.sale_discount_product_id = discount_product
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=False,
+        )
+        invoice.write({
+            'invoice_line_ids': [Command.create({
+                'product_id': discount_product.id,
+                'name': 'Discount',
+                'price_unit': -200.0,
+                'quantity': 1.0,
+                'tax_ids': [],
+            })]
+        })
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        discount_items = [item for item in json_data['itemInfo'] if item.get('selection') == 3]
+        self.assertEqual(len(discount_items), 1, "Expected exactly one discount item in itemInfo.")
+        discount_item = discount_items[0]
+        self.assertFalse(discount_item['isIncreaseItem'])
+        self.assertGreaterEqual(discount_item['unitPrice'], 0, "unitPrice must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['quantity'], 0, "quantity must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithoutTax'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountAfterDiscount'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithTax'], 0)
+
+    @freeze_time('2024-01-01')
+    def test_pos_discount_product_in_json(self):
+        """
+        When a line's product matches the POS config's discount_product_id, it should be
+        treated as a discount line: selection=3, isIncreaseItem=False, all amounts absolute.
+        Requires the 'point_of_sale' module to be installed.
+        """
+        self.ensure_installed('pos_discount')
+        discount_product = self.env['product.product'].create({
+            'name': 'POS Discount Product',
+            'type': 'service',
+        })
+        pos_config = self.env['pos.config'].create({
+            'name': 'Test POS',
+            'discount_product_id': discount_product.id,
+        })
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=False,
+        )
+        invoice.write({
+            'invoice_line_ids': [Command.create({
+                'product_id': discount_product.id,
+                'name': 'POS Discount',
+                'price_unit': -100.0,
+                'quantity': 1.0,
+                'tax_ids': [],
+            })]
+        })
+        pos_session = self.env['pos.session'].create({'config_id': pos_config.id})
+        self.env['pos.order'].create({
+            'session_id': pos_session.id,
+            'account_move': invoice.id,
+            'lines': [],
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        discount_items = [item for item in json_data['itemInfo'] if item.get('selection') == 3]
+        self.assertEqual(len(discount_items), 1, "Expected exactly one POS discount item in itemInfo.")
+        discount_item = discount_items[0]
+        self.assertFalse(discount_item['isIncreaseItem'])
+        self.assertGreaterEqual(discount_item['unitPrice'], 0, "unitPrice must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['quantity'], 0, "quantity must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithoutTax'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountAfterDiscount'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithTax'], 0)
+
+    @freeze_time('2024-01-01')
+    def test_downpayment_line_in_json(self):
+        """
+        A downpayment line (is_downpayment=True) should be treated as a discount line:
+        selection=3, isIncreaseItem=False, all amounts absolute.
+        Requires the 'sale' module to be installed.
+        """
+        self.ensure_installed('sale')
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 1000.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(
+            active_ids=sale_order.ids,
+            active_model='sale.order',
+        ).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 150.0,
+        })
+        downpayment_wizard.create_invoices()
+
+        invoice = sale_order.invoice_ids
+        self.assertEqual(len(invoice), 1)
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        downpayment_items = [item for item in json_data['itemInfo'] if item.get('selection') == 3]
+        self.assertEqual(len(downpayment_items), 1, "Expected exactly one downpayment item treated as discount.")
+        dp_item = downpayment_items[0]
+        self.assertFalse(dp_item['isIncreaseItem'])
+        self.assertGreaterEqual(dp_item['unitPrice'], 0, "unitPrice must be non-negative (abs value).")
+        self.assertGreaterEqual(dp_item['quantity'], 0, "quantity must be non-negative (abs value).")
+        self.assertGreaterEqual(dp_item['itemTotalAmountWithoutTax'], 0)
+        self.assertGreaterEqual(dp_item['itemTotalAmountAfterDiscount'], 0)
+        self.assertGreaterEqual(dp_item['itemTotalAmountWithTax'], 0)
+
+    @freeze_time('2024-01-01')
+    def test_loyalty_discount_in_json(self):
+        """
+        When a loyalty program applies a discount reward to a sale order, the
+        reward line on the invoice should be treated as a discount line:
+        selection=3, isIncreaseItem=False, all amounts absolute.
+        Requires the 'sale_loyalty' module.
+        """
+        self.ensure_installed('sale_loyalty')
+        program = self.env['loyalty.program'].create({
+            'name': '10% Discount',
+            'program_type': 'coupons',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 1000.0,
+                'tax_id': [Command.set(self.tax_sale_a.ids)],
+            })],
+        })
+
+        sale_order._update_programs_and_rewards()
+        coupon = sale_order.coupon_point_ids.coupon_id
+        sale_order._apply_program_reward(program.reward_ids, coupon)
+
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        discount_items = [item for item in json_data['itemInfo'] if item.get('selection') == 3]
+        self.assertEqual(len(discount_items), 1, "Expected exactly one loyalty discount item in itemInfo.")
+        discount_item = discount_items[0]
+        self.assertFalse(discount_item['isIncreaseItem'])
+        self.assertGreaterEqual(discount_item['unitPrice'], 0, "unitPrice must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['quantity'], 0, "quantity must be non-negative (abs value).")
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithoutTax'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountAfterDiscount'], 0)
+        self.assertGreaterEqual(discount_item['itemTotalAmountWithTax'], 0)
+
+    @freeze_time('2024-01-01')
     def test_decimal_rounding(self):
         """ Test that taxAmount are correctly rounded in the JSON data. """
         invoice = self.init_invoice(
@@ -467,3 +690,101 @@ class TestVNEDI(AccountTestInvoicingCommon):
         json_values = invoice._l10n_vn_edi_generate_invoice_json()
         itemInfo = json_values['itemInfo'][0]
         self.assertEqual(itemInfo['taxAmount'], 100.03, "Tax amount should be correctly rounded to 2 decimals.")
+
+    def test_unzip_single_zip_response(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+            currency=self.other_currency,
+        )
+        self._send_invoice(invoice)
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr('sinvoice.xml', b'<invoice>test xml content</invoice>')
+        zip_bytes = zip_buffer.getvalue()
+
+        zip_response = {
+            'fileToBytes': base64.b64encode(zip_bytes).decode('utf-8'),
+            'fileName': 'sinvoice.zip',
+        }, ""
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_file_data',
+            return_value=zip_response,
+        ):
+            result, error = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+
+        self.assertFalse(error, f"Expected no error, got: {error}")
+        self.assertEqual(result['name'], 'sinvoice.xml')
+        self.assertEqual(result['mimetype'], 'application/xml')
+        self.assertEqual(result['raw'], b'<invoice>test xml content</invoice>')
+        self.assertEqual(result['res_field'], 'l10n_vn_edi_sinvoice_xml_file')
+
+    def test_unzip_double_zip_response(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+            currency=self.other_currency,
+        )
+        self._send_invoice(invoice)
+
+        inner_buffer = io.BytesIO()
+        with zipfile.ZipFile(inner_buffer, 'w', zipfile.ZIP_DEFLATED) as inner_zf:
+            inner_zf.writestr('sinvoice.xml', b'<invoice>nested xml content</invoice>')
+        inner_zip_bytes = inner_buffer.getvalue()
+
+        outer_buffer = io.BytesIO()
+        with zipfile.ZipFile(outer_buffer, 'w', zipfile.ZIP_DEFLATED) as outer_zf:
+            outer_zf.writestr('sinvoice.zip', inner_zip_bytes)
+        outer_zip_bytes = outer_buffer.getvalue()
+
+        zip_response = {
+            'fileToBytes': base64.b64encode(outer_zip_bytes).decode('utf-8'),
+            'fileName': 'sinvoice.zip',
+        }, ""
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_file_data',
+            return_value=zip_response,
+        ):
+            result, error = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+
+        self.assertFalse(error, f"Expected no error, got: {error}")
+        self.assertEqual(result['name'], 'sinvoice.xml')
+        self.assertEqual(result['mimetype'], 'application/xml')
+        self.assertEqual(result['raw'], b'<invoice>nested xml content</invoice>')
+        self.assertEqual(result['res_field'], 'l10n_vn_edi_sinvoice_xml_file')
+
+    def test_unzip_no_xml_in_zip(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+            currency=self.other_currency,
+        )
+        self._send_invoice(invoice)
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr('readme.txt', b'no xml here')
+        zip_bytes = zip_buffer.getvalue()
+
+        zip_response = {
+            'fileToBytes': base64.b64encode(zip_bytes).decode('utf-8'),
+            'fileName': 'sinvoice.zip',
+        }, ""
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_file_data',
+            return_value=zip_response,
+        ):
+            result, error = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+
+        self.assertTrue(error, "Expected an error when no XML file is present in the ZIP.")
+        self.assertFalse(result, "Expected no result when no XML file is found.")

@@ -1,7 +1,11 @@
 import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
+
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
+
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { setElementContent } from "@web/core/utils/html";
 
 /**
  * @typedef Data
@@ -105,6 +109,18 @@ export class Activity extends Record {
     icon = "fa-tasks";
     /** @type {number} */
     id;
+    /** @type {boolean} */
+    isNoteEmpty = Record.attr(true, {
+        /** @this {import("models").Activity} */
+        compute() {
+            if (!this.note) {
+                return true;
+            }
+            const element = document.createElement("div");
+            setElementContent(element, this.note);
+            return isEmptyBlock(element);
+        },
+    });
     /** @type {Object[]} */
     mail_template_ids;
     note = Record.attr("", { html: true });
@@ -186,7 +202,7 @@ export class Activity extends Record {
             [[this.id]],
             { feedback: this.feedback }
         );
-        this.activityBroadcastChannel?.postMessage({
+        this.store.activityBroadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
             payload: { id: this.res_id, model: this.res_model },
         });
@@ -194,9 +210,12 @@ export class Activity extends Record {
     }
 
     remove({ broadcast = true } = {}) {
+        if (!this.exists()) {
+            return;
+        }
         this.delete();
         if (broadcast) {
-            this.activityBroadcastChannel?.postMessage({
+            this.store.activityBroadcastChannel?.postMessage({
                 type: "DELETE",
                 payload: { id: this.id },
             });

@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
-from odoo import fields
+from odoo import Command, fields
 
 
 
@@ -75,3 +75,13 @@ class TestStockReplenish(TestStockCommon):
         self.assertEqual(len(product.route_ids), 0)
         wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=product.id))
         self.assertEqual(wizard._values['quantity'], 1)
+
+    def test_replenish_route_from_another_company(self):
+        company = self.env['res.company'].create({'name': 'Company 2'})
+        route = self.env['stock.route'].create({
+            'name': 'Test Route',
+            'company_id': company.id,
+        })
+        self.productA.write({'route_ids': [Command.link(route.id)]})
+        wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.productA.product_tmpl_id.id))
+        self.assertFalse(wizard._values['route_id'])

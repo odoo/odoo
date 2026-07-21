@@ -20,7 +20,7 @@ class TestUBLSG(TestUBLCommon):
             'phone': '+65 9123 4567',
             'email': 'info@outlook.sg',
             'country_id': cls.env.ref('base.sg').id,
-            'bank_ids': [(0, 0, {'acc_number': '000099998B57'})],
+            'bank_ids': [(0, 0, {'acc_number': '000099998B57', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_sg',
             'peppol_eas': '0195',
@@ -35,7 +35,7 @@ class TestUBLSG(TestUBLCommon):
             'vat': 'S16FC0121D',
             'phone': '+65 9123 4589',
             'country_id': cls.env.ref('base.sg').id,
-            'bank_ids': [(0, 0, {'acc_number': '93999574162167'})],
+            'bank_ids': [(0, 0, {'acc_number': '93999574162167', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_sg',
             'peppol_eas': '0195',
@@ -47,6 +47,10 @@ class TestUBLSG(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         tax_10 = self.percent_tax(10)
         tax_0 = self.percent_tax(0)
         invoice = self._generate_move(
@@ -99,6 +103,10 @@ class TestUBLSG(TestUBLCommon):
         self.test_export_import_invoice()
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         tax_10 = self.percent_tax(10)
         tax_0 = self.percent_tax(0)
         refund = self._generate_move(

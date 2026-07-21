@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.l10n_ar.tests.common import TestArCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo import Command
 from datetime import datetime
 
@@ -435,3 +435,42 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 188865.27, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 188865.27, 'reconciled': True}
         ])
+
+    def test_payment_register_without_currency(self):
+        "check computation of amount and adjustment warning without currency"
+        moves = self.in_invoice_wht_5('2-1')
+        taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
+        wizard = Form(self.new_payment_register(moves, taxes))
+        wizard.currency_id = self.env['res.currency']
+        self.assertEqual(wizard.amount, 188865.27)
+        self.assertFalse(wizard.l10n_ar_adjustment_warning)
+
+    def test_payment_withholding_kept(self):
+        """ Check that resetting a payment doesn't remove any payment withholding line. """
+        # Vendor Payment Withholding Tax: 0%
+        tax_wth_0 = self.tax_wth_test_2.copy({
+            'amount': 0.0,
+            'l10n_ar_withholding_sequence_id': self.tax_wth_seq.id,
+        })
+        moves = self.in_invoice_2_wht('2-5')
+        taxes = [{'id': self.tax_wth_test_2.id, 'base_amount': 1000.0}, {'id': tax_wth_0.id, 'base_amount': 1000.0}]
+        wizard = self.new_payment_register(moves, [])
+        wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
+        wizard.l10n_ar_withholding_ids._compute_amount()
+        action = wizard.action_create_payments()
+
+        payment = self.env['account.payment'].browse(action['res_id'])
+        # There should be 2 payment withholding lines
+        self.assertEqual(len(payment.l10n_ar_withholding_ids), 2)
+        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
+        self.assertEqual(-100.0, line_1.balance)
+        self.assertEqual(0.0, line_2.balance)
+        # Reset the payment to draft
+        payment.action_draft()
+        # Payment withholding lines should be the same
+        self.assertEqual(len(payment.l10n_ar_withholding_ids), 2)
+        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
+        self.assertEqual(-100.0, line_1.balance)
+        self.assertEqual(0.0, line_2.balance)

@@ -1921,3 +1921,39 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                 {'credit': 0, 'debit': 500},
             ]
         )
+
+    def test_svl_account_move_analytic_account_model_change_from_SO(self):
+        """ Tests whether, when an analytic account rule is set, and user changes manually the analytic account on
+        the SO, it is the same that is mentioned in the account move created by the svl.
+        """
+        # Required for `analytic.group_analytic_accounting` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan.id})
+        self.product.categ_id.property_cost_method = 'standard'
+        self.product.standard_price = 10
+        self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 1)
+
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account_default.id: 100},
+            'product_id': self.product.id,
+        })
+        analytic_distribution_manual = {str(analytic_account_manual.id): 100}
+
+        so_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as so_line_form:
+            so_line_form.name = self.product.name
+            so_line_form.product_id = self.product
+            so_line_form.product_uom_qty = 1.0
+            so_line_form.price_unit = 10
+            so_line_form.analytic_distribution = analytic_distribution_manual
+
+        sale_order = so_form.save()
+        sale_order.action_confirm()
+        sale_order.picking_ids.button_validate()
+
+        amls = sale_order.picking_ids.move_ids.stock_valuation_layer_ids.account_move_id.line_ids
+        self.assertEqual(amls[0].analytic_distribution, analytic_distribution_manual)
+        self.assertEqual(amls[1].analytic_distribution, analytic_distribution_manual)

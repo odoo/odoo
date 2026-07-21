@@ -52,12 +52,13 @@ class StockMove(models.Model):
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
+            convert_date = self._get_currency_convert_date()
             receipt_value = 0
             for layer in move_layer:
                 if not layer._should_impact_price_unit_receipt_value():
                     continue
                 receipt_value += layer.currency_id._convert(
-                    layer.value, order.currency_id, order.company_id, layer.create_date, round=False)
+                    layer.value, order.currency_id, order.company_id, convert_date, round=False)
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
@@ -106,17 +107,23 @@ class StockMove(models.Model):
         return {self.env['stock.lot']: price_unit}
 
     def _get_qty_received_without_self(self):
-        qty_received = self.purchase_line_id.qty_received
+        line = self.purchase_line_id
+        qty_received = line.qty_received
         if self.state == 'done':
             qty_received -= self.product_uom._compute_quantity(
-                self.quantity, self.purchase_line_id.product_uom, rounding_method='HALF-UP'
+                self.quantity, line.product_uom, rounding_method='HALF-UP'
             )
             batch_moves = self._get_batch_moves()
-            for move in batch_moves:
-                if move == self or move.state != 'done' or move.purchase_line_id != self.purchase_line_id:
+            picking = self.picking_id
+            product = self.product_id
+            same_product_moves = line.move_ids.filtered(
+                lambda m: m.picking_id == picking and m.product_id == product
+            )
+            for move in (batch_moves | same_product_moves):
+                if move == self or move.state != 'done' or move.purchase_line_id != line:
                     continue
                 qty_received -= move.product_uom._compute_quantity(
-                    move.quantity, self.purchase_line_id.product_uom, rounding_method='HALF-UP'
+                    move.quantity, line.product_uom, rounding_method='HALF-UP'
                 )
         return qty_received
 

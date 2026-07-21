@@ -3,7 +3,7 @@
 # * sale_timesheet
 #
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024, 2026.
 # Yaroslav Husyar, 2024
 # Wil Odoo, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 10:37+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-22 10:11+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "sale_timesheet/uk/>\n"
 "Language: uk\n"
@@ -21,11 +21,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
-"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
-"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
-" ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -86,6 +85,9 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"'%(missing_plan_names)s' аналітичний(і) план(и), необхідний(і) для "
+"аналітичного розподілу елементу замовлення на продаж '%(so_line_name)s' "
+"привʼязаного до табеля."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -130,12 +132,12 @@ msgstr "4 дні після співбесіди"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Daily Cost: </b>"
-msgstr ""
+msgstr "<b>Щоденна вартість: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Unit Price: </b>"
-msgstr ""
+msgstr "<b>Ціна одиниці: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -148,6 +150,13 @@ msgid ""
 "create separate sales order items.\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\"/>\n"
+"                        <span>\n"
+"                            Визначте ставку, за якою оплачується час "
+"співробітника, залежно від його кваліфікації, навичок або досвіду.\n"
+"Щоб виставити рахунок за ту саму послугу за різною ставкою, створіть окремі "
+"рядки замовлення на продаж.\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -163,6 +172,9 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -224,7 +236,7 @@ msgstr "<strong>Замовлення на продаж:</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "<strong>Time Remaining on SO: </strong>"
-msgstr ""
+msgstr "<strong>Час, що залишився на SO: </strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -341,6 +353,20 @@ msgid ""
 "                        spirit. To be successful, you will have solid "
 "solving problem skills."
 msgstr ""
+"Як співробітник нашої компанії, ви будете <b>співпрацювати з кожним відділом "
+"\n"
+"для створення та впровадження революційних продуктів.</b> Приходьте "
+"працювати в компанію, \n"
+"що розвивається, яка пропонує чудові переваги з можливостями для розвитку та "
+"навчання \n"
+"разом з досвідченими лідерами. Ми шукаємо досвідченого та видатного \n"
+"співробітника.\n"
+"<br><br>\n"
+"Ця посада є одночасно <b>креативною та ретельною</b> за своєю природою, вам "
+"потрібно мислити \n"
+"нестандартно. Ми очікуємо, що кандидат буде проактивним та матиме дух «"
+"довести справу до кінця». \n"
+"Щоб досягти успіху, ви повинні мати сильні навички вирішення проблем."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -470,12 +496,12 @@ msgstr "Створити рахунок"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr "Створіть рахунок-фактуру з проекту"
+msgstr "Створіть рахунок-фактуру з проєкту"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr "Створіть замовлення на продаж з проекту"
+msgstr "Створіть замовлення на продаж з проєкту"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -570,6 +596,11 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, "
 "and much more"
 msgstr ""
+"Кожен працівник має можливість побачити вплив своєї роботи.\n"
+"Ви можете зробити реальний внесок в успіх компанії.\n"
+"<br>\n"
+"Протягом року часто організовуються різні заходи, такі як щотижневі \n"
+"спортивні заняття, тімбілдинги, щомісячні напої та багато іншого."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -581,7 +612,7 @@ msgstr "Їжа та напої"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_elevator_installation_product_template
 msgid "Elevator Installation"
-msgstr ""
+msgstr "Встановлення ліфта"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -690,12 +721,12 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "Дизайнер інтер'єрів"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
 msgid "Interior Designing"
-msgstr ""
+msgstr "Дизайн інтер'єрів"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -718,7 +749,7 @@ msgstr "Політика виставлення рахунку"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Invoice based on timesheets (delivered quantity)."
-msgstr ""
+msgstr "Рахунок-фактура на основі табелів (доставлена кількість)."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -916,7 +947,7 @@ msgstr "Не виставляється у рахунку"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr ""
+msgstr "Час, що не виставляється у рахунку"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1051,33 +1082,33 @@ msgstr "Варіант товару"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__project_id
 msgid "Project"
-msgstr "Проект"
+msgstr "Проєкт"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr "Рядок продажів проекту, зіставлення співробітників"
+msgstr "Рядок продажів проєкту, зіставлення співробітників"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
-msgstr "Шаблон проекту"
+msgstr "Шаблон проєкту"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr "Оновлення проекту"
+msgstr "Оновлення проєкту"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr "Ставка проекту"
+msgstr "Ставка проєкту"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr "Проект, щоб зробити оплату"
+msgstr "Проєкт, щоб зробити оплату"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1128,7 +1159,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
 msgid "Roofing"
-msgstr ""
+msgstr "Покрівля"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1272,12 +1303,12 @@ msgstr "Послуги"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Менеджер сайту"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
 msgid "Solar Panel Installation"
-msgstr ""
+msgstr "Встановлення сонячної панелі"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1343,6 +1374,7 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be linked to a "
 "company."
 msgstr ""
+"Товар %s потрібен для модуля Табелі та не може бути пов’язаний з компанією."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1495,7 +1527,7 @@ msgstr "Табелі (Фіксована ціна)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Non-Billable)"
-msgstr ""
+msgstr "Табелі (не виставляються у рахунку)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1531,7 +1563,7 @@ msgstr "Табелі %s"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Табель на проекті (одна ціна за ЗНП/проект)"
+msgstr "Табель на проєкті (одна ціна за ЗНП/проект)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1559,7 +1591,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr ""
+msgstr "Табелі без елемента замовлення на продаж відображаються як"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1641,7 +1673,7 @@ msgstr "Значення не існує у типі ціни"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr ""
+msgstr "Переглянути табелі"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1673,7 +1705,7 @@ msgstr "Що чудового у роботі?"
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 msgid "You can only apply this action from a project."
-msgstr "Цю дію можна застосувати лише з проекту."
+msgstr "Цю дію можна застосувати лише з проєкту."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1682,7 +1714,7 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
-"Ви не можете пов’язати оплачуваний проект із позицією замовлення на продаж, "
+"Ви не можете пов’язати оплачуваний проєкт із позицією замовлення на продаж, "
 "яка надходить із витрат або рахунку постачальника."
 
 #. module: sale_timesheet
@@ -1692,7 +1724,7 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
-"Ви не можете пов’язати оплачуваний проект з позицією замовлення на продаж, "
+"Ви не можете пов’язати оплачуваний проєкт з позицією замовлення на продаж, "
 "яка не є послугою."
 
 #. module: sale_timesheet

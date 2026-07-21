@@ -403,6 +403,26 @@ test("set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea", asy
     expect(getCurrentValue()).toBe("1");
 });
 
+test("ends_with stays selected", async () => {
+    await makeDomainSelector({
+        domain: `[['foo', '=', '']]`,
+        update: (domain) => {
+            expect.step(domain);
+        },
+    });
+
+    await selectOperator("ends_with");
+    expect.verifySteps(['[("foo", "=ilike", "%")]']);
+
+    expect(getCurrentOperator()).toBe("ends with");
+    await editValue("abc");
+    expect.verifySteps(['[("foo", "=ilike", "%abc")]']);
+
+    await selectOperator("starts_with");
+    expect(getCurrentOperator()).toBe("starts with");
+    expect.verifySteps(['[("foo", "=ilike", "abc%")]']);
+});
+
 test("operator fallback (mode readonly)", async () => {
     await makeDomainSelector({
         domain: `[['foo', 'like', 'kikou']]`,
@@ -2530,4 +2550,30 @@ test("hide within operators when allowExpressions = False", async () => {
         "is set",
         "is not set",
     ]);
+});
+
+test("number formatting", async () => {
+    defineParams({
+        lang_parameters: {
+            decimal_point: "$",
+            thousands_sep: "~",
+        },
+    });
+
+    Partner._fields.number = fields.Float();
+    let expr;
+    await makeDomainSelector({
+        update: (e) => {
+            expr = e;
+        },
+        domain: `[("number", "=", 1989.45)]`,
+    });
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$45");
+    await contains(".o_tree_editor_editor input").edit("1~989$46");
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$46");
+    expect(expr).toEqual('[("number", "=", 1989.46)]');
+
+    await contains(".o_tree_editor_editor input").edit("1989.47");
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$47");
+    expect(expr).toEqual('[("number", "=", 1989.47)]');
 });

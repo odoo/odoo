@@ -6,6 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 
@@ -121,6 +122,10 @@ export class LivechatService {
         if (this.state === SESSION_STATE.PERSISTED) {
             return this.thread;
         }
+        if (this._persistDeferred) {
+            return this._persistDeferred;
+        }
+        this._persistDeferred = new Deferred();
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
         if (temporaryThread) {
@@ -134,6 +139,8 @@ export class LivechatService {
         this.store.chatHub.opened.add({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.store"].initialize();
+        this._persistDeferred.resolve(this.thread);
+        this._persistDeferred = null;
         return this.thread;
     }
 
@@ -212,9 +219,7 @@ export class LivechatService {
             {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
-                chatbot_script_id: this.savedState
-                    ? this.thread.chatbot?.script.id
-                    : this.rule.chatbotScript?.id,
+                chatbot_script_id: this.thread?.chatbot?.script.id ?? this.rule.chatbotScript?.id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 temporary_id: this.thread?.id,
                 persisted: persist,

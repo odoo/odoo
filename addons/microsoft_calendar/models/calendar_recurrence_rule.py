@@ -27,6 +27,11 @@ class RecurrenceRule(models.Model):
         # modified in Odoo but computed from other fields).
         for recurrence in self.filtered('rrule'):
             values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+            until = values.get('until')
+            if until and until.tzinfo:
+                # UNTIL=...Z is parsed as an aware UTC datetime; convert it to the
+                # recurrence timezone so the stored date is the right local boundary day.
+                values['until'] = until.astimezone(recurrence._get_timezone())
             recurrence.with_context(dont_notify=True).write(dict(values, need_sync_m=False))
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
@@ -101,7 +106,14 @@ class RecurrenceRule(models.Model):
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
         # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
-        if self._has_base_event_time_fields_changed(new_event_values) and (new_event_values['start'] >= self.base_event_id.start):
+        # Also skip when the base event is an exception (follow_recurrence=False), because its
+        # modified time will differ from the seriesMaster pattern without the master having changed,
+        # and entering the destructive path would clear all Microsoft IDs
+        if (
+            self._has_base_event_time_fields_changed(new_event_values) and
+            (new_event_values['start'] >= self.base_event_id.start) and
+            self.base_event_id.follow_recurrence
+        ):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.

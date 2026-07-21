@@ -413,12 +413,19 @@ export function clickOnExtraMenuItem(stepOptions, backend = false) {
             trigger: `${
                 backend ? ":iframe" : ""
             } ul.top_menu`,
-            run(actions) {
+            async run(actions) {
                 // Note: the button might not exist (it only appear if there is many menu items)
                 const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
                 // Don't click on the extra menu button if it's already visible.
                 if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                    const dropdownFullyOpen = Promise.withResolvers();
+                    extraMenuButton.addEventListener(
+                        "shown.bs.dropdown",
+                        dropdownFullyOpen.resolve,
+                        { once: true }
+                    );
                     actions.click(extraMenuButton);
+                    await dropdownFullyOpen.promise;
                 }
             },
         },

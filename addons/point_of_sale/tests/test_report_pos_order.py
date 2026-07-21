@@ -107,3 +107,36 @@ class TestReportPoSOrder(TestPoSCommon):
 
         self.assertEqual(reports[0].margin, 135)
         self.assertEqual(reports[0].price_total, 135)
+
+    def test_report_pos_order_margin_other_currency(self):
+        """Test that the currency_rate set on the order is correctly taken into account when generating the report"""
+
+        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        self.open_new_session()
+        session = self.pos_session
+
+        self.env['pos.order'].create({
+         'session_id': session.id,
+            'lines': [
+                (0, 0, {
+                    'name': "OL/0001",
+                    'product_id': product1.id,
+                    'price_unit': 300,
+                    'discount': 0,
+                    'qty': 1.0,
+                    'price_subtotal': 300,
+                    'price_subtotal_incl': 300,
+                })
+            ],
+            'amount_total': 300.0,
+            'amount_tax': 0.0,
+            'amount_paid': 300.0,
+            'amount_return': 0.0,
+            'currency_rate': 2
+        })
+
+        reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
+
+        self.assertEqual(reports[0].margin, 150)
+        self.assertEqual(reports[0].price_subtotal_excl, 150)
+        self.assertEqual(reports[0].price_total, 150)

@@ -1,4 +1,5 @@
 import re
+from base64 import b64encode
 from functools import wraps
 from io import BytesIO
 from unittest.mock import MagicMock, call, patch
@@ -99,7 +100,10 @@ def mock_requests_request(method, url, *args, **kwargs):
                 response = xml.read()
         elif '/pdf' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
-                response = pdf.read()
+                # Nilvera's /pdf endpoint returns the PDF base64-encoded inside a JSON
+                # string body. NilveraClient.request() calls response.json() by default,
+                # so the caller receives a base64 str, not raw bytes.
+                response = b64encode(pdf.read()).decode()
         else:
             response.get.return_value = [
                 {'UUID': 'invoice_uuid'},
@@ -139,7 +143,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
 
         invoices_data = {
-            invoice: {**invoice.read()[0], 'extra_edis': {'tr_nilvera'}}
+            invoice: {
+                **self.env['account.move.send']._get_default_sending_settings(invoice),
+            }
         }
 
         with patch('odoo.addons.l10n_tr_nilvera_einvoice.models.account_move.AccountMove._l10n_tr_nilvera_submit_einvoice') as mock_submit_einvoice, \
@@ -241,4 +247,11 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
 
             invoice = self.env['account.move'].search([('l10n_tr_nilvera_uuid', '=', 'invoice_uuid')])
             self.assertEqual(len(invoice), 1)
-            self.assertListEqual(sorted(invoice.attachment_ids.mapped('mimetype')), ['application/pdf', 'application/xml'])
+            self.assertListEqual(
+                [invoice.attachment_ids.mimetype, invoice.ubl_cii_xml_id.mimetype],
+                ['application/pdf', 'application/xml']
+            )
+            self.assertTrue(
+                invoice.attachment_ids.raw.startswith(b'%PDF-'),
+                "PDF attachment must contain decoded PDF bytes, not base64 text",
+            )

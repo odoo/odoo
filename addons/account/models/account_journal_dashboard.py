@@ -114,6 +114,7 @@ class account_journal(models.Model):
       LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
           WHERE move.journal_id = ANY(%(ids)s)
             AND move.company_id = ANY(%(company_ids)s)
+            AND activity.active = TRUE
 
       UNION ALL
 
@@ -132,6 +133,7 @@ class account_journal(models.Model):
       LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
           WHERE journal.id = ANY(%(ids)s)
             AND journal.company_id = ANY(%(company_ids)s)
+            AND activity.active = TRUE
             """,
             today=today,
             act_type_name=act_type_name,
@@ -716,7 +718,7 @@ class account_journal(models.Model):
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('payment_state', 'in', ('not_paid', 'partial')),
-            ('move_type', 'in', ('out_invoice', 'out_refund') if journal_type == 'sale' else ('in_invoice', 'in_refund')),
+            ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt') if journal_type == 'sale' else ('in_invoice', 'in_refund', 'in_receipt')),
             ('state', '=', 'posted'),
         ])
         selects = [

@@ -2301,8 +2301,14 @@
                             <record id="tax_report_25_formula" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">box_23.balance - box_16.balance</field>
+                                <field name="formula">box_23.balance - box_16.balance + box_25.adjustment</field>
                                 <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="tax_report_25_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
                             </record>
                         </field>
                     </record>

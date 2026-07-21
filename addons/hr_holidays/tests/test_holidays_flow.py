@@ -11,6 +11,7 @@ from odoo import Command
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestHolidaysFlow(TestHrHolidaysCommon):
@@ -281,3 +282,106 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                         'request_date_from': date.today() + relativedelta(day=11),
                         'request_date_to': date.today() + relativedelta(day=10),
                     })
+
+    @freeze_time("2023-03-15")
+    def test_manager_can_approve_from_leave_report_calendar(self):
+        """Check if an approval user that has not additional access rights for Time Off can approve a leave for an employee."""
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Manager Approval Time Off',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'manager',
+            'time_type': 'leave',
+        })
+
+        manager_user = mail_new_test_user(
+            self.env,
+            login='manager_no_timeoff',
+            groups='base.group_user',
+        )
+
+        self.employee_emp.leave_manager_id = manager_user
+
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Employee Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date.today() + relativedelta(days=1),
+            'request_date_to': date.today() + relativedelta(days=1),
+        })
+
+        leave_report = self.env['hr.leave.report.calendar'].with_user(manager_user).browse(leave.id)
+        self.assertEqual(leave.state, 'confirm')
+        leave_report.action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+    @freeze_time("2025-05-02")
+    def test_leave_calendar_date_from_to(self):
+        calendar = self.env["resource.calendar"].create({
+            "name": "Test calendar",
+            "attendance_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Morning",
+                        "dayofweek": "4",
+                        "day_period": "morning",
+                        "hour_from": 9,
+                        "hour_to": 14,
+                        "date_from": "2025-01-02",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Afternoon",
+                        "dayofweek": "4",
+                        "day_period": "afternoon",
+                        "hour_from": 17,
+                        "hour_to": 20,
+                        "date_from": "2025-01-02",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Morning (old)",
+                        "dayofweek": "4",
+                        "day_period": "morning",
+                        "hour_from": 8,
+                        "hour_to": 13,
+                        "date_to": "2025-01-01",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Afternoon (old)",
+                        "dayofweek": "4",
+                        "day_period": "afternoon",
+                        "hour_from": 19,
+                        "hour_to": 21,
+                        "date_to": "2025-01-01",
+                    },
+                )
+            ]
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.holidays_status_hr = self.env["hr.leave.type"].with_user(self.user_hrmanager_id).create({
+            "name": "NotLimitedHR",
+            "requires_allocation": "no",
+            "leave_validation_type": "hr",
+        })
+        holidays = self.env["hr.leave"].with_user(self.user_employee_id).create({
+            "name": "Hol11",
+            "employee_id": self.employee_emp.id,
+            "holiday_status_id": self.holidays_status_hr.id,
+            "request_date_from": "2025-05-02",
+            "request_date_to": "2025-05-02",
+        })
+        self.assertEqual(holidays.date_from.hour, 7)
+        self.assertEqual(holidays.date_to.hour, 18)

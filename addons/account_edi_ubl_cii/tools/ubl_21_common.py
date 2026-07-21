@@ -132,6 +132,10 @@ Party = {
         'cbc:RegistrationName': {},
         'cbc:CompanyID': {},
         'cac:RegistrationAddress': Address,
+        'cac:CorporateRegistrationScheme': {
+            'cbc:ID': {},
+            'cbc:Name': {},
+        },
     },
     'cac:Contact': Contact,
     'cac:Person': {
@@ -227,6 +231,7 @@ TaxCategory = {
 }
 
 AllowanceCharge = {
+    'cbc:ID': {},
     'cbc:ChargeIndicator': {},
     'cbc:AllowanceChargeReasonCode': {},
     'cbc:AllowanceChargeReason': {},
@@ -303,4 +308,16 @@ Price = {
 
 ItemPriceExtension = {
     'cbc:Amount': {},
+}
+
+ContractDocumentReference = {
+    'cbc:ID': {},
+}
+
+DespatchDocumentReference = {
+    'cbc:ID': {},
+}
+
+ProjectReference = {
+    'cbc:ID': {},
 }

@@ -1,0 +1,427 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_peppol_response
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-15 11:35+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
+"account_peppol_response/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
+msgid "<span>This information will be sent with your response.</span>"
+msgstr "<span>سيتم إرسال هذه المعلومات مع ردك.</span>"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid ""
+"A Peppol response was sent to the Peppol Access Point declaring you "
+"%(status)s this document."
+msgstr ""
+"تم إرسال استجابة Peppol إلى نقطة وصول Peppol تعلن أنك %(status)s هذا المستند."
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr "مستخدِم وكيل تبادل البيانات إلكترونياً في الحساب"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ab
+msgid "Acknowledgement"
+msgstr "شكر وتقدير"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
+msgid "Actions to suggest"
+msgstr "الإجراءات المقترحة"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid ""
+"An error occurred while responding to this invoice's expeditor.%(br)sStatus:"
+" %(status)s - %(error)s"
+msgstr ""
+"حدث خطأ أثناء الرد على مرسل هذه الفاتورة.%(br)sالحالة: %(status)s - %(error)s"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ap
+msgid "Approval"
+msgstr "الموافقة"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_move__peppol_move_state__ap
+msgid "Approved"
+msgstr "تمت الموافقة"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+#: code:addons/account_peppol_response/wizard/peppol_rejection_wizard.py:0
+msgid "At least one reason must be given when rejecting a Peppol invoice."
+msgstr "يجب تقديم سبب واحد على الأقل عند رفض فاتورة Peppol."
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_account_peppol_response
+msgid "Business Level Responses for Peppol"
+msgstr "استجابات مستوى الأعمال لـ Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__code
+msgid "Code"
+msgstr "رمز"
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ca
+msgid "Conditionally accepted"
+msgstr "مقبول بشروط"
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__create_uid
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__create_uid
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__create_date
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__create_date
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__display_name
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__display_name
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.res_partner_form_account_peppol_response
+msgid "Does not support Invoice Responses"
+msgstr "لا يدعم ردود الفواتير"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__peppol_state__done
+msgid "Done"
+msgstr "منتهي"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__peppol_state__error
+msgid "Error"
+msgstr "خطأ"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__id
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__id
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ip
+msgid "In Process"
+msgstr "قيد التنفيذ"
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__write_uid
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__write_uid
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__write_date
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__write_date
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__list_identifier
+msgid "List identifier"
+msgstr "معرف القائمة"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "Miscellaneous:"
+msgstr "أمور متنوعة:"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__move_ids
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__move_id
+msgid "Move"
+msgstr "حركة"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_clarification__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__peppol_state__not_serviced
+msgid "Not Serviced"
+msgstr "غير متوفر"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_clarification__list_identifier__opstatusaction
+msgid "OPStatusAction"
+msgstr "OPStatusAction"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_clarification__list_identifier__opstatusreason
+msgid "OPStatusReason"
+msgstr "OPStatusReason"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_bank_statement_line__peppol_move_state
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_move__peppol_move_state
+msgid "PEPPOL status"
+msgstr "PEPPOL status"
+
+#. module: account_peppol_response
+#: model:ir.actions.server,name:account_peppol_response.ir_cron_peppol_auto_register_services_ir_actions_server
+msgid "PEPPOL: auto register services"
+msgstr "PEPPOL: خدمات التسجيل التلقائي"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__pd
+msgid "Paid"
+msgstr "مدفوع"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__peppol_state__processing
+msgid "Pending Reception"
+msgstr "بانتظار الاستقبال"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_bank_statement_line__peppol_can_send_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_move__peppol_can_send_response
+msgid "Peppol Can Send Response"
+msgstr "يمكن لـ Peppol إرسال استجابة"
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_account_peppol_rejection_wizard
+msgid "Peppol Rejection wizard"
+msgstr "معالج رفض Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_bank_statement_line__peppol_response_ids
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_move__peppol_response_ids
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_response_view_form
+msgid "Peppol Response"
+msgstr "استجابة Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_res_partner__peppol_response_support
+#: model:ir.model.fields,field_description:account_peppol_response.field_res_users__peppol_response_support
+msgid "Peppol Response Service"
+msgstr "خدمة استجابة Peppol"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_response_view_list
+msgid "Peppol Responses"
+msgstr "استجابات Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__peppol_message_uuid
+msgid "Peppol UUID"
+msgstr "Peppol UUID"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "Peppol business response error: %s"
+msgstr "خطأ في استجابة Peppol للأعمال: %s"
+
+#. module: account_peppol_response
+#: model:ir.model,name:account_peppol_response.model_account_peppol_clarification
+msgid "Peppol clarifications used for rejection"
+msgstr "توضيحات Peppol المستخدمة للرفض"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_response_view_move_form
+msgid "Peppol info"
+msgstr "معلومات Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__peppol_state
+msgid "Peppol status"
+msgstr "Peppol status"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
+msgid "Reasons"
+msgstr "الأسباب"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "Reasons:"
+msgstr "الأسباب:"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_move__peppol_move_state__ab
+msgid "Received"
+msgstr "تم الاستلام"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
+msgid "Reject Peppol Document"
+msgstr "رفض مستند Peppol"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_move__peppol_move_state__re
+msgid "Rejected"
+msgstr "تم الرفض"
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__re
+msgid "Rejection"
+msgstr "الرفض"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__action_ids
+msgid "Rejection actions"
+msgstr "إجراءات الرفض"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_rejection_wizard__reason_ids
+msgid "Rejection reasons"
+msgstr "أسباب الرفض"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_account_peppol_response__response_code
+msgid "Response Code"
+msgstr "رمز الاستجابة"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
+msgid "Send Rejection"
+msgstr "إرسال الرفض"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "Suggested actions:"
+msgstr "الإجراءات المقترحة:"
+
+#. module: account_peppol_response
+#: model:ir.model.fields,field_description:account_peppol_response.field_res_partner__peppol_supported_documents
+#: model:ir.model.fields,field_description:account_peppol_response.field_res_users__peppol_supported_documents
+msgid "Supported Peppol Documents"
+msgstr "مستندات Peppol المدعومة"
+
+#. module: account_peppol_response
+#: model_terms:ir.ui.view,arch_db:account_peppol_response.res_partner_form_account_peppol_response
+msgid "Supports Invoice Responses"
+msgstr "يدعم الردود على الفواتير"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid ""
+"The Peppol receiver of this document has rejected it with the following "
+"information:%(br)s%(rejection_message)s"
+msgstr ""
+"رفض مستلم Peppol لهذا المستند مع المعلومات التالية:%(br)s%(rejection_message)"
+"s"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "The Peppol receiver of this document replied that he has accepted it."
+msgstr "رد مستلم Peppol لهذا المستند بأنه قد قبله."
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "The Peppol receiver of this document replied that he has received it."
+msgstr "رد مستلم Peppol لهذا المستند بأنه قد استلمه."
+
+#. module: account_peppol_response
+#: model:ir.model.fields,help:account_peppol_response.field_account_peppol_rejection_wizard__action_ids
+msgid ""
+"The actions to be suggested to the document's sender in order for the "
+"document to be accepted when sent again (eventually). These will be sent to "
+"the document's sender. Not mandatory."
+msgstr ""
+"الإجراءات التي سيتم اقتراحها على مرسل المستند حتى يتم قبول المستند عند إرساله "
+"مرة أخرى (في النهاية). سيتم إرسال هذه الإجراءات إلى مرسل المستند. غير إلزامي."
+
+#. module: account_peppol_response
+#: model:ir.model.fields,help:account_peppol_response.field_account_peppol_rejection_wizard__reason_ids
+msgid ""
+"The reasons to reject the received PEPPOL document. These will be sent to "
+"the document's sender."
+msgstr ""
+"أسباب رفض مستند PEPPOL المستلم. سيتم إرسال هذه الأسباب إلى مرسل المستند."
+
+#. module: account_peppol_response
+#: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__uq
+msgid "Under query"
+msgstr "تحت الاستعلام"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "accepted"
+msgstr "تم القبول"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "received"
+msgstr "المستلم"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid "rejected"
+msgstr "مرفوض"

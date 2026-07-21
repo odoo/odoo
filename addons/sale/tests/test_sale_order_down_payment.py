@@ -399,15 +399,14 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # keys
             ['account_id',               'tax_ids',                 'balance',    'price_total'],
             # base lines
-            [self.revenue_account.id,    (tax_10_a + tax_10_b).ids, -110,         132          ],
-            [self.revenue_account.id,    tax_10_b.ids,              -10,          11           ],
+            [self.revenue_account.id,    (tax_10_a + tax_10_b).ids, -100,         120          ],
             [self.revenue_account.id,    tax_10_a.ids,              -200,         220          ],
-            [self.revenue_account.id,    self.env['account.tax'],   -110,         110          ],
+            [self.revenue_account.id,    self.env['account.tax'],   -100,         100          ],
             # taxes
-            [self.tax_account.id,        self.env['account.tax'],   -31,          0            ],
-            [self.tax_account.id,        self.env['account.tax'],   -12,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],   -30,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],   -10,          0            ],
             # receivable
-            [self.receivable_account.id, self.env['account.tax'],   473,          0            ],
+            [self.receivable_account.id, self.env['account.tax'],   440,          0            ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
@@ -547,15 +546,14 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # keys
             ['account_id',               'tax_ids',                 'balance',    'price_total', 'analytic_distribution'],
             # base lines
-            [self.revenue_account.id,    (tax_10_a + tax_10_b).ids, -110,         132,            {an_acc_01: 50, an_acc_02: 50}],
-            [self.revenue_account.id,    tax_10_b.ids,              -10,          11,             {an_acc_01: 50, an_acc_02: 50}],
+            [self.revenue_account.id,    (tax_10_a + tax_10_b).ids, -100,         120,            {an_acc_01: 50, an_acc_02: 50}],
             [self.revenue_account.id,    tax_10_a.ids,              -200,         220,            False                         ],
-            [self.revenue_account.id,    self.env['account.tax'],   -110,         110,            False                         ],
+            [self.revenue_account.id,    self.env['account.tax'],   -100,         100,            False                         ],
             # taxes
-            [self.tax_account.id,        self.env['account.tax'],   -31,          0,              False                         ],
-            [self.tax_account.id,        self.env['account.tax'],   -12,          0,              False                         ],
+            [self.tax_account.id,        self.env['account.tax'],   -30,          0,              False                         ],
+            [self.tax_account.id,        self.env['account.tax'],   -10,          0,              False                         ],
             # receivable
-            [self.receivable_account.id, self.env['account.tax'],   473,          0,              False                         ],
+            [self.receivable_account.id, self.env['account.tax'],   440,          0,              False                         ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
@@ -1105,3 +1103,56 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         reversal_move.action_post()
         self.assertEqual(reversal_move.move_type, 'out_refund')
         self.assertIn('ref', so_dp_line.name)
+
+    def test_downpayment_price_unit_after_credit_note_cancel(self):
+        """
+        Test that cancelling a credit note issued against a down payment
+        invoice resets the state, allowing invoicing the remaining amount
+        on the sale order to proceed successfully.
+        """
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 100,
+                })
+            ],
+        })
+        sale_order.action_confirm()
+
+        # Down payment invoice (50% of the order)
+        invoicing_wizard = self.env["sale.advance.payment.inv"].create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": sale_order.amount_total / 2.0,
+            "sale_order_ids": [Command.link(sale_order.id)],
+        })
+        action = invoicing_wizard.create_invoices()
+        dp_invoice = self.env["account.move"].browse(action["res_id"])
+        dp_invoice.action_post()
+
+        # Credit note against the down payment invoice
+        action = dp_invoice.action_reverse()
+        reversal_wizard = (
+            self
+            .env[action["res_model"]]
+            .with_context(active_ids=dp_invoice.ids, active_model="account.move")
+            .create({"journal_id": dp_invoice.journal_id.id})
+        )
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env["account.move"].browse(action["res_id"])
+        credit_note.action_post()
+
+        credit_note.button_draft()
+        credit_note.button_cancel()
+
+        # Invoice the remaining amount: should only be 50
+        invoicing_wizard = self.env["sale.advance.payment.inv"].create({
+            "advance_payment_method": "delivered",
+            "sale_order_ids": [Command.link(sale_order.id)],
+        })
+        action = invoicing_wizard.create_invoices()
+        final_invoice = self.env["account.move"].browse(action["res_id"])
+
+        self.assertEqual(final_invoice.amount_total, 50.0)

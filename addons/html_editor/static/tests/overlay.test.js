@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
-import { click, hover, queryAll, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { unformat } from "./_helpers/format";
@@ -109,7 +109,7 @@ test("Table column control should always be displayed on top of the table", asyn
     const columnControl = await waitFor(".o-we-table-menu[data-type='column']");
 
     // Table column control displayed on hover should be above the table
-    expect(bottom(columnControl)).toBeLessThan(top(table));
+    expect(bottom(columnControl)).toBe(top(table));
 
     // Scroll down so that the table is close to the top
     const distanceToTop = top(table) - top(scrollableElement);
@@ -119,9 +119,8 @@ test("Table column control should always be displayed on top of the table", asyn
     await hover(".odoo-editor-editable td");
     await animationFrame();
 
-    // Table control should not be displayed (it should not overflow the scroll
-    // container, nor be placed below the first row).
-    expect(queryAll(".o-we-table-menu[data-type='column']")).toHaveCount(0);
+    // Table column control displayed on hover should be above the table
+    expect(bottom(columnControl)).toBe(top(table));
 });
 
 test.tags("desktop");

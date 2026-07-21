@@ -1608,3 +1608,35 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(purchase_order_line, [
             {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}
         ])
+
+    def test_replenish_expired_seller(self):
+        self.product_01.standard_price = 50.0
+        self.product_01.seller_ids.price = 100.0
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(2).create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 10.0,
+            'trigger': 'manual',
+        })
+        orderpoint.qty_to_order = 5.0
+        orderpoint.action_replenish()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)], order='id desc', limit=1)
+        self.assertRecordValues(po.order_line, [{
+            'product_id': self.product_01.id,
+            'product_qty': 5.0,
+            'price_unit': 100.0,
+        }])
+
+        # Expire the seller
+        self.product_01.seller_ids.date_end = Date.today() - td(days=1)
+        # Second replenishment with expired seller using the same orderpoint
+        orderpoint.qty_to_order = 1.0
+        orderpoint.action_replenish()
+        self.assertRecordValues(po.order_line, [{
+            'product_id': self.product_01.id,
+            'product_qty': 6.0,
+            'price_unit': 100.0,
+        }])
