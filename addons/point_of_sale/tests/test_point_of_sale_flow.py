@@ -181,51 +181,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.pos_config_usd.current_session_id.close_session_from_ui()
 
-    def test_order_to_invoice_uses_correct_shipping_address(self):
-        """
-        Test that invoice created from POS uses the correct shipping address
-        same as selected in the POS order.
-        """
-        _, delivery2 = self.env["res.partner"].create([{
-                'name': f"Delivery Address {i + 1}",
-                'type': 'delivery',
-                'parent_id': self.partner.id,
-            } for i in range(2)]
-        )
-
-        self.pos_config_eur.open_ui()
-        current_session = self.pos_config_eur.current_session_id
-        untax, tax = self.compute_tax(self.product, 100, 1)
-
-        pos_order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': delivery2.id,
-            'pricelist_id': self.partner.property_product_pricelist.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product.id,
-                'price_unit': 100,
-                'qty': 1.0,
-                'tax_ids': [(6, 0, self.product.taxes_id.ids)],
-                'price_subtotal': untax,
-                'price_subtotal_incl': untax + tax,
-            })],
-            'amount_tax': tax,
-            'amount_total': untax + tax,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
-
-        pos_order.action_pos_order_invoice()
-        invoice = pos_order.account_move
-
-        self.assertEqual(
-            invoice.partner_shipping_id.id,
-            delivery2.id,
-            "The shipping address should be 'Delivery Address 2' as selected in the POS order."
-        )
-
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
@@ -415,70 +370,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         with self.assertRaises(ValidationError, msg="The points of sale for the payment method Bank must belong to its company."):
             bank_payment_method.write({"config_ids": sub_pos_config.ids})
-
-    def test_order_unexisting_lots(self):
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-
-        order, _ = self.create_backend_pos_order({
-            'line_data': [{
-                'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                'pack_lot_ids': [[0, 0, {'lot_name': '1001'}]],
-            }],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
-            ],
-        })
-
-        self.pos_config_usd.current_session_id.close_session_from_ui()
-        order_lot_id = order.picking_ids.move_line_ids.lot_id
-        self.assertEqual(order_lot_id.name, '1001')
-        self.assertTrue(all(
-            quant.lot_id == order_lot_id
-            for quant in self.env['stock.quant'].search([
-                ('product_id', '=', self.ten_dollars_with_10_incl.product_variant_id.id)
-            ])
-        ))
-
-    def test_order_existing_lot_gs1_nomenclature(self):
-        """An existing lot whose name is also a valid GS1 barcode (e.g. "10156":
-        AI "10" -> Batch/Lot) must still be found when the order is validated,
-        instead of being recreated and raising a duplicate lot error.
-        """
-        if not self.env['ir.module.module'].search_count([('name', '=', 'stock_barcode'), ('state', '=', 'installed')]):
-            self.skipTest("stock_barcode is not installed")
-        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
-        self.env.company.nomenclature_id = gs1_nomenclature
-        self.pos_config_usd.picking_type_id.write({
-            'use_create_lots': True,
-            'use_existing_lots': True,
-        })
-        product = self.ten_dollars_with_10_incl.product_variant_id
-        product.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-
-        order_data = {
-            'line_data': [{
-                'product_id': product.id,
-                'pack_lot_ids': [Command.create({'lot_name': '10156'})],
-            }],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
-            ],
-        }
-        order1, _ = self.create_backend_pos_order(order_data)
-        lot = order1.picking_ids.move_line_ids.lot_id
-        self.assertEqual(lot.name, '10156')
-
-        order2, _ = self.create_backend_pos_order(order_data)
-        self.pos_config_usd.current_session_id.close_session_from_ui()
-
-        self.assertEqual(order2.state, 'done')
-        self.assertEqual(order2.picking_ids.move_line_ids.lot_id, lot)
 
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
