@@ -78,19 +78,6 @@ export class TableUIPlugin extends Plugin {
         this.rowMenuOverlayKey = "table-row-menu";
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
-            positionOptions: {
-                position: "top-fit",
-                flip: false,
-            },
-        });
-        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.rowMenu = this.dependencies.overlay.createOverlay(TableMenu, {
-            positionOptions: {
-                position: "left-fit",
-            },
-        });
-        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.tableDragDropOverlay = this.dependencies.overlay.createOverlay(TableDragDrop);
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
         const closeMenus = () => {
