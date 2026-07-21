@@ -425,7 +425,7 @@ class Base(models.AbstractModel):
         # only active records will get returned in the default case
         domain = Domain(domain)
         if any(cond.field_expr == self._active_name for cond in domain.iter_conditions()):
-            domain &= Domain('active', 'in', [True, False])
+            domain &= Domain(self._active_name, 'in', [True, False])
         domain = domain.optimize(self)
 
         # dict to help creating order compatible with _read_group and for search
