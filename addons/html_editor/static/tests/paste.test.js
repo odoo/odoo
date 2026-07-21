@@ -1103,16 +1103,6 @@ describe("Unwrapping html element", () => {
         });
     });
 
-    test("should unwrap a node when pasting in between same node (6)", async () => {
-        await testEditor({
-            contentBefore: '<p><font style="background-color: rgb(255, 0, 0);">[]test</font></p>',
-            stepFunction: async (editor) => {
-                pasteHtml(editor, '<font style="background-color: rgb(255, 0, 0);">nested </font>');
-            },
-            contentAfter:
-                '<p><font style="background-color: rgb(255, 0, 0);">nested []test</font></p>',
-        });
-    });
     test("should not unwrap a node when pasting at start of different node (1)", async () => {
         await testEditor({
             contentBefore: "<p>[]mn</p>",

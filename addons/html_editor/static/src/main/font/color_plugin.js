@@ -7,9 +7,9 @@ import {
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
-import { isRedundantElement, isTextNode } from "@html_editor/utils/dom_info";
-import { closestElement, findUpTo, selectElements } from "@html_editor/utils/dom_traversal";
+import { removeClass, removeStyle } from "@html_editor/utils/dom";
+import { isTextNode } from "@html_editor/utils/dom_info";
+import { closestElement, findUpTo } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
@@ -149,19 +149,7 @@ export class ColorPlugin extends Plugin {
             }
             return false;
         },
-
-        /** Processors */
-        normalize_processors: this.normalize.bind(this),
     };
-
-    normalize(root) {
-        for (const el of selectElements(root, "font")) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
-        }
-        return root;
-    }
 
     getElementColors(el) {
         const elStyle = getComputedStyle(el);
