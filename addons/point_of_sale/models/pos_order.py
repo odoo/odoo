@@ -826,7 +826,7 @@ class PosOrder(models.Model):
         today = fields.Date.context_today(self)
         if self.env.context.get('active_ids'):
             orders = self.browse(self.env.context.get('active_ids'))
-            order_is_in_futur = any(order.preset_time and order.preset_time.date() > today for order in orders)
+            order_is_in_futur = any(order.preset_time and fields.Datetime.context_timestamp(self, order.preset_time).date() > today for order in orders)
             if order_is_in_futur:
                 raise UserError(_('The order delivery / pickup date is in the future. You cannot cancel it.'))
             if not draft_orders:
@@ -1469,7 +1469,7 @@ class PosOrder(models.Model):
         fiscal_positions so it won't make any issue when we access user,
         partner, bank or similar directly.
         """
-        invoice_date = fields.Date.today()
+        invoice_date = fields.Date.context_today(self)
         pos_refunded_invoice_ids = []
         is_single_order = len(self) == 1
 

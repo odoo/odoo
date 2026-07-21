@@ -159,7 +159,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(pos_orders.account_move), 1)
         self.assertEqual(pos_orders.account_move.partner_id, self.customer)
         self.assertEqual(pos_orders.account_move.amount_total, sum(pos_orders.mapped('amount_total')))
-        self.assertEqual(pos_orders.account_move.payment_state, 'in_payment')
+        self.assertEqual(pos_orders.account_move.payment_state, pos_orders.account_move._get_invoice_in_payment_state())
         self.assertEqual(pos_orders.account_move.state, 'posted')
         self.assertEqual(pos_orders.account_move.amount_residual, 0)
 
@@ -208,7 +208,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertNotEqual(self.pos_session.move_ids, pos_orders.account_move)
         self.assertEqual(pos_orders.account_move.partner_id, self.customer)
         self.assertEqual(pos_orders.account_move.amount_total, round(sum(pos_orders.mapped('amount_total')), 2))
-        self.assertEqual(pos_orders.account_move.payment_state, 'in_payment')
+        self.assertEqual(pos_orders.account_move.payment_state, pos_orders.account_move._get_invoice_in_payment_state())
         self.assertEqual(pos_orders.account_move.state, 'posted')
         self.assertEqual(pos_orders.account_move.amount_residual, 0)
 

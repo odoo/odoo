@@ -370,7 +370,7 @@ class PosSession(models.Model):
     def get_session_orders(self):
         today = fields.Date.context_today(self)
         return self.order_ids.filtered(lambda o:
-            not (o.preset_time and o.preset_time.date() > today),
+            not (o.preset_time and fields.Datetime.context_timestamp(self, o.preset_time).date() > today),
         )
 
     def get_order_count_by_preset(self):
@@ -443,7 +443,7 @@ class PosSession(models.Model):
             'state': 'closed',
             'stop_at': self.stop_at or fields.Datetime.now(),
         })
-        self.order_ids.write({'state': 'done'})
+        self._get_closed_orders().write({'state': 'done'})
         self.env.flush_all()  # ensure sale.report is up to date
         return {'status': True}
 

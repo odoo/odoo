@@ -90,7 +90,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
         pos_journal = cls.env['account.journal'].create({
             "name": "Point of Sale",
             "code": "POSUSD",
-            "type": "general",
+            "type": "sale",
             "company_id": cls.env.company.id,
             "currency_id": cls.foreign_currency.id,
         })
