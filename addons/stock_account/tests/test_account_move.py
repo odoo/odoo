@@ -170,6 +170,7 @@ class TestAccountMove(TestStockValuationCommon):
         """
         self.env.user.company_ids |= self.other_company
 
+        bill_company_pairs = []
         for company in (self.company | self.other_company):
             bill_form = Form(self.env['account.move'].with_company(company.id).with_context(default_move_type='in_invoice'))
             bill_form.partner_id = self.partner
@@ -177,9 +178,10 @@ class TestAccountMove(TestStockValuationCommon):
             with bill_form.invoice_line_ids.new() as line:
                 line.product_id = self.product_standard
                 line.price_unit = 100
-            bill = bill_form.save()
-            bill.action_post()
+            bill_company_pairs.append((bill_form.save(), company))
+        self.env['account.move'].browse([b.id for b, _ in bill_company_pairs]).action_post()
 
+        for bill, company in bill_company_pairs:
             product_accounts = self.product_standard.product_tmpl_id.with_company(company.id).get_product_accounts()
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
 
