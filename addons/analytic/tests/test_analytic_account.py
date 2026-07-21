@@ -16,7 +16,8 @@ class TestAnalyticAccount(AnalyticCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.partner_a, cls.partner_b = cls.env['res.partner'].create([
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        cls.partner_a, cls.partner_b = cls.env['res.partner'].with_context(**MAIL_OFF).create([
             {'name': 'partner_a', 'company_id': False},
             {'name': 'partner_b', 'company_id': False},
         ])
@@ -31,7 +32,7 @@ class TestAnalyticAccount(AnalyticCommon):
                 'analytic_distribution': {cls.analytic_account_2.id: 100},  # analytic_plan_1
             },
         ])
-        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company.id})
+        cls.company_b_branch = cls.env['res.company'].with_context(**MAIL_OFF).create({'name': "B Branch", 'parent_id': cls.company.id})
 
     def test_aggregates(self):
         # debit and credit are hidden by the group when account is installed

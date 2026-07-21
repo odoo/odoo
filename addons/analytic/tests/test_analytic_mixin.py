@@ -10,6 +10,7 @@ class TestAnalyticMixin(TransactionCase):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan'})
 
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
         (
             cls.sales_aa,
             cls.administrative_aa,
@@ -17,7 +18,7 @@ class TestAnalyticMixin(TransactionCase):
             cls.commercial_aa,
             cls.marketing_aa,
             cls.com_marketing_aa,
-        ) = cls.env['account.analytic.account'].create([
+        ) = cls.env['account.analytic.account'].with_context(**MAIL_OFF).create([
             {'name': 'Sales', 'plan_id': cls.analytic_plan.id},
             {'name': 'Administrative', 'plan_id': cls.analytic_plan.id},
             {'name': 'Research & Development', 'plan_id': cls.analytic_plan.id},

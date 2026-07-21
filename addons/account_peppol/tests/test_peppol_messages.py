@@ -48,7 +48,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'refresh_token': 'deadbeef-0000-0000-0000-000000000000',
         })
 
-        cls.invalid_partner, cls.valid_partner, cls.incoming_invoice_partner = cls.env['res.partner'].create([{
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        cls.invalid_partner, cls.valid_partner, cls.incoming_invoice_partner = cls.env['res.partner'].with_context(**MAIL_OFF).create([{
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
