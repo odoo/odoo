@@ -10,9 +10,13 @@ export class SaverScreen extends Component {
 
     setup() {
         this.time = useTime();
-        this.dialog = useService("dialog");
         this.uiService = useService("ui");
-        this.dialog.closeAll();
+        this.overlayService = useService("overlay");
+        this.closeAllOverlays();
+    }
+
+    closeAllOverlays() {
+        Object.values(this.overlayService.overlays).forEach((overlay) => overlay.remove());
     }
 }
 
