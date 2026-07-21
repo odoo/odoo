@@ -33,3 +33,21 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             allowed=False,
             thread=thread,
         )
+
+    def test_delete_non_comment_message_attachment(self):
+        msg = self.env["mail.message"].with_user(self.user_employee).create({
+            "message_type": "notification",
+            "body": 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
+            "model": "res.partner",
+            "res_id": self.partner_admin.id,
+        })
+
+        self.assertEqual(len(msg.attachment_ids), 1)
+        attachment = msg.attachment_ids[0]
+        # self.authenticate(self.user_employee.login, "employee")
+        url = "/mail/attachment/delete"
+        self.make_jsonrpc_request(url, params={
+            "attachment_id": attachment.id,
+            "access_token": attachment._get_ownership_token()
+        })
+        self.assertFalse(msg.attachment_ids)
