@@ -3896,6 +3896,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('test_dynamic_barcode_extra', login="pos_admin")
 
+    def test_saver_screen_close_overlays(self):
+        """Test that active overlays (e.g., dropdown menus) are closed when the SaverScreen is triggered."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SaverScreenCloseOverlaysTour')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
