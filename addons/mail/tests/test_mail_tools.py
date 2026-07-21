@@ -128,11 +128,10 @@ class TestMailTools(MailCommon):
         which followers have to be found based on email. Check multi email
         and encapsulated email support. """
         # create partner just for the follow mechanism
-        linked_record = self.env['res.partner'].sudo().create({'name': 'Record for followers'})
-        follower_partner = self.env['res.partner'].sudo().create({
-            'email': self._test_email,
-            'name': 'Duplicated, follower of record',
-        })
+        linked_record, follower_partner = self.env['res.partner'].sudo().create([
+            {'name': 'Record for followers'},
+            {'email': self._test_email, 'name': 'Duplicated, follower of record'},
+        ])
         linked_record.message_subscribe(partner_ids=follower_partner.ids)
         test_partner = self.test_partner.with_env(self.env)
 

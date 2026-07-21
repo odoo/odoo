@@ -628,8 +628,7 @@ class TestSearchTemplateCategory(MailCommon):
         cls.custom_templates = MailTemplate.create([
             {'name': f'Custom Template {i + 1}', 'description': f'Desc {i + 1}'}
             for i in range(4)
-        ])
-        cls.custom_templates |= MailTemplate.create({'name': 'Custom Template empty', 'description': ''})
+        ] + [{'name': 'Custom Template empty', 'description': ''}])
 
         # 4 Base templates with XML ID
         cls.base_templates = MailTemplate.create([
@@ -637,13 +636,15 @@ class TestSearchTemplateCategory(MailCommon):
             for i in range(4)
         ])
 
-        for template in cls.base_templates:
-            ModelData.create({
+        ModelData.create([
+            {
                 'name': f'mail_template_{template.id}',
                 'module': 'test_module',
                 'model': 'mail.template',
-                'res_id': template.id
-            })
+                'res_id': template.id,
+            }
+            for template in cls.base_templates
+        ])
 
     @users('employee')
     def test_search_template_category(self):

@@ -188,8 +188,10 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_get_by_expertise(self):
-        dog_expert = self.env["im_livechat.expertise"].create({"name": "dog"})
-        cat_expert = self.env["im_livechat.expertise"].create({"name": "cat"})
+        dog_expert, cat_expert = self.env["im_livechat.expertise"].create([
+            {"name": "dog"},
+            {"name": "cat"},
+        ])
         operator_dog = self._create_operator(expertises=dog_expert)
         operator_car = self._create_operator(expertises=cat_expert)
         all_operators = operator_dog + operator_car
@@ -200,8 +202,10 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         self.assertEqual(operator_car, pets_support._get_operator(expertises=cat_expert))
 
     def test_get_by_expertise_amongst_same_language(self):
-        dog_expert = self.env["im_livechat.expertise"].create({"name": "dog"})
-        cat_expert = self.env["im_livechat.expertise"].create({"name": "cat"})
+        dog_expert, cat_expert = self.env["im_livechat.expertise"].create([
+            {"name": "dog"},
+            {"name": "cat"},
+        ])
         operator_fr_dog = self._create_operator("fr_FR", expertises=dog_expert)
         operator_fr_cat = self._create_operator("fr_FR", expertises=cat_expert)
         operator_fr_dog_cat = self._create_operator("fr_FR", expertises=dog_expert + cat_expert)

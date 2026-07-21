@@ -72,16 +72,14 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             .with_user(bob)
             ._create_group(users_to=john)
         )
-        public_channel = self.env["discuss.channel"].create(
-            {"name": "public community", "group_public_id": False}
-        )
-        private_channel = self.env["discuss.channel"].create(
+        public_channel, private_channel = self.env["discuss.channel"].create([
+            {"name": "public community", "group_public_id": False},
             {
                 "name": "user restricted channel",
                 "channel_type": "channel",
                 "group_public_id": self.env.ref("base.group_user").id,
-            }
-        )
+            },
+        ])
         for channel in private_channel:
             with self.assertRaises(UserError) as exc:
                 channel.invite_by_email(["some@email.com"])

@@ -55,8 +55,10 @@ class TestMailPresence(WebsocketCase, MailCommon):
         other_portal = new_test_user(
             self.env, login="other_portal_user", groups="base.group_portal"
         )
-        guest = self.env["mail.guest"].create({"name": "Guest"})
-        other_guest = self.env["mail.guest"].create({"name": "Other Guest"})
+        guest, other_guest = self.env["mail.guest"].create([
+            {"name": "Guest"},
+            {"name": "Other Guest"},
+        ])
         for requested_by, target, has_token, allowed in [
             *product([internal], [guest, other_internal, portal], [True, False], [True]),
             *product([guest, portal], [internal, other_guest, other_portal], [False], [False]),

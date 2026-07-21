@@ -1011,8 +1011,10 @@ class TestChannelInternals(MailCommon, HttpCase):
         bob = mail_new_test_user(self.env, groups="base.group_user", login="bob")
         alice = mail_new_test_user(self.env, groups="base.group_user", login="alice")
         eve = mail_new_test_user(self.env, groups="base.group_user", login="eve")
-        group = self.env["discuss.channel"].create({"name": "", "channel_type": "group"})
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        group, channel = self.env["discuss.channel"].create([
+            {"name": "", "channel_type": "group"},
+            {"name": "General"},
+        ])
 
         # Each test case represents a flow of member changes on a given channel.
         # The format is: (channel, flow) where `flow` is a list of tuples
@@ -1162,8 +1164,10 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     def test_search_favorite_first(self):
         john = mail_new_test_user(self.env, groups="base.group_user", login="john")
-        regular = self.env["discuss.channel"].create({"name": "test_regular"})
-        favorite = self.env["discuss.channel"].create({"name": "test_favorite"})
+        regular, favorite = self.env["discuss.channel"].create([
+            {"name": "test_regular"},
+            {"name": "test_favorite"},
+        ])
         regular._add_members(users=john, post_joined_message=False)
         favorite._add_members(users=john, post_joined_message=False)
         favorite.channel_member_ids.filtered(
