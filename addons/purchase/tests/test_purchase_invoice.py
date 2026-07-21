@@ -321,8 +321,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         eur = self.env.ref('base.EUR')
         purchase_orders = []
 
-        ResCurrencyRate.create({'currency_id': usd.id, 'rate': 1})
-        ResCurrencyRate.create({'currency_id': eur.id, 'rate': 2})
+        ResCurrencyRate.create([
+            {'currency_id': usd.id, 'rate': 1},
+            {'currency_id': eur.id, 'rate': 2},
+        ])
 
         for currency in [usd, eur]:
             po = self.env['purchase.order'].create({

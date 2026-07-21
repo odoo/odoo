@@ -394,16 +394,14 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.save()
 
-        delivery_moves = self.env['stock.move']
-        for i in range(0, 6):
-            delivery_moves |= self.env['stock.move'].create({
-                'date': datetime.today() + timedelta(days=i),
-                'product_id': product.id,
-                'uom_id': product.uom_id.id,
-                'product_uom_qty': 5.0,
-                'location_id': self.stock_location.id,
-                'location_dest_id': self.customer_location.id,
-            })
+        delivery_moves = self.env['stock.move'].create([{
+            'date': datetime.today() + timedelta(days=i),
+            'product_id': product.id,
+            'uom_id': product.uom_id.id,
+            'product_uom_qty': 5.0,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        } for i in range(6)])
         delivery_moves._action_confirm()
 
         self.env['stock.rule'].run_scheduler()
