@@ -134,7 +134,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         self.assertTrue(new_report)
 
     # ========================== Tests Taxes Amounts =============================
-    @freeze_time('2019-01-01')
     def test_fixed_tax_amount_discounted_payment_mixed(self):
         fixed_tax = self.fixed_tax(0.05)
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'mixed'
@@ -532,7 +531,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'balance': 200.0},
         ])
 
-    @freeze_time('2022-02-01')
     def test_mixed_epd_with_tax_included(self):
         early_pay_2_percents_10_days = self.env['account.payment.term'].create({
             'name': '2% discount if paid within 10 days',
@@ -577,7 +575,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ],
         })
 
-    @freeze_time('2019-01-01')
     def test_mixed_epd_with_tax_no_duplication(self):
         (self.pay_terms_a | self.early_pay_10_percents_10_days).write({'early_pay_discount_computation': 'mixed'})
         inv = self._create_invoice_one_line(
@@ -607,7 +604,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         self.assertEqual(len(inv.line_ids), 5)  # 1 prod, 1 tax, 1 epd, 1 epd tax discount, 1 payment terms
         self.assertEqual(inv.amount_tax, 9.00)  # $100.0 @ 10% tax (-10% epd)
 
-    @freeze_time('2022-02-21')
     def test_mixed_epd_with_rounding_issue(self):
         """
         Ensure epd line will not unbalance the invoice

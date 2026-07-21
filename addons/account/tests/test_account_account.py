@@ -558,7 +558,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         searched_account = self.env['account.account'].with_user(user_that_cannot_access_company_2).sudo().search([('id', '=', account.id)])
         self.assertEqual(searched_account, account)
 
-    @freeze_time('2018-01-01')
     def test_account_opening_balance(self):
         company = self.env.company
         account = self.company_data['default_account_revenue']
