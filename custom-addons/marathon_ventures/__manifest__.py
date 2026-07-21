@@ -125,6 +125,7 @@
         'views/phase16_program_daypart_views.xml',
         'views/phase17_dataloader_views.xml',
         'views/menus_root_action.xml',
+        'views/web_noindex.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -144,6 +145,7 @@
             'marathon_ventures/static/src/scss/dataloader_wizard.scss',
             'marathon_ventures/static/src/js/dataloader/dataloader_wizard.js',
             'marathon_ventures/static/src/js/dataloader/dataloader_wizard.xml',
+            'marathon_ventures/static/src/js/deal_footer/mv_deal_footer.js',
         ],
     },
     'installable': True,

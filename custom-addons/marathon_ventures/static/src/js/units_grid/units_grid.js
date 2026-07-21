@@ -64,6 +64,10 @@ export class MvUnitsGrid extends Component {
             bulkMaxDay: "",
             bulkHiatusStart: "",
             bulkHiatusEnd: "",
+            // Update Rate bulk action inputs
+            bulkRateStart: "",
+            bulkRateEnd: "",
+            bulkRateValue: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -102,6 +106,7 @@ export class MvUnitsGrid extends Component {
             deal_update: {},   // Phase 12: holds units_start_date changes
             ltc_ops: [],       // Staged Last-To-Cancel operations
             hiatus_ops: [],    // Staged Hiatus operations (bulk action)
+            rate_ops: [],      // Staged Update-Rate operations (bulk action)
         };
         this.state.dirty = false;
         // Drop any selection + bulk-bar state too - the rows from the
@@ -112,6 +117,9 @@ export class MvUnitsGrid extends Component {
         this.state.bulkMaxDay = "";
         this.state.bulkHiatusStart = "";
         this.state.bulkHiatusEnd = "";
+        this.state.bulkRateStart = "";
+        this.state.bulkRateEnd = "";
+        this.state.bulkRateValue = "";
     }
 
     // Phase 12: deal-level start date changed -> snap to Monday,
@@ -791,6 +799,23 @@ export class MvUnitsGrid extends Component {
             const end = new Date(now.getTime() + 7 * 86400000);
             this.state.bulkHiatusStart = this._isoDate(now);
             this.state.bulkHiatusEnd   = this._isoDate(end);
+        } else if (value === "rate") {
+            this.state.bulkAction = "rate";
+            // Default the date range to the full grid so a planner
+            // who just wants to change every week's rate doesn't
+            // have to pick dates. They can narrow it after.
+            const weeks = (this.state.payload && this.state.payload.weeks) || [];
+            if (weeks.length) {
+                this.state.bulkRateStart = weeks[0];
+                try {
+                    const lastMon = new Date(weeks[weeks.length - 1] + "T00:00:00");
+                    lastMon.setDate(lastMon.getDate() + 6);
+                    this.state.bulkRateEnd = this._isoDate(lastMon);
+                } catch (e) {
+                    this.state.bulkRateEnd = weeks[weeks.length - 1];
+                }
+            }
+            this.state.bulkRateValue = "";
         }
     }
 
@@ -982,6 +1007,152 @@ export class MvUnitsGrid extends Component {
         // row is already displaying them, so leaving them here would
         // double-count visually.
         const affectedWeeks = new Set(op.schedules.map((s) => s.week));
+        for (const cell of row.cells) {
+            if (!affectedWeeks.has(cell.week)) continue;
+            cell.units = 0;
+            cell.cancelled_units = 0;
+            cell.state = "dashed";
+            cell.dirty = true;
+        }
+    }
+
+    // ---- Update Rate bulk action ---------------------------------
+    onBulkRateStartInput(ev) { this.state.bulkRateStart = ev.target.value || ""; }
+    onBulkRateEndInput(ev)   { this.state.bulkRateEnd   = ev.target.value || ""; }
+    onBulkRateValueInput(ev) { this.state.bulkRateValue = ev.target.value || ""; }
+
+    // Stage one rate op per selected row. Payload:
+    //   { row_id, rate_start, rate_end, new_rate,
+    //     schedules: [{sched_id, week, units}] }
+    // The backend handles this on Save: for each schedule in the op,
+    // if all of its weeks fall inside [start, end] it just writes
+    // the new rate; otherwise it keeps the original at the old rate
+    // and creates a sibling schedule at the new rate for the
+    // in-range weeks (which then land in a new signature group).
+    confirmBulkRate() {
+        const start = (this.state.bulkRateStart || "").trim();
+        const end   = (this.state.bulkRateEnd   || "").trim();
+        const raw   = (this.state.bulkRateValue || "").trim();
+        if (!start || !end) {
+            alert("Please pick both a Start Date and an End Date.");
+            return;
+        }
+        if (end < start) {
+            alert("End Date must be on or after Start Date.");
+            return;
+        }
+        const newRate = parseFloat(raw);
+        if (!Number.isFinite(newRate) || newRate < 0) {
+            alert("Please enter a non-negative New Rate.");
+            return;
+        }
+        const ids = this.selectedRowIds;
+        if (!ids.length) {
+            alert("No rows selected.");
+            return;
+        }
+        for (const rid of ids) {
+            if (typeof rid === "string" && rid.startsWith("tmp:")) {
+                continue;  // temp rows have no persisted schedules
+            }
+            const row = (this.state.payload.rows || []).find((r) => r.id === rid);
+            if (!row) continue;
+            // No point re-writing the rate a schedule already has.
+            if ((Number(row.rate) || 0) === newRate) continue;
+
+            const schedules = [];
+            for (const cell of row.cells) {
+                if (!cell.sched_id) continue;
+                // Only weeks whose Monday..Sunday span overlaps
+                // [start, end] count. cell.week is always a Monday.
+                const monIso = cell.week;
+                const sunIso = this._addDaysIso(monIso, 6);
+                if (sunIso < start || monIso > end) continue;
+                schedules.push({
+                    sched_id: cell.sched_id,
+                    week: cell.week,
+                    units: cell.units || 0,
+                });
+            }
+            if (!schedules.length) continue;
+
+            const op = {
+                row_id: rid,
+                rate_start: start,
+                rate_end: end,
+                new_rate: newRate,
+                schedules: schedules,
+            };
+            this.state.edits.rate_ops.push(op);
+            this._stageRatePreview(row, op);
+        }
+        this._markDirty();
+        this.state.bulkAction = "";
+        this.state.bulkRateStart = "";
+        this.state.bulkRateEnd = "";
+        this.state.bulkRateValue = "";
+        this.clearSelection();
+    }
+
+    // Preview: insert one row grouped by the NEW rate below the
+    // original, carrying the affected weeks' units. Dim the source
+    // cells (and zero them) so the units don't appear twice.
+    _stageRatePreview(row, op) {
+        if (!row || !op || !op.schedules || !op.schedules.length) return;
+
+        const rows = this.state.payload.rows;
+        let insertAt = rows.indexOf(row);
+        if (insertAt < 0) return;
+        insertAt += 1;
+
+        const weekList = this.state.payload.weeks || [];
+        const affectedWeekSet = new Set(op.schedules.map((s) => s.week));
+        const srcCellByWeek = {};
+        for (const c of row.cells) srcCellByWeek[c.week] = c;
+
+        const previewCells = weekList.map((wk) => {
+            if (affectedWeekSet.has(wk)) {
+                const src = srcCellByWeek[wk] || {};
+                return {
+                    week: wk,
+                    units: src.units || 0,
+                    state: (src.units || 0) > 0 ? "green" : "dashed",
+                    sched_id: false,
+                    cancelled_units: 0,
+                    cancelled_sched_ids: [],
+                    dirty: true,
+                };
+            }
+            return {
+                week: wk, units: 0, state: "dashed",
+                sched_id: false, cancelled_units: 0,
+                cancelled_sched_ids: [],
+            };
+        });
+
+        this._tempCounter += 1;
+        const previewKey = "rate-preview:" + this._tempCounter;
+        // New rate -> new row_revenue calculation (units * new_rate).
+        const totalSpots = previewCells.reduce(
+            (a, c) => a + (Number(c.units) || 0), 0,
+        );
+        const previewRow = {
+            ...row,
+            id: previewKey,
+            _is_rate_preview: true,
+            _is_ltc_preview: true,   // reuse existing preview styling
+            _temp: this._tempCounter,
+            rate: op.new_rate,
+            cells: previewCells,
+            total_spots: totalSpots,
+            total_revenue: totalSpots * op.new_rate,
+            total_cancelled: 0,
+        };
+        rows.splice(insertAt, 0, previewRow);
+
+        // Zero the source row's affected cells so units don't
+        // appear twice on screen.
+        const affectedWeeks = affectedWeekSet;
         for (const cell of row.cells) {
             if (!affectedWeeks.has(cell.week)) continue;
             cell.units = 0;

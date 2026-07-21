@@ -469,6 +469,37 @@ class MvDealUnitsGridRpc(models.Model):
             else:
                 self._do_apply_hiatus_by_sig(sig, hstart, hend)
 
+        # ==============================================================
+        # rate_ops: bulk Update-Rate on selected rows.
+        # Payload: { row_id, rate_start, rate_end, new_rate,
+        #            schedules: [{sched_id, week, units}] }
+        # For each affected schedule, we simply write the new rate.
+        # Because rate is part of the signature, the schedule then
+        # moves into a new signature group -> the grid re-renders it
+        # under a new row on next load_units_grid().
+        # ==============================================================
+        for op in edits.get('rate_ops') or []:
+            new_rate = op.get('new_rate')
+            payload_scheds = op.get('schedules') or []
+            if new_rate is None or not payload_scheds:
+                continue
+            try:
+                new_rate = float(new_rate)
+            except (TypeError, ValueError):
+                continue
+            if new_rate < 0:
+                continue
+            sched_ids = [
+                int(s.get('sched_id'))
+                for s in payload_scheds
+                if s.get('sched_id')
+            ]
+            if not sched_ids:
+                continue
+            scheds = self.env['mv.schedules'].browse(sched_ids).exists()
+            if scheds:
+                scheds.write({'rate': new_rate})
+
         return self.load_units_grid()
 
     # ==================================================================

@@ -116,6 +116,7 @@
             <option value="ltc">LTC</option>
             <option value="maxday">Max/Day</option>
             <option value="hiatus">Hiatus</option>
+            <option value="rate">Update Rate</option>
           </select>
         </span>
         <button class="btn btn-light btn-sm"
@@ -189,6 +190,57 @@
             </button>
             <button class="btn btn-primary"
                     t-on-click.stop.prevent="() => this.confirmBulkMaxDay()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Update Rate modal -->
+      <div t-if="state.bulkAction === 'rate'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Update Rate on <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            <div style="margin-top: 8px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">Start Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkRateStart || ''"
+                     t-on-input="(ev) => this.onBulkRateStartInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">End Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkRateEnd || ''"
+                     t-on-input="(ev) => this.onBulkRateEndInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">New Rate</label>
+              <input type="number" step="0.01" min="0"
+                     class="mv-bulk-input mv-bulk-input--units"
+                     t-att-value="state.bulkRateValue || ''"
+                     t-on-input="(ev) => this.onBulkRateValueInput(ev)"
+                     placeholder="e.g. 125.00"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              For each selected row, schedules whose week falls in the
+              date range get moved onto the new rate. Whole rows land in a
+              new row grouped by the new rate; partial ranges leave the
+              original weeks at the old rate.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkRate()">
               Apply
             </button>
           </div>
@@ -439,20 +491,6 @@
                   </span>
                   <button class="btn btn-primary btn-sm mv-bulk-go"
                           t-on-click.prevent="() => this.applyBulkAllocation(row, 'sec1')">
-                    Go
-                  </button>
-                </div>
-
-                <div class="mv-bulk-section mv-bulk-section--secondary">
-                  <span class="mv-bulk-field">
-                    <span class="mv-bulk-field__label">To</span>
-                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
-                           t-att-value="(row._bulk and row._bulk.sec2_end) || ''"
-                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec2_end', ev)"/>
-                  </span>
-                  <button class="btn btn-primary btn-sm mv-bulk-go"
-                          t-on-click.prevent="() => this.applyLtcFromSection2(row)"
-                          title="Cancel post-week schedules + split the LTC week's days_allowed">
                     Go
                   </button>
                 </div>

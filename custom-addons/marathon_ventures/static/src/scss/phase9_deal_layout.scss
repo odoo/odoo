@@ -370,3 +370,42 @@
 .mv-deal-redesign .mv-essentials-grid .o_field_monetary > div {
     background-color: transparent !important;
 }
+
+.mv-deal-redesign .o_field_invalid input,
+.mv-deal-redesign .o_field_invalid select,
+.mv-deal-redesign .o_field_invalid textarea,
+.mv-deal-redesign .o_field_invalid .o_input,
+.mv-deal-redesign input.o_field_invalid,
+.mv-deal-redesign select.o_field_invalid,
+.mv-deal-redesign textarea.o_field_invalid,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid input,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid select,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid .o_input,
+.mv-deal-redesign .mv-essentials-grid input.o_field_invalid,
+.mv-deal-redesign .mv-essentials-grid select.o_field_invalid {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff5f5 !important;
+    color: #58151c !important;
+    box-shadow: 0 0 0 2px #dc3545 !important;
+}
+
+/* Field labels next to an invalid field: pop them red too. Uses
+   the :has() selector where available (Odoo 19's supported browsers
+   all support it). Graceful fallback: labels stay their normal
+   color - the input outline is enough on its own. */
+.mv-deal-redesign .o_wrap_field:has(.o_field_invalid) label,
+.mv-deal-redesign .o_wrap_field:has(.o_field_invalid) .o_form_label,
+.mv-deal-redesign .mv-essentials-grid .o_wrap_field:has(.o_field_invalid) .o_form_label {
+    color: #dc3545 !important;
+}
+
+/* Focus ring on the invalid field once auto-focus lands: slightly
+   darker + wider so the target of the auto-focus is obvious. */
+.mv-deal-redesign .o_field_invalid input:focus,
+.mv-deal-redesign .o_field_invalid select:focus,
+.mv-deal-redesign .o_field_invalid textarea:focus,
+.mv-deal-redesign input.o_field_invalid:focus,
+.mv-deal-redesign select.o_field_invalid:focus {
+    border-color: #b02a37 !important;
+    box-shadow: 0 0 0 3px #dc3545 !important;
+}
