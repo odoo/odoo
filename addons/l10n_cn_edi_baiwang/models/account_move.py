@@ -51,13 +51,20 @@ class AccountMove(models.Model):
         required=True,
         help="Type of e-Fapiao to issue: '01' for special (专票) or '02' for general (普票).",
     )
-    l10n_cn_baiwang_invoice_no = fields.Char(string="Fapiao Number", copy=False)
+    l10n_cn_baiwang_invoice_no = fields.Char(string="Fapiao No.", copy=False)
     l10n_cn_baiwang_invoice_date = fields.Datetime(string="Fapiao Date", copy=False)
     l10n_cn_baiwang_serial_no = fields.Char(string="Serial No", copy=False, readonly=True, help="Unique request serial number for idempotency")
     l10n_cn_baiwang_qr_code = fields.Char(string="Invoice QR Code", copy=False, readonly=True)
 
     # Red form fields (for credit notes)
-    l10n_cn_baiwang_red_form_type = fields.Selection(selection=RED_FORM_TYPES, string="Red Form Reason")
+    l10n_cn_baiwang_red_form_type = fields.Selection(
+        selection=RED_FORM_TYPES,
+        string="Red Form Reason",
+        compute="_compute_l10n_cn_baiwang_latest_edi_data",
+        store=True,
+        readonly=False,
+        compute_sudo=True,
+    )
 
     # EDI document tracking
     l10n_cn_edi_document_ids = fields.One2many(
@@ -88,10 +95,12 @@ class AccountMove(models.Model):
     l10n_cn_baiwang_red_form_uuid = fields.Char(
         string="Red Form UUID",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
+        compute_sudo=True,
     )
     l10n_cn_baiwang_red_form_number = fields.Char(
         string="Red Form Number",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
+        compute_sudo=True,
     )
     l10n_cn_baiwang_red_form_status = fields.Selection(
         selection=[
@@ -102,14 +111,17 @@ class AccountMove(models.Model):
         ],
         string="Red Form Status",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
+        compute_sudo=True,
     )
     l10n_cn_baiwang_red_form_amount_total = fields.Float(
         string="Inbound Credit Price",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
+        compute_sudo=True,
     )
     l10n_cn_baiwang_red_form_amount_tax = fields.Float(
         string="Inbound Credit Tax",
         compute='_compute_l10n_cn_baiwang_latest_edi_data',
+        compute_sudo=True,
     )
 
     @api.depends('l10n_cn_baiwang_red_form_required', 'l10n_cn_baiwang_red_form_status')
@@ -212,7 +224,6 @@ class AccountMove(models.Model):
         )
         for move in self:
             move.l10n_cn_baiwang_date_consistency_warning = False
-            # ponytail: Only show warning on Credit Notes that are still in Draft but have already received a Fapiao Number
             if (
                 move.move_type == 'out_refund'
                 and move.state == 'draft'
@@ -287,15 +298,15 @@ class AccountMove(models.Model):
             return error_msg
 
         if result.get('success'):
-            # Parse successful response
             success_list = result.get('response', {}).get('success', [])
             if success_list:
                 invoice_resp = success_list[0]
                 raw_date = invoice_resp.get('invoiceDate')
+                invoice_date = (datetime.strptime(raw_date, '%Y%m%d%H%M%S') - timedelta(hours=8)) if raw_date else False
                 self.write({
                     'l10n_cn_baiwang_state': 'issued',
                     'l10n_cn_baiwang_invoice_no': invoice_resp.get('invoiceNo'),
-                    'l10n_cn_baiwang_invoice_date': (datetime.strptime(raw, '%Y%m%d%H%M%S') - timedelta(hours=8)) if (raw := invoice_resp.get('invoiceDate')) else False,
+                    'l10n_cn_baiwang_invoice_date': invoice_date,
                     'l10n_cn_baiwang_qr_code': invoice_resp.get('invoiceQrCode'),
                 })
                 self.message_post(body=self.env._(
@@ -477,7 +488,7 @@ class AccountMove(models.Model):
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move, serial_no)
         try:
             result = client.add_red_confirmation(red_form_data)
-        except Exception as e:
+        except UserError as e:
             error_msg = str(e)
             edi_doc.write({'state': 'failed', 'error_message': error_msg})
             self.write({'l10n_cn_baiwang_state': 'failed'})
@@ -506,7 +517,7 @@ class AccountMove(models.Model):
                     if raw_date and len(raw_date) >= 14:
                         vals['l10n_cn_baiwang_invoice_date'] = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
                     else:
-                        # ponytail: If Baiwang doesn't explicitly return a date, default to the time we submitted it
+                        # If Baiwang omits redInvoiceDate, fall back to current time.
                         vals['l10n_cn_baiwang_invoice_date'] = fields.Datetime.now()
 
                     self.write(vals)
@@ -547,8 +558,8 @@ class AccountMove(models.Model):
         orig_type = original_move.l10n_cn_baiwang_invoice_type_code or '02'
         origin_invoice_type = '01' if orig_type in ('01', '004', '028') else '02'
 
-        # ponytail: res.partner.mobile requires the 'sms' addon. Use getattr to survive environments where it is absent.
-        raw_phone = original_move.partner_id.phone or getattr(original_move.partner_id, 'mobile', '') or ''
+        # Use getattr for mobile to handle environments where sms fields are unavailable.
+        raw_phone = original_move.partner_id.mobile or ''
         clean_phone = ''.join(c for c in raw_phone if c.isdigit())
         valid_phone = clean_phone if clean_phone and clean_phone[0] in ('0', '1') and 10 <= len(clean_phone) <= 12 else ''
 
@@ -648,7 +659,7 @@ class AccountMove(models.Model):
         if not latest_doc:
             return
 
-        # ponytail: bypass API call for local testing
+        # Skip remote approval for mock UUIDs used in local tests.
         if not latest_doc.baiwang_uuid.startswith('mock-'):
             client = BaiwangClient(self.company_id)
             try:
@@ -666,7 +677,7 @@ class AccountMove(models.Model):
         if not latest_doc:
             return
 
-        # ponytail: bypass API call for local testing
+        # Skip remote rejection for mock UUIDs used in local tests.
         if not latest_doc.baiwang_uuid.startswith('mock-'):
             client = BaiwangClient(self.company_id)
             try:

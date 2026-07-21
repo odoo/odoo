@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlsplit
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -20,7 +20,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         company.write({
             'vat': '91310000TEST12345X',
             'l10n_cn_baiwang_org_auth_code': 'demo-org',
-            'l10n_cn_baiwang_subscription_status': 'authorized',  # ponytail: Authorize globally so business tests run
+            'l10n_cn_baiwang_subscription_status': 'authorized',
         })
         cls.partner_a.country_id = cls.env.ref('base.cn')
 
@@ -28,7 +28,6 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         cls.product_a.product_tmpl_id.l10n_cn_tax_category_id = tax_cat.id
         cls.product_b.product_tmpl_id.l10n_cn_tax_category_id = tax_cat.id
 
-        # ponytail: Setup a global proxy user so cron and business tests don't crash from missing config
         private_key = cls.env['certificate.key']._generate_rsa_private_key(company, name='baiwang_test_proxy_key_global')
         cls.env['account_edi_proxy_client.user'].create({
             'id_client': 'baiwang-test-client-global',
@@ -43,8 +42,8 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
 
     def setUp(self):
         super().setUp()
-        # ponytail: String paths to Odoo model classes are fragile and often mismatch the actual source files. Patch the ORM class directly.
-        proxy_class = type(self.env['account_edi_proxy_client.user'])
+        # Patch the ORM class directly to avoid fragile string-path patches.
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
 
         patch.object(proxy_class, '_make_request',
                      return_value={'id_client': 'mock_id', 'refresh_token': 'mock_token'}).start()
@@ -100,7 +99,6 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         company = self.company_data['company']
         client = BaiwangClient(company)
 
-        # ponytail: call_api is dead. Test a live business method[cite: 5].
         result = client.query_invoice({'foo': 'bar'})
         self.assertEqual(result, {'success': True})
 
@@ -111,7 +109,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         action = settings.action_l10n_cn_baiwang_subscribe()
 
         self.assertEqual(action['type'], 'ir.actions.act_url')
-        parsed = urlparse(action['url'])
+        parsed = urlsplit(action['url'])
         query = parse_qs(parsed.query)
         self.assertEqual(query.get('taxNo'), [company.vat])
         self.assertTrue(query.get('requestId'))
@@ -150,14 +148,14 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
                 'extra_edis': {'cn_baiwang'},
             },
         }
-        with patch.object(type(invoice), '_l10n_cn_baiwang_issue_invoice', return_value='Proxy error'):
+        with patch.object(invoice.__class__, '_l10n_cn_baiwang_issue_invoice', return_value='Proxy error'):
             send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
         self.assertIn('error', invoices_data[invoice])
         self.assertIn('Proxy error', invoices_data[invoice]['error']['errors'])
 
     def test_10_red_form_status_cron_handles_empty_queue(self):
-        # ponytail: cron runs as superuser, not accountman[cite: 5].
+        # Cron runs as superuser in production; use sudo here to mirror it.
         self.env['l10n_cn_edi.document'].sudo()._cron_check_red_form_status()
 
     def test_11_red_form_pending_to_confirmed_lifecycle(self):
@@ -187,8 +185,8 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             }],
         }
 
-        # ponytail: Local string patches fail silently when targeting dynamic ORM classes, falling back to the global mock (which returned an empty list, leaving your state as 'draft'). Patch the class object directly.
-        proxy_class = type(self.env['account_edi_proxy_client.user'])
+        # Patch the ORM class directly; string-path patches can miss dynamic model classes.
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
 
         with patch.object(
             proxy_class, '_l10n_cn_baiwang_contact_proxy',
@@ -208,12 +206,12 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
                 'confirmState': '01',
                 'redConfirmNo': 'mock-no-456',
                 'redInvoiceNo': 'mock-red-fapiao-789',
-                'redInvoiceDate': '20260715123000',
+                # 'redInvoiceDate': '20260715123000',
             }],
         }
 
-        # ponytail: _cron_check_red_form_status polls outbound red forms. _pull_inbound_red_forms is for inbound buyer forms. Test the right workflow.
-        proxy_class = type(self.env['account_edi_proxy_client.user'])
+        # _cron_check_red_form_status validates outbound red forms for this workflow.
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
         with patch.object(
             proxy_class, '_l10n_cn_baiwang_contact_proxy',
             return_value=approved_response,
@@ -227,7 +225,6 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.l10n_cn_baiwang_invoice_no, 'mock-red-fapiao-789')
 
     def test_13_proportional_global_discount(self):
-        # ponytail: Combined test. Moving this here eliminates two duplicate files testing the exact same preparation math.
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
