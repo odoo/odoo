@@ -4,12 +4,12 @@ import {
     immediateEffect,
     onMounted,
     onWillDestroy,
-    onWillUpdateProps,
     proxy,
     props,
     status,
     t,
     untrack,
+    useEffect,
     xml,
 } from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
@@ -186,9 +186,8 @@ export class Dropdown extends Component {
             (target) => this.setTargetElement(target),
             () => [this.target]
         );
-
-        onWillUpdateProps(({ disabled }) => {
-            if (disabled) {
+        useEffect(() => {
+            if (this.props.disabled) {
                 this.closePopover();
             }
         });
