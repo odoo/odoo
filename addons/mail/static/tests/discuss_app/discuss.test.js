@@ -2540,3 +2540,28 @@ test("do not show control panel without breadcrumbs", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o_control_panel .breadcrumb", { text: serverState.partnerName });
 });
+
+test("leaveChannel closed the channel on RPC success with simulated SH websocket traffic", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "SH leaveChannel test",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss();
+    // simulate websocket traffic failing to reach the browser 
+    onRpc("discuss.channel", "action_unfollow", () => {
+        asyncStep("action_unfollow_called");
+        return true; 
+    });
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('SH leaveChannel test'))");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click("button:contains(Leave Conversation)");
+    await waitForSteps(["action_unfollow_called"]);
+    // ensure the channel has been fully closed 
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "SH leaveChannel test" });
+});
