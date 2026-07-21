@@ -24,7 +24,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                     "discount": 10,
                     "discount_mode": "percent",
                     "discount_applicability": "order",
-                })
+                }),
             ],
         })
 
@@ -39,7 +39,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         # Check default invoice_policy on discount product
         self.assertEqual(
-            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
+            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order",
         )
 
         order._update_programs_and_rewards()
@@ -75,7 +75,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         # Check default invoice_policy on discount product
         self.assertEqual(
-            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
+            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order",
         )
 
         self._auto_rewards(order, self.discount_coupon_program)
@@ -101,16 +101,18 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         )
 
     def test_reward_line_does_not_split_group_tax(self):
-        tax_gst = self.env["account.tax"].create({
-            "name": "GST 5%",
-            "amount_type": "percent",
-            "amount": 5.0,
-        })
-        tax_qst = self.env["account.tax"].create({
-            "name": "QST 9.975%",
-            "amount_type": "percent",
-            "amount": 9.975,
-        })
+        tax_gst, tax_qst = self.env["account.tax"].create([
+            {
+                "name": "GST 5%",
+                "amount_type": "percent",
+                "amount": 5.0,
+            },
+            {
+                "name": "QST 9.975%",
+                "amount_type": "percent",
+                "amount": 9.975,
+            },
+        ])
         tax_quebec = self.env["account.tax"].create({
             "name": "Quebec Tax 14.975%",
             "amount_type": "group",

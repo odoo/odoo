@@ -35,23 +35,25 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.create({
                     "attribute_id": no_variant_attribute.id,
                     "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
-                })
+                }),
             ],
         })
-        combo_a = self.env["product.combo"].create({
-            "name": "Combo A",
-            "combo_item_ids": [
-                Command.create({"product_id": product_a1.product_variant_id.id, "extra_price": 5}),
-                Command.create({"product_id": self._create_product(name="Product A2").id}),
-            ],
-        })
-        combo_b = self.env["product.combo"].create({
-            "name": "Combo B",
-            "combo_item_ids": [
-                Command.create({"product_id": self._create_product(name="Product B1").id}),
-                Command.create({"product_id": self._create_product(name="Product B2").id}),
-            ],
-        })
+        combo_a, combo_b = self.env["product.combo"].create([
+            {
+                "name": "Combo A",
+                "combo_item_ids": [
+                    Command.create({"product_id": product_a1.product_variant_id.id, "extra_price": 5}),
+                    Command.create({"product_id": self._create_product(name="Product A2").id}),
+                ],
+            },
+            {
+                "name": "Combo B",
+                "combo_item_ids": [
+                    Command.create({"product_id": self._create_product(name="Product B1").id}),
+                    Command.create({"product_id": self._create_product(name="Product B2").id}),
+                ],
+            },
+        ])
         self._create_product(
             name="Combo product",
             list_price=25,
@@ -64,19 +66,21 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
-        combo_a = self.env["product.combo"].create({
-            "name": "Combo A",
-            "combo_item_ids": [
-                Command.create({"product_id": self._create_product(name="Product A1").id})
-            ],
-        })
-        combo_b = self.env["product.combo"].create({
-            "name": "Combo B",
-            "combo_item_ids": [
-                Command.create({"product_id": self._create_product(name="Product B1").id}),
-                Command.create({"product_id": self._create_product(name="Product B2").id}),
-            ],
-        })
+        combo_a, combo_b = self.env["product.combo"].create([
+            {
+                "name": "Combo A",
+                "combo_item_ids": [
+                    Command.create({"product_id": self._create_product(name="Product A1").id}),
+                ],
+            },
+            {
+                "name": "Combo B",
+                "combo_item_ids": [
+                    Command.create({"product_id": self._create_product(name="Product B1").id}),
+                    Command.create({"product_id": self._create_product(name="Product B2").id}),
+                ],
+            },
+        ])
         optional_product = self.env["product.template"].create({"name": "Optional Product"})
         combo_product = self.env["product.template"].create({
             "name": "Combo product",
@@ -116,38 +120,45 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
-        unconfigurable_no_variant_attribute = self.env["product.attribute"].create({
-            "name": "Attribute A",
-            "create_variant": "no_variant",
-            "value_ids": [Command.create({"name": "A"})],
-        })
-        configurable_no_variant_attribute = self.env["product.attribute"].create({
-            "name": "Attribute B",
-            "create_variant": "no_variant",
-            "display_type": "multi",
-            "value_ids": [Command.create({"name": "B"})],
-        })
-        unconfigurable_always_attribute = self.env["product.attribute"].create({
-            "name": "Attribute C",
-            "create_variant": "always",
-            "value_ids": [Command.create({"name": "C"})],
-        })
-        configurable_always_attribute = self.env["product.attribute"].create({
-            "name": "Attribute D",
-            "create_variant": "always",
-            "value_ids": [Command.create({"name": "D", "is_custom": True})],
-        })
+        (
+            unconfigurable_no_variant_attribute,
+            configurable_no_variant_attribute,
+            unconfigurable_always_attribute,
+            configurable_always_attribute,
+        ) = self.env["product.attribute"].create([
+            {
+                "name": "Attribute A",
+                "create_variant": "no_variant",
+                "value_ids": [Command.create({"name": "A"})],
+            },
+            {
+                "name": "Attribute B",
+                "create_variant": "no_variant",
+                "display_type": "multi",
+                "value_ids": [Command.create({"name": "B"})],
+            },
+            {
+                "name": "Attribute C",
+                "create_variant": "always",
+                "value_ids": [Command.create({"name": "C"})],
+            },
+            {
+                "name": "Attribute D",
+                "create_variant": "always",
+                "value_ids": [Command.create({"name": "D", "is_custom": True})],
+            },
+        ])
         unconfigurable_no_variant_combo = self._create_combo_from_attribute(
-            unconfigurable_no_variant_attribute, "Product A", "Combo A"
+            unconfigurable_no_variant_attribute, "Product A", "Combo A",
         )
         configurable_no_variant_combo = self._create_combo_from_attribute(
-            configurable_no_variant_attribute, "Product B", "Combo B"
+            configurable_no_variant_attribute, "Product B", "Combo B",
         )
         unconfigurable_always_combo = self._create_combo_from_attribute(
-            unconfigurable_always_attribute, "Product C", "Combo C"
+            unconfigurable_always_attribute, "Product C", "Combo C",
         )
         configurable_always_combo = self._create_combo_from_attribute(
-            configurable_always_attribute, "Product D", "Combo D"
+            configurable_always_attribute, "Product D", "Combo D",
         )
         combo_with_multiple_unconfigurable_items = self.env["product.combo"].create({
             "name": "Combo E",
@@ -177,17 +188,19 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         if self.env["ir.module.module"]._get("sale_management").state != "installed":
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
-        unconfigurable_no_variant_attribute = self.env["product.attribute"].create({
-            "name": "Attribute A",
-            "create_variant": "no_variant",
-            "value_ids": [Command.create({"name": "A"})],
-        })
-        configurable_no_variant_attribute = self.env["product.attribute"].create({
-            "name": "Attribute B",
-            "create_variant": "no_variant",
-            "display_type": "multi",
-            "value_ids": [Command.create({"name": "B"})],
-        })
+        unconfigurable_no_variant_attribute, configurable_no_variant_attribute = self.env["product.attribute"].create([
+            {
+                "name": "Attribute A",
+                "create_variant": "no_variant",
+                "value_ids": [Command.create({"name": "A"})],
+            },
+            {
+                "name": "Attribute B",
+                "create_variant": "no_variant",
+                "display_type": "multi",
+                "value_ids": [Command.create({"name": "B"})],
+            },
+        ])
         product = self.env["product.template"].create({
             "name": "Test product",
             "attribute_line_ids": [
@@ -207,7 +220,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         })
         self._create_product(name="Combo product", type="combo", combo_ids=[Command.link(combo.id)])
         self.start_tour(
-            "/odoo", "sale_combo_configurator_preconfigure_unconfigurable_ptals", login=self.env.user.login
+            "/odoo", "sale_combo_configurator_preconfigure_unconfigurable_ptals", login=self.env.user.login,
         )
 
     def _create_combo_from_attribute(self, attribute, product_name, combo_name):
@@ -217,7 +230,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.create({
                     "attribute_id": attribute.id,
                     "value_ids": [Command.set(attribute.value_ids.ids)],
-                })
+                }),
             ],
         })
         return self.env["product.combo"].create({

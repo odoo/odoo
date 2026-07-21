@@ -16,8 +16,7 @@ class TestSaleSections(SaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.tax_1 = cls.env["account.tax"].create({"name": "Tax 1", "amount": 10})
-        cls.tax_2 = cls.env["account.tax"].create({"name": "Tax 2", "amount": 20})
+        cls.tax_1, cls.tax_2 = cls.env["account.tax"].create([{"name": "Tax 1", "amount": 10}, {"name": "Tax 2", "amount": 20}])
         cls.sections_sale_order = cls.env["sale.order"].create({
             "partner_id": cls.partner.id,
             "order_line": [
@@ -81,13 +80,13 @@ class TestSaleSections(SaleCommon):
         """
         self.assertFalse(self.sections_sale_order.order_line[0].parent_id)
         self.assertEqual(
-            self.sections_sale_order.order_line[2].parent_id, self.sections_sale_order.order_line[1]
+            self.sections_sale_order.order_line[2].parent_id, self.sections_sale_order.order_line[1],
         )
         self.assertEqual(
-            self.sections_sale_order.order_line[3].parent_id, self.sections_sale_order.order_line[1]
+            self.sections_sale_order.order_line[3].parent_id, self.sections_sale_order.order_line[1],
         )
         self.assertEqual(
-            self.sections_sale_order.order_line[4].parent_id, self.sections_sale_order.order_line[3]
+            self.sections_sale_order.order_line[4].parent_id, self.sections_sale_order.order_line[3],
         )
 
     def test_sale_order_report_line_visibility_and_grouping(self):
@@ -123,7 +122,7 @@ class TestSaleSections(SaleCommon):
             {"name": "Side", "combo_item_ids": [Command.create({"product_id": product_b.id})]},
         ])
         product_combo = self._create_product(
-            name="Meal Menu", list_price=10.0, type="combo", combo_ids=[Command.set(combos.ids)]
+            name="Meal Menu", list_price=10.0, type="combo", combo_ids=[Command.set(combos.ids)],
         )
         self.sections_sale_order.order_line = [
             Command.clear(),

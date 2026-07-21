@@ -8,31 +8,33 @@ class TestSaleOrderAccess(TransactionCase):
             {"name": "Company 1 Sale Order"},
             {"name": "Company 2 Project"},
         ])
-        user_company_1 = self.env['res.users'].create({
-            'name': 'User 1',
-            'login': 'user1',
-            'password': 'password',
-            'company_ids': [(6, 0, [company_1.id])],
-            'company_id': company_1.id,
-            'group_ids': [(6, 0, [
-                self.env.ref('sales_team.group_sale_manager').id,
-                self.env.ref('project.group_project_manager').id,
-            ])]
-        })
-        admin_user = self.env['res.users'].create({
-            'name': 'Admin User',
-            'login': 'adminn',
-            'password': 'password',
-            'company_ids': [(6, 0, [company_1.id, company_2.id])],
-            'company_id': company_1.id,
-            'group_ids': [(6, 0, [
-                self.env.ref('sales_team.group_sale_manager').id,
-                self.env.ref('project.group_project_manager').id,
-            ])],
-            })
+        user_company_1, admin_user = self.env['res.users'].create([
+            {
+                'name': 'User 1',
+                'login': 'user1',
+                'password': 'password',
+                'company_ids': [(6, 0, [company_1.id])],
+                'company_id': company_1.id,
+                'group_ids': [(6, 0, [
+                    self.env.ref('sales_team.group_sale_manager').id,
+                    self.env.ref('project.group_project_manager').id,
+                ])],
+            },
+            {
+                'name': 'Admin User',
+                'login': 'adminn',
+                'password': 'password',
+                'company_ids': [(6, 0, [company_1.id, company_2.id])],
+                'company_id': company_1.id,
+                'group_ids': [(6, 0, [
+                    self.env.ref('sales_team.group_sale_manager').id,
+                    self.env.ref('project.group_project_manager').id,
+                ])],
+            },
+        ])
         partner = self.env['res.partner'].create({
             'name': 'XYZ',
-            'type': 'contact'
+            'type': 'contact',
         })
         product_order_service = self.env['product.product'].create({
             'name': "Service Ordered",
@@ -59,11 +61,11 @@ class TestSaleOrderAccess(TransactionCase):
                     'product_uom_qty': 1,
                     'project_id':  project_company_2.id,
                 }),
-            ]
+            ],
         })
         project_company_2.write({
             'sale_order_id': sale_order_company_1.id,
-            'sale_line_id': sale_order_company_1.order_line.id
+            'sale_line_id': sale_order_company_1.order_line.id,
         })
         Form(sale_order_company_1.with_user(admin_user).with_company(company_1))
         Form(sale_order_company_1.with_user(user_company_1).with_company(company_1))

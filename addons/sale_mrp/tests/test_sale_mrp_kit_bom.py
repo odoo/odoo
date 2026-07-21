@@ -2,9 +2,9 @@
 
 from unittest import skip
 
+from odoo import Command
 from odoo.tests import Form, tagged
 
-from odoo import Command
 from odoo.addons.base.tests.common import BaseCommon
 
 
@@ -34,43 +34,43 @@ class TestSaleMrpKitBom(BaseCommon):
         component_2. Create a SO for one of the variant, confirm, cancel, reset to draft and then change the product of
         the SO -> There should be no traceback
         """
-        component_1 = self.env['product.product'].create({'name': 'compo 1'})
-        component_2 = self.env['product.product'].create({'name': 'compo 2'})
+        component_1, component_2 = self.env['product.product'].create([
+            {'name': 'compo 1'},
+            {'name': 'compo 2'},
+        ])
 
         product_category = self.env['product.category'].create({
             'name': 'test avco kit',
-            'property_cost_method': 'average'
+            'property_cost_method': 'average',
         })
         attributes = self.env['product.attribute'].create({'name': 'Legs'})
-        steel_legs = self.env['product.attribute.value'].create({'attribute_id': attributes.id, 'name': 'Steel'})
-        aluminium_legs = self.env['product.attribute.value'].create(
-            {'attribute_id': attributes.id, 'name': 'Aluminium'})
+        steel_legs, aluminium_legs = self.env['product.attribute.value'].create([
+            {'attribute_id': attributes.id, 'name': 'Steel'},
+            {'attribute_id': attributes.id, 'name': 'Aluminium'},
+        ])
 
         product_template = self.env['product.template'].create({
             'name': 'test product',
             'categ_id': product_category.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': attributes.id,
-                'value_ids': [(6, 0, [steel_legs.id, aluminium_legs.id])]
-            })]
+                'value_ids': [(6, 0, [steel_legs.id, aluminium_legs.id])],
+            })],
         })
         product_variant_ids = product_template.product_variant_ids
-        # BoM 1 with component_1
-        self.env['mrp.bom'].create({
+        self.env['mrp.bom'].create([{
             'product_id': product_variant_ids[0].id,
             'product_tmpl_id': product_variant_ids[0].product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component_1.id, 'product_qty': 1})]
-        })
-        # BoM 2 with component_2
-        self.env['mrp.bom'].create({
+            'bom_line_ids': [(0, 0, {'product_id': component_1.id, 'product_qty': 1})],
+        }, {
             'product_id': product_variant_ids[1].id,
             'product_tmpl_id': product_variant_ids[1].product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component_2.id, 'product_qty': 1})]
-        })
+            'bom_line_ids': [(0, 0, {'product_id': component_2.id, 'product_qty': 1})],
+        }])
         partner = self.env['res.partner'].create({'name': 'Testing Man'})
         so = self.env['sale.order'].create({
             'partner_id': partner.id,
@@ -102,7 +102,7 @@ class TestSaleMrpKitBom(BaseCommon):
             # cost of Kit A = (6 * 1 * 12) + (10 * 2) = $ 92
         """
         self.customer = self.env['res.partner'].create({
-            'name': 'customer'
+            'name': 'customer',
         })
 
         self.kit_product = self._create_product('Kit Product', True, 1.00)
@@ -114,7 +114,7 @@ class TestSaleMrpKitBom(BaseCommon):
 
         cat = self.env['product.category'].create({
             'name': 'fifo',
-            'property_cost_method': 'fifo'
+            'property_cost_method': 'fifo',
         })
         self.kit_product.product_tmpl_id.categ_id = cat
         self.component_a.product_tmpl_id.categ_id = cat
@@ -123,21 +123,20 @@ class TestSaleMrpKitBom(BaseCommon):
         self.bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.kit_product.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'
+            'type': 'phantom',
         })
 
-        self.env['mrp.bom.line'].create({
+        self.env['mrp.bom.line'].create([{
                 'product_id': self.component_a.id,
                 'product_qty': 1.0,
                 'bom_id': self.bom.id,
                 'uom_id': self.env.ref('uom.product_uom_dozen').id,
-        })
-        self.env['mrp.bom.line'].create({
+        }, {
                 'product_id': self.component_b.id,
                 'product_qty': 2.0,
                 'bom_id': self.bom.id,
                 'uom_id': self.env.ref('uom.product_uom_unit').id,
-        })
+        }])
 
         # Create a SO with one unit of the kit product
         so = self.env['sale.order'].create({
@@ -172,7 +171,6 @@ class TestSaleMrpKitBom(BaseCommon):
             bom_line.product_id = self.comp
             bom_line.product_qty = 0.08600
         self.bom = bom_product_form.save()
-
 
         self.customer = self.env['res.partner'].create({
             'name': 'customer',
@@ -301,7 +299,7 @@ class TestSaleMrpKitBom(BaseCommon):
                     'product_uom_qty': 1.0,
                     'price_unit': 1,
                     'tax_ids': False,
-                })]
+                })],
         })
         so.action_confirm()
 
@@ -438,8 +436,8 @@ class TestSaleMrpKitBom(BaseCommon):
             'name': 'Kit 2',
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': prod_attr.id,
-                'value_ids': [(6, 0, prod_attr_values.ids)]
-            })]
+                'value_ids': [(6, 0, prod_attr_values.ids)],
+            })],
         })
         self.env['mrp.bom'].create([{
             'product_tmpl_id': kit_2.id,
@@ -625,7 +623,7 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component_a.id, 'product_qty': 1})]
+            'bom_line_ids': [(0, 0, {'product_id': component_a.id, 'product_qty': 1})],
         })
 
         # Create sale order
@@ -695,7 +693,7 @@ class TestSaleMrpKitBom(BaseCommon):
                 'bom_line_ids': [
                     Command.create({'product_id': subcomp.id, 'product_qty': 1}),
                 ],
-            }
+            },
         ])
 
         so = self.env['sale.order'].create({
@@ -738,7 +736,7 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component_product.id, 'product_qty': 1})]
+            'bom_line_ids': [(0, 0, {'product_id': component_product.id, 'product_qty': 1})],
         })
 
         # Create the sale order with a partner that uses the inter company location
@@ -753,8 +751,8 @@ class TestSaleMrpKitBom(BaseCommon):
                     'name': kit_product.name,
                     'product_id': kit_product.id,
                     'product_uom_qty': 1.0,
-                })
-            ]
+                }),
+            ],
         })
         so.action_confirm()
 

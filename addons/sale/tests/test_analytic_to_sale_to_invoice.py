@@ -34,22 +34,21 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.reinvoice_at_cost_product = cls.env["product.product"].create({
+        cls.reinvoice_at_cost_product, cls.reinvoice_at_sales_price_product = cls.env["product.product"].create([{
             "name": "Reinvoice at Cost product",
             "type": "service",
             "standard_price": 100,
             "list_price": 110,
             "reinvoice_policy": "cost",
             "invoice_policy": "delivery",
-        })
-        cls.reinvoice_at_sales_price_product = cls.env["product.product"].create({
+        }, {
             "name": "Reinvoice at Sales Price product",
             "type": "service",
             "standard_price": 100,
             "list_price": 110,
             "reinvoice_policy": "sales_price",
             "invoice_policy": "delivery",
-        })
+        }])
         cls.services_sale_order = cls.env["sale.order"].create({
             "partner_id": cls.partner.id,
             "order_line": [
@@ -67,19 +66,17 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         # confirm the sale order
         cls.services_sale_order.action_confirm()
 
-        cls.at_cost_aal = cls.env["account.analytic.line"].create({
+        cls.at_cost_aal, cls.at_sale_price_aal = cls.env["account.analytic.line"].create([{
             "name": "At cost Upsale line",
             "product_id": cls.reinvoice_at_cost_product.id,
             "unit_amount": 1,
             "order_id": cls.services_sale_order.id,
-        })
-
-        cls.at_sale_price_aal = cls.env["account.analytic.line"].create({
+        }, {
             "name": "At sale price Upsale line",
             "product_id": cls.reinvoice_at_sales_price_product.id,
             "unit_amount": 1,
             "order_id": cls.services_sale_order.id,
-        })
+        }])
 
     def test_upsale_lines_created_based_on_reinvoice_policy(self):
         """Ensure that services upsold from analytic lines create proper sale order lines
@@ -95,10 +92,10 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         self.assertEqual(len(self.services_sale_order.order_line), 3)
 
         reinvoice_at_cost_product_lines = self.services_sale_order.order_line.filtered(
-            lambda aal: aal.product_id == self.reinvoice_at_cost_product
+            lambda aal: aal.product_id == self.reinvoice_at_cost_product,
         )
         reinvoice_at_sales_price_product_lines = self.services_sale_order.order_line.filtered(
-            lambda aal: aal.product_id == self.reinvoice_at_sales_price_product
+            lambda aal: aal.product_id == self.reinvoice_at_sales_price_product,
         )
 
         self.assertEqual(
@@ -108,7 +105,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         )
 
         at_cost_upsale_order_line = reinvoice_at_cost_product_lines.filtered(
-            lambda aal: aal.product_uom_qty == 0
+            lambda aal: aal.product_uom_qty == 0,
         )
 
         self.assertEqual(
@@ -220,11 +217,11 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         )
 
         new_at_cost_upsale_order_line = empty_services_sale_order.order_line.filtered(
-            lambda aal: aal.product_id == self.reinvoice_at_cost_product
+            lambda aal: aal.product_id == self.reinvoice_at_cost_product,
         )
 
         new_at_sale_price_upsale_order_line = empty_services_sale_order.order_line.filtered(
-            lambda aal: aal.product_id == self.reinvoice_at_sales_price_product
+            lambda aal: aal.product_id == self.reinvoice_at_sales_price_product,
         )
 
         self.assertEqual(
@@ -257,7 +254,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         at_cost_upsale_order_line = self.at_cost_aal.so_line
         at_sale_price_upsale_order_line = self.at_sale_price_aal.so_line
 
-        reinvoice_at_cost_product_new = self.env["product.product"].create({
+        reinvoice_at_cost_product_new, reinvoice_at_sales_price_product_new = self.env["product.product"].create([{
             "name": "New Reinvoice at Cost product",
             "type": "service",
             "standard_price": 200,
@@ -265,8 +262,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             "reinvoice_policy": "cost",
             "invoice_policy": "delivery",
             "uom_id": self.uom_hour.id,
-        })
-        reinvoice_at_sales_price_product_new = self.env["product.product"].create({
+        }, {
             "name": "New Reinvoice at Sales Price product",
             "type": "service",
             "standard_price": 200,
@@ -274,7 +270,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             "reinvoice_policy": "sales_price",
             "invoice_policy": "delivery",
             "uom_id": self.uom_hour.id,
-        })
+        }])
 
         self.at_cost_aal.sudo().product_id = reinvoice_at_cost_product_new
         self.at_sale_price_aal.sudo().product_id = reinvoice_at_sales_price_product_new
@@ -336,7 +332,7 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
         reinvoice_move_id.action_post()
 
         self.assertEqual(
-            len(reinvoice_move_id.invoice_line_ids), 2, "Upsales lines should be reinvoiced"
+            len(reinvoice_move_id.invoice_line_ids), 2, "Upsales lines should be reinvoiced",
         )
 
         self.assertEqual(
@@ -407,19 +403,17 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
           should be decreased.
         - At sale price expense policy -> contributed delivered quantity should be decreased.
         """
-        extra_at_sale_price_aal = self.env["account.analytic.line"].create({
+        extra_at_sale_price_aal, extra_at_cost_aal = self.env["account.analytic.line"].create([{
             "name": "Extra work At sales Price",
             "product_id": self.reinvoice_at_sales_price_product.id,
             "unit_amount": 2,
             "order_id": self.services_sale_order.id,
-        })
-
-        extra_at_cost_aal = self.env["account.analytic.line"].create({
+        }, {
             "name": "Extra work At cost",
             "product_id": self.reinvoice_at_cost_product.id,
             "unit_amount": 2,
             "order_id": self.services_sale_order.id,
-        })
+        }])
 
         # we need to replicate the case when some nasty user deliberately changes the quantity
         # of the upsale line

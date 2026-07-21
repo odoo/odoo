@@ -29,16 +29,15 @@ class TestAccruedSaleOrders(TestSaleCommon):
             "property_account_income_id": cls.alt_inc_account.id,
         })
         cls.default_plan = cls.env["account.analytic.plan"].create({"name": "Default"})
-        cls.analytic_account_a = cls.env["account.analytic.account"].create({
+        cls.analytic_account_a, cls.analytic_account_b = cls.env["account.analytic.account"].create([{
             "name": "analytic_account_a",
             "plan_id": cls.default_plan.id,
             "company_id": False,
-        })
-        cls.analytic_account_b = cls.env["account.analytic.account"].create({
+        }, {
             "name": "analytic_account_b",
             "plan_id": cls.default_plan.id,
             "company_id": False,
-        })
+        }])
         cls.sale_order = cls.env["sale.order"].create({
             "partner_id": cls.partner_a.id,
             "order_line": [

@@ -48,20 +48,21 @@ class TestSaleOrder(SaleCommon):
             {"name": "Dummy product", "list_price": 0.0},
         ])
         # Test pre-computes of lines with order
-        order = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [
-                Command.create({"display_type": "line_section", "name": "Dummy section"}),
-                Command.create({"display_type": "line_section", "name": "Dummy section"}),
-                Command.create({"product_id": free_product.id}),
-                Command.create({"product_id": dummy_product.id}),
-            ],
-        })
-
         # Test pre-computes of lines creation alone
         # Ensures the creation works fine even if the computes
         # are triggered after the defaults
-        order = self.env["sale.order"].create({"partner_id": self.partner.id})
+        _, order = self.env["sale.order"].create([
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    Command.create({"display_type": "line_section", "name": "Dummy section"}),
+                    Command.create({"display_type": "line_section", "name": "Dummy section"}),
+                    Command.create({"product_id": free_product.id}),
+                    Command.create({"product_id": dummy_product.id}),
+                ],
+            },
+            {"partner_id": self.partner.id},
+        ])
         self.env["sale.order.line"].create([
             {"display_type": "line_section", "name": "Dummy section", "order_id": order.id},
             {"display_type": "line_section", "name": "Dummy section", "order_id": order.id},
@@ -112,12 +113,12 @@ class TestSaleOrder(SaleCommon):
         )
         # send the mail with same user as customer
         sale_order.with_context(**email_ctx).with_user(self.sale_user).message_post_with_source(
-            mail_template, subtype_xmlid="mail.mt_comment"
+            mail_template, subtype_xmlid="mail.mt_comment",
         )
         self.assertTrue(sale_order.state == "sent", "Sale : state should be changed to sent")
         mail_message = sale_order.message_ids[0]
         self.assertEqual(
-            mail_message.author_id, sale_order.partner_id, "Sale: author should be same as customer"
+            mail_message.author_id, sale_order.partner_id, "Sale: author should be same as customer",
         )
         self.assertEqual(
             mail_message.author_id,
@@ -142,7 +143,7 @@ class TestSaleOrder(SaleCommon):
         self.assertTrue(sale_order.name.startswith("SO/2020/"))
         # In EU/BXL tz, this is actually already 01/01/2020
         sale_order = self.sale_order.with_context(tz="Europe/Brussels").copy({
-            "date_order": "2019-12-31 23:30:00"
+            "date_order": "2019-12-31 23:30:00",
         })
         self.assertTrue(sale_order.name.startswith("SO/2020/"))
 
@@ -183,7 +184,7 @@ class TestSaleOrder(SaleCommon):
             self
             .env["sale.order"]
             .with_context(
-                default_sale_order_template_id=False
+                default_sale_order_template_id=False,
                 # Do not modify test behavior even if sale_management is installed
             )
             .create({"partner_id": self.partner.id})
@@ -249,7 +250,7 @@ class TestSaleOrder(SaleCommon):
                 Command.create({
                     "attribute_id": no_variant_attr.id,
                     "value_ids": no_variant_attr.value_ids.ids,
-                })
+                }),
             ],
         })
         no_variant_product = no_variant_product_tmpl.product_variant_id
@@ -365,7 +366,7 @@ class TestSaleOrder(SaleCommon):
                         "price_unit": 192,
                         "discount": 74.246,
                     },
-                )
+                ),
             ],
         })
         self.assertEqual(
@@ -499,7 +500,7 @@ class TestSaleOrder(SaleCommon):
         composer.action_schedule_message()
 
         scheduled_message = self.env["mail.scheduled.message"].search(
-            [("model", "=", order._name), ("res_id", "=", order.id)], limit=1
+            [("model", "=", order._name), ("res_id", "=", order.id)], limit=1,
         )
         self.assertEqual(order.state, "draft")
         scheduled_message.post_message()
@@ -508,7 +509,7 @@ class TestSaleOrder(SaleCommon):
     def test_so_discount_is_not_reset(self):
         """Check that discounts are not be recomputed on order confirmation."""
         with patch(
-            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_discount"
+            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_discount",
         ) as patched:
             self.sale_order.action_confirm()
             self.sale_order.order_line.flush_recordset(["discount"])
@@ -517,7 +518,7 @@ class TestSaleOrder(SaleCommon):
     def test_so_company_empty(self):
         """Check emptying company on SO form."""
         self.env["res.company"].sudo().create({  # activate multi company for the form view
-            "name": "Company 2"
+            "name": "Company 2",
         })
         so_form = Form(self.env["sale.order"])
         with self.assertRaises(ValidationError):
@@ -601,55 +602,59 @@ class TestSaleOrder(SaleCommon):
             {"name": "Tax Group X", "company_id": branch_x.id},
             {"name": "Tax Group XX", "company_id": branch_xx.id},
         ])
-        tax_a = self.env["account.tax"].sudo().create({
-            "name": "Tax A",
-            "type_tax_use": "sale",
-            "amount_type": "percent",
-            "amount": 10,
-            "tax_group_id": tax_groups[0].id,
-            "company_id": company.id,
-        })
-        tax_b = self.env["account.tax"].sudo().create({
-            "name": "Tax B",
-            "type_tax_use": "sale",
-            "amount_type": "percent",
-            "amount": 15,
-            "tax_group_id": tax_groups[0].id,
-            "company_id": company.id,
-        })
-        tax_x = self.env["account.tax"].sudo().create({
-            "name": "Tax X",
-            "type_tax_use": "sale",
-            "amount_type": "percent",
-            "amount": 20,
-            "tax_group_id": tax_groups[1].id,
-            "company_id": branch_x.id,
-        })
-        tax_xx = self.env["account.tax"].sudo().create({
-            "name": "Tax XX",
-            "type_tax_use": "sale",
-            "amount_type": "percent",
-            "amount": 25,
-            "tax_group_id": tax_groups[2].id,
-            "company_id": branch_xx.id,
-        })
+        tax_a, tax_b, tax_x, tax_xx = self.env["account.tax"].sudo().create([
+            {
+                "name": "Tax A",
+                "type_tax_use": "sale",
+                "amount_type": "percent",
+                "amount": 10,
+                "tax_group_id": tax_groups[0].id,
+                "company_id": company.id,
+            },
+            {
+                "name": "Tax B",
+                "type_tax_use": "sale",
+                "amount_type": "percent",
+                "amount": 15,
+                "tax_group_id": tax_groups[0].id,
+                "company_id": company.id,
+            },
+            {
+                "name": "Tax X",
+                "type_tax_use": "sale",
+                "amount_type": "percent",
+                "amount": 20,
+                "tax_group_id": tax_groups[1].id,
+                "company_id": branch_x.id,
+            },
+            {
+                "name": "Tax XX",
+                "type_tax_use": "sale",
+                "amount_type": "percent",
+                "amount": 25,
+                "tax_group_id": tax_groups[2].id,
+                "company_id": branch_xx.id,
+            },
+        ])
         # create several products with different taxes combination
-        product_all_taxes = self.env["product.product"].create({
-            "name": "Product all taxes",
-            "taxes_id": [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
-        })
-        product_no_xx_tax = self.env["product.product"].create({
-            "name": "Product no tax from XX",
-            "taxes_id": [Command.set((tax_a + tax_b + tax_x).ids)],
-        })
-        product_no_branch_tax = self.env["product.product"].create({
-            "name": "Product no tax from branch",
-            "taxes_id": [Command.set((tax_a + tax_b).ids)],
-        })
-        product_no_tax = self.env["product.product"].create({
-            "name": "Product no tax",
-            "taxes_id": [],
-        })
+        product_all_taxes, product_no_xx_tax, product_no_branch_tax, product_no_tax = self.env["product.product"].create([
+            {
+                "name": "Product all taxes",
+                "taxes_id": [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            },
+            {
+                "name": "Product no tax from XX",
+                "taxes_id": [Command.set((tax_a + tax_b + tax_x).ids)],
+            },
+            {
+                "name": "Product no tax from branch",
+                "taxes_id": [Command.set((tax_a + tax_b).ids)],
+            },
+            {
+                "name": "Product no tax",
+                "taxes_id": [],
+            },
+        ])
         # create a SO from Branch XX
         so_form = Form(self.env["sale.order"].with_company(branch_xx))
         so_form.partner_id = self.partner
@@ -694,7 +699,7 @@ class TestSaleOrder(SaleCommon):
                 "product_id": self.product.id,
                 "fixed_price": 22.0,
                 "min_quantity": 3.0,
-            })
+            }),
         ]
 
         # Order update
@@ -703,9 +708,9 @@ class TestSaleOrder(SaleCommon):
         self.sale_order.write({
             "order_line": [
                 Command.update(
-                    product_sol.id, {"product_uom_qty": 4.0, "technical_price_unit": 22.0}
-                )
-            ]
+                    product_sol.id, {"product_uom_qty": 4.0, "technical_price_unit": 22.0},
+                ),
+            ],
         })
         self.assertEqual(product_sol.price_unit, 22.0)
 
@@ -717,7 +722,7 @@ class TestSaleOrder(SaleCommon):
                     "product_id": self.product.id,
                     "product_uom_qty": 5.0,
                     "technical_price_unit": 22.0,
-                })
+                }),
             ],
         })
         self.assertEqual(new_order.order_line.price_unit, 22.0)
@@ -733,17 +738,21 @@ class TestSaleOrder(SaleCommon):
             "parent_id": partner_with_warning.id,
             "sale_warn_msg": "Slightly infectious disease",
         })
-        sale_order = self.env["sale.order"].create({"partner_id": partner_with_warning.id})
-        sale_order2 = self.env["sale.order"].create({"partner_id": child_partner.id})
+        sale_order, sale_order2 = self.env["sale.order"].create([
+            {"partner_id": partner_with_warning.id},
+            {"partner_id": child_partner.id},
+        ])
 
-        product_with_warning1 = self.env["product.product"].create({
-            "name": "Test Product 1",
-            "sale_line_warn_msg": "Highly corrosive",
-        })
-        product_with_warning2 = self.env["product.product"].create({
-            "name": "Test Product 2",
-            "sale_line_warn_msg": "Toxic pollutant",
-        })
+        product_with_warning1, product_with_warning2 = self.env["product.product"].create([
+            {
+                "name": "Test Product 1",
+                "sale_line_warn_msg": "Highly corrosive",
+            },
+            {
+                "name": "Test Product 2",
+                "sale_line_warn_msg": "Toxic pollutant",
+            },
+        ])
         self.env["sale.order.line"].create([
             {"order_id": sale_order.id, "product_id": product_with_warning1.id},
             {"order_id": sale_order.id, "product_id": product_with_warning2.id},
@@ -774,7 +783,7 @@ class TestSaleOrder(SaleCommon):
         )
         self.assertEqual(sale_order.sale_warning_text, "\n".join(expected_warnings))
         self.assertEqual(
-            sale_order2.sale_warning_text, "\n".join(expected_warnings_for_sale_order2)
+            sale_order2.sale_warning_text, "\n".join(expected_warnings_for_sale_order2),
         )
         self.assertEqual(invoice.sale_warning_text, "\n".join(expected_warnings_for_sale_order2))
 
@@ -790,13 +799,13 @@ class TestSaleOrder(SaleCommon):
         partner = self.env["res.partner"].create({"type": "invoice", "parent_id": self.partner.id})
         self.sale_order.partner_id = partner
         context = self.sale_order._notify_by_email_prepare_rendering_context(
-            message=self.env["mail.message"]
+            message=self.env["mail.message"],
         )
         self.assertEqual(context["subtitles"][0], self.sale_order.name)
 
         self.sale_order.partner_id.name = "Test Partner"
         context = self.sale_order._notify_by_email_prepare_rendering_context(
-            message=self.env["mail.message"]
+            message=self.env["mail.message"],
         )
         self.assertEqual(context["subtitles"][0], f"{self.sale_order.name} - Test Partner")
 
@@ -878,14 +887,16 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         # Test with 0 records
         self.env["sale.order"].action_close_invoicing()
 
-        sale_order_1 = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 5})],
-        })
-        sale_order_2 = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 3})],
-        })
+        sale_order_1, sale_order_2 = self.env["sale.order"].create([
+            {
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 5})],
+            },
+            {
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 3})],
+            },
+        ])
 
         # Draft orders cannot be closed
         with self.assertRaises(UserError, msg="Draft orders cannot be closed"):
@@ -913,14 +924,16 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         # Test with 0 records
         self.env["sale.order"].action_reopen_order()
 
-        sale_order_1 = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 5})],
-        })
-        sale_order_2 = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 3})],
-        })
+        sale_order_1, sale_order_2 = self.env["sale.order"].create([
+            {
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 5})],
+            },
+            {
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 3})],
+            },
+        ])
 
         (sale_order_1 | sale_order_2).action_confirm()
 
@@ -1005,7 +1018,7 @@ class TestSalesTeam(SaleCommon):
         })
         sale_order = self.env["sale.order"].create({"partner_id": partner.id})
         self.assertEqual(
-            sale_order.team_id.id, self.sale_team.id, "Should assign to team of sales person"
+            sale_order.team_id.id, self.sale_team.id, "Should assign to team of sales person",
         )
 
     def test_assign_sales_team_when_changing_user(self):
@@ -1017,7 +1030,7 @@ class TestSalesTeam(SaleCommon):
         })
         sale_order.user_id = self.user_in_team
         self.assertEqual(
-            sale_order.team_id.id, self.sale_team.id, "Should assign to team of sales person"
+            sale_order.team_id.id, self.sale_team.id, "Should assign to team of sales person",
         )
 
     def test_keep_sales_team_when_changing_user_with_no_team(self):
@@ -1028,23 +1041,27 @@ class TestSalesTeam(SaleCommon):
         })
         sale_order.user_id = self.user_not_in_team
         self.assertEqual(
-            sale_order.team_id.id, self.sale_team_2.id, "Should not reset the team to default"
+            sale_order.team_id.id, self.sale_team_2.id, "Should not reset the team to default",
         )
 
     def test_sale_order_analytic_distribution_change(self):
         self.env.user.group_ids += self.env.ref("analytic.group_analytic_accounting")
 
         analytic_plan = self.env["account.analytic.plan"].create({"name": "Plan Test"})
-        analytic_account_super = self.env["account.analytic.account"].create({
-            "name": "Super Account",
-            "plan_id": analytic_plan.id,
-        })
-        analytic_account_great = self.env["account.analytic.account"].create({
-            "name": "Great Account",
-            "plan_id": analytic_plan.id,
-        })
-        super_product = self.env["product.product"].create({"name": "Super Product"})
-        great_product = self.env["product.product"].create({"name": "Great Product"})
+        analytic_account_super, analytic_account_great = self.env["account.analytic.account"].create([
+            {
+                "name": "Super Account",
+                "plan_id": analytic_plan.id,
+            },
+            {
+                "name": "Great Account",
+                "plan_id": analytic_plan.id,
+            },
+        ])
+        super_product, great_product = self.env["product.product"].create([
+            {"name": "Super Product"},
+            {"name": "Great Product"},
+        ])
         self.env["account.analytic.distribution.model"].create([
             {
                 "analytic_distribution": {analytic_account_super.id: 100},
@@ -1103,33 +1120,39 @@ class TestSalesTeam(SaleCommon):
 
     def test_cannot_assign_tax_of_mismatch_company(self):
         """Test that sol cannot have assigned tax belonging to a different company."""
-        company_a = self.env["res.company"].sudo().create({"name": "A"})
-        company_b = self.env["res.company"].sudo().create({"name": "B"})
+        company_a, company_b = self.env["res.company"].sudo().create([
+            {"name": "A"},
+            {"name": "B"},
+        ])
         self.env.user.company_ids += company_a + company_b
-        tax_group_a = self.env["account.tax.group"].sudo().create({
-            "name": "A",
-            "company_id": company_a.id,
-        })
-        tax_group_b = self.env["account.tax.group"].sudo().create({
-            "name": "B",
-            "company_id": company_b.id,
-        })
+        tax_group_a, tax_group_b = self.env["account.tax.group"].sudo().create([
+            {
+                "name": "A",
+                "company_id": company_a.id,
+            },
+            {
+                "name": "B",
+                "company_id": company_b.id,
+            },
+        ])
         country = self.env["res.country"].search([], limit=1)
 
-        tax_a = self.env["account.tax"].sudo().create({
-            "name": "A",
-            "amount": 10,
-            "company_id": company_a.id,
-            "tax_group_id": tax_group_a.id,
-            "country_id": country.id,
-        })
-        tax_b = self.env["account.tax"].sudo().create({
-            "name": "B",
-            "amount": 10,
-            "company_id": company_b.id,
-            "tax_group_id": tax_group_b.id,
-            "country_id": country.id,
-        })
+        tax_a, tax_b = self.env["account.tax"].sudo().create([
+            {
+                "name": "A",
+                "amount": 10,
+                "company_id": company_a.id,
+                "tax_group_id": tax_group_a.id,
+                "country_id": country.id,
+            },
+            {
+                "name": "B",
+                "amount": 10,
+                "company_id": company_b.id,
+                "tax_group_id": tax_group_b.id,
+                "country_id": country.id,
+            },
+        ])
 
         sale_order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
@@ -1159,7 +1182,7 @@ class TestSalesTeam(SaleCommon):
             "child_ids": [
                 Command.create({"name": "B1 company"}),
                 Command.create({"name": "B2 company"}),
-            ]
+            ],
         })
         self.env.user.company_ids += root_company + root_company.child_ids
 
@@ -1168,27 +1191,29 @@ class TestSalesTeam(SaleCommon):
             "name": "basic group",
             "country_id": country.id,
         })
-        tax_b0 = self.env["account.tax"].sudo().create({
-            "name": "B0 tax",
-            "company_id": root_company.id,
-            "amount": 10,
-            "tax_group_id": basic_tax_group.id,
-            "country_id": country.id,
-        })
-        tax_b1 = self.env["account.tax"].sudo().create({
-            "name": "B1 tax",
-            "company_id": root_company.child_ids[0].id,
-            "amount": 11,
-            "tax_group_id": basic_tax_group.id,
-            "country_id": country.id,
-        })
-        tax_b2 = self.env["account.tax"].sudo().create({
-            "name": "B2 tax",
-            "company_id": root_company.child_ids[1].id,
-            "amount": 20,
-            "tax_group_id": basic_tax_group.id,
-            "country_id": country.id,
-        })
+        tax_b0, tax_b1, tax_b2 = self.env["account.tax"].sudo().create([
+            {
+                "name": "B0 tax",
+                "company_id": root_company.id,
+                "amount": 10,
+                "tax_group_id": basic_tax_group.id,
+                "country_id": country.id,
+            },
+            {
+                "name": "B1 tax",
+                "company_id": root_company.child_ids[0].id,
+                "amount": 11,
+                "tax_group_id": basic_tax_group.id,
+                "country_id": country.id,
+            },
+            {
+                "name": "B2 tax",
+                "company_id": root_company.child_ids[1].id,
+                "amount": 20,
+                "tax_group_id": basic_tax_group.id,
+                "country_id": country.id,
+            },
+        ])
 
         sale_order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
@@ -1249,34 +1274,36 @@ class TestSalesTeam(SaleCommon):
             "price_include_override": "tax_included",
         })
 
-        mapping_a = self.env["account.fiscal.position"].sudo().create({"name": "Special Tax Reduction"})
-        mapping_b = self.env["account.fiscal.position"].sudo().create({"name": "Special Tax Reduction"})
-        self.env["account.tax"].sudo().create({
-            "name": "tax_a",
-            "amount_type": "percent",
-            "amount": 12.5,
-            "include_base_amount": True,
-            "price_include_override": "tax_included",
-            "fiscal_position_ids": mapping_a,
-            "original_tax_ids": special_tax,
-        })
-
-        self.env["account.tax"].sudo().create({
-            "name": "tax_b",
-            "amount_type": "percent",
-            "amount": 5.0,
-            "include_base_amount": True,
-            "price_include_override": "tax_included",
-            "fiscal_position_ids": mapping_b,
-            "original_tax_ids": special_tax,
-        })
-
-        sales_tax = self.env["account.tax"].sudo().create({
-            "name": "VAT 20%",
-            "amount_type": "percent",
-            "amount": 20.0,
-            "price_include_override": "tax_included",
-        })
+        mapping_a, mapping_b = self.env["account.fiscal.position"].sudo().create([
+            {"name": "Special Tax Reduction"},
+            {"name": "Special Tax Reduction"},
+        ])
+        _, _, sales_tax = self.env["account.tax"].sudo().create([
+            {
+                "name": "tax_a",
+                "amount_type": "percent",
+                "amount": 12.5,
+                "include_base_amount": True,
+                "price_include_override": "tax_included",
+                "fiscal_position_ids": mapping_a,
+                "original_tax_ids": special_tax,
+            },
+            {
+                "name": "tax_b",
+                "amount_type": "percent",
+                "amount": 5.0,
+                "include_base_amount": True,
+                "price_include_override": "tax_included",
+                "fiscal_position_ids": mapping_b,
+                "original_tax_ids": special_tax,
+            },
+            {
+                "name": "VAT 20%",
+                "amount_type": "percent",
+                "amount": 20.0,
+                "price_include_override": "tax_included",
+            },
+        ])
 
         # taxes and standard price need to be set on the product, as they will be
         # recomputed when changing the fiscal position.
@@ -1327,7 +1354,7 @@ class TestSalesTeam(SaleCommon):
 
         # Setting a partner with the same fpos shouldn't recompute taxes.
         with patch(
-            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids"
+            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids",
         ) as patched:
             order_form.partner_id = partner_fpos_a_2
             form_order = order_form.save()
@@ -1389,7 +1416,7 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         ]
 
         iterator = self.quotation._notify_get_classified_recipients_iterator(
-            message=self.message, recipients_data=recipients_data
+            message=self.message, recipients_data=recipients_data,
         )
         results = {lang: group for lang, render_values, group in iterator}
 
@@ -1403,8 +1430,8 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         )
 
         self.assertEqual(
-            button_en, "View Sales Order", f"Expected 'View Sales Order', got '{button_en}'"
+            button_en, "View Sales Order", f"Expected 'View Sales Order', got '{button_en}'",
         )
         self.assertEqual(
-            button_fr, "Voir Commande client", f"Expected 'Voir Commande client', got '{button_fr}'"
+            button_fr, "Voir Commande client", f"Expected 'Voir Commande client', got '{button_fr}'",
         )
