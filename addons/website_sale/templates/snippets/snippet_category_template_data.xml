@@ -7,7 +7,7 @@
             <div
                 t-if="not is_parent or includeParent"
                 name="category_item"
-                class="s_dynamic_category_item position-relative bg-black overflow-hidden oe_unremovable oe_unmovable"
+                class="s_dynamic_category_item position-relative overflow-hidden oe_unremovable oe_unmovable"
                 t-att-data-category-id="category['id']"
                 t-attf-style="grid-row: span {{ 4 if is_parent else size }}; grid-column: span {{ 2 if is_parent and colSpanTwo else 1 }}"
                 role="article"
