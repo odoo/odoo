@@ -37,6 +37,8 @@ class TestFacturaDescuentoWizard(TransactionCase):
         wizard.action_aplicar()
 
         self.assertEqual(self.move.amount_untaxed, 1800.0)
+        self.assertEqual(self.move.amount_tax, 270.0)
+        self.assertEqual(self.move.amount_total, 2070.0)
         discount_lines = self.move.invoice_line_ids.filtered(
             lambda l: l.product_id == self.move.company_id.sale_discount_product_id
         )
@@ -56,3 +58,9 @@ class TestFacturaDescuentoWizard(TransactionCase):
                 'move_id': self.move.id,
                 'porcentaje': 0.0,
             })
+
+    def test_move_id_defaults_from_active_id_context(self):
+        wizard = self.env['distribuidora.factura.descuento.wizard'].with_context(
+            active_id=self.move.id
+        ).create({'porcentaje': 10.0})
+        self.assertEqual(wizard.move_id, self.move)

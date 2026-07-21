@@ -43,7 +43,7 @@ class FacturaDescuentoWizard(models.TransientModel):
 
         product_lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
         base_lines = [
-            AccountTax._prepare_base_line_for_taxes_computation(line) for line in product_lines
+            move._prepare_product_base_line_for_taxes_computation(line) for line in product_lines
         ]
         AccountTax._add_tax_details_in_base_lines(base_lines, move.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, move.company_id)
@@ -56,7 +56,7 @@ class FacturaDescuentoWizard(models.TransientModel):
             company=move.company_id,
             amount_type='percent',
             amount=self.porcentaje,
-            computation_key=f'distribuidora_descuento_general,{self.id}',
+            computation_key=f'global_discount,distribuidora_ventas,{self.id}',
             grouping_function=grouping_function,
         )
 
