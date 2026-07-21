@@ -271,8 +271,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Check that partner_a's credit and credit_to_invoice is 0.0.
         self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
 
-        for order in sale_orders:
-            order.action_confirm()
+        sale_orders.action_confirm()
 
         # Make sure partner_a's credit_to_invoice includes the newly confirmed SOs.
         self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
