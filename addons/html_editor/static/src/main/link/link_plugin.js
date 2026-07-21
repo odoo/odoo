@@ -4,6 +4,7 @@ import {
     childNodes,
     closestElement,
     descendants,
+    findFurthest,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -13,13 +14,14 @@ import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isEmptyTextNode, isTextNode, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isContentEditable } from "../../utils/dom_info";
+import { INLINE_DECORATION_TAGS } from "@html_editor/utils/formatting";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -546,19 +548,26 @@ export class LinkPlugin extends Plugin {
                         }
                         if (
                             cleanZWChars(this.linkElement.innerText) === label ||
-                            !!this.linkElement.childElementCount
+                            !!this.linkElement.querySelector("img")
                         ) {
-                            this.overlay.close();
                             this.dependencies.selection.setSelection(
                                 this.dependencies.selection.getEditableSelection()
                             );
                         } else {
                             const restore = prepareUpdate(...leftPos(this.linkElement));
-                            this.linkElement.innerText = label;
+                            // A label in a single text keeps the formats wrapping
+                            // it, any other label replaces the link content.
+                            const textNodes = descendants(this.linkElement).filter(
+                                (node) =>
+                                    isTextNode(node) && !isZwnbsp(node) && !isEmptyTextNode(node)
+                            );
+                            const labelNode =
+                                textNodes.length === 1 ? textNodes[0] : this.linkElement;
+                            labelNode.textContent = label;
                             restore();
-                            this.overlay.close();
-                            this.dependencies.selection.setCursorEnd(this.linkElement);
+                            this.dependencies.selection.setCursorEnd(labelNode);
                         }
+                        this.overlay.close();
                         if (classes) {
                             this.linkElement.className = classes;
                         } else {
@@ -584,7 +593,11 @@ export class LinkPlugin extends Plugin {
     }
 
     /**
-     * get the link from the selection or create one if there is none
+     * Returns the existing link element that contains the selection, expanding
+     * it if the selection partially overlaps it. If no link exists, creates a
+     * new one around the selected content. Inline decoration wrappers (<s>/<u>)
+     * enclosing the selection are preserved inside the new link rather than
+     * having the link nested inside them.
      *
      * @return {HTMLElement}
      */
@@ -625,12 +638,54 @@ export class LinkPlugin extends Plugin {
             const imageNode = targetedNodes.find((node) => node.tagName === "IMG");
 
             const link = this.document.createElement("a");
-            if (!selection.isCollapsed) {
-                const content = this.dependencies.selection.extractContent(selection);
-                link.append(content);
-                link.normalize();
+
+            let currentSelection = selection;
+            if (selection.isCollapsed) {
+                // A zero-width space is inserted as a placeholder so the
+                // collapsed cursor has a tangible position to split around,
+                // and the new link has non-empty content before a label is set.
+                const zws = this.document.createTextNode("\u200B");
+                this.dependencies.dom.insert(zws);
+                this.dependencies.selection.setSelection({
+                    anchorNode: zws,
+                    anchorOffset: 0,
+                    focusNode: zws,
+                    focusOffset: 1,
+                });
+                currentSelection = this.dependencies.selection.getEditableSelection();
             }
-            this.dependencies.dom.insert(link);
+
+            // If the selection is inside an inline decoration wrapper (<s>/<u>),
+            // split around it so the wrapper is preserved inside the link
+            // rather than having the link nested inside the decoration element.
+            const inlineDecorationWrapper = findFurthest(
+                currentSelection.commonAncestorContainer,
+                closestBlock(currentSelection.commonAncestorContainer),
+                (el) => INLINE_DECORATION_TAGS.includes(el.tagName)
+            );
+            let content;
+            if (inlineDecorationWrapper) {
+                this.dependencies.split.splitSelection();
+                content = this.dependencies.split.splitAroundUntil(
+                    this.dependencies.selection
+                        .getTargetedNodes()
+                        .filter((node) =>
+                            this.dependencies.selection.areNodeContentsFullySelected(node)
+                        ),
+                    inlineDecorationWrapper
+                );
+                // The link takes the place of the split content, between the
+                // two parts of the wrapper.
+                content.before(link);
+            } else {
+                content = this.dependencies.selection.extractContent(currentSelection);
+            }
+            link.append(content);
+            link.normalize();
+
+            if (!inlineDecorationWrapper) {
+                this.dependencies.dom.insert(link);
+            }
             if (!imageNode) {
                 this.dependencies.selection.setCursorEnd(link);
             } else {
