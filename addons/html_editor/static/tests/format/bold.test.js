@@ -477,3 +477,27 @@ test("should toggle bold across nested spans", async () => {
     bold(editor);
     expect(getContent(el)).toBe(`<p><span><span>[A</span> </span></p><p>B]</p>`);
 });
+
+test("should keep inner <strong> when intermediate element resets font-weight to normal", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                <strong>
+                    <span style="font-weight: normal;">
+                        <a href="#">[Hello World]</a>
+                    </span>
+                </strong>
+            </p>
+        `),
+        stepFunction: bold,
+        contentAfter: unformat(`
+            <p>
+                <strong>
+                    <span style="font-weight: normal;">
+                        <a href="#"><strong>[Hello World]</strong></a>
+                    </span>
+                </strong>
+            </p>
+        `),
+    });
+});

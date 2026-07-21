@@ -781,6 +781,9 @@ function hasStylesSubset(node, node2) {
  * A node is considered redundant if:
  * - It is an Element node with a parent.
  * - There is a closest element with the same tag name.
+ * - For bold nodes: since font-weight can be reset by an intermediate
+ *   element (e.g. font-weight: normal), we verify node.parentElement is
+ *   still bold before marking the node as redundant.
  * - All of the node's attributes are present in that closest element:
  *   - All classes exist in the closest element's class list (subset check).
  *   - All inline styles are present in the closest element's style attribute (subset check).
@@ -801,7 +804,14 @@ export function isRedundantElement(node) {
         return false;
     }
 
-    // Check each attribute from node.
+    // If node is bold but its parent isn't (font-weight was reset by an
+    // intermediate element), unwrapping node would remove the bold, so
+    // it's not redundant.
+    if (isBold(node) && !isBold(node.parentElement)) {
+        return false;
+    }
+
+    // Check each attribute from node (all attributes of node must exist in closest element).
     for (const { name: attrName, value: nodeAttrVal } of node.attributes) {
         const closestElAttrVal = closestEl.getAttribute(attrName);
 
