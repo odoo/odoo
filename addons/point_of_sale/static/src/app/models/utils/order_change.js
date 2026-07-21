@@ -15,7 +15,11 @@ export const changesToOrder = (
     for (const lineChange of linesChanges) {
         if (lineChange["quantity"] === 0) {
             continue;
-        } else if (lineChange["quantity"] > 0 && !cancelled) {
+            // if the line is new than make it to add as new not as the remove when line qtydisallowchange it will be -ve qty line but a new one
+        } else if (
+            !cancelled &&
+            typeof order.lines.filter((x) => x.uuid == lineChange["uuid"])[0].id == "string"
+        ) {
             toAdd.push(lineChange);
         } else {
             lineChange["quantity"] = Math.abs(lineChange["quantity"]); // we need always positive values.
