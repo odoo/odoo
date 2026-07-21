@@ -231,6 +231,7 @@ test("Ensuring each progress bar has some space", async () => {
     }
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -253,6 +254,7 @@ test("column progressbars properly work", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -436,6 +438,7 @@ test("column progressbars should not crash in non grouped views", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -464,6 +467,7 @@ test("column progressbars: creating a new column should create a new progressbar
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -503,6 +507,7 @@ test("column progressbars on quick create properly update counter", async () => 
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -738,6 +743,7 @@ test("kanban with progressbars: slow read_progress_bar", async () => {
     onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1023,6 +1029,7 @@ test("progress bar recompute after d&d to and from other column", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1417,6 +1424,7 @@ test("column progressbars on quick create with quick_create_view", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2142,6 +2150,7 @@ test("drag record to folded column, with progressbars", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2240,6 +2249,7 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
     onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2277,6 +2287,7 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
     onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `

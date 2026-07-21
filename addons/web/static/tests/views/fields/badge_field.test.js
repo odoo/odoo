@@ -46,6 +46,7 @@ onRpc("has_group", () => true);
 
 test("BadgeField component on a char field in list view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `<list><field name="display_name" widget="badge"/></list>`,
@@ -58,6 +59,7 @@ test("BadgeField component on a char field in list view", async () => {
 
 test("BadgeField component on a selection field in list view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `<list><field name="selection_field" widget="badge"/></list>`,
@@ -70,6 +72,7 @@ test("BadgeField component on a selection field in list view", async () => {
 
 test("BadgeField component on a many2one field in list view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `<list><field name="many2one_field" widget="badge"/></list>`,
@@ -81,6 +84,7 @@ test("BadgeField component on a many2one field in list view", async () => {
 
 test("BadgeField component with decoration-xxx attributes", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `
@@ -98,6 +102,7 @@ test("BadgeField component with decoration-xxx attributes", async () => {
 
 test("BadgeField component with color_field option", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `

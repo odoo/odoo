@@ -56,6 +56,7 @@ test("No chosen color is a red line with a white background (color 0)", async ()
 
 test("closes when color selected or outside click", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -78,6 +79,7 @@ test("closes when color selected or outside click", async () => {
 
 test("color picker on list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "res.partner",
         selectRecord() {
@@ -95,6 +97,7 @@ test("color picker in editable list view", async () => {
         int_field: 1,
     });
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "res.partner",
         arch: `
@@ -116,6 +119,7 @@ test("color picker in editable list view", async () => {
 test("column widths: dont overflow color picker in list", async () => {
     Partner._fields.date_field = fields.Date({ string: "Date field" });
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "res.partner",
         arch: `
@@ -146,6 +150,7 @@ test("column widths: dont overflow color picker in list", async () => {
 test.tags("mobile");
 test("ColorPicker opens a BottomSheet on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,

@@ -118,6 +118,7 @@ test("html field displays an empty string for the value false in list view", asy
 
 test("html fields are correctly rendered in kanban view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `

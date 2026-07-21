@@ -593,6 +593,7 @@ test("domain field: does not wait for the count to render", async function () {
     onRpc("search_count", () => def.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -1151,6 +1152,7 @@ test("folded domain field with any operator", async function () {
     Partner._fields.company_id = fields.Many2one({ relation: "partner" });
     Partner._records[0].foo = "[('company_id', 'any', [('id', '=', 1)])]";
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

@@ -26,6 +26,7 @@ test("Simple render", async () => {
     });
     redirect("/odoo");
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: /* xml */ `
             <form js_class="base_settings">

@@ -53,6 +53,7 @@ beforeEach(() => {
 test("Numeric fields: fields with keydown on numpad decimal key", async () => {
     defineParams({ lang_parameters: { decimal_point: "🇧🇪" } });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -118,6 +119,7 @@ test("Numeric fields: fields with keydown on numpad decimal key", async () => {
 
 test("Numeric fields: NumpadDecimal key is different from the decimalPoint", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -281,6 +283,7 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
 
 test("select all content on focus", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="monetary"/></form>`,

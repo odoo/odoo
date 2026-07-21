@@ -154,6 +154,7 @@ test(`width computation: parseWidthAttribute`, async () => {
 test(`width computation: no record, lot of fields`, async () => {
     Foo._records = [];
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -175,6 +176,7 @@ test(`width computation: no record, lot of fields`, async () => {
 test(`width computation: no record, few fields`, async () => {
     Foo._records = [];
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -190,6 +192,7 @@ test(`width computation: no record, few fields`, async () => {
 test(`width computation: no record, all fields with a max width`, async () => {
     Foo._records = [];
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -205,6 +208,7 @@ test(`width computation: no record, all fields with a max width`, async () => {
 test(`width computation: no record, sample data`, async () => {
     Foo._records = [];
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -221,6 +225,7 @@ test(`width computation: no record, sample data`, async () => {
 
 test(`width computation: with records, lot of fields`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -241,6 +246,7 @@ test(`width computation: with records, lot of fields`, async () => {
 
 test(`width computation: with records, lot of fields, grouped`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -264,6 +270,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
 
 test(`width computation: with records, few fields`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -278,6 +285,7 @@ test(`width computation: with records, few fields`, async () => {
 
 test(`width computation: with records, no relative fields`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -301,6 +309,7 @@ test(`width computation: with records, very long text field`, async () => {
         "sunt in culpa qui officia deserunt mollit anim id est laborum";
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -319,6 +328,7 @@ test(`width computation: with records, lot of fields, long texts`, async () => {
     Foo._records[1].foo = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -346,6 +356,7 @@ test(`width computation: with records, lot of fields, long texts (mobile)`, asyn
     Bar._records[1].name = "Lorem Ipsum is not simply random text.";
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -392,6 +403,7 @@ test(`width computation: editable list, overflowing table`, async () => {
     defineModels([Abc]);
 
     await mountView({
+        noMainContainer: true,
         resModel: "abc",
         type: "list",
         arch: `
@@ -414,6 +426,7 @@ test(`width computation: with records, few fields, long texts`, async () => {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -428,6 +441,7 @@ test(`width computation: with records, few fields, long texts`, async () => {
 
 test(`width computation: list with handle field`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -443,6 +457,7 @@ test(`width computation: editable list, no record, with handle field`, async () 
     Foo._records = [];
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -473,6 +488,7 @@ test(`width computation: widget with listViewWidth in its definition`, async () 
     };
     registry.category("view_widgets").add("my_widget", myWidget);
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -486,6 +502,7 @@ test(`width computation: widget with listViewWidth in its definition`, async () 
 
 test(`width computation: list with width attribute in arch (fixed widths)`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -501,6 +518,7 @@ test(`width computation: list with width attribute in arch (fixed widths)`, asyn
 
 test(`width computation: list with width attribute in arch (min/max widths)`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -525,6 +543,7 @@ test(`width computation: datetime in numeric, am/pm format`, async () => {
     after(resetDateFieldWidths);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -553,6 +572,7 @@ test(`width computation: width attribute in arch and overflowing table`, async (
         "sunt in culpa qui officia deserunt mollit anim id est laborum";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -570,6 +590,7 @@ test(`width computation: no record, nameless and stringless buttons`, async () =
     Foo._records = [];
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -742,6 +763,7 @@ test(`width computation: widths are re-computed on window resize`, async () => {
         "ipsum purus bibendum est.";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -766,6 +788,7 @@ test(`width computation: widths are re-computed on parent resize`, async () => {
         "ipsum purus bibendum est.";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -788,6 +811,7 @@ test(`width computation: button columns don't have a max width`, async () => {
     Foo._records[0].foo = "Lorem ipsum dolor sit amet";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -1000,6 +1024,7 @@ test(`freeze widths: navigate with the pager`, async () => {
     Foo._records[0].foo = "Some very very long value for a char field";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -1025,6 +1050,7 @@ test(`freeze widths: toggle a filter`, async () => {
     Foo._records[3].text = "Some very very long value for a char field";
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -1521,6 +1547,7 @@ test(`resize column and toggle check all`, async () => {
 
 test("resize column headers in editable list", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -1547,6 +1574,7 @@ test("resize column headers in editable list (2)", async () => {
     Foo._records[0].foo = "a".repeat(200);
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "list",
         arch: `
@@ -1576,6 +1604,7 @@ test(`resize column with several x2many lists in form group`, async () => {
     Foo._records[0].o2m = [1, 2];
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "form",
         arch: `
@@ -1625,6 +1654,7 @@ test(`resize column with x2many list with several fields in form notebook`, asyn
     Foo._records[0].o2m = [1, 2];
 
     await mountView({
+        noMainContainer: true,
         resModel: "foo",
         type: "form",
         arch: `

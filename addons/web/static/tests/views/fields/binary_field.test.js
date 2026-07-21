@@ -102,6 +102,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
 test("BinaryField is correctly rendered (readonly on fresh record)", async () => {
     // Readonly on fresh record happens when editing one2many items on a new record (lines out of focus become readonly)
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "form",
         arch: `
@@ -126,6 +127,7 @@ test("BinaryField is correctly rendered (readonly on fresh record)", async () =>
 
 test("BinaryField is correctly rendered (readonly on fresh record without filename)", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "form",
         arch: `
@@ -253,6 +255,7 @@ test("BinaryField is correctly rendered (isDirty)", async () => {
 
 test("file name field is not defined", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -269,6 +272,7 @@ test("file name field is not defined", async () => {
 
 test("icons are displayed exactly once", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resId: 1,
         type: "form",
@@ -367,6 +371,7 @@ test("readonly in create mode does not download", async () => {
 test("BinaryField in list view (formatter)", async () => {
     Partner._records[0]["document"] = BINARY_FILE;
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `<list><field name="document"/></list>`,
@@ -377,6 +382,7 @@ test("BinaryField in list view (formatter)", async () => {
 test("BinaryField in list view with filename", async () => {
     Partner._records[0]["document"] = BINARY_FILE;
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "list",
         arch: `
@@ -392,6 +398,7 @@ test("BinaryField in list view with filename", async () => {
 test("new record has no download button", async () => {
     Partner._fields.document.default = BINARY_FILE;
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "form",
         arch: `<form><field name="document" filename="foo"/></form>`,
@@ -408,6 +415,7 @@ test("filename doesn't exceed 255 bytes", async () => {
 
     Partner._fields.document.default = LARGE_BINARY_FILE;
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         type: "form",
         arch: `<form><field name="document"/></form>`,
@@ -426,6 +434,7 @@ test("filename is updated when using the pager", async () => {
         { id: 2, document: "def", foo: "def.txt" }
     );
     await mountView({
+        noMainContainer: true,
         resModel: "res.partner",
         resIds: [1, 2],
         resId: 1,

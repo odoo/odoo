@@ -31,6 +31,7 @@ test("FloatTimeField in form view", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "foo",
         arch: `
@@ -138,6 +139,7 @@ test("FloatTimeField with formula", async () => {
 
 test("float_time field does not have an inputmode attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "foo",
         arch: `
@@ -151,6 +153,7 @@ test("float_time field does not have an inputmode attribute", async () => {
 
 test("float_time apply beautiful duration on sum", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `
@@ -165,6 +168,7 @@ test("float_time apply beautiful duration on sum", async () => {
 
 test("float_time apply options duration on sum", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "foo",
         arch: `

@@ -687,6 +687,7 @@ test("input field: change value before pending onchange renaming", async () => {
 
 test("support autocomplete attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -702,6 +703,7 @@ test("support autocomplete attribute", async () => {
 
 test("input autocomplete attribute set to none by default", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -717,6 +719,7 @@ test("input autocomplete attribute set to none by default", async () => {
 
 test("support password attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -735,6 +738,7 @@ test("support password attribute", async () => {
 
 test("input field: readonly password", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -826,6 +830,7 @@ test("input field: set and remove value, then wait for onchange", async () => {
 test("char field with placeholder", async () => {
     Partner._fields.name.default = false;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         arch: `

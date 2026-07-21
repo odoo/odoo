@@ -246,6 +246,7 @@ test("basic ungrouped rendering", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -554,6 +555,7 @@ test("kanban grouped by date field", async () => {
     Partner._records[0].date = "2007-06-10";
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -572,6 +574,7 @@ test("kanban grouped by date field", async () => {
 
 test("pager should be hidden in grouped mode", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -592,6 +595,7 @@ test("there should be no limit on the number of fetched groups", async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_GROUP_LIMIT: 1 });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -616,6 +620,7 @@ test("pager, ungrouped, with default limit", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -634,6 +639,7 @@ test("pager, ungrouped, with default limit", async () => {
 test.tags("desktop");
 test("pager, ungrouped, with default limit on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -657,6 +663,7 @@ test("pager, ungrouped, with limit given in options", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -674,6 +681,7 @@ test("pager, ungrouped, with limit given in options", async () => {
 test.tags("desktop");
 test("pager, ungrouped, with limit given in options on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -699,6 +707,7 @@ test("pager, ungrouped, with limit set on arch and given in options", async () =
 
     // the limit given in the arch should take the priority over the one given in options
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1192,6 +1201,7 @@ test("kanban with an action id as on_create attrs", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1609,6 +1619,7 @@ test("kanban with reference field", async () => {
 test.tags("desktop");
 test("drag and drop a record with load more", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1637,6 +1648,7 @@ test("can drag and drop a record from one column to the next", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1679,6 +1691,7 @@ test("user without permission cannot drag and drop a column thus sequence remain
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1779,6 +1792,7 @@ test("drag and drop highlight on hover and has visible placeholder", async () =>
 
 test("drag and drop outside of a column", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1810,6 +1824,7 @@ test("drag and drop a record, grouped by selection", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1859,6 +1874,7 @@ test("prevent drag and drop of record if grouped by readonly", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1980,6 +1996,7 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
     Partner._records[3].datetime = "2017-02-10 08:05:51";
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2050,6 +2067,7 @@ test("prevent drag and drop if grouped by many2many field", async () => {
     Partner._records[3].category_ids = [7];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2116,6 +2134,7 @@ test("prevent drag and drop if grouped by many2many field", async () => {
 
 test("completely prevent drag and drop if records_draggable set to false", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2169,6 +2188,7 @@ test("prevent drag and drop of record if save fails", async () => {
         throw new Error("Save failed");
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2355,6 +2375,7 @@ test("kanban view not groupable", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2569,6 +2590,7 @@ test("create a column in grouped on m2o without sequence field on view model", a
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2933,6 +2955,7 @@ test("edit a column propagates right context", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3001,6 +3024,7 @@ test("quick create column should close on window click if there is no column", a
 
 test("quick create several columns in a row", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3165,6 +3189,7 @@ test("quick create column with x_name as _rec_name", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3202,6 +3227,7 @@ test("count of folded groups in empty kanban with sample data", async () => {
     }));
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "kanban",
         arch: `
@@ -3335,6 +3361,7 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3461,6 +3488,7 @@ test("no nocontent helper for grouped kanban with empty groups", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3553,6 +3581,7 @@ test("no nocontent helper is hidden when quick creating a column", async () => {
     }));
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3579,6 +3608,7 @@ test("nocontent helper for grouped kanban (on m2o field) with no records with no
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3606,6 +3636,7 @@ test("nocontent helper for grouped kanban (on date field) with no records with n
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3630,6 +3661,7 @@ test("empty grouped kanban with sample data and no columns", async () => {
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban default_group_by="product_id" sample="1">
                 <templates>
@@ -3727,6 +3759,7 @@ test("empty kanban with sample data", async () => {
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3772,6 +3805,7 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3855,6 +3889,7 @@ test("sample data does not change after reload with sample data", async () => {
 test.tags("desktop");
 test("non empty kanban with sample data", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3897,6 +3932,7 @@ test("empty grouped kanban with sample data: add a column", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban default_group_by="product_id" sample="1">
                 <templates>
@@ -4127,6 +4163,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
     }));
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "kanban",
         arch: `
@@ -4256,6 +4293,7 @@ test("resequence columns in grouped by m2o", async () => {
     Product._fields.sequence = fields.Integer();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4302,6 +4340,7 @@ test("resequence all when creating new record + partial resequencing", async () 
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4551,6 +4590,7 @@ test("load more records in column", async () => {
         expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4601,6 +4641,7 @@ test("load more records in column with x2many", async () => {
         expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4737,6 +4778,7 @@ test("asynchronous tooltips when grouped", async () => {
         return def?.promise;
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4780,6 +4822,7 @@ test("loads data tooltips only when first opening", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4815,6 +4858,7 @@ test("move a record then put it again in the same column", async () => {
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4865,6 +4909,7 @@ test("resequence a record twice", async () => {
         return def?.promise;
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -4919,6 +4964,7 @@ test("load more should load correct records after drag&drop event", async () => 
     Partner._records.forEach((r, i) => (r.sequence = i));
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -5290,6 +5336,7 @@ test(`kanban should ask to scroll to top on page changes (mobile)`, async () => 
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "kanban",
         arch: `
@@ -5566,6 +5613,7 @@ test("ungrouped kanban with handle field", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -5851,6 +5899,7 @@ test("basic rendering with 2 groupbys", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6002,6 +6051,7 @@ test("no leak of TransactionInProgress (grouped case)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6073,6 +6123,7 @@ test("no leak of TransactionInProgress (not grouped case)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6133,6 +6184,7 @@ test("no leak of TransactionInProgress (not grouped case)", async () => {
 
 test("column quick create - title and placeholder", async function (assert) {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6160,6 +6212,7 @@ test("column quick create - title and placeholder", async function (assert) {
 test.tags("desktop");
 test("fold a column and drag record on it should not unfold it", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6257,6 +6310,7 @@ test("no content helper, all groups folded with (unloaded) records", async () =>
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6281,6 +6335,7 @@ test("Move multiple records in different columns simultaneously", async () => {
     onRpc("read", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6389,6 +6444,7 @@ test("attribute default_order", async () => {
     defineModels([CustomModel]);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "custom.model",
         arch: `
@@ -6414,6 +6470,7 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6473,6 +6530,7 @@ test("rerenders only once after resequencing records", async () => {
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6959,6 +7017,7 @@ test("group by properties and drag and drop", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -6988,6 +7047,7 @@ test("group by properties and drag and drop", async () => {
 
 test("grouped on field with readonly expression depending on context", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -7083,6 +7143,7 @@ test("group by numeric field (with aggregator)", async () => {
         expect.step("web_read_group");
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -7240,6 +7301,7 @@ test("display 'None' for false group, when grouped by char field", async () => {
     Partner._records[0].foo = false;
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -7602,6 +7664,7 @@ test("hide pager in the kanban view with sample data", async () => {
     Partner._records = [];
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban sample="1">
                 <templates>
@@ -7625,6 +7688,7 @@ test("kanban views make their control panel available directly", async () => {
     const def = Promise.withResolvers();
     onRpc("web_search_read", () => def?.promise);
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -7652,6 +7716,7 @@ test("interact with search view while kanban is loading", async () => {
     const defs = [Promise.withResolvers()];
     onRpc("web_search_read", () => defs.pop()?.promise);
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -7682,6 +7747,7 @@ test("interact with search view while kanban is loading", async () => {
 test("click on New while kanban is loading", async () => {
     onRpc("web_search_read", () => new Promise(() => {}));
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -8733,6 +8799,7 @@ test(`[Offline] disable unavailable records when offline`, async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "kanban",
         arch: `

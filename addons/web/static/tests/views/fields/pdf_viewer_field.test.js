@@ -34,6 +34,7 @@ defineModels([Partner]);
 
 test("PdfViewerField without data", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: '<form><field name="document" widget="pdf_viewer"/></form>',
@@ -46,6 +47,7 @@ test("PdfViewerField without data", async () => {
 
 test("PdfViewerField: basic rendering", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -67,6 +69,7 @@ test("PdfViewerField: upload rendering", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: '<form><field name="document" widget="pdf_viewer"/></form>',
@@ -84,6 +87,7 @@ test("PdfViewerField: upload rendering", async () => {
 
 test("PdfViewerField: upload file and download it", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -121,6 +125,7 @@ test("PdfViewerField: upload also sets filename", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `

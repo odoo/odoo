@@ -30,6 +30,7 @@ defineModels([Localization]);
 test("in a list view", async () => {
     onRpc("has_group", () => true);
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "localization",
         resId: 1,
@@ -51,6 +52,7 @@ test("in a list view", async () => {
 
 test("in a form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "localization",
         resId: 1,

@@ -42,6 +42,7 @@ defineModels([Partner]);
 
 test("Char Field: Copy to clipboard button", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -64,6 +65,7 @@ test("Copy button is hidden on empty field", async () => {
 test("Copy button is visible on readonly empty field with default value", async () => {
     Partner._fields.char_field.readonly = true;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         arch: `
@@ -95,6 +97,7 @@ test("Display a tooltip on click", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -113,6 +116,7 @@ test("CopyClipboardButtonField in form view", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -136,6 +140,7 @@ test("CopyClipboardButtonField in form view", async () => {
 
 test("CopyClipboardButtonField with a secondary style", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,
@@ -161,6 +166,7 @@ test("CopyClipboardButtonField can be disabled", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         resId: 1,

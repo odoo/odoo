@@ -784,6 +784,7 @@ test("many2many: create & delete attributes (both true)", async () => {
     Partner._records[0].timmy = [1, 2];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -805,6 +806,7 @@ test("many2many: create & delete attributes (both false)", async () => {
     Partner._records[0].timmy = [1, 2];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `

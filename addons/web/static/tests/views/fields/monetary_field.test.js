@@ -678,6 +678,7 @@ test("float field with monetary widget and decimal precision", async () => {
 
 test("MonetaryField without currency symbol", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 5,
@@ -698,6 +699,7 @@ test("MonetaryField without currency symbol", async () => {
 
 test("required monetary field with zero value", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -712,6 +714,7 @@ test("required monetary field with zero value", async () => {
 
 test("uses 'currency_id' as currency field by default", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -784,6 +787,7 @@ test("monetary field with pending onchange", async () => {
 
 test("with 'hide_trailing_zeros' option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 5,

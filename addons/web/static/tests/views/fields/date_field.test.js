@@ -675,6 +675,7 @@ test(`DateField in x2many list: open/close picker`, async () => {
 
 test("DateField: placeholder", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.partner",
         arch: `
