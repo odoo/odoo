@@ -46,7 +46,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "We should have 3 lines as we should have a new line for promo code reduction",
         )
         self.assertEqual(
-            order.amount_total, 864, "Only paid product should have their price discounted"
+            order.amount_total, 864, "Only paid product should have their price discounted",
         )
         order.order_line.filtered(lambda x: "Discount" in x.name).unlink()  # Remove Discount
         order._remove_program_from_points(self.p1)
@@ -55,7 +55,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         sol1.product_uom_qty = 2
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            len(order.order_line.ids), 1, "Free Large Cabinet should have been removed"
+            len(order.order_line.ids), 1, "Free Large Cabinet should have been removed",
         )
 
         # Free product in cart will be considered as paid product when changing quantity of paid
@@ -87,18 +87,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # 4A 1B then you should receive 1b (you are eligible to receive 4 because you have 4A but
         # since you don't have enough B in your cart, you are limited to the B quantity).
         order = self.empty_order
-        sol1 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "name": "drawer black",
-            "product_uom_qty": 3.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.largeMeetingTable.id,
-            "name": "Large Meeting Table",
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
+        sol1, sol2 = self.env["sale.order.line"].create([
+            {
+                "product_id": self.drawerBlack.id,
+                "name": "drawer black",
+                "product_uom_qty": 3.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.largeMeetingTable.id,
+                "name": "Large Meeting Table",
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+        ])
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             len(order.order_line.ids),
@@ -161,7 +163,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_point_mode": "order",
                     "minimum_amount_tax_mode": "excl",
                     "minimum_amount": 320.00,
-                })
+                }),
             ],
             "reward_ids": [
                 Command.create({
@@ -171,7 +173,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_applicability": "specific",
                     "discount_product_ids": self.largeCabinet,
                     "required_points": 1,
-                })
+                }),
             ],
         })
         self.all_programs |= p_specific_product
@@ -287,32 +289,34 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 2636.09 | 2994.00 |  357.91
         self.assertEqual(
-            order.amount_total, 2994.0, "The discount should be limited to $200 tax included"
+            order.amount_total, 2994.0, "The discount should be limited to $200 tax included",
         )
         self.assertEqual(
-            order.amount_untaxed, 2636.09, "The discount should be limited to $200 tax included (2)"
+            order.amount_untaxed, 2636.09, "The discount should be limited to $200 tax included (2)",
         )
 
     def test_program_numbers_one_discount_line_per_tax(self):
         order = self.empty_order
         self.env["ir.config_parameter"].set_bool("loyalty.compute_all_discount_product_ids", True)
         # Create taxes
-        self.tax_15pc_excl = self.env["account.tax"].create({
-            "name": "15% Tax excl",
-            "amount_type": "percent",
-            "amount": 15,
-        })
-        self.tax_50pc_excl = self.env["account.tax"].create({
-            "name": "50% Tax excl",
-            "amount_type": "percent",
-            "amount": 50,
-        })
-        self.tax_35pc_incl = self.env["account.tax"].create({
-            "name": "35% Tax incl",
-            "amount_type": "percent",
-            "amount": 35,
-            "price_include_override": "tax_included",
-        })
+        self.tax_15pc_excl, self.tax_50pc_excl, self.tax_35pc_incl = self.env["account.tax"].create([
+            {
+                "name": "15% Tax excl",
+                "amount_type": "percent",
+                "amount": 15,
+            },
+            {
+                "name": "50% Tax excl",
+                "amount_type": "percent",
+                "amount": 50,
+            },
+            {
+                "name": "35% Tax incl",
+                "amount_type": "percent",
+                "amount": 35,
+                "price_include_override": "tax_included",
+            },
+        ])
 
         # Set tax and prices on products as neeed for the test
         (
@@ -323,43 +327,45 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             + self.drawerBlack
         ).write({"list_price": 100})
         (self.largeCabinet + self.drawerBlack).write({
-            "taxes_id": [Command.link(self.tax_15pc_excl.id)]
+            "taxes_id": [Command.link(self.tax_15pc_excl.id)],
         })
         self.conferenceChair.taxes_id = self.tax_10pc_incl
         self.pedalBin.taxes_id = None
         self.product_A.taxes_id = self.tax_35pc_incl + self.tax_50pc_excl
 
         # Add products in order
-        self.env["sale.order.line"].create({
-            "product_id": self.largeCabinet.id,
-            "name": "Large Cabinet",
-            "product_uom_qty": 4.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.conferenceChair.id,
-            "name": "Conference Chair",
-            "product_uom_qty": 3.0,
-            "order_id": order.id,
-        })
-        self.env["sale.order.line"].create({
-            "product_id": self.pedalBin.id,
-            "name": "Pedal Bin",
-            "product_uom_qty": 5.0,
-            "order_id": order.id,
-        })
-        self.env["sale.order.line"].create({
-            "product_id": self.product_A.id,
-            "name": "product A with multiple taxes",
-            "product_uom_qty": 3.0,
-            "order_id": order.id,
-        })
-        self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "name": "Drawer Black",
-            "product_uom_qty": 2.0,
-            "order_id": order.id,
-        })
+        _, sol2, _, _, _ = self.env["sale.order.line"].create([
+            {
+                "product_id": self.largeCabinet.id,
+                "name": "Large Cabinet",
+                "product_uom_qty": 4.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.conferenceChair.id,
+                "name": "Conference Chair",
+                "product_uom_qty": 3.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.pedalBin.id,
+                "name": "Pedal Bin",
+                "product_uom_qty": 5.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.product_A.id,
+                "name": "product A with multiple taxes",
+                "product_uom_qty": 3.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.drawerBlack.id,
+                "name": "Drawer Black",
+                "product_uom_qty": 2.0,
+                "order_id": order.id,
+            },
+        ])
 
         # Create needed programs
         self.immediate_promotion_program.active = False
@@ -368,71 +374,73 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # NOTE: programs may not make much sense, but they have been modified in order to validate
         # the result since the change from coupon to loyalty.
-        self.p_large_cabinet = self.env["loyalty.program"].create({
-            "name": "Buy 1 large cabinet, get 3/4 for free",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "product_ids": self.largeCabinet,
-                    "reward_point_mode": "unit",
-                    "minimum_qty": 1,
-                    "reward_point_amount": 0.752,
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "product",
-                    "reward_product_id": self.largeCabinet.id,
-                    "reward_product_qty": 1,
-                    "required_points": 1,
-                })
-            ],
-        })
-        self.p_conference_chair = self.env["loyalty.program"].create({
-            "name": "Buy 1 chair, get one for free",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "product_ids": self.conferenceChair,
-                    "reward_point_mode": "unit",
-                    "minimum_qty": 1,
-                    "reward_point_amount": 0.4,
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "product",
-                    "reward_product_id": self.conferenceChair.id,
-                    "reward_product_qty": 1,
-                    "required_points": 1,
-                })
-            ],
-        })
-        self.p_pedal_bin = self.env["loyalty.program"].create({
-            "name": "Buy 1 bin, get one for free",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "product_ids": self.pedalBin,
-                    "reward_point_mode": "unit",
-                    "minimum_qty": 1,
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "product",
-                    "reward_product_id": self.pedalBin.id,
-                    "reward_product_qty": 1,
-                    "required_points": 1,
-                })
-            ],
-        })
+        self.p_large_cabinet, self.p_conference_chair, self.p_pedal_bin = self.env["loyalty.program"].create([
+            {
+                "name": "Buy 1 large cabinet, get 3/4 for free",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "product_ids": self.largeCabinet,
+                        "reward_point_mode": "unit",
+                        "minimum_qty": 1,
+                        "reward_point_amount": 0.752,
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "product",
+                        "reward_product_id": self.largeCabinet.id,
+                        "reward_product_qty": 1,
+                        "required_points": 1,
+                    }),
+                ],
+            },
+            {
+                "name": "Buy 1 chair, get one for free",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "product_ids": self.conferenceChair,
+                        "reward_point_mode": "unit",
+                        "minimum_qty": 1,
+                        "reward_point_amount": 0.4,
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "product",
+                        "reward_product_id": self.conferenceChair.id,
+                        "reward_product_qty": 1,
+                        "required_points": 1,
+                    }),
+                ],
+            },
+            {
+                "name": "Buy 1 bin, get one for free",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "product_ids": self.pedalBin,
+                        "reward_point_mode": "unit",
+                        "minimum_qty": 1,
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "product",
+                        "reward_product_id": self.pedalBin.id,
+                        "reward_product_qty": 1,
+                        "required_points": 1,
+                    }),
+                ],
+            },
+        ])
         self.all_programs |= self.p_large_cabinet | self.p_conference_chair | self.p_pedal_bin
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
@@ -447,7 +455,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertRecordValues(order, [{"amount_total": 1901.11, "amount_untaxed": 1594.95}])
         self.assertEqual(
-            len(order.order_line.ids), 5, "The order without any programs should have 5 lines"
+            len(order.order_line.ids), 5, "The order without any programs should have 5 lines",
         )
 
         # Apply all the programs
@@ -521,7 +529,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_product_ids": self.largeCabinet,
                     "required_points": 1,
                     "clear_wallet": 1,
-                })
+                }),
             ],
         })
         self._auto_rewards(order, self.all_programs)
@@ -545,7 +553,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         order.order_line.filtered(lambda line: "10%" in line.name)[0].unlink()
         order._remove_program_from_points(self.p1)
         self.assertEqual(
-            len(order.order_line.ids), 9, "All of the 10% discount line per tax should be removed"
+            len(order.order_line.ids), 9, "All of the 10% discount line per tax should be removed",
         )
         # At this point, removing the Conference Chair's discount line (split per tax) removed also
         # the other discount lines.
@@ -661,7 +669,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
         self.all_programs |= fixed_amount_program
@@ -671,7 +679,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount": 0,
         })
         fixed_amount_program.reward_ids.discount_line_product_id.write({
-            "taxes_id": [Command.link(self.tax_0pc_excl.id)]
+            "taxes_id": [Command.link(self.tax_0pc_excl.id)],
         })
         sol1 = self.env["sale.order.line"].create({
             "product_id": self.drawerBlack.id,
@@ -688,7 +696,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             " be reduced to the SO total",
         )
         self.assertEqual(
-            len(order.order_line.ids), 2, "There should be the product line and the reward line"
+            len(order.order_line.ids), 2, "There should be the product line and the reward line",
         )
         sol1.product_uom_qty = 17
         self._auto_rewards(order, self.all_programs)
@@ -721,7 +729,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_product_id": self.pedalBin.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
-                })
+                }),
             ],
         })
         sol1 = self.env["sale.order.line"].create({
@@ -733,7 +741,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart")
         self.assertEqual(
-            len(order._get_reward_coupons()), 0, "No coupon should have been generated yet"
+            len(order._get_reward_coupons()), 0, "No coupon should have been generated yet",
         )
 
         sol1.product_uom_qty = 2
@@ -742,7 +750,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart (2)")
         self.assertEqual(len(generated_coupon), 1, "A coupon should have been generated")
         self.assertEqual(
-            generated_coupon.points, 0, "The coupon should not have it's points already."
+            generated_coupon.points, 0, "The coupon should not have it's points already.",
         )
 
         sol1.product_uom_qty = 1
@@ -766,13 +774,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             " need to create a new one (see next assert)",
         )
         self.assertEqual(
-            generated_coupon.points, 0, "The coupon should not have it's points already."
+            generated_coupon.points, 0, "The coupon should not have it's points already.",
         )
         self.assertFalse(order._get_claimable_rewards(), "No rewards should be claimable")
 
         order.action_confirm()
         self.assertEqual(
-            generated_coupon.points, 1, "The coupon should have 1 point after confirmation"
+            generated_coupon.points, 1, "The coupon should have 1 point after confirmation",
         )
         self.assertFalse(
             order._get_claimable_rewards(),
@@ -790,14 +798,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         })
         self.assertEqual(order.amount_total, 165.0, "The order amount is not correct")
         self.env["loyalty.generate.wizard"].with_context(
-            active_id=self.discount_coupon_program.id
+            active_id=self.discount_coupon_program.id,
         ).create({"coupon_qty": 1, "points_granted": 1}).generate_coupons()
         coupon = self.discount_coupon_program.coupon_ids[0]
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(order.amount_total, 65.0, "The coupon should be correctly applied")
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            order.amount_total, 65.0, "The coupon should not be removed from the order"
+            order.amount_total, 65.0, "The coupon should not be removed from the order",
         )
 
     def test_coupon_and_program_discount_fixed_amount(self):
@@ -818,7 +826,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "trigger": "with_code",
             "rule_ids": [
-                Command.create({"mode": "with_code", "code": "testpromo", "minimum_amount": 100})
+                Command.create({"mode": "with_code", "code": "testpromo", "minimum_amount": 100}),
             ],
             "reward_ids": [
                 Command.create({
@@ -826,13 +834,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 100,
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
-                })
+                }),
             ],
         })
 
         self._apply_promo_code(order, "testpromo")
         self.assertEqual(
-            order.amount_total, 65.0, "The promotion program should be correctly applied"
+            order.amount_total, 65.0, "The promotion program should be correctly applied",
         )
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
@@ -842,7 +850,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         )
 
         self.env["loyalty.generate.wizard"].with_context(
-            active_id=self.discount_coupon_program.id
+            active_id=self.discount_coupon_program.id,
         ).create({"coupon_qty": 1, "points_granted": 1}).generate_coupons()
         coupon = self.discount_coupon_program.coupon_ids[0]
         with self.assertRaises(ValidationError):
@@ -850,7 +858,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         orderline.write({"product_uom_qty": 15})
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(
-            order.amount_total, 47.5, "The promotion program should now be correctly applied"
+            order.amount_total, 47.5, "The promotion program should now be correctly applied",
         )
 
         orderline.write({"product_uom_qty": 5})
@@ -884,7 +892,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 288.5,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
@@ -918,7 +926,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self._apply_promo_code(order, "test_10pc")
         self.assertEqual(
-            order.amount_total, 283.5, "The promotion program should be correctly applied"
+            order.amount_total, 283.5, "The promotion program should be correctly applied",
         )
 
         self.env["loyalty.generate.wizard"].with_context(active_id=coupon_program.id).create({
@@ -944,7 +952,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 3, "The promotion program should be removed")
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(
-            order.amount_total, 26.5, "The promotion program should be correctly applied"
+            order.amount_total, 26.5, "The promotion program should be correctly applied",
         )
         self._auto_rewards(order, self.all_programs)
         self._apply_promo_code(order, "test_10pc")
@@ -990,7 +998,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 290,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
@@ -1024,7 +1032,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self._apply_promo_code(order, "test_10pc")
         self.assertEqual(
-            order.amount_total, 270.0, "The promotion program should be correctly applied"
+            order.amount_total, 270.0, "The promotion program should be correctly applied",
         )
 
         self.env["loyalty.generate.wizard"].with_context(active_id=coupon_program.id).create({
@@ -1041,7 +1049,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(order.amount_tax, 0)
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            order.amount_total, 0, "The promotion program should not be altered after recomputation"
+            order.amount_total, 0, "The promotion program should not be altered after recomputation",
         )
         self.assertEqual(order.amount_tax, 0)
 
@@ -1053,7 +1061,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 3, "The promotion program should be removed")
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(
-            order.amount_total, 10.0, "The promotion program should be correctly applied"
+            order.amount_total, 10.0, "The promotion program should be correctly applied",
         )
         self._apply_promo_code(order, "test_10pc")
         self._auto_rewards(order, self.all_programs)
@@ -1095,30 +1103,32 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 25,
                     "discount_applicability": "specific",
                     "discount_product_ids": [
-                        Command.set([self.conferenceChair.id, self.drawerBlack.id])
+                        Command.set([self.conferenceChair.id, self.drawerBlack.id]),
                     ],
                     "required_points": 1,
-                })
+                }),
             ],
         })
         self.all_programs |= p_specific_products
 
-        self.env["sale.order.line"].create({
-            "product_id": self.conferenceChair.id,
-            "name": "Conference Chair",
-            "product_uom_qty": 4.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "name": "Drawer Black",
-            "product_uom_qty": 2.0,
-            "order_id": order.id,
-        })
+        _, sol2 = self.env["sale.order.line"].create([
+            {
+                "product_id": self.conferenceChair.id,
+                "name": "Conference Chair",
+                "product_uom_qty": 4.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.drawerBlack.id,
+                "name": "Drawer Black",
+                "product_uom_qty": 2.0,
+                "order_id": order.id,
+            },
+        ])
 
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            len(order.order_line.ids), 3, "Conference Chair + Drawer Black + 20% discount line"
+            len(order.order_line.ids), 3, "Conference Chair + Drawer Black + 20% discount line",
         )
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
@@ -1131,7 +1141,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # remove Drawer Black case from promotion
         p_specific_products.reward_ids.discount_product_ids = [
-            Command.set(self.conferenceChair.ids)
+            Command.set(self.conferenceChair.ids),
         ]
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
@@ -1147,14 +1157,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL                                              |   99.50 |   99.50 |   0.00
         self.assertEqual(
-            order.amount_total, 99.50, "The 12.50 discount from the drawer black should be gone"
+            order.amount_total, 99.50, "The 12.50 discount from the drawer black should be gone",
         )
 
         # =========================================================================
         # PART 2: Same flow but with different taxes on products to ensure discount is split per VAT
         # Add back Drawer Black in promotion
         p_specific_products.reward_ids.discount_product_ids = [
-            Command.set([self.conferenceChair.id, self.drawerBlack.id])
+            Command.set([self.conferenceChair.id, self.drawerBlack.id]),
         ]
 
         percent_tax = self.env["account.tax"].create({
@@ -1182,7 +1192,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # TOTAL                                              |   78.35 |   87.00 |   8.66
         self.assertEqual(order.amount_total, 87.00, "Total untaxed should be as per above comment")
         self.assertEqual(
-            order.amount_untaxed, 78.35, "Total with taxes should be as per above comment"
+            order.amount_untaxed, 78.35, "Total with taxes should be as per above comment",
         )
 
     def test_program_numbers_free_prod_with_min_amount_and_qty_on_same_prod(self):
@@ -1203,7 +1213,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_point_mode": "order",
                     "minimum_qty": 2,
                     "minimum_amount": self.conferenceChair.lst_price * 2,
-                })
+                }),
             ],
             "reward_ids": [
                 Command.create({
@@ -1211,21 +1221,23 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_product_id": self.conferenceChair.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
-                })
+                }),
             ],
         })
-        sol1 = self.env["sale.order.line"].create({
-            "product_id": self.conferenceChair.id,
-            "name": "Conf Chair",
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "name": "Drawer",
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })  # dummy line
+        sol1, sol2 = self.env["sale.order.line"].create([
+            {
+                "product_id": self.conferenceChair.id,
+                "name": "Conf Chair",
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.drawerBlack.id,
+                "name": "Drawer",
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+        ])  # dummy line
 
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 2, "The promotion lines should not be applied")
@@ -1241,7 +1253,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         sol2.unlink()
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            len(order.order_line.ids), 2, "The other product should not affect the promotion"
+            len(order.order_line.ids), 2, "The other product should not affect the promotion",
         )
         self.assertEqual(
             order.amount_total,
@@ -1251,101 +1263,103 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         sol1.write({"product_uom_qty": 1.0})
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
-            len(order.order_line.ids), 1, "The promotion lines should have been removed"
+            len(order.order_line.ids), 1, "The promotion lines should have been removed",
         )
 
     def test_program_step_percentages(self):
         # test step-like percentages increase over amount
         testprod = self.env["product.product"].create({"name": "testprod", "lst_price": 118.0})
 
-        self.all_programs |= self.env["loyalty.program"].create({
-            "name": "10% discount",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "reward_point_mode": "order",
-                    "minimum_amount": 1500.00,
-                    "minimum_amount_tax_mode": "incl",
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "discount",
-                    "discount": 10,
-                    "discount_mode": "percent",
-                    "discount_applicability": "order",
-                    "required_points": 1,
-                })
-            ],
-        })
-        self.all_programs |= self.env["loyalty.program"].create({
-            "name": "15% discount",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "reward_point_mode": "order",
-                    "minimum_amount": 1750.00,
-                    "minimum_amount_tax_mode": "incl",
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "discount",
-                    "discount": 15,
-                    "discount_mode": "percent",
-                    "discount_applicability": "order",
-                    "required_points": 1,
-                })
-            ],
-        })
-        self.all_programs |= self.env["loyalty.program"].create({
-            "name": "20% discount",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "reward_point_mode": "order",
-                    "minimum_amount": 2000.00,
-                    "minimum_amount_tax_mode": "incl",
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "discount",
-                    "discount": 20,
-                    "discount_mode": "percent",
-                    "discount_applicability": "order",
-                    "required_points": 1,
-                })
-            ],
-        })
-        self.all_programs |= self.env["loyalty.program"].create({
-            "name": "25% discount",
-            "trigger": "auto",
-            "program_type": "promotion",
-            "applies_on": "current",
-            "rule_ids": [
-                Command.create({
-                    "reward_point_mode": "order",
-                    "minimum_amount": 2500.00,
-                    "minimum_amount_tax_mode": "incl",
-                })
-            ],
-            "reward_ids": [
-                Command.create({
-                    "reward_type": "discount",
-                    "discount": 25,
-                    "discount_mode": "percent",
-                    "discount_applicability": "order",
-                    "required_points": 1,
-                })
-            ],
-        })
+        self.all_programs |= self.env["loyalty.program"].create([
+            {
+                "name": "10% discount",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "reward_point_mode": "order",
+                        "minimum_amount": 1500.00,
+                        "minimum_amount_tax_mode": "incl",
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+            },
+            {
+                "name": "15% discount",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "reward_point_mode": "order",
+                        "minimum_amount": 1750.00,
+                        "minimum_amount_tax_mode": "incl",
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 15,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+            },
+            {
+                "name": "20% discount",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "reward_point_mode": "order",
+                        "minimum_amount": 2000.00,
+                        "minimum_amount_tax_mode": "incl",
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 20,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+            },
+            {
+                "name": "25% discount",
+                "trigger": "auto",
+                "program_type": "promotion",
+                "applies_on": "current",
+                "rule_ids": [
+                    Command.create({
+                        "reward_point_mode": "order",
+                        "minimum_amount": 2500.00,
+                        "minimum_amount_tax_mode": "incl",
+                    }),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 25,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+            },
+        ])
 
         # apply 10%
         order = self.empty_order
@@ -1396,7 +1410,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "product_ids": self.largeCabinet,
                     "reward_point_mode": "order",
                     "minimum_qty": 1,
-                })
+                }),
             ],
             "reward_ids": [
                 Command.create({
@@ -1407,7 +1421,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_product_ids": self.conferenceChair,
                     "discount_max_amount": 200,
                     "required_points": 1,
-                })
+                }),
             ],
         })
         # set large cabinet and conference chair prices
@@ -1415,18 +1429,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.conferenceChair.write({"list_price": 100, "sale_ok": True})
 
         # create SOL
-        self.env["sale.order.line"].create({
-            "product_id": self.largeCabinet.id,
-            "name": "Large Cabinet",
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.conferenceChair.id,
-            "name": "Conference chair",
-            "product_uom_qty": 2.0,
-            "order_id": order.id,
-        })
+        _, sol2 = self.env["sale.order.line"].create([
+            {
+                "product_id": self.largeCabinet.id,
+                "name": "Large Cabinet",
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.conferenceChair.id,
+                "name": "Conference chair",
+                "product_uom_qty": 2.0,
+                "order_id": order.id,
+            },
+        ])
 
         self.assertEqual(
             len(order.order_line),
@@ -1434,7 +1450,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "The order must contain 2 order lines since the coupon is not yet applied",
         )
         self.assertEqual(
-            order.amount_total, 700.0, "The price must be 500.0 since the coupon is not yet applied"
+            order.amount_total, 700.0, "The price must be 500.0 since the coupon is not yet applied",
         )
 
         # generate and apply coupon
@@ -1523,7 +1539,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "product_ids": self.drawerBlack,
                     "reward_point_mode": "order",
                     "minimum_qty": 1,
-                })
+                }),
             ],
             "reward_ids": [
                 Command.create({
@@ -1533,20 +1549,22 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_applicability": "specific",
                     "discount_product_ids": self.largeMeetingTable,
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
-        self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "product_uom_qty": 2.0,
-            "order_id": order.id,
-        })
-        sol_B = self.env["sale.order.line"].create({
-            "product_id": self.largeMeetingTable.id,
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
+        _, sol_B = self.env["sale.order.line"].create([
+            {
+                "product_id": self.drawerBlack.id,
+                "product_uom_qty": 2.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.largeMeetingTable.id,
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+        ])
 
         self._auto_rewards(order, self.all_programs)
 
@@ -1598,7 +1616,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "product_ids": product_F,
                     "reward_point_mode": "order",
                     "minimum_qty": 1,
-                })
+                }),
             ],
             "reward_ids": [
                 Command.create({
@@ -1606,7 +1624,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 5,
                     "discount_mode": "per_point",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
@@ -1666,7 +1684,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "percent",
                     "discount_applicability": "cheapest",
                     "discount_max_amount": 30,
-                })
+                }),
             ],
         })
 
@@ -1688,7 +1706,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 2, "The order must contain 2 order lines")
         self.assertEqual(
-            order.amount_total, 610.0, "The price must be 610.0 since the max discount is 30"
+            order.amount_total, 610.0, "The price must be 610.0 since the max discount is 30",
         )
 
     def test_specific_discount_product_group(self):
@@ -1719,7 +1737,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount_applicability": "specific",
                         "discount_product_ids": product_a | product_b,
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
             {
@@ -1736,7 +1754,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount_applicability": "specific",
                         "discount_product_ids": product_a,
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
         ])
@@ -1811,7 +1829,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount_applicability": "specific",
                         "discount_product_ids": product_a,
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
             {
@@ -1828,7 +1846,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount_applicability": "specific",
                         "discount_product_ids": product_a | product_b,
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
         ])
@@ -1875,7 +1893,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
@@ -1908,7 +1926,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Value is 5.99 instead of 6 because you cannot have 6 with 10% tax excluded and a precision
         # rounding of 2.
         self.assertAlmostEqual(
-            order.amount_total, 6, 1, msg="Price should be 11$ - 5$(discount) = 6$"
+            order.amount_total, 6, 1, msg="Price should be 11$ - 5$(discount) = 6$",
         )
         self.assertEqual(
             float_compare(order.amount_tax, 6 / 11, precision_rounding=3),
@@ -1930,7 +1948,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 6, 1, msg="Price should be 11$ - 5$(discount) = 6$"
+            order.amount_total, 6, 1, msg="Price should be 11$ - 5$(discount) = 6$",
         )
         self.assertEqual(
             float_compare(order.amount_tax, 6 / 12, precision_rounding=3),
@@ -1953,28 +1971,30 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
         order = self.empty_order
-        sol1 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "price_unit": 10,
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
-        sol2 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "price_unit": 10,
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
+        sol1, sol2 = self.env["sale.order.line"].create([
+            {
+                "product_id": self.drawerBlack.id,
+                "price_unit": 10,
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.drawerBlack.id,
+                "price_unit": 10,
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+        ])
 
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 15, 1, msg="Price should be 20$ - 5$(discount) = 15$"
+            order.amount_total, 15, 1, msg="Price should be 20$ - 5$(discount) = 15$",
         )
         self.assertEqual(order.amount_tax, 0, "No taxes are applied yet")
 
@@ -1982,7 +2002,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 15, 1, msg="Price should be 20$ - 5$(discount) = 15$"
+            order.amount_total, 15, 1, msg="Price should be 20$ - 5$(discount) = 15$",
         )
         self.assertEqual(
             float_compare(order.amount_tax, 5 / 11 + 0, precision_rounding=3),
@@ -1994,7 +2014,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 16, 1, msg="Price should be 21$ - 5$(discount) = 16$"
+            order.amount_total, 16, 1, msg="Price should be 21$ - 5$(discount) = 16$",
         )
         # Tax amount = 10% in 10$ + 10% in 11$ - 10% in 5$ (apply on excluded)
         self.assertEqual(float_compare(order.amount_tax, 5 / 11, precision_rounding=3), 0)
@@ -2003,7 +2023,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 16, 1, msg="Price should be 21$ - 5$(discount) = 16$"
+            order.amount_total, 16, 1, msg="Price should be 21$ - 5$(discount) = 16$",
         )
         # Promo apply on line 2 (10% inc + 10% exc)
         # Tax amount = 10% in 10$ + 10% in 10$ + 10% in 11 - 10% in 5$ - 10% in 4.55$ (100/110*5)
@@ -2021,7 +2041,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._auto_rewards(order, program)
 
         self.assertAlmostEqual(
-            order.amount_total, 27, 1, msg="Price should be 32$ - 5$(discount) = 27$"
+            order.amount_total, 27, 1, msg="Price should be 32$ - 5$(discount) = 27$",
         )
         # Promo apply on line 2 (10% inc + 10% exc)
         # Tax amount
@@ -2044,26 +2064,27 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
         order = self.empty_order
 
-        sol1 = self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "price_unit": 10,
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
-
-        self.env["sale.order.line"].create({
-            "product_id": self.drawerBlack.id,
-            "name": "hand discount",
-            "price_unit": -5,
-            "product_uom_qty": 1.0,
-            "order_id": order.id,
-        })
+        sol1, _ = self.env["sale.order.line"].create([
+            {
+                "product_id": self.drawerBlack.id,
+                "price_unit": 10,
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+            {
+                "product_id": self.drawerBlack.id,
+                "name": "hand discount",
+                "price_unit": -5,
+                "product_uom_qty": 1.0,
+                "order_id": order.id,
+            },
+        ])
 
         self._auto_rewards(order, program)
 
@@ -2075,7 +2096,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 3, "Promotion should add 1 line")
         self.assertEqual(
-            order.amount_total, 5, "10$ discount should be applied on top of the 15$ original price"
+            order.amount_total, 5, "10$ discount should be applied on top of the 15$ original price",
         )
 
     def test_fixed_amount_change_promo_amount(self):
@@ -2092,7 +2113,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount_mode": "per_point",
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
@@ -2130,22 +2151,24 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 50,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
         order = self.empty_order
         # Create taxes
-        self.tax_15pc_excl = self.env["account.tax"].create({
-            "name": "15% Tax excl",
-            "amount_type": "percent",
-            "amount": 15,
-        })
-        self.tax_10_fixed = self.env["account.tax"].create({
-            "name": "10$ Fixed tax",
-            "amount_type": "fixed",
-            "amount": 10,
-        })
+        self.tax_15pc_excl, self.tax_10_fixed = self.env["account.tax"].create([
+            {
+                "name": "15% Tax excl",
+                "amount_type": "percent",
+                "amount": 15,
+            },
+            {
+                "name": "10$ Fixed tax",
+                "amount_type": "fixed",
+                "amount": 10,
+            },
+        ])
 
         # Set tax and prices on products as need for the test
         self.product_A.write({"list_price": 100})
@@ -2163,10 +2186,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 2, "Promotion should add 1 line")
         self.assertEqual(
-            order.amount_total, 67.5, "100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) "
+            order.amount_total, 67.5, "100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) ",
         )
         self.assertEqual(
-            order.amount_tax, 17.5, "15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) "
+            order.amount_tax, 17.5, "15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) ",
         )
 
     def test_fixed_tax_not_affected_2(self):
@@ -2183,22 +2206,24 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 50,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
 
         order = self.empty_order
         # Create taxes
-        self.tax_15pc_excl = self.env["account.tax"].create({
-            "name": "15% Tax excl",
-            "amount_type": "percent",
-            "amount": 15,
-        })
-        self.tax_10_fixed = self.env["account.tax"].create({
-            "name": "10$ Fixed tax",
-            "amount_type": "fixed",
-            "amount": 10,
-        })
+        self.tax_15pc_excl, self.tax_10_fixed = self.env["account.tax"].create([
+            {
+                "name": "15% Tax excl",
+                "amount_type": "percent",
+                "amount": 15,
+            },
+            {
+                "name": "10$ Fixed tax",
+                "amount_type": "fixed",
+                "amount": 10,
+            },
+        ])
 
         # Set tax and prices on products as need for the test
         self.product_A.write({"list_price": 100})
@@ -2216,7 +2241,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 2, "Promotion should add 1 line")
         self.assertEqual(
-            order.amount_total, 75, "100$ + 15% tax + 10$ tax - 50$(discount) = 75$(total) "
+            order.amount_total, 75, "100$ + 15% tax + 10$ tax - 50$(discount) = 75$(total) ",
         )
 
     def test_loyalty_card_tax_total(self):
@@ -2226,7 +2251,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "applies_on": "both",
             "rule_ids": [
-                Command.create({"reward_point_mode": "money", "reward_point_amount": 0.01})
+                Command.create({"reward_point_mode": "money", "reward_point_amount": 0.01}),
             ],
             "reward_ids": [
                 Command.create({
@@ -2235,12 +2260,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 1,
                     "discount_applicability": "cheapest",
                     "required_points": 1,
-                })
+                }),
             ],
         })
         order = self.empty_order
         self.env["loyalty.card"].create([
-            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3.39}
+            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3.39},
         ])
 
         # Create taxes
@@ -2277,12 +2302,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 0.03,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
         order = self.empty_order
         self.env["loyalty.card"].create([
-            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3030}
+            {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3030},
         ])
         product_a = self._create_product(name="product_a", lst_price=3000.0, taxes_id=False)
         order.order_line = [Command.create({"product_id": product_a.id})]
@@ -2323,7 +2348,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 10,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
         })
         order = self.empty_order
@@ -2374,7 +2399,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "discount": 10,
                     "discount_applicability": "order",
                     "required_points": 1,
-                })
+                }),
             ],
             "company_id": JPY_company.id,
         })
@@ -2438,7 +2463,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount": 50,
                         "discount_applicability": "order",
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
             {
@@ -2455,13 +2480,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                         "discount_applicability": "specific",
                         "discount_product_ids": self.pedalBin.ids,
                         "required_points": 1,
-                    })
+                    }),
                 ],
             },
         ])
         order = self.empty_order
         order.order_line = [
-            Command.create({"product_id": self.pedalBin.id, "tax_ids": self.tax_20pc_excl.ids})
+            Command.create({"product_id": self.pedalBin.id, "tax_ids": self.tax_20pc_excl.ids}),
         ]
 
         self.assertAlmostEqual(

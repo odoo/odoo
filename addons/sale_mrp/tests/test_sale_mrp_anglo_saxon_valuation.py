@@ -6,7 +6,9 @@ from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -120,8 +122,10 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Create variant attributes
         self.prod_att_1 = self.env['product.attribute'].create({'name': 'Color'})
-        self.prod_attr1_v1 = self.env['product.attribute.value'].create({'name': 'red', 'attribute_id': self.prod_att_1.id, 'sequence': 1})
-        self.prod_attr1_v2 = self.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': self.prod_att_1.id, 'sequence': 2})
+        self.prod_attr1_v1, self.prod_attr1_v2 = self.env['product.attribute.value'].create([
+            {'name': 'red', 'attribute_id': self.prod_att_1.id, 'sequence': 1},
+            {'name': 'blue', 'attribute_id': self.prod_att_1.id, 'sequence': 2},
+        ])
 
         # Create Product template with variants
         self.product_template = self.env['product.template'].create({
@@ -132,8 +136,8 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'categ_id': self.stock_account_product_categ.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
-                'value_ids': [(6, 0, [self.prod_attr1_v1.id, self.prod_attr1_v2.id])]
-            })]
+                'value_ids': [(6, 0, [self.prod_attr1_v1.id, self.prod_attr1_v2.id])],
+            })],
         })
 
         # Get product variant
@@ -148,7 +152,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 'is_storable': True,
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.stock_account_product_categ.id,
-                'standard_price': price
+                'standard_price': price,
             })
             self.env['stock.quant'].sudo().create({
                 'product_id': component.id,
@@ -159,12 +163,12 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 'product_tmpl_id': self.product_template.id,
                 'product_id': product.id,
                 'product_qty': 1.0,
-                'type': 'phantom'
+                'type': 'phantom',
             })
             self.env['mrp.bom.line'].create({
                 'product_id': component.id,
                 'product_qty': 1.0,
-                'bom_id': bom.id
+                'bom_id': bom.id,
             })
 
         create_simple_bom_for_product(self.variant_1, "V1", 20)
@@ -179,7 +183,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 2,
-                    'price_unit': product.list_price
+                    'price_unit': product.list_price,
                 })],
                 'company_id': self.company_data['company'].id,
             }
@@ -227,7 +231,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'product_tmpl_id': kit.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})]
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
         })
 
         # Receive 3 components: one @10, one @20 and one @60
@@ -329,7 +333,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'product_tmpl_id': kit.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})]
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
         })
 
         # Receive 3 components: one @10, one @20 and one @60
@@ -460,8 +464,8 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         amls = invoice.line_ids
         self.assertRecordValues(amls, [
             # pylint: disable=bad-whitespace
-            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 5},
-            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 5,     'credit': 0},
+            {'account_id': self.company_data['default_account_revenue'].id, 'debit': 0, 'credit': 5},
+            {'account_id': self.company_data['default_account_receivable'].id, 'debit': 5, 'credit': 0},
         ])
 
     def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
@@ -513,10 +517,10 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         amls = invoice.line_ids
         self.assertRecordValues(amls, [
             # pylint: disable=bad-whitespace
-            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 10},
-            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 10,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 30},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
+            {'account_id': self.company_data['default_account_revenue'].id, 'debit': 0, 'credit': 10},
+            {'account_id': self.company_data['default_account_receivable'].id, 'debit': 10, 'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'debit': 0, 'credit': 30},
+            {'account_id': self.company_data['default_account_expense'].id, 'debit': 30, 'credit': 0},
         ])
 
     def test_anglo_saxo_kit_subkits(self):
@@ -556,8 +560,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 
-        # Create BoM for Main kit
-        self.env['mrp.bom'].create({
+        self.env['mrp.bom'].create([{
             'product_id': main_kit.id,
             'product_tmpl_id': main_kit.product_tmpl_id.id,
             'product_qty': 4.0,
@@ -566,9 +569,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 (0, 0, {'product_id': subkit_a.id, 'product_qty': 1.0}),
                 (0, 0, {'product_id': subkit_b.id, 'product_qty': 1.0}),
             ],
-        })
-        # Create BoM for Subkit A
-        self.env['mrp.bom'].create({
+        }, {
             'product_id': subkit_a.id,
             'product_tmpl_id': subkit_a.product_tmpl_id.id,
             'product_qty': 1.0,
@@ -576,9 +577,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'bom_line_ids': [
                 (0, 0, {'product_id': component_a.id, 'product_qty': 2.0}),
             ],
-        })
-        # Create BoM for Subkit B
-        self.env['mrp.bom'].create({
+        }, {
             'product_id': subkit_b.id,
             'product_tmpl_id': subkit_b.product_tmpl_id.id,
             'product_qty': 1.0,
@@ -586,7 +585,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'bom_line_ids': [
                 (0, 0, {'product_id': component_b.id, 'product_qty': 2.0}),
             ],
-        })
+        }])
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -666,12 +665,12 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         stock_output_amls = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_out'].id)], order='id asc')
         self.assertRecordValues(stock_output_amls,
             [
-                {'product_id': kit.id,       'reconciled': True,    'debit': 0.0,     'credit':  30.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 0.0,     'credit':  20.0},
-                {'product_id': compo01.id,   'reconciled': True,    'debit': 10.0,    'credit':  0.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
-            ]
+                {'product_id': kit.id, 'reconciled': True, 'debit': 0.0, 'credit':  30.0},
+                {'product_id': compo02.id, 'reconciled': True, 'debit': 0.0, 'credit':  20.0},
+                {'product_id': compo01.id, 'reconciled': True, 'debit': 10.0, 'credit':  0.0},
+                {'product_id': compo02.id, 'reconciled': True, 'debit': 20.0, 'credit':  0.0},
+                {'product_id': compo02.id, 'reconciled': True, 'debit': 20.0, 'credit':  0.0},
+            ],
         )
 
     @skip('Temporary to fast merge new valuation')
@@ -720,11 +719,11 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         stock_output_amls = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_out'].id)], order='id asc')
         self.assertRecordValues(stock_output_amls,
             [
-                {'product_id': component.id, 'reconciled': True,    'debit': 10.0,     'credit':  0.0},
-                {'product_id': component.id, 'reconciled': True,    'debit': 10.0,     'credit':  0.0},
-                {'product_id': kit.id,       'reconciled': True,    'debit': 0.0,     'credit':  10.0},
-                {'product_id': component.id, 'reconciled': True,    'debit': 0.0,     'credit':  10.0},
-            ]
+                {'product_id': component.id, 'reconciled': True, 'debit': 10.0, 'credit':  0.0},
+                {'product_id': component.id, 'reconciled': True, 'debit': 10.0, 'credit':  0.0},
+                {'product_id': kit.id, 'reconciled': True, 'debit': 0.0, 'credit':  10.0},
+                {'product_id': component.id, 'reconciled': True, 'debit': 0.0, 'credit':  10.0},
+            ],
         )
 
     def test_kit_comp_fifo_deliver_and_invoice_in_two_waves(self):
@@ -743,7 +742,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'product_tmpl_id': kit.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
-            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})]
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
         })
 
         # Receive 2 components: one @10, one @20
@@ -789,8 +788,8 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         invoice.action_post()
         invoice_1_cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
         self.assertRecordValues(invoice_1_cogs_amls, [
-            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 10},
-            {'account_id': self.company_data['default_account_expense'].id,           'debit': 10,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'debit': 0, 'credit': 10},
+            {'account_id': self.company_data['default_account_expense'].id, 'debit': 10, 'credit': 0},
         ])
 
         # Deliver second and invoice (cogs should be 20)
@@ -802,8 +801,8 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         invoice_2.action_post()
         invoice_2_cogs_amls = invoice_2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
         self.assertRecordValues(invoice_2_cogs_amls, [
-            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 20},
-            {'account_id': self.company_data['default_account_expense'].id,           'debit': 20,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'debit': 0, 'credit': 20},
+            {'account_id': self.company_data['default_account_expense'].id, 'debit': 20, 'credit': 0},
         ])
 
     def test_cogs_kit_multi_steps_first_step_validated(self):
@@ -853,6 +852,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         invoice.action_post()
         invoice_cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
         self.assertRecordValues(invoice_cogs_amls, [
-            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 30},
-            {'account_id': self.company_data['default_account_expense'].id,           'debit': 30,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'debit': 0, 'credit': 30},
+            {'account_id': self.company_data['default_account_expense'].id, 'debit': 30, 'credit': 0},
         ])

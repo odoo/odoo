@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.tests import Form
-from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
 from psycopg2.errors import NotNullViolation
+
+from odoo import Command
+from odoo.exceptions import ValidationError
+from odoo.tests import Form
+from odoo.tests.common import tagged
+
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -22,55 +23,63 @@ class TestSoLineMilestones(TestSaleCommon):
         cls.env.user.group_ids += cls.env.ref('project.group_project_milestone')
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
-        cls.product_delivery_milestones1 = cls.env['product.product'].create({
-            'name': "Milestones 1, create project only",
-            'standard_price': 15,
-            'list_price': 30,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'default_code': 'MILE-DELI4',
-            'service_type': 'milestones',
-            'service_tracking': 'project_only',
-        })
-        cls.product_delivery_milestones2 = cls.env['product.product'].create({
-            'name': "Milestones 2, create project only",
-            'standard_price':20,
-            'list_price': 35,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'default_code': 'MILE-DELI4',
-            'service_type': 'milestones',
-            'service_tracking': 'project_only',
-        })
-        cls.product_delivery_milestones3 = cls.env['product.product'].create({
-            'name': "Milestones 3, create project & task",
-            'standard_price': 20,
-            'list_price': 35,
-            'type': 'service',
-            'invoice_policy': 'delivery',
-            'uom_id': uom_hour.id,
-            'default_code': 'MILE-DELI4',
-            'service_type': 'milestones',
-            'service_tracking': 'task_in_project',
-        })
+        (
+            cls.product_delivery_milestones1,
+            cls.product_delivery_milestones2,
+            cls.product_delivery_milestones3,
+        ) = cls.env['product.product'].create([
+            {
+                'name': "Milestones 1, create project only",
+                'standard_price': 15,
+                'list_price': 30,
+                'type': 'service',
+                'invoice_policy': 'delivery',
+                'uom_id': uom_hour.id,
+                'default_code': 'MILE-DELI4',
+                'service_type': 'milestones',
+                'service_tracking': 'project_only',
+            },
+            {
+                'name': "Milestones 2, create project only",
+                'standard_price': 20,
+                'list_price': 35,
+                'type': 'service',
+                'invoice_policy': 'delivery',
+                'uom_id': uom_hour.id,
+                'default_code': 'MILE-DELI4',
+                'service_type': 'milestones',
+                'service_tracking': 'project_only',
+            },
+            {
+                'name': "Milestones 3, create project & task",
+                'standard_price': 20,
+                'list_price': 35,
+                'type': 'service',
+                'invoice_policy': 'delivery',
+                'uom_id': uom_hour.id,
+                'default_code': 'MILE-DELI4',
+                'service_type': 'milestones',
+                'service_tracking': 'task_in_project',
+            },
+        ])
 
         cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
         })
-        cls.sol1 = cls.env['sale.order.line'].create({
-            'product_id': cls.product_delivery_milestones1.id,
-            'product_uom_qty': 20,
-            'order_id': cls.sale_order.id,
-        })
-        cls.sol2 = cls.env['sale.order.line'].create({
-            'product_id': cls.product_delivery_milestones2.id,
-            'product_uom_qty': 30,
-            'order_id': cls.sale_order.id,
-        })
+        cls.sol1, cls.sol2 = cls.env['sale.order.line'].create([
+            {
+                'product_id': cls.product_delivery_milestones1.id,
+                'product_uom_qty': 20,
+                'order_id': cls.sale_order.id,
+            },
+            {
+                'product_id': cls.product_delivery_milestones2.id,
+                'product_uom_qty': 30,
+                'order_id': cls.sale_order.id,
+            },
+        ])
         cls.sale_order.action_confirm()
 
         cls.project = cls.sol1.project_id
@@ -84,20 +93,22 @@ class TestSoLineMilestones(TestSaleCommon):
         })
 
     def test_reached_milestones_delivered_quantity(self):
-        self.milestone2 = self.env['project.milestone'].create({
-            'name': 'Milestone 2',
-            'project_id': self.project.id,
-            'is_reached': False,
-            'sale_line_id': self.sol2.id,
-            'quantity_percentage': 0.2,
-        })
-        self.milestone3 = self.env['project.milestone'].create({
-            'name': 'Milestone 3',
-            'project_id': self.project.id,
-            'is_reached': False,
-            'sale_line_id': self.sol2.id,
-            'quantity_percentage': 0.4,
-        })
+        self.milestone2, self.milestone3 = self.env['project.milestone'].create([
+            {
+                'name': 'Milestone 2',
+                'project_id': self.project.id,
+                'is_reached': False,
+                'sale_line_id': self.sol2.id,
+                'quantity_percentage': 0.2,
+            },
+            {
+                'name': 'Milestone 3',
+                'project_id': self.project.id,
+                'is_reached': False,
+                'sale_line_id': self.sol2.id,
+                'quantity_percentage': 0.4,
+            },
+        ])
 
         self.assertEqual(self.sol1.qty_delivered, 0.0, "Delivered quantity should start at 0")
         self.assertEqual(self.sol2.qty_delivered, 0.0, "Delivered quantity should start at 0")
@@ -146,7 +157,7 @@ class TestSoLineMilestones(TestSaleCommon):
         """
         project = self.env['project.project'].create({
             'name': 'Test project',
-            'sale_line_id': self.sol2.id, # sol1 was created first so we use sol2 to demonstrate that sol1 is used
+            'sale_line_id': self.sol2.id,  # sol1 was created first so we use sol2 to demonstrate that sol1 is used
         })
         milestone = self.env['project.milestone'].with_context({'default_project_id': project.id}).create({
             'name': 'Test milestone',
@@ -154,8 +165,8 @@ class TestSoLineMilestones(TestSaleCommon):
             'is_reached': False,
         })
         # since SOL1 was created before SOL2, it should be selected
-        self.assertEqual(milestone.sale_line_id, self.sol1, "The milestone's sale order line should be the first one in the project's SO") #1
-        self.assertEqual(milestone.quantity_percentage, 1.0, "The milestone's quantity percentage should be 1.0") #2
+        self.assertEqual(milestone.sale_line_id, self.sol1, "The milestone's sale order line should be the first one in the project's SO")  # 1
+        self.assertEqual(milestone.quantity_percentage, 1.0, "The milestone's quantity percentage should be 1.0")  # 2
 
     def test_compute_qty_milestone(self):
         """ This test will check that the compute methods for the milestone quantity fields work properly. """
@@ -313,7 +324,7 @@ class TestSoLineMilestones(TestSaleCommon):
                     'product_uom_qty': 1,
                     'name': name,
                 }) for name in ["m1", "m2"]
-            ]
+            ],
         })
         sale_order.action_confirm()
 
@@ -322,7 +333,7 @@ class TestSoLineMilestones(TestSaleCommon):
             'name': 'Test Task',
             'partner_id': self.partner.id,
             'project_id': sale_order.project_id.id,
-            'sale_line_id': self.sol1.id
+            'sale_line_id': self.sol1.id,
         })
         tasks = sale_order.project_id.task_ids
         tasks[0].parent_id = parent_task.id

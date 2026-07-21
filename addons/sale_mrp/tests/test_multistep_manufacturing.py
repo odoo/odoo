@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, Form
-from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo import Command
+from odoo.tests import Form, tagged
+
+from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -162,28 +162,27 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.route_mto.active = True
         warehouse = self.warehouse_1
         warehouse.manufacture_steps = 'pbm_sam'
-        prod1 = self.env['product.product'].create({
+        prod1, prod2 = self.env['product.product'].create([{
             'name': 'elct1',
             'type': 'consu',
             'route_ids': [(6, 0, [
                 warehouse.manufacture_pull_id.route_id.id,
-                warehouse.mto_pull_id.route_id.id
+                warehouse.mto_pull_id.route_id.id,
             ])],
-        })
-        prod2 = self.env['product.product'].create({
+        }, {
             'name': 'elct2',
             'type': 'consu',
             'route_ids': [(6, 0, [
                 warehouse.manufacture_pull_id.route_id.id,
-                warehouse.mto_pull_id.route_id.id
+                warehouse.mto_pull_id.route_id.id,
             ])],
-        })
+        }])
         partner = self.env['res.partner'].create({'name': 'Steve Buscemi'})
         so = self.env['sale.order'].create({
             'partner_id': partner.id,
             'order_line': [(0, 0, {'product_id': prod1.id, 'product_uom_qty': 1}),
                            (0, 0, {'product_id': prod2.id, 'product_uom_qty': 1})],
-            'client_order_ref': 'Test Reference'
+            'client_order_ref': 'Test Reference',
         })
         so.action_confirm()
 
@@ -197,7 +196,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(
             self.sale_order.order_line.product_id,
             self.sale_order.warehouse_id.lot_stock_id,
-            10
+            10,
         )
         self.sale_order.action_confirm()
         self.assertEqual(self.sale_order.picking_ids.state, 'waiting')

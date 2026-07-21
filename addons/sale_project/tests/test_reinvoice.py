@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
-from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.tests import Form, tagged
+
 from odoo.fields import Command
+from odoo.tests import Form, tagged
+
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -25,7 +27,7 @@ class TestReInvoice(TestSaleCommon):
             'code': 'TESTSALE_REINVOICE',
             'company_id': cls.partner_a.company_id.id,
             'plan_id': cls.analytic_plan.id,
-            'partner_id': cls.partner_a.id
+            'partner_id': cls.partner_a.id,
         })
 
         cls.project = cls.env['project.project'].create({
@@ -53,18 +55,20 @@ class TestReInvoice(TestSaleCommon):
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
         # create SO line and confirm SO (with only one line)
-        sale_order_line1 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_order_cost'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
-            'order_id': self.sale_order.id,
-        })
-        sale_order_line2 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_delivery_cost'].id,
-            'product_uom_qty': 4,
-            'qty_delivered': 1,
-            'order_id': self.sale_order.id,
-        })
+        sale_order_line1, sale_order_line2 = self.env['sale.order.line'].create([
+            {
+                'product_id': self.company_data['product_order_cost'].id,
+                'product_uom_qty': 2,
+                'qty_delivered': 1,
+                'order_id': self.sale_order.id,
+            },
+            {
+                'product_id': self.company_data['product_delivery_cost'].id,
+                'product_uom_qty': 4,
+                'qty_delivered': 1,
+                'order_id': self.sale_order.id,
+            },
+        ])
 
         self.sale_order.action_confirm()
 
@@ -165,18 +169,20 @@ class TestReInvoice(TestSaleCommon):
         # Required for `analytic_distribution` to be visible in the view
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # create SO line and confirm SO (with only one line)
-        sale_order_line1 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_delivery_sales_price'].id,
-            'product_uom_qty': 2,
-            'qty_delivered': 1,
-            'order_id': self.sale_order.id,
-        })
-        sale_order_line2 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_order_sales_price'].id,
-            'product_uom_qty': 3,
-            'qty_delivered': 1,
-            'order_id': self.sale_order.id,
-        })
+        sale_order_line1, sale_order_line2 = self.env['sale.order.line'].create([
+            {
+                'product_id': self.company_data['product_delivery_sales_price'].id,
+                'product_uom_qty': 2,
+                'qty_delivered': 1,
+                'order_id': self.sale_order.id,
+            },
+            {
+                'product_id': self.company_data['product_order_sales_price'].id,
+                'product_uom_qty': 3,
+                'qty_delivered': 1,
+                'order_id': self.sale_order.id,
+            },
+        ])
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -260,16 +266,18 @@ class TestReInvoice(TestSaleCommon):
 
     def test_not_reinvoicing_invoiced_so_lines(self):
         """ Test that invoiced SO lines are not re-invoiced. """
-        so_line1 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_delivery_cost'].id,
-            'discount': 100.00,
-            'order_id': self.sale_order.id,
-        })
-        so_line2 = self.env['sale.order.line'].create({
-            'product_id': self.company_data['product_delivery_sales_price'].id,
-            'discount': 100.00,
-            'order_id': self.sale_order.id,
-        })
+        so_line1, so_line2 = self.env['sale.order.line'].create([
+            {
+                'product_id': self.company_data['product_delivery_cost'].id,
+                'discount': 100.00,
+                'order_id': self.sale_order.id,
+            },
+            {
+                'product_id': self.company_data['product_delivery_sales_price'].id,
+                'discount': 100.00,
+                'order_id': self.sale_order.id,
+            },
+        ])
 
         self.sale_order.action_confirm()
 
@@ -413,8 +421,10 @@ class TestReInvoice(TestSaleCommon):
         the default analytic account is not replaced by the one from the so in the invoice.
         """
         analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
-        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so', 'plan_id': analytic_plan_default.id})
+        analytic_account_default, analytic_account_so = self.env['account.analytic.account'].create([
+            {'name': 'default', 'plan_id': analytic_plan_default.id},
+            {'name': 'so', 'plan_id': analytic_plan_default.id},
+        ])
 
         self.env['account.analytic.distribution.model'].create({
             'analytic_distribution': {analytic_account_default.id: 100},

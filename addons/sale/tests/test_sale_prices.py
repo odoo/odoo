@@ -79,7 +79,7 @@ class TestSalePrices(SaleCommon):
                     "product_uom_qty": 0.3,
                     "product_uom_id": self.uom_dozen.id,
                 }),
-            ]
+            ],
         )
 
         discounted_lines = order.order_line.filtered("pricelist_item_id")
@@ -91,7 +91,7 @@ class TestSalePrices(SaleCommon):
             [product_price, product_price, product_dozen_price, product_dozen_price],
         )
         self.assertEqual(
-            discounted_lines.mapped("discount"), [self.discount] * len(discounted_lines)
+            discounted_lines.mapped("discount"), [self.discount] * len(discounted_lines),
         )
 
         discounted_lines[0].product_uom_qty = 3.0
@@ -103,7 +103,7 @@ class TestSalePrices(SaleCommon):
         tomorrow = today + timedelta(days=1)
 
         pricelist_rule = self._create_discount_pricelist_rule(
-            date_start=today - timedelta(hours=1), date_end=today + timedelta(hours=23)
+            date_start=today - timedelta(hours=1), date_end=today + timedelta(hours=23),
         )
 
         with freeze_time(today):
@@ -150,7 +150,7 @@ class TestSalePrices(SaleCommon):
             self.assertEqual(order_line.discount, 10)
 
         self.assertEqual(
-            order.amount_untaxed, self.product.lst_price * 3.8
+            order.amount_untaxed, self.product.lst_price * 3.8,
         )  # Discount of 10% on 2 of the 4 sol
 
     def test_pricelist_product_context(self):
@@ -171,7 +171,7 @@ class TestSalePrices(SaleCommon):
                 Command.create({
                     "attribute_id": no_variant_attribute.id,
                     "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
-                })
+                }),
             ],
             "list_price": 75.0,
             "taxes_id": False,
@@ -189,7 +189,7 @@ class TestSalePrices(SaleCommon):
                     "product_no_variant_attribute_value_ids": [Command.link(ptav.id)],
                 })
                 for ptav in ptavs
-            ]
+            ],
         )
 
         order_lines = order.order_line
@@ -207,8 +207,8 @@ class TestSalePrices(SaleCommon):
                     "product_id": self.product.id,
                     "product_uom_id": self.uom_dozen.id,
                     "product_uom_qty": 2.0,
-                })
-            ]
+                }),
+            ],
         )
         self.assertEqual(order.order_line.price_unit, 240.0)
 
@@ -232,7 +232,7 @@ class TestSalePrices(SaleCommon):
                         "product_id": self.product.id,
                         "product_uom_id": self.uom_dozen.id,
                         "product_uom_qty": 2.0,
-                    })
+                    }),
                 ],
             })
             # 20.0 (product price) * 24.0 (2 dozens) * 2.0 (price rate USD -> EUR)
@@ -269,7 +269,7 @@ class TestSalePrices(SaleCommon):
                     "percent_price": 10,
                     "applied_on": "3_global",
                     "name": "First discount",
-                })
+                }),
             ],
         })
 
@@ -282,8 +282,8 @@ class TestSalePrices(SaleCommon):
                     "percent_price": 10,
                     "applied_on": "3_global",
                     "name": "Second discount",
-                })
-            ]
+                }),
+            ],
         })
 
         order = self._create_so(date_order="2018-07-11")
@@ -292,7 +292,7 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(order_line.pricelist_item_id, self.pricelist.item_ids)
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
         self.assertEqual(
-            order_line.discount, 19, "Discount not computed correctly based on both pricelists"
+            order_line.discount, 19, "Discount not computed correctly based on both pricelists",
         )
 
     def test_pricelist_with_another_currency(self):
@@ -308,7 +308,7 @@ class TestSalePrices(SaleCommon):
         })
         with mute_logger("odoo.models.unlink"):
             self.env["res.currency.rate"].sudo().search([
-                ("currency_id", "=", self.env.company.currency_id.id)
+                ("currency_id", "=", self.env.company.currency_id.id),
             ]).unlink()
         new_uom = self.env["uom.uom"].create({
             "name": "10 units",
@@ -327,7 +327,7 @@ class TestSalePrices(SaleCommon):
                     "percent_price": 10,
                     "applied_on": "3_global",
                     "name": "First discount",
-                })
+                }),
             ],
         })
 
@@ -371,7 +371,7 @@ class TestSalePrices(SaleCommon):
                     "percent_price": -10,
                     "base": "pricelist",
                     "base_pricelist_id": pricelist_a.id,
-                })
+                }),
             ],
         })
 
@@ -639,8 +639,8 @@ class TestSalePrices(SaleCommon):
                     "applied_on": "3_global",
                     "compute_price": "percentage",
                     "percent_price": 54,
-                })
-            ]
+                }),
+            ],
         })
 
         # creating SO
@@ -788,7 +788,7 @@ class TestSalePrices(SaleCommon):
             line.product_uom_qty = 1.0
         sale_order = order_form.save()
         self.assertRecordValues(
-            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 94.34}]
+            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 94.34}],
         )
 
         # Test Mapping included to excluded
@@ -826,7 +826,7 @@ class TestSalePrices(SaleCommon):
             line.product_uom_qty = 1.0
         sale_order = order_form.save()
         self.assertRecordValues(
-            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 84.91}]
+            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 84.91}],
         )
 
         # Test Mapping (excluded,included) to (excluded, excluded)
@@ -869,7 +869,7 @@ class TestSalePrices(SaleCommon):
 
         # Check the unit price of SO line
         self.assertEqual(
-            100, order.order_line[0].price_unit, "The included tax must be subtracted to the price"
+            100, order.order_line[0].price_unit, "The included tax must be subtracted to the price",
         )
 
     def test_so_tax_mapping_multicompany(self):
@@ -897,11 +897,11 @@ class TestSalePrices(SaleCommon):
         })
         self.env.user.company_ids += branch_company
         order = self._create_so(
-            company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False
+            company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False,
         ).with_company(branch_company)
         self.assertEqual(order.order_line.tax_ids, tax_exclude, "Line tax should be mapped")
         self.assertAlmostEqual(
-            order.order_line.price_unit, 100.0, msg="Tax should not be included in unit price"
+            order.order_line.price_unit, 100.0, msg="Tax should not be included in unit price",
         )
 
     def test_free_product_and_price_include_fixed_tax(self):
@@ -931,15 +931,15 @@ class TestSalePrices(SaleCommon):
                     "product_uom_qty": 1,
                     "price_unit": 0.0,
                     "tax_ids": [Command.set(taxes.ids)],
-                })
-            ]
+                }),
+            ],
         )
 
         self.assertRecordValues(
-            order.order_line, [{"price_tax": 0.3, "price_subtotal": -0.3, "price_total": 0.0}]
+            order.order_line, [{"price_tax": 0.3, "price_subtotal": -0.3, "price_total": 0.0}],
         )
         self.assertRecordValues(
-            order, [{"amount_untaxed": -0.30, "amount_tax": 0.30, "amount_total": 0.0}]
+            order, [{"amount_untaxed": -0.30, "amount_tax": 0.30, "amount_total": 0.0}],
         )
 
     def test_sale_with_taxes(self):
@@ -983,8 +983,8 @@ class TestSalePrices(SaleCommon):
                     "product_uom_qty": 38,
                     "price_unit": 541.26,
                     "discount": 2.00,
-                })
-            ]
+                }),
+            ],
         )
 
         order.action_confirm()
@@ -1005,7 +1005,7 @@ class TestSalePrices(SaleCommon):
                 "amount_type": "percent",
                 "amount": 15.0,
                 "price_include_override": "tax_included",
-            })
+            }),
         ]
         order.action_confirm()
         self.assertEqual(line.untaxed_amount_to_invoice, 0)
@@ -1025,8 +1025,8 @@ class TestSalePrices(SaleCommon):
                     "product_uom_qty": 1,
                     "price_unit": 100.0,
                     "discount": 1.00,
-                })
-            ]
+                }),
+            ],
         )
         order.action_confirm()
         order_line = order.order_line
@@ -1057,7 +1057,7 @@ class TestSalePrices(SaleCommon):
                 "amount_type": "percent",
                 "amount": 10.0,
                 "price_include_override": "tax_included",
-            })
+            }),
         ]
         line.discount = 50.0
         order.action_confirm()
@@ -1075,8 +1075,8 @@ class TestSalePrices(SaleCommon):
                     "product_id": self.product.id,
                     "product_uom_qty": 1,
                     "price_unit": 100.0,
-                })
-            ]
+                }),
+            ],
         )
         wizard = self.env["sale.order.discount"].create({
             "sale_order_id": order.id,
@@ -1097,8 +1097,8 @@ class TestSalePrices(SaleCommon):
                     "product_uom_qty": 1,
                     "price_unit": 100.11,
                     "discount": 50.00,
-                })
-            ]
+                }),
+            ],
         )
         self.assertEqual(order.order_line.price_subtotal, 50.06)  # sol discount applied
         advantage_tax_excl, _ = order._get_advantages()
@@ -1114,17 +1114,17 @@ class TestSalePrices(SaleCommon):
                     "product_id": self.product.id,
                     "product_uom_qty": product_uom_qty,
                     "price_unit": 75.0,
-                })
-            ]
+                }),
+            ],
         )
         order.action_confirm()
         line = order.order_line
         quantity_precision = self.env["decimal.precision"].precision_get("Product Unit")
         self.assertEqual(
-            line.product_uom_qty, float_round(product_uom_qty, precision_digits=quantity_precision)
+            line.product_uom_qty, float_round(product_uom_qty, precision_digits=quantity_precision),
         )
         expected_price_subtotal = line.currency_id.round(
-            line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision)
+            line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision),
         )
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get("total_amount_currency"))
@@ -1134,16 +1134,15 @@ class TestSalePrices(SaleCommon):
         Test that discount is shown only when compute_price is percentage
         If compute_price is formula, discount should be included in price.
         """
-        test_product_discount = self.env["product.product"].create({
+        test_product_discount, test_product_incl_discount = self.env["product.product"].create([{
             "name": "Test Product",
             "list_price": 100.0,
             "taxes_id": None,
-        })
-        test_product_incl_discount = self.env["product.product"].create({
+        }, {
             "name": "Test Product",
             "list_price": 100.0,
             "taxes_id": None,
-        })
+        }])
         sale_order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [
@@ -1196,7 +1195,7 @@ class TestSalePrices(SaleCommon):
                     "percent_price": 10,
                     "base": "pricelist",
                     "base_pricelist_id": base_discount_pricelist.id,
-                })
+                }),
             ],
         })
         sale_order.pricelist_id = discount_pricelist
@@ -1215,7 +1214,7 @@ class TestSalePrices(SaleCommon):
             {"name": "Side", "combo_item_ids": [Command.create({"product_id": product_b.id})]},
         ])
         product_combo = self._create_product(
-            name="Meal Menu", list_price=10.0, type="combo", combo_ids=[Command.set(combos.ids)]
+            name="Meal Menu", list_price=10.0, type="combo", combo_ids=[Command.set(combos.ids)],
         )
 
         self._create_discount_pricelist_rule(product_tmpl_id=product_combo.product_tmpl_id.id)
@@ -1242,7 +1241,7 @@ class TestSalePrices(SaleCommon):
         )
         advantage_tax_excl, _ = order._get_advantages()
         self.assertEqual(
-            advantage_tax_excl, -1.0, msg="Pricelist discount should be applied to quotation"
+            advantage_tax_excl, -1.0, msg="Pricelist discount should be applied to quotation",
         )
 
     def test_combo_product_zero_base_price_distributes_evenly(self):
@@ -1258,7 +1257,7 @@ class TestSalePrices(SaleCommon):
             {"name": "G2", "combo_item_ids": [Command.create({"product_id": product_b.id})]},
         ])
         product_combo = self._create_product(
-            name="Meal Menu", list_price=100.0, type="combo", combo_ids=[Command.set(combos.ids)]
+            name="Meal Menu", list_price=100.0, type="combo", combo_ids=[Command.set(combos.ids)],
         )
 
         combo_line = self.env["sale.order.line"].create({
@@ -1342,7 +1341,7 @@ class TestSalePrices(SaleCommon):
                 Command.create({
                     "attribute_id": no_variant_attribute.id,
                     "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
-                })
+                }),
             ],
             "taxes_id": False,
         })
@@ -1355,9 +1354,9 @@ class TestSalePrices(SaleCommon):
                     Command.create({
                         "product_id": product_template.product_variant_id.id,
                         "extra_price": 50,
-                    })
+                    }),
                 ],
-            }
+            },
         ])
         combo_product_template = self.env["product.template"].create({
             "name": "Test Combo Product Template",
@@ -1380,7 +1379,7 @@ class TestSalePrices(SaleCommon):
                 "product_no_variant_attribute_value_ids": [Command.link(ptav.id)],
                 "combo_item_id": combo.combo_item_ids.id,
                 "linked_line_id": combo_line.id,
-            }
+            },
         ])
 
         self.assertAlmostEqual(order.amount_total, (100 + 50 + 10), 2)

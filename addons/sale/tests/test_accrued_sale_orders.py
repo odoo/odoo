@@ -8,12 +8,12 @@ from odoo.tests import freeze_time, tagged
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-@freeze_time("2022-01-01")
 @tagged("post_install", "-at_install")
 class TestAccruedSaleOrders(TestSaleCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    @freeze_time("2022-01-01")
     def setUpClass(cls):
         super().setUpClass()
 
@@ -29,16 +29,15 @@ class TestAccruedSaleOrders(TestSaleCommon):
             "property_account_income_id": cls.alt_inc_account.id,
         })
         cls.default_plan = cls.env["account.analytic.plan"].create({"name": "Default"})
-        cls.analytic_account_a = cls.env["account.analytic.account"].create({
+        cls.analytic_account_a, cls.analytic_account_b = cls.env["account.analytic.account"].create([{
             "name": "analytic_account_a",
             "plan_id": cls.default_plan.id,
             "company_id": False,
-        })
-        cls.analytic_account_b = cls.env["account.analytic.account"].create({
+        }, {
             "name": "analytic_account_b",
             "plan_id": cls.default_plan.id,
             "company_id": False,
-        })
+        }])
         cls.sale_order = cls.env["sale.order"].create({
             "partner_id": cls.partner_a.id,
             "order_line": [
@@ -73,6 +72,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
             .create({"account_id": cls.account_expense.id, "date": fields.Date.today()})
         )
 
+    @freeze_time("2022-01-01")
     def test_accrued_order(self):
         # self.wizard = self.wizard.with_context(accrual_entry_date=fields.Date.today())
         self.wizard.date = fields.Date.today()
@@ -216,6 +216,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
             ],
         )
 
+    @freeze_time("2022-01-01")
     def test_product_name_in_accrued_revenue_entry(self):
         self.sale_order.order_line.qty_delivered = 5
 
