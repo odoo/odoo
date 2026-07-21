@@ -77,8 +77,7 @@ class TestSlideInternals(slides_common.SlidesCase):
         category_slides[0].user_has_completed = True
         self.assertFalse(category_slides[0].user_has_completed_category)
         # All slides completed in the category
-        for slide in category_slides:
-            slide.user_has_completed = True
+        category_slides.write({'user_has_completed': True})
         self.assertTrue(category_slides[0].user_has_completed_category)
 
     def test_change_content_type(self):
