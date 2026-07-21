@@ -476,10 +476,9 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         # If an exclusion rule deletes all variants at once it does not delete the template.
         # Here we can test `_get_first_possible_combination` with a product template with no variants
         # Deletes all exclusions
-        for exclusion in computer_ram_32.excluded_value_ids:
-            computer_ram_32.write({
-                'excluded_value_ids': [Command.unlink(exclusion.id)]
-            })
+        computer_ram_32.write({
+            'excluded_value_ids': [Command.unlink(exclusion.id) for exclusion in computer_ram_32.excluded_value_ids]
+        })
 
         # Activates all exclusions at once
         computer_ram_32.write({
@@ -550,13 +549,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'sequence': i,
             })
 
-            for j in range(50):
-                # create the attribute values
-                value = self.env['product.attribute.value'].create([{
-                    'name': "val %s" % j,
-                    'attribute_id': product_attribute.id,
-                    'sequence': j,
-                }])
+            # create the attribute values
+            self.env['product.attribute.value'].create([{
+                'name': "val %s" % j,
+                'attribute_id': product_attribute.id,
+                'sequence': j,
+            } for j in range(50)])
 
             # set attribute and attribute values on the template
             self.env['product.template.attribute.line'].create([{
@@ -644,13 +642,12 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'sequence': i,
             })
 
-            for j in range(10):
-                # create the attribute values
-                self.env['product.attribute.value'].create([{
-                    'name': "val %s/%s" % (i, j),
-                    'attribute_id': product_attribute.id,
-                    'sequence': j,
-                }])
+            # create the attribute values
+            self.env['product.attribute.value'].create([{
+                'name': "val %s/%s" % (i, j),
+                'attribute_id': product_attribute.id,
+                'sequence': j,
+            } for j in range(10)])
 
             # set attribute and attribute values on the template
             self.env['product.template.attribute.line'].create([{

@@ -2425,14 +2425,14 @@ class TestStockFlow(TestStockCommon):
         for product in products:
             product.route_ids = [(6, 0, warehouse02.resupply_route_ids.ids)]
             self.env['stock.quant']._update_available_quantity(product, wh01_stock_location, 10)
-            self.env['stock.warehouse.orderpoint'].sudo().create({
-                'name': 'RR for %s' % product.name,
-                'warehouse_id': warehouse02.id,
-                'location_id': wh02_stock_location.id,
-                'product_id': product.id,
-                'product_min_qty': 1,
-                'product_max_qty': 5,
-            })
+        self.env['stock.warehouse.orderpoint'].sudo().create([{
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse02.id,
+            'location_id': wh02_stock_location.id,
+            'product_id': product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+        } for product in products])
 
         self.env['stock.rule'].run_scheduler()
 

@@ -39,13 +39,11 @@ class TestProductBarcode(TransactionCase):
 
     def test_blank_barcodes_allowed(self):
         """Makes sure duplicated blank barcodes are allowed."""
-        for i in range(2):
-            self.env['product.product'].create({'name': f'BC_{i}'})
+        self.env['product.product'].create([{'name': f'BC_{i}'} for i in range(2)])
 
     def test_false_barcodes_allowed(self):
         """Makes sure duplicated False barcodes are allowed."""
-        for i in range(2):
-            self.env['product.product'].create({'name': f'BC_{i}', 'barcode': False})
+        self.env['product.product'].create([{'name': f'BC_{i}', 'barcode': False} for i in range(2)])
 
     def test_duplicated_barcode(self):
         """Tests for simple duplication."""
@@ -129,8 +127,7 @@ class TestProductBarcode(TransactionCase):
             {'name': 'F6', 'barcode': '3', 'company_id': False},
         ]
 
-        for product in allowed_products:
-            self.env['product.product'].create(product)
+        self.env['product.product'].create(allowed_products)
 
         for product in forbidden_products:
             with self.assertRaises(ValidationError):

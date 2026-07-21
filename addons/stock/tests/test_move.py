@@ -1045,28 +1045,21 @@ class TestStockMove(TestStockCommon):
         self.warehouse_1.reception_steps = 'two_steps'
 
         basic_category = self.env.ref('product.product_category_goods')
-        child_locations = self.env['stock.location']
-        categs = self.env['product.category']
 
-        for i in range(3):
-            loc = self.env['stock.location'].create({
-                'name': 'shelf %s' % i,
-                'usage': 'internal',
-                'location_id': self.stock_location.id,
-            })
-            child_locations |= loc
-
-            categ = self.env['product.category'].create({
-                'name': 'Category %s' % i,
-                'parent_id': basic_category.id
-            })
-            categs |= categ
-
-            self.env['stock.putaway.rule'].create({
-                'category_id': categ.id,
-                'location_in_id': self.stock_location.id,
-                'location_out_id': loc.id,
-            })
+        child_locations = self.env['stock.location'].create([{
+            'name': 'shelf %s' % i,
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        } for i in range(3)])
+        categs = self.env['product.category'].create([{
+            'name': 'Category %s' % i,
+            'parent_id': basic_category.id,
+        } for i in range(3)])
+        self.env['stock.putaway.rule'].create([{
+            'category_id': categ.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc.id,
+        } for loc, categ in zip(child_locations, categs)])
 
         second_child_location = child_locations[1]
         second_categ = categs[1]
@@ -1961,11 +1954,11 @@ class TestStockMove(TestStockCommon):
         """
 
         # make 12 quants of 1
-        for i in range(1, 13):
-            lot_id = self.env['stock.lot'].create({
-                'name': 'lot%s' % str(i),
-                'product_id': self.product_serial.id,
-            })
+        lots = self.env['stock.lot'].create([{
+            'name': 'lot%s' % str(i),
+            'product_id': self.product_serial.id,
+        } for i in range(1, 13)])
+        for lot_id in lots:
             self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_id)
 
         # the move should be reserved
@@ -2835,11 +2828,11 @@ class TestStockMove(TestStockCommon):
         """
 
         # 6 units are available in stock
-        for i in range(1, 13):
-            lot_id = self.env['stock.lot'].create({
-                'name': 'lot%s' % str(i),
-                'product_id': self.product_serial.id,
-            })
+        lots = self.env['stock.lot'].create([{
+            'name': 'lot%s' % str(i),
+            'product_id': self.product_serial.id,
+        } for i in range(1, 13)])
+        for lot_id in lots:
             self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_id)
 
         # create pickings and moves for a pick -> pack mto scenario
@@ -2901,11 +2894,11 @@ class TestStockMove(TestStockCommon):
             'relative_factor': 3,
             'relative_uom_id': self.uom_unit.id,
         })
-        for i in range(1, 4):
-            lot_id = self.env['stock.lot'].create({
-                'name': 'lot%s' % str(i),
-                'product_id': self.product_serial.id,
-            })
+        lots = self.env['stock.lot'].create([{
+            'name': 'lot%s' % str(i),
+            'product_id': self.product_serial.id,
+        } for i in range(1, 4)])
+        for lot_id in lots:
             self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot_id)
 
         picking_stock_pack = self.env['stock.picking'].create({
