@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_factura_descuento_wizard_form" model="ir.ui.view">
+        <field name="name">distribuidora.factura.descuento.wizard.form</field>
+        <field name="model">distribuidora.factura.descuento.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Descuento general">
+                <group>
+                    <field name="porcentaje"/>
+                </group>
+                <footer>
+                    <button name="action_aplicar" string="Aplicar" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_factura_descuento_wizard" model="ir.actions.act_window">
+        <field name="name">Descuento general</field>
+        <field name="res_model">distribuidora.factura.descuento.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_move_form_descuento_general" model="ir.ui.view">
+        <field name="name">account.move.form.descuento.general</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[hasclass('oe_invoice_lines_tab')]" position="before">
+                <div class="float-end d-flex d-print-none gap-1 mb-2"
+                     invisible="move_type not in ('out_invoice', 'out_refund') or state != 'draft'">
+                    <button string="Descuento general"
+                            name="%(distribuidora_ventas.action_factura_descuento_wizard)d"
+                            type="action"
+                            class="btn-secondary"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
