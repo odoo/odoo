@@ -18,7 +18,7 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLA
 from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups
 from odoo.sql_db import Cursor
-from odoo.tests import Form, tagged, RecordCapturer, Like
+from odoo.tests import tagged, RecordCapturer, Like
 from odoo.tools import mute_logger
 from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 
@@ -2643,7 +2643,13 @@ class TestMailGatewayReplies(MailGatewayCommon):
             ('update', False),  # reference is lost, hence considered as a reply to catchall, is going to crash (FIXME ?)
         ]:
             with self.subTest(reply_to_mode=reply_to_mode, auto_delete_keep_log=auto_delete_keep_log), self.mock_mail_gateway(mail_unlink_sent=True):
-                composer_form = Form(self.env['mail.compose.message'].with_context({
+                create_vals = {
+                    'body': f'<p>Hello <t t-out="object.name"/></p>',
+                    'reply_to_mode': reply_to_mode,
+                }
+                if reply_to_mode == 'new':
+                    create_vals['reply_to'] = self.alias.display_name
+                composer = self.env['mail.compose.message'].with_context({
                     'active_ids': self.test_records.ids,
                     'default_auto_delete': True,
                     'default_auto_delete_keep_log': auto_delete_keep_log,
@@ -2651,12 +2657,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                     'default_email_from': self.user_employee.email_formatted,
                     'default_model': self.test_records._name,
                     'default_subject': 'Coucou Hibou',
-                }))
-                composer_form.body = f'<p>Hello <t t-out="object.name"/></p>'
-                composer_form.reply_to_mode = reply_to_mode
-                if reply_to_mode == 'new':
-                    composer_form.reply_to = self.alias.display_name
-                composer = composer_form.save()
+                }).create(create_vals)
                 mails, _msg = composer._action_send_mail()
                 self.assertFalse(mails.exists())
 

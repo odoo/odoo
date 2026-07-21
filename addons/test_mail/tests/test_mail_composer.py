@@ -1971,17 +1971,17 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     self.env.user.email = email_from
 
                     # open a composer and run it in comment mode
-                    composer = Form(self.env['mail.compose.message'].with_context(
+                    composer = self.env['mail.compose.message'].with_context(
                         default_composition_mode='comment',
                         default_force_send=True,  # force sending emails directly to check SMTP
                         default_model=test_records._name,
                         default_res_ids=test_records.ids,
                         # avoid successive tests issues with followers
                         mail_post_autofollow_author_skip=True,
-                    ))
-                    composer.body = 'Hello {{ object.name }}'
-                    composer.subject = 'My Subject'
-                    composer = composer.save()
+                    ).create({
+                        'body': 'Hello {{ object.name }}',
+                        'subject': 'My Subject',
+                    })
                     with self.mock_mail_gateway(mail_unlink_sent=False), \
                          self.mock_mail_app():
                         composer._action_send_mail()
@@ -2862,11 +2862,10 @@ class TestComposerResultsMass(TestMailComposer):
         })
 
         def _instanciate_composer(composer_attachments=False):
-            composer_form = Form(self.env['mail.compose.message'].with_context(
+            composer = self.env['mail.compose.message'].with_context(
                 self._get_web_context(self.test_records[:2], add_web=True,
                                       default_template_id=self.template.id)
-            ))
-            composer = composer_form.save()
+            ).create({})
             if composer_attachments:
                 composer_attachments.res_id = composer.id
                 composer.attachment_ids += composer_attachments
@@ -3406,13 +3405,12 @@ class TestComposerResultsMass(TestMailComposer):
         """ Test various combinations of recipients: res_domain, active_id,
         active_ids, ... to ensure fallback behavior are working. """
         # 1: active ids
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             active_ids=self.test_records.ids,
             default_composition_mode='mass_mail',
             default_model=self.test_records._name,
             default_template_id=self.template.id,
-        ))
-        composer = composer_form.save()
+        ).create({})
         self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
@@ -3431,15 +3429,14 @@ class TestComposerResultsMass(TestMailComposer):
                                  record.customer_id)
 
         # 2: default_res_ids + active_ids -> res_ids takes lead
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=False,
                                   default_composition_mode='mass_mail',
                                   default_res_ids=self.test_record.ids,
                                   default_template_id=self.template.id,
                                   active_ids=self.test_records.ids,
                                  )
-        ))
-        composer = composer_form.save()
+        ).create({})
         self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
@@ -3454,13 +3451,12 @@ class TestComposerResultsMass(TestMailComposer):
                              self.test_record.customer_id)
 
         # 3: fallback on active_id if not active_ids
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             active_id=self.test_record.id,
             default_composition_mode='mass_mail',
             default_model=self.test_records._name,
             default_template_id=self.template.id,
-        ))
-        composer = composer_form.save()
+        ).create({})
         self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
@@ -3472,13 +3468,12 @@ class TestComposerResultsMass(TestMailComposer):
 
         # 4: _batch_size limit for active_ids
         with patch.object(MailComposeMessage, '_batch_size', new=1):
-            composer_form = Form(self.env['mail.compose.message'].with_context(
+            composer = self.env['mail.compose.message'].with_context(
                 active_ids=self.test_records.ids,
                 default_composition_mode='mass_mail',
                 default_model=self.test_records._name,
                 default_template_id=self.template.id,
-            ))
-            composer = composer_form.save()
+            ).create({})
             self.assertTrue(composer.composition_batch)
             self.assertEqual(composer.composition_mode, 'mass_mail')
             self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
@@ -3496,13 +3491,12 @@ class TestComposerResultsMass(TestMailComposer):
         # 5: mail.batch_size config parameter support, for sending only
         self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 1)
         with patch.object(MailComposeMessage, '_batch_size', new=50):
-            composer_form = Form(self.env['mail.compose.message'].with_context(
+            composer = self.env['mail.compose.message'].with_context(
                 active_ids=self.test_records.ids,
                 default_composition_mode='mass_mail',
                 default_model=self.test_records._name,
                 default_template_id=self.template.id,
-            ))
-            composer = composer_form.save()
+            ).create({})
             self.assertTrue(composer.composition_batch)
             self.assertEqual(composer.composition_mode, 'mass_mail')
             self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
@@ -3518,22 +3512,20 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
 
         # 6: void is void: raise in comment mode, just don't send anything in mass mail mode
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             default_model='mail.test.ticket.mc',
             default_template_id=self.template.id
-        ))
-        composer = composer_form.save()
+        ).create({})
         self.assertEqual(composer.composition_mode, 'comment')
         with self.mock_mail_gateway(mail_unlink_sent=False), self.assertRaises(ValueError):
             composer._action_send_mail()
         self.assertNotSentEmail()
 
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             default_composition_mode='mass_mail',
             default_model='mail.test.ticket.mc',
             default_template_id=self.template.id
-        ))
-        composer = composer_form.save()
+        ).create({})
         self.assertEqual(composer.composition_mode, 'mass_mail')
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
@@ -3620,14 +3612,13 @@ class TestComposerResultsMass(TestMailComposer):
             'Formatting: wrong formatting due to multi-email')
 
         # instantiate composer, send mailing
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(
                 self.test_records,
                 add_web=True,
                 default_template_id=self.template.id,
             )
-        ))
-        composer = composer_form.save()
+        ).create({})
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer.action_send_mail()
 
@@ -3905,11 +3896,10 @@ class TestComposerResultsMassStatus(TestMailComposer):
         """ Tests a document-based mass mailing with excluded emails. Their emails
         are canceled if the model inherits from the blacklist mixin. """
         test_records = self.test_records[:2].with_env(self.env)
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(test_records, add_web=True,
                                   default_template_id=self.template.id)
-        ))
-        composer = composer_form.save()
+        ).create({})
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer._action_send_mail()
 
@@ -3935,12 +3925,11 @@ class TestComposerResultsMassStatus(TestMailComposer):
         self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, and skipped an excluded email.')
 
         # test exclusion list bypass
-        composer_form = Form(self.env['mail.compose.message'].with_context(
+        composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(test_records, add_web=True,
                                   default_template_id=self.template.id,
                                   default_use_exclusion_list=False)
-        ))
-        composer = composer_form.save()
+        ).create({})
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer._action_send_mail()
 
