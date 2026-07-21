@@ -8,12 +8,12 @@ from odoo.tests import freeze_time, tagged
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-@freeze_time("2022-01-01")
 @tagged("post_install", "-at_install")
 class TestAccruedSaleOrders(TestSaleCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    @freeze_time("2022-01-01")
     def setUpClass(cls):
         super().setUpClass()
 
@@ -72,6 +72,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
             .create({"account_id": cls.account_expense.id, "date": fields.Date.today()})
         )
 
+    @freeze_time("2022-01-01")
     def test_accrued_order(self):
         # self.wizard = self.wizard.with_context(accrual_entry_date=fields.Date.today())
         self.wizard.date = fields.Date.today()
@@ -215,6 +216,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
             ],
         )
 
+    @freeze_time("2022-01-01")
     def test_product_name_in_accrued_revenue_entry(self):
         self.sale_order.order_line.qty_delivered = 5
 
