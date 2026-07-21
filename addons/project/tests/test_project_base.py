@@ -32,15 +32,11 @@ class TestProjectCommon(TransactionCase):
         user_group_project_user = cls.env.ref('project.group_project_user')
         user_group_project_manager = cls.env.ref('project.group_project_manager')
 
-        cls.partner_1 = cls.env['res.partner'].create({
-            'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com'})
-        cls.partner_2 = cls.env['res.partner'].create({
-            'name': 'Valid Poilvache',
-            'email': 'valid.other@gmail.com'})
-        cls.partner_3 = cls.env['res.partner'].create({
-            'name': 'Valid Poilboeuf',
-            'email': 'valid.poilboeuf@gmail.com'})
+        cls.partner_1, cls.partner_2, cls.partner_3 = cls.env['res.partner'].create([
+            {'name': 'Valid Lelitre', 'email': 'valid.lelitre@agrolait.com'},
+            {'name': 'Valid Poilvache', 'email': 'valid.other@gmail.com'},
+            {'name': 'Valid Poilboeuf', 'email': 'valid.poilboeuf@gmail.com'},
+        ])
 
         # Test users to use through the various tests
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
@@ -84,14 +80,18 @@ class TestProjectCommon(TransactionCase):
             'alias_name': 'project+pigs',
             'partner_id': cls.partner_1.id})
         # Already-existing tasks in Pigs
-        cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Pigs UserTask',
-            'user_ids': cls.user_projectuser,
-            'project_id': cls.project_pigs.id})
-        cls.task_2 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Pigs ManagerTask',
-            'user_ids': cls.user_projectmanager,
-            'project_id': cls.project_pigs.id})
+        cls.task_1, cls.task_2 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create([
+            {
+                'name': 'Pigs UserTask',
+                'user_ids': cls.user_projectuser,
+                'project_id': cls.project_pigs.id,
+            },
+            {
+                'name': 'Pigs ManagerTask',
+                'user_ids': cls.user_projectmanager,
+                'project_id': cls.project_pigs.id,
+            },
+        ])
 
         # Test 'Goats' project, same as 'Pigs', but with 2 stages
         cls.project_goats = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({

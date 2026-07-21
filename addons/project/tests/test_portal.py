@@ -89,19 +89,22 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
             ('group_ids', 'in', [self.env.ref('project.group_project_manager').id])
         ],limit=1)
         self.authenticate(project_manager.login, project_manager.login)
-        self.project_1 = self.env['project.project'].create({'name': 'Portal Search Project 1'})
-        self.project_2 = self.env['project.project'].create({'name': 'Portal Search Project 2'})
-        self.task_1 = self.env['project.task'].create({
-            'name': 'Test Task Name Match',
-            'project_id': self.project_1.id,
-            'user_ids': project_manager,
-        })
-
-        self.task_2 = self.env['project.task'].create({
-            'name': 'Another Task For Searching',
-            'project_id': self.project_2.id,
-            'user_ids': project_manager,
-        })
+        self.project_1, self.project_2 = self.env['project.project'].create([
+            {'name': 'Portal Search Project 1'},
+            {'name': 'Portal Search Project 2'},
+        ])
+        self.task_1, self.task_2 = self.env['project.task'].create([
+            {
+                'name': 'Test Task Name Match',
+                'project_id': self.project_1.id,
+                'user_ids': project_manager,
+            },
+            {
+                'name': 'Another Task For Searching',
+                'project_id': self.project_2.id,
+                'user_ids': project_manager,
+            },
+        ])
 
         url = '/my/tasks'
         response = self.url_open(url)

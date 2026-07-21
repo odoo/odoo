@@ -27,8 +27,10 @@ class TestProjectRecurrence(TransactionCase):
             'group_ids': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_project_recurring_task.id])]
         })
 
-        cls.stage_a = cls.env['project.task.type'].create({'name': 'a'})
-        cls.stage_b = cls.env['project.task.type'].create({'name': 'b'})
+        cls.stage_a, cls.stage_b = cls.env['project.task.type'].create([
+            {'name': 'a'},
+            {'name': 'b'},
+        ])
         cls.project_recurring = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Recurring',
             'type_ids': [

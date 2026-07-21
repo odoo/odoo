@@ -163,8 +163,10 @@ class TestProjectSubtasks(TestProjectCommon):
         """
         parent_task = self.task_1
 
-        stage_a = self.env['project.task.type'].create({'name': 'a', 'sequence': 1})
-        stage_b = self.env['project.task.type'].create({'name': 'b', 'sequence': 10})
+        stage_a, stage_b = self.env['project.task.type'].create([
+            {'name': 'a', 'sequence': 1},
+            {'name': 'b', 'sequence': 10},
+        ])
         self.project_pigs.type_ids |= stage_a
         self.project_pigs.type_ids |= stage_b
 
