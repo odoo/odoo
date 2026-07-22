@@ -291,6 +291,13 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     _test_user_name = 'Test Product Manager'
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.mouse_tmpl = cls.env['product.template'].create({'name': 'Mouse'})
+        cls.color_attribute = cls.env['product.attribute'].create({'name': 'Color'})
+        cls.tmpl_many_combos = cls.env['product.template'].create({'name': 'many combinations'})
+
     def test_product_template_attribute_values_creation(self):
         self.assertEqual(len(self.computer_ssd_attribute_lines.product_template_value_ids), 2,
             'Product attribute values (ssd) were not automatically created')
@@ -363,11 +370,11 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_16))
 
         # CASE: no combination, no variant, just return the only variant
-        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        mouse = self.mouse_tmpl
         self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
 
         # prep work for the last part of the test
-        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_attribute = self.color_attribute
         color_red = self.env['product.attribute.value'].create({
             'name': 'Red',
             'attribute_id': color_attribute.id,
@@ -498,11 +505,11 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertIsNone(next(gen, None))
 
         # Testing parent case
-        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        mouse = self.mouse_tmpl
         self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
 
         # prep work for the last part of the test
-        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_attribute = self.color_attribute
         color_red = self.env['product.attribute.value'].create({
             'name': 'Red',
             'attribute_id': color_attribute.id,
@@ -536,9 +543,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertEqual(mouse._get_first_possible_combination(necessary_values=mouse_color_yellow), mouse_color_red + mouse_color_yellow)
 
         # Making sure it's not extremely slow (has to discard invalid combinations early !)
-        product_template = self.env['product.template'].create({
-            'name': 'many combinations',
-        })
+        product_template = self.tmpl_many_combos
 
         for i in range(10):
             # create the attributes
@@ -629,9 +634,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
             computer_ssd_256 + computer_ram_8 + computer_hdd_4)
 
         # Make sure this is not extremely slow:
-        product_template = self.env['product.template'].create({
-            'name': 'many combinations',
-        })
+        product_template = self.tmpl_many_combos
 
         for i in range(10):
             # create the attributes

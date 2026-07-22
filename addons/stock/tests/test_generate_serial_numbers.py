@@ -36,6 +36,12 @@ class StockGenerateCommon(TransactionCase):
             'name': 'Room B',
             'location_id': cls.warehouse.lot_stock_id.id,
         })
+        cls.receipt_picking = cls.env['stock.picking'].create({
+            'picking_type_id': cls.warehouse.in_type_id.id,
+            'location_id': cls.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': cls.warehouse.lot_stock_id.id,
+            'state': 'draft',
+        })
 
     def get_new_move(self, nbre_of_lines=0, product=False):
         product = product or self.product_serial
@@ -323,12 +329,7 @@ class StockGenerateCommon(TransactionCase):
             'name': 'abc',
         })
         self.warehouse.in_type_id.use_existing_lots = True
-        receipt_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.warehouse.lot_stock_id.id,
-            'state': 'draft',
-        })
+        receipt_picking = self.receipt_picking
         self.env['stock.move'].create({
             'product_id': product_lot.id,
             'uom_id': product_lot.uom_id.id,
@@ -370,12 +371,7 @@ class StockGenerateCommon(TransactionCase):
         sn_t1_02 = self.env['stock.lot'].create({'product_id': product_lot.id, 'name': 'sn-t1-02'})
 
         self.warehouse.in_type_id.use_existing_lots = True
-        receipt_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.warehouse.lot_stock_id.id,
-            'state': 'draft',
-        })
+        receipt_picking = self.receipt_picking
         move = self.env['stock.move'].create({
             'product_id': product_lot.id,
             'uom_id': product_lot.uom_id.id,

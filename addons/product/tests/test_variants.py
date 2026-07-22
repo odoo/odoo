@@ -101,6 +101,11 @@ class TestVariants(ProductVariantsCommon):
 
     _test_user_name = 'Test Product & Contact Manager'
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.tmpl_no_attr = cls.env['product.template'].create({'name': 'template'})
+
     def test_variants_is_product_variant(self):
         template = self.product_template_sofa
         variants = template.product_variant_ids
@@ -426,9 +431,7 @@ class TestVariants(ProductVariantsCommon):
 
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
-        template = self.env['product.template'].create({
-            'name': 'template'
-        })
+        template = self.tmpl_no_attr
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -494,9 +497,7 @@ class TestVariants(ProductVariantsCommon):
 
     @mute_logger('odoo.models.unlink')
     def test_archive_all_variants(self):
-        template = self.env['product.template'].create({
-            'name': 'template'
-        })
+        template = self.tmpl_no_attr
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -670,6 +671,10 @@ class TestVariantsNoCreate(ProductVariantsCommon):
         super().setUpClass()
 
         cls.size_attribute.create_variant = 'no_variant'
+        cls.tmpl_sofa_no_attrs = cls.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': cls.uom_unit.id,
+        })
 
     def test_create_mono(self):
         """ create a product with a 'nocreate' attribute with a single value """
@@ -686,10 +691,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
     def test_update_mono(self):
         """ modify a product with a 'nocreate' attribute with a single value """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -716,10 +718,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
     def test_update_multi(self):
         """ modify a product with a 'nocreate' attribute with several values """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -756,10 +755,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
     @mute_logger('odoo.models.unlink')
     def test_update_mixed_mono(self):
         """ modify a product with regular and 'nocreate' attributes """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -805,10 +801,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
     @mute_logger('odoo.models.unlink')
     def test_update_mixed_multi(self):
         """ modify a product with regular and 'nocreate' attributes """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({

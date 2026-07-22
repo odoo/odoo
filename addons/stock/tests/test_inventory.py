@@ -27,6 +27,10 @@ class TestInventory(TransactionCase):
             'is_storable': True,
             'tracking': 'serial',
         })
+        cls.lot_sn2 = cls.env['stock.lot'].create({
+            'name': 'sn2',
+            'product_id': cls.product2.id,
+        })
 
     def test_inventory_1(self):
         """ Check that making an inventory adjustment to remove all products from stock is working
@@ -63,10 +67,7 @@ class TestInventory(TransactionCase):
 
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
@@ -94,10 +95,7 @@ class TestInventory(TransactionCase):
         ])
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
@@ -121,10 +119,7 @@ class TestInventory(TransactionCase):
         ]
         inventory_quants = self.env['stock.quant'].search(quant_domain)
         self.assertEqual(len(inventory_quants), 0)
-        lot1 = self.env['stock.lot'].create({
-            'name': 'sn2',
-            'product_id': self.product2.id,
-        })
+        lot1 = self.lot_sn2
         self.env['stock.quant'].create({
             'location_id': self.stock_location.id,
             'product_id': self.product2.id,
