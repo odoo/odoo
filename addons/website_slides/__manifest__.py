@@ -50,6 +50,7 @@ Featuring
         'views/website_slides_templates_utils.xml',
         'views/website_pages_views.xml',
         'views/slide_channel_add.xml',
+        'views/website_slides_snippet_templates.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/digest_data.xml',
         'data/gamification_data.xml',
@@ -59,6 +60,7 @@ Featuring
         'data/slide_data.xml',
         'data/website_data.xml',
         'data/slides_tour.xml',
+        'data/website_snippet_filter_data.xml',
         'security/ir.access.csv',
     ],
     'demo': [
