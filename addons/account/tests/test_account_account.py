@@ -6,6 +6,7 @@ from odoo.tools import mute_logger
 import psycopg2
 from freezegun import freeze_time
 
+
 @tagged('post_install', '-at_install')
 class TestAccountAccount(TestAccountMergeCommon):
 

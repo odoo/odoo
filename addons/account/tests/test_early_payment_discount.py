@@ -127,7 +127,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
         self.assertTrue(report)
 
-        #Test for invoices with multiple due dates and no early discount
+        # Test for invoices with multiple due dates and no early discount
         out_invoice.invoice_payment_term_id = self.pay_30_percents_now_balance_60_days
         with self.allow_pdf_render():
             new_report = self.env['ir.actions.report']._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)

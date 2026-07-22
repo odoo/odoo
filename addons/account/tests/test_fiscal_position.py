@@ -4,6 +4,7 @@
 from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -16,6 +17,7 @@ class TestFiscalPosition(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestFiscalPosition, cls).setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.fp = cls.env['account.fiscal.position']
 
         # reset any existing FP
@@ -92,7 +94,6 @@ class TestFiscalPosition(common.TransactionCase):
         # Dedicated position has max precedence
         self.george.property_account_position_id = self.be_nat
         assert_fp(self.george, self.be_nat, "Forced position has max precedence")
-
 
     def test_20_fp_one_tax_2m(self):
         self.env.company.country_id = self.env.ref('base.us')
