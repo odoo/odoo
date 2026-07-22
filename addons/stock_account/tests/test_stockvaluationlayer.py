@@ -5,13 +5,16 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.stock_account.tests.common import (
+    TestStockValuationMultiCompanyCommon,
+    TestStockValuationSingleCompanyCommon,
+)
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo import Command
 
 
-class TestStockValuationStandard(TestStockValuationCommon):
+class TestStockValuationStandard(TestStockValuationMultiCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
@@ -256,7 +259,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
-class TestStockValuationAVCO(TestStockValuationCommon):
+class TestStockValuationAVCO(TestStockValuationMultiCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
@@ -535,7 +538,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 2)
 
 
-class TestStockValuationFIFO(TestStockValuationCommon):
+class TestStockValuationFIFO(TestStockValuationMultiCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
@@ -779,7 +782,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 0.0)
 
 
-class TestStockValuationChangeCostMethod(TestStockValuationCommon):
+class TestStockValuationChangeCostMethod(TestStockValuationSingleCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
@@ -889,7 +892,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
 
 
 @tagged('post_install', '-at_install', 'change_valuation')
-class TestStockValuationChangeValuation(TestStockValuationCommon):
+class TestStockValuationChangeValuation(TestStockValuationSingleCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
@@ -989,7 +992,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             self.assertAlmostEqual(abs(move.value), 1123.39)
 
 
-class TestAngloSaxonAccounting(TestStockValuationCommon):
+class TestAngloSaxonAccounting(TestStockValuationSingleCompanyCommon):
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests
         'product.group_product_manager',  # product.product/template/category/attribute create/write are the subject
