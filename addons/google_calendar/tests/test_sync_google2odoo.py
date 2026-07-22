@@ -1536,6 +1536,30 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_recurrence_without_rrule(self):
+        """ A 'recurrence' list containing only a stale EXDATE and no RRULE does not define an
+        actual recurring series (EXDATE only has meaning together with a RRULE, per RFC5545).
+        It must be synced as a single, non-recurring event instead of a broken recurrence. """
+        google_id = 'gcalendarid123'
+        values = {
+            'id': google_id,
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'recurrence': ['EXDATE;TZID=Europe/Luxembourg:20260527T113000'],
+            'reminders': {'useDefault': True},
+            'start': {'dateTime': '2026-07-01T12:00:00+02:00', 'timeZone': 'Europe/Luxembourg'},
+            'end': {'dateTime': '2026-07-01T13:00:00+02:00', 'timeZone': 'Europe/Luxembourg'},
+        }
+        google_event = GoogleEvent([values])
+        self.assertFalse(google_event.is_recurrence(), "an EXDATE without a RRULE should not be treated as a recurrence")
+        self.env['calendar.event']._sync_google2odoo(google_event)
+        event = self.env['calendar.event'].search([('google_id', '=', google_id)])
+        self.assertTrue(event, "it should have created a single event")
+        self.assertFalse(event.recurrency)
+        self.assertFalse(self.env['calendar.recurrence'].search([('google_id', '=', google_id)]),
+                          "no recurrence should have been created")
+
+    @patch_api
     def test_recurrence_creation_with_attendee_answer(self):
         """ Create a recurrence with predefined attendee answers """
         google_id = "aaaaaaaaaaa"
