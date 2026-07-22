@@ -181,9 +181,10 @@ export class ForecastedDetails extends Component {
 
     displayReserve(line){
         let splittedLine = true;
-        if(this.line_index - 1 >= 0){
-            const previousLine = this.lines[this.line_index - 1];
-            const sameProduct = this.line.product.id == previousLine.product.id;
+        const line_index = this.lines.indexOf(line);
+        if(line_index - 1 >= 0){
+            const previousLine = this.lines[line_index - 1];
+            const sameProduct = line.product.id == previousLine.product.id;
             const isOnHandSplittedLine = this.OnHandLinesPerProduct[line.product.id] && this.OnHandLinesPerProduct[line.product.id].some(l => this.sameDocumentOut(l, line))
             const isReconciledSplittedLine = this.ReconciledLinesPerProduct[line.product.id] && !this.isReconciled(line) && this.ReconciledLinesPerProduct[line.product.id].some(l => this.sameDocumentOut(l, line))
             splittedLine = sameProduct && (this.sameDocumentOut(line, previousLine) || isOnHandSplittedLine || isReconciledSplittedLine);
@@ -220,11 +221,11 @@ export class ForecastedDetails extends Component {
     }
 
     isOnHand(line){
-        return this.OnHandLinesPerProduct[line.product.id] && this.OnHandLinesPerProduct[line.product.id].includes(this.lines[this.line_index]);
+        return this.OnHandLinesPerProduct[line.product.id] && this.OnHandLinesPerProduct[line.product.id].includes(line);
     }
 
     isReconciled(line){
-        return this.ReconciledLinesPerProduct[line.product.id] && this.ReconciledLinesPerProduct[line.product.id].includes(this.lines[this.line_index]);
+        return this.ReconciledLinesPerProduct[line.product.id] && this.ReconciledLinesPerProduct[line.product.id].includes(line);
     }
 
     get freeStockLabel() {
