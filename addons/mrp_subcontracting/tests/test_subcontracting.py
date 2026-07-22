@@ -7,6 +7,7 @@ from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
 from odoo.tests import tagged
@@ -1470,6 +1471,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.env = self.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         self.subcontractor = self.env['res.partner'].create({
             'name': 'Subcontractor',
         })

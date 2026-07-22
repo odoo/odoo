@@ -8,6 +8,7 @@ from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time
 from odoo.tools import float_compare, float_repr, float_round, format_date
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
@@ -2883,6 +2884,7 @@ class TestTourBoM(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.product = cls.env['product.product'].create({
             'name': 'test1',
             'is_storable': True,

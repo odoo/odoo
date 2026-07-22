@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.tests import Form, HttpCase, tagged
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 @tagged('post_install', '-at_install')
@@ -10,8 +11,9 @@ class TestSubcontractingPortalUi(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         # 1. Create portal user
-        user = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
+        user = cls.env['res.users'].create({
             'name': 'Georges',
             'login': 'georges1',
             'password': 'georges1',
@@ -21,7 +23,7 @@ class TestSubcontractingPortalUi(HttpCase):
             'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
         })
 
-        cls.partner_portal = cls.env['res.partner'].with_context({'mail_create_nolog': True}).create({
+        cls.partner_portal = cls.env['res.partner'].create({
             'name': 'Georges',
             'email': 'georges@project.portal',
             'company_id': False,

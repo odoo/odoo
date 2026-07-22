@@ -2,6 +2,7 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -9,6 +10,7 @@ class TestAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         # The group 'mrp.group_mrp_routings' is required to make the field
         # 'workorder_ids' visible in the view of 'mrp.production'. The subviews
         #  of `workorder_ids` must be present in many tests to create records.
