@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
@@ -60,10 +60,9 @@ class AccountMove(models.Model):
     l10n_cn_baiwang_red_form_type = fields.Selection(
         selection=RED_FORM_TYPES,
         string="Red Form Reason",
-        compute="_compute_l10n_cn_baiwang_latest_edi_data",
+        compute="_compute_l10n_cn_baiwang_red_form_type",
         store=True,
         readonly=False,
-        compute_sudo=True,
     )
 
     # EDI document tracking
@@ -147,19 +146,6 @@ class AccountMove(models.Model):
                 "You must issue a Red Form (Credit Note) to reverse it.",
             ))
         return super().button_draft()
-
-    @api.constrains('invoice_line_ids')
-    def _check_cn_tax_categories(self):
-        for move in self:
-            if move.country_code == 'CN' and move.move_type in ('out_invoice', 'out_refund'):
-                # Ignore negative lines (discounts). Our Baiwang mapper dynamically
-                # overwrites their tax category with the preceding line's category anyway!
-                if any(
-                    not line.l10n_cn_tax_category_id
-                    for line in move.invoice_line_ids
-                    if line.display_type == 'product' and line.price_subtotal >= 0
-                ):
-                    raise ValidationError(self.env._("All positive product lines must have a Tax Category Code for Chinese corporate invoices."))
 
     def action_cancel_baiwang_red_form(self):
         """Cancel a pending Red Form request."""
@@ -688,36 +674,28 @@ class AccountMove(models.Model):
         latest_doc.write({'state': 'failed', 'error_message': self.env._("Rejected by user.")})
         self.message_post(body=self.env._("Inbound Red Form %s rejected.", latest_doc.baiwang_red_form_number))
 
+    @api.depends('l10n_cn_edi_document_ids.baiwang_red_form_type')
+    def _compute_l10n_cn_baiwang_red_form_type(self):
+        for move in self:
+            latest_doc = move.l10n_cn_edi_document_ids.sorted('create_date', reverse=True)[:1]
+            if latest_doc and latest_doc.baiwang_red_form_type:
+                move.l10n_cn_baiwang_red_form_type = latest_doc.baiwang_red_form_type
+
     @api.depends(
         'l10n_cn_edi_document_ids.state',
         'l10n_cn_edi_document_ids.baiwang_uuid',
         'l10n_cn_edi_document_ids.baiwang_red_form_number',
         'l10n_cn_edi_document_ids.baiwang_red_form_amount_total',
         'l10n_cn_edi_document_ids.baiwang_red_form_amount_tax',
-        'l10n_cn_edi_document_ids.baiwang_red_form_type',
     )
     def _compute_l10n_cn_baiwang_latest_edi_data(self):
         for move in self:
-            uuid_val = number_val = status_val = type_val = False
-            amt_total = amt_tax = 0.0
-
-            if move.l10n_cn_edi_document_ids:
-                docs = move.l10n_cn_edi_document_ids.sorted(key=lambda d: d.create_date or fields.Datetime.now(), reverse=True)
-                if docs:
-                    latest = docs[0]
-                    uuid_val = latest.baiwang_uuid
-                    number_val = latest.baiwang_red_form_number
-                    status_val = latest.state
-                    amt_total = latest.baiwang_red_form_amount_total
-                    amt_tax = latest.baiwang_red_form_amount_tax
-                    type_val = latest.baiwang_red_form_type  # <--- Extract it
-
-            move.l10n_cn_baiwang_red_form_uuid = uuid_val
-            move.l10n_cn_baiwang_red_form_number = number_val
-            move.l10n_cn_baiwang_red_form_status = status_val
-            move.l10n_cn_baiwang_red_form_amount_total = amt_total
-            move.l10n_cn_baiwang_red_form_amount_tax = amt_tax
-            move.l10n_cn_baiwang_red_form_type = type_val  # <--- Pass to the UI
+            latest = move.l10n_cn_edi_document_ids.sorted('create_date', reverse=True)[:1]
+            move.l10n_cn_baiwang_red_form_uuid = latest.baiwang_uuid or False
+            move.l10n_cn_baiwang_red_form_number = latest.baiwang_red_form_number or False
+            move.l10n_cn_baiwang_red_form_status = latest.state or False
+            move.l10n_cn_baiwang_red_form_amount_total = latest.baiwang_red_form_amount_total or 0.0
+            move.l10n_cn_baiwang_red_form_amount_tax = latest.baiwang_red_form_amount_tax or 0.0
 
     def action_fetch_inbound_red_form_details(self):
         """Manually fetch and dump the red form line details into the chatter."""
