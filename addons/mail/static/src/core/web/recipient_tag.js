@@ -18,7 +18,7 @@ export class RecipientTag extends Component {
             email: types.string(),
             id: types.string(),
             name: types.string(),
-            onDelete: types.function([]),
+            onDelete: types.function([]).optional(),
             resId: types.number().optional(),
             text: types.string(),
             tooltip: types.string(),
