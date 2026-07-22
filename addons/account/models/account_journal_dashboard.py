@@ -479,7 +479,7 @@ class AccountJournal(models.Model):
         # Misc Entries (journal items in the default_account not linked to bank.statement.line)
         misc_domain = []
         for journal in bank_cash_journals:
-            date_limit = journal.last_statement_id.date or journal.company_id.fiscalyear_lock_date
+            date_limit = journal.last_statement_id.date or journal.company_id.sudo().fiscalyear_lock_date
             misc_domain.append(
                 [('account_id', '=', journal.default_account_id.id), ('date', '>', date_limit)]
                 if date_limit else
