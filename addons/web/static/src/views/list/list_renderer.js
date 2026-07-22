@@ -126,7 +126,6 @@ export class ListRenderer extends Component {
     static rowsTemplate = "web.ListRenderer.Rows";
     static recordRowTemplate = "web.ListRenderer.RecordRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
-    static useMagicColumnWidths = true;
     static components = {
         DropdownItem,
         Field,
@@ -138,7 +137,10 @@ export class ListRenderer extends Component {
         ActionHelper,
         GroupConfigMenu,
     };
+
     props = useProps(listRendererProps);
+
+    useMagicColumnWidths = true;
 
     setup() {
         this.uiService = useService("ui");
@@ -286,7 +288,7 @@ export class ListRenderer extends Component {
             }
         });
 
-        this.columnWidths = useMagicColumnWidths(this.tableRef, () => ({
+        this.columnWidths = useMagicColumnWidths(this.tableRef, this.useMagicColumnWidths, () => ({
             columns: this.columns,
             isEmpty: !this.props.list.records.length || this.props.list.model.useSampleModel,
             hasSelectors: this.hasSelectors,

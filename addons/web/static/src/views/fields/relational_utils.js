@@ -1,14 +1,29 @@
-import { render, useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import {
+    Component,
+    onWillUpdateProps,
+    proxy,
+    signal,
+    t,
+    usePlugin,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { ORM } from "@web/core/orm_plugin";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SIZES } from "@web/core/ui/ui_service";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { highlightText, odoomark } from "@web/core/utils/html";
+import { deepEqual } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
+import { render, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews, useFormViewInDialog } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -31,21 +46,6 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  *
  * @typedef {import("services").ServiceFactories} Services
  */
-
-import {
-    Component,
-    onWillUpdateProps,
-    plugin,
-    useProps,
-    signal,
-    status,
-    proxy,
-    t,
-} from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { highlightText, odoomark } from "@web/core/utils/html";
-import { deepEqual } from "@web/core/utils/objects";
 
 //
 // Commons
@@ -113,7 +113,7 @@ export function useActiveActions({
         return result;
     };
 
-    const props = useComponent().props;
+    const props = useProps();
     const isMany2Many = fieldType === "many2many";
 
     // Define eval functions
@@ -147,10 +147,11 @@ export function useActiveActions({
  * @param {(orm: Services["orm"], props: Component<Props, Env>["props"]) => Promise<T>} loadFn
  */
 export function useSpecialData(loadFn) {
-    const component = useComponent();
-    const record = component.props.record;
+    const props = useProps();
+    const scope = useScope();
+    const record = props.record;
     const { specialDataCaches } = record.model;
-    const orm = component.env.services.orm;
+    const orm = usePlugin(ORM);
     const ormWithCache = Object.create(orm);
     ormWithCache.call = async (...args) => {
         const key = JSON.stringify(args);
@@ -161,8 +162,8 @@ export function useSpecialData(loadFn) {
                     update: "always",
                     callback: (res, hasChanged) => {
                         specialDataCaches[key] = Promise.resolve(res);
-                        if (status(component) !== "destroyed" && hasChanged) {
-                            loadFn(ormWithCache, component.props).then((res) => {
+                        if (!scope.isDestroyed() && hasChanged) {
+                            loadFn(ormWithCache, props).then((res) => {
                                 result.data = res;
                             });
                         }
@@ -178,10 +179,10 @@ export function useSpecialData(loadFn) {
     useRecordObserver(async (record, props) => {
         result.data = await loadFn(ormWithCache, { ...props, record });
     });
-    onWillUpdateProps(async (props) => {
+    onWillUpdateProps(async (nextProps) => {
         // useRecordObserver callback is not called when the record doesn't change
-        if (props.record.id === component.props.record.id) {
-            result.data = await loadFn(ormWithCache, props);
+        if (nextProps.record.id === props.record.id) {
+            result.data = await loadFn(ormWithCache, nextProps);
         }
     });
     return result;
@@ -222,11 +223,13 @@ export const many2XAutocompleteProps = {
 export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
+
     props = useProps(many2XAutocompleteProps);
     autocompleteContainerRef = signal.ref();
+
     setup() {
         this.orm = useService("orm");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.uiService = useService("ui");
 
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -701,7 +704,9 @@ export const x2ManyFieldDialogProps = {
 export class X2ManyFieldDialog extends Component {
     static template = "web.X2ManyFieldDialog";
     static components = { Dialog, FormRenderer, ViewButton };
+
     props = useProps(x2ManyFieldDialogProps);
+
     setup() {
         this.actionService = useService("action");
         this.ui = useService("ui");
@@ -906,7 +911,7 @@ export function useOpenX2ManyRecord({
     const viewService = useService("view");
     const ui = useService("ui");
     const env = useEnv();
-    const component = useComponent();
+    const props = useProps();
 
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
@@ -925,7 +930,7 @@ export function useOpenX2ManyRecord({
             viewService,
             isSmall: ui.isSmall,
         });
-        if (!component.props.record.isInEdition) {
+        if (!props.record.isInEdition) {
             archInfo.activeActions.edit = false;
         }
 

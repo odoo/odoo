@@ -1,7 +1,8 @@
-import { onWillRender, useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -21,8 +22,8 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
 export function useInputField(params) {
     const inputRefOrSignal = params.ref;
     const getEl = () => resolveRefEl(inputRefOrSignal) ?? null;
-    const component = useComponent();
-    const fieldName = params.fieldName || component.props.name;
+    const props = useProps();
+    const fieldName = params.fieldName || props.name;
     const shouldSave = params.shouldSave ?? (() => false);
 
     /*
@@ -54,9 +55,9 @@ export function useInputField(params) {
         if (params.preventLineBreaks && ev.inputType === "insertFromPaste") {
             ev.target.value = ev.target.value.replace(/[\r\n]+/g, " ");
         }
-        component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
-        if (!component.props.record.isValid) {
-            component.props.record.resetFieldValidity(fieldName);
+        props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+        if (!props.record.isValid) {
+            props.record.resetFieldValidity(fieldName);
         }
     }
 
@@ -73,21 +74,18 @@ export function useInputField(params) {
                 try {
                     val = params.parse(val);
                 } catch {
-                    component.props.record.setInvalidField(fieldName);
+                    props.record.setInvalidField(fieldName);
                     isInvalid = true;
                 }
             }
 
             if (!isInvalid) {
-                if (val !== component.props.record.data[fieldName]) {
+                if (val !== props.record.data[fieldName]) {
                     lastSetValue = getEl().value;
                     pendingUpdate = true;
-                    await component.props.record.update(
-                        { [fieldName]: val },
-                        { save: shouldSave() }
-                    );
+                    await props.record.update({ [fieldName]: val }, { save: shouldSave() });
                     pendingUpdate = false;
-                    component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                    props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
                     getEl().value = params.getValue();
                 }
@@ -144,13 +142,13 @@ export function useInputField(params) {
         if (el.value === value) {
             isDirty = false;
         }
-        if (!isDirty && !component.props.record.isFieldInvalid(fieldName)) {
+        if (!isDirty && !props.record.isFieldInvalid(fieldName)) {
             el.value = value;
             lastSetValue = el.value;
         }
     });
 
-    const { model } = component.props.record;
+    const { model } = props.record;
     useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
     useBus(model.bus, "NEED_LOCAL_CHANGES", (ev) => ev.detail.proms.push(commitChanges()));
 
@@ -176,7 +174,7 @@ export function useInputField(params) {
                     if (urgent) {
                         return;
                     } else {
-                        component.props.record.setInvalidField(fieldName);
+                        props.record.setInvalidField(fieldName);
                     }
                 }
             }
@@ -185,10 +183,10 @@ export function useInputField(params) {
                 return;
             }
 
-            if ((val || false) !== (component.props.record.data[fieldName] || false)) {
+            if ((val || false) !== (props.record.data[fieldName] || false)) {
                 lastSetValue = el.value;
-                await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
-                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+                await props.record.update({ [fieldName]: val }, { save: shouldSave() });
+                props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 el.value = params.getValue();
             }

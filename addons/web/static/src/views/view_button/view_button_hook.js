@@ -1,10 +1,9 @@
-import { useComponent, useEnv, useSubEnv } from "@web/owl2/utils";
-import { useService } from "@web/core/utils/hooks";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { useScope } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
-import { status } from "@odoo/owl";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 
 export async function executeButtonCallback(el, fct) {
     let btns = [];
@@ -53,7 +52,7 @@ function undefinedAsTrue(val) {
 export function useViewButtons(ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
-    const comp = useComponent();
+    const scope = useScope();
     const env = useEnv();
 
     // Resolved lazily: the element only exists once the component is mounted.
@@ -92,11 +91,7 @@ export function useViewButtons(ref, options = {}) {
                     context: params.context || {},
                     buttonContext,
                     onClose: async (onCloseInfo) => {
-                        if (
-                            !closeDialog &&
-                            status(comp) !== "destroyed" &&
-                            !onCloseInfo?.noReload
-                        ) {
+                        if (!closeDialog && !scope.isDestroyed() && !onCloseInfo?.noReload) {
                             await options.reload?.();
                         }
                     },

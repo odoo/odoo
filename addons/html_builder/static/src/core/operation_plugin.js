@@ -1,6 +1,6 @@
-import { useComponent } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
+import { useEnv } from "@web/owl2/utils";
 import { Operation } from "./operation";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */
@@ -85,11 +85,14 @@ export class OperationPlugin extends Plugin {
 }
 
 export function useOperation() {
-    const comp = useComponent();
+    const env = useEnv();
     return (apply, ...args) => {
-        comp.env.editor.shared.operation.next(async (...args) => {
-            await apply(...args);
-            comp.env.editor.shared.history.commit();
-        }, ...args);
+        env.editor.shared.operation.next(
+            async (...args) => {
+                await apply(...args);
+                env.editor.shared.history.commit();
+            },
+            ...args
+        );
     };
 }

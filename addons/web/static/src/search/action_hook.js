@@ -1,7 +1,7 @@
-import { useComponent } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
+import { onMounted, onWillUnmount, useListener, useProps, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { useEnv } from "../owl2/utils";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -41,17 +41,16 @@ export class CallbackRecorder {
  * @param {Function} callback
  */
 export function useCallbackRecorder(callbackRecorder, callback) {
-    const component = useComponent();
-    onMounted(() => {
-        callbackRecorder.add(component, callback);
-    });
-    onWillUnmount(() => callbackRecorder.remove(component));
+    const scope = useScope();
+    onMounted(() => callbackRecorder.add(scope, callback));
+    onWillUnmount(() => callbackRecorder.remove(scope));
 }
 
 /**
  */
 export function useSetupAction(params = {}) {
-    const component = useComponent();
+    const env = useEnv();
+    const props = useProps();
     const ui = useService("ui");
     const {
         __beforeLeave__,
@@ -59,7 +58,7 @@ export function useSetupAction(params = {}) {
         __getLocalState__,
         __getContext__,
         __getOrderBy__,
-    } = component.env;
+    } = env;
 
     const {
         beforeVisibilityChange,
@@ -93,7 +92,7 @@ export function useSetupAction(params = {}) {
     const getRootEl = () => resolveRefEl(rootRef);
 
     function setScrollFromState() {
-        const { state } = component.props;
+        const { state } = props;
         const scrolling = state && state[scrollSymbol];
         if (scrolling) {
             const rootEl = getRootEl();

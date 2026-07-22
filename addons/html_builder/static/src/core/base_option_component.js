@@ -1,6 +1,6 @@
-import { useComponent, useEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy } from "@odoo/owl";
 import { useDomState } from "@html_builder/core/utils";
+import { Component, onWillDestroy } from "@odoo/owl";
+import { useEnv } from "@web/owl2/utils";
 
 /**
  * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
@@ -82,14 +82,13 @@ export class BaseOptionComponent extends Component {
         this.checkPredicates = context.checkPredicates;
 
         this.isActiveItem = useIsActiveItem();
-        const comp = useComponent();
-        const editor = comp.env.editor;
+        const editor = this.env.editor;
 
-        if (!comp.constructor.components) {
-            comp.constructor.components = {};
+        if (!this.constructor.components) {
+            this.constructor.components = {};
         }
         const Components = editor.shared.builderComponents.getComponents();
-        Object.assign(comp.constructor.components, Components);
+        Object.assign(this.constructor.components, Components);
     }
     /**
      * Check if the given items are active.

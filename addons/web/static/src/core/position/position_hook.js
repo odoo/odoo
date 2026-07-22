@@ -1,8 +1,8 @@
-import { useChildSubEnv, useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { EventBus, onWillDestroy } from "@odoo/owl";
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { EventBus, onWillDestroy } from "@odoo/owl";
+import { useChildSubEnv, useEnv, useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
@@ -65,8 +65,8 @@ export function usePosition(popperRef, getTarget, options = {}) {
         return true;
     };
 
-    const component = useComponent();
-    const bus = component.env[POSITION_BUS] || new EventBus();
+    const env = useEnv();
+    const bus = env[POSITION_BUS] || new EventBus();
 
     let executingUpdate = false;
     const batchedUpdate = async () => {
@@ -85,7 +85,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
     bus.addEventListener("update", batchedUpdate);
     onWillDestroy(() => bus.removeEventListener("update", batchedUpdate));
 
-    const isTopmost = !(POSITION_BUS in component.env);
+    const isTopmost = !(POSITION_BUS in env);
     if (isTopmost) {
         useChildSubEnv({ [POSITION_BUS]: bus });
     }
