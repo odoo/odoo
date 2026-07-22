@@ -127,6 +127,16 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 210.0,
             'amount_total': 1410.0,
         }
+        cls.caba_tax_waiting_account = cls.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        cls.caba_tax_final_account = cls.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+        })
 
     def setUp(self):
         super(TestAccountMoveOutRefundOnchanges, self).setUp()
@@ -965,16 +975,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
          })
 
     def test_out_refund_reverse_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
@@ -1089,16 +1091,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
 
     def test_out_refund_with_down_payment_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         default_income_account = self.company_data['default_account_revenue']
         not_default_income_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_INCOME',

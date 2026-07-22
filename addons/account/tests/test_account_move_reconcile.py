@@ -160,6 +160,23 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.sushi_currency = cls.env['res.currency'].create({
+            'name': "Sushi",
+            'symbol': '🍣',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-09-23', 'rate': 0.050800000000}),
+                Command.create({'name': '2019-06-27', 'rate': 0.052235000000}),
+                Command.create({'name': '2019-06-23', 'rate': 0.052686000000}),
+                Command.create({'name': '2019-06-19', 'rate': 0.052353000000}),
+                Command.create({'name': '2019-06-11', 'rate': 0.052072000000}),
+            ],
+        })
+
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
@@ -2178,18 +2195,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_special_mexican_workflow_1(self):
         comp_curr = self.company_data['currency']
-        foreign_curr = self.env['res.currency'].create({
-            'name': "Sushi",
-            'symbol': '🍣',
-            'rounding': 0.01,
-            'rate_ids': [
-                Command.create({'name': '2019-09-23', 'rate': 0.050800000000}),
-                Command.create({'name': '2019-06-27', 'rate': 0.052235000000}),
-                Command.create({'name': '2019-06-23', 'rate': 0.052686000000}),
-                Command.create({'name': '2019-06-19', 'rate': 0.052353000000}),
-                Command.create({'name': '2019-06-11', 'rate': 0.052072000000}),
-            ],
-        })
+        foreign_curr = self.sushi_currency
 
         refund1 = self.env['account.move'].create({
             'move_type': 'out_refund',
@@ -2494,18 +2500,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_special_mexican_workflow_2(self):
         comp_curr = self.company_data['currency']
-        foreign_curr = self.env['res.currency'].create({
-            'name': "Sushi",
-            'symbol': '🍣',
-            'rounding': 0.01,
-            'rate_ids': [
-                Command.create({'name': '2019-09-23', 'rate': 0.050800000000}),
-                Command.create({'name': '2019-06-27', 'rate': 0.052235000000}),
-                Command.create({'name': '2019-06-23', 'rate': 0.052686000000}),
-                Command.create({'name': '2019-06-19', 'rate': 0.052353000000}),
-                Command.create({'name': '2019-06-11', 'rate': 0.052072000000}),
-            ],
-        })
+        foreign_curr = self.sushi_currency
 
         refund1 = self.env['account.move'].create({
             'move_type': 'out_refund',
@@ -5493,9 +5488,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         self.env.company.tax_exigibility = True
 
-        analytic_plan = self.env['account.analytic.plan'].create({
-            'name': 'Default',
-        })
+        analytic_plan = self.analytic_plan
         analytic_account_a = self.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': analytic_plan.id,
@@ -5680,9 +5673,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         self.env.company.tax_exigibility = True
 
-        analytic_plan = self.env['account.analytic.plan'].create({
-            'name': 'Default',
-        })
+        analytic_plan = self.analytic_plan
         analytic_account_a = self.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': analytic_plan.id,

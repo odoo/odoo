@@ -65,6 +65,9 @@ class TestFiscalPosition(common.TransactionCase):
                                          auto_apply=True,
                                          country_id=fr.id,
                                          sequence=50))
+        cls.test_tax_group = cls.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': cls.env.company.id}
+        )
 
     def test_10_fp_country(self):
         def assert_fp(partner, expected_pos, message):
@@ -97,9 +100,6 @@ class TestFiscalPosition(common.TransactionCase):
 
     def test_20_fp_one_tax_2m(self):
         self.env.company.country_id = self.env.ref('base.us')
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
 
         self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
 
@@ -224,9 +224,6 @@ class TestFiscalPosition(common.TransactionCase):
 
     def test_domestic_fp_map_self(self):
         self.env.company.country_id = self.us
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
         fp = self.env['account.fiscal.position'].create({
             'name': 'FP Self',
         })

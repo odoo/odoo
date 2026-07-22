@@ -59,6 +59,11 @@ class TestSequenceMixin(TestSequenceMixinCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.partner_root').company_id = cls.env.company
+        cls.awesome_journal = cls.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
 
     def assertNameAtDate(self, date, name):
         test = self.create_move(date=date)
@@ -226,11 +231,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(new_multiple_move_2, 'MISC/15-16/02/0001')
 
         # Change the journal of the last two moves (empty)
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         new_moves.journal_id = journal
 
         # Both moves should be assigned a name, since no moves are in the journal and they are in different periods.
@@ -695,11 +696,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
     @freeze_time('2021-10-01 00:00:00')
     def test_change_journal_on_first_account_move(self):
         """Changing the journal on the first move is allowed"""
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         move = self.env['account.move'].create({})
         self.assertMoveName(move, 'MISC/21-22/10/0001')
         with Form(move) as move_form:

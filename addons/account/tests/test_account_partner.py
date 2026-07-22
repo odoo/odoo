@@ -12,9 +12,23 @@ class TestAccountPartner(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.my_customer = cls.env['res.partner'].create({'name': 'MyCustomer'})
+        cls.partner_move = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2025-04-29',
+            'partner_id': cls.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500.0,
+            })],
+        })
+
     @freeze_time("2023-05-31")
     def test_days_sales_outstanding(self):
-        partner = self.env['res.partner'].create({'name': 'MyCustomer'})
+        partner = self.my_customer
         self.assertEqual(partner.days_sales_outstanding, 0.0)
         move_1 = self.init_invoice("out_invoice", partner, invoice_date="2023-01-01", amounts=[3000], taxes=self.tax_sale_a)
         self.assertEqual(partner.days_sales_outstanding, 0.0)
@@ -107,15 +121,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.assertEqual(receivable_lines.mapped('reconciled'), [True, True])
 
     def test_manually_write_partner_id_different_vat(self):
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2025-04-29',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'quantity': 1,
-                'price_unit': 500.0,
-            })],
-        })
+        move = self.partner_move
         move.action_post()
         self.partner_a.vat = 'SOMETHING'
         self.partner_b.vat = 'DIFFERENT'
@@ -123,15 +129,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             self.partner_a.parent_id = self.partner_b
 
     def test_manually_write_partner_id_empty_string_vs_False(self):
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2025-04-29',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'quantity': 1,
-                'price_unit': 500.0,
-            })],
-        })
+        move = self.partner_move
         move.action_post()
         self.partner_a.vat = ''
         self.partner_b.vat = False
@@ -145,7 +143,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             + self.env.ref('account.group_validate_bank_account')
         )
 
-        partner = self.env['res.partner'].create({'name': 'MyCustomer'})
+        partner = self.my_customer
         account = self.env['res.partner.bank'].create({
             'account_number': '123456789',
             'partner_id': partner.id,

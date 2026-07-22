@@ -35,22 +35,49 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
             })],
         })
 
-    def test_epd_split_signs(self):
-        """ Test that an early payment discount adds a discount row, signed for
-        both bills and invoices.
-        """
-        bill = self.env['account.move'].create({
+        cls.epd_bill = cls.env['account.move'].create({
             'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
+            'partner_id': cls.partner_a.id,
             'date': '2026-01-01',
             'invoice_date': '2026-01-01',
-            'invoice_payment_term_id': self.epd_term.id,
+            'invoice_payment_term_id': cls.epd_term.id,
             'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
+                'product_id': cls.product_a.id,
                 'price_unit': 100.0,
                 'tax_ids': [],
             })],
         })
+        cls.writeoff_bill = cls.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': cls.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': cls.no_epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': cls.product_a.id,
+                'price_unit': 200.0,
+                'tax_ids': [],
+            })],
+        })
+        cls.foreign_bill = cls.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': cls.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'currency_id': cls.other_currency.id,
+            'invoice_payment_term_id': cls.no_epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': cls.product_a.id,
+                'price_unit': 200.0,
+                'tax_ids': [],
+            })],
+        })
+
+    def test_epd_split_signs(self):
+        """ Test that an early payment discount adds a discount row, signed for
+        both bills and invoices.
+        """
+        bill = self.epd_bill
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -255,18 +282,7 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
         discount window is reported as a write-off, not as an early payment
         discount.
         """
-        bill = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2026-01-01',
-            'invoice_date': '2026-01-01',
-            'invoice_payment_term_id': self.epd_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 100.0,
-                'tax_ids': [],
-            })],
-        })
+        bill = self.epd_bill
         bill.action_post()
 
         gain_account = self.env.company.account_journal_early_pay_discount_gain_account_id
@@ -291,18 +307,7 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
         """ Test that a payment below a fully-paid bill's total adds a write-off
         row for the difference.
         """
-        bill = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2026-01-01',
-            'invoice_date': '2026-01-01',
-            'invoice_payment_term_id': self.no_epd_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 200.0,
-                'tax_ids': [],
-            })],
-        })
+        bill = self.writeoff_bill
         paid_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': self.partner_a.id,
@@ -345,18 +350,7 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
         """ Test that a grouped payment's write-off is split across the bills in
         proportion to their amounts.
         """
-        bill_a = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2026-01-01',
-            'invoice_date': '2026-01-01',
-            'invoice_payment_term_id': self.no_epd_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 200.0,
-                'tax_ids': [],
-            })],
-        })
+        bill_a = self.writeoff_bill
         bill_b = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': self.partner_a.id,
@@ -402,19 +396,7 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
         currency shows the paid amount in the payment's currency, not scaled by
         the exchange rate.
         """
-        bill = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2026-01-01',
-            'invoice_date': '2026-01-01',
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.no_epd_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 200.0,
-                'tax_ids': [],
-            })],
-        })
+        bill = self.foreign_bill
         bill.action_post()
 
         # Bill is 200 EUR (= 100 USD at rate 2.0). Pay 96 USD cash, write off
@@ -445,19 +427,7 @@ class TestPaymentReceipt(AccountTestInvoicingWithBanksCommon):
         company currency splits the write-off per bill and reports the paid
         amount in the payment's currency, not scaled by the exchange rate.
         """
-        bill_a = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2026-01-01',
-            'invoice_date': '2026-01-01',
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.no_epd_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 200.0,
-                'tax_ids': [],
-            })],
-        })
+        bill_a = self.foreign_bill
         bill_b = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': self.partner_a.id,

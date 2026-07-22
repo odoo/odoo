@@ -55,6 +55,20 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ]
         })
 
+        cls.early_pay_term_mixed_1pct_7d = cls.env['account.payment.term'].create({
+            'name': '1% discount if paid within 7 days',
+            'company_id': cls.company_data['company'].id,
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 1,
+            'discount_days': 7,
+            'early_discount': True,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+
     # ========================== Tests Payment Terms ==========================
     @freeze_time('2019-01-01')
     def test_early_payment_end_date(self):
@@ -613,19 +627,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         tax_136 = self.fixed_tax(0.136, include_base_amount=True)
         tax_176 = self.fixed_tax(0.176, include_base_amount=True)
 
-        early_pay_1_percents_7_days = self.env['account.payment.term'].create({
-            'name': '1% discount if paid within 7 days',
-            'company_id': self.company_data['company'].id,
-            'early_pay_discount_computation': 'mixed',
-            'discount_percentage': 1,
-            'discount_days': 7,
-            'early_discount': True,
-            'line_ids': [Command.create({
-                'value': 'percent',
-                'nb_days': 0,
-                'value_amount': 100,
-            })]
-        })
+        early_pay_1_percents_7_days = self.early_pay_term_mixed_1pct_7d
 
         # These `invoice_line_ids` values will create a rounding issue
         # If invoice is not balanced the following create will fail
@@ -645,19 +647,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         """
         tax_15 = self.percent_tax(15.0)
 
-        early_pay_1_percents_7_days = self.env['account.payment.term'].create({
-            'name': '1% discount if paid within 7 days',
-            'company_id': self.company_data['company'].id,
-            'early_pay_discount_computation': 'mixed',
-            'discount_percentage': 1,
-            'discount_days': 7,
-            'early_discount': True,
-            'line_ids': [Command.create({
-                'value': 'percent',
-                'nb_days': 0,
-                'value_amount': 100,
-            })]
-        })
+        early_pay_1_percents_7_days = self.early_pay_term_mixed_1pct_7d
 
         invoice = self._create_invoice(
             date='2022-02-01',
