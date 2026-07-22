@@ -8,7 +8,7 @@ import {
 } from "@odoo/hoot";
 import { queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useDraggable } from "@web/core/utils/draggable";
@@ -24,7 +24,7 @@ test("Parameters error handling", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-            static props = ["*"];
+            props = useProps();
             rootRef = signal(null);
             setup() {
                 setupList(this);
@@ -78,7 +78,7 @@ test("Simple dragging in single group", async () => {
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -127,7 +127,7 @@ test("Dynamically disable draggable feature", async () => {
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             this.state = proxy(state);
@@ -175,7 +175,7 @@ test("Ignore specified elements", async () => {
                     </li>
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -229,7 +229,7 @@ test("Ignore specific elements in a nested draggable", async () => {
                     </li>
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -282,7 +282,7 @@ test("Dragging element with touch event", async () => {
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -324,7 +324,7 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -364,7 +364,7 @@ test("Elements are confined within their container and keep their initial width 
                 </ul>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
 
         setup() {
@@ -434,7 +434,7 @@ test("Focusing is not lost after clicking", async () => {
             <div t-ref="this.rootRef" class="root">
                 <input type="checkbox" class="item">Something</input>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -459,7 +459,7 @@ test("allowDisconnected option", async () => {
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item w-50 h-100" />
                 </ul>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             this.state = proxy({ hasHandle: true });
@@ -493,7 +493,7 @@ test("draggable in iframe", async () => {
         <div t-ref="this.rootRef" class="root">
             <iframe class="mydroppable" t-att-srcdoc="this.srcdoc" />
         </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -562,7 +562,7 @@ test("dragging element in iframe offset", async () => {
                 <iframe class="mydroppable" t-att-srcdoc="this.srcdoc"/>
             </div>
         </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
         setup() {
             useDraggable({
@@ -625,7 +625,7 @@ test("Dragging cancels previous drag sequences", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-        static props = ["*"];
+        props = useProps();
         rootRef = signal(null);
 
         setup() {

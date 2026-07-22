@@ -7,7 +7,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { click, edit, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Component, proxy, xml } from "@odoo/owl";
+import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import {
     contains,
     editSelectMenu,
@@ -27,7 +27,9 @@ import { SelectMenu } from "@web/core/select_menu/select_menu";
  */
 async function mountSingleApp(ComponentClass, props) {
     class TestComponent extends Component {
-        static props = { components: { type: Array } };
+        props = useProps({
+            components: t.array(),
+        });
         static template = xml`
             <t t-foreach="this.props.components" t-as="comp" t-key="comp.component.name">
                 <t t-component="comp.component" t-props="comp.props"/>
@@ -52,7 +54,7 @@ async function mountSingleApp(ComponentClass, props) {
 }
 
 class Parent extends Component {
-    static props = ["*"];
+    props = useProps();
     static components = { SelectMenu };
     static template = xml`
         <SelectMenu
@@ -110,7 +112,7 @@ test("Default value correctly set", async () => {
 
 test("Selecting a choice calls onSelect and the displayed value is updated", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -185,7 +187,7 @@ test("Close dropdown on escape keydown", async () => {
 
 test("Search input should be present as a toggler, but cannot be edited if searchable=false", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices" searchable="false" />
@@ -204,7 +206,7 @@ test("Search input should be present as a toggler, but cannot be edited if searc
 
 test("Search input should be present in a dropdown with a custom toggler", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices">
@@ -227,7 +229,7 @@ test("Search input should be present in a dropdown with a custom toggler", async
 test.tags("mobile");
 test("Search input should behave as a toggler only and an input should be present in a dropdown on small+touch screen", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices" />
@@ -248,7 +250,7 @@ test("Search input should behave as a toggler only and an input should be presen
 
 test("Value with no corresponding choices displays as if no choice was selected", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
         <SelectMenu
@@ -273,7 +275,7 @@ test("Value with no corresponding choices displays as if no choice was selected"
 
 test("Changing value props properly updates the selected choice", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -302,7 +304,7 @@ test("Changing value props properly updates the selected choice", async () => {
 
 test("Use a null value for choices", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -333,7 +335,7 @@ test("Use a null value for choices", async () => {
 
 test("Use an empty string as the value for a choice display the corresponding choice", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
         <SelectMenu
@@ -367,7 +369,7 @@ test("Use an empty string as the value for a choice display the corresponding ch
 test("Clear the input calls 'onSelect' with null value and appears only when value is not null", async () => {
     expect.assertions(4);
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -398,7 +400,7 @@ test("Clear the input calls 'onSelect' with null value and appears only when val
 
 test("When the 'required' props is set to true, the input cannot be cleared", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -427,7 +429,7 @@ test("When the 'required' props is set to true, the input cannot be cleared", as
 
 test("When the 'required' props is set to true, the clear button is not shown", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -460,7 +462,7 @@ test("When the 'required' props is set to true, the clear button is not shown", 
 
 test("Items are sorted based on their label by default", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -483,7 +485,7 @@ test("Items are sorted based on their label by default", async () => {
 
 test("autoSort props set to false", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`<SelectMenu choices="this.choices" autoSort="false"/>`;
         setup() {
@@ -502,7 +504,7 @@ test("autoSort props set to false", async () => {
 
 test("Custom toggler using default slot", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices">
@@ -525,7 +527,7 @@ test("Custom toggler using default slot", async () => {
 
 test("Custom choice template using a slot", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices">
@@ -550,7 +552,7 @@ test("Custom choice template using a slot", async () => {
 
 test("Custom slot for the bottom area sends the current search value", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices">
@@ -591,7 +593,7 @@ test("Custom slot for the bottom area sends the current search value", async () 
 
 test("Groups properly added in the select", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`<SelectMenu groups="this.groups"/>`;
         setup() {
@@ -614,7 +616,7 @@ test("Groups properly added in the select", async () => {
 
 test("Items are properly sorted but still in their respective group", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -663,7 +665,7 @@ test("When they are a lot of choices, not all are show at first and scrolling lo
     };
 
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -699,7 +701,7 @@ test("When they are a lot of choices, not all are show at first and scrolling lo
 
 test("When multiSelect is enable, value is an array of values, multiple choices should display as selected and tags should be displayed", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -750,7 +752,7 @@ test("When multiSelect is enable, value is an array of values, multiple choices 
 
 test("When multiSelect is enable, allow deselecting elements by clicking the selected choices inside the dropdown or by clicking the tags", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -798,7 +800,7 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
 test.tags("desktop");
 test("Navigation is possible from the input when it is focused", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -849,7 +851,7 @@ test("Navigation is possible from the input when it is focused", async () => {
 test.tags("desktop");
 test("When only one choice is displayed, 'enter' key should select the value", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -886,7 +888,7 @@ test("When only one choice is displayed, 'enter' key should select the value", a
 
 test("Props onInput is executed when the search changes", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -942,7 +944,7 @@ test("Props onInput is executed when the search changes", async () => {
 
 test("Choices are updated and filtered when props change", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1004,7 +1006,7 @@ test("SelectMenu group items only after being opened", async () => {
     });
     class MyParent extends Component {
         static components = { SelectMenu };
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <SelectMenu
                 choices="this.state.choices"
@@ -1075,7 +1077,7 @@ test("SelectMenu group items only after being opened", async () => {
 test("search value is cleared when reopening the menu", async () => {
     class MyParent extends Component {
         static components = { SelectMenu };
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <SelectMenu
                 choices="this.state.choices"
@@ -1111,7 +1113,7 @@ test("search value is cleared when reopening the menu", async () => {
 
 test("Groups can be member of sections", async () => {
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices" groups="this.groups" sections="this.sections" />
@@ -1169,7 +1171,7 @@ test("Groups can be member of sections", async () => {
 
 test("Can add custom data to choices", async () => {
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices">
@@ -1189,7 +1191,7 @@ test("Can add custom data to choices", async () => {
 
 test("placeholder added succesfully", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1216,7 +1218,7 @@ test("placeholder added succesfully", async () => {
 
 test("disabled select list", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1239,7 +1241,7 @@ test("disabled select list", async () => {
 
 test("Fetch choices", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1268,7 +1270,7 @@ test("Fetch choices", async () => {
 test.tags("mobile");
 test("In the BottomSheet, a 'Clear' button is present", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1295,7 +1297,7 @@ test("In the BottomSheet, a 'Clear' button is present", async () => {
 
 test("Ensure items are properly sorted", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu
@@ -1381,7 +1383,7 @@ test("prevent glitch on open or focusout", async () => {
     `;
     class Wrapper extends Component {
         static components = { SelectMenu };
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <SelectMenu t-props="this.props">${slots}</SelectMenu>`;
     }
@@ -1418,7 +1420,7 @@ test("prevent glitch on open or focusout", async () => {
 
 test("Prevents loss of value due to debounce when changing state (rendering)", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
         <SelectMenu
@@ -1456,7 +1458,7 @@ test("Prevents loss of value due to debounce when changing state (rendering)", a
 
 test("Filter is preserved when choices rerender before the debounced search runs", async () => {
     class MyParent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu

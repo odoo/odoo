@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, signal } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -46,7 +46,7 @@ export class PivotRenderer extends Component {
         PropertiesGroupByItem,
         ReportViewMeasures,
     };
-    static props = ["model", "buttonTemplate"];
+    props = useProps(["model", "buttonTemplate"]);
 
     tableRef = signal(null);
 

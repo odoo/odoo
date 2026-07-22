@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -159,7 +159,7 @@ class TestClientAction extends Component {
             ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>
     `;
-    static props = ["*"];
+    props = useProps();
 
     setup() {
         onMounted(() => {
@@ -219,7 +219,7 @@ test(`actions can push state`, async () => {
                 ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
 
         _actionPushState() {
             router.pushState({ arbitrary: "actionPushed" });
@@ -254,7 +254,7 @@ test(`actions override previous state`, async () => {
                 ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
 
         _actionPushState() {
             router.pushState({ arbitrary: "actionPushed" });
@@ -292,7 +292,7 @@ test(`actions override previous state from menu click`, async () => {
                 ClientAction_<t t-out="this.props.params and this.props.params.description"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
 
         _actionPushState() {
             router.pushState({ arbitrary: "actionPushed" });

@@ -1,20 +1,21 @@
 import { useChildSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
+import { t, useProps } from "@odoo/owl";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { saveMultipleAttachments } from "@web/core/utils/image_library";
 
 export class X2ManyMediaViewer extends X2ManyField {
     static template = "html_editor.X2ManyMediaViewer";
-    static props = {
-        ...X2ManyField.props,
-        convertToWebp: { type: Boolean, optional: true },
-        forceCreate: { type: Boolean, optional: true },
-        setAttachmentId: { type: Boolean, optional: true },
-        onlyImage: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        ...x2ManyFieldProps,
+        convertToWebp: t.boolean().optional(),
+        forceCreate: t.boolean().optional(),
+        setAttachmentId: t.boolean().optional(),
+        onlyImage: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();
@@ -90,12 +91,12 @@ export const x2ManyMediaViewer = {
         { attrs, relatedFields, viewMode, views, widget, options, string },
         dynamicInfo
     ) => {
-        const x2ManyFieldProps = x2ManyField.extractProps(
+        const fieldProps = x2ManyField.extractProps(
             { attrs, relatedFields, viewMode, views, widget, options, string },
             dynamicInfo
         );
         return {
-            ...x2ManyFieldProps,
+            ...fieldProps,
             convertToWebp: options.convert_to_webp,
             forceCreate: options.force_create,
             setAttachmentId: options.set_attachment_id,

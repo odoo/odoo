@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TimePicker } from "@web/core/time_picker/time_picker";
 import { useService } from "@web/core/utils/hooks";
@@ -13,14 +13,14 @@ export class MultiCreatePopover extends Component {
         Record,
         TimePicker,
     };
-    static props = {
-        close: Function,
-        multiCreateArchInfo: Object,
-        multiCreateRecordProps: Object,
-        onAdd: Function,
-        callbackRecorder: Object,
-        timeRange: { type: [Object, { value: null }] },
-    };
+    props = useProps({
+        close: t.function(),
+        multiCreateArchInfo: t.object(),
+        multiCreateRecordProps: t.object(),
+        onAdd: t.function(),
+        callbackRecorder: t.object(),
+        timeRange: t.or([t.object(), t.literal(null)]),
+    });
 
     setup() {
         this.notification = useService("notification");

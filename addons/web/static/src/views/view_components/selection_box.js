@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class SelectionBox extends Component {
     static components = {};
     static template = "web.SelectionBox";
-    static props = {
-        root: { type: Object },
-    };
+    props = useProps({
+        root: t.object(),
+    });
     setup() {
         this.root = this.props.root;
         this.uiService = useService("ui");

@@ -1,5 +1,5 @@
 import { animationFrame } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 import { mountWithCleanup } from "./component_test_helpers";
@@ -9,7 +9,7 @@ class TestClientAction extends Component {
         <div class="test_client_action">
             ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>`;
-    static props = ["*"];
+    props = useProps();
 }
 
 export function useTestClientAction() {

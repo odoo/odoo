@@ -2,8 +2,11 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { Component } from "@odoo/owl";
+import {
+    buildM2OFieldDescription,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
+import { Component, useProps } from "@odoo/owl";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
@@ -25,7 +28,7 @@ export class PartnerMany2One extends Many2One {
 export class PartnerAutoCompleteMany2one extends Component {
     static template = "partner_autocomplete.PartnerAutoCompleteMany2one";
     static components = { Many2One: PartnerMany2One };
-    static props = { ...Many2OneField.props };
+    props = useProps({ ...many2OneFieldProps });
 
     setup() {
         super.setup();

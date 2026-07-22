@@ -21,7 +21,6 @@ const STATUS = {
 
 class OfflineSystray extends Component {
     static template = "web.OfflineSystray";
-    static props = {};
     static components = { Dropdown, DropdownItem };
 
     setup() {

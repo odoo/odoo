@@ -1,4 +1,4 @@
-import { Component, onWillStart, plugin } from "@odoo/owl";
+import { Component, onWillStart, plugin, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -66,9 +66,9 @@ export function openViewItem() {
 class ClocReport extends Component {
     static components = { Dialog };
     static template = "web.ClocReport";
-    static props = {
-        close: Function,
-    };
+    props = useProps({
+        close: t.function(),
+    });
 
     setup() {
         this.action = useService("action");

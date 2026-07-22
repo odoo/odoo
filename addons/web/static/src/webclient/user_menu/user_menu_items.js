@@ -1,4 +1,4 @@
-import { Component, markup, plugin } from "@odoo/owl";
+import { Component, markup, plugin, t, useProps } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -28,9 +28,9 @@ function supportItem() {
 
 class ShortcutsFooterComponent extends Component {
     static template = "web.UserMenu.ShortcutsFooterComponent";
-    static props = {
-        switchNamespace: { type: Function, optional: true },
-    };
+    props = useProps({
+        switchNamespace: t.function().optional(),
+    });
     setup() {
         this.runShortcutKey = isMacOS() ? "CONTROL" : "ALT";
     }

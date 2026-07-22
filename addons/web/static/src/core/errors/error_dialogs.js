@@ -6,24 +6,24 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
-import { Component, markup, signal, proxy } from "@odoo/owl";
+import { Component, markup, proxy, signal, t, useProps } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
 // This props are added by the error handler
 export const standardErrorDialogProps = {
-    traceback: { type: [String, { value: null }], optional: true },
-    message: { type: String, optional: true },
-    name: { type: String, optional: true },
-    exceptionName: { type: [String, { value: null }], optional: true },
-    data: { type: [Object, { value: null }], optional: true },
-    subType: { type: [String, { value: null }], optional: true },
-    code: { type: [Number, String, { value: null }], optional: true },
-    type: { type: [String, { value: null }], optional: true },
-    serverHost: { type: [String, { value: null }], optional: true },
-    id: { type: [Number, { value: null }], optional: true },
-    model: { type: [String, { value: null }], optional: true },
-    close: Function, // prop added by the Dialog service
+    traceback: t.or([t.string(), t.literal(null)]).optional(),
+    message: t.string().optional(),
+    name: t.string().optional(),
+    exceptionName: t.or([t.string(), t.literal(null)]).optional(),
+    data: t.or([t.object(), t.literal(null)]).optional(),
+    subType: t.or([t.string(), t.literal(null)]).optional(),
+    code: t.or([t.number(), t.string(), t.literal(null)]).optional(),
+    type: t.or([t.string(), t.literal(null)]).optional(),
+    serverHost: t.or([t.string(), t.literal(null)]).optional(),
+    id: t.or([t.number(), t.literal(null)]).optional(),
+    model: t.or([t.string(), t.literal(null)]).optional(),
+    close: t.function(), // prop added by the Dialog service
 };
 
 export const odooExceptionTitleMap = new Map(
@@ -49,7 +49,9 @@ export class ErrorDialog extends Component {
     static title = _t("Odoo Error");
     static showTracebackButtonText = _t("See technical details");
     static hideTracebackButtonText = _t("Hide technical details");
-    static props = { ...standardErrorDialogProps };
+    props = useProps({
+        ...standardErrorDialogProps,
+    });
 
     copyButtonRef = signal(null);
 
@@ -151,13 +153,15 @@ export class RPCErrorDialog extends ErrorDialog {
 // -----------------------------------------------------------------------------
 // Warning Dialog
 // -----------------------------------------------------------------------------
+export const warningDialogProps = {
+    ...standardErrorDialogProps,
+    title: t.string().optional(),
+};
+
 export class WarningDialog extends Component {
     static template = "web.WarningDialog";
     static components = { Dialog };
-    static props = {
-        ...standardErrorDialogProps,
-        title: { type: String, optional: true },
-    };
+    props = useProps(warningDialogProps);
 
     setup() {
         this.title = this.inferTitle();
@@ -182,7 +186,9 @@ export class WarningDialog extends Component {
 export class RedirectWarningDialog extends Component {
     static template = "web.RedirectWarningDialog";
     static components = { Dialog };
-    static props = { ...standardErrorDialogProps };
+    props = useProps({
+        ...standardErrorDialogProps,
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -213,7 +219,9 @@ export class RedirectWarningDialog extends Component {
 export class Error504Dialog extends Component {
     static template = "web.Error504Dialog";
     static components = { Dialog };
-    static props = { ...standardErrorDialogProps };
+    props = useProps({
+        ...standardErrorDialogProps,
+    });
 }
 
 // -----------------------------------------------------------------------------
@@ -222,7 +230,9 @@ export class Error504Dialog extends Component {
 export class SessionExpiredDialog extends Component {
     static template = "web.SessionExpiredDialog";
     static components = { Dialog };
-    static props = { ...standardErrorDialogProps };
+    props = useProps({
+        ...standardErrorDialogProps,
+    });
 
     onClick() {
         browser.location.reload();

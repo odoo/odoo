@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, xml, proxy } from "@odoo/owl";
+import { Component, markup, proxy, useProps, xml } from "@odoo/owl";
 import {
     contains,
     editAce,
@@ -75,7 +75,7 @@ test("Can be rendered", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" mode="'xml'" />`;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Parent);
     expect(".ace_editor").toHaveCount(1);
@@ -91,12 +91,12 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor value="this.props.value" />`;
-        static props = ["*"];
+        props = useProps();
     }
     class GrandParent extends Component {
         static components = { Parent };
         static template = xml`<Parent value="this.state.value"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ value: `<div>Some Text</div>` });
         }
@@ -115,7 +115,7 @@ test("onChange props called when code is edited", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" onChange.bind="this.onChange" />`;
-        static props = ["*"];
+        props = useProps();
         onChange(value) {
             expect.step(value);
         }
@@ -136,7 +136,7 @@ test("onChange props not called when value props is updated", async () => {
                 onChange.bind="this.onChange"
             />
         `;
-        static props = ["*"];
+        props = useProps();
         state = proxy({ value: "initial value" });
         onChange(value) {
             expect.step(value || "__emptystring__");
@@ -169,7 +169,7 @@ test("Default value correctly set and updates", async () => {
                 maxLines="200"
             />
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ value: textA });
             this.onChange = debounce(this.onChange.bind(this));
@@ -222,7 +222,7 @@ test("Mode props update imports the mode", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" mode="this.state.mode" />`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ mode: "xml" });
         }
@@ -260,7 +260,7 @@ test("Theme props updates imports the theme", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" theme="this.state.theme" />`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ theme: "" });
         }
@@ -281,7 +281,7 @@ test("initial value cannot be undone", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor mode="'xml'" value="'some value'" class="'h-100'" />`;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Parent);
     await animationFrame();
@@ -323,7 +323,7 @@ test("cursor position stored by sessionId", async () => {
                 value="this.state.value"
                 sessionId="this.state.sessionId"
             />`;
-        static props = ["*"];
+        props = useProps();
 
         setup() {
             this.state = proxy({
@@ -372,7 +372,7 @@ test("qweb mode readonly attributes", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions"/>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     const initialValue = `
@@ -441,7 +441,7 @@ test("get undo/redo state using editorState prop", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor value="'my first string'" editorState="this.editorState"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.editorState = useCodeEditorState();
         }

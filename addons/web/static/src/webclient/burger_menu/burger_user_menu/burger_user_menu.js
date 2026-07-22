@@ -1,11 +1,12 @@
-import { UserMenu } from "@web/webclient/user_menu/user_menu";
+import { t, useProps } from "@odoo/owl";
+import { UserMenu, userMenuProps } from "@web/webclient/user_menu/user_menu";
 
 export class BurgerUserMenu extends UserMenu {
     static template = "web.BurgerUserMenu";
-    static props = {
-        ...UserMenu.props,
-        onMenuClicked: { type: Function, optional: true },
-    };
+    props = useProps({
+        ...userMenuProps,
+        onMenuClicked: t.function().optional(),
+    });
     _onItemClicked(callback) {
         return (ev) => {
             callback(ev);

@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
@@ -9,10 +9,10 @@ import { registry } from "@web/core/registry";
 export class ShareTargetDialog extends Component {
     static template = "web.ShareTargetDialog";
     static components = { Dialog, ShareTargetItem };
-    static props = {
-        close: { type: Function },
-        files: { type: Array, element: File },
-    };
+    props = useProps({
+        close: t.function(),
+        files: t.array(t.instanceOf(File)),
+    });
 
     setup() {
         super.setup();

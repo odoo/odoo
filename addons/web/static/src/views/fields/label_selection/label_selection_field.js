@@ -3,11 +3,11 @@ import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class LabelSelectionField extends Component {
     static template = "web.LabelSelectionField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         classesObj: t.object().optional({}),
     });

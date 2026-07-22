@@ -4,7 +4,18 @@ import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
-import { Component, EventBus, onMounted, onWillStart, plugin, proxy, signal, useListener } from "@odoo/owl";
+import {
+    Component,
+    EventBus,
+    onMounted,
+    onWillStart,
+    plugin,
+    proxy,
+    signal,
+    t,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -58,17 +69,17 @@ export class QuickCreateState {
 }
 
 export class KanbanQuickCreateController extends Component {
-    static props = {
-        Model: Function,
-        Renderer: Function,
-        Compiler: Function,
-        quickCreateState: QuickCreateState,
-        resModel: String,
-        onValidate: Function,
-        fields: { type: Object },
-        context: { type: Object },
-        archInfo: { type: Object },
-    };
+    props = useProps({
+        Model: t.function(),
+        Renderer: t.function(),
+        Compiler: t.function(),
+        quickCreateState: t.instanceOf(QuickCreateState),
+        resModel: t.string(),
+        onValidate: t.function(),
+        fields: t.object(),
+        context: t.object(),
+        archInfo: t.object(),
+    });
     static template = "web.KanbanQuickCreateController";
 
     rootRef = signal(null);
@@ -299,12 +310,12 @@ export class KanbanQuickCreateController extends Component {
 export class KanbanRecordQuickCreate extends Component {
     static components = { KanbanQuickCreateController };
     static template = "web.KanbanRecordQuickCreate";
-    static props = {
-        quickCreateState: QuickCreateState,
-        onValidate: Function,
-        resModel: String,
-        context: Object,
-    };
+    props = useProps({
+        quickCreateState: t.instanceOf(QuickCreateState),
+        onValidate: t.function(),
+        resModel: t.string(),
+        context: t.object(),
+    });
 
     setup() {
         this.state = proxy({

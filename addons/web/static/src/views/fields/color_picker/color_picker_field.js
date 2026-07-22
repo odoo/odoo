@@ -4,7 +4,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 export class ColorPickerField extends Component {
     static template = "web.ColorPickerField";
@@ -12,9 +12,9 @@ export class ColorPickerField extends Component {
         ColorList,
         Dropdown,
     };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-    };
+    });
 
     setup() {
         this.dropdownState = useDropdownState();
@@ -37,7 +37,7 @@ export class ColorPickerField extends Component {
 export const colorPickerField = {
     component: ColorPickerField,
     supportedTypes: ["integer"],
-    extractProps: ({}, dynamicInfo) => ({
+    extractProps: (staticInfo, dynamicInfo) => ({
         readonly: dynamicInfo.readonly,
     }),
 };

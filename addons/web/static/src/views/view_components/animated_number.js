@@ -1,27 +1,21 @@
 import { browser } from "@web/core/browser/browser";
 import { formatInteger, formatMonetary } from "@web/views/fields/formatters";
 
-import { Component, onWillUnmount, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 
 export class AnimatedNumber extends Component {
     static template = "web.AnimatedNumber";
-    static props = {
-        value: Number,
-        duration: Number,
-        animationClass: { type: String, optional: true },
-        currencies: { type: Array, optional: true },
-        title: { type: String, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                prefix: { type: Object, optional: true },
-            },
-            optional: true,
-        },
-    };
+    props = useProps({
+        value: t.number(),
+        duration: t.number(),
+        animationClass: t.string().optional(),
+        currencies: t.array().optional(),
+        title: t.string().optional(),
+        slots: t.object({ prefix: t.object().optional() }).optional(),
+    });
     static enableAnimations = true;
 
     setup() {

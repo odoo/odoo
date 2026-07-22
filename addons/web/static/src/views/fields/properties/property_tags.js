@@ -8,7 +8,7 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";
 
 class PropertyTagsColorListPopover extends Component {
@@ -16,12 +16,12 @@ class PropertyTagsColorListPopover extends Component {
     static components = {
         ColorList,
     };
-    static props = {
-        colors: Array,
-        tag: Object,
-        switchTagColor: Function,
-        close: Function,
-    };
+    props = useProps({
+        colors: t.array(),
+        tag: t.object(),
+        switchTagColor: t.function(),
+        close: t.function(),
+    });
 }
 
 export class PropertyTags extends Component {
@@ -33,22 +33,22 @@ export class PropertyTags extends Component {
         Popover: PropertyTagsColorListPopover,
     };
 
-    static props = {
-        id: { type: String, optional: true },
-        selectedTags: {}, // Tags value visible in the tags list
-        tags: {}, // Tags definition visible in the dropdown
+    props = useProps({
+        id: t.string().optional(),
+        selectedTags: t.any(), // Tags value visible in the tags list
+        tags: t.any(), // Tags definition visible in the dropdown
         // Define the behavior of the delete button on the tags, either
         // "value" or "tags". If "value", the delete button will unselect
         // the value, if "tags" the value will be removed from the definition.
-        deleteAction: { type: String },
-        readonly: { type: Boolean, optional: true },
-        canChangeTags: { type: Boolean, optional: true },
+        deleteAction: t.string(),
+        readonly: t.boolean().optional(),
+        canChangeTags: t.boolean().optional(),
         // Select a new value
-        onValueChange: { type: Function, optional: true },
+        onValueChange: t.function().optional(),
         // Change the tags definition (can also receive a second
         // argument to update the current selected value)
-        onTagsChange: { type: Function, optional: true },
-    };
+        onTagsChange: t.function().optional(),
+    });
     propertyTagsRef = signal(null);
 
     setup() {
@@ -305,7 +305,7 @@ export class PropertyTags extends Component {
 export class PropertyTagsField extends Component {
     static template = "web.PropertyTagsField";
     static components = { PropertyTags };
-    static props = { ...standardFieldProps };
+    props = useProps({ ...standardFieldProps });
 
     get propertyTagsProps() {
         return {

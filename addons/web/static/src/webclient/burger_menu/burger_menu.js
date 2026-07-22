@@ -2,11 +2,7 @@ import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
-import {
-    isAndroidApp,
-    isDisplayStandalone,
-    isIosApp,
-} from "@web/core/browser/feature_detection";
+import { isAndroidApp, isDisplayStandalone, isIosApp } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
@@ -22,7 +18,6 @@ const SWIPE_ACTIVATION_THRESHOLD = 100;
 
 export class BurgerMenu extends Component {
     static template = "web.BurgerMenu";
-    static props = {};
     static components = {
         BurgerUserMenu,
         MobileSwitchCompanyMenu,

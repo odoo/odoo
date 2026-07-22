@@ -4,8 +4,9 @@ import { Component, xml, onWillDestroy } from "@odoo/owl";
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
 // -----------------------------------------------------------------------------
+export const actionContainerProps = {};
+
 export class ActionContainer extends Component {
-    static props = {};
     static template = xml`
         <t t-name="web.ActionContainer">
           <div class="o_action_manager">

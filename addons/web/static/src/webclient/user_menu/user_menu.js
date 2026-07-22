@@ -1,4 +1,4 @@
-import { Component, useScope } from "@odoo/owl";
+import { Component, useProps, useScope } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -10,10 +10,12 @@ import { session } from "@web/session";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
+export const userMenuProps = {};
+
 export class UserMenu extends Component {
     static template = "web.UserMenu";
     static components = { DropdownGroup, Dropdown, DropdownItem, CheckBox };
-    static props = {};
+    props = useProps(userMenuProps);
 
     scope = useScope();
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -91,7 +91,7 @@ test("basic search panel rendering", async () => {
     class Parent extends Component {
         static components = { SearchPanel };
         static template = xml`<SearchPanel/>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithSearch(Parent, {
@@ -119,7 +119,7 @@ test("Dropdown closes on category selection", async () => {
     class Parent extends Component {
         static components = { SearchPanel };
         static template = xml`<SearchPanel/>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithSearch(Parent, {

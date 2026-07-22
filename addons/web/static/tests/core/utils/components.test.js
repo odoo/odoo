@@ -1,13 +1,13 @@
 import { render } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ErrorHandler } from "@web/core/utils/components";
 
 test("ErrorHandler component", async () => {
     class Boom extends Component {
         static template = xml`<div><t t-out="this.will.throw"/></div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     class Parent extends Component {
@@ -22,7 +22,7 @@ test("ErrorHandler component", async () => {
             </div>
         `;
         static components = { Boom, ErrorHandler };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.flag = true;
         }

@@ -1,12 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 
-import { EventBus, Component, proxy } from "@odoo/owl";
+import { Component, EventBus, proxy, t, useProps } from "@odoo/owl";
 
 export class BlockUI extends Component {
-    static props = {
-        bus: EventBus,
-    };
+    props = useProps({
+        bus: t.instanceOf(EventBus),
+    });
 
     static template = "web.BlockUI";
 

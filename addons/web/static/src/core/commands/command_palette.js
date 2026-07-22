@@ -6,7 +6,9 @@ import {
     onWillStart,
     proxy,
     signal,
+    t,
     useListener,
+    useProps,
     useScope,
 } from "@odoo/owl";
 import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
@@ -76,29 +78,31 @@ function commandsWithinCategory(categoryName, categories) {
     };
 }
 
+export const defaultCommandItemProps = {
+    slots: t.object().optional(),
+    // Props send by the command palette:
+    hotkey: t.string().optional(),
+    hotkeyOptions: t.string().optional(),
+    name: t.string().optional(),
+    searchValue: t.string().optional(),
+    executeCommand: t.function().optional(),
+};
+
 export class DefaultCommandItem extends Component {
     static template = "web.DefaultCommandItem";
-    static props = {
-        slots: { type: Object, optional: true },
-        // Props send by the command palette:
-        hotkey: { type: String, optional: true },
-        hotkeyOptions: { type: String, optional: true },
-        name: { type: String, optional: true },
-        searchValue: { type: String, optional: true },
-        executeCommand: { type: Function, optional: true },
-    };
+    props = useProps(defaultCommandItemProps);
 }
 
 export class CommandPalette extends Component {
     static template = "web.CommandPalette";
     static components = { Dialog };
     static lastSessionId = 0;
-    static props = {
-        bus: { type: EventBus, optional: true },
-        close: Function,
-        config: Object,
-        closeMe: { type: Function, optional: true },
-    };
+    props = useProps({
+        bus: t.instanceOf(EventBus).optional(),
+        close: t.function(),
+        config: t.object(),
+        closeMe: t.function().optional(),
+    });
 
     scope = useScope();
 

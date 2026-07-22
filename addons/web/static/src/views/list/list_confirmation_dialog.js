@@ -7,13 +7,13 @@ import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { formatDate } from "@web/views/fields/formatters";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
     static components = { BadgeTag, Dialog, Field };
-    props = props({
+    props = useProps({
         close: t.function(),
         title: t
             .customValidator(

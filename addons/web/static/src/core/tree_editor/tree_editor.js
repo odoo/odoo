@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
@@ -20,7 +20,7 @@ export class TreeEditor extends Component {
         DropdownItem,
         TreeEditor,
     };
-    props = props({
+    props = useProps({
         tree: t.object(),
         resModel: t.string(),
         update: t.function(),

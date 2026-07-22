@@ -11,7 +11,7 @@ import {
     queryOne,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -24,7 +24,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 
 class FooterComponent extends Component {
     static template = xml`<span>My footer</span>`;
-    static props = ["*"];
+    props = useProps();
 }
 
 test("empty providers", async () => {
@@ -261,7 +261,7 @@ test("command with a Custom Component", async () => {
                 <span t-out="this.props.name"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(MainComponentsContainer);

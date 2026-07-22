@@ -5,7 +5,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { ResUserGroupIdsPopover } from "./res_user_group_ids_popover";
 
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 /**
@@ -16,7 +16,9 @@ import { usePopover } from "@web/core/popover/popover_hook";
 class ResUserGroupIdsPrivilegeField extends Component {
     static template = "web.ResUserGroupIdsPrivilegeField";
     static components = { BooleanField, SelectionField };
-    static props = { ...standardFieldProps };
+    props = useProps({
+        ...standardFieldProps,
+    });
 
     setup() {
         this.isDebug = odoo.debug;

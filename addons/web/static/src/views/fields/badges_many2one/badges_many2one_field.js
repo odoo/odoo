@@ -4,19 +4,19 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { BaseBadgesField, extractStandardFieldProps } from "../badges_selection/base_badges_field";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 
 export class BadgesMany2oneField extends Component {
     static template = "web.BadgesMany2oneField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        domain: { type: [Array, Function], optional: true },
-        relatedIconField: { type: String, optional: true },
-        badgeLimit: { type: Number, optional: true },
-        defaultIcon: { type: String, optional: true },
-        canDeselect: { type: Boolean, optional: true },
-    };
+        domain: t.or([t.array(), t.function()]).optional(),
+        relatedIconField: t.string().optional(),
+        badgeLimit: t.number().optional(),
+        defaultIcon: t.string().optional(),
+        canDeselect: t.boolean().optional(),
+    });
     static components = { BaseBadgesField };
 
     setup() {

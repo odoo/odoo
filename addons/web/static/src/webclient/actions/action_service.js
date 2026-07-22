@@ -24,9 +24,11 @@ import {
     onError,
     onMounted,
     onWillUnmount,
+    plugin,
     proxy,
     status,
-    plugin,
+    t,
+    useProps,
     xml,
     useScope,
 } from "@odoo/owl";
@@ -38,7 +40,10 @@ import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
 
 class BlankComponent extends Component {
-    static props = ["onMounted", "withControlPanel", "*"];
+    props = useProps({
+        onMounted: t.any(),
+        withControlPanel: t.any(),
+    });
     static template = "web.BlankComponent";
     static components = { ControlPanel };
 
@@ -84,13 +89,13 @@ export async function clearUncommittedChanges(env, { forceLeave } = {}) {
 }
 
 export const standardActionServiceProps = {
-    action: Object, // prop added by _getActionInfo
-    actionId: { type: Number, optional: true }, // prop added by _getActionInfo
-    className: { type: String, optional: true }, // prop added by the ActionContainer
-    globalState: { type: Object, optional: true }, // prop added by _updateUI
-    state: { type: Object, optional: true }, // prop added by _updateUI
-    resId: { type: [Number, Boolean], optional: true },
-    updateActionState: { type: Function, optional: true },
+    action: t.object(), // prop added by _getActionInfo
+    actionId: t.number().optional(), // prop added by _getActionInfo
+    className: t.string().optional(), // prop added by the ActionContainer
+    globalState: t.object().optional(), // prop added by _updateUI
+    state: t.object().optional(), // prop added by _updateUI
+    resId: t.or([t.number(), t.boolean()]).optional(),
+    updateActionState: t.function().optional(),
 };
 
 function parseActiveIds(ids) {
@@ -940,9 +945,7 @@ export function makeActionManager(env, router = _router) {
         class ControllerComponent extends Component {
             static template = ControllerComponentTemplate;
             static Component = controller.Component;
-            static props = {
-                "*": true,
-            };
+            props = useProps();
             setup() {
                 this.Component = controller.Component;
                 this.titleService = useService("title");

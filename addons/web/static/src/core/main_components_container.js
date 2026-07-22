@@ -16,7 +16,6 @@ mainComponents.addValidation(
 
 export class MainComponentsContainer extends Component {
     static components = { ErrorHandler };
-    static props = {};
     static template = xml`
     <div class="o-main-components-container" t-att-class="{'o_rtl': this.isRTL}">
         <t t-foreach="this.Components.entries" t-as="C" t-key="C[0]">

@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -62,7 +62,7 @@ async function makeDomainSelector(params = {}) {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`<DomainSelector t-props="this.domainSelectorProps"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domainSelectorProps = {
                 resModel: "partner",
@@ -501,7 +501,7 @@ test("multi selection", async () => {
                 update.bind="this.update"
             />
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domain = `[("state", "in", ["a", "b", "c"])]`;
         }
@@ -544,7 +544,7 @@ test("parse -1", async () => {
         static template = xml`
             <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domain = `[("id", "=", -1)]`;
         }
@@ -559,7 +559,7 @@ test("parse 3-1", async () => {
         static template = xml`
             <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domain = `[("id", "=", 3-1)]`;
         }
@@ -664,7 +664,7 @@ test("debug input in model field selector popover", async () => {
                 update.bind="this.update"
             />
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domain = `[("id", "=", 1)]`;
         }
@@ -870,7 +870,7 @@ test("support of connector '!' (mode readonly)", async () => {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ domain: `[]` });
         }
@@ -988,7 +988,7 @@ test("support of connector '!' (debug mode)", async () => {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="this.state.domain"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ domain: `[]` });
         }
@@ -1042,7 +1042,7 @@ test("support properties", async () => {
             />
         `;
         static components = { DomainSelector };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.domain = expectedDomain;
         }
@@ -1210,7 +1210,7 @@ test("support properties (mode readonly)", async () => {
     class Parent extends Component {
         static components = { DomainSelector };
         static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ domain: `[]` });
         }

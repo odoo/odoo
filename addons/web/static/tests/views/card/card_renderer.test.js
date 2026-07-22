@@ -11,7 +11,7 @@ import {
     queryText,
     test,
 } from "@odoo/hoot";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -194,7 +194,7 @@ test("field with widget and attributes in card", async () => {
     const myField = {
         component: class MyField extends Component {
             static template = xml`<span/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 expect(this.props.attrs).toEqual({
                     name: "int_field",
@@ -349,7 +349,7 @@ test("field with widget and dynamic attributes in card", async () => {
     const myField = {
         component: class MyField extends Component {
             static template = xml`<span/>`;
-            static props = ["*"];
+            props = useProps();
         },
         extractProps: ({ attrs }) => {
             expect.step(
@@ -811,7 +811,7 @@ test("Allow use of 'editable'/'deletable' in card", async () => {
 test("basic support for widgets (being Owl Components)", async () => {
     class MyComponent extends Component {
         static template = xml`<div t-att-class="this.props.class" t-out="this.value"/>`;
-        static props = ["*"];
+        props = useProps();
         get value() {
             return JSON.stringify(this.props.record.data);
         }
@@ -842,7 +842,7 @@ test("basic support for widgets (being Owl Components)", async () => {
 test("card record: record value should be updated", async () => {
     class MyComponent extends Component {
         static template = xml`<div><button t-on-click="this.onClick">CLick</button></div>`;
-        static props = ["*"];
+        props = useProps();
         onClick() {
             this.props.record.update({ foo: "yolo" });
         }
@@ -978,7 +978,7 @@ test("card view with monetary and currency fields without widget", async () => {
 test("card widget can extract props from attrs", async () => {
     class TestWidget extends Component {
         static template = xml`<div class="o-test-widget-option" t-out="this.props.title"/>`;
-        static props = ["*"];
+        props = useProps();
     }
     const testWidget = {
         component: TestWidget,
@@ -1009,7 +1009,7 @@ test("fieldDependencies support for fields", async () => {
     const customField = {
         component: class CustomField extends Component {
             static template = xml`<span t-out="this.props.record.data.int_field"/>`;
-            static props = ["*"];
+            props = useProps();
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     };
@@ -1036,7 +1036,7 @@ test("fieldDependencies support for fields: dependence on a relational field", a
     const customField = {
         component: class CustomField extends Component {
             static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
-            static props = ["*"];
+            props = useProps();
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     };

@@ -1,12 +1,15 @@
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { Component, onWillStart } from "@odoo/owl";
+import {
+    buildM2OFieldDescription,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 
 export class TaskWithHours extends Component {
     static template = "hr_timesheet.TaskWithHours";
     static components = { Many2One };
-    static props = { ...Many2OneField.props };
+    props = useProps({ ...many2OneFieldProps });
 
     setup() {
         super.setup();

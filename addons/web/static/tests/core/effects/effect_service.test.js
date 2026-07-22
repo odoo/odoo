@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, xml } from "@odoo/owl";
+import { Component, markup, useProps, xml } from "@odoo/owl";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { user } from "@web/core/user";
@@ -75,7 +75,7 @@ test("rendering a rainbowman with a custom component", async () => {
 
     class Custom extends Component {
         static template = xml`<div class="custom">foo is <t t-out="this.props.foo"/></div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             expect(this.props).toEqual(props);
         }

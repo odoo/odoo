@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class ColorList extends Component {
     static COLORS = [
@@ -18,11 +18,11 @@ export class ColorList extends Component {
         _t("Violet"),
     ];
     static template = "web.ColorList";
-    static props = {
-        disableTransparent: { type: Boolean, optional: true },
-        onColorSelected: Function,
-        selectedColor: { type: Number, optional: true },
-    };
+    props = useProps({
+        disableTransparent: t.boolean().optional(),
+        onColorSelected: t.function(),
+        selectedColor: t.number().optional(),
+    });
     get colors() {
         return this.constructor.COLORS;
     }

@@ -2,18 +2,18 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
-import { DefaultCommandItem } from "@web/core/commands/command_palette";
+import { defaultCommandItemProps } from "@web/core/commands/command_palette";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { Component, plugin } from "@odoo/owl";
+import { Component, plugin, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 class AppIconCommand extends Component {
     static template = "web.AppIconCommand";
-    static props = {
-        webIconData: { type: String, optional: true },
-        webIcon: { type: Object, optional: true },
-        ...DefaultCommandItem.props,
-    };
+    props = useProps({
+        webIconData: t.string().optional(),
+        webIcon: t.object().optional(),
+        ...defaultCommandItemProps,
+    });
 }
 
 const commandCategoryRegistry = registry.category("command_categories");

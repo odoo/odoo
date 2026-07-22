@@ -1,4 +1,4 @@
-import { Component, computed, proxy, signal } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -8,12 +8,12 @@ import { useLayoutEffect } from "@web/owl2/utils";
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        modules: Array,
-        anchors: Array,
-        initialTab: { type: String, optional: true },
-        slots: Object,
-    };
+    props = useProps({
+        modules: t.array(),
+        anchors: t.array(),
+        initialTab: t.string().optional(),
+        slots: t.object(),
+    });
     settingsRef = signal(null);
     setup() {
         this.uiService = useService("ui");

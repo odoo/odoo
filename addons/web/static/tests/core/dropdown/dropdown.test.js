@@ -12,7 +12,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, proxy, signal, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal, t, useProps, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -41,7 +41,6 @@ const DROPDOWN_ITEM = ".o-dropdown-item.dropdown-item:not(.o-dropdown)";
 
 class SimpleDropdown extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = [];
     static template = xml`
         <div class="outside">outside</div>
         <Dropdown t-props="this.dropdownProps">
@@ -57,7 +56,6 @@ class SimpleDropdown extends Component {
 
 class MultiLevelDropdown extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = [];
     static template = xml`
         <div class="outside">outside</div>
         <Dropdown t-props="this.dropdownProps">
@@ -83,7 +81,6 @@ class MultiLevelDropdown extends Component {
 
 class NoBottomSheetDropdown extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = [];
     static template = xml`
         <Dropdown t-props="this.dropdownProps" bottomSheet="false">
             <button>Dropdown</button>
@@ -186,7 +183,6 @@ test("close on outside click", async () => {
 test("close on click outside an active element", async () => {
     class ActiveElementDropdown extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
             <div class="outside">outside</div>
             <div t-custom-ref="active">
@@ -222,7 +218,6 @@ test("close on click outside an active element", async () => {
 test("close on click outside when the opening active element was removed", async () => {
     class ActiveElementDropdown extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
             <div class="outside">outside</div>
             <div t-if="this.state.showActive" t-custom-ref="active">
@@ -267,13 +262,11 @@ test("close on outside click in shadow dom", async () => {
     const shadowRootId = "o-shadow-root-id";
     class DropdownInShadowDom extends Component {
         static components = { SimpleDropdown };
-        static props = [];
         static template = xml`<div><SimpleDropdown/></div>`;
     }
 
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`<div class="shadow-root" t-ref="this.shadowRootRef" id="${shadowRootId}" />`;
         shadowRootRef = signal(null);
         setup() {
@@ -339,7 +332,6 @@ test("hold position on hover", async () => {
             </Dropdown>
         `;
         static components = { Dropdown };
-        static props = [];
     }
 
     await mountWithCleanup(Parent);
@@ -378,7 +370,6 @@ test("unlock position after close", async () => {
                 </div>
             `;
         static components = { Dropdown };
-        static props = [];
     }
     await mountWithCleanup(Parent);
     await click(DROPDOWN_TOGGLE);
@@ -408,7 +399,6 @@ test("dropdowns keynav", async () => {
 
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button data-hotkey="m">Toggle</button>
@@ -499,7 +489,6 @@ test.tags("desktop");
 test("dropdowns keynav is not impacted by bootstrap", async () => {
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
                 <Dropdown state="this.dropdown">
                     <button>Open</button>
@@ -592,7 +581,6 @@ test("navigationProps changes navigation behaviour", async () => {
 test("'o-dropdown-caret' class adds a caret", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button class="first o-dropdown-caret">First</button>
@@ -639,7 +627,6 @@ test("direction class set to default when closed", async () => {
 
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
             <Dropdown>
                 <!-- style dropdown to be at the bottom to force popover to position on top -->
@@ -673,7 +660,6 @@ test.tags("desktop");
 test("tooltip on toggler", async () => {
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button data-tooltip="My tooltip">Dropdown toggler</button>
@@ -695,7 +681,6 @@ test("tooltip on toggler", async () => {
 test("date picker inside does not close when a click occurs in date picker", async () => {
     class Parent extends Component {
         static components = { DateTimeInput, Dropdown };
-        static props = [];
         static template = xml`
                     <Dropdown>
                         <button>Dropdown toggler</button>
@@ -761,7 +746,6 @@ test("onOpened callback props called after the menu has been mounted", async () 
 test("dropdown button can be disabled", async () => {
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button disabled="">Open</button>
@@ -791,7 +775,6 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
                     </t>
                 </Dropdown>`;
         static components = { Dropdown, CheckboxItem };
-        static props = [];
         setup() {
             this.state = proxy({ checked: false });
         }
@@ -817,7 +800,9 @@ test("don't close parent dropdown when clicking in a child active element", asyn
     // opening this dropdown will not close the first dropdown.
     class CustomDialog extends Component {
         static components = { Dialog, Dropdown, DropdownItem };
-        static props = { close: true };
+        props = useProps({
+            close: t.any(),
+        });
         static template = xml`
                 <Dialog title="'Welcome'">
                     <Dropdown>
@@ -833,7 +818,6 @@ test("don't close parent dropdown when clicking in a child active element", asyn
 
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
                 <div>
                     <Dropdown>
@@ -896,7 +880,6 @@ test("t-if t-else as toggler", async () => {
 
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button t-if="this.state.foo === 'bar'">Coucou</button>
@@ -936,7 +919,9 @@ test("t-if t-else as toggler", async () => {
 test("Dropdown in dialog in dropdown, first dropdown should stay open when clicking inside the second one", async () => {
     class DialogDropdown extends Component {
         static components = { Dialog, Dropdown };
-        static props = { close: true };
+        props = useProps({
+            close: t.any(),
+        });
         static template = xml`
                 <Dialog>
                     <button class="inside-dialog">Inside Dialog</button>
@@ -952,7 +937,6 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
 
     class Parent extends Component {
         static components = { Dropdown };
-        static props = {};
         static template = xml`
                 <Dropdown>
                     <button class="root-dropdown">Coucou</button>
@@ -1079,7 +1063,6 @@ test("multi-level dropdown: close on item selection", async () => {
 test("multi-level dropdown: parent closing modes on item selection", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <div class="outside">outside</div>
                 <Dropdown>
@@ -1140,7 +1123,6 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
 test("multi-level dropdown: recursive template can be rendered", async () => {
     class Parent extends Component {
         static template = xml`<t t-call="recursive.Template" name="this.name" items="this.items"/>`;
-        static props = [];
         static components = { Dropdown, DropdownItem };
         setup() {
             this.dropdown = startOpenState();
@@ -1225,7 +1207,6 @@ test("multi-level dropdown: keynav", async () => {
             expect.step(value);
         }
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button class="first" data-hotkey="1">First</button>
@@ -1348,7 +1329,6 @@ test("multi-level dropdown: keynav when rtl direction", async () => {
     expect.assertions(10);
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button class="first" data-hotkey="1">First</button>
@@ -1434,7 +1414,6 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     let parentState;
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                 <Dropdown>
                     <button class="one">one</button>
@@ -1484,7 +1463,6 @@ test("multi-level dropdown: mouseentering a dropdown item should close any subdr
     expect.assertions(4);
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
                     <Dropdown>
                         <button class="main">Main</button>
@@ -1529,7 +1507,6 @@ test.tags("desktop");
 test("multi-level dropdown: unsubscribe all keynav when root destroyed", async () => {
     class Parent extends Component {
         static components = { Dropdown };
-        static props = [];
         static template = xml`
             <Dropdown>
                 <button class="first">First</button>

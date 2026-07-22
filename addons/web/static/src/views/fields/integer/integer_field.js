@@ -6,7 +6,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
 export const integerFieldProps = {
     ...standardFieldProps,
@@ -21,7 +21,7 @@ export const integerFieldProps = {
 
 export class IntegerField extends Component {
     static template = "web.IntegerField";
-    props = props(integerFieldProps);
+    props = useProps(integerFieldProps);
 
     numpadDecimalRef = signal(null);
 

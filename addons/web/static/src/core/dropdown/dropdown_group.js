@@ -1,5 +1,5 @@
 import { useChildSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, onWillDestroy, t, useProps, xml } from "@odoo/owl";
 
 const GROUPS = new Map();
 
@@ -25,10 +25,10 @@ function removeGroup(id) {
 export const DROPDOWN_GROUP = Symbol("dropdownGroup");
 export class DropdownGroup extends Component {
     static template = xml`<t t-call-slot="default"/>`;
-    static props = {
-        group: { type: String, optional: true },
-        slots: Object,
-    };
+    props = useProps({
+        group: t.string().optional(),
+        slots: t.object(),
+    });
 
     setup() {
         if (this.props.group) {

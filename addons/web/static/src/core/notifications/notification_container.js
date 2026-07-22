@@ -1,12 +1,12 @@
 import { Notification } from "./notification";
 import { Transition } from "@web/core/transition";
 
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 
 export class NotificationContainer extends Component {
-    static props = {
-        notifications: Object,
-    };
+    props = useProps({
+        notifications: t.object(),
+    });
 
     static template = xml`
         <div class="o_notification_manager">

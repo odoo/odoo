@@ -1,12 +1,12 @@
-import { Component, onMounted, signal, types as t } from "@odoo/owl";
+import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class CalendarScheduleSection extends Component {
     static template = "web.CalendarScheduleSection";
-    static props = {
-        model: Object,
-        editRecord: Function,
-    };
+    props = useProps({
+        model: t.object(),
+        editRecord: t.function(),
+    });
     rootRef = signal(null, { type: t.ref() });
     collapsed = signal(false, { type: t.boolean });
     setup() {

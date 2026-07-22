@@ -1,10 +1,10 @@
-import { Component, computed, onPatched, props, t } from "@odoo/owl";
+import { Component, computed, onPatched, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListTextField, TextField } from "@web/views/fields/text/text_field";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
 import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 
 const SHOW_ALL_ITEMS_TOOLTIP = _t("Some lines can be on the next page, display them to unlock actions on section.");
@@ -69,7 +69,7 @@ function getRecordsUntilSection(list, record, asc, subSection) {
 export class SectionAndNoteListRenderer extends ListRenderer {
     static template = "account.SectionAndNoteListRenderer";
     static recordRowTemplate = "account.SectionAndNoteListRenderer.RecordRow";
-    props = props({
+    props = useProps({
         ...listRendererProps,
         aggregatedFields: t.any(),
         subsections: t.any(),
@@ -535,13 +535,13 @@ export class SectionAndNoteFieldOne2Many extends X2ManyField {
         ...super.components,
         ListRenderer: SectionAndNoteListRenderer,
     };
-    static props = {
-        ...super.props,
-        aggregatedFields: Array,
-        hideComposition: Boolean,
-        hidePrices: Boolean,
-        subsections: Boolean,
-    };
+    props = useProps({
+        ...x2ManyFieldProps,
+        aggregatedFields: t.array(),
+        hideComposition: t.boolean(),
+        hidePrices: t.boolean(),
+        subsections: t.boolean(),
+    });
 
     get rendererProps() {
         const rp = super.rendererProps;

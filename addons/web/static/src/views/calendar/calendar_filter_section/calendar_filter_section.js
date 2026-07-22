@@ -5,7 +5,7 @@ import { Transition } from "@web/core/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { getColor } from "../utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 let nextId = 1;
 
@@ -18,10 +18,10 @@ export class CalendarFilterSection extends Component {
     static subTemplates = {
         filter: "web.CalendarFilterSection.filter",
     };
-    static props = {
-        model: Object,
-        section: Object,
-    };
+    props = useProps({
+        model: t.object(),
+        section: t.object(),
+    });
 
     setup() {
         this.state = proxy({
@@ -104,9 +104,7 @@ export class CalendarFilterSection extends Component {
                 id: result[0],
             },
             label: result[1],
-            onSelect: () => {
-                return this.props.model.createFilter(this.section.fieldName, result[0]);
-            },
+            onSelect: () => this.props.model.createFilter(this.section.fieldName, result[0]),
         }));
 
         if (records.length > 7) {

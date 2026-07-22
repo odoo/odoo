@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 export class ContactStatisticsField extends Component {
     static template = "web.ContactStatisticsField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-    };
+    });
 
     get list() {
         return this.props.record.data[this.props.name] || [];

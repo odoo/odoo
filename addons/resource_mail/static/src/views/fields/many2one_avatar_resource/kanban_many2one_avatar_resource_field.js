@@ -1,13 +1,16 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import {
+    buildM2OFieldDescription,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
 
 export class CardMany2OneAvatarResourceField extends Component {
     static template = "resource_mail.CardMany2OneAvatarResourceField";
     static components = { Avatar, KanbanMany2One };
-    static props = { ...Many2OneField.props };
+    props = useProps({ ...many2OneFieldProps });
 
     get m2oProps() {
         return {

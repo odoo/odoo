@@ -19,7 +19,6 @@ import { Component, untrack, proxy } from "@odoo/owl";
 export class LoadingIndicator extends Component {
     static template = "web.LoadingIndicator";
     static components = { Transition };
-    static props = {};
 
     setup() {
         this.state = proxy({

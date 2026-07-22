@@ -1,12 +1,12 @@
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
-    Many2OneField,
+    many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
@@ -19,13 +19,15 @@ export class Many2OneAvatarUser extends Many2One {
     };
 }
 
+export const many2OneAvatarUserFieldProps = {
+    ...many2OneFieldProps,
+    withCommand: t.boolean(),
+};
+
 export class Many2OneAvatarUserField extends Component {
     static template = "mail.Many2OneAvatarUserField";
     static components = { Avatar, Many2OneAvatarUser };
-    static props = {
-        ...Many2OneField.props,
-        withCommand: { type: Boolean },
-    };
+    props = useProps(many2OneAvatarUserFieldProps);
 
     setup() {
         if (this.props.withCommand) {

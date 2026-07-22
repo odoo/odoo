@@ -23,7 +23,6 @@ export class DebugMenuBasic extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {};
 
     setup() {
         this.debugContext = useEnvDebugContext();

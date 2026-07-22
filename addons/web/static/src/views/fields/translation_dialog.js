@@ -4,22 +4,27 @@ import { useService } from "@web/core/utils/hooks";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
 import { jsToPyLocale, localeCompare } from "@web/core/l10n/utils";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     static template = "web.TranslationDialog";
     static components = { Dialog };
-    static props = {
-        fieldName: String,
-        resId: Number,
-        resModel: String,
-        userLanguageValue: { type: String, optional: true },
-        isComingFromTranslationAlert: { type: Boolean, optional: true },
-        onSave: Function,
-        close: Function,
-        isText: { type: Boolean, optional: true },
-        showSource: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        fieldName: t.string(),
+        resId: t.number(),
+        resModel: t.string(),
+        userLanguageValue: t.string().optional(),
+        isComingFromTranslationAlert: t.boolean().optional(),
+        onSave: t.function(),
+        close: t.function(),
+        domain: t.array().optional(),
+        searchName: t.string().optional(),
+    });
+
+    // derived from the loaded translations, not received from the parent
+    isText = false;
+    showSource = false;
+
     setup() {
         super.setup();
         this.title = _t("Translate: %s", this.props.fieldName);
@@ -35,8 +40,8 @@ export class TranslationDialog extends Component {
             const [translations, context] = await this.loadTranslations(languages);
             let id = 1;
             translations.forEach((t) => (t.id = id++));
-            this.props.isText = context.translation_type === "text";
-            this.props.showSource = context.translation_show_source;
+            this.isText = context.translation_type === "text";
+            this.showSource = context.translation_show_source;
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
@@ -50,7 +55,7 @@ export class TranslationDialog extends Component {
                 // from the value of the field in the form
                 if (
                     term.lang === jsToPyLocale(user.lang) &&
-                    !this.props.showSource &&
+                    !this.showSource &&
                     !this.props.isComingFromTranslationAlert
                 ) {
                     this.updatedTerms[term.id] = this.props.userLanguageValue;
@@ -89,7 +94,7 @@ export class TranslationDialog extends Component {
         this.terms.map((term) => {
             const updatedTermValue = this.updatedTerms[term.id];
             if (term.id in this.updatedTerms && term.value !== updatedTermValue) {
-                if (this.props.showSource) {
+                if (this.showSource) {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
                     }

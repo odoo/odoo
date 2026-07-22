@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SignatureViewer } from "@web/core/signature/signature_viewer";
@@ -10,7 +10,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class SignatureField extends Component {
     static template = "web.SignatureField";
     static components = { SignatureViewer };
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         defaultFont: t.string(),
         fullName: t.string().optional(),

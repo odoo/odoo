@@ -3,14 +3,16 @@ import { _t } from "@web/core/l10n/translation";
 import { formatFloat } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
+
+export const percentPieFieldProps = {
+    ...standardFieldProps,
+    string: t.string().optional(),
+};
 
 export class PercentPieField extends Component {
     static template = "web.PercentPieField";
-    static props = {
-        ...standardFieldProps,
-        string: { type: String, optional: true },
-    };
+    props = useProps(percentPieFieldProps);
 
     /**
      * Format to 2 decimals without trailing zeros.

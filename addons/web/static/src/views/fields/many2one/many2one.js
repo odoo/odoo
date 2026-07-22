@@ -1,4 +1,4 @@
-import { Component, props, toRaw, proxy, signal, t } from "@odoo/owl";
+import { Component, useProps, toRaw, proxy, signal, t } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -107,7 +107,7 @@ export const many2OneProps = {
 export class Many2One extends Component {
     static template = "web.Many2One";
     static components = { Many2XAutocomplete };
-    props = props(many2OneProps);
+    props = useProps(many2OneProps);
     rootRef = signal(null);
 
     setup() {
@@ -307,7 +307,7 @@ export class Many2One extends Component {
 }
 
 class KanbanMany2OneAssignPopover extends Many2One {
-    props = props({
+    props = useProps({
         ...many2OneProps,
         close: t.function(),
     });
@@ -322,7 +322,7 @@ class KanbanMany2OneAssignPopover extends Many2One {
 
 export class KanbanMany2One extends Component {
     static template = "web.KanbanMany2One";
-    props = props(many2OneProps);
+    props = useProps(many2OneProps);
 
     setup() {
         this.assignPopover = usePopover(KanbanMany2OneAssignPopover, {

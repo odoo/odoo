@@ -8,7 +8,7 @@ import { deepCopy, pick } from "@web/core/utils/objects";
 import { nbsp } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
 import { extractLayoutComponents } from "@web/search/layout";
-import { WithSearch } from "@web/search/with_search/with_search";
+import { WithSearch, withSearchProps } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
@@ -19,7 +19,7 @@ import {
     onWillUpdateProps,
     onWillStart,
     proxy,
-    props,
+    useProps,
     toRaw,
     t,
     applyDefaults,
@@ -211,7 +211,7 @@ export class View extends Component {
     static canOrderByCount = false;
     // View accepts any prop (owl3 validation is loose); only the keys with
     // defaults are declared here.
-    props = props();
+    props = useProps();
 
     setup() {
         this.props = this.applyViewDefaults(this.props);
@@ -478,7 +478,7 @@ export class View extends Component {
         }
 
         for (const key in this.withSearchProps) {
-            if (!(key in WithSearch.props)) {
+            if (!(key in withSearchProps)) {
                 delete this.withSearchProps[key];
             }
         }

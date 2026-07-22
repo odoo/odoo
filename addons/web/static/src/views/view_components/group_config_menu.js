@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -11,14 +11,16 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 export class GroupConfigMenu extends Component {
     static template = "web.GroupConfigMenu";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        activeActions: { type: Object },
-        configItems: { type: Object },
-        deleteGroup: { type: Function },
-        dialogClose: { type: Array },
-        group: { type: Object },
-        list: { type: Object },
-    };
+    props = useProps({
+        activeActions: t.object(),
+        // entries: [key, descriptor][] — the legacy `{ type: Object }` was
+        // never enforced (static props were ignored by the compat layer)
+        configItems: t.array(),
+        deleteGroup: t.function(),
+        dialogClose: t.array(),
+        group: t.object(),
+        list: t.object(),
+    });
     setup() {
         this.dialog = useService("dialog");
     }

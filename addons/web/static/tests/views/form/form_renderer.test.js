@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { defineModels, fields, models, mountView, contains } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
@@ -79,7 +79,7 @@ test("render field with placeholder", async () => {
         "char",
         {
             component: class CharField extends Component {
-                static props = ["*"];
+                props = useProps();
                 static template = xml`<div/>`;
                 setup() {
                     expect.step("setup field component");

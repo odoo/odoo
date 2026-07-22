@@ -1,10 +1,6 @@
-import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { patch } from "@web/core/utils/patch";
+import { warningDialogProps } from "@web/core/errors/error_dialogs";
+import { t } from "@odoo/owl";
 
-patch(WarningDialog, {
-    props: {
-        ...WarningDialog.props,
-        backdrop: { type: Boolean, optional: true },
-    },
-    defaultProps: { ...WarningDialog.defaultProps, backdrop: false },
+Object.assign(warningDialogProps, {
+    backdrop: t.boolean().optional(false),
 });

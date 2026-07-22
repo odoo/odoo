@@ -2,14 +2,14 @@ import { test, expect } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
 import { Pager } from "@web/core/pager/pager";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
     static template = xml`<Pager t-props="this.state" />`;
     static components = { Pager };
-    static props = ["*"];
+    props = useProps();
     setup() {
         this.state = proxy({ ...this.props });
     }

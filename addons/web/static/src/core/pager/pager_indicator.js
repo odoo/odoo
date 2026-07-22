@@ -9,7 +9,6 @@ import { PAGER_UPDATED_EVENT, pagerBus } from "./pager";
 export class PagerIndicator extends Component {
     static template = "web.PagerIndicator";
     static components = { Transition };
-    static props = {};
 
     setup() {
         this.state = proxy({

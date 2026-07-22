@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, signal } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -8,16 +8,20 @@ import { imageUrl } from "@web/core/utils/urls";
 import { RecordAutocomplete } from "./record_autocomplete";
 import { useTagNavigation } from "./tag_navigation_hook";
 
+export const multiRecordSelectorProps = {
+    // no element type: subclasses (e.g. DomainSelectorAutocomplete) accept
+    // expressions too, and the base schema is still validated for them
+    resIds: t.array(),
+    resModel: t.string(),
+    update: t.function(),
+    domain: t.array().optional(),
+    context: t.object().optional(),
+    fieldString: t.string().optional(),
+    placeholder: t.string().optional(),
+};
+
 export class MultiRecordSelector extends Component {
-    static props = {
-        resIds: { type: Array, element: Number },
-        resModel: String,
-        update: Function,
-        domain: { type: Array, optional: true },
-        context: { type: Object, optional: true },
-        fieldString: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
-    };
+    props = useProps(multiRecordSelectorProps);
     static components = { AvatarTag, BadgeTag, RecordAutocomplete };
     static template = "web.MultiRecordSelector";
 

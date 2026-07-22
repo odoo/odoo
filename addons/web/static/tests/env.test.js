@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, getFixture, test, tick } from "@odoo/hoot";
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, useProps, xml } from "@odoo/owl";
 import {
     allowTranslations,
     clearRegistry,
@@ -203,7 +203,7 @@ test(`mountComponent creates an env and sets the application as root`, async () 
     let comp = null;
     class Root extends Component {
         static template = xml`Root`;
-        static props = ["*"];
+        props = useProps();
 
         setup() {
             comp = this;
@@ -219,7 +219,7 @@ test(`mountComponent creates an env and sets the application as root`, async () 
 test(`mountComponent: can pass props to the root component`, async () => {
     class Root extends Component {
         static template = xml`<t t-out="this.props.text"/>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountComponent(Root, getFixture(), { props: { text: "text from props" } });

@@ -1,7 +1,11 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
-import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
-import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import {
+    MultiRecordSelector,
+    multiRecordSelectorProps,
+} from "@web/core/record_selectors/multi_record_selector";
+import { RecordSelector, recordSelectorProps } from "@web/core/record_selectors/record_selector";
 import { Expression } from "@web/core/tree_editor/condition_tree";
 import { isId } from "@web/core/tree_editor/utils";
 import { imageUrl } from "@web/core/utils/urls";
@@ -24,10 +28,10 @@ const getFormat = (val, displayNames) => {
 };
 
 export class DomainSelectorAutocomplete extends MultiRecordSelector {
-    static props = {
-        ...MultiRecordSelector.props,
-        resIds: true, //resIds could be an array of ids or an array of expressions
-    };
+    props = useProps({
+        ...multiRecordSelectorProps,
+        resIds: t.any(), // resIds could be an array of ids or an array of expressions
+    });
 
     getIds(props = this.props) {
         return props.resIds.filter((val) => isId(val));
@@ -52,10 +56,10 @@ export class DomainSelectorAutocomplete extends MultiRecordSelector {
 }
 
 export class DomainSelectorSingleAutocomplete extends RecordSelector {
-    static props = {
-        ...RecordSelector.props,
-        resId: true,
-    };
+    props = useProps({
+        ...recordSelectorProps,
+        resId: t.any(),
+    });
 
     getDisplayName(props = this.props, displayNames) {
         const { resId } = props;

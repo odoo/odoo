@@ -6,7 +6,6 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export class InstallScopedApp extends Component {
-    static props = {};
     static template = "web.InstallScopedApp";
     static components = { Dropdown };
     setup() {

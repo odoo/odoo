@@ -14,7 +14,6 @@ import { rpcBus } from "@web/core/network/rpc";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
-    static props = {};
     static components = {
         ActionContainer,
         NavBar,

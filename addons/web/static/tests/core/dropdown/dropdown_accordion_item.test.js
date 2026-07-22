@@ -1,7 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { click, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -11,7 +11,7 @@ test("accordion can be rendered", async () => {
     class Parent extends Component {
         static template = xml`<AccordionItem description="'Test'" class="'text-primary'" selected="false"><h5>In accordion</h5></AccordionItem>`;
         static components = { AccordionItem };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -41,7 +41,7 @@ test("dropdown with accordion keyboard navigation", async () => {
             </Dropdown>
         `;
         static components = { Dropdown, DropdownItem, AccordionItem };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);

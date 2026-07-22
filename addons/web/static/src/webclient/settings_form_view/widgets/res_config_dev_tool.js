@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { SettingsBlock } from "../settings/settings_block";
 import { Setting } from "../../../views/form/setting/setting";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { router } from "@web/core/browser/router";
 
@@ -19,9 +19,9 @@ export class ResConfigDevTool extends Component {
         SettingsBlock,
         Setting,
     };
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-    };
+    });
 
     setup() {
         this.isDebug = Boolean(odoo.debug);
@@ -30,7 +30,7 @@ export class ResConfigDevTool extends Component {
 
         this.action = useService("action");
         onWillStart(async () => {
-            this.isDemoDataActive = await rpc("/base_setup/demo_active", {}, {cache: true});
+            this.isDemoDataActive = await rpc("/base_setup/demo_active", {}, { cache: true });
         });
     }
 

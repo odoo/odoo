@@ -1,18 +1,20 @@
 import { browser } from "@web/core/browser/browser";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
+
+export const copyButtonProps = {
+    className: t.string().optional(),
+    copyText: t.string().optional(),
+    disabled: t.boolean().optional(),
+    successText: t.string().optional(),
+    icon: t.string().optional(),
+    content: t.or([t.string(), t.object(), t.function()]).optional(),
+};
 
 export class CopyButton extends Component {
     static template = "web.CopyButton";
-    static props = {
-        className: { type: String, optional: true },
-        copyText: { type: String, optional: true },
-        disabled: { type: Boolean, optional: true },
-        successText: { type: String, optional: true },
-        icon: { type: String, optional: true },
-        content: { type: [String, Object, Function], optional: true },
-    };
+    props = useProps(copyButtonProps);
 
     buttonRef = signal(null);
 

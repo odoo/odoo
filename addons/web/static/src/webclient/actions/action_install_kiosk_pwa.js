@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "./action_service";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 
 /**
  * Client action to use in a dialog to display the URL of a Kiosk, containing a
@@ -10,7 +10,9 @@ import { Component, onWillStart } from "@odoo/owl";
  */
 export class InstallKiosk extends Component {
     static template = "web.ActionInstallKioskPWA";
-    static props = { ...standardActionServiceProps };
+    props = useProps({
+        ...standardActionServiceProps,
+    });
 
     setup() {
         this.resModel = this.props.action.res_model;

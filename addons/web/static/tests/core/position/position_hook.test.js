@@ -10,7 +10,7 @@ import {
     scroll,
     test,
 } from "@odoo/hoot";
-import { Component, onMounted, signal, xml } from "@odoo/owl";
+import { Component, onMounted, signal, useProps, xml } from "@odoo/owl";
 import {
     defineParams,
     defineStyle,
@@ -38,7 +38,7 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         containerRef = signal(null);
         targetRef = signal(null);
         popperRef = signal(null);
@@ -201,7 +201,7 @@ test("popper is an inner element", async () => {
                 <div id="popper" t-ref="this.popperRef"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         popperRef = signal(null);
         setup() {
             usePosition(this.popperRef, () => getFixture(), {
@@ -296,7 +296,7 @@ test("does not reposition when scroll is in an unrelated container", async () =>
                 <div id="popper" t-ref="this.popperRef" style="width: 100px; height: 100px"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         targetRef = signal(null);
         popperRef = signal(null);
         setup() {
@@ -378,7 +378,7 @@ function getPopperComponent(popperOptions, target) {
                 <div id="popper-content" style="background-color: coral; height: 50px; width: 50px"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         popperRef = signal(null);
         setup() {
             usePosition(this.popperRef, () => target, {
@@ -691,7 +691,7 @@ test("iframe: default container is the popper owner's document", async () => {
 
     // Mount the popper component and check its position
     class Popper extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div id="popper" t-ref="this.popperRef" />`;
         popperRef = signal(null);
         setup() {
@@ -719,7 +719,7 @@ test("popper as child of another", async () => {
                 <div class="popper" t-ref="this.popperRef" style="background-color: olive; height: 100px; width: 10px"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         childTargetRef = signal(null);
         popperRef = signal(null);
         setup() {
@@ -734,7 +734,7 @@ test("popper as child of another", async () => {
                 <div id="popper" t-ref="this.popperRef"><Child/></div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         containerRef = signal(null);
         targetRef = signal(null);
         popperRef = signal(null);
@@ -775,7 +775,7 @@ test("batch update call", async () => {
                 <div id="popper" t-ref="this.popperRef" style="background-color: olive; height: 50px; width: 50px"/>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         containerRef = signal(null);
         targetRef = signal(null);
         popperRef = signal(null);
@@ -804,7 +804,7 @@ test("not positioned if target not connected", async () => {
         static template = xml`
             <div t-ref="this.container"><div t-ref="this.popperRef"/></div>
         `;
-        static props = ["*"];
+        props = useProps();
         container = signal(null);
         popperRef = signal(null);
         setup() {
@@ -841,7 +841,7 @@ function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {
                     </div>
                 </div>
             `;
-            static props = ["*"];
+            props = useProps();
             containerRef = signal(null);
             targetRef = signal(null);
             popperRef = signal(null);

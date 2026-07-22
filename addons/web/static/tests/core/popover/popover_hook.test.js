@@ -3,12 +3,12 @@ import {
     Component,
     onMounted,
     Plugin,
-    props,
     providePlugins,
     signal,
     types as t,
     useConfig,
     usePlugin,
+    useProps,
     xml,
 } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -22,7 +22,7 @@ test("close popover when component is unmounted", async () => {
     class CompWithPopover extends Component {
         static template = xml`<div />`;
 
-        props = props({ id: t.string() });
+        props = useProps({ id: t.string() });
 
         setup() {
             const popover = usePopover(Comp);
@@ -77,7 +77,7 @@ test("popover opened from another", async () => {
                 <button class="pop-open" t-on-click="(ev) => this.popover.open(ev.target, {})">open popover</button>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.popover = usePopover(Comp, {
                 popoverClass: `popover-${++Comp.id}`,

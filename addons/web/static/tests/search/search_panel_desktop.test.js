@@ -1,7 +1,7 @@
 import { describe, expect, press, test } from "@odoo/hoot";
 import { drag, queryAll, queryAllTexts, queryFirst, scroll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -57,7 +57,7 @@ class TestComponent extends Component {
             <SearchBarMenu />
         </div>
     `;
-    static props = ["*"];
+    props = useProps();
 
     setup() {
         this.domain = this.props.domain;
@@ -2187,7 +2187,7 @@ test("scroll kanban view with searchpanel and kept scroll position", async () =>
     }
 
     class WebClientContainer extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { WebClient };
         static template = xml`
             <div class="o_web_client" style="max-height: 300px"><WebClient/></div>
@@ -2215,7 +2215,7 @@ test("scroll position is kept when switching between controllers", async () => {
     }
 
     class WebClientContainer extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { WebClient };
         static template = xml`
             <div class="o_web_client" style="max-height: 300px"><WebClient/></div>

@@ -1,17 +1,18 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ImageField, imageField } from "@web/views/fields/image/image_field";
+import { ImageField, imageField, imageFieldProps } from "@web/views/fields/image/image_field";
+import { t, useProps } from "@odoo/owl";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { saveSingleAttachment } from "@web/core/utils/image_library";
 
 export class X2ManyImageField extends ImageField {
     static template = "html_editor.ImageField";
-    static props = {
-        ...ImageField.props,
-        setAttachmentId: { type: Boolean, optional: true },
-        onlyImage: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        ...imageFieldProps,
+        setAttachmentId: t.boolean().optional(),
+        onlyImage: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();

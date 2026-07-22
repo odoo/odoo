@@ -1,14 +1,14 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 export class TagsList extends Component {
     static template = "web.TagsList";
     static components = { BadgeTag };
-    static props = {
-        slots: { type: Object },
-        tags: { type: Array, element: Object },
-        tagLimit: { type: Number },
-    };
+    props = useProps({
+        slots: t.object(),
+        tags: t.array(t.object()),
+        tagLimit: t.number(),
+    });
 
     setup() {
         this.state = proxy({ expanded: false });

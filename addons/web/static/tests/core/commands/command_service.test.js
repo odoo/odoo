@@ -9,7 +9,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
@@ -18,14 +18,14 @@ import { useActiveElement } from "@web/core/ui/ui_service";
 
 class TestComponent extends Component {
     static template = xml`<div />`;
-    static props = ["*"];
+    props = useProps();
 }
 
 class Parent extends Component {
     static template = xml`
       <t t-component="this.props.componentInfo.Component" t-if="this.props.componentInfo.Component" />
     `;
-    static props = ["*"];
+    props = useProps();
 }
 
 const commandProviderRegistry = registry.category("command_provider");
@@ -106,7 +106,7 @@ test("useCommand hook when the activeElement change", async () => {
 
     class OtherComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><div tabindex="1">visible</div></div>`;
-        static props = ["*"];
+        props = useProps();
         activeRef = signal(null);
         setup() {
             useActiveElement(this.activeRef);
@@ -184,7 +184,7 @@ test("global command with hotkey", async () => {
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><button>visible</button></div>`;
-        static props = ["*"];
+        props = useProps();
         activeRef = signal(null);
         setup() {
             useActiveElement(this.activeRef);
@@ -357,7 +357,7 @@ test("data-hotkey added to command palette", async () => {
                 <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         onClick() {
             expect.step("Hodor");
         }
@@ -404,7 +404,7 @@ test("access to hotkeys from the command palette", async () => {
                 <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         onClickB() {
             expect.step("B");
         }
@@ -861,7 +861,7 @@ test("data-command-category", async () => {
             <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(MyComponent);
 
@@ -887,7 +887,7 @@ test("display shortcuts correctly for non-MacOS ", async () => {
                 <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -930,7 +930,7 @@ test("display shortcuts correctly for MacOS ", async () => {
             <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -976,7 +976,7 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
                 <TestComponent />
                 </div>
             `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -1003,7 +1003,7 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
             <TestComponent />
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);

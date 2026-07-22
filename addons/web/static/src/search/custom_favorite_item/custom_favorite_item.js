@@ -8,10 +8,11 @@ import { Component, proxy, signal } from "@odoo/owl";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
+export const customFavoriteItemProps = {};
+
 export class CustomFavoriteItem extends Component {
     static template = "web.CustomFavoriteItem";
     static components = { CheckBox, AccordionItem };
-    static props = {};
 
     descriptionRef = signal(null);
 

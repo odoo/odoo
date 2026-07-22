@@ -1,11 +1,6 @@
 /** @odoo-module **/
 
-import { AttendeeCalendarYearRenderer } from "@calendar/views/attendee_calendar/year/attendee_calendar_year_renderer";
-import { patch } from "@web/core/utils/patch";
+import { t } from "@odoo/owl";
+import { calendarYearRendererProps } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 
-patch(AttendeeCalendarYearRenderer, {
-    props: {
-        ...AttendeeCalendarYearRenderer.props,
-        openWorkLocationWizard: { type: Function, optional: true },
-    }
-});
+calendarYearRendererProps.openWorkLocationWizard = t.function().optional();

@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, signal, useScope, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal, t, useProps, useScope, xml } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
@@ -120,14 +120,14 @@ export function useTransition({
  */
 export class Transition extends Component {
     static template = xml`<t t-call-slot="default" t-if="this.transition.shouldMount" className="this.transition.className"/>`;
-    static props = {
-        name: String,
-        visible: { type: Boolean, optional: true },
-        immediate: { type: Boolean, optional: true },
-        leaveDuration: { type: Number, optional: true },
-        onLeave: { type: Function, optional: true },
-        slots: Object,
-    };
+    props = useProps({
+        name: t.string(),
+        visible: t.boolean().optional(),
+        immediate: t.boolean().optional(),
+        leaveDuration: t.number().optional(),
+        onLeave: t.function().optional(),
+        slots: t.object(),
+    });
 
     setup() {
         const { immediate, visible, leaveDuration, name, onLeave } = this.props;

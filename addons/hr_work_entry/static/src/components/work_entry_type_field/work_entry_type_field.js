@@ -1,6 +1,9 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import {
+    buildM2OFieldDescription,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
 export class WorkEntryTypeMany2One extends Many2One {
@@ -36,7 +39,7 @@ export class Many2OneWorkEntryTypeField extends Component {
     static components = {
         WorkEntryTypeMany2One,
     };
-    static props = Many2OneField.props;
+    props = useProps(many2OneFieldProps);
     get m2oProps() {
         return {
             ...computeM2OProps(this.props),

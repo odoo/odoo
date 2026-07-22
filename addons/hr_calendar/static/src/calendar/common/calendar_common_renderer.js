@@ -1,8 +1,9 @@
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer";
-import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/attendee_calendar_renderer";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
-import { onPatched } from "@odoo/owl";
+import { onPatched, t } from "@odoo/owl";
+import { calendarRendererProps } from "@web/views/calendar/calendar_renderer";
+import { calendarCommonRendererProps } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 
 const { DateTime } = luxon;
 
@@ -97,14 +98,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     }
 });
 
-AttendeeCalendarRenderer.props = {
-    ...AttendeeCalendarRenderer.props,
-    openWorkLocationWizard: { type: Function, optional: true },
-}
-AttendeeCalendarCommonRenderer.props = {
-    ...AttendeeCalendarCommonRenderer.props,
-    openWorkLocationWizard: { type: Function, optional: true }
-};
+calendarRendererProps.openWorkLocationWizard = t.function().optional();
+calendarCommonRendererProps.openWorkLocationWizard = t.function().optional();
 
 AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr_calendar.CalendarCommonRenderer.worklocation";
 AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr_calendar.CalendarCommonRenderer.buttonWorklocation";

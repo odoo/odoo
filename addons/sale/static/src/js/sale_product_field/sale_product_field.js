@@ -1,7 +1,8 @@
-import { useEffect } from "@odoo/owl";
+import { t, useEffect, useProps } from "@odoo/owl";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
+    productLabelSectionAndNoteFieldProps,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -9,10 +10,10 @@ import { saleProductMixin } from "../sale_product_mixin";
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
-    static props = {
-        ...super.props,
-        readonlyField: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        ...productLabelSectionAndNoteFieldProps,
+        readonlyField: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();

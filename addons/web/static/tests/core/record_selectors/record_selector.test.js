@@ -1,6 +1,6 @@
 import { test, expect } from "@odoo/hoot";
 import { RecordSelector } from "@web/core/record_selectors/record_selector";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -30,7 +30,7 @@ async function mountRecordSelector(props) {
     class Parent extends Component {
         static components = { RecordSelector };
         static template = xml`<RecordSelector t-props="this.recordProps" />`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ resId: props.resId });
         }

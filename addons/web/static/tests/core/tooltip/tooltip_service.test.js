@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     mockService,
@@ -15,7 +15,7 @@ import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service"
 test.tags("desktop");
 test("basic rendering", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
     }
 
@@ -36,7 +36,7 @@ test("basic rendering", async () => {
 test.tags("desktop");
 test("basic rendering 2", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<span data-tooltip="hello" class="outer_span"><span class="inner_span">Action</span></span>`;
     }
 
@@ -63,7 +63,7 @@ test.tags("desktop");
 test("remove element with opened tooltip", async () => {
     let compState;
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div>
                 <button t-if="this.state.visible" data-tooltip="hello">Action</button>
@@ -92,7 +92,7 @@ test("remove element with opened tooltip", async () => {
 test.tags("desktop");
 test("rendering with several tooltips", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div>
                 <button class="button_1" data-tooltip="tooltip 1">Action 1</button>
@@ -133,7 +133,7 @@ test("positioning", async () => {
     });
 
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div style="height: 400px; padding: 40px">
                 <button class="default" data-tooltip="default">Default</button>
@@ -185,7 +185,7 @@ test("positioning", async () => {
 test.tags("desktop");
 test("tooltip with a template, no info", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <button data-tooltip-template="my_tooltip_template">Action</button>
         `;
@@ -207,7 +207,7 @@ test("tooltip with a template, no info", async () => {
 test.tags("desktop");
 test("tooltip with a template and info", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <button
                 data-tooltip-template="my_tooltip_template"
@@ -243,7 +243,7 @@ test("tooltip with a template and info", async () => {
 test.tags("desktop");
 test("empty tooltip, no template", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button t-att-data-tooltip="this.tooltip">Action</button>`;
         get tooltip() {
             return "";
@@ -260,7 +260,7 @@ test("empty tooltip, no template", async () => {
 test.tags("desktop");
 test("tooltip with a delay", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
     }
 
@@ -277,7 +277,7 @@ test("tooltip with a delay", async () => {
 test.tags("desktop");
 test("tooltip does not crash with disappearing target", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
     }
 
@@ -300,7 +300,7 @@ test("tooltip using touch enabled device", async () => {
     mockTouch(true);
 
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
     }
 
@@ -324,7 +324,7 @@ test("tooltip using touch enabled device", async () => {
 test.tags("mobile");
 test("touch rendering - hold-to-show", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button data-tooltip="hello">Action</button>`;
     }
 
@@ -351,7 +351,7 @@ test("touch rendering - hold-to-show", async () => {
 test.tags("mobile");
 test("touch rendering - tap-to-show", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;
     }
 
@@ -392,7 +392,7 @@ test("touch rendering - tap-to-show", async () => {
 test.tags("desktop");
 test("tooltip from and to child element", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
         <div class="no-tooltip">space</div>
         <div class="p-5" data-tooltip="hello">
@@ -429,7 +429,7 @@ test("tooltip from and to child element", async () => {
 test.tags("mobile");
 test("tooltip from the title attribute", async () => {
     class MyComponent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
         <div title="Coucou">
             Toto

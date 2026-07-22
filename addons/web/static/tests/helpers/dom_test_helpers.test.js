@@ -9,7 +9,6 @@ import { useDraggable } from "@web/core/utils/draggable";
 test("contains: all actions", async () => {
     class Container extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = [];
         static template = xml`
             <div class="container" style="height: 10px; overflow: scroll">
                 <button type="button">Click me</button>
@@ -111,7 +110,6 @@ test("only one drag sequence is allowed at a time", async () => {
     await mountWithCleanup(
         class extends Component {
             static components = {};
-            static props = {};
             static template = xml`
                 <ul t-ref="this.listRef">
                     <li>First item</li>

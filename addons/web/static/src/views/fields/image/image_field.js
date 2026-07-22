@@ -8,7 +8,7 @@ import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -19,25 +19,27 @@ export const fileTypeMagicWordMap = {
 };
 const placeholder = "/web/static/img/placeholder.png";
 
+export const imageFieldProps = {
+    ...standardFieldProps,
+    alt: t.string().optional(_t("Binary file")),
+    enableZoom: t.boolean().optional(),
+    imgClass: t.string().optional(""),
+    zoomDelay: t.number().optional(),
+    previewImage: t.string().optional(),
+    acceptedFileExtensions: t.string().optional("image/*"),
+    width: t.number().optional(),
+    height: t.number().optional(),
+    reload: t.boolean().optional(true),
+    convertToWebp: t.boolean().optional(),
+    fileNameField: t.string().optional(),
+};
+
 export class ImageField extends Component {
     static template = "web.ImageField";
     static components = {
         FileUploader,
     };
-    props = props({
-        ...standardFieldProps,
-        alt: t.string().optional(_t("Binary file")),
-        enableZoom: t.boolean().optional(),
-        imgClass: t.string().optional(""),
-        zoomDelay: t.number().optional(),
-        previewImage: t.string().optional(),
-        acceptedFileExtensions: t.string().optional("image/*"),
-        width: t.number().optional(),
-        height: t.number().optional(),
-        reload: t.boolean().optional(true),
-        convertToWebp: t.boolean().optional(),
-        fileNameField: t.string().optional(),
-    });
+    props = useProps(imageFieldProps);
 
     setup() {
         this.notification = useService("notification");

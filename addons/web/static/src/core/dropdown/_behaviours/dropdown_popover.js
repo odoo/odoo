@@ -1,5 +1,5 @@
 import { onRendered } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillStart, t, useProps, xml } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class DropdownPopover extends Component {
@@ -12,20 +12,18 @@ export class DropdownPopover extends Component {
         </t>
         <t t-call-slot="content" />
     `;
-    static props = {
+    props = useProps({
         // Popover service
-        close: { type: Function, optional: true },
-
+        close: t.function().optional(),
         // Events & Handlers
-        beforeOpen: { type: Function, optional: true },
-        onOpened: { type: Function, optional: true },
-        onClosed: { type: Function, optional: true },
-
+        beforeOpen: t.function().optional(),
+        onOpened: t.function().optional(),
+        onClosed: t.function().optional(),
         // Rendering & Context
-        refresher: Object,
-        slots: Object,
-        items: { type: Array, optional: true },
-    };
+        refresher: t.object(),
+        slots: t.object(),
+        items: t.array().optional(),
+    });
 
     setup() {
         onRendered(() => {

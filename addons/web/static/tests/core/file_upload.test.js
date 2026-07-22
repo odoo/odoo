@@ -12,7 +12,7 @@ import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_p
 import { FileUploadProgressRecord } from "@web/core/file_upload/file_upload_progress_record";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 
 class FileUploadProgressTestRecord extends FileUploadProgressRecord {
     static template = xml`
@@ -33,7 +33,7 @@ class Parent extends Component {
             <FileUploadProgressContainer fileUploads="this.fileUploadService.uploads" shouldDisplay="this.props.shouldDisplay" Component="this.FileUploadProgressTestRecord"/>
         </div>
     `;
-    static props = ["*"];
+    props = useProps();
     setup() {
         this.fileUploadService = useService("file_upload");
         this.FileUploadProgressTestRecord = FileUploadProgressTestRecord;

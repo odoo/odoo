@@ -1,10 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class FileUploadProgressContainer extends Component {
     static template = "web.FileUploadProgressContainer";
-    static props = {
-        Component: { optional: false },
-        shouldDisplay: { type: Function, optional: true },
-        fileUploads: { type: Object },
-    };
+    props = useProps({
+        Component: t.any(),
+        shouldDisplay: t.function().optional(),
+        fileUploads: t.object(),
+    });
 }

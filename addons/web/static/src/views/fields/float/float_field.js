@@ -6,7 +6,7 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
 export const floatFieldProps = {
     ...standardFieldProps,
@@ -22,7 +22,7 @@ export const floatFieldProps = {
 
 export class FloatField extends Component {
     static template = "web.FloatField";
-    props = props(floatFieldProps);
+    props = useProps(floatFieldProps);
 
     numpadDecimalRef = signal(null);
 

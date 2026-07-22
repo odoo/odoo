@@ -14,7 +14,6 @@ import {
 export class PickupLocationMany2OneField extends Many2OneField {
     static template = "website_sale_stock.PickupLocationField";
     static components = {Many2One};
-    static props = {...Many2OneField.props};
 
     async setup() {
         super.setup();

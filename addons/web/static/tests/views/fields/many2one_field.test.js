@@ -10,7 +10,7 @@ import {
     scroll,
 } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     clickFieldDropdown,
     clickFieldDropdownItem,
@@ -1503,7 +1503,7 @@ test("standalone many2one field", async () => {
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.fields = {
                 partner_id: {
@@ -4099,7 +4099,7 @@ test("skip name search optimization", async () => {
             preventMemoization="true"
         />`;
         static components = { Many2XAutocomplete };
-        static props = ["*"];
+        props = useProps();
         getDomain() {
             return [];
         }
@@ -4147,7 +4147,7 @@ test("custom many2one field with write_date as related field", async () => {
     Partner._records[0].write_date = "2023-02-13 10:00:00";
     Partner._records[1].write_date = "2022-09-03 18:00:00";
     class MyM2O extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Many2OneField };
         static template = xml`
             <div>

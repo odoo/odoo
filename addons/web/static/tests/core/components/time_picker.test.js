@@ -287,7 +287,6 @@ test("typing a value that is in the suggestions will focus it in the dropdown", 
 test("false, null and undefined are accepted values", async () => {
     class Parent extends Component {
         static components = { TimePicker };
-        static props = {};
         static template = xml`<TimePicker value="this.state.value"/>`;
 
         setup() {
@@ -313,7 +312,6 @@ test.tags("desktop");
 test("click-out triggers onChange", async () => {
     class Parent extends Component {
         static components = { TimePicker, Dropdown };
-        static props = {};
         static template = xml`
             <div>
                 <Dropdown>
@@ -353,7 +351,6 @@ test("click-out triggers onChange", async () => {
 test("changing the props value updates the input", async () => {
     class Parent extends Component {
         static components = { TimePicker };
-        static props = {};
         static template = xml`<TimePicker value="this.state.value" onChange.bind="this.onChange"/>`;
 
         setup() {
@@ -399,7 +396,6 @@ test.tags("desktop");
 test("ensure placeholder is customizable", async () => {
     class Parent extends Component {
         static components = { TimePicker };
-        static props = {};
         static template = xml`<TimePicker placeholder="this.state.placeholder"/>`;
 
         setup() {
@@ -419,7 +415,6 @@ test("ensure placeholder is customizable", async () => {
 test("add a custom class", async () => {
     class Parent extends Component {
         static components = { TimePicker };
-        static props = {};
         static template = xml`<TimePicker cssClass="'o_custom_class'"/>`;
     }
 
@@ -430,7 +425,6 @@ test("add a custom class", async () => {
 test("add a custom input class", async () => {
     class Parent extends Component {
         static components = { TimePicker };
-        static props = {};
         static template = xml`<TimePicker inputCssClass="'o_custom_class'"/>`;
     }
 

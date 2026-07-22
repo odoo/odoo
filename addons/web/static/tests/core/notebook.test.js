@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Notebook } from "@web/core/notebook/notebook";
@@ -29,7 +29,7 @@ test("notebook with multiple pages given as slots", async () => {
                 </t>
             </Notebook>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -77,7 +77,7 @@ test("notebook with defaultPage props", async () => {
                 </t>
             </Notebook>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -108,7 +108,7 @@ test("notebook with defaultPage set on invisible page", async () => {
                     </t>
                 </Notebook>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -131,7 +131,7 @@ test("notebook set vertically", async () => {
                 </t>
             </Notebook>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -150,10 +150,10 @@ test("notebook pages rendered by a template component", async () => {
                 <h3 t-out="this.props.heading"></h3>
                 <p t-out="this.props.text" />
             `;
-        static props = {
-            heading: String,
-            text: String,
-        };
+        props = useProps({
+            heading: t.string(),
+            text: t.string(),
+        });
     }
 
     class Parent extends Component {
@@ -167,7 +167,7 @@ test("notebook pages rendered by a template component", async () => {
                 </t>
             </Notebook>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.pages = [
                 {
@@ -209,13 +209,13 @@ test("notebook pages rendered by a template component", async () => {
 test("each page is different", async () => {
     class Page extends Component {
         static template = xml`<h3>Coucou</h3>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     class Parent extends Component {
         static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.pages = [
                 {
@@ -259,7 +259,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
                         <div class="page3" />
                     </t>
                 </Notebook>`;
-        static props = ["*"];
+        props = useProps();
         get defaultPageVisible() {
             return defaultPageVisible;
         }
@@ -301,7 +301,7 @@ test("disabled pages are greyed out and can't be toggled", async () => {
                     <div class="page3" />
                 </t>
             </Notebook>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -338,7 +338,7 @@ test("icons can be given for each page tab", async () => {
                     <div class="page3" />
                 </t>
             </Notebook>`;
-        static props = ["*"];
+        props = useProps();
         get icons() {
             return {
                 1: "fa-trash",
@@ -360,13 +360,13 @@ test("switch notebook page after async work", async () => {
     let { promise, resolve } = Promise.withResolvers();
     class Page extends Component {
         static template = xml`<h3>Coucou</h3>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     class Parent extends Component {
         static template = xml`<Notebook pages="this.pages" onWillActivatePage="() => this.onWillActivatePage()"/>`;
         static components = { Notebook };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.pages = [
                 {

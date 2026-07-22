@@ -3,20 +3,20 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class AttachDocumentWidget extends Component {
     static template = "web.AttachDocument";
     static components = {
         FileInput,
     };
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        acceptedFileExtensions: { type: String, optional: true },
-        string: { type: String },
-        action: { type: String, optional: true },
-        highlight: { type: Boolean },
-    };
+        acceptedFileExtensions: t.string().optional(),
+        string: t.string(),
+        action: t.string().optional(),
+        highlight: t.boolean(),
+    });
 
     setup() {
         this.http = useService("http");

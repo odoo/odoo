@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy, signal } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -84,6 +84,25 @@ const PROPERTY_PARAMETERS = new Set(
     Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters)
 );
 
+export const propertyDefinitionProps = {
+    fieldName: t.string(),
+    readonly: t.boolean().optional(),
+    canChangeDefinition: t.boolean().optional(),
+    propertyDefinition: t.any().optional(),
+    context: t.object(),
+    isNewlyCreated: t.boolean().optional(),
+    // index and number of properties, to hide the move arrows when needed
+    propertiesSize: t.number(),
+    // events
+    onChange: t.function().optional(),
+    onDelete: t.function().optional(),
+    onDiscard: t.function().optional(),
+    onAdd: t.function().optional(),
+    // prop needed by the popover service
+    close: t.function().optional(),
+    record: t.object().optional(),
+};
+
 export class PropertyDefinition extends Component {
     static template = "web.PropertyDefinition";
     static components = {
@@ -98,24 +117,7 @@ export class PropertyDefinition extends Component {
         PropertyTags,
         SelectMenu,
     };
-    static props = {
-        fieldName: { type: String },
-        readonly: { type: Boolean, optional: true },
-        canChangeDefinition: { type: Boolean, optional: true },
-        propertyDefinition: { optional: true },
-        context: { type: Object },
-        isNewlyCreated: { type: Boolean, optional: true },
-        // index and number of properties, to hide the move arrows when needed
-        propertiesSize: { type: Number },
-        // events
-        onChange: { type: Function, optional: true },
-        onDelete: { type: Function, optional: true },
-        onDiscard: { type: Function, optional: true },
-        onAdd: { type: Function, optional: true },
-        // prop needed by the popover service
-        close: { type: Function, optional: true },
-        record: { type: Object, optional: true },
-    };
+    props = useProps(propertyDefinitionProps);
 
     propertyDefinitionRef = signal(null);
 

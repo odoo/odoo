@@ -3,10 +3,10 @@ import {
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
-    props,
     signal,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -21,7 +21,7 @@ function useResizable({
 }) {
     containerRef = typeof containerRef == "string" ? useRef(containerRef) : containerRef;
     handleRef = typeof handleRef == "string" ? useRef(handleRef) : handleRef;
-    const resizeableProps = props(resizablePanelProps);
+    const resizeableProps = useProps(resizablePanelProps);
 
     let minWidth = getMinWidth(resizeableProps);
     let resizeSide = getResizeSide(resizeableProps);
@@ -50,7 +50,7 @@ function useResizable({
     onMounted(() => {
         const handleEl = resolveRefEl(handleRef);
         if (handleEl) {
-            resize(Math.max(initialWidth, getMinWidth(props) || 0));
+            resize(Math.max(initialWidth, getMinWidth(resizeableProps) || 0));
             handleEl.addEventListener("mousedown", onMouseDown);
         }
     });
@@ -137,7 +137,7 @@ export class ResizablePanel extends Component {
     static template = "web_studio.ResizablePanel";
 
     static components = {};
-    props = props(resizablePanelProps);
+    props = useProps(resizablePanelProps);
 
     containerRef = signal(null);
     handleRef = signal(null);

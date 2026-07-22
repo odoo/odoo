@@ -39,7 +39,6 @@ export class NavBar extends Component {
         ErrorHandler,
         Transition,
     };
-    static props = {};
     root = signal(null);
     appSubMenus = signal(null);
     menuApps = signal(null);

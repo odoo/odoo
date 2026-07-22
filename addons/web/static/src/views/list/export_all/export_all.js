@@ -17,7 +17,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class ExportAll extends Component {
     static template = "web.ExportAll";
     static components = { DropdownItem };
-    static props = {};
 
     //---------------------------------------------------------------------
     // Protected

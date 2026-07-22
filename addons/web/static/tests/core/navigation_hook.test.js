@@ -16,7 +16,6 @@ import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/naviga
 import { useAutofocus } from "@web/core/utils/hooks";
 
 class BasicHookParent extends Component {
-    static props = [];
     static template = xml`
         <button class="outside" t-ref="this.outsideRef">outside target</button>
         <div class="container" t-ref="this.containerRef">
@@ -223,7 +222,6 @@ test("navigation disabled when component is destroyed", async () => {
 
 test("insert item before current", async () => {
     class TestComp extends Component {
-        static props = [];
         static template = xml`
             <div class="container" t-ref="this.containerRef">
                 <t t-foreach="this.state.items" t-as="item" t-key="item">
@@ -289,7 +287,6 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
     // of one of the navigable item.
 
     class Parent extends Component {
-        static props = [];
         static template = xml`
             <button class="outside" t-ref="this.outsideRef">outside target</button>
             <div class="container" t-ref="this.containerRef">
@@ -323,7 +320,6 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
 
 test("mousehover only set active if navigation is availible", async () => {
     class Parent extends Component {
-        static props = [];
         static template = xml`
             <div class="container" t-ref="this.containerRef">
                 <button class="o-navigable one">target one</button>
@@ -361,7 +357,6 @@ test("mousehover only set active if navigation is availible", async () => {
 
 test("active item is unset when focusing out", async () => {
     class Parent extends Component {
-        static props = [];
         static template = xml`
             <button class="outside">outside</button>
             <div class="container" t-ref="this.containerRef">
@@ -390,7 +385,6 @@ test("active item is unset when focusing out", async () => {
 
 test("set focused element as active item", async () => {
     class Parent extends Component {
-        static props = [];
         static template = xml`
             <div class="container" t-ref="this.containerRef">
                 <input class="o-navigable one" id="input" t-ref="this.inputRef"/>
@@ -421,7 +415,6 @@ test("browser default navigation is not captured", async () => {
     }
 
     class Parent extends Component {
-        static props = [];
         static template = xml`
             <button class="outside-one" t-ref="this.outsideRef">outside one</button>
             <div class="container" t-ref="this.containerRef">
@@ -477,7 +470,6 @@ test("focus not stolen from search input during typing, hovering, and clearing",
                 </t>
             </div>
         `;
-        static props = [];
 
         containerRef = signal(null);
         inputRef = signal(null);

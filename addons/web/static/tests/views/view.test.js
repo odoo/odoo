@@ -1,7 +1,7 @@
 import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     defineModels,
@@ -26,7 +26,7 @@ import { CallbackRecorder } from "@web/search/action_hook";
 const viewRegistry = registry.category("views");
 
 class ToyController extends Component {
-    static props = ["*"];
+    props = useProps();
     static template = xml`<div t-attf-class="{{this.class}} {{this.props.className}}"><t t-call="{{ this.template }}"/></div>`;
     setup() {
         this.class = "toy";
@@ -758,7 +758,7 @@ test("rendering with loaded arch attribute 'js_class' and given jsClass", async 
     viewRegistry.add("toy_2", {
         type: "toy",
         Controller: class extends Component {
-            static props = ["*"];
+            props = useProps();
             static template = xml`<div class="o_toy_view_2"/>`;
             static type = "toy";
         },
@@ -789,7 +789,7 @@ test("rendering with given arch attribute 'js_class' and given jsClass", async f
         {
             type: "toy",
             Controller: class extends Component {
-                static props = ["*"];
+                props = useProps();
                 static template = xml`<div class="o_toy_view_2"/>`;
                 static type = "toy";
             },
@@ -882,7 +882,7 @@ test("'searchViewFields' cannot be passed as prop alone", async function () {
 test("search query props are passed as props to concrete view (default search arch)", async function () {
     expect.assertions(4);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             const { context, domain, groupBy, orderBy } = this.props;
@@ -913,7 +913,7 @@ test("search query props are passed as props to concrete view (default search ar
 test("non empty prop 'noContentHelp'", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.info.noContentHelp).toBe("<div>Help</div>");
@@ -931,7 +931,7 @@ test("non empty prop 'noContentHelp'", async function () {
 test("useSampleModel false by default", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.useSampleModel).toBe(false);
@@ -945,7 +945,7 @@ test("useSampleModel false by default", async function () {
 test("sample='1' on arch", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.useSampleModel).toBe(true);
@@ -964,7 +964,7 @@ test("sample='1' on arch", async function () {
 test("sample='0' on arch and useSampleModel=true", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.useSampleModel).toBe(true);
@@ -984,7 +984,7 @@ test("sample='0' on arch and useSampleModel=true", async function () {
 test("sample='1' on arch and useSampleModel=false", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.useSampleModel).toBe(false);
@@ -1004,7 +1004,7 @@ test("sample='1' on arch and useSampleModel=false", async function () {
 test("useSampleModel=true", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.useSampleModel).toBe(true);
@@ -1018,7 +1018,7 @@ test("useSampleModel=true", async function () {
 test("rendering with given prop", async function () {
     expect.assertions(1);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.props.specificProp).toBe("specificProp");
@@ -1032,7 +1032,7 @@ test("rendering with given prop", async function () {
 test("search query props are passed as props to concrete view (specific search arch)", async function () {
     expect.assertions(4);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             const { context, domain, groupBy, orderBy } = this.props;
@@ -1095,7 +1095,7 @@ test("multiple ways to pass classes for styling", async () => {
 test("callback recorders are moved from props to subenv", async () => {
     expect.assertions(5);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.env.__getGlobalState__).toBeInstanceOf(CallbackRecorder); // put in env by View
@@ -1122,7 +1122,7 @@ test("callback recorders are moved from props to subenv", async () => {
 test("react to prop 'domain' changes", async function () {
     expect.assertions(2);
     class ToyController extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<div/>`;
         setup() {
             onWillStart(() => {
@@ -1135,7 +1135,7 @@ test("react to prop 'domain' changes", async function () {
     }
     viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -23,7 +23,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         ...super.components,
         Tag: AvatarTag,
     };
-    props = props(many2ManyTagsAvatarFieldProps);
+    props = useProps(many2ManyTagsAvatarFieldProps);
 
     get assignBtnTooltip() {
         return _t("Assign");
@@ -77,7 +77,7 @@ export class ListMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         ...super.components,
         Tag: ListAvatarTag,
     };
-    props = props(listMany2ManyTagsAvatarFieldProps);
+    props = useProps(listMany2ManyTagsAvatarFieldProps);
 }
 
 export const listMany2ManyTagsAvatarField = {
@@ -89,7 +89,7 @@ registry.category("fields").add("list.many2many_tags_avatar", listMany2ManyTagsA
 
 export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     static template = "web.Many2ManyTagsAvatarFieldPopover";
-    props = props({
+    props = useProps({
         ...many2ManyTagsAvatarFieldProps,
         specification: t.object(),
         close: t.function(),
@@ -125,7 +125,7 @@ export const cardMany2ManyTagsAvatarFieldProps = {
 };
 
 export class CardMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    props = props(cardMany2ManyTagsAvatarFieldProps);
+    props = useProps(cardMany2ManyTagsAvatarFieldProps);
     static PopoverClass = Many2ManyTagsAvatarFieldPopover;
 
     setup() {

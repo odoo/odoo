@@ -1,14 +1,19 @@
 /** @odoo-module **/
 
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import {
+    SelectionField,
+    selectionField,
+    selectionFieldProps,
+} from "@web/views/fields/selection/selection_field";
 
 export class DynamicSelectionField extends SelectionField {
 
-    static props = {
-        ...SelectionField.props,
-        available_field: { type: String },
-    }
+    props = useProps({
+        ...selectionFieldProps,
+        available_field: t.string(),
+    });
 
     get availableOptions() {
         return this.props.record.data[this.props.available_field]?.split(",") || [];

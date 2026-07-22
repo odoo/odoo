@@ -1,18 +1,20 @@
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onMounted, onPatched, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
     static template = "web.PropertyDefinitionSelection";
-    static props = {
-        default: { type: String, optional: true },
-        options: {},
-        readonly: { type: Boolean, optional: true },
-        canChangeDefinition: { type: Boolean, optional: true },
-        onOptionsChange: { type: Function, optional: true }, // we add / remove / rename an option
-        onDefaultOptionChange: { type: Function, optional: true }, // we select a default value
-    };
+    props = useProps({
+        default: t.string().optional(),
+        options: t.any(),
+        readonly: t.boolean().optional(),
+        canChangeDefinition: t.boolean().optional(),
+        onOptionsChange: t.function().optional(),
+        // we add / remove / rename an option
+        onDefaultOptionChange: t.function().optional(),
+        // we select a default value
+    });
 
     propertyDefinitionSelectionRef = signal(null);
     addButtonRef = signal(null);

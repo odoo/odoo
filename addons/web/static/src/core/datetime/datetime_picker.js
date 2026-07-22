@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -305,7 +305,7 @@ export const dateTimePickerProps = {
 
 /** @extends {Component<DateTimePickerProps>} */
 export class DateTimePicker extends Component {
-    props = props(dateTimePickerProps);
+    props = useProps(dateTimePickerProps);
 
     static template = "web.DateTimePicker";
     static components = { TimePicker };

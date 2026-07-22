@@ -1,46 +1,48 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, toRaw } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, t, toRaw, useProps } from "@odoo/owl";
 import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export const SEARCH_KEYS = ["context", "domain", "groupBy", "orderBy"];
 
+export const withSearchProps = {
+    slots: t.object(),
+    SearchModel: t.function().optional(),
+
+    resModel: t.string(),
+
+    globalState: t.object().optional(),
+    searchModelArgs: t.object().optional(),
+
+    display: t.object().optional(),
+
+    // search query elements
+    context: t.object().optional(),
+    domain: t.array(t.or([t.string(), t.array()])).optional(),
+    groupBy: t.array(t.string()).optional(),
+    orderBy: t.array(t.object()).optional(),
+
+    // search view description
+    searchViewArch: t.string().optional(),
+    searchViewFields: t.object().optional(),
+    searchViewId: t.or([t.number(), t.boolean()]).optional(),
+
+    irFilters: t.array(t.object()).optional(),
+    loadIrFilters: t.boolean().optional(),
+
+    // extra options
+    activateFavorite: t.boolean().optional(),
+    dynamicFilters: t.array(t.object()).optional(),
+    hideCustomGroupBy: t.boolean().optional(),
+    searchMenuTypes: t.array(t.string()).optional(),
+    canOrderByCount: t.boolean().optional(),
+    defaultGroupBy: t.array(t.string()).optional(),
+};
+
 export class WithSearch extends Component {
     static template = "web.WithSearch";
-    static props = {
-        slots: Object,
-        SearchModel: { type: Function, optional: true },
-
-        resModel: String,
-
-        globalState: { type: Object, optional: true },
-        searchModelArgs: { type: Object, optional: true },
-
-        display: { type: Object, optional: true },
-
-        // search query elements
-        context: { type: Object, optional: true },
-        domain: { type: Array, element: [String, Array], optional: true },
-        groupBy: { type: Array, element: String, optional: true },
-        orderBy: { type: Array, element: Object, optional: true },
-
-        // search view description
-        searchViewArch: { type: String, optional: true },
-        searchViewFields: { type: Object, optional: true },
-        searchViewId: { type: [Number, Boolean], optional: true },
-
-        irFilters: { type: Array, element: Object, optional: true },
-        loadIrFilters: { type: Boolean, optional: true },
-
-        // extra options
-        activateFavorite: { type: Boolean, optional: true },
-        dynamicFilters: { type: Array, element: Object, optional: true },
-        hideCustomGroupBy: { type: Boolean, optional: true },
-        searchMenuTypes: { type: Array, element: String, optional: true },
-        canOrderByCount: { type: Boolean, optional: true },
-        defaultGroupBy: { type: Array, element: String, optional: true },
-    };
+    props = useProps(withSearchProps);
 
     setup() {
         if (!this.env.__getContext__) {
@@ -77,7 +79,16 @@ export class WithSearch extends Component {
         });
 
         onWillStart(async () => {
-            const config = { ...toRaw(this.props) };
+            // owl3 exposes every declared prop, including those the parent did
+            // not pass. Only forward the ones actually provided: the search
+            // model distinguishes a missing key from an undefined value (e.g.
+            // `"activateFavorite" in config`).
+            const config = {};
+            for (const [key, value] of Object.entries(toRaw(this.props))) {
+                if (value !== undefined) {
+                    config[key] = value;
+                }
+            }
             if (config.globalState && config.globalState.searchModel) {
                 config.state = JSON.parse(config.globalState.searchModel);
                 delete config.globalState;

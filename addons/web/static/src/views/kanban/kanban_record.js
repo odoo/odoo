@@ -1,5 +1,5 @@
 import { browser } from "@web/core/browser/browser";
-import { props, signal, t } from "@odoo/owl";
+import { signal, t, useProps } from "@odoo/owl";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -70,7 +70,7 @@ export class KanbanRecord extends CardRenderer {
         KanbanDropdownMenuWrapper,
         KanbanCoverImageDialog,
     };
-    props = props(kanbanRecordProps);
+    props = useProps(kanbanRecordProps);
 
     rootRef = signal(null);
 

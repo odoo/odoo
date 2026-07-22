@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
 export class ColorField extends Component {
     static template = "web.ColorField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-    };
+    });
 
     get color() {
         return this.props.record.data[this.props.name] || "";

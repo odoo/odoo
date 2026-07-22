@@ -6,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parsers";
 
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export const floatTimeFieldProps = {
@@ -18,7 +18,7 @@ export const floatTimeFieldProps = {
 
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
-    props = props(floatTimeFieldProps);
+    props = useProps(floatTimeFieldProps);
     numpadDecimalRef = signal(null);
 
     setup() {
@@ -100,10 +100,10 @@ export class FloatTimeField extends Component {
 
 class DurationPopover extends Component {
     static template = "web.DurationPopover";
-    static props = {
-        state: { type: Object, optional: true },
-        close: { type: Function, optional: true },
-    };
+    props = useProps({
+        state: t.object().optional(),
+        close: t.function().optional(),
+    });
 }
 
 export const floatTimeField = {

@@ -38,7 +38,16 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, plugin, props, signal, status, proxy, t } from "@odoo/owl";
+import {
+    Component,
+    onWillUpdateProps,
+    plugin,
+    useProps,
+    signal,
+    status,
+    proxy,
+    t,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
@@ -220,7 +229,7 @@ export const many2XAutocompleteProps = {
 export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
-    props = props(many2XAutocompleteProps);
+    props = useProps(many2XAutocompleteProps);
     autocompleteContainerRef = signal(null);
     setup() {
         this.orm = useService("orm");
@@ -700,7 +709,7 @@ export const x2ManyFieldDialogProps = {
 export class X2ManyFieldDialog extends Component {
     static template = "web.X2ManyFieldDialog";
     static components = { Dialog, FormRenderer, ViewButton };
-    props = props(x2ManyFieldDialogProps);
+    props = useProps(x2ManyFieldDialogProps);
     setup() {
         this.actionService = useService("action");
         this.ui = useService("ui");

@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -488,7 +488,7 @@ test("properly drop client actions after new action is initiated", async () => {
     const slowWillStartDef = Promise.withResolvers();
     class ClientAction extends Component {
         static template = xml`<div class="client_action">ClientAction</div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             onWillStart(() => slowWillStartDef?.promise);
         }
@@ -709,7 +709,7 @@ test("local state, global state, and race conditions", async () => {
                 <SearchBar />
             </div>`;
         static components = { ControlPanel, SearchBar };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.id = id++;
             expect.step(this.props.state || "no state");

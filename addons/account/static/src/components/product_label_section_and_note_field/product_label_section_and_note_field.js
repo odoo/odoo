@@ -1,34 +1,22 @@
 import { _t } from "@web/core/l10n/translation";
-import { buildM2OFieldDescription, extractM2OFieldProps, m2oSupportedOptions } from "@web/views/fields/many2one/many2one_field";
+import {
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    m2oSupportedOptions,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
 import { registry } from "@web/core/registry";
 import { ProductNameAndDescriptionField } from "@product/product_name_and_description/product_name_and_description";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
-// inlined from Many2OneField.props (via ProductNameAndDescriptionField, both still old-style)
 export const productLabelSectionAndNoteFieldProps = {
-    ...standardFieldProps,
-    canCreate: t.boolean().optional(),
-    canCreateEdit: t.boolean().optional(),
-    canOpen: t.boolean().optional(),
-    canQuickCreate: t.boolean().optional(),
-    canScanBarcode: t.boolean().optional(),
-    canWrite: t.boolean().optional(),
-    context: t.object().optional(),
-    decorations: t.object().optional(),
-    domain: t.or([t.array(), t.function()]).optional(),
-    nameCreateField: t.string().optional(),
-    openActionContext: t.string().optional(),
-    placeholder: t.string().optional(),
-    searchLimit: t.number().optional(),
-    searchThreshold: t.number().optional(),
-    string: t.string().optional(),
+    ...many2OneFieldProps,
     show_label_warning: t.boolean().optional(false),
 };
 
 export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionField {
     static template = "account.ProductLabelSectionAndNoteField";
-    props = props(productLabelSectionAndNoteFieldProps);
+    props = useProps(productLabelSectionAndNoteFieldProps);
 
     static descriptionColumn = "name";
 

@@ -8,7 +8,7 @@ import { CharField } from "../char/char_field";
 import { standardFieldProps } from "../standard_field_props";
 import { UrlField } from "../url/url_field";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export const copyClipboardFieldProps = {
     ...standardFieldProps,
@@ -18,7 +18,7 @@ export const copyClipboardFieldProps = {
 
 class CopyClipboardField extends Component {
     static template = "web.CopyClipboardField";
-    props = props(copyClipboardFieldProps);
+    props = useProps(copyClipboardFieldProps);
 
     setup() {
         this.copyText = this.props.string || _t("Copy");
@@ -47,7 +47,7 @@ class CopyClipboardField extends Component {
 export class CopyClipboardButtonField extends CopyClipboardField {
     static template = "web.CopyClipboardButtonField";
     static components = { CopyButton };
-    props = props({
+    props = useProps({
         ...copyClipboardFieldProps,
         btnClass: t.string().optional("primary"),
     });

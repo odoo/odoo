@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -9,10 +9,10 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 export class JsonCheckboxes extends Component {
     static template = "account.JsonCheckboxes";
     static components = { CheckBox };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        stacked: { type: Boolean, optional: true },
-    };
+        stacked: t.boolean().optional(),
+    });
 
     setup() {
         this.checkboxes = proxy(this.props.record.data[this.props.name]);

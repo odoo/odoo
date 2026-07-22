@@ -1,16 +1,18 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
+
+export const avatarTagProps = {
+    cssClass: t.or([t.string(), t.object()]).optional(),
+    imageUrl: t.string(),
+    onAvatarClick: t.function().optional(),
+    onDelete: t.function().optional(),
+    slots: t.any().optional(),
+    text: t.string().optional(),
+    tooltip: t.string().optional(),
+};
 
 export class AvatarTag extends Component {
     static template = "web.AvatarTag";
-    static props = {
-        cssClass: { type: [String, Object], optional: true },
-        imageUrl: { type: String },
-        onAvatarClick: { type: Function, optional: true },
-        onDelete: { type: Function, optional: true },
-        slots: { optional: true },
-        text: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-    };
+    props = useProps(avatarTagProps);
 
     ref = signal.ref();
 

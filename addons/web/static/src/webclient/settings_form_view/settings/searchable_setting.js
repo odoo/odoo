@@ -1,7 +1,7 @@
-import { onMounted, proxy, signal } from "@odoo/owl";
+import { onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { normalize } from "@web/core/l10n/utils";
-import { Setting } from "@web/views/form/setting/setting";
+import { Setting, settingProps } from "@web/views/form/setting/setting";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { HighlightText } from "../highlight_text/highlight_text";
 
@@ -12,10 +12,10 @@ export class SearchableSetting extends Setting {
         FormLabel: FormLabelHighlightText,
         HighlightText,
     };
-    static props = {
-        ...Setting.props,
-        fieldLabels: { type: Array },
-    };
+    props = useProps({
+        ...settingProps,
+        fieldLabels: t.array(),
+    });
 
     settingRef = signal.ref();
     setup() {

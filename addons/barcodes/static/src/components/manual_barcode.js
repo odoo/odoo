@@ -1,11 +1,11 @@
-import { BarcodeDialog } from "@web/core/barcode/barcode_dialog";
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { BarcodeDialog, barcodeDialogProps } from "@web/core/barcode/barcode_dialog";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeInput extends Component {
     static template = "barcodes.BarcodeInput";
-    props = props({
+    props = useProps({
         onSubmit: t.function(),
         placeholder: t.string().optional(_t("Enter a barcode...")),
     });
@@ -41,5 +41,5 @@ export class ManualBarcodeScanner extends BarcodeDialog {
         ...BarcodeDialog.components,
         BarcodeInput,
     };
-    static props = [...BarcodeDialog.props, "placeholder?"];
+    props = useProps({ ...barcodeDialogProps, placeholder: t.any().optional() });
 }

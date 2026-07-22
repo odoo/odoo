@@ -1,14 +1,19 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
+import {
+    selectionField,
+    SelectionField,
+    selectionFieldProps,
+} from "@web/views/fields/selection/selection_field";
 
 const { DateTime } = luxon;
 
 export class TimePeriodSelectionField extends SelectionField {
-    static props = {
-        ...SelectionField.props,
-        onChange: { type: Function, optional: true },
-    };
+    props = useProps({
+        ...selectionFieldProps,
+        onChange: t.function().optional(),
+    });
 
     onChange(ev) {
         super.onChange(ev);

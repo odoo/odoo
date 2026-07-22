@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-import { Component, signal, useEffect } from "@odoo/owl";
+import { Component, signal, useEffect, useProps } from "@odoo/owl";
 
 export class IframeWrapperField extends Component {
     static template = "web.IframeWrapperField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-    };
+    });
 
     iframeRef = signal(null);
 

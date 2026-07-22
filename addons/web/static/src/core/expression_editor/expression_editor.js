@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
@@ -13,12 +13,12 @@ import { getDefaultPath } from "@web/core/tree_editor/utils";
 export class ExpressionEditor extends Component {
     static template = "web.ExpressionEditor";
     static components = { TreeEditor };
-    static props = {
-        resModel: String,
-        fields: Object,
-        expression: String,
-        update: Function,
-    };
+    props = useProps({
+        resModel: t.string(),
+        fields: t.object(),
+        expression: t.string(),
+        update: t.function(),
+    });
 
     setup() {
         onWillStart(() => this.onPropsUpdated(this.props));

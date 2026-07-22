@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { drag, queryOne, queryRect, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 
@@ -17,7 +17,7 @@ test("Width cannot exceed viewport width", async () => {
                 <p>Paragraph</p>
             </ResizablePanel>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -43,7 +43,7 @@ test("handles right-to-left", async () => {
                 </ResizablePanel>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -73,7 +73,7 @@ test("handles resize handle at start in fixed position", async () => {
                 </ResizablePanel>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -107,7 +107,7 @@ test("resizing the window adapts the panel", async () => {
                 </ResizablePanel>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -137,7 +137,7 @@ test("minWidth props can be updated", async () => {
                 </ResizablePanel>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     const state = proxy({ minWidth: 20 });
     await mountWithCleanup(Parent, {
@@ -167,7 +167,7 @@ test("minWidth props can be updated", async () => {
 test("default to minWidth if initialWidth is smaller than minWidth", async () => {
     class Parent extends Component {
         static components = { ResizablePanel };
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div class="d-flex">
                 <ResizablePanel minWidth="200" initialWidth="100">

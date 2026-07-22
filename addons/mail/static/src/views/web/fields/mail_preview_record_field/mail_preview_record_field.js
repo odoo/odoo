@@ -1,8 +1,12 @@
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, t, useProps } from "@odoo/owl";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { referenceField, ReferenceField } from "@web/views/fields/reference/reference_field";
+import {
+    referenceField,
+    ReferenceField,
+    referenceFieldProps,
+} from "@web/views/fields/reference/reference_field";
 
 export class MailPreviewRecordField extends ReferenceField {
     static components = {
@@ -10,10 +14,10 @@ export class MailPreviewRecordField extends ReferenceField {
         Pager,
     };
     static template = "mail.MailPreviewRecordField";
-    static props = {
-        ...super.props,
-        hideRecordSelector: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        ...referenceFieldProps,
+        hideRecordSelector: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();

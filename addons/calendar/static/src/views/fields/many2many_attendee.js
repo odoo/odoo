@@ -1,4 +1,5 @@
-import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { AvatarTag, avatarTagProps } from "@web/core/tags_list/avatar_tag";
+import { t, useProps } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import {
     Many2ManyTagsAvatarUserField,
@@ -15,12 +16,12 @@ const ICON_BY_STATUS = {
 
 export class AttendeeTag extends AvatarTag {
     static template = "calendar.AttendeeTag";
-    static props = {
-        ...AvatarTag.props,
-        isUnavailable: { type: Boolean, optional: true },
-        noEmail: { type: Boolean, optional: true },
-        status: { type: String, optional: true },
-    };
+    props = useProps({
+        ...avatarTagProps,
+        isUnavailable: t.boolean().optional(),
+        noEmail: t.boolean().optional(),
+        status: t.string().optional(),
+    });
 
     get statusIcon() {
         return ICON_BY_STATUS[this.props.status];

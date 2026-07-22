@@ -1,20 +1,22 @@
 import { fieldVisualFeedback } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
+
+export const formLabelProps = {
+    fieldInfo: t.object(),
+    record: t.object(),
+    fieldName: t.string(),
+    className: t.string().optional(),
+    string: t.string(),
+    id: t.string(),
+    notMuttedLabel: t.boolean().optional(),
+};
 
 export class FormLabel extends Component {
     static template = "web.FormLabel";
-    static props = {
-        fieldInfo: { type: Object },
-        record: { type: Object },
-        fieldName: { type: String },
-        className: { type: String, optional: true },
-        string: { type: String },
-        id: { type: String },
-        notMuttedLabel: { type: Boolean, optional: true },
-    };
+    props = useProps(formLabelProps);
 
     get className() {
         const { invalid, empty, readonly } = fieldVisualFeedback(

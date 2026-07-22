@@ -1,9 +1,9 @@
-import { Component, untrack, proxy } from "@odoo/owl";
+import { Component, proxy, t, untrack, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
-import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field";
+import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 
 /**
  * @typedef ReferenceValue
@@ -33,14 +33,16 @@ import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field"
  * 3) Standard case
  * The value is already in record.data[fieldName]
  */
+export const referenceFieldProps = {
+    ...many2OneFieldProps,
+    hideModel: t.boolean().optional(),
+    modelField: t.string().optional(),
+};
+
 export class ReferenceField extends Component {
     static template = "web.ReferenceField";
     static components = { Many2One };
-    static props = {
-        ...Many2OneField.props,
-        hideModel: { type: Boolean, optional: true },
-        modelField: { type: String, optional: true },
-    };
+    props = useProps(referenceFieldProps);
 
     setup() {
         /** @type {{formattedCharValue?: ReferenceValue, modelName?: string}} */

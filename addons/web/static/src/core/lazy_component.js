@@ -1,4 +1,4 @@
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, t, useProps, xml } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
@@ -7,11 +7,11 @@ import { registry } from "@web/core/registry";
  */
 export class LazyComponent extends Component {
     static template = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
-    static props = {
-        Component: String,
-        bundle: String,
-        props: { type: [Object, Function], optional: true },
-    };
+    props = useProps({
+        Component: t.string(),
+        bundle: t.string(),
+        props: t.or([t.object(), t.function()]).optional(),
+    });
 
     setup() {
         onWillStart(async () => {

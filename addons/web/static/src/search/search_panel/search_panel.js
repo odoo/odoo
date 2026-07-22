@@ -38,7 +38,6 @@ const nameOfCheckedValues = (values) => {
  */
 export class SearchPanel extends Component {
     static template = "web.SearchPanel";
-    static props = {};
     static components = {
         Dropdown,
     };

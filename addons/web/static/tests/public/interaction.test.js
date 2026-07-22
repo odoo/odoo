@@ -9,7 +9,7 @@ import {
     freezeTime,
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, t, useProps, xml } from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -1943,7 +1943,6 @@ describe("components", () => {
         let isCDestroyed = false;
         class C extends Component {
             static template = xml`component`;
-            static props = {};
 
             setup() {
                 onWillDestroy(() => (isCDestroyed = true));
@@ -1974,9 +1973,9 @@ describe("components", () => {
         let isCDestroyed = false;
         class C extends Component {
             static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
-            static props = {
-                prop: { optional: true, type: String },
-            };
+            props = useProps({
+                prop: t.string().optional(),
+            });
 
             setup() {
                 onWillDestroy(() => (isCDestroyed = true));
@@ -2007,9 +2006,9 @@ describe("components", () => {
         let isCDestroyed = false;
         class C extends Component {
             static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
-            static props = {
-                prop: { optional: true, type: String },
-            };
+            props = useProps({
+                prop: t.string().optional(),
+            });
 
             setup() {
                 onWillDestroy(() => (isCDestroyed = true));
@@ -2039,7 +2038,6 @@ describe("components", () => {
     test("can insert a component at certain position", async () => {
         class C extends Component {
             static template = xml`component`;
-            static props = {};
         }
         class Test extends Interaction {
             static selector = ".test";
@@ -2058,7 +2056,6 @@ describe("components", () => {
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
-            static props = {};
         }
 
         let destroy;
@@ -2084,9 +2081,9 @@ describe("components", () => {
     test("can insert a component with props with mountComponent", async () => {
         class C extends Component {
             static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
-            static props = {
-                prop: { optional: true, type: String },
-            };
+            props = useProps({
+                prop: t.string().optional(),
+            });
         }
 
         class Test extends Interaction {

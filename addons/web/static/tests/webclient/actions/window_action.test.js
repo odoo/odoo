@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     MockServer,
     clickSave,
@@ -1926,7 +1926,7 @@ test("stored action is restored correctly with domain", async () => {
 test("current_action doesn't contains _originalAction", async () => {
     class myActionComponent extends Component {
         static template = xml`<div>This is a Client Action</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     const myAction = (env, action) => {

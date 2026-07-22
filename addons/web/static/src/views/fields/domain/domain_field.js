@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
@@ -28,7 +28,7 @@ export class DomainField extends Component {
     static components = {
         DomainSelector,
     };
-    props = props(domainFieldProps);
+    props = useProps(domainFieldProps);
 
     setup() {
         this.orm = useService("orm");

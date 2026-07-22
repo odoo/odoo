@@ -1,17 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
 import { FileUploadProgressBar } from "./file_upload_progress_bar";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class FileUploadProgressRecord extends Component {
     static template = "";
     static components = {
         FileUploadProgressBar,
     };
-    static props = {
-        fileUpload: Object,
-        selector: { type: String, optional: true },
-    };
+    props = useProps({
+        fileUpload: t.object(),
+        selector: t.string().optional(),
+    });
     getProgressTexts() {
         const fileUpload = this.props.fileUpload;
         const percent = Math.round(fileUpload.progress * 100);

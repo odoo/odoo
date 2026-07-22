@@ -1,11 +1,16 @@
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import {
+    SelectionField,
+    selectionField,
+    selectionFieldProps,
+} from "@web/views/fields/selection/selection_field";
 
 export class DaySelectionField extends SelectionField {
-    static props = {
-        ...SelectionField.props,
-        monthField: String,
-    };
+    props = useProps({
+        ...selectionFieldProps,
+        monthField: t.string(),
+    });
     /**
      * @override
      * return the available days in the carryover_month

@@ -6,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export const MAX_FILENAME_SIZE_BYTES = 0xff; // filenames do not exceed 255 bytes on Linux/Windows/MacOS
 
@@ -25,7 +25,7 @@ export class BinaryField extends Component {
     static components = {
         FileUploader,
     };
-    props = props(binaryFieldProps);
+    props = useProps(binaryFieldProps);
 
     setup() {
         this.notification = useService("notification");

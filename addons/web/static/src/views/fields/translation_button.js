@@ -4,7 +4,7 @@ import { user } from "@web/core/user";
 import { Record } from "@web/model/relational_model/record";
 import { TranslationDialog } from "./translation_dialog";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 /**
@@ -46,10 +46,10 @@ export function useTranslationDialog() {
 
 export class TranslationButton extends Component {
     static template = "web.TranslationButton";
-    static props = {
-        fieldName: { type: String },
-        record: { type: Object },
-    };
+    props = useProps({
+        fieldName: t.string(),
+        record: t.object(),
+    });
 
     setup() {
         this.translationDialog = useTranslationDialog();

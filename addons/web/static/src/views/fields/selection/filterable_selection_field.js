@@ -1,5 +1,10 @@
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import {
+    SelectionField,
+    selectionField,
+    selectionFieldProps,
+} from "@web/views/fields/selection/selection_field";
 
 /**
  * The purpose of this field is to be able to define some values which should not be
@@ -7,12 +12,12 @@ import { SelectionField, selectionField } from "@web/views/fields/selection/sele
  * that uses different possible sets of values on the same selection field.
  */
 export class FilterableSelectionField extends SelectionField {
-    static props = {
-        ...SelectionField.props,
-        whitelist_fname: { type: String, optional: true },
-        whitelisted_values: { type: Array, optional: true },
-        blacklisted_values: { type: Array, optional: true },
-    };
+    props = useProps({
+        ...selectionFieldProps,
+        whitelist_fname: t.string().optional(),
+        whitelisted_values: t.array().optional(),
+        blacklisted_values: t.array().optional(),
+    });
 
     /**
      * @override
@@ -20,26 +25,23 @@ export class FilterableSelectionField extends SelectionField {
     get options() {
         let options = super.options;
         if (this.props.whitelist_fname) {
-            options = options.filter((option) => {
-                return (
+            options = options.filter(
+                (option) =>
                     option[0] === this.props.record.data[this.props.name] ||
                     this.props.record.data[this.props.whitelist_fname].includes(option[0])
-                );
-            });
+            );
         } else if (this.props.whitelisted_values) {
-            options = options.filter((option) => {
-                return (
+            options = options.filter(
+                (option) =>
                     option[0] === this.props.record.data[this.props.name] ||
                     this.props.whitelisted_values.includes(option[0])
-                );
-            });
+            );
         } else if (this.props.blacklisted_values) {
-            options = options.filter((option) => {
-                return (
+            options = options.filter(
+                (option) =>
                     option[0] === this.props.record.data[this.props.name] ||
                     !this.props.blacklisted_values.includes(option[0])
-                );
-            });
+            );
         }
         return options;
     }

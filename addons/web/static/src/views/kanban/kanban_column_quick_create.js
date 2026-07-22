@@ -1,16 +1,16 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-import { Component, onPatched, proxy, signal, useListener } from "@odoo/owl";
+import { Component, onPatched, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
-    static props = {
-        onFoldChange: Function,
-        onValidate: Function,
-        folded: Boolean,
-        groupByField: Object,
-    };
+    props = useProps({
+        onFoldChange: t.function(),
+        onValidate: t.function(),
+        folded: t.boolean(),
+        groupByField: t.object(),
+    });
 
     root = signal(null);
     inputRef = signal(null);

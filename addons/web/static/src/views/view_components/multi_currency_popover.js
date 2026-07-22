@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, useListener } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useListener, useProps } from "@odoo/owl";
 import { getCurrency, getCurrencyRates } from "@web/core/currency";
 import { toLocaleDateString } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
@@ -7,12 +7,12 @@ import { formatMonetary } from "../fields/formatters";
 
 export class MultiCurrencyPopover extends Component {
     static template = "web.MultiCurrencyPopover";
-    static props = {
-        close: Function,
-        currencyIds: Array,
-        target: HTMLElement,
-        value: Number,
-    };
+    props = useProps({
+        close: t.function(),
+        currencyIds: t.array(),
+        target: t.instanceOf(HTMLElement),
+        value: t.number(),
+    });
 
     setup() {
         this.orm = useService("orm");

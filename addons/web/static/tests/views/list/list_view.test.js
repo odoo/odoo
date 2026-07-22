@@ -28,7 +28,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onWillStart, signal, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, signal, useProps, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -12424,9 +12424,9 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
 
     class CustomField extends Component {
         static template = xml`<input t-ref="this.input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
-        static props = {
+        props = useProps({
             ...standardFieldProps,
-        };
+        });
         input = signal(null);
 
         setup() {
@@ -16969,7 +16969,7 @@ test(`fieldDependencies support for fields`, async () => {
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static template = xml`<span t-out="this.props.record.data.int_field"/>`;
-            static props = ["*"];
+            props = useProps();
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -16986,7 +16986,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static template = xml`<span t-out="this.props.record.data.m2o.id"/>`;
-            static props = ["*"];
+            props = useProps();
         },
         fieldDependencies: [{ name: "m2o", type: "many2one", relation: "bar" }],
     });
@@ -17353,7 +17353,7 @@ test(`optional field selection do not unselect current row`, async () => {
 test(`view widgets are rendered in list view`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget" t-out="this.props.record.data.bar"/>`;
-        static props = ["*"];
+        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
 
@@ -17376,7 +17376,7 @@ test(`view widgets are rendered in list view`, async () => {
 test(`view widget with options in list view`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget" t-out="this.props.x"/>`;
-        static props = ["*"];
+        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", {
         component: TestWidget,
@@ -20631,7 +20631,7 @@ test(`custom button that creates record in list with sample data`, async () => {
 test(`widget visibility with invisible attribute`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget">Widget Content</div>`;
-        static props = ["*"];
+        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
 
@@ -20653,7 +20653,7 @@ test(`widget visibility with invisible attribute`, async () => {
 test(`widget column visibility with column_invisible attribute`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget">Widget Content</div>`;
-        static props = ["*"];
+        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
 

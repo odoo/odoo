@@ -1,6 +1,15 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+
+export const viewScaleSelectorProps = {
+    scales: t.object(),
+    currentScale: t.string(),
+    isWeekendVisible: t.boolean().optional(),
+    setScale: t.function(),
+    toggleWeekendVisibility: t.function().optional(),
+    dropdownClass: t.string().optional(),
+};
 
 export class ViewScaleSelector extends Component {
     static components = {
@@ -8,14 +17,7 @@ export class ViewScaleSelector extends Component {
         DropdownItem,
     };
     static template = "web.ViewScaleSelector";
-    static props = {
-        scales: { type: Object },
-        currentScale: { type: String },
-        isWeekendVisible: { type: Boolean, optional: true },
-        setScale: { type: Function },
-        toggleWeekendVisibility: { type: Function, optional: true },
-        dropdownClass: { type: String, optional: true },
-    };
+    props = useProps(viewScaleSelectorProps);
     get scales() {
         return Object.entries(this.props.scales).map(([key, value]) => ({ key, ...value }));
     }

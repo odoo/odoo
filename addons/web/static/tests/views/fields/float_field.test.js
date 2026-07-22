@@ -10,7 +10,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class Partner extends models.Model {
@@ -425,7 +425,7 @@ test("field with enable_formatting option as false in editable list view", async
 test("float field can be updated by another field/widget", async () => {
     class MyWidget extends Component {
         static template = xml`<button t-on-click="this.onClick">do it</button>`;
-        static props = ["*"];
+        props = useProps();
         onClick() {
             const val = this.props.record.data.float_field;
             this.props.record.update({ float_field: val + 1 });
