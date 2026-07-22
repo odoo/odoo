@@ -6,7 +6,6 @@ import { Component, onMounted, onWillStart } from "@odoo/owl";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
@@ -50,30 +49,13 @@ export class Chrome extends Component {
         onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
         effect(
-            batched(({ selectedOrder, scale }) => {
-                if (selectedOrder) {
-                    const scaleData = scale.product
-                        ? {
-                              product: { ...scale.product },
-                              unitPrice: scale.unitPriceString,
-                              totalPrice: scale.totalPriceString,
-                              netWeight: scale.netWeightString,
-                              grossWeight: scale.grossWeightString,
-                              tare: scale.tareWeightString,
-                          }
-                        : null;
-                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
-                }
+            batched((pos) => {
+                // `selectedOrder` and the scale data are read by
+                // `sendOrderToCustomerDisplay`, which is what this effect tracks.
+                pos.sendOrderToCustomerDisplay();
             }),
             [this.pos]
         );
-    }
-
-    sendOrderToCustomerDisplay(selectedOrder, scaleData) {
-        const adapter = new CustomerDisplayPosAdapter();
-        adapter.formatOrderData(selectedOrder);
-        adapter.data.scaleData = scaleData;
-        adapter.dispatch(this.pos);
     }
 
     // GETTERS //

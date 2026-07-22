@@ -17,6 +17,20 @@ export function uuidv4() {
 }
 
 /**
+ * Uuid identifying this browser. It is used to pair a PoS with the customer
+ * display opened on another device.
+ * @returns {string}
+ */
+export function getDeviceUuid() {
+    let uuid = localStorage.getItem("device_uuid");
+    if (!uuid) {
+        uuid = uuidv4();
+        localStorage.setItem("device_uuid", uuid);
+    }
+    return uuid;
+}
+
+/**
  * Formats the given `url` with correct protocol and port.
  * Useful for communicating to local iot box instance.
  * @param {string} url

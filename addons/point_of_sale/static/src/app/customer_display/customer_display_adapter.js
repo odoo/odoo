@@ -21,6 +21,9 @@ export class CustomerDisplayPosAdapter {
 
     dispatch(pos) {
         this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
+        if (!pos.isCustomerDisplayConnected()) {
+            return;
+        }
         pos.data
             .call("pos.config", "update_customer_display", [
                 [pos.config.id],

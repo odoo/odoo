@@ -22,3 +22,17 @@ class PosCustomerDisplay(http.Controller):
                 },
             },
         )
+
+    @http.route("/pos_customer_display/<int:id_>/<device_uuid>/alive", auth="public", type="jsonrpc")
+    def pos_customer_display_alive(self, id_, device_uuid, access_token='', needs_data=False):
+        """ Let the PoS know a customer display is listening, so that it only
+        pushes updates to the bus while one is actually open. ``needs_data``
+        tells it the display has nothing to show yet and must be given the
+        current order right away. """
+        pos_config_sudo = request.env["pos.config"].sudo().browse(id_)
+        if not access_token or not consteq(access_token, pos_config_sudo.access_token or ''):
+            raise request.not_found()
+        pos_config_sudo._notify("CUSTOMER_DISPLAY_ALIVE", {
+            "device_uuid": device_uuid,
+            "needs_data": bool(needs_data),
+        })

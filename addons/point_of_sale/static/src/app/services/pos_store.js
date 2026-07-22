@@ -10,8 +10,10 @@ import {
     random5Chars,
     uuidv4,
     Counter,
+    getDeviceUuid,
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
+import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -54,6 +56,11 @@ import { SIZES } from "@web/core/ui/ui_service";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
+
+// A customer display running on another device announces itself periodically.
+// Past this delay without any sign of life we consider it gone and stop pushing
+// updates to it. Must be larger than the display's ping interval.
+const CUSTOMER_DISPLAY_ALIVE_TIMEOUT = 45000;
 
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
@@ -128,6 +135,9 @@ export class PosStore extends WithLazyGetterTrap {
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
         this.unwatched = markRaw({});
+        // Kept out of the reactivity: a ping must not by itself retrigger the
+        // effect pushing the order to the customer display.
+        this.customerDisplayPresence = markRaw({ lastPing: 0 });
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
 
@@ -340,6 +350,10 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processServerData();
         await this.handleUrlParams();
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket(
+            "CUSTOMER_DISPLAY_ALIVE",
+            this.customerDisplayAliveNotification.bind(this)
+        );
         const process = await this.afterProcessServerData();
 
         if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
@@ -355,6 +369,53 @@ export class PosStore extends WithLazyGetterTrap {
                   };
         this.navigate(page.page, page.params);
         return process;
+    }
+
+    /**
+     * A customer display is considered connected as long as it recently pinged
+     * us. Only then is it worth pushing the order to the server.
+     */
+    isCustomerDisplayConnected() {
+        return Date.now() - this.customerDisplayPresence.lastPing < CUSTOMER_DISPLAY_ALIVE_TIMEOUT;
+    }
+
+    customerDisplayAliveNotification({ device_uuid, needs_data }) {
+        if (device_uuid !== getDeviceUuid()) {
+            // Another PoS of the same config is paired with that display.
+            return;
+        }
+        const wasConnected = this.isCustomerDisplayConnected();
+        this.customerDisplayPresence.lastPing = Date.now();
+        if (!wasConnected || needs_data) {
+            // The display has nothing to show, either because it just showed up
+            // or because it was reloaded. Give it the current order instead of
+            // waiting for the next change.
+            this.sendOrderToCustomerDisplay();
+        }
+    }
+
+    getCustomerDisplayScaleData() {
+        const scale = this.scale;
+        return scale.product
+            ? {
+                  product: { ...scale.product },
+                  unitPrice: scale.unitPriceString,
+                  totalPrice: scale.totalPriceString,
+                  netWeight: scale.netWeightString,
+                  grossWeight: scale.grossWeightString,
+                  tare: scale.tareWeightString,
+              }
+            : null;
+    }
+
+    sendOrderToCustomerDisplay(order = this.selectedOrder) {
+        if (!order) {
+            return;
+        }
+        const adapter = new CustomerDisplayPosAdapter();
+        adapter.formatOrderData(order);
+        adapter.data.scaleData = this.getCustomerDisplayScaleData();
+        adapter.dispatch(this);
     }
 
     async closingSessionNotification(data) {

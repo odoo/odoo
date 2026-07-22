@@ -17,7 +17,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
-import { isPrivateIp, uuidv4 } from "@point_of_sale/utils";
+import { isPrivateIp, getDeviceUuid } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -181,12 +181,6 @@ export class Navbar extends Component {
     }
 
     get customerDisplayURL() {
-        const getDeviceUuid = () => {
-            if (!localStorage.getItem("device_uuid")) {
-                localStorage.setItem("device_uuid", uuidv4());
-            }
-            return localStorage.getItem("device_uuid");
-        };
         return `${this.pos.config._base_url}/pos_customer_display/${
             this.pos.config.id
         }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
