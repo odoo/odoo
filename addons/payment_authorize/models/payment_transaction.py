@@ -106,7 +106,7 @@ class PaymentTransaction(models.Model):
                 # The payment has been settled on Authorize.net side. We can refund it.
                 rounded_amount = round(self.amount, self.currency_id.decimal_places)
                 res_content = authorize_api.refund(
-                    self.provider_reference, rounded_amount, tx_details
+                    self.source_transaction_id.provider_reference, rounded_amount, tx_details
                 )
             _logger.info(
                 "refund request response for transaction %s:\n%s",
