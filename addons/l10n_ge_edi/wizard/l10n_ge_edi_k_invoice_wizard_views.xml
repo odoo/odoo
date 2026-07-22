@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ge_edi_k_invoice_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_ge_edi.k_invoice.wizard.form</field>
+        <field name="model">l10n_ge_edi.k_invoice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Corrective Invoice">
+                <p class="text-muted">
+                    Any of the options below creates a new corrective invoice on RS.ge - the
+                    outcome is reflected back on this invoice once the correction is confirmed.
+                </p>
+                <dl class="row mb-0">
+                    <dt class="col-4">Cancel Transaction</dt>
+                    <dd class="col-8">The transaction never took place.</dd>
+                    <dt class="col-4">Modify Invoice</dt>
+                    <dd class="col-8">The transaction's type or price needs to be corrected.</dd>
+                    <dt class="col-4">Full/Partial Refund</dt>
+                    <dd class="col-8">Goods or services were returned, fully or partially.</dd>
+                </dl>
+                <footer>
+                    <button name="action_taxable_transaction_cancelled"
+                            string="Cancel Transaction"
+                            type="object" class="btn-primary"
+                            confirm="This permanently marks the original invoice as corrected on RS.ge and cannot be undone. The customer must accept the cancellation on RS.ge - if rejected, it can be resent, but a new correction cannot be created for this invoice."/>
+                    <button name="action_modify_invoice"
+                            string="Modify Invoice"
+                            type="object" class="btn-primary"/>
+                    <button name="action_full_partial_refund"
+                            string="Full/Partial Refund"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
