@@ -1167,15 +1167,20 @@ export class Rtc extends Record {
      * @param {Object} param0
      * @param {boolean} [param0.audio]
      * @param {boolean} [param0.video]
+     * @param {string} [param0.deviceId]
      * @param {ContextOptions} [options]
      * @returns {Promise<boolean>}
      */
-    async askForBrowserPermission({ audio, video }, options = {}) {
+    async askForBrowserPermission({ audio, video, deviceId }, options = {}) {
         try {
             const sourceWindow = options.rootRef?.()?.ownerDocument?.defaultView || browser;
             const stream = await sourceWindow.navigator.mediaDevices.getUserMedia({
-                audio: audio ? this.store.settings.audioConstraints : false,
-                video: video ? this.store.settings.cameraConstraints : false,
+                audio: audio
+                    ? { ...this.store.settings.audioConstraints, ...(deviceId && { deviceId }) }
+                    : false,
+                video: video
+                    ? { ...this.store.settings.cameraConstraints, ...(deviceId && { deviceId }) }
+                    : false,
             });
             if (isBrowserSafari() || isMobileOS()) {
                 if (audio) {
@@ -1188,6 +1193,7 @@ export class Rtc extends Record {
             closeStream(stream);
         } catch {
             this.showMediaUnavailableWarning({ microphone: audio, camera: video }, options);
+            return false;
         }
         if (audio && video) {
             return this.microphonePermission === "granted" && this.cameraPermission === "granted";
