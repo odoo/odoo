@@ -730,6 +730,67 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(self.env['account.chart.template'].ref('test_account_1'), account_to_unmerge)
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), new_account)
 
+    def test_set_code_after_merging_accounts_with_no_code(self):
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+
+        accounts = self.env['account.account']._load_records([
+            {
+                'xml_id': f'account.{company_1.id}_test_account_1',
+                'values': {
+                    'name': 'My First Account',
+                    'account_type': 'asset_receivable',
+                    'company_ids': [Command.link(company_1.id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_2.id}_test_account_2',
+                'values': {
+                    'name': 'My Second Account',
+                    'account_type': 'asset_receivable',
+                    'company_ids': [Command.link(company_2.id)],
+                },
+            },
+        ])
+        wizard = self._create_account_merge_wizard(accounts)
+        wizard.action_merge()
+
+        merged_account = accounts[0]
+        # should set the code with no errors
+        merged_account.code = '112233'
+
+    def test_unmerge_after_merging_accounts_with_no_code(self):
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+
+        accounts = self.env['account.account']._load_records([
+            {
+                'xml_id': f'account.{company_1.id}_test_account_1',
+                'values': {
+                    'name': 'My First Account',
+                    'account_type': 'asset_receivable',
+                    'company_ids': [Command.link(company_1.id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_2.id}_test_account_2',
+                'values': {
+                    'name': 'My Second Account',
+                    'account_type': 'asset_receivable',
+                    'company_ids': [Command.link(company_2.id)],
+                },
+            },
+        ])
+        wizard = self._create_account_merge_wizard(accounts)
+        wizard.action_merge()
+
+        merged_account = accounts[0]
+        # should unmerge with no errors
+        merged_account.with_context({
+            'account_unmerge_confirm': True,
+            'allowed_company_ids': [company_1.id, company_2.id],
+        })._action_unmerge()
+
     def test_account_code_mapping(self):
         company_3 = self.env['res.company'].create({'name': 'company_3'})
         account = self.env['account.account'].create({

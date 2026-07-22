@@ -212,7 +212,7 @@ class AccountMergeWizard(models.TransientModel):
                SET code_store = %(code_by_company_json)s
              WHERE id = %(account_to_merge_into_id)s
             """,
-            code_by_company_json=json.dumps(code_by_company),
+            code_by_company_json=code_by_company and json.dumps(code_by_company),
             account_to_merge_into_id=account_to_merge_into.id,
         ))
 
