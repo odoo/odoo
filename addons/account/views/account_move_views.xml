@@ -318,7 +318,6 @@
                     <field name="date"/>
                     <field name="date_maturity" string="Due Date"/>
                     <field name="discount_date" string="Discount Date"/>
-                    <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', raw_value), ('debit', '=', raw_value)]"/>
                     <field name="account_id" context="{'active_test': False}"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
@@ -533,7 +532,7 @@
                     <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date" decoration-warning="abnormal_date_warning"/>
                     <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'" string="Invoice Date" decoration-warning="abnormal_date_warning"/>
                     <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
+                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed')"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" column_invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"/>
                     <field name="ref" optional="hide"/>
@@ -1427,12 +1426,12 @@
                                                sum="Total Debit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
                                                readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
-                                               decoration-muted="debit == 0"/>
+                                        />
                                         <field name="credit"
                                                sum="Total Credit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
                                                readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
-                                               decoration-muted="credit == 0"/>
+                                        />
                                         <field name="balance" column_invisible="True"/>
                                         <field name="discount_date"
                                                string="Discount Date"
