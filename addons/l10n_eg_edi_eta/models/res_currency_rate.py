@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import models, api, _
+from odoo import models, api
 from odoo.tools import float_compare
 
 
@@ -18,8 +18,8 @@ class ResCurrencyRate(models.Model):
             ):
             return {
                 'warning': {
-                    'title': _("Warning for %s", self.currency_id.name),
-                    'message': _(
+                    'title': self.env._("Warning for %s", self.currency_id.name),
+                    'message': self.env._(
                         "Please make sure that the EGP per unit is within 5 decimal accuracy.\n"
                         "Higher decimal accuracy might lead to inconsistency with the ETA invoicing portal!"
                     )
