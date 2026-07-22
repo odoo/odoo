@@ -3,11 +3,11 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosPayment.prototype, {
     //@override
-    canBeAdjusted() {
+    async cancelPayment() {
         if (this.payment_method_id.is_online_payment) {
-            return false;
-        } else {
-            return super.canBeAdjusted();
+            this.setPaymentStatus("retry");
+            return true;
         }
+        return super.cancelPayment(...arguments);
     },
 });
