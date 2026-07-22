@@ -738,33 +738,33 @@
 
 <template id="job_filter_base">
     <div class="dropdown d-none d-lg-block">
-        <t t-if="jobs">
-            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
-                <t t-if="selected_filter" t-out="selected_filter.name"/>
-                <t t-elif="is_unset_selected">
-                    <t t-if="untype_label" t-out="untype_label"/>
-                    <t t-else="">Unspecified <t t-out="filter_label"/></t>
-                </t>
-                <t t-else="">All <t t-out="filter_label"/></t>
-            </button>
-            <div class="dropdown-menu w-100 w-md-auto" t-att-aria-labelledby="dropdown_id">
+        <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
+            <t t-if="selected_filter" t-out="selected_filter.name"/>
+            <t t-elif="is_unset_selected">
+                <t t-if="untype_label" t-out="untype_label"/>
+                <t t-else="">Unspecified <t t-out="filter_label"/></t>
+            </t>
+            <t t-else="">All <t t-out="filter_label"/></t>
+        </button>
+        <div class="dropdown-menu w-100 w-md-auto" t-att-aria-labelledby="dropdown_id">
+            <t t-if="count_per_filter">
                 <t t-foreach="count_per_filter.items()" t-as="filter_item">
                     <t t-set="selection" t-value="filter_item[0]"/>
                     <t t-set="count" t-value="filter_item[1]"/>
                     <t t-if="isinstance(selection, str) and selection == 'all'">
-                        <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}"
+                        <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}#{('&amp;search=' + search) if search else ''}"
                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between#{'' if selected_filter or is_unset_selected else ' active'}">
                             All <t t-out="filter_label"/><span t-attf-class="badge pagination text-bg-primary ms-2" t-out="count"/>
                         </a>
                     </t>
                     <t t-elif="selection">
-                        <a t-attf-href="/jobs?#{id_selected_arg}=#{selection.id}&amp;#{non_filter_params}"
+                        <a t-attf-href="/jobs?#{id_selected_arg}=#{selection.id}&amp;#{non_filter_params}#{('&amp;search=' + search) if search else ''}"
                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between#{' active' if selected_filter and selected_filter.id == selection.id else ''}">
                             <t t-out="selection.name"/><span t-attf-class="badge pagination text-bg-primary ms-2" t-out="count"/>
                         </a>
                     </t>
                     <t t-else="">
-                        <a t-attf-href="/jobs?#{unset_arg}&amp;#{non_filter_params}"
+                        <a t-attf-href="/jobs?#{unset_arg}&amp;#{non_filter_params}#{('&amp;search=' + search) if search else ''}"
                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between#{' active' if is_unset_selected else ''}">
                             <t t-if="untype_label" t-out="untype_label"/>
                             <t t-else="">Unspecified <t t-out="filter_label"/></t>
@@ -772,18 +772,14 @@
                         </a>
                     </t>
                 </t>
-            </div>
-        </t>
-        <t t-else="">
-            <button class="btn btn-light w-100">
-                <t t-if="selected_filter" t-out="selected_filter.name"/>
-                <t t-elif="is_untyped">
-                    <t t-if="untype_label" t-out="untype_label"/>
-                    <t t-else="">Unspecified <t t-out="filter_label"/></t>
-                </t>
-                <t t-else="">All <t t-out="filter_label"/></t>
-            </button>
-        </t>
+            </t>
+            <t t-else="">
+                <a t-attf-href="/jobs?#{all_arg}&amp;#{non_filter_params}#{('&amp;search=' + search) if search else ''}"
+                   class="dropdown-item">
+                    All <t t-out="filter_label"/>
+                </a>
+            </t>
+        </div>
     </div>
 </template>
 
