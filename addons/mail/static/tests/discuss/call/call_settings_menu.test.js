@@ -211,3 +211,45 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
     await click(".o-discuss-ChangeLayoutDialog-option:contains('Discuss')");
     await contains(".o-mail-Meeting", { count: 0 });
 });
+
+test("Changing inputs in Call Settings should pre-ask for browser permission", async () => {
+    patchWithCleanup(browser.navigator.mediaDevices, {
+        enumerateDevices: () =>
+            Promise.resolve([
+                {
+                    deviceId: "mockAudioDeviceId1",
+                    kind: "audioinput",
+                    label: "mockAudioDeviceLabel1",
+                },
+                {
+                    deviceId: "mockAudioDeviceId2",
+                    kind: "audioinput",
+                    label: "mockAudioDeviceLabel2",
+                },
+            ]),
+        getUserMedia: async (...args) => {
+            expect.step("getUserMedia:permission-asked");
+            expect.step(JSON.stringify(args));
+            return { getTracks: () => [] };
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    getService("discuss.rtc").microphonePermission = "granted";
+    await openDiscuss(channelId);
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains(".o-discuss-CallSettings");
+    await click(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    await click(".o-dropdown-item:text('mockAudioDeviceLabel2')");
+    await contains(
+        ".o-mail-DeviceSelect-button[data-kind='audioinput']:text('mockAudioDeviceLabel2')"
+    );
+    await expect.waitForSteps([
+        "getUserMedia:permission-asked",
+        '[{"audio":{"echoCancellation":true,"noiseSuppression":true,"deviceId":"mockAudioDeviceId2"},"video":false}]',
+    ]);
+});
