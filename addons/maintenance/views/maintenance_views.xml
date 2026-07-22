@@ -473,6 +473,7 @@
                             <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
                         </div>
                         <field t-if="record.serial_no.raw_value" name="serial_no"/>
+                        <field name="equipment_properties" widget="properties"/>
                         <footer>
                             <div class="badge text-bg-danger" t-if="record.maintenance_open_count.raw_value">
                                 <field name="maintenance_open_count" /> Request
