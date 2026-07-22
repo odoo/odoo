@@ -20,6 +20,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.sitemap import registry as sitemap_registry
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
@@ -1628,7 +1629,8 @@ class Website(models.CachedModel):
         return all(p.name in rule._converters for p in params
                    if p.kind in supported_kinds and p.default is inspect.Parameter.empty)
 
-    def _enumerate_pages(self, query_string=None, force=False, ignore_custom_homepage=False):
+    def _enumerate_pages(self, query_string=None, force=False, ignore_custom_homepage=False,
+                         exclude_registry_groups=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
             controllers for dynamic pages (e.g. blog).
@@ -1639,6 +1641,11 @@ class Website(models.CachedModel):
 
             :param boolean ignore_custom_homepage: used to exclude the hompage url
                 from the page list if the homepage is not ``/``
+
+            :param boolean exclude_registry_groups: do not yield the URLs of
+                registered sitemap groups (see :mod:`odoo.addons.website.sitemap`);
+                used by the sitemap controller which renders those groups as
+                their own sub-sitemap files
             :returns: a list of mappings with two keys: ``name`` is the displayable
                       name of the resource (page), ``url`` is the absolute URL
                       of the same.
@@ -1696,7 +1703,18 @@ class Website(models.CachedModel):
                 return f.__func__
             return f
 
+        registered_prefixes = sitemap_registry.get_route_prefixes(self.env.registry._init_modules)
+
         for rule in router.iter_rules():
+            # Routes without an explicit `sitemap` kwarg whose URLs are
+            # covered by a registered sitemap group must not be
+            # auto-enumerated: the group generators own those URLs.
+            if 'sitemap' not in rule.endpoint.routing and any(
+                rule.rule == prefix or rule.rule.startswith(prefix + '/')
+                for prefix in registered_prefixes
+            ):
+                continue
+
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
@@ -1774,6 +1792,33 @@ class Website(models.CachedModel):
                     url_set.add(url)
 
                     yield page
+
+        # ==== SITEMAP REGISTRY GROUPS ====
+        # Keep group URLs available to generic consumers (e.g. link
+        # suggestions through `search_pages()`); the sitemap controller
+        # excludes them here and renders each group as its own file.
+        if not exclude_registry_groups:
+            groups = sitemap_registry.get_groups(self.env.registry._init_modules)
+            for group in sorted(groups):
+                for loc in self._enumerate_group_pages(group, query_string):
+                    if loc['loc'] not in url_set:
+                        url_set.add(loc['loc'])
+                        yield loc
+
+    def _enumerate_group_pages(self, group, query_string=None):
+        """ Yield the sitemap locs produced by the generators registered
+            under ``group``, normalized and deduplicated within the group.
+        """
+        self = self.with_context(website_id=self.id)  # noqa: PLW0642
+        env = self.with_context(lang=self.default_lang_id.code).env
+        groups = sitemap_registry.get_groups(self.env.registry._init_modules)
+        url_set = set()
+        for entry in groups.get(group, ()):
+            for loc in entry['func'](env, query_string):
+                url = '/' if loc['loc'] == '/' else loc['loc'].rstrip('/')
+                if url not in url_set:
+                    url_set.add(url)
+                    yield {**loc, 'loc': url}
 
     def get_website_page_ids(self):
         """

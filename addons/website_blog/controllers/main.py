@@ -168,24 +168,6 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
-    def sitemap_blog(env, rule, qs):
-        Blog = env['blog.blog']
-        domain = env.website.website_domain()
-        blogs = tools.lazy(lambda: Blog.search(domain, order="sequence"))
-        slug = env['ir.http']._slug
-
-        def match(loc):
-            return not qs or qs.lower() in loc.lower()
-
-        if len(blogs) > 1:
-            if match('/blog'):
-                yield {'loc': '/blog'}
-
-        for blog in blogs:
-            loc = f'/blog/{slug(blog)}'
-            if match(loc):
-                yield {'loc': loc}
-
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
@@ -195,7 +177,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
-    ], type='http', auth="public", website=True, sitemap=sitemap_blog, list_as_website_content=_lt("Blogs"))
+    ], type='http', auth="public", website=True, list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         blogs = tools.lazy(lambda: Blog.search(self.env.website.website_domain(), order="sequence"))
@@ -252,26 +234,9 @@ class WebsiteBlog(http.Controller):
         # Compatibility pre-v14
         return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog), request.env['ir.http']._slug(blog_post)), code=301)
 
-    def sitemap_blog_post(env, rule, qs):
-        BlogPost = env['blog.post']
-        IrHttp = env['ir.http']
-        posts = BlogPost.search([('website_published', '=', True)])
-
-        for post in posts:
-            # Canonical path: /blog/<blog>/<post>
-            blog = post.blog_id
-            canonical_url = f"/blog/{IrHttp._slug(blog)}/{IrHttp._slug(post)}"
-
-            if not qs or qs.lower() in canonical_url.lower():
-                # blog posts should also have lastmod for seo purposes.
-                yield {
-                    "loc": canonical_url,
-                    "lastmod": (post.write_date or post.create_date).date(),
-                }
-
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
-    ], type='http', auth="public", website=True, sitemap=sitemap_blog_post)
+    ], type='http', auth="public", website=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
