@@ -34,6 +34,7 @@ import odoo
 from odoo.exceptions import UserError
 from . import config, pycompat
 from .misc import file_open, file_path, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from .sql import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -1547,26 +1548,67 @@ class TranslationImporter:
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
                 for sub_field_dictionary in cr.split_for_in_conditions(field_dictionary.items()):
-                    # [xmlid, translations, xmlid, translations, ...]
-                    params = []
+                    # Parallel arrays + ORDINALITY preserve sub_field_dictionary order
+                    # so colliding xmlids merge deterministically in SQL.
+                    imd_modules, imd_names, values = [], [], []
                     for xmlid, translations in sub_field_dictionary:
-                        params.extend([*xmlid.split('.', maxsplit=1), Json(translations)])
-                    if not force_overwrite:
-                        value_query = f"""CASE WHEN {overwrite} IS TRUE AND imd.noupdate IS NOT TRUE
-                        THEN m."{field_name}" || t.value
-                        ELSE t.value || m."{field_name}"END"""
+                        module, name = xmlid.split('.', maxsplit=1)
+                        imd_modules.append(module)
+                        imd_names.append(name)
+                        values.append(Json(translations))
+
+                    field = SQL.identifier(field_name)
+                    if force_overwrite:
+                        value_query = SQL("m.%(field)s || merged.noupdate_value || merged.update_value", field=field)
+                    elif overwrite:
+                        value_query = SQL("merged.noupdate_value || m.%(field)s || merged.update_value", field=field)
                     else:
-                        value_query = f'm."{field_name}" || t.value'
-                    env.cr.execute(f"""
-                        UPDATE "{model_table}" AS m
-                        SET "{field_name}" = {value_query}
-                        FROM (
-                            VALUES {', '.join(['(%s, %s, %s::jsonb)'] * (len(params) // 3))}
-                        ) AS t(imd_module, imd_name, value)
-                        JOIN "ir_model_data" AS imd
-                        ON imd."model" = '{model_name}' AND imd.name = t.imd_name AND imd.module = t.imd_module
-                        WHERE imd."res_id" = m."id"
-                    """, params)
+                        value_query = SQL("merged.noupdate_value || merged.update_value || m.%(field)s", field=field)
+
+                    # Single UPDATE via CTEs:
+                    # 1. input: unnest imported (module, name, translations) with ordinality
+                    # 2. entries: resolve xmlid → res_id and expand jsonb keys
+                    # 3. merged: aggregate per res_id
+                    env.cr.execute(SQL("""
+                        WITH input(imd_module, imd_name, value, id) AS (
+                            SELECT * FROM unnest(%(imd_modules)s::text[], %(imd_names)s::text[], %(values)s::jsonb[]) WITH ORDINALITY
+                        ),
+                        entries AS (
+                            SELECT imd.res_id, imd.noupdate, input.id, translation.key, translation.value
+                            FROM input
+                            JOIN "ir_model_data" AS imd
+                            ON imd.model = %(model_name)s
+                            AND imd.module = input.imd_module
+                            AND imd.name = input.imd_name
+                            CROSS JOIN LATERAL jsonb_each(input.value) AS translation(key, value)
+                        ),
+                        merged AS (
+                            SELECT
+                                res_id,
+                                COALESCE(
+                                    jsonb_object_agg(key, value ORDER BY id ASC) FILTER (WHERE noupdate),
+                                    '{}'::jsonb
+                                ) AS noupdate_value,
+                                COALESCE(
+                                    jsonb_object_agg(key, value ORDER BY id ASC) FILTER (WHERE NOT noupdate),
+                                    '{}'::jsonb
+                                ) AS update_value
+                            FROM entries
+                            GROUP BY res_id
+                        )
+                        UPDATE %(table)s AS m
+                        SET %(field)s = %(value_query)s
+                        FROM merged
+                        WHERE m.id = merged.res_id
+                    """,
+                        imd_modules=imd_modules,
+                        imd_names=imd_names,
+                        values=values,
+                        model_name=model_name,
+                        table=SQL.identifier(model_table),
+                        field=field,
+                        value_query=value_query,
+                    ))
 
         self.model_translations.clear()
 
