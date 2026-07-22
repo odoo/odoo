@@ -113,6 +113,7 @@ describe("AccountFileUploader", () => {
             type: "form",
             resModel: "partner",
             resId: 7,
+            noMainContainer: true,
         });
 
         expect(".o_widget_account_file_uploader").toHaveCount(1);
@@ -143,6 +144,7 @@ describe("AccountMoveUploadKanbanView", () => {
         await mountView({
             type: "kanban",
             resModel: "partner",
+            noMainContainer: true,
         });
 
         expect(".o_control_panel .o_button_upload_bill:visible").toHaveCount(1);
@@ -156,6 +158,7 @@ describe("PaymentTermsLineWidget", () => {
             type: "form",
             resModel: "account_payment_term",
             resId: 1,
+            noMainContainer: true,
             arch: `
             <form>
                 <field name="line_ids" widget="payment_term_line_ids">
