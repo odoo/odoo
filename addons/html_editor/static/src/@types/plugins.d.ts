@@ -49,7 +49,7 @@ declare module "plugins" {
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
-    import { toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
+    import { expandable_toolbar_namespaces_providers, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
     import { CollaborationShared, on_remote_history_commits_applied_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
@@ -273,6 +273,7 @@ declare module "plugins" {
         // Data
         advanced_popover_options: advanced_popover_options;
         contenteditable_to_remove_selector: contenteditable_to_remove_selector;
+        expandable_toolbar_namespaces_providers: expandable_toolbar_namespaces_providers;
         font_type_items: font_type_items,
         format_specs: format_specs;
         hints: hints;

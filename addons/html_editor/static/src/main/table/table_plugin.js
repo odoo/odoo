@@ -105,6 +105,7 @@ export class TablePlugin extends Plugin {
         "unmergeSelectedCell",
         "buildTableGrid",
     ];
+    toolbarNamespace = "table";
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -119,17 +120,9 @@ export class TablePlugin extends Plugin {
                 id: "mergeTableCells",
                 title: _t("Merge Cells"),
                 description: _t("Merge selected table cells"),
-                icon: "fa-compress",
-                run: this.mergeCellsCommand.bind(this),
-                isAvailable: this.isMergeCellsAvailable.bind(this),
-            },
-            {
-                id: "unmergeTableCells",
-                title: _t("Unmerge Cells"),
-                description: _t("Unmerge selected table cells"),
-                icon: "fa-expand",
-                run: this.unmergeCellsCommand.bind(this),
-                isAvailable: this.isUnmergeCellsAvailable.bind(this),
+                icon: "cell_merge",
+                run: this.toggleMergeCellCommand.bind(this),
+                isAvailable: () => this.isMergeCellsAvailable() || this.isUnmergeCellsAvailable(),
             },
         ],
         toolbar_items: [
@@ -137,11 +130,7 @@ export class TablePlugin extends Plugin {
                 id: "mergeCells",
                 groupId: "table_cell_merge",
                 commandId: "mergeTableCells",
-            },
-            {
-                id: "unmergeCells",
-                groupId: "table_cell_merge",
-                commandId: "unmergeTableCells",
+                isActive: () => this.isUnmergeCellsAvailable(),
             },
         ],
         table_menu_commands: [
@@ -161,8 +150,7 @@ export class TablePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(25, { id: "table" }),
-            withSequence(35, { id: "table_cell_merge", namespaces: ["expanded"] }),
+            withSequence(35, { id: "table_cell_merge", namespaces: ["expanded", "table"] }),
         ],
 
         /** Providers */
@@ -170,9 +158,11 @@ export class TablePlugin extends Plugin {
             withSequence(
                 90,
                 (targetedNodes, editableSelection) =>
-                    closestElement(editableSelection.anchorNode, ".o_selected_td") && "compact"
+                    closestElement(editableSelection.anchorNode, ".o_selected_td") &&
+                    this.toolbarNamespace
             ),
         ],
+        expandable_toolbar_namespaces_providers: "table",
         color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
         selected_background_color_providers: withSequence(
@@ -931,7 +921,9 @@ export class TablePlugin extends Plugin {
      */
     isUnmergeCellsAvailable() {
         const selectedTds = this.document.querySelectorAll(".o_selected_td");
-        if (selectedTds.length === 0) {
+        // We only show the unmerge option, e.g. activated merge button, when
+        // only the merged cell is selected.
+        if (selectedTds.length !== 1) {
             return false;
         }
         const firstTd = selectedTds[0];
@@ -942,6 +934,14 @@ export class TablePlugin extends Plugin {
         const grid = this.buildTableGrid(table);
         const { canUnmerge } = getSelectedCellsMergeInfo(this.document, grid, firstTd);
         return canUnmerge;
+    }
+
+    toggleMergeCellCommand() {
+        if (this.isUnmergeCellsAvailable()) {
+            this.unmergeCellsCommand();
+        } else {
+            this.mergeCellsCommand();
+        }
     }
 
     /**

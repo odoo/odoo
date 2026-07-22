@@ -40,10 +40,14 @@ export class TableAlignPlugin extends Plugin {
                 run: () => this.setVerticalAlignment("bottom"),
             },
         ],
+        toolbar_groups: withSequence(30, {
+            id: "table_alignment",
+            namespaces: ["expanded", "table"],
+        }),
         toolbar_items: [
             withSequence(20, {
                 id: "table_alignment",
-                groupId: "table",
+                groupId: "table_alignment",
                 description: _t("Vertical align table cells content"),
                 isAvailable: () =>
                     this.dependencies.selection
