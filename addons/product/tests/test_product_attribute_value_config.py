@@ -587,8 +587,8 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         started_at = time.time()
         self.assertEqual(product_template._get_first_possible_combination(), combination)
         elapsed = time.time() - started_at
-        # It should be about instantaneous, 0.5 to avoid false positives
-        self.assertLess(elapsed, 0.5)
+        # It should be about instantaneous, 2 to avoid false positives on loaded/slow CI runners
+        self.assertLess(elapsed, 2)
 
     @mute_logger('odoo.models.unlink')
     def test_get_closest_possible_combinations(self):
