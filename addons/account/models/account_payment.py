@@ -805,9 +805,14 @@ class AccountPayment(models.Model):
             else:
                 pay.reconciled_invoices_type = 'invoice'
 
+    @api.depends('payment_type', 'partner_type')
     def _compute_payment_receipt_title(self):
-        """ To override in order to change the title displayed on the payment receipt report """
-        self.payment_receipt_title = _('Payment Receipt')
+        for pay in self:
+            pay.payment_receipt_title = self.env._("Payment Receipt")
+            if pay.payment_type == 'outbound' and pay.partner_type == 'supplier':
+                pay.payment_receipt_title = self.env._("Remittance Advice")
+            elif (pay.payment_type == 'outbound' and pay.partner_type == 'customer') or (pay.payment_type == 'inbound' and pay.partner_type == 'supplier'):
+                pay.payment_receipt_title = self.env._("Refund Confirmation")
 
     @api.depends('partner_id', 'amount', 'date', 'payment_type')
     def _compute_duplicate_payment_ids(self):
