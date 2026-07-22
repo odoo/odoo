@@ -18,6 +18,7 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         cls.company_data_2 = cls.setup_other_company()
         cls.other_currency = cls.setup_other_currency('EUR')
+        cls.company_3 = cls.env['res.company'].create({'name': 'company_3'})
 
     def test_shared_accounts(self):
         ''' Test that creating an account with a given company in company_ids sets the code for that company.
@@ -734,7 +735,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), new_account)
 
     def test_account_code_mapping(self):
-        company_3 = self.env['res.company'].create({'name': 'company_3'})
         account = self.env['account.account'].create({
             'code': 'test1',
             'name': 'Test Account',
@@ -744,14 +744,14 @@ class TestAccountAccount(TestAccountMergeCommon):
         # Write to DB so that the account gets an ID, and invalidate cache for code_mapping_ids so that they will be looked up
         account.invalidate_recordset(['code_mapping_ids'])
 
-        account = account.with_context({'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id]})
+        account = account.with_context({'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, self.company_3.id]})
 
         with Form(account) as account_form:
             # Test that the code mapping gives correct values once the form has been opened (which should call search)
             self.assertRecordValues(account.code_mapping_ids, [
                 {'company_id': self.company_data['company'].id, 'code': 'test1'},
                 {'company_id': self.company_data_2['company'].id, 'code': False},
-                {'company_id': company_3.id, 'code': False},
+                {'company_id': self.company_3.id, 'code': False},
             ])
 
             # Test that we are able to set a new code for companies 2 and 3 via the company mapping
@@ -763,25 +763,23 @@ class TestAccountAccount(TestAccountMergeCommon):
             # Test that writing codes and companies at the same time doesn't trigger the constraint
             # that the code must be set for each company in company_ids
             account_form.company_ids.add(self.company_data_2['company'])
-            account_form.company_ids.add(company_3)
+            account_form.company_ids.add(self.company_3)
 
         self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
-        self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
+        self.assertRecordValues(account.with_company(self.company_3.id), [{'code': 'test3'}])
 
     def test_account_code_mapping_create(self):
         """ Similar as above, except test that you can create an account while specifying multiple codes in the code mapping tab. """
 
-        company_3 = self.env['res.company'].create({'name': 'company_3'})
-
         AccountAccount = self.env['account.account'].with_context(
-            {'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id]}
+            {'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, self.company_3.id]}
         )
 
         with Form(AccountAccount) as account_form:
             expected_code_mapping_vals_list = [
                 {'company_id': self.company_data['company'].id, 'code': False},
                 {'company_id': self.company_data_2['company'].id, 'code': False},
-                {'company_id': company_3.id, 'code': False},
+                {'company_id': self.company_3.id, 'code': False},
             ]
             actual_code_mapping_vals_list = account_form.code_mapping_ids._records
 
@@ -800,16 +798,16 @@ class TestAccountAccount(TestAccountMergeCommon):
             # Test that writing codes and companies at the same time doesn't trigger the constraint
             # that the code must be set for each company in company_ids
             account_form.company_ids.add(self.company_data_2['company'])
-            account_form.company_ids.add(company_3)
+            account_form.company_ids.add(self.company_3)
 
         account = account_form.record
 
         self.assertRecordValues(account, [{
-            'company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id],
+            'company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, self.company_3.id],
             'code': 'test1'
         }])
         self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
-        self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
+        self.assertRecordValues(account.with_company(self.company_3.id), [{'code': 'test3'}])
 
     def test_compute_account(self):
         account_sale = self.company_data['default_account_revenue'].copy()

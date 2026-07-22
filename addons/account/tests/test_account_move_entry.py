@@ -69,6 +69,21 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 500.0,
         }
+        cls.awesome_journal = cls.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        cls.entry_move = cls.env['account.move'].create({
+            'move_type': 'entry',
+            'partner_id': cls.partner_a.id,
+            'date': fields.Date.from_string('2019-01-01'),
+            'currency_id': cls.other_currency.id,
+            'line_ids': [
+                Command.create(cls.entry_line_vals_1),
+                Command.create(cls.entry_line_vals_2),
+            ],
+        })
 
     @classmethod
     def default_env_context(cls):
@@ -1038,11 +1053,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     @freeze_time('2021-10-01 00:00:00')
     def test_change_journal_account_move(self):
         """Changing the journal should change the name of the move"""
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         move = self.env['account.move'].with_context(default_move_type='entry')
         with Form(move) as move_form:
             self.assertEqual(move_form.name_placeholder, 'MISC/2021/10/0001')
@@ -1056,11 +1067,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
     def test_change_journal_posted_before(self):
         """ Changes to a move posted before can only de done if move name is '/' or empty (False) """
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         self.test_move.action_post()
         self.test_move.button_draft()  # move has posted_before == True
         self.assertEqual(self.test_move.journal_id, self.company_data['default_journal_misc'])
@@ -1078,11 +1085,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         """ Changes to an account move with a sequence number assigned can only de done
         if the move name is '/' or empty (False)
         """
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         # Post move with sequence number 1 and create new move with sequence number 2
         self.test_move.action_post()
         test_move_2 = self.test_move.copy({'name': 'TEST/2016/01/0002', 'date': '2016-01-01'})
@@ -1348,16 +1351,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
     def test_no_partner_id_on_duplication(self):
         """ Test that when a account_move is duplicated the partner_id is not included in the duplicated_move """
-        move = self.env['account.move'].create({
-            'move_type': 'entry',
-            'partner_id': self.partner_a.id,
-            'date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'line_ids': [
-                Command.create(self.entry_line_vals_1),
-                Command.create(self.entry_line_vals_2),
-            ],
-        })
+        move = self.entry_move
         move_duplicate = move.copy()
         self.assertTrue(move_duplicate)
         self.assertFalse(move_duplicate.partner_id)
@@ -1383,16 +1377,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             original_recompute[self._name](field, ids)
 
         # Setup data
-        invoice = self.env['account.move'].create({
-            'move_type': 'entry',
-            'partner_id': self.partner_a.id,
-            'date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'line_ids': [
-                Command.create(self.entry_line_vals_1),
-                Command.create(self.entry_line_vals_2),
-            ],
-        })
+        invoice = self.entry_move
         self.env.flush_all()
 
         # Check

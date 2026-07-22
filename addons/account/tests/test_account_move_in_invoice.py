@@ -132,6 +132,48 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1128.0,
         }
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.fiscal_pos_mapping = cls.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_mapping',
+        })
+        cls.tax_10_incl = cls.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+        })
+        cls.in_invoice_move = cls.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': cls.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': cls.other_currency.id,
+            'invoice_payment_term_id': cls.pay_terms_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': cls.product_line_vals_1['product_id'],
+                    'product_uom_id': cls.product_line_vals_1['product_uom_id'],
+                    'price_unit': cls.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(cls.product_line_vals_1['tax_ids'])],
+                }),
+                Command.create({
+                    'product_id': cls.product_line_vals_2['product_id'],
+                    'product_uom_id': cls.product_line_vals_2['product_uom_id'],
+                    'price_unit': cls.product_line_vals_2['price_unit'],
+                    'tax_ids': [Command.set(cls.product_line_vals_2['tax_ids'])],
+                }),
+            ],
+        })
+        cls.caba_tax_waiting_account = cls.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        cls.caba_tax_final_account = cls.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+        })
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
@@ -221,18 +263,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
         The price_unit should be 100.0 after applying the fiscal position.
         '''
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-        })
-
-        tax_price_include = self.env['account.tax'].create({
-            'name': '10% incl',
-            'type_tax_use': 'purchase',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fiscal_position = self.fiscal_pos_mapping
+        tax_price_include = self.tax_10_incl
         tax_price_exclude = self.env['account.tax'].create({
             'name': '15% excl',
             'type_tax_use': 'purchase',
@@ -360,17 +392,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
         '''
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-        })
-        tax_price_include_1 = self.env['account.tax'].create({
-            'name': '10% incl',
-            'type_tax_use': 'purchase',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fiscal_position = self.fiscal_pos_mapping
+        tax_price_include_1 = self.tax_10_incl
         tax_price_include_2 = self.env['account.tax'].create({
             'name': '20% incl',
             'type_tax_use': 'purchase',
@@ -1428,27 +1451,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_create_1(self):
         # Test creating an account_move with the least information.
-        move = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
-                    'price_unit': self.product_line_vals_1['price_unit'],
-                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
-                }),
-                Command.create({
-                    'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
-                    'price_unit': self.product_line_vals_2['price_unit'],
-                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
-                }),
-            ],
-        })
+        move = self.in_invoice_move
 
         self.assertInvoiceValues(move, [
             {
@@ -1608,27 +1611,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_in_invoice_switch_type_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund,
         # then switching it back to an in_invoice.
-        move = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
-                    'price_unit': self.product_line_vals_1['price_unit'],
-                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
-                }),
-                Command.create({
-                    'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
-                    'price_unit': self.product_line_vals_2['price_unit'],
-                    'tax_ids': [Command.set(self.product_line_vals_2['tax_ids'])],
-                }),
-            ],
-        })
+        move = self.in_invoice_move
         move.action_switch_move_type()  # Switch to refund.
 
         self.assertRecordValues(move, [{'move_type': 'in_refund'}])
@@ -2071,16 +2054,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
     def test_in_invoice_reverse_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
@@ -2195,16 +2170,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
 
     def test_in_invoice_with_down_payment_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         default_expense_account = self.company_data['default_account_expense']
         not_default_expense_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_EXPENSE',

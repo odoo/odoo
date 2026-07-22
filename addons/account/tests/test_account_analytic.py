@@ -24,6 +24,22 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'plan_id': cls.cross_plan.id,
             'company_id': False,
         })
+        cls.move_for_analytic = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': cls.partner_a.id,
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': cls.product_a.id,
+                    'price_unit': 100.0,
+                    'analytic_distribution': {
+                        cls.analytic_account_1.id: 40,
+                        cls.analytic_account_2.id: 60,
+                    },
+                }),
+            ],
+        })
 
     def get_analytic_lines(self, invoice):
         return self.env['account.analytic.line'].search([
@@ -708,23 +724,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
 
     def test_synchronization_between_analytic_distribution_and_analytic_lines(self):
         """ Test creating, updating, and deleting analytic lines and ensure the changes are reflected in move_line's analytic_distribution. """
-        # Create an invoice with analytic distribution
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2023-01-01',
-            'invoice_date': '2023-01-01',
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'price_unit': 100.0,
-                    'analytic_distribution': {
-                        self.analytic_account_1.id: 40,
-                        self.analytic_account_2.id: 60,
-                    },
-                }),
-            ],
-        })
+        invoice = self.move_for_analytic
 
         # Post the invoice
         invoice.action_post()
@@ -790,22 +790,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         plan1 = self.analytic_account_1.plan_id._column_name()
         plan2 = self.analytic_account_3.plan_id._column_name()
 
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'date': '2023-01-01',
-            'invoice_date': '2023-01-01',
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'price_unit': 100.0,
-                    'analytic_distribution': {
-                        self.analytic_account_1.id: 40,
-                        self.analytic_account_2.id: 60,
-                    },
-                }),
-            ],
-        })
+        invoice = self.move_for_analytic
         invoice_line = invoice.invoice_line_ids
 
         for comment, init, update, expect in [(
