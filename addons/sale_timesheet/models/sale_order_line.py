@@ -162,7 +162,12 @@ class SaleOrderLine(models.Model):
             and sol.product_id._is_delivered_timesheet()
             and sol.invoice_status == 'to invoice')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
+        refund_domain = [('state', '=', 'posted'), ('move_type', '=', 'out_refund')]
+        if start_date:
+            refund_domain.append(('invoice_date', '>=', start_date))
+        if end_date:
+            refund_domain.append(('invoice_date', '<=', end_date))
+        refund_account_moves = self.order_id.invoice_ids.filtered_domain(refund_domain).reversed_entry_id
         timesheet_domain = [
             '|',
                 ('timesheet_invoice_id', '=', False),
