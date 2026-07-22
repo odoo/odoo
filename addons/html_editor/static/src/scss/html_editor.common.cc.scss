@@ -352,6 +352,43 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
 // =============================================================================
+// COMPONENT SCOPE HELPER
+// =============================================================================
+
+///
+/// Generates the full selector list for a single Bootstrap component class,
+/// covering every color-combination nesting scenario so that the "closest
+/// o_cc{N} wins" rule is enforced by CSS specificity alone.
+///
+///   Scenario                               Selector                       Spec
+///   ──────────────────────────────────── ─────────────────────────────── ──────
+///   Global / :root default               .{component}                   (0,1,0)
+///   cc parent → component (inherited)    (via CSS custom-property inh.)  —
+///   cc class ON the component            #{$scope}.{component}          (0,2,0)
+///   component inside a nested cc         #{$nested-scope} .{component}  (0,3,0)
+///   cc ON component, inside parent cc    #{$nested-scope}.{component}   (0,3,0)
+///
+/// @param $component    Selector string for the component, e.g. '.card'
+/// @param $scope        Current cc selector — default '&' (= .o_cc{N})
+/// @param $nested-scope High-specificity nested selector — e.g. '.o_cc &'
+///                      (= .o_cc .o_cc{N}). Pass null to emit only .{component}.
+@mixin o-cc-component($component, $scope: '&', $nested-scope: null) {
+    @if $nested-scope {
+        #{$component},
+        #{$scope}#{$component},
+        #{$nested-scope} #{$component},
+        #{$nested-scope}#{$component} {
+            @content;
+        }
+    } @else {
+        #{$component} {
+            @content;
+        }
+    }
+}
+
+
+// =============================================================================
 // MAIN COLOR COMBINATION MIXIN
 // =============================================================================
 
@@ -481,7 +518,7 @@ $resolved-btn-secondary-outline-color: null !default;
     // ── Dropdowns ─────────────────────────────────────────────────────────────
     // Note: the existing .o_cc dropdown-item reset rules in html_editor.common
     // can be removed once components consistently reference these variables.
-    #{if($nested-scope, '.dropdown-menu, #{$nested-scope} .dropdown-menu', '.dropdown-menu')} {
+    @include o-cc-component('.dropdown-menu', $scope, $nested-scope) {
         --dropdown-color:                 #{$text-color};
         --dropdown-bg:                    #{$bg-color};
         --dropdown-border-color:          #{$-border-color};
@@ -497,14 +534,14 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── Nav links ────────────────────────────────────────────────────────
-    #{if($nested-scope, '.nav, #{$nested-scope} .nav', '.nav')} {
+    @include o-cc-component('.nav', $scope, $nested-scope) {
         --nav-link-color: #{$text-color};
         --nav-link-hover-color: #{$text-color};
         --nav-link-disabled-color: #{$-muted-text};
     }
 
     // ── Nav tabs ─────────────────────────────────────────────────────────
-    #{if($nested-scope, '.nav-tabs, #{$nested-scope} .nav-tabs', '.nav-tabs')} {
+    @include o-cc-component('.nav-tabs', $scope, $nested-scope) {
         --nav-tabs-border-color: #{$-border-color};
         --nav-tabs-link-hover-border-color: #{$-border-color};
         --nav-tabs-link-active-color: #{$text-color};
@@ -515,14 +552,14 @@ $resolved-btn-secondary-outline-color: null !default;
     }
 
     // ── Nav pills ────────────────────────────────────────────────────────
-    #{if($nested-scope, '.nav-pills, #{$nested-scope} .nav-pills', '.nav-pills')} {
+    @include o-cc-component('.nav-pills', $scope, $nested-scope) {
         --nav-pills-link-active-bg: #{$-active-bg};
         --nav-pills-link-active-color: #{color-contrast($-active-bg)};
     }
 
 
     // ── Navbar ───────────────────────────────────────────────────────────────
-    #{if($nested-scope, '.navbar, #{$nested-scope} .navbar, &.navbar', '.navbar')} {
+    @include o-cc-component('.navbar', $scope, $nested-scope) {
         // Mirrors the "light" navbar variable pattern: color at reduced opacity,
         // full opacity on active, slightly reduced for hover/brand.
         --navbar-color:               #{rgba($text-color, .55)};
@@ -539,7 +576,7 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── Cards ────────────────────────────────────────────────────────────────
-    #{$scope+'.card'}, #{if($nested-scope, '.card, #{$nested-scope}.card, #{$nested-scope} .card', '.card')} {
+    @include o-cc-component('.card', $scope, $nested-scope) {
         --card-color: #{$text-color};
         --card-bg: #{$bg-color};
         --card-border-color: #{$-border-color};
@@ -550,7 +587,7 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── List groups ──────────────────────────────────────────────────────────
-    #{if($nested-scope, '.list-group, #{$nested-scope} .list-group', '.list-group')} {
+    @include o-cc-component('.list-group', $scope, $nested-scope) {
         --list-group-color:               #{$text-color};
         --list-group-bg:                  #{$bg-color};
         --list-group-border-color:        #{$-border-color};
@@ -568,7 +605,7 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── Accordion ────────────────────────────────────────────────────────────
-    #{if($nested-scope, '.accordion, #{$nested-scope} .accordion', '.accordion')} {
+    @include o-cc-component('.accordion', $scope, $nested-scope) {
         --accordion-color: #{$text-color};
         --accordion-bg: #{$bg-color};
         --accordion-border-color: #{$-border-color};
