@@ -28,8 +28,6 @@
                 t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_contact_forms.svg"/>
             <t snippet-group="social" t-snippet="website.s_snippet_group" string="Social"
                 t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_social.svg"/>
-            <t t-if="debug" snippet-group="debug" t-snippet="website.s_snippet_group" string="Debug"
-                t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_debug.svg"/>
             <t snippet-group="ecommerce" t-snippet="website.s_snippet_group" string="eCommerce"
                 t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_catalog.svg"/>
             <t id="installed_snippets_hook"/>
@@ -37,6 +35,8 @@
                 t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_blogs.svg"/>
             <t snippet-group="events" string="Events" t-install="website_event"
                 t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_events.svg"/>
+            <t t-if="debug" snippet-group="debug" t-snippet="website.s_snippet_group" string="Debug"
+                t-thumbnail="/website/static/src/img/snippets_thumbs/thumb_snippets_debug.svg"/>
         </snippets>
 
         <snippets id="snippet_structure" string="Structure">
