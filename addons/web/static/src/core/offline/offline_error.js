@@ -7,6 +7,33 @@ import { OfflinePlugin } from "./offline_plugin";
 const errorHandlerRegistry = registry.category("error_handlers");
 
 // -----------------------------------------------------------------------------
+// Fail to fetch errors
+// -----------------------------------------------------------------------------
+
+const fetchErrorMessages = [
+    "Failed to fetch", // Chromium
+    "Load failed", // WebKit
+    "NetworkError when attempting to fetch resource.", // Firefox
+];
+
+/**
+ * @param {OdooEnv} env
+ * @param {UncaughError} error
+ * @param {Error} originalError
+ * @returns {boolean}
+ */
+export function offlineFailToFetchErrorHandler(env, error, originalError) {
+    if (originalError instanceof TypeError && fetchErrorMessages.includes(originalError.message)) {
+        const offlinePlugin = plugin(OfflinePlugin);
+        offlinePlugin.setOffline(true);
+        return true;
+    }
+}
+errorHandlerRegistry.add("offlineFailToFetchErrorHandler", offlineFailToFetchErrorHandler, {
+    sequence: 96,
+});
+
+// -----------------------------------------------------------------------------
 // Lost connection errors
 // -----------------------------------------------------------------------------
 
