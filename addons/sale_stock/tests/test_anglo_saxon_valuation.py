@@ -1788,7 +1788,10 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         """Create a SO with a product invoiced on ordered quantity.
         Do a partial down payment, invoice the rest.
         Create a credit note. The credit note should reverse the cogs"""
-        self.product.standard_price = 4
+        self.product.write({
+            'standard_price': 4,
+            'invoice_policy': 'order',
+        })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product.id,
             'inventory_quantity': 20,
