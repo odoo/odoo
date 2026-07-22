@@ -19,6 +19,7 @@ The module is designed to provide a standard accounting setup for companies oper
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/res_partner_demo.xml',
     ],
     'data': [
         'data/account_tax_report_data.xml',
