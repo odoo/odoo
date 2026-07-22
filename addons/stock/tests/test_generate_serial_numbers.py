@@ -3,14 +3,16 @@
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, TransactionCase, new_test_user
+from odoo.tests import TransactionCase, new_test_user
 
 
 class StockGenerateCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         Product = cls.env['product.product']
         cls.product_serial = Product.create({

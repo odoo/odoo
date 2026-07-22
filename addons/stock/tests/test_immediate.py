@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, Form
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -9,6 +10,7 @@ class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',

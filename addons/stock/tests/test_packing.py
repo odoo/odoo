@@ -243,10 +243,10 @@ class TestPacking(TestPackingCommon):
         }
         quant = self.env['stock.quant'].create({
             **location_dict,
-            **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
+            'product_id': self.productA.id, 'quantity': 355.4,  # important number
         })
         self.env['stock.package'].create({
-            **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
+            **location_dict, 'quant_ids': [(6, 0, [quant.id])],
         })
         location_dict.update({
             'state': 'draft',
@@ -254,17 +254,17 @@ class TestPacking(TestPackingCommon):
         })
         move = self.env['stock.move'].create({
             **location_dict,
-            **{
+
                 'product_id': self.productA.id,
                 'uom_id': self.productA.uom_id.id,
-                'product_uom_qty': 355.40000000000003,  # other number
-            }})
+                'product_uom_qty': 355.40000000000003  # other number
+            })
         picking = self.env['stock.picking'].create({
             **location_dict,
-            **{
+
                 'picking_type_id': self.picking_type_in.id,
-                    'move_ids': [(6, 0, [move.id])],
-        }})
+                    'move_ids': [(6, 0, [move.id])]
+        })
 
         picking.action_confirm()
         picking.action_assign()
@@ -1740,7 +1740,7 @@ class TestPacking(TestPackingCommon):
                 'quantity': 10.0,
                 'package_id': pack.id,
                 'result_package_id': pack.id,
-                'picked': True, # to simulate barcode flows
+                'picked': True,  # to simulate barcode flows
             })]
         pickings[1].button_validate()
         self.assertEqual(pickings[1].state, 'done')

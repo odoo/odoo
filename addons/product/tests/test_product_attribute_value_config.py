@@ -173,7 +173,6 @@ class TestProductAttributeValueCommon(BaseCommon):
             'value_ids': [Command.set([cls.size_m.id, cls.size_l.id, cls.size_xl.id])],
         })
 
-
     @classmethod
     def _add_computer_attribute_lines(cls):
         (

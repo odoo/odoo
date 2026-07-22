@@ -81,6 +81,7 @@ class TestVariantsSearch(ProductVariantsCommon):
         )
         self.assertFalse(templates, "Should not return template.")
 
+
 @tagged('post_install', '-at_install')
 class TestVariants(ProductVariantsCommon):
 
@@ -736,11 +737,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [Command.link(self.size_attribute_s.id)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -763,11 +764,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
         template.write({
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [Command.link(self.size_attribute_s.id)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -785,11 +786,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [(6, 0, self.size_attribute.value_ids.ids)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -812,11 +813,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
         template.write({
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [(6, 0, self.size_attribute.value_ids.ids)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -834,7 +835,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofax',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # one variant for this one
+                Command.create({  # one variant for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [(6, 0, self.color_attribute_red.ids)],
                 }),
@@ -883,6 +884,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
         self.assertTrue(first_product.active)
         self.assertTrue(second_product.active)
         self.assertTrue(second_product.product_variant_ids)
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsManyAttributes(TransactionCase):
@@ -1828,6 +1830,7 @@ class TestVariantWrite(ProductVariantsCommon):
 
         v1.volume = 1.0
         self.assertEqual(template.volume, 2.0)
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):

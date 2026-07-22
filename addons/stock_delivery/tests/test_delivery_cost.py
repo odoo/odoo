@@ -3,6 +3,7 @@
 from odoo.exceptions import UserError
 from odoo.tests import common
 
+
 @common.tagged('post_install', '-at_install')
 class TestDeliveryCost(common.TransactionCase):
 

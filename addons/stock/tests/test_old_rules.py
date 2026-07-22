@@ -44,7 +44,6 @@ class TestOldRules(TestStockCommon):
         reception_route_3.rule_ids[1].write({'action': 'pull_push'})
         reception_route_3.rule_ids[2].write({'action': 'pull_push'})
 
-
         # Create a warehouse with 2 steps using old rules setup.
         cls.warehouse_2_steps = cls.env['stock.warehouse'].create({
             'name': 'Warehouse 2 steps',

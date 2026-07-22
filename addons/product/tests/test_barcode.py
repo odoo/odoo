@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
@@ -12,6 +13,7 @@ class TestProductBarcode(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.env['product.product'].create([
             {'name': 'BC1', 'barcode': '1'},
             {'name': 'BC2', 'barcode': '2'},

@@ -162,8 +162,8 @@ class TestStockMoveInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': super_product.name, 'product_id': super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
-                (0, 0, {'name': great_product.name, 'product_id': great_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                (0, 0, {'name': super_product.name, 'product_id': super_product.id, 'product_uom_qty': 1, 'price_unit': 1}),
+                (0, 0, {'name': great_product.name, 'product_id': great_product.id, 'product_uom_qty': 1, 'price_unit': 1}),
             ]
         })
         # Confirm the SO

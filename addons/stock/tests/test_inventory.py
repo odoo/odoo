@@ -3,14 +3,16 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestInventory(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestInventory, cls).setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True

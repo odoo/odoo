@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged, Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestMultiCompany(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMultiCompany, cls).setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         group_user = cls.env.ref('base.group_user')
         group_stock_manager = cls.env.ref('stock.group_stock_manager')
 

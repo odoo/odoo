@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 
 from odoo import Command
 from odoo.tests import tagged, Form
-from odoo.tools import float_is_zero, float_compare
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -145,7 +144,6 @@ class TestPickShip(TestStockCommon):
         move_2._action_done()
         quants = self.env['stock.quant']._gather(product_unreserve, self.stock_location, strict=True)
         self.assertEqual(quants[0].reserved_quantity, 2)
-
 
     def test_mto_moves(self):
         """
@@ -2552,12 +2550,12 @@ class TestSinglePicking(TestStockCommon):
         """
         new_location, new_destination = self.env['stock.location'].sudo().create([
             {
-                'name': f'Super location',
+                'name': 'Super location',
                 'usage': 'internal',
                 'location_id': self.stock_location.id,
             },
             {
-                'name': f'Super destination',
+                'name': 'Super destination',
                 'usage': 'internal',
                 'location_id': self.stock_location.id,
             }
@@ -2571,7 +2569,7 @@ class TestSinglePicking(TestStockCommon):
             picking_form.location_dest_id = new_destination
         picking = picking_form.save()
         self.assertRecordValues(picking.move_ids, [
-            { 'location_id': new_location.id, 'location_dest_id': new_destination.id }
+            { 'location_id': new_location.id, 'location_dest_id': new_destination.id}
         ])
 
     def test_onchange_lot_ids_for_lot_tracked_product_without_reservation(self):
@@ -3012,7 +3010,7 @@ class TestRoutes(TestStockCommon):
             last_picking_id = self.env[model_name].browse(int(picking_id))
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
-        self.assertTrue(move_line,'The product is not in the picking')
+        self.assertTrue(move_line, 'The product is not in the picking')
         self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
         self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
 
@@ -3555,7 +3553,7 @@ class TestAutoAssign(TestStockCommon):
         move.lot_ids = [Command.link(lot1.id)]
         move.lot_ids = [Command.link(lot2.id)]
         move.lot_ids = [Command.link(lot3.id)]
-        self.assertEqual(move.quantity, 3.0/12.0)
+        self.assertEqual(move.quantity, 3.0 / 12.0)
 
     def test_do_not_merge_deliveries_with_different_partner(self):
         """

@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 

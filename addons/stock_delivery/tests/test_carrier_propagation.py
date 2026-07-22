@@ -2,8 +2,8 @@
 
 from unittest.mock import patch, DEFAULT
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -12,6 +12,7 @@ class TestCarrierPropagation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.warehouse = cls.env.ref("stock.warehouse0")
 
         # Set Warehouse as multi steps delivery
@@ -70,7 +71,7 @@ class TestCarrierPropagation(TransactionCase):
             'partner_id': self.partner_propagation.id,
             'partner_invoice_id': self.partner_propagation.id,
             'order_line': [
-                (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1}),
             ]
         })
         choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
@@ -103,7 +104,7 @@ class TestCarrierPropagation(TransactionCase):
                 'partner_id': self.partner_propagation.id,
                 'partner_invoice_id': self.partner_propagation.id,
                 'order_line': [
-                    (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                    (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1}),
                 ]
             })
             choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
@@ -152,7 +153,7 @@ class TestCarrierPropagation(TransactionCase):
         """
         route1 = self.env['stock.route'].create({
             'name': 'Route1',
-            'sale_selectable' : True,
+            'sale_selectable': True,
             'shipping_selectable': True,
             'rule_ids': [Command.create({
                 'name': 'rule1',
@@ -171,8 +172,8 @@ class TestCarrierPropagation(TransactionCase):
         })
         route2 = self.env['stock.route'].create({
             'name': 'Route2',
-            'sale_selectable' : True,
-            'shipping_selectable':True,
+            'sale_selectable': True,
+            'shipping_selectable': True,
             'rule_ids': [Command.create({
                 'name': 'rule2',
                 'location_src_id': shelf1_location.id,

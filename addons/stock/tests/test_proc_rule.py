@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 from json import loads
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.fields import Command
 from odoo.tests import tagged, Form, TransactionCase
 from odoo.tools import mute_logger
@@ -17,6 +18,7 @@ class TestProcRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.product = cls.env['product.product'].create({
