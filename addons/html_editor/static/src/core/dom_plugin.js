@@ -429,7 +429,7 @@ export class DomPlugin extends Plugin {
         let nodeToInsert;
         let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
         const candidatesForRemoval = [];
-        const insertedNodes = childNodes(container);
+        const insertedNodes = [];
         while ((nodeToInsert = container.firstChild)) {
             if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
                 // Split blocks at the edges if inserting new blocks (preventing
@@ -506,6 +506,7 @@ export class DomPlugin extends Plugin {
                 currentNode.after(nodeToInsert);
             }
             allInsertedNodes.push(nodeToInsert);
+            insertedNodes.push(nodeToInsert);
             if (currentNode.tagName !== "BR" && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
