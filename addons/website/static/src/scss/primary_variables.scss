@@ -47,13 +47,11 @@ $o-theme-figcaption-opacity: 0.6;
 
 $o-color-palettes: map-merge($o-color-palettes,
     (
-        'base-1': o-make-palette(#000, $o-enterprise-color, #F2F2F2, #FFFFFF, #121212, (
-            'category': 'base',
+        'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
             'menu': 1,
             'footer': 2,
         )),
-        'base-2': o-make-palette(#337ab7, #e9ecef, #F8F9FA, #FFFFFF, #343a40, (
-            'category': 'base',
+        'base-2': map-merge(map-get($o-color-palettes, 'base-2'), (
             'menu': 2,
             'footer': 2,
             'copyright': 5,
