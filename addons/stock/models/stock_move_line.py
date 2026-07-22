@@ -189,6 +189,11 @@ class StockMoveLine(models.Model):
         if self.product_id:
             self.lots_visible = self.product_id.tracking != 'none'
 
+    @api.onchange('quant_id')
+    def _onchange_quant_id(self):
+        if self.quant_id:
+            self.update(self._copy_quant_info({'quant_id': self.quant_id.id}))
+
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
