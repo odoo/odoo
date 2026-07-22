@@ -31,11 +31,11 @@
                     t-out="PERMISSION_NEEDED"/>
             </button>
             <t t-set-slot="content">
-                <DropdownItem t-if="!isBrowserChrome or props.kind === 'videoinput'" class="{ 'active': isSelected() }" onSelected="onSelectAudioDevice.bind(this)">
+                <DropdownItem t-if="!isBrowserChrome or props.kind === 'videoinput'" class="{ 'active': isSelected() }" onSelected="(ev) => this.onSelectAudioDevice(ev)">
                     <t t-esc="BROWSER_DEFAULT"/>
                 </DropdownItem>
                 <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                    <DropdownItem t-if="device.kind === props.kind" class="{ 'active': isSelected(device.deviceId) }" onSelected="onSelectAudioDevice.bind(this, device)">
+                    <DropdownItem t-if="device.kind === props.kind" class="{ 'active': isSelected(device.deviceId) }" onSelected="(ev) => this.onSelectAudioDevice(ev, { device })">
                         <t t-esc="device.label || 'device ' + device_index"/>
                     </DropdownItem>
                 </t>
