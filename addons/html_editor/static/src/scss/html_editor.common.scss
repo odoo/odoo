@@ -458,11 +458,17 @@ pre {
 
 // Extend bootstrap to create background and text utilities for some colors
 // outside of the $theme-colors too (but not btn-, alert-, etc).
+// Use o-color() rather than map-get($colors, …) so this works in bundles
+// that include html_editor.common.scss but NOT bootstrap_overridden.scss
+// (which is what populates $colors with o-color-* entries). o-color() falls
+// back to $o-color-palette directly when $o-color-system-initialized is false.
 @for $index from 1 through 5 {
     $-color-name: 'o-color-#{$index}';
-    $-color: map-get($colors, $-color-name);
-    @include bg-variant(".bg-#{$-color-name}", $-color);
-    @include text-emphasis-variant(".text-#{$-color-name}", $-color);
+    $-color: o-color($-color-name);
+    @if $-color {
+        @include bg-variant(".bg-#{$-color-name}", $-color);
+        @include text-emphasis-variant(".text-#{$-color-name}", $-color);
+    }
 }
 
 // Color combinations: emit named :root vars for builder JS and .o_cc{N} classes
