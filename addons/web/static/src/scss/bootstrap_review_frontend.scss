@@ -77,15 +77,10 @@ $o-btn-outline-border-width-defaults: () !default;
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
         @if index($o-btn-outline-defaults, $color) {
-            // !optional: .btn-outline-primary/secondary are defined in
-            // html_editor.common.scss which is not present in every bundle
-            // (e.g. minimal embed bundles). Fall back to Bootstrap defaults.
-            @extend .btn-outline-#{$color} !optional;
+            @extend .btn-outline-#{$color};
             border-width: map-get($o-btn-outline-border-width-defaults, $color);
         } @else {
-            // !optional: same reason — .btn-fill-primary/secondary live in
-            // html_editor.common.scss and may be absent in lean bundles.
-            @extend .btn-fill-#{$color} !optional;
+            @extend .btn-fill-#{$color};
             @if index($o-btn-flat-defaults, $color) {
                 // TODO In master: move definition to web_editor
                 @extend .btn.flat !optional;
