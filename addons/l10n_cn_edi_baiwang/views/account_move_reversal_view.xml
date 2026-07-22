@@ -5,9 +5,6 @@
         <field name="model">account.move.reversal</field>
         <field name="inherit_id" ref="account.view_account_move_reversal"/>
         <field name="arch" type="xml">
-            <xpath expr="//group" position="inside">
-                <field name="l10n_cn_baiwang_use_red_form_reason" invisible="1"/>
-            </xpath>
             <xpath expr="//field[@name='reason']" position="attributes">
                 <attribute name="invisible">l10n_cn_baiwang_use_red_form_reason</attribute>
             </xpath>
