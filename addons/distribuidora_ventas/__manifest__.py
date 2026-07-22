@@ -8,6 +8,7 @@
     'data': [
         'data/res_partner_category_data.xml',
         'views/sale_order_views.xml',
+        'views/pricelist_menu.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,
