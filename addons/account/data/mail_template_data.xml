@@ -76,7 +76,7 @@
         <record id="mail_template_data_payment_receipt" model="mail.template">
             <field name="name">Payment: Payment Receipt</field>
             <field name="model_id" ref="account.model_account_payment"/>
-            <field name="subject">{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref {{ object.name or 'n/a' }})</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent manually to customer when clicking on 'Send receipt by email' in payment action</field>
@@ -85,9 +85,11 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear <t t-out="object.partner_id.name or ''">Azure Interior</t><br/><br/>
-        Thank you for your payment.
-        Here is your payment receipt <span style="font-weight:bold;" t-out="(object.name or '').replace('/','-') or ''">BNK1-2021-05-0002</span> amounting
-        to <span style="font-weight:bold;" t-out="format_amount(object.amount, object.currency_id) or ''">$ 10.00</span> from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <t t-if="object.partner_type == 'customer' and object.payment_type == 'outbound'">We have processed your refund of</t>
+        <t t-elif="object.partner_type == 'supplier' and object.payment_type == 'outbound'">We have processed your payment of</t>
+        <t t-elif="object.partner_type == 'supplier' and object.payment_type == 'inbound'">Thank you for your refund of</t>
+        <t t-else="">Thank you for your payment of</t> <span style="font-weight:bold;" t-out="format_amount(object.amount, object.currency_id) or ''">$ 10.00</span>.
+        Please find the <t t-out="object.payment_receipt_title.lower()">payment receipt</t> <span t-if="object.name" style="font-weight:bold;" t-out="object.name.replace('/','-')">BNK1-2021-05-0002</span> from <t t-out="object.company_id.name or ''">YourCompany</t>.
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
         <br/><br/>
