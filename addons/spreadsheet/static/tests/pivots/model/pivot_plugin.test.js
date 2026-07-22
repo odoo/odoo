@@ -42,6 +42,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { Partner, Product } from "../../helpers/data";
 import { createSheet, deleteSheet } from "../../helpers/commands";
+import { makeGlobalStoresWithModel } from "../../helpers/stores";
 const { toZone } = spreadsheet.helpers;
 const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
 
@@ -1989,6 +1990,7 @@ test("Spreadsheet pivot table ignored by global fiter plugin", () => {
     allowTranslations();
 
     const model = new Model();
+    makeGlobalStoresWithModel(model);
     model.selection.selectZone({ cell: { col: 0, row: 0 }, zone: toZone("A1:A4") });
     const pivotId = "pivot1";
     const sheetId = model.getters.getActiveSheetId();

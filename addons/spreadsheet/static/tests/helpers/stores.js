@@ -3,7 +3,7 @@
 import { stores } from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
-const { ModelStore, NotificationStore, DependencyContainer } = stores;
+const { ModelStore, NotificationStore, DependencyContainer, globalStores } = stores;
 
 /**
  * @template T
@@ -38,6 +38,26 @@ export function makeStoreWithModel(model, Store, ...args) {
     container.inject(NotificationStore, makeTestNotificationStore());
     return {
         store: container.instantiate(Store, ...args),
+        container,
+        // @ts-ignore
+        model: container.get(ModelStore),
+    };
+}
+
+/**
+ * @template T
+ * @param {import("@odoo/o-spreadsheet").Model} model
+ * @return {{ container: InstanceType<DependencyContainer>, model: OdooSpreadsheetModel }}
+ */
+export function makeGlobalStoresWithModel(model) {
+    const container = new DependencyContainer();
+    container.inject(ModelStore, model);
+    container.inject(NotificationStore, makeTestNotificationStore());
+    for (const store of globalStores.getAll()) {
+        container.get(store);
+    }
+
+    return {
         container,
         // @ts-ignore
         model: container.get(ModelStore),
