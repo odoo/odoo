@@ -19,6 +19,10 @@ class HrEmployeePublic(models.Model):
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
     allocation_display = fields.Char(compute='_compute_allocation_display')
     allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
+    leave_date_from = fields.Datetime(compute='_compute_leave_status')
+    leave_request_date_from_period = fields.Selection(related='employee_id.leave_request_date_from_period')
+    next_working_day_on_leave = fields.Date(related='employee_id.next_working_day_on_leave', help="The next working day that is also encoded as leave")
+    leave_request_duration = fields.Selection(related='employee_id.leave_request_duration')
 
     def _compute_show_leaves(self):
         self._compute_from_employee('show_leaves')
@@ -27,7 +31,7 @@ class HrEmployeePublic(models.Model):
         self._compute_from_employee('leave_manager_id')
 
     def _compute_leave_status(self):
-        self._compute_from_employee(['leave_date_to', 'is_absent'])
+        self._compute_from_employee(['leave_date_to', 'leave_date_from', 'is_absent'])
 
     def _search_absent_employee(self, operator, value):
         if operator != 'in':
