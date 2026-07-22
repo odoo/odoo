@@ -4,6 +4,13 @@
         <field name="active">False</field>
     </record>
 
+    <menuitem id="menu_productos_root"
+        name="Productos"
+        action="sale.product_template_action"
+        web_icon="product,static/description/icon.png"
+        groups="sales_team.group_sale_salesman"
+        sequence="32"/>
+
     <!--
         El nombre de contacts.menu_contacts y sale.sale_menu_root se
         renombra vía _distribuidora_config_apply_menu_names en vez de un

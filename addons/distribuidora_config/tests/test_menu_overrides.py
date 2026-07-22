@@ -17,3 +17,9 @@ class TestMenuOverrides(TransactionCase):
     def test_point_of_sale_menu_is_hidden(self):
         menu = self.env.ref('point_of_sale.menu_point_root')
         self.assertFalse(menu.active)
+
+    def test_productos_menu_is_root_app_pointing_to_sale_catalog(self):
+        menu = self.env.ref('distribuidora_config.menu_productos_root')
+        self.assertFalse(menu.parent_id, "debe ser un menu raiz para aparecer en el switcher de apps")
+        self.assertEqual(menu.action.id, self.env.ref('sale.product_template_action').id)
+        self.assertEqual(menu.sequence, 32)
