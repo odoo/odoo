@@ -49,7 +49,7 @@
                                             <span class="font-monospace"><t t-out="tax['amount']" /></span>
                                         </td>
                                     </tr>
-                                    <tr t-if="not extra_data['prices']['same_tax_base'] and not conditions.get('simplified_receipt')">
+                                    <tr t-if="not conditions.get('simplified_receipt')">
                                         <td class="text-start w-70">
                                             <span>Base <t t-out="tax['name']" /></span>
                                         </td>
