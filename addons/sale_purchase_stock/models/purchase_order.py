@@ -69,3 +69,12 @@ class PurchaseOrderLine(models.Model):
                 lang=vendor.lang,
             )._get_sale_order_line_multiline_description_variants().strip()
         return values
+
+    def _prepare_backorder_move_vals(self, picking):
+        self.ensure_one()
+        res = super()._prepare_backorder_move_vals(picking)
+        if self.sale_line_id:
+            res['sale_line_id'] = self.sale_line_id.id
+        if self.sale_line_id.route_ids:
+            res['route_ids'] = [Command.link(route_id) for route_id in self.sale_line_id.route_ids.ids]
+        return res

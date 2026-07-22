@@ -3,7 +3,7 @@
 from datetime import datetime, time, timedelta
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
@@ -465,3 +465,21 @@ class SaleOrderLine(models.Model):
                 ("move_ids.date", ">", datetime.combine(date, time.max)),
             ])
         return domain
+
+    def _should_backorder(self):
+        self.ensure_one()
+        return self.product_id.type == 'consu' and not self.move_ids
+
+    def _prepare_backorder_move_vals(self, picking):
+        self.ensure_one()
+        res = {
+            'product_id': self.product_id.id,
+            'sale_line_id': self.id,
+            'product_uom_qty': self.product_uom_qty - self.qty_delivered,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        }
+        if self.route_ids:
+            res['route_ids'] = [Command.link(route_id) for route_id in self.sale_line_id.route_ids.ids]
+        return res
