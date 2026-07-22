@@ -2,7 +2,10 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, Command
+from markupsafe import Markup
+
+from odoo import api, fields, models, Command, _
+from odoo.tools import float_compare
 
 
 class StockRoute(models.Model):
@@ -137,6 +140,18 @@ class StockMove(models.Model):
                 if move.sale_line_id and move.product_id != move.sale_line_id.product_id and move.sale_line_id.order_id.state != 'draft':
                     move.sale_line_id = False
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_sale_line_id(self):
+        for move_line in self.filtered(lambda ml: ml.sale_line_id and ml.picking_id):
+            move_line.picking_id.message_post(body=Markup("<strong>%(remove_message)s</strong><br/><ul><li>%(product_label)s: %(product_name)s</li><li>%(quantity_label)s: %(quantity)s</li></ul>") % {
+                "remove_message": _("The following demand has been removed from this transfer by %(user_name)s.", user_name=self.env.user.display_name),
+                "product_label": _("Product"),
+                "product_name": move_line.product_id.display_name,
+                "quantity_label": _("Quantity"),
+                "quantity": move_line.product_uom_qty,
+                "uom": move_line.uom_id.name,
+            })
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
@@ -352,6 +367,35 @@ class StockPicking(models.Model):
         if self.sale_id:
             vals['sale_id'] = self.sale_id.id
         return vals
+
+    def _check_backorder(self):
+        backorder_pickings = super()._check_backorder()
+        prec = self.env["decimal.precision"].precision_get("Product Unit")
+        for picking in self:
+            if picking.picking_type_id.create_backorder != 'ask':
+                continue
+            if any(
+                    not line.move_ids and line.product_id.type == 'consu' and
+                    float_compare(line.product_uom_qty, line.qty_delivered, precision_digits=prec) < 0
+                    for line in picking.sale_id.order_line
+                    if line.state != 'cancel'
+            ):
+                backorder_pickings |= picking
+        return backorder_pickings
+
+    def _get_moves_to_backorder(self):
+        backorder_moves = super()._get_moves_to_backorder()
+        for picking in self:
+            unfulfilled_order_lines = picking.sale_id.order_line.filtered(lambda line: not line.move_ids and line.product_id.type == 'consu')
+            backorder_moves |= self.env['stock.move'].create([{
+                'product_id': order_line.product_id.id,
+                'product_uom_qty': order_line.product_uom_qty - order_line.qty_delivered,
+                'sale_line_id': order_line.id,
+                'location_id': picking.location_id.id,
+                'location_dest_id': picking.location_dest_id.id,
+                'company_id': picking.company_id.id,
+            } for order_line in unfulfilled_order_lines])
+        return backorder_moves
 
 
 class StockLot(models.Model):
