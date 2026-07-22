@@ -623,7 +623,8 @@ class QwebContent:
     @property
     def irQweb(self):
         irQweb = self.__irQweb
-        if threading.current_thread().dbname != irQweb.env.cr.dbname:
+        thread_dbname = getattr(threading.current_thread(), 'dbname', None)
+        if thread_dbname and thread_dbname != irQweb.env.cr.dbname:
             return None
         return irQweb
 

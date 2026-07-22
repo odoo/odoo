@@ -129,6 +129,10 @@ class SnailmailLetter(models.Model):
             self.attachment_id.check_access('read')
         return res
 
+    @api.onchange("attachment_id")
+    def _onchange_attachment_id(self):
+        self.attachment_id.check_access('read')
+
     def _generate_report_pdf(self, report):
         obj = self.env[self.model].browse(self.res_id)
         if report.print_report_name:

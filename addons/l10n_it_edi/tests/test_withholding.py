@@ -478,7 +478,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         )
 
         errors = invoice._l10n_it_edi_export_taxes_check()
-        self.assertNotIn('move_pension_fund_tax_per_line', errors)
+        self.assertEqual(len(errors), 0)
 
     ####################################################
     # RA 23% WITHHOLDING TAX

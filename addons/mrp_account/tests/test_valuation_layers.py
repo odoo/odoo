@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.fields import Command
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.tests import Form
+from odoo.tests.common import new_test_user
 
 PRICE = 718.75 - 100  # total price minus glass
 
@@ -370,3 +372,52 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._produce(mo)
         mo.with_company(self.other_company).button_mark_done()
         self.assertEqual(self.dining_table.total_value, PRICE + 10)
+
+    def test_validate_branch_mo_with_main_company_component(self):
+        """
+        Check that an MRP user of a branch company can process an MO in a multi-company
+        setup where the component belongs to the main company.
+        """
+        sub_company = self.branch
+        self.category_avco.with_company(self.branch).write({'property_valuation': 'real_time', 'property_cost_method': 'average'})
+        final_product, component = self.env['product.product'].create([
+            {
+                'name': 'Finished Product',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+            {
+                'name': 'Component',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'company_id': sub_company.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2})],
+        })
+        self._make_in_move(component, 1, 10, company=self.branch)
+        self.assertEqual(component.with_company(self.branch).standard_price, 10.0)
+        mrp_user = new_test_user(
+            self.env,
+            login='test_mrp_sub_user',
+            groups='mrp.group_mrp_user,stock.group_stock_user',
+            company_id=sub_company.id,
+        )
+        mo = self.env['mrp.production'].with_context(allowed_company_ids=sub_company.ids).with_user(mrp_user).create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(final_product.with_company(self.branch).standard_price, 20.0)

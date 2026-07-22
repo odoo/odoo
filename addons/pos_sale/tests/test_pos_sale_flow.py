@@ -764,6 +764,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         invoice.action_post()
         self.assertEqual(invoice.amount_total, 90)
 
+    def test_downpayment_invoice_line_name(self):
+        """When a down payment is invoiced straight from the POS, the invoice is
+        generated inside super().sync_from_ui, before the down-payment POS line
+        gets linked to a sale order line. At that point sale_order_line_id is
+        empty, so the invoice line name must not fall back to False (a False name
+        breaks the UBL/e-invoice export)."""
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_pos_tour('PoSApplyDownpaymentInvoice')
+
+        pos_order = so.pos_order_line_ids.order_id
+        invoice_line = pos_order.account_move.invoice_line_ids.filtered(
+            lambda l: l.product_id == self.main_pos_config.down_payment_product_id)
+        self.assertTrue(invoice_line, "The down payment should have been invoiced")
+        self.assertTrue(invoice_line.name, "The down-payment invoice line must have a name")
+
     def test_ship_later_no_default(self):
         """ Verify that when settling an order the ship later is not activated by default"""
         product = self.env['product.product'].create({
@@ -1918,6 +1947,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env.flush_all()
         refund_payment.with_context(**payment_context).check()
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
     def test_settle_order_with_multiple_uom(self):
         """ Verify that a sale order with multiple UoM can be settled from the PoS."""
@@ -2268,6 +2298,49 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
+    def test_settle_so_archived_attribute(self):
+        attr = self.env['product.attribute'].create({
+            'name': 'Archived Size',
+            'create_variant': 'no_variant',
+        })
+        attr_values = self.env['product.attribute.value'].create([
+            {'name': 'S', 'attribute_id': attr.id},
+            {'name': 'M', 'attribute_id': attr.id},
+        ])
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Archived Attr Product',
+            'available_in_pos': True,
+            'type': 'service',
+            'list_price': 10.0,
+            'taxes_id': [],
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attr.id,
+                'value_ids': [Command.set(attr_values.ids)],
+            })],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [Command.create({
+                'product_id': product_tmpl.product_variant_ids[0].id,
+                'product_uom_qty': 1,
+                'price_unit': 10.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # Simulate what Odoo does when you delete an attribute line that is already
+        # referenced by a sale order: it archives the line instead of deleting it.
+        attr_line = product_tmpl.with_context(active_test=False).attribute_line_ids
+        attr_line.write({'active': False})
+
+        # Also archive the product.attribute itself (worst case: triggers the crash
+        # because the archived attribute won't be loaded at PoS startup).
+        attr.write({'active': False})
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_archived_attribute', login="accountman")
 
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({

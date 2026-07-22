@@ -662,8 +662,11 @@ export class PosOrder extends PosOrderAccounting {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition =
-                this.findFiscalPosition(newPartner.fiscal_position_id) || defaultFiscalPosition;
+            const partnerFiscalPosition = this.findFiscalPosition(newPartner.fiscal_position_id);
+            const isFpAllowed =
+                partnerFiscalPosition &&
+                this.config.fiscal_position_ids.some((fp) => fp.id === partnerFiscalPosition.id);
+            newPartnerFiscalPosition = isFpAllowed ? partnerFiscalPosition : defaultFiscalPosition;
             newPartnerPricelist =
                 this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
@@ -757,6 +760,17 @@ export class PosOrder extends PosOrderAccounting {
 
     get globalDiscountPc() {
         return this.discountLines?.[0]?.extra_tax_data?.discount_percentage || 0;
+    }
+
+    get isDirectSale() {
+        return false; // Overridden in pos_restaurant
+    }
+
+    get preparationName() {
+        if (this.isDirectSale) {
+            return this.floatingOrderName || this.pos_reference;
+        }
+        return this.getName();
     }
 
     getName() {

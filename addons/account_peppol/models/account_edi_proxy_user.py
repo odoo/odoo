@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import logging
 from datetime import timedelta
 
@@ -14,6 +15,13 @@ from odoo.addons.account_peppol.tools.peppol_iap_connector import PEPPOL_PROXY_U
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
+
+REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE = re.compile(
+    rb'(<(?P<tag>(?:[A-Za-z_][A-Za-z0-9_.-]*:)?EmbeddedDocumentBinaryObject)\b[^<>]*>)'
+    rb'(?P<data>.*?)'
+    rb'(</(?P=tag)\s*>)',
+    re.DOTALL,
+)
 
 
 class Account_Edi_Proxy_ClientUser(models.Model):
@@ -211,6 +219,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         file_data = self.env['account.move']._to_files_data(attachment)[0]
 
+        # Fallback to avoid issues with large EmbeddedDocumentBinaryObject
+        if file_data['xml_tree'] is None:
+            file_data['raw'] = REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', file_data['raw'])
+            file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
+
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
         # In this case, the invoice needs to be created as an out_invoice in a sale journal.
         # 329/527: Self-billing invoice; 261: Self-billing credit note
@@ -403,16 +416,23 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     # "Peppol request not ready" error:
                     # thrown when the IAP is still processing the message
                     continue
-                error_message = get_peppol_error_message(self.env, error_vals)
-                move._message_log(body=error_message)
                 move.peppol_move_state = 'error'
+                move._message_log(body=self._peppol_get_message_status_error_body(move, content['error']))
                 processed_message_uuids.append(uuid)
                 continue
 
             move.peppol_move_state = content['state']
-            move._message_log(body=self.env._('Peppol status update: %s', content['state']))
+            move._message_log(body=self._peppol_get_message_status_update_body(move, content))
             processed_message_uuids.append(uuid)
         return processed_message_uuids
+
+    def _peppol_get_message_status_error_body(self, move, error):
+        self.ensure_one()
+        return self._get_peppol_error_message(error)
+
+    def _peppol_get_message_status_update_body(self, move, content):
+        self.ensure_one()
+        return self.env._('Peppol status update: %s', content['state'])
 
     def _peppol_process_participant_status(self, proxy_user):
         self.ensure_one()

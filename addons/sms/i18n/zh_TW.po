@@ -6,15 +6,15 @@
 # Wil Odoo, 2025
 # Tony Ng, 2025
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-05-16 09:39+0000\n"
+"PO-Revision-Date: 2026-07-01 04:01+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/sms/zh_Hant/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -41,8 +41,7 @@ msgstr "#有效的收件人"
 msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
-msgstr ""
-"已成功重新傳送 %(count)s 個 SMS 文字訊息。原本選取的總數為 %(total)s 個。"
+msgstr "已成功重新傳送 %(count)s 個 SMS 文字訊息。原本選取的總數為 %(total)s 個。"
 
 #. module: sms
 #. odoo-python
@@ -119,8 +118,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">沒有記錄</span>"
+msgstr "<span class=\"text-warning\" invisible=\"not no_record\">沒有記錄</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -146,18 +144,18 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    訊息將以 SMS 簡訊形式發送給範本的收件"
-"人，\n"
+"                                    訊息將以 SMS 簡訊形式發送給範本的收件人"
+"，\n"
 "                                    而且不會出現在訊息歷史記錄中。\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
 "                                    簡訊不會被發送，只會在訊息歷史記錄中，\n"
 "                                    作為內部備註發佈。\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    簡訊將以 SMS 簡訊形式發送給範本的收件"
-"人，\n"
+"                                <span invisible=\"sms_method != 'comment'\">"
+"\n"
+"                                    簡訊將以 SMS 簡訊形式發送給範本的收件人"
+"，\n"
 "                                    亦會在訊息歷史記錄中，\n"
 "                                    作為內部備註發佈。\n"
 "                                </span>"
@@ -741,8 +739,7 @@ msgstr "只留備註"
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
-msgstr ""
-"請留意，此項並非必須填寫。若不設定發訊人名稱，短訊發送方將顯示為簡短代碼。"
+msgstr "請留意，此項並非必須填寫。若不設定發訊人名稱，短訊發送方將顯示為簡短代碼。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
@@ -780,8 +777,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
-"{{ object.partner_id.lang }}。"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ "
+"object.partner_id.lang }}。"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms

@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-21 22:27+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-07-01 00:06+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/pl/>\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -347,6 +347,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Dołącz paragon - zazwyczaj obraz lub plik PDF."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr "Liczba załączników"
@@ -575,6 +580,7 @@ msgstr "Digitalizacja paragonów za pomocą OCR i sztucznej inteligencji"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -629,7 +635,8 @@ msgstr "Duplikat wydatków"
 msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
-msgstr "Każdy wydatek opłacany przez firmę musi mieć odrębny wpis do dziennika."
+msgstr ""
+"Każdy wydatek opłacany przez firmę musi mieć odrębny wpis do dziennika."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -989,6 +996,7 @@ msgstr "Domena aliasu wydatków hr"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -1643,8 +1651,8 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
-"Gotowy? Możesz zapisać ręcznie lub odrzucić modyfikacje z tego miejsca. <em>"
-"Nie musisz zapisywać</em> - Odoo zapisze wszystko za Ciebie podczas "
+"Gotowy? Możesz zapisać ręcznie lub odrzucić modyfikacje z tego miejsca. "
+"<em>Nie musisz zapisywać</em> - Odoo zapisze wszystko za Ciebie podczas "
 "nawigacji."
 
 #. module: hr_expense
@@ -2265,10 +2273,10 @@ msgstr ""
 "0,                                             użytkownik korzystający z "
 "tego produktu nie będzie mógł zmienić kwoty "
 "wydatku,                                             a jedynie jego ilość. "
-"Użyj kosztu różnego od zera dla kategorii wydatków finansowanych przez"
-"                                             firmę według stałej stawki, "
-"takich jak: ryczałty za przejazd, diety dzienne, zakwaterowanie"
-"                                             czy posiłki."
+"Użyj kosztu różnego od zera dla kategorii wydatków finansowanych "
+"przez                                             firmę według stałej "
+"stawki, takich jak: ryczałty za przejazd, diety dzienne, "
+"zakwaterowanie                                             czy posiłki."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2297,6 +2305,25 @@ msgstr "Możesz teraz przesłać go do menedżera, korzystając z poniższego ł
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr "Możesz wygenerować jedynie wpis księgowy lub zaakceptowane wydatki."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2387,6 +2414,12 @@ msgstr "Nie masz wymaganych uprawnień, aby przesłać ten wydatek."
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
 msgstr "Nie masz uprawnień do edytowania tego wydatku."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

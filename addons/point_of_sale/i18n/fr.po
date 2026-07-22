@@ -8,17 +8,17 @@
 # Logan Gônet <logan.gonet.perso@outlook.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Camille Dantinne <cmd@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:35+0000\n"
-"PO-Revision-Date: 2026-06-08 11:08+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-06-30 23:45+0000\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fr/>\n"
 "Language: fr\n"
@@ -3308,6 +3308,7 @@ msgstr "Remises"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__display_name
@@ -3629,8 +3630,10 @@ msgstr "Adresse IP de l'imprimante de reçus Epson"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/services/printer_service.js:0
 msgid "Error"
 msgstr "Erreur"
 
@@ -4225,6 +4228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__id
@@ -5803,6 +5807,12 @@ msgstr "Non facturée"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Not available"
 msgstr "Pas disponible"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -8068,6 +8078,11 @@ msgid "Remaining"
 msgstr "Restant"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_removal
+msgid "Removal Strategy"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
@@ -8659,6 +8674,12 @@ msgid "Session Statistics"
 msgstr "Statistiques de session"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
 msgstr "Session ouverte depuis plus de 7 jours"
@@ -8916,6 +8937,14 @@ msgstr ""
 "Des commandes n'ont pas pu être envoyées au serveur à cause d'un incident de "
 "connexion internet. Vous pouvez quitter le point de ventes, mais ne clôturez "
 "par la session avant d'avoir résolu ce problème."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

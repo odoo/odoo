@@ -581,6 +581,7 @@ patch(PosOrder.prototype, {
                     continue;
                 }
                 let totalProductQty = 0;
+                let hasValidProduct = false;
                 // Only count points for paid lines.
                 const qtyPerProduct = {};
                 let orderedProductPaid = 0;
@@ -619,8 +620,13 @@ patch(PosOrder.prototype, {
                                 : line.prices.total_included;
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
+                            hasValidProduct = true;
                         }
                     }
+                }
+                // Skip product-restricted rules when the order contains none of their products.
+                if (!rule.any_product && !hasValidProduct) {
+                    continue;
                 }
                 if (totalProductQty < rule.minimum_qty) {
                     // Should also count the points from negative quantities.
@@ -730,6 +736,14 @@ patch(PosOrder.prototype, {
             if (rule.minimum_qty > nItems) {
                 return false;
             }
+            if (
+                !rule.any_product &&
+                !this._get_regular_order_lines().some((line) =>
+                    rule.validProductIds.has(line.product_id.id)
+                )
+            ) {
+                return false;
+            }
         }
         return true;
     },
@@ -791,10 +805,15 @@ patch(PosOrder.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
-                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                // Skip already applied rewards: 'coupons' programs, and non-payment
+                // discounts when auto-claiming, to avoid stacking them
+                const isPaymentProgram = ["ewallet", "gift_card"].includes(
+                    reward.program_id.program_type
+                );
                 if (
-                    reward.program_id.program_type === "coupons" &&
-                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                    (reward.program_id.program_type === "coupons" ||
+                        (auto && reward.reward_type === "discount" && !isPaymentProgram)) &&
+                    this.lines.some((rewardline) => rewardline.reward_id?.id === reward.id)
                 ) {
                     continue;
                 }
@@ -1093,11 +1112,20 @@ patch(PosOrder.prototype, {
                     if (line.reward_id) {
                         continue;
                     }
+                    let discountedAmount = 0;
                     if (lineReward.discount_applicability === "cheapest") {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.getQuantity();
+                        discountedAmount =
+                            (-remainingAmountPerLine[line.uuid] * discount) / line.getQuantity();
                     } else {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount;
+                        discountedAmount = -remainingAmountPerLine[line.uuid] * discount;
                     }
+                    if (lineReward.discount_max_amount && lineReward.discount_max_amount > 0) {
+                        discountedAmount = Math.max(
+                            discountedAmount,
+                            -lineReward.discount_max_amount
+                        );
+                    }
+                    remainingAmountPerLine[line.uuid] += discountedAmount;
                 }
             }
         }

@@ -785,7 +785,7 @@ class SaleOrder(models.Model):
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
         for order in self:
-            order.with_company(order.company_id)
+            order = order.with_company(order.company_id)
             order.partner_credit_warning = ''
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
@@ -935,10 +935,11 @@ class SaleOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_order_line(self):
+        linked_lines_by_line = self.order_line._get_linked_lines_by_line()
         for index, line in enumerate(self.order_line):
             if line.display_type == 'line_subsection' and not line.parent_id:
                 line.display_type = 'line_section'
-            combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
+            combo_item_lines = linked_lines_by_line[line].filtered('combo_item_id')
             if line.product_template_id.type != 'combo':
                 if combo_item_lines:
                     # Delete any linked combo item lines if the line's product is no longer a combo

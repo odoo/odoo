@@ -9,19 +9,19 @@
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Adrian Cocos <adrian.cocos@capps.ai>, 2025.
-# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Adrian Cocos <adrian.cocos@capps.ai>, 2025, 2026.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-13 20:47+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 23:03+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/mrp/ro/>"
 "\n"
 "Language: ro\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -4517,8 +4517,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Please unblock the work center to validate the work order"
-msgstr ""
-"Vă rugăm să deblocați centrul de lucru pentru a valida comanda de lucru"
+msgstr "Vă rugăm să deblocați centrul de lucru pentru a valida comanda de lucru"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -5929,8 +5928,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already "
 "been produced"
 msgstr ""
-"Numărul de serie%(number)s utilizat pentru produsul secundar %"
-"(product_name)s a fost deja produs"
+"Numărul de serie%(number)s utilizat pentru produsul secundar %(product_name)"
+"s a fost deja produs"
 
 #. module: mrp
 #. odoo-python
@@ -6758,8 +6757,7 @@ msgstr "Asistent pentru divizarea unei producții"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
-msgstr ""
-"Asistent pentru marcarea ca finalizat sau crearea unei comenzi restante"
+msgstr "Asistent pentru marcarea ca finalizat sau crearea unei comenzi restante"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
@@ -7109,8 +7107,7 @@ msgstr "Nu puteți șterge o comandă de fabricație care este deja finalizată.
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
-"Nu puteți șterge o comandă de dezmembrare dacă starea este „Efectuată”."
+msgstr "Nu puteți șterge o comandă de dezmembrare dacă starea este „Efectuată”."
 
 #. module: mrp
 #. odoo-python
@@ -7122,8 +7119,7 @@ msgstr "Nu puteți avea %s ca produs finit și ca produs secundar"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
-"Nu puteți lega această comandă de lucru la o altă comandă de producție."
+msgstr "Nu puteți lega această comandă de lucru la o altă comandă de producție."
 
 #. module: mrp
 #. odoo-python
@@ -7202,10 +7198,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Vă rugăm să revizuiți consumul componentelor sau "
 "să solicitați unui manager să valideze\n"
-"                            <span invisible=\"mrp_production_count != "
-"1\">această comandă de producție</span>\n"
-"                            <span invisible=\"mrp_production_count == "
-"1\">aceste comenzi de producție</span>.\n"
+"                            <span invisible=\"mrp_production_count != 1\">"
+"această comandă de producție</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">"
+"aceste comenzi de producție</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7222,8 +7218,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Trebuie să definiți cel puțin o pierdere de productivitate în categoria "
-"„Performanță”. Creați una din aplicația Producție, meniu: Configurare / "
+"Trebuie să definiți cel puțin o pierdere de productivitate în categoria „"
+"Performanță”. Creați una din aplicația Producție, meniu: Configurare / "
 "Pierderi de productivitate."
 
 #. module: mrp
@@ -7234,8 +7230,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Trebuie să definiți cel puțin o pierdere de productivitate în categoria "
-"„Productivitate”. Creați una din aplicația Producție, meniu: Configurare / "
+"Trebuie să definiți cel puțin o pierdere de productivitate în categoria „"
+"Productivitate”. Creați una din aplicația Producție, meniu: Configurare / "
 "Pierderi de productivitate."
 
 #. module: mrp

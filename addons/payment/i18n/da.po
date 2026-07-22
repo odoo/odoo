@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
-"PO-Revision-Date: 2026-06-23 17:25+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-06-29 23:29+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/payment/"
 "da/>\n"
 "Language: da\n"
@@ -68,10 +68,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"Nogle af de transaktioner, du ønsker at registrere, "
-"kan kun registreres i deres helhed. Behandl transaktionerne enkeltvis, hvis "
-"du vil registrere et delbeløb.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Nogle af de "
+"transaktioner, du ønsker at registrere, kan kun registreres i deres helhed. "
+"Behandl transaktionerne enkeltvis, hvis du vil registrere et delbeløb.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -85,7 +85,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Konfigurér en betalingsudbyder"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Konfigurér en betalingsudbyder"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1020,11 +1021,6 @@ msgid "EPS"
 msgstr "EPS"
 
 #. module: payment
-#: model:payment.method,name:payment.payment_method_easypaisa
-msgid "EasyPaisa"
-msgstr "EasyPaisa"
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_elo
 msgid "Elo"
 msgstr "Elo"
@@ -1321,11 +1317,6 @@ msgstr ""
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
 msgstr "JCB"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_jazzcash
-msgid "JazzCash"
-msgstr "JazzCash"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
@@ -1863,6 +1854,11 @@ msgstr "PayPal"
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
 msgstr "PaySafeCard"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_payu
+msgid "PayU"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2713,7 +2709,8 @@ msgstr "Meddelelsen, der vises, hvis ordren afbrydes under betalingsprocessen"
 msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
-msgstr "Meddelelsen, der vises, når bestillingen er gennemført efter betalingen"
+msgstr ""
+"Meddelelsen, der vises, når bestillingen er gennemført efter betalingen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
@@ -3291,6 +3288,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3320,6 +3318,7 @@ msgstr "Din betaling er blevet godkendt."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3349,6 +3348,7 @@ msgstr "Din betaling er blevet annulleret."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3377,6 +3377,7 @@ msgstr "Din betaling er blevet behandlet, men afventer stadig godkendelse."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
@@ -3543,6 +3544,12 @@ msgstr "tokenisering understøttes ikke"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenisering uden betaling understøttes ikke"
+
+#~ msgid "EasyPaisa"
+#~ msgstr "EasyPaisa"
+
+#~ msgid "JazzCash"
+#~ msgstr "JazzCash"
 
 #~ msgid " Data Fetched"
 #~ msgstr "Data Hentet"

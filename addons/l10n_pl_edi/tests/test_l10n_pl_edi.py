@@ -517,6 +517,19 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             )
 
     @freeze_time('2026-01-23')
+    def test_ksef_fa3_eu_service_b2b_includes_p13_9(self):
+        """
+        EU B2B service invoices tagged with K_12 must include P_13_9 as the net
+        amount of the supplied service.
+        """
+        service_tax = self.env['account.chart.template'].ref('vs_dostu')
+        service_product = self._create_product(name='EU Service', type='service', taxes_id=[(6, 0, [service_tax.id])])
+        invoice_line = self._prepare_invoice_line(product_id=service_product.id, quantity=1, price_unit=1000.0)
+        invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Fa/ns:P_13_9"), '1000.00')
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
         """
         Verification of Negative Values for Corrections (Difference Method).
@@ -1002,3 +1015,23 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(capt.call_count, 3)
         new_bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-NEW-BILL-001')])
         self.assertTrue(new_bill)
+
+    def test_ksef_bill_import_dynamic_taxes_and_fiscal_position(self):
+        """ Test that importing a KSeF bill maps taxes dynamically using amounts and fiscal positions. """
+
+        path = 'l10n_pl_edi/tests/import_xmls/fa3_standard_bill.xml'
+        with tools.file_open(path, mode='rb') as file:
+            xml_content = file.read()
+
+        parsed_vals = self.env['account.move'].with_company(self.company).l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
+        bill = self.env['account.move'].with_company(self.company).create(parsed_vals)
+
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'price_unit': 3.19},
+            {'price_unit': 5.00},
+            {'price_unit': 5.00},
+        ])
+        self.assertEqual(
+            bill.invoice_line_ids.mapped('tax_ids.amount'),
+            [23.0, 23.0, 5.0],
+        )

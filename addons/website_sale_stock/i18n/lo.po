@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-06-08 11:10+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-07-01 16:54+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/lo/>\n"
@@ -24,8 +24,7 @@ msgstr ""
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
-msgstr ""
-"%(product_name)s ບໍ່ໄດ້ຖືກເພີ່ມເຂົ້າໃນກະຕ່າຂອງທ່ານ ເນື່ອງຈາກສິນຄ້າບໍ່ມີ."
+msgstr "%(product_name)s ບໍ່ໄດ້ຖືກເພີ່ມເຂົ້າໃນກະຕ່າຂອງທ່ານ ເນື່ອງຈາກສິນຄ້າບໍ່ມີ."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -84,8 +83,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
-"ຮູບແບບການສະແດງຈຳນວນທີ່ມີ ເຊິ່ງຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ກັບສິນຄ້າທີ່ຈັດເກັບໄດ້ທີ່ສ້າງຂຶ້ນໃໝ່. ສາມາດປ່ຽນແປງໄດ້ໃນລະດັ"
-"ບສິນຄ້າ."
+"ຮູບແບບການສະແດງຈຳນວນທີ່ມີ ເຊິ່ງຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ກັບສິນຄ້າທີ່ຈັດເກັບໄດ້ທີ່ສ້າງຂຶ້ນໃໝ່. "
+"ສາມາດປ່ຽນແປງໄດ້ໃນລະດັບສິນຄ້າ."
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
@@ -144,7 +143,7 @@ msgstr "ອີເມລບໍ່ຖືກຕ້ອງ"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/interactions/website_sale.js:0
 msgid "Invalid email"
 msgstr "ອີເມລບໍ່ຖືກຕ້ອງ"
 
@@ -181,6 +180,12 @@ msgstr "ສິນຄ້າໝົດສາງ"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "ຂໍ້ຄວາມເມື່ອສິນຄ້າໝົດສາງ"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -263,10 +268,9 @@ msgstr "ສະແດງຈຳນວນທີ່ມີ"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
-msgstr ""
-"ສິນຄ້າບາງລາຍການບໍ່ມີແລ້ວ ແລະ ກະຕ່າຂອງທ່ານໄດ້ຖືກອັບເດດ. ພວກເຮົາຂໍອະໄພໃນຄວາມບໍ່ສະດວກ."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
+msgstr "ສິນຄ້າບາງລາຍການບໍ່ມີແລ້ວ ແລະ ກະຕ່າຂອງທ່ານໄດ້ຖືກອັບເດດ. ພວກເຮົາຂໍອະໄພໃນຄວາມບໍ່ສະດວກ."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -278,6 +282,12 @@ msgstr "ສິນຄ້າຕໍ່ໄປນີ້ມີພ້ອມສົ່ງ
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "ສິນຄ້າ '%(product_name)s' ມີພ້ອມສົ່ງແລ້ວ"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -320,17 +330,14 @@ msgstr "ທ່ານໄດ້ເພີ່ມສິນຄ້າທີ່ມີທ
 msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
-msgstr ""
-"ທ່ານຕ້ອງການ %(desired_qty)s %(product_name)s ແຕ່ມີພຽງ %(new_qty)s ເທົ່ານັ້ນທີ່ມີ"
+msgstr "ທ່ານຕ້ອງການ %(desired_qty)s %(product_name)s ແຕ່ມີພຽງ %(new_qty)s ເທົ່ານັ້ນທີ່ມີ"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is "
-"available."
-msgstr ""
-"ທ່ານຕ້ອງການ %(desired_qty)s ລາຍການ ແຕ່ມີພຽງ %(available_qty)s ເທົ່ານັ້ນທີ່ມີ."
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
+msgstr "ທ່ານຕ້ອງການ %(desired_qty)s ລາຍການ ແຕ່ມີພຽງ %(available_qty)s ເທົ່ານັ້ນທີ່ມີ."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock

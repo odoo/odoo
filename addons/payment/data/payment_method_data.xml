@@ -1089,20 +1089,6 @@
         />
     </record>
 
-    <record id="payment_method_easypaisa" model="payment.method">
-        <field name="name">EasyPaisa</field>
-        <field name="code">easypaisa</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/easypaisa.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_manual_capture">none</field>
-        <field name="support_refund">none</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.pk')])]" />
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PKR')])]" />
-    </record>
-
     <record id="payment_method_emi_india" model="payment.method">
         <field name="name">EMI</field>
         <field name="code">emi_india</field>
@@ -1471,20 +1457,6 @@
                          ref('base.EUR'),
                      ])]"
         />
-    </record>
-
-    <record id="payment_method_jazzcash" model="payment.method">
-        <field name="name">JazzCash</field>
-        <field name="code">jazzcash</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/jazzcash.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_manual_capture">none</field>
-        <field name="support_refund">none</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.pk')])]" />
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PKR')])]" />
     </record>
 
     <record id="payment_method_jeniuspay" model="payment.method">

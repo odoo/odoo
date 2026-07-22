@@ -19,16 +19,16 @@
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # aleksandar ivanov, 2023
 # Ivo Matev <ivo.matev@lensin.eu>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Toma Tomov <toma.tomov@gmail.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Toma Tomov <toma.tomov@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-12-27 09:35+0000\n"
-"Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
+"PO-Revision-Date: 2026-06-30 21:43+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "purchase/bg/>\n"
 "Language: bg\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -47,8 +47,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Запитване за Оферта "
-"- %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Запитване за "
+"Оферта - %s' % (object.name) or\n"
 "                'Поръчка - %s' % (object.name))"
 
 #. module: purchase
@@ -317,8 +317,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Запитване за Оферта </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Запитване за Оферта </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Поръчка </span>"
 
@@ -733,8 +733,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
-"Периодът от време между одобрението на покупката и датата на поръчката."
+msgstr "Периодът от време между одобрението на покупката и датата на поръчката."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -2952,8 +2951,7 @@ msgstr "Показване на сравнение"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
-"Показване на всички записи, чиято следваща дата на активност е отминала"
+msgstr "Показване на всички записи, чиято следваща дата на активност е отминала"
 
 #. module: purchase
 #. odoo-python
@@ -3593,9 +3591,9 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"Когато създавате Поръчка, погледнете коефициента на доставчика за "
-"<i>навременна доставка</i> : процентът на продуктите, изпратени навреме. Ако "
-"е твърде ниско, активирайте <i>автоматизираните напомняния</i>. Няколко дни "
+"Когато създавате Поръчка, погледнете коефициента на доставчика за <i>"
+"навременна доставка</i> : процентът на продуктите, изпратени навреме. Ако е "
+"твърде ниско, активирайте <i>автоматизираните напомняния</i>. Няколко дни "
 "преди крайната доставка системата ще изпрати на доставчика имейл, за да "
 "поиска потвърждение на датите на доставка и ще ви информира, в случай на "
 "закъснения. За да получите статистически данни за ефективността на "
@@ -3682,9 +3680,9 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"Вашето Запитване за Оферта съдържа продукти от компанията %"
-"(product_company)s като самото запитване за оферта принадлежи на компанията %"
-"(quote_company)s. \n"
+"Вашето Запитване за Оферта съдържа продукти от компанията %(product_company)"
+"s като самото запитване за оферта принадлежи на компанията %(quote_company)"
+"s. \n"
 "Моля, променете компанията на вашето запитване за оферта или премахнете "
 "продуктите от други компании (%(bad_products)s)."
 

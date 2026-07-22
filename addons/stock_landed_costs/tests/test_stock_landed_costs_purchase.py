@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
-from unittest import skip
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLCCommon
@@ -11,7 +10,6 @@ from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     @classmethod
@@ -251,42 +249,23 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], aggregates=['balance:sum'])[0]
         self.assertEqual(balance, 0, 'Move is not balanced')
         move_lines = [
-            {'name': 'split by volume - Microwave Oven',                    'debit': 3.75,  'credit': 0.0},
-            {'name': 'split by volume - Microwave Oven',                    'debit': 0.0,   'credit': 3.75},
-            {'name': 'split by weight - Microwave Oven',                    'debit': 40.0,  'credit': 0.0},
-            {'name': 'split by weight - Microwave Oven',                    'debit': 0.0,   'credit': 40.0},
-            {'name': 'split by quantity - Microwave Oven',                  'debit': 33.33, 'credit': 0.0},
-            {'name': 'split by quantity - Microwave Oven',                  'debit': 0.0,   'credit': 33.33},
-            {'name': 'equal split - Microwave Oven',                        'debit': 2.5,   'credit': 0.0},
-            {'name': 'equal split - Microwave Oven',                        'debit': 0.0,   'credit': 2.5},
-            {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.5,   'credit': 0.0},
-            {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 0.5},
-            {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 4.0,   'credit': 0.0},
-            {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 4.0},
-            {'name': 'split by weight - Refrigerator',                      'debit': 0.0,   'credit': 10.0},
-            {'name': 'split by weight - Refrigerator',                      'debit': 10.0,  'credit': 0.0},
-            {'name': 'split by volume - Refrigerator',                      'debit': 0.0,   'credit': 1.25},
-            {'name': 'split by volume - Refrigerator',                      'debit': 1.25,  'credit': 0.0},
-            {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 6.67,  'credit': 0.0},
-            {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 0.0,   'credit': 6.67},
-            {'name': 'split by quantity - Refrigerator',                    'debit': 16.67, 'credit': 0.0},
-            {'name': 'split by quantity - Refrigerator',                    'debit': 0.0,   'credit': 16.67},
-            {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 1.0,   'credit': 0.0},
-            {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 0.0,   'credit': 1.0},
-            {'name': 'equal split - Refrigerator',                          'debit': 2.5,   'credit': 0.0},
-            {'name': 'equal split - Refrigerator',                          'debit': 0.0,   'credit': 2.5}
+            {'name': 'split by volume - Microwave Oven',     'debit': 3.75,   'credit': 0.0},
+            {'name': 'split by volume - Microwave Oven',     'debit': 0.0,    'credit': 3.75},
+            {'name': 'split by weight - Microwave Oven',     'debit': 40.0,   'credit': 0.0},
+            {'name': 'split by weight - Microwave Oven',     'debit': 0.0,    'credit': 40.0},
+            {'name': 'split by quantity - Microwave Oven',   'debit': 33.33,  'credit': 0.0},
+            {'name': 'split by quantity - Microwave Oven',   'debit': 0.0,    'credit': 33.33},
+            {'name': 'equal split - Microwave Oven',         'debit': 2.5,    'credit': 0.0},
+            {'name': 'equal split - Microwave Oven',         'debit': 0.0,    'credit': 2.5},
+            {'name': 'split by weight - Refrigerator',       'debit': 6.0,    'credit': 0.0},
+            {'name': 'split by weight - Refrigerator',       'debit': 0.0,    'credit': 6.0},
+            {'name': 'split by volume - Refrigerator',       'debit': 0.75,   'credit': 0.0},
+            {'name': 'split by volume - Refrigerator',       'debit': 0.0,    'credit': 0.75},
+            {'name': 'split by quantity - Refrigerator',     'debit': 10.0,   'credit': 0.0},
+            {'name': 'split by quantity - Refrigerator',     'debit': 0.0,    'credit': 10.0},
+            {'name': 'equal split - Refrigerator',           'debit': 1.5,    'credit': 0.0},
+            {'name': 'equal split - Refrigerator',           'debit': 0.0,    'credit': 1.5},
         ]
-        if stock_negative_landed_cost.account_move_id.company_id.anglo_saxon_accounting:
-            move_lines += [
-                {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.5,   'credit': 0.0},
-                {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 0.5},
-                {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 4.0,   'credit': 0.0},
-                {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 4.0},
-                {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 6.67,  'credit': 0.0},
-                {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 0.0,   'credit': 6.67},
-                {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 1.0,   'credit': 0.0},
-                {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 0.0,   'credit': 1.0},
-            ]
         self.assertRecordValues(
             stock_negative_landed_cost.account_move_id.line_ids.sorted(lambda d: (d['name'], d['debit'])),
             sorted(move_lines, key=lambda d: (d['name'], d['debit'])),
@@ -364,68 +343,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 
 @tagged('post_install', '-at_install')
 class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
-    @skip('Temporary to fast merge new valuation')
-    def test_invoice_after_lc(self):
-        self.env.company.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        stock_valuation_account = self.company_data['default_account_stock_valuation']
-
-        # Create PO
-        po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.env['res.partner'].create({'name': 'vendor'})
-        with po_form.order_line.new() as po_line:
-            po_line.product_id = self.product1
-            po_line.product_qty = 1
-            po_line.price_unit = 455.0
-        order = po_form.save()
-        order.button_confirm()
-
-        # Receive the goods
-        receipt = order.picking_ids[0]
-        receipt.move_ids.quantity = 1
-        receipt.button_validate()
-
-        # Check SVL and AML
-        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)])
-        self.assertAlmostEqual(svl.value, 455)
-        aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id)])
-        self.assertAlmostEqual(aml.debit, 455)
-
-        # Create and validate LC
-        lc = self.env['stock.landed.cost'].create(dict(
-            picking_ids=[(6, 0, [receipt.id])],
-            account_journal_id=self.stock_journal.id,
-            cost_lines=[
-                (0, 0, {
-                    'name': 'equal split',
-                    'split_method': 'equal',
-                    'price_unit': 99,
-                    'product_id': self.productlc1.id,
-                }),
-            ],
-        ))
-        lc.compute_landed_cost()
-        lc.button_validate()
-
-        # Check LC, SVL and AML
-        self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
-        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)], order='id desc', limit=1)
-        self.assertAlmostEqual(svl.value, 99)
-        aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id)], order='id desc', limit=1)
-        self.assertAlmostEqual(aml.debit, 99)
-
-        # Create an invoice with the same price
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.invoice_date = move_form.date
-        move_form.partner_id = order.partner_id
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
-        move = move_form.save()
-        move.action_post()
-
-        # Check nothing was posted in the stock valuation account.
-        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id), ('move_id', '=', move.id)])
-        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the stock valuation account about the price difference.")
 
     def test_lc_with_avco_ordered_qty_backorder(self):
         """ Make sure the landed cost added in invoices are taken into account to compute product
@@ -493,74 +410,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertEqual(self.product1.standard_price, 1.5)
         self.assertEqual(product2.standard_price, 3.5)
 
-    @skip('Temporary to fast merge new valuation')
-    def test_invoice_after_lc_amls(self):
-        self.env.company.anglo_saxon_accounting = True
-        self.landed_cost.landed_cost_ok = True
-        self.landed_cost.categ_id.property_cost_method = 'fifo'
-        self.landed_cost.categ_id.property_valuation = 'real_time'
-
-        # Create PO
-        po = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-            'currency_id': self.company_data['currency'].id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product_a.name,
-                    'product_id': self.product_a.id,
-                    'product_qty': 1.0,
-                    'product_uom_id': self.product_a.uom_id.id,
-                    'price_unit': 100.0,
-                    'tax_ids': False,
-                }),
-                (0, 0, {
-                    'name': self.landed_cost.name,
-                    'product_id': self.landed_cost.id,
-                    'product_qty': 1.0,
-                    'price_unit': 100.0,
-                }),
-            ],
-        })
-        po.button_confirm()
-
-        receipt = po.picking_ids
-        receipt.move_ids.quantity = 1
-        receipt.button_validate()
-        po.order_line[1].qty_received = 1
-
-        po.action_create_invoice()
-        bill = po.invoice_ids
-
-        # Create and validate LC
-        lc = self.env['stock.landed.cost'].create(dict(
-            picking_ids=[(6, 0, [receipt.id])],
-            account_journal_id=self.stock_journal.id,
-            cost_lines=[
-                (0, 0, {
-                    'name': 'equal split',
-                    'split_method': 'equal',
-                    'price_unit': 100,
-                    'product_id': self.landed_cost.id,
-                }),
-            ],
-        ))
-        lc.compute_landed_cost()
-        lc.button_validate()
-
-        user = self.env['res.users'].create({
-            'name': 'User h',
-            'login': 'usher',
-            'email': 'usher@yourcompany.com',
-            'group_ids': [(6, 0, [self.env.ref('account.group_account_invoice').id])]
-        })
-        # Post the bill
-        bill.landed_costs_ids = [(6, 0, lc.id)]
-        bill.invoice_date = Date.today()
-        bill.with_user(user)._post()
-
-        landed_cost_aml = bill.invoice_line_ids.filtered(lambda l: l.product_id == self.landed_cost)
-        self.assertTrue(landed_cost_aml.reconciled)
-
     def test_lc_with_avco_ordered_qty_invoice_receipt_order(self):
         """ When using an invoicing policy that permits invoicing prior to reception, stock moves
         for products using dynamic cost methods should account for LCs associated with the order
@@ -619,7 +468,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         receipt2.button_validate()
         self.assertEqual(product.standard_price, 1.81)
 
-    @skip('Temporary to fast merge new valuation')
     def test_landed_costs_avco_invoice_before_receipt(self):
         """
         Test the application of landed costs on a product with average cost (AVCO) method
@@ -661,7 +509,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         receipt.button_validate()
 
         # Ensure that the product cost has not been updated yet
-        assert receipt.move_ids[0].stock_valuation_layer_ids[0].unit_cost == 10
+        self.assertEqual(receipt.move_ids[0].value, 10)
 
         action = bill.button_create_landed_costs()
         lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
@@ -672,7 +520,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # 35 = Product price (10) + landed cost price (25)
         self.assertEqual(product.standard_price, 35)
 
-    @skip('Temporary to fast merge new valuation')
     def test_refund_landed_cost_creates_negative_valuation(self):
         """Ensure landed cost created from a vendor refund is negative and reduces valuation."""
         self.env.company.anglo_saxon_accounting = True
@@ -723,7 +570,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         lc = lc_form.save()
         lc.button_validate()
         self.assertEqual(lc.amount_total, 20)
-        self.assertEqual(lc.stock_valuation_layer_ids.value, 20)
+        self.assertEqual(sum(lc.valuation_adjustment_lines.mapped('additional_landed_cost')), 20)
         reverse_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=bill.ids).create({
             'reason': 'Refund for landed cost',
             'date': fields.Date.today(),
@@ -739,9 +586,8 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         lc = lc_form.save()
         lc.button_validate()
         self.assertEqual(lc.amount_total, -20)
-        self.assertEqual(lc.stock_valuation_layer_ids.value, -20)
+        self.assertEqual(sum(lc.valuation_adjustment_lines.mapped('additional_landed_cost')), -20)
 
-    @skip('Temporary to fast merge new valuation')
     def test_landed_cost_avco_partial_bill_rounding(self):
         """Tests landed cost calculation for an AVCO product with partial
         billing and backorders, ensuring correct stock valuation and handling
@@ -792,14 +638,10 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         bill.invoice_line_ids.quantity = 70
         bill.action_post()
 
-        svl_initial_receipt = self.env['stock.valuation.layer'].search([
-            ('product_id', '=', self.product1.id),
-            ('stock_move_id', '=', picking.move_ids.id)
-        ])
-        self.assertEqual(len(svl_initial_receipt), 1)
-        self.assertAlmostEqual(svl_initial_receipt.quantity, 70)
-        self.assertAlmostEqual(svl_initial_receipt.unit_cost, 110, msg="SVL unit cost for initial receipt should match PO price.")
-        self.assertAlmostEqual(svl_initial_receipt.value, 70 * 110)
+        initial_receipt_move = picking.move_ids
+        self.assertAlmostEqual(initial_receipt_move.quantity, 70)
+        self.assertAlmostEqual(initial_receipt_move.value / initial_receipt_move.quantity, 110, msg="Move unit cost for initial receipt should match PO price.")
+        self.assertAlmostEqual(initial_receipt_move.value, 70 * 110)
         self.assertAlmostEqual(self.product1.standard_price, 110, msg="Product AVCO should be 110 after first receipt.")
         self.assertAlmostEqual(purchase_order.order_line[0].qty_invoiced, 70)
 
@@ -829,17 +671,12 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         backorder_picking.move_ids[0].quantity = 120
         backorder_picking.button_validate()  # This should not create another backorder
 
-        # Check that the valuation layers of the backorder matches the bill
-        svl_backorder_receipt = self.env['stock.valuation.layer'].search([
-            ('product_id', '=', self.product1.id),
-            ('stock_move_id', '=', backorder_picking.move_ids[0].id)
-        ])
-
-        self.assertEqual(len(svl_backorder_receipt), 1)
-        self.assertAlmostEqual(svl_backorder_receipt.quantity, 120)
+        # Check that the move valuation of the backorder matches the bill
+        backorder_receipt_move = backorder_picking.move_ids[0]
+        self.assertAlmostEqual(backorder_receipt_move.quantity, 120)
         # The unit cost for AVCO on receipt is taken from the purchase order line price.
-        self.assertAlmostEqual(svl_backorder_receipt.unit_cost, 110, msg="SVL unit cost for backorder receipt should match PO price.")
-        self.assertAlmostEqual(svl_backorder_receipt.value, 120 * 110)
+        self.assertAlmostEqual(backorder_receipt_move.value / backorder_receipt_move.quantity, 110, msg="Move unit cost for backorder receipt should match PO price.")
+        self.assertAlmostEqual(backorder_receipt_move.value, 120 * 110)
 
         # Final check on product's AVCO and total quantity/value
         # Total quantity received is 120 + 70 = 190
@@ -850,9 +687,9 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # 110 + 95 / 190 = 110.5
         self.assertAlmostEqual(self.product1.standard_price, 110.5)
 
-        # Check total value in SVL:
+        # Check total value:
         # 120 * 110 + 95 + 70 * 110 = 20995
-        self.assertAlmostEqual(self.product1.value_svl, 20995)
+        self.assertAlmostEqual(self.product1.total_value, 20995)
 
     def test_landed_cost_partial_cogs(self):
         """ Check that when billing a landed cost product and then creating the associate

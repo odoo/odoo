@@ -8,6 +8,7 @@ from google.oauth2 import service_account
 
 from odoo import models
 from odoo.exceptions import ValidationError
+from odoo.http import content_disposition
 
 from ..utils.cloud_storage_google_utils import generate_signed_url_v4
 
@@ -64,7 +65,13 @@ class IrAttachment(models.Model):
             return super()._generate_cloud_storage_download_info()
         info = self._get_cloud_storage_google_info()
         return {
-            'url': self._generate_cloud_storage_google_signed_url(info['bucket_name'], info['blob_name'], method='GET', expiration=self._cloud_storage_download_url_time_to_expiry),
+            'url': self._generate_cloud_storage_google_signed_url(
+                info['bucket_name'], info['blob_name'],
+                method='GET',
+                expiration=self._cloud_storage_download_url_time_to_expiry,
+                response_type=self.mimetype or None,
+                response_disposition=content_disposition(self.name) if self.env.context.get('download_attachments') else None,
+            ),
             'time_to_expiry': self._cloud_storage_download_url_time_to_expiry,
         }
 
@@ -76,4 +83,5 @@ class IrAttachment(models.Model):
             'url': self._generate_cloud_storage_google_signed_url(info['bucket_name'], info['blob_name'], method='PUT', expiration=self._cloud_storage_upload_url_time_to_expiry),
             'method': 'PUT',
             'response_status': 200,
+            'headers': {'Content-Type': self.mimetype} if self.mimetype else None,
         }

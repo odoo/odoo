@@ -409,6 +409,8 @@ export class SnippetModel extends Reactive {
                             : snippetCopyEl;
                         cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
 
+                        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
+
                         const defaultSnippetName = isButton
                             ? _t("Custom Button")
                             : _t("Custom %s", snippetEl.dataset.name);

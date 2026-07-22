@@ -1315,12 +1315,12 @@ class AccountMove(models.Model):
     def _compute_status_in_payment(self):
         for move in self:
             if move.state == 'posted':
-                if move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
+                if move.payment_state in ('partial', 'in_payment', 'paid', 'reversed', 'blocked'):
                     move.status_in_payment = move.payment_state
                 elif move.is_move_sent:
                     move.status_in_payment = 'sent'
             elif move.state == 'draft':
-                if move.payment_state in ('partial', 'in_payment', 'paid'):
+                if move.payment_state in ('partial', 'in_payment', 'paid', 'blocked'):
                     move.status_in_payment = move.payment_state
 
             if not move.status_in_payment:
@@ -1980,7 +1980,7 @@ class AccountMove(models.Model):
     @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id')
     def _compute_partner_credit_warning(self):
         for move in self:
-            move.with_company(move.company_id)
+            move = move.with_company(move.company_id)
             move.partner_credit_warning = ''
             show_warning = move.state == 'draft' and \
                            move.move_type == 'out_invoice' and \
@@ -2163,7 +2163,7 @@ class AccountMove(models.Model):
                 move_type_sql_condition=move_type_sql_condition,
             )))
         return {
-            self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
+            self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)._filtered_access('read')
             for move_id, duplicate_ids in result
         }
 
@@ -6040,6 +6040,8 @@ class AccountMove(models.Model):
     def action_force_register_payment(self):
         if any(m.move_type == 'entry' for m in self):
             raise UserError(_("You cannot register payments for miscellaneous entries."))
+        if any(m.payment_state == 'blocked' for m in self):
+            raise UserError(self.env._("You cannot register payments for blocked invoices."))
         return self.line_ids.action_register_payment()
 
     def action_duplicate(self):
@@ -6386,12 +6388,12 @@ class AccountMove(models.Model):
                 if not move:
                     continue
                 move._post()
+                self.env['ir.cron']._commit_progress(1)
             except UserError as e:
                 self.env.cr.rollback()
                 msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
                 move.message_post(body=msg, message_type='comment')
                 move.auto_post = 'no'
-            finally:
                 self.env['ir.cron']._commit_progress(1)
 
     @api.model
@@ -6691,7 +6693,7 @@ class AccountMove(models.Model):
                 line[2]['partner_id'] = self.env['res.partner'].browse(line[2]['partner_id']).sudo().display_name
             line[2]['account_id'] = self.env['account.account'].browse(line[2]['account_id']).display_name or _('Destination Account')
             line[2]['debit'] = currency_id and formatLang(self.env, line[2]['debit'], currency_obj=currency_id) or line[2]['debit']
-            line[2]['credit'] = currency_id and formatLang(self.env, line[2]['credit'], currency_obj=currency_id) or line[2]['debit']
+            line[2]['credit'] = currency_id and formatLang(self.env, line[2]['credit'], currency_obj=currency_id) or line[2]['credit']
         return preview_vals
 
     def _generate_qr_code(self, silent_errors=False):
@@ -6992,9 +6994,11 @@ class AccountMove(models.Model):
                 'company_email': journal_alias_company.email or self.env.company.email,
                 'company_name': journal_alias_company.name or self.env.company.name,
             })
-            self._routing_create_bounce_email(
+            reply_to_journal_company = journal_alias_company.email or self.env.company.email
+            self.with_company(journal_alias_company)._routing_create_bounce_email(
                 message_dict['from'], body, message,
-                references=f'{message_dict["message_id"]} {generate_tracking_message_id("loop-detection-bounce-email")}')
+                references=f'{message_dict["message_id"]} {generate_tracking_message_id("loop-detection-bounce-email")}',
+                reply_to=reply_to_journal_company)
             return ()
         return super()._routing_check_route(message, message_dict, route, raise_exception=raise_exception)
 

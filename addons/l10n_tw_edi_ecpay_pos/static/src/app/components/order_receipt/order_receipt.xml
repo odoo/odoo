@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt')]" position="attributes">
+            <attribute name="t-att-class">{ 'pos-receipt-ecpay-width': order.config.is_ecpay_enabled and order.company.account_fiscal_country_id?.code === "TW" }</attribute>
+        </xpath>
+    </t>
+</templates>

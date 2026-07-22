@@ -302,9 +302,7 @@ class HrAttendanceOvertimeRule(models.Model):
         employee = attendances.employee_id
         if self.expected_hours_from_contract:
             if employee.version_id.is_flexible:
-                leaves_duration = sum_intervals(schedule['leave'] & Intervals([(start, stop, self.env['resource.calendar'])]))
-                duration = (employee.resource_calendar_id.hours_per_week if self.quantity_period == 'week' else employee.resource_calendar_id.hours_per_day) - leaves_duration
-                expected_duration = max(duration, 0)
+                expected_duration = self._get_expected_hours_from_contract(start.date(), employee.version_id, period=self.quantity_period)
             else:
                 period_schedule = (schedule['work'] - schedule['leave']) & Intervals([(start, stop, self.env['resource.calendar'])])
                 expected_duration = sum_intervals(period_schedule)

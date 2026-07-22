@@ -196,6 +196,7 @@ export class PosStore extends WithLazyGetterTrap {
         initLNA(this.notification, (type, message) => {
             this.lnaState = { type, message };
         });
+        await this.checkAccessRight();
     }
 
     async posBackOnline() {
@@ -762,6 +763,7 @@ export class PosStore extends WithLazyGetterTrap {
             (attr) => attr.attribute_id?.id in attrById
         );
         let attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
+        let variantProduct = null;
         if (opts.code || opts.presetVariant) {
             let product;
             if (opts.code) {
@@ -779,6 +781,7 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 product = opts.presetVariant;
             }
+            variantProduct = product;
 
             const attrValueIds = new Set(
                 product?.product_template_attribute_value_ids?.map((v) => v.id) || []
@@ -791,10 +794,22 @@ export class PosStore extends WithLazyGetterTrap {
             );
         }
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            const forceVariantValue =
+                (opts.forceVariantValue
+                    ? Object.fromEntries(opts.forceVariantValue.map((value) => [value.id, value]))
+                    : undefined) ||
+                (variantProduct
+                    ? Object.fromEntries(
+                          variantProduct.product_template_attribute_value_ids.map((value) => [
+                              value.id,
+                              value,
+                          ])
+                      )
+                    : undefined);
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
-                forceVariantValue: opts.forceVariantValue,
+                forceVariantValue,
                 line: opts.line,
             });
         }
@@ -1263,7 +1278,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (values.product_id.product_template_variant_value_ids.length > 0) {
                 // Verify price extra of variant products
                 const priceExtra = values.product_id.product_template_variant_value_ids
-                    .filter((attr) => attr.attribute_id.create_variant !== "always")
+                    .filter((attr) => attr.attribute_id.create_variant !== "always" && !opts.code)
                     .reduce((acc, attr) => acc + attr.price_extra, 0);
 
                 values.price_extra += priceExtra;
@@ -1683,15 +1698,13 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async getServerOrders() {
         await this.syncAllOrders();
-        const config_domain = new Domain([
-            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-        ]);
-        return await this.data.loadServerOrders(
-            Domain.and([config_domain, this.getServerOrdersDomain()]).toList()
-        );
+        return await this.data.loadServerOrders(this.getServerOrdersDomain().toList());
     }
     getServerOrdersDomain() {
-        return new Domain([["state", "=", "draft"]]);
+        return new Domain([
+            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+            ["state", "=", "draft"],
+        ]);
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
@@ -2078,7 +2091,7 @@ export class PosStore extends WithLazyGetterTrap {
     getOrderData(order, reprint) {
         return {
             reprint: reprint,
-            pos_reference: order.getName(),
+            pos_reference: order.preparationName,
             config_name: order.config_id?.name || order.config.name,
             time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
@@ -2364,8 +2377,22 @@ export class PosStore extends WithLazyGetterTrap {
         await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
         await this.reloadData(true);
     }
+
+    async checkAccessRight() {
+        try {
+            this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
+        } catch {
+            this.canUserCreateProduct = false;
+        }
+    }
+
+    get hasProductCreationAccess() {
+        return this.canUserCreateProduct;
+    }
+
+    // TODO: Remove in master. Use `hasProductCreationAccess` instead.
     async allowProductCreation() {
-        return await user.checkAccessRight("product.product", "create");
+        return this.hasProductCreationAccess;
     }
     orderDetailsProps(order) {
         return {

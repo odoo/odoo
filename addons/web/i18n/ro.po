@@ -9,20 +9,20 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Claudia Baisan, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Cozmin Cândea <cozmin@terrabit.ro>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Adrian Cocos <adrian.cocos@capps.ai>, 2025.
-# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Cozmin Cândea <cozmin@terrabit.ro>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Adrian Cocos <adrian.cocos@capps.ai>, 2025, 2026.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-04-13 20:49+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-06-30 14:51+0000\n"
+"Last-Translator: Cozmin Cândea <cozmin@terrabit.ro>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/web/ro/"
 ">\n"
 "Language: ro\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -6074,6 +6074,12 @@ msgstr "Salvează manual"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation_button.js:0
+msgid "Save this record and its parent to translate"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one.xml:0
 msgid "Scan barcode"
 msgstr "Scanare cod de bare"
@@ -6783,17 +6789,6 @@ msgstr "Text"
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 msgid "Text file"
 msgstr "Fișier Text"
-
-#. module: web
-#: model:ir.model.fields,help:web.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Numărul de identificare fiscală. Valorile aici vor fi validate în funcție de "
-"formatul țării. Puteți folosi „/” pentru a indica că partenerul nu este "
-"plătitor de TVA."
 
 #. module: web
 #. odoo-python
@@ -7909,6 +7904,11 @@ msgstr "Puteți instala aplicația din meniul browserului"
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
 msgstr "Nu puteți citi definiția câmpului respectiv."
+
+#. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -26996,6 +26996,15 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Numărul de identificare fiscală. Valorile aici vor fi validate în funcție "
+#~ "de formatul țării. Puteți folosi „/” pentru a indica că partenerul nu "
+#~ "este plătitor de TVA."
 
 #~ msgid "Memory limit (in bytes)"
 #~ msgstr "Limită de memorie (în octeți)"

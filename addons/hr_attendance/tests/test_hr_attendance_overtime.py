@@ -1758,3 +1758,41 @@ class TestHrAttendanceOvertime(HttpCase):
             4.0,
             msg='Overtime duration should be the full 4 hours worked, not 4 - 1 = 3 hours.',
         )
+
+    def test_overtime_recomputation_attendance_overlapping_midnight(self):
+        attendance1 = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 22, 0),
+            'check_out': datetime(2021, 1, 5, 10, 0)
+        })
+        self.assertEqual(attendance1.overtime_hours, 2.0, "There should be 2 hours of overtime on the 5th.")
+
+        attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 5, 14, 0),
+            'check_out': datetime(2021, 1, 5, 18, 0)
+        })
+        self.assertEqual(attendance2.overtime_hours, 4.0, "The whole attendance should be in overtime.")
+
+    def test_weekly_overtime_flexible_resource_public_holiday(self):
+        self.ruleset.rule_ids.write({
+            'expected_hours_from_contract': True,
+            'quantity_period': 'week',
+        })
+        self.employee.resource_calendar_id = self.calendar_flex_40h
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': self.calendar_flex_40h.id,
+            'date_from': datetime(2026, 5, 25, 0, 0),
+            'date_to': datetime(2026, 5, 25, 23, 59, 59),
+            'company_id': self.company.id,
+        })
+        attendances = self.env['hr.attendance'].create([
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 5, 26, 0, 0), 'check_out': datetime(2026, 5, 26, 8, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 5, 27, 0, 0), 'check_out': datetime(2026, 5, 27, 8, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 5, 28, 0, 0), 'check_out': datetime(2026, 5, 28, 8, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 5, 29, 0, 0), 'check_out': datetime(2026, 5, 29, 8, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 5, 30, 0, 0), 'check_out': datetime(2026, 5, 30, 8, 0)},
+        ])
+        self.assertEqual(sum(attendances.mapped('worked_hours')), 40)
+        self.assertEqual(sum(attendances.mapped('overtime_hours')), 8)

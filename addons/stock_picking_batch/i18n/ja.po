@@ -5,17 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
 # Andy Yiu, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-06 13:59+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-07-07 12:13+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "stock_picking_batch/ja/>\n"
 "Language: ja\n"
@@ -582,7 +582,7 @@ msgstr "フォロー中"
 #. module: stock_picking_batch
 #: model:ir.ui.menu,name:stock_picking_batch.menu_stock_jobs
 msgid "Jobs"
-msgstr "採用情報"
+msgstr "処理"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -1127,6 +1127,14 @@ msgstr "選択された転送は一意の会社に属している必要があり
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to the same operation type"
 msgstr "選択された転送は同一のオペレーションタイプに属している必要があります。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid ""
+"The sequence '%(sequence)s' is misconfigured. Its prefix should end with a "
+"'/' separator."
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave

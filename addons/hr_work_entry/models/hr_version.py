@@ -723,7 +723,7 @@ class HrVersion(models.Model):
         # It is more interesting for batching to process statically generated work entries first
         # since we get benefits from having multiple versions on the same calendar
         versions_todo = versions_todo.sorted(key=lambda v: 1 if v.has_static_work_entries() else 100)
-        versions_todo = versions_todo[:BATCH_SIZE].generate_work_entries(start.date(), stop.date(), False)
+        versions_todo = versions_todo[:BATCH_SIZE].with_context(lang=self.env.user.lang).generate_work_entries(start.date(), stop.date(), False)
         # if necessary, retrigger the cron to generate more work entries
         if version_todo_count > BATCH_SIZE:
             self.env.ref('hr_work_entry.ir_cron_generate_missing_work_entries')._trigger()

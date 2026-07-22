@@ -1138,7 +1138,7 @@ class HrExpense(models.Model):
         expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
-            expenses_autovalidated._do_approve()
+            expenses_autovalidated.with_context(validate_analytic=True)._do_approve()
         self.sudo().update_activities_and_mails()
 
     def _can_be_autovalidated(self):
@@ -1149,14 +1149,6 @@ class HrExpense(models.Model):
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
         self._check_can_approve()
-        for expense in self:
-            expense._validate_distribution(
-                account=expense.account_id.id,
-                product=expense.product_id.id,
-                business_domain='expense',
-                company_id=expense.company_id.id,
-            )
-
         duplicates = self.duplicate_expense_ids.filtered(lambda exp: exp.state in {'submitted', 'approved', 'posted', 'paid', 'in_payment'})
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
@@ -1457,6 +1449,12 @@ class HrExpense(models.Model):
     def _do_approve(self, check=True):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
         for expense in expenses_to_approve:
+            expense._validate_distribution(
+                account=expense.account_id.id,
+                product=expense.product_id.id,
+                business_domain='expense',
+                company_id=expense.company_id.id,
+            )
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,

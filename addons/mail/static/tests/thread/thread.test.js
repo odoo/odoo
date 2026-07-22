@@ -20,7 +20,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
+import { press, queryFirst, queryOne, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -76,7 +76,8 @@ test("load more messages from channel (auto-load on scroll)", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
+    await contains("button:text(Load More)", { before: [".o-mail-Message", { count: 30 }] });
+    expect(getComputedStyle(queryOne("button:text(Load More)")).opacity).toBe("1");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", { count: 60 });
@@ -728,15 +729,26 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
-    pyEnv["mail.message"].create({
+    const helloMessageId = pyEnv["mail.message"].create({
         body: "Hello there!",
         model: "discuss.channel",
         res_id: channelId,
         author_id: partnerId,
     });
+    // Mark the pre-existing message as read: otherwise reopening the channel
+    // reloads it around the 0 separator, and that /discuss/channel/messages
+    // fetch marks the needaction message as read (set_message_done) instead of
+    // the tested `mark_all_as_read` flow, racing (and losing to) the assertion.
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: helloMessageId + 1,
+    });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message:contains('Hello there!)");
+    await contains(".o-mail-Message", { text: "Hello there!" });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);

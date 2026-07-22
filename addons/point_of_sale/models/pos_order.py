@@ -775,11 +775,14 @@ class PosOrder(models.Model):
         return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount, force_round=False):
-        # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
-        if self.config_id.cash_rounding \
-           and (force_round or (not self.config_id.only_round_cash_method \
-           or any(p.payment_method_id.is_cash_count for p in self.payment_ids))):
-            amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+        if self.config_id.cash_rounding:
+            rounding_method = self.config_id.rounding_method
+            if force_round or not self.config_id.only_round_cash_method:
+                amount = float_round(amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
+            elif any(p.payment_method_id.is_cash_count for p in self.payment_ids):
+                # Only round the residual settled in cash: non-cash payments pay their exact share.
+                non_cash_amount = sum(p.amount for p in self.payment_ids if not p.payment_method_id.is_cash_count)
+                amount = non_cash_amount + float_round(amount - non_cash_amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
@@ -1754,7 +1757,7 @@ class PosOrderLine(models.Model):
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
             if (self.tax_ids):
-                taxes = self.tax_ids.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
+                taxes = self.tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
@@ -1907,7 +1910,7 @@ class PosOrderLine(models.Model):
             account = fiscal_position.map_account(account)
 
         is_refund_order = line.order_id.is_refund or line.order_id.amount_total < 0.0
-        is_refund_line = line.qty * line.price_unit < 0
+        is_refund_line = line.isRefund()
 
         lang = line.order_id.partner_id.lang or self.env.user.lang
         product_name = line.product_id.with_context(lang=lang).display_name
@@ -1966,6 +1969,9 @@ class PosOrderLine(models.Model):
 
     def _has_discount(self):
         return self.discount > 0
+
+    def isRefund(self):
+        return self.qty * self.price_unit < 0
 
 
 class PosPackOperationLot(models.Model):

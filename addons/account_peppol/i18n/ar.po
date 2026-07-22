@@ -2,16 +2,16 @@
 # This file contains the translation of the following modules:
 # * account_peppol
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-05-05 12:54+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-06-30 20:02+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/ar/>\n"
 "Language: ar\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -79,8 +79,8 @@ msgstr "%s has requested electronic invoices reception on Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>التحقق من الهوية باستخدام itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -443,11 +443,6 @@ msgid "Activate"
 msgstr "تفعيل"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Activate Electronic Invoicing"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -455,6 +450,7 @@ msgstr "Activate Electronic Invoicing (via Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Activate Peppol"
 
@@ -643,6 +639,12 @@ msgid ""
 msgstr ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1047,6 +1049,13 @@ msgstr ""
 "this database'."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Free on Odoo"
@@ -1146,11 +1155,6 @@ msgstr "جاري إرسال الفاتورة"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
 msgid "Is Branch Company"
 msgstr "Is Branch Company"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__service_json
@@ -2239,6 +2243,18 @@ msgid ""
 msgstr "لإنشاء فواتير إلكترونية كاملة، قم أيضاً بتحديد دولة هذا الشريك."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr "Token Out of Sync"
@@ -2293,6 +2309,12 @@ msgid "Use Parent Connection Selection"
 msgstr "Use Parent Connection Selection"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "تأكيد"
@@ -2333,6 +2355,12 @@ msgstr "Welcome to Peppol"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
 msgstr "What is Peppol and why it's great ?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2516,6 +2544,14 @@ msgstr ""
 "database."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2625,6 +2661,15 @@ msgstr "to send invoices, but this one"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "الاستخدامات"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>التحقق من الهوية باستخدام itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Activate Electronic Invoicing"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"
 
 #~ msgid " (no access)"
 #~ msgstr " (no access)"

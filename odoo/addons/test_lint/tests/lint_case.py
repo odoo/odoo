@@ -6,9 +6,10 @@ from os.path import join as opj
 from typing import Generic, TypeVar
 
 from odoo.modules import Manifest
-from odoo.tests import BaseCase
+from odoo.tests.common import BaseCase, no_retry
 
 
+@no_retry
 class LintCase(BaseCase):
     """ Utility method for lint-type cases
     """

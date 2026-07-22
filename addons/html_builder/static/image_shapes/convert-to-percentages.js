@@ -41,7 +41,7 @@ submitButton.addEventListener("click", async (ev) => {
         alert("Please select files using the file picker first");
         return;
     }
-    Array.from(filePicker.files).forEach(async (file) => {
+    for (const file of filePicker.files) {
         const fileReader = new FileReader();
         const readerPromise = new Promise((resolve, reject) => {
             fileReader.addEventListener("load", () => resolve(fileReader.result));
@@ -171,5 +171,5 @@ submitButton.addEventListener("click", async (ev) => {
         downloadLinkEl.setAttribute("download", file.name);
         downloadLinkEl.classList.add("dl_link");
         document.getElementById("downloadArea").appendChild(downloadLinkEl);
-    });
+    }
 });

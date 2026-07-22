@@ -642,6 +642,8 @@ Versions:
                 days = hours / (today_hours or HOURS_PER_DAY)
             if leave.leave_type_request_unit == 'day' and check_leave_type:
                 days = ceil(days)
+            elif leave.request_unit_half and calendar.duration_based:
+                days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
 

@@ -1,12 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.exceptions import ValidationError
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
-@skip('Temporary to fast merge new valuation')
 class TestAnalytics(TestStockCommon):
 
     @classmethod

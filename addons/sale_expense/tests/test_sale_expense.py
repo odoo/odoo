@@ -34,11 +34,14 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'quantity': 11.30,
             'sale_order_id': so.id,
         })
+        self.assertEqual(so.expense_count, 1, "SO should recognize that an expense was created and linked to it")
+
         expense.action_submit()
         expense.action_approve()
         self.post_expenses_with_wizard(expense)
 
         # expense should now be in sales order
+        self.assertEqual(so.expense_count, 1, "Changing the state of the expense shouldn't change the expense count on the SO")
         self.assertIn(self.company_data['product_delivery_cost'], so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == self.company_data['product_delivery_cost'].id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (55.0, 11.3), 'Sale Expense: error when invoicing an expense at cost')
@@ -65,11 +68,14 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'employee_id': self.expense_employee.id,
             'sale_order_id': so.id,
         })
+        self.assertEqual(so.expense_count, 2, "SO should recognize that another expense was created and linked to it")
+
         expense_2.action_submit()
         expense_2.action_approve()
         self.post_expenses_with_wizard(expense_2)
 
         # expense should now be in sales order
+        self.assertEqual(so.expense_count, 2, "Changing the state of the expense shouldn't change the expense count on the SO")
         self.assertIn(prod_exp_2, so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_2.id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (prod_exp_2.list_price, 100.0), 'Sale Expense: error when invoicing an expense at cost')

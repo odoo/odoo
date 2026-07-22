@@ -21,13 +21,12 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
-            content: "Open contract end date",
-            trigger: ".o_field_widget[name='contract_date_end'] .o_input",
-            run: "click",
+            content: "Version should have no contract",
+            trigger: ".o_arrow_button_wrapper[data-tooltip='No contract']",
         },
         {
-            content: "Go to the next month",
-            trigger: ".o_next",
+            content: "Set a contract date start on the version",
+            trigger: ".o_field_widget[name='contract_date_start'] .o_input",
             run: "click",
         },
         {
@@ -36,55 +35,42 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
+            trigger: "body:not(:has(.o_datetime_picker))",
+        },
+        ...stepUtils.saveForm(),
+        {
+            content: "Tooltip should now reflect the new contract date start",
+            trigger: ".o_arrow_button_wrapper[data-tooltip^='Contract:']",
+        },
+        {
+            content: "Open contract end date",
+            trigger: ".o_field_widget[name='contract_date_end'] .o_input",
+            run: "click",
+        },
+        {
+            content: "Choose date X + 2",
+            trigger: ".o_date_item_cell:nth-child(12) > div",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o_datetime_picker))",
+        },
+        {
             content: "Open Create New Version",
             trigger: ".o_field_widget[name='version_id'] > .o_arrow_button_wrapper > button",
             run: "click",
         },
         {
-            content: "Go to the next month",
-            trigger: ".o_next",
+            content: "Choose date X + 3",
+            trigger: ".o_date_item_cell:nth-child(13) > div",
             run: "click",
         },
         {
-            content: "Choose date X + 2",
-            trigger: ".o_date_item_cell:nth-child(12) > div",
-            run: "click",
+            trigger: "body:not(:has(.o_datetime_picker))",
         },
         {
-            content: "Wait until the form is saved",
+            content: "Wait until new version is created and form reloads",
             trigger: "body .o_form_saved",
-        },
-        {
-            content: "New version should have no contract",
-            trigger: ".o_arrow_button_wrapper[data-tooltip='No contract']",
-        },
-        {
-            content: "Set a contract date start on the new version",
-            trigger: ".o_field_widget[name='contract_date_start'] .o_input",
-            run: "click",
-        },
-        {
-            content: "Go to the next month",
-            trigger: ".o_next",
-            run: "click",
-        },
-        {
-            content: "Choose date X + 2",
-            trigger: ".o_date_item_cell:nth-child(12) > div",
-            run: "click",
-        },
-        {
-            content: "Save the form",
-            trigger: ".o_form_button_save",
-            run: "click",
-        },
-        {
-            content: "Wait until saved",
-            trigger: "body .o_form_saved",
-        },
-        {
-            content: "Tooltip should now reflect the new contract date start",
-            trigger: ".o_arrow_button_wrapper[data-tooltip^='Contract:']",
         },
     ],
 });

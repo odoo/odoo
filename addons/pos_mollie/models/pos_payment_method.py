@@ -59,6 +59,6 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         return self.sudo().mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
 
-    def _mollie_get_payment(self, payment_id: str):
+    def mollie_get_payment(self, payment_id: str):
         self.ensure_one()
         return self.sudo().mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")

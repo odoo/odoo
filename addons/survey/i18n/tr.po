@@ -24,17 +24,17 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
 # İlknur Gözütok, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
-# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 14:45+0000\n"
-"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 07:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/survey/"
 "tr/>\n"
 "Language: tr\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -258,8 +258,8 @@ msgstr ""
 "''\">Mobilya Yapımı</strong>\n"
 "                    sertifikanız ekte sunulmuştur.\n"
 "                </p>\n"
-"                <p>Testi <strong t-out=\"object.scoring_percentage\"/"
-">%puanla geçtiğiniz için tebrikler!</p> \n"
+"                <p>Testi <strong t-out=\"object.scoring_percentage\"/>"
+"%puanla geçtiğiniz için tebrikler!</p> \n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -310,8 +310,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sayın <t t-out=\"object.partner_id.name or "
-"'participant'\">katılımcısı</t><br/><br/>\n"
+"        Sayın <t t-out=\"object.partner_id.name or 'participant'\">"
+"katılımcısı</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Yeni bir sertifika almaya davet edildiniz.\n"
 "       </t>\n"
@@ -321,8 +321,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">{{user.company_id.email_primary_color or '#FFFFFF'}}; "
 "border-radius: 5px; font-size:13px;\">\n"
 "               <t t-if=\"object.survey_id.certification\">\n"
@@ -334,8 +334,8 @@ msgstr ""
 "            </a>\n"
 "       </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Lütfen <t t-out=\"format_date(object.deadline) or "
-"''\">05/05/2021</t> için anketi yanıtlayın.<br/><br/>\n"
+"            Lütfen <t t-out=\"format_date(object.deadline) or ''\">05/05/"
+"2021</t> için anketi yanıtlayın.<br/><br/>\n"
 "       </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Size iyi şanslar dileriz!\n"
@@ -512,8 +512,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Sertifikalar</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Sertifikalar</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Sertifika</span>"
 
@@ -523,8 +523,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
-"inline\">veya Enter'a basın </span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">"
+"veya Enter'a basın </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -2290,8 +2290,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
 msgid "If yes, explain what you think is missing, give examples."
-msgstr ""
-"Evet ise, neyin eksik olduğunu düşündüğünüzü açıklayın, örnekler verin."
+msgstr "Evet ise, neyin eksik olduğunu düşündüğünüzü açıklayın, örnekler verin."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_image
@@ -2415,8 +2414,7 @@ msgstr "Bu kullanıcı girişi bir anket oturumunun parçası mı değil mi?"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before any of its trigger questions?"
-msgstr ""
-"Bu soru, tetikleyici sorularından herhangi birinden önce mi yer alıyor?"
+msgstr "Bu soru, tetikleyici sorularından herhangi birinden önce mi yer alıyor?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -3246,8 +3244,8 @@ msgid ""
 msgstr ""
 "Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
 "Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir yer tutucu ifade olmalıdır, örneğin "
-"{{ object.partner_id.lang }}."
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id.lang }}"
+"."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4541,8 +4539,7 @@ msgstr "Soru zamanla sınırlıdır"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr ""
-"Ölçek, 0 ile 10 (dahil) arasında boş olmayan artan bir aralık olmalıdır"
+msgstr "Ölçek, 0 ile 10 (dahil) arasında boş olmayan artan bir aralık olmalıdır"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4780,8 +4777,7 @@ msgstr "Katılmak için:"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr ""
-"Bu ankete katılmak için lütfen diğer tüm sekmeleri kapatın %(hostname)s"
+msgstr "Bu ankete katılmak için lütfen diğer tüm sekmeleri kapatın %(hostname)s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search

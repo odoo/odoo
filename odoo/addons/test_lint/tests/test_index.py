@@ -36,6 +36,7 @@ BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
 }
 
 @common.tagged('post_install', '-at_install')
+@common.no_retry
 class TestIndex(common.TransactionCase):
 
     def test_enforce_index_on_one2many_inverse(self):

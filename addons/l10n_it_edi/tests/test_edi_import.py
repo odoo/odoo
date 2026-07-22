@@ -114,6 +114,54 @@ class TestItEdiImport(TestItEdi):
             ],
         }], applied_xml)
 
+    def test_receive_vendor_bill_applies_fiscal_position(self):
+        """ The fiscal position set on the bill remaps the taxes decoded from
+            the XML, matching what a manual line entry produces.
+        """
+        company = self.company
+        fiscal_position = self.env['account.fiscal.position'].with_company(company).create({
+            'name': 'Remap 22% purchase',
+        })
+        # The tax the importer decodes from a 22% line, before any mapping. The
+        # search is the same one _l10n_it_edi_search_tax_for_import runs.
+        source_tax = self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(company),
+            ('amount_type', '=', 'percent'),
+            ('amount', '=', 22.0),
+            ('type_tax_use', '=', 'purchase'),
+            ('l10n_it_exempt_reason', '=', False),
+        ]).filtered(
+            lambda tax: all(rl.factor_percent >= 0 for rl in tax.invoice_repartition_line_ids)
+        )[0]
+        # A distinct rate so the importer's search can never select it directly:
+        # it can only land on the line through the fiscal position mapping.
+        mapped_tax = self.env['account.tax'].with_company(company).create({
+            'name': '10% mapped by fiscal position',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'fiscal_position_ids': [Command.set(fiscal_position.ids)],
+            'original_tax_ids': [Command.set(source_tax.ids)],
+        })
+        self.env['res.partner'].with_company(company).create({
+            'name': 'SELLER FP SRL',
+            'vat': 'IT12345670017',
+            'l10n_it_codice_fiscale': '12345670017',
+            'country_id': self.env.ref('base.it').id,
+            'is_company': True,
+            'property_account_position_id': fiscal_position.id,
+        })
+
+        invoice = self._assert_import_invoice('IT01234567890_FPMAP.xml', [{
+            'move_type': 'in_invoice',
+            'amount_untaxed': 100.0,
+            'invoice_line_ids': [{
+                'price_unit': 100.0,
+                'tax_ids': mapped_tax.ids,
+            }],
+        }])
+        self.assertEqual(invoice.fiscal_position_id, fiscal_position)
+
     def test_receive_vendor_bill_sconto_maggiorazione(self):
         """ Test a sample e-invoice file with
         ScontoMaggiorazione on lines

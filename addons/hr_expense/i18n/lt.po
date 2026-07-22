@@ -24,14 +24,14 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 21:52+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-06-30 13:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/lt/>\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
 "1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -336,6 +336,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr "Prisegtukų skaičius"
@@ -560,6 +565,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -968,6 +974,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -2220,6 +2227,25 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
@@ -2294,6 +2320,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
 msgstr ""
 
 #. module: hr_expense

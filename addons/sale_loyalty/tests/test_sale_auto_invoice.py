@@ -41,3 +41,58 @@ class TestSaleAutoInvoice(TestSaleCouponCommon):
             self.empty_order.invoice_ids,
             "Invoices should be generated for orders with zero total amount",
         )
+
+    def test_automatic_invoice_email_on_zero_amount_order(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        # Create a loyalty program with 100% discount
+        self.env['loyalty.program'].sudo().create({
+            'name': '100discount',
+            'program_type': 'promo_code',
+            'rule_ids': [
+                Command.create({
+                    'code': "100dis",
+                    'minimum_amount': 0,
+                })
+            ],
+            'reward_ids': [
+                Command.create({
+                    'discount': 100,
+                }),
+            ],
+        })
+
+        # Create a dummy mail template for the invoice
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test Invoice Template',
+            'model_id': self.env.ref('account.model_account_move').id,
+            'auto_delete': False,
+        })
+        self.env['ir.config_parameter'].sudo().set_param('sale.default_invoice_email_template', str(mail_template.id))
+
+        # Ensure partner has an email address
+        self.empty_order.partner_id.email = "test@example.com"
+
+        # Add order line to order
+        self.env["sale.order.line"].create({
+            'order_id': self.empty_order.id,
+            'product_id': self.product_A.id,
+            'product_uom_qty': 1,
+            'price_unit': 200,
+        })
+
+        # Apply discount
+        self._apply_promo_code(self.empty_order, '100dis')
+
+        self.empty_order._validate_order()
+
+        self.assertTrue(
+            self.empty_order.invoice_ids.is_move_sent,
+            "Invoice should be marked as sent",
+        )
+
+        emails = self.env['mail.mail'].search([])
+        self.assertTrue(
+            emails,
+            "An email should have been generated for the invoice",
+        )

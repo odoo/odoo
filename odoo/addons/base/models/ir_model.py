@@ -171,9 +171,17 @@ def upsert_en(model, fnames, rows, conflict):
         excluded=comma(
             (
                 SQL(
-                    "COALESCE(%s, '{}'::jsonb) || EXCLUDED.%s",
-                    SQL.identifier(model._table, fname),
-                    SQL.identifier(fname),
+                    """CASE
+                        WHEN %(old)s ->> 'en_US' IS DISTINCT FROM %(new)s ->> 'en_US'
+                            -- the source text changed: existing translations were
+                            -- made for a source that no longer exists, drop them so
+                            -- they get reloaded fresh instead of being kept as if
+                            -- they still applied to the current source
+                            THEN %(new)s
+                        ELSE COALESCE(%(old)s, '{}'::jsonb) || %(new)s
+                       END""",
+                    old=SQL.identifier(model._table, fname),
+                    new=SQL("EXCLUDED.%s", SQL.identifier(fname)),
                 )
                 if model._fields[fname].translate is True
                 else SQL("EXCLUDED.%s", SQL.identifier(fname))
@@ -484,7 +492,7 @@ class IrModel(models.Model):
             '_description': model_data['name'],
             '_module': False,
             '_custom': True,
-            '_abstract': bool(model_data['abstract']),
+            '_abstract': bool(model_data.get('abstract', False)),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
             '_fold_name': model_data['fold_name'],

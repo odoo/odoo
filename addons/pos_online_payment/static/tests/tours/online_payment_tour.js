@@ -59,6 +59,39 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
         ].flat(),
 });
 
+registry
+    .category("web_tour.tours")
+    .add("test_online_payment_amount_updated_after_order_modification", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
+                ProductScreen.addOrderline("Letter Tray", "10"),
+                ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
+                ProductScreen.clickPayButton(),
+                PaymentScreen.totalIs("48.0"),
+
+                PaymentScreen.clickPaymentMethod("Online payment"),
+                PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
+                // Remove the online payment line so the order can be modified.
+                PaymentScreen.clickPaymentline("Online payment", "48.0"),
+                PaymentScreen.clickPaymentlineDelButton("Online payment", "48.0"),
+
+                PaymentScreen.clickBackToProductScreen(),
+                ProductScreen.clickOrderline("Letter Tray", "10.0"),
+                ProductScreen.clickNumpad("2", "0"),
+                ProductScreen.selectedOrderlineHas("Letter Tray", "20.0"),
+                ProductScreen.clickPayButton(),
+                PaymentScreen.totalIs("96.0"),
+
+                PaymentScreen.clickPaymentMethod("Online payment"),
+                PaymentScreen.selectedPaymentlineHas("Online payment", "96.0"),
+                PaymentScreen.validateButtonIsHighlighted(true),
+                PaymentScreen.clickValidate(),
+                Dialog.is({ title: "Scan to Pay" }),
+            ].flat(),
+    });
+
 registry.category("web_tour.tours").add("test_selected_customer_after_adding_payment_sync", {
     steps: () =>
         [

@@ -6,17 +6,17 @@
 # Noma Yuki, 2022
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-05-23 09:40+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-06-30 20:04+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/ja/>\n"
 "Language: ja\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -172,6 +172,14 @@ msgstr "%(name)s (残%(time)g、全%(maximum)g 時間のうち)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -243,26 +251,6 @@ msgstr "の休暇概要 ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "のこの時期の休暇概要"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr "および残りの上限が以下に設定されています:"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4119,12 +4107,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "その申請をカバーできる有効な割当がありません。"
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "This allocation have already ran once, any modification won't be effective "
@@ -5238,6 +5220,12 @@ msgstr "割当日"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "および"
@@ -5274,6 +5262,12 @@ msgstr "ここをクリック"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "日付"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "日"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5359,6 +5353,12 @@ msgstr "割当の開始から"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5380,6 +5380,12 @@ msgid ""
 "leaves of type 'Worked Time' should be always eligible for accrual rate."
 msgstr ""
 "「勤務時間」タイプの休暇は、常に休暇累積(付与)率の対象である必要があります。"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "ヶ月"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5506,6 +5512,20 @@ msgstr "有効期限"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "検証"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "年"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr "および残りの上限が以下に設定されています:"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "その申請をカバーできる有効な割当がありません。"
 
 #~ msgid ""
 #~ "Changing the contract on this employee changes their working schedule in "
@@ -6231,17 +6251,11 @@ msgstr "検証"
 #~ msgid "after allocation date"
 #~ msgstr "後（割当日から）"
 
-#~ msgid "day(s)"
-#~ msgstr "日"
-
 #~ msgid "in"
 #~ msgstr "に"
 
 #~ msgid "last day"
 #~ msgstr "末日"
-
-#~ msgid "month(s)"
-#~ msgstr "ヶ月"
 
 #~ msgid "postponed"
 #~ msgstr "繰り越しされます"
@@ -6251,6 +6265,3 @@ msgstr "検証"
 
 #~ msgid "validated"
 #~ msgstr "検証済"
-
-#~ msgid "year(s)"
-#~ msgstr "年"

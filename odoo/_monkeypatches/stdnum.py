@@ -1,4 +1,7 @@
 # ruff: noqa: PLC0415
+from importlib.metadata import version
+
+from odoo.tools import parse_version
 
 _soap_clients = {}
 
@@ -49,6 +52,9 @@ def new_get_soap_client(wsdlurl, timeout=30):
 
 
 def patch_module():
+    if parse_version(version("python-stdnum")) >= parse_version("2.0"):
+        return  # nothing to patch
+
     try:
         from stdnum import util
     except ImportError:

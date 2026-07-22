@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-06-18 08:15+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-06-29 23:32+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/lo/>\n"
@@ -66,8 +66,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
-msgstr ""
-"%(processed)s ເອກະສານ Peppol ຖືກປະມວນຜົນແລ້ວ, %(deleted)s ເອກະສານຖືກລຶບແລ້ວ"
+msgstr "%(processed)s ເອກະສານ Peppol ຖືກປະມວນຜົນແລ້ວ, %(deleted)s ເອກະສານຖືກລຶບແລ້ວ"
 
 #. module: account_peppol
 #. odoo-python
@@ -77,8 +76,8 @@ msgstr "%s ໄດ້ຮ້ອງຂໍການຮັບໃບແຈ້ງໜີ
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>ຢືນຢັນຕົວຕົນດ້ວຍ itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -428,11 +427,6 @@ msgid "Activate"
 msgstr "ເປີດໃຊ້ງານ"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "ເປີດໃຊ້ງານການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -440,6 +434,7 @@ msgstr "ເປີດໃຊ້ງານການອອກໃບແຈ້ງໜີ
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "ເປີດໃຊ້ງານ Peppol"
 
@@ -615,6 +610,12 @@ msgid ""
 msgstr ""
 "ໃບແຈ້ງໜີ້ທີ່ອອກດ້ວຍຕົນເອງ / ໃບແຈ້ງຫຼຸດໜີ້ ທີ່ໄດ້ຮັບຜ່ານ Peppol ຈະຖືກສ້າງເປັນສະບັບຮ່າງໃນປຶ້ມບັນຊີນີ້. "
 "ຄ່າເລີ່ມຕົ້ນແມ່ນປຶ້ມບັນຊີການຂາຍທຳອິດ."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1019,6 +1020,13 @@ msgstr ""
 "ຄລິກໃສ່ 'ເຊື່ອມຕໍ່ຖານຂໍ້ມູນນີ້ຄືນໃໝ່'."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Free on Odoo"
@@ -1114,11 +1122,6 @@ msgstr "ການສົ່ງໃບແຈ້ງໜີ້"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
 msgid "Is Branch Company"
 msgstr "ແມ່ນບໍລິສັດສາຂາ"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__service_json
@@ -2176,6 +2179,18 @@ msgid ""
 msgstr "ເພື່ອສ້າງໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກທີ່ສົມບູນ, ກະລຸນາກຳນົດປະເທດສຳລັບຄູ່ຄ້ານີ້ດ້ວຍ."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr "Token ບໍ່ກົງກັນ"
@@ -2228,6 +2243,12 @@ msgid "Use Parent Connection Selection"
 msgstr "ການເລືອກໃຊ້ການເຊື່ອມຕໍ່ບໍລິສັດແມ່"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "ກວດສອບ"
@@ -2266,6 +2287,12 @@ msgstr "ຍິນດີຕ້ອນຮັບເຂົ້າສູ່ Peppol"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
 msgstr "Peppol ແມ່ນຫຍັງ ແລະ ເປັນຫຍັງມັນຈຶ່ງດີເລີດ?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2440,6 +2467,14 @@ msgstr ""
 "                                        ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ເຊື່ອມຕໍ່ຖານຂໍ້ມູນທີ່ຖືກຕ້ອງຄືນໃໝ່."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2544,6 +2579,15 @@ msgstr "ເພື່ອສົ່ງໃບແຈ້ງໜີ້, ແຕ່ໃບ�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ໃຊ້"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>ຢືນຢັນຕົວຕົນດ້ວຍ itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "ເປີດໃຊ້ງານການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"
 
 #~ msgid " (no access)"
 #~ msgstr " (ບໍ່ມີສິດເຂົ້າເຖິງ)"

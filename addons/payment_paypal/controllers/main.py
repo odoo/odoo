@@ -63,8 +63,12 @@ class PaypalController(http.Controller):
                 'paypal', normalized_data
             )
             if tx_sudo:
-                self._verify_notification_origin(data, tx_sudo)
-                tx_sudo._process('paypal', normalized_data)
+                try:
+                    self._verify_notification_origin(data, tx_sudo)
+                except ValidationError:
+                    tx_sudo._set_error(_("Unable to verify the payment data"))
+                else:
+                    tx_sudo._process('paypal', normalized_data)
         return request.make_json_response('')
 
     def _normalize_paypal_data(self, data, from_webhook=False):
@@ -120,14 +124,9 @@ class PaypalController(http.Controller):
             'webhook_id': tx_sudo.provider_id.paypal_webhook_id,
             'webhook_event': payment_data,
         }
-        try:
-            verification = tx_sudo._send_api_request(
-                'POST', '/v1/notifications/verify-webhook-signature', json=data
-            )
-        except ValidationError:
-            tx_sudo._set_error(_("Unable to verify the payment data"))
-            return
-
+        verification = tx_sudo._send_api_request(
+            'POST', '/v1/notifications/verify-webhook-signature', json=data
+        )
         if verification.get('verification_status') != 'SUCCESS':
             _logger.warning("Received payment data that was not verified by PayPal.")
             raise Forbidden()

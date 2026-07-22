@@ -94,5 +94,5 @@ class CloudStorageMigrationReport(models.Model):
     def get_progress(self):
         max_attachment_id = int(self.env['ir.config_parameter'].get_param('cloud_storage_migration_max_attachment_id', 0)) or 1
         self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'cloud_storage_migration_min_attachment_id'")
-        min_attachment_id = int(self.env.cr.fetchone()[0]) if self.env.cr.rowcount else 0
+        min_attachment_id = int(self.env.cr.fetchone()[0] or 0) if self.env.cr.rowcount else 0
         return min_attachment_id * 100 // max(max_attachment_id, min_attachment_id)

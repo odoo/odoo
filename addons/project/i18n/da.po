@@ -11,15 +11,15 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Lærke Hedegaard Mathiasen <lhm@flytconsulting.dk>, 2026.
 # "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-23 16:54+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-13 08:11+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/project/"
 "da/>\n"
@@ -51,7 +51,7 @@ msgstr "# opgaver"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr "%(closedCount)s delopgaver afsluttet %(totalCount)s"
+msgstr "%(closedCount)s underopgaver afsluttet %(totalCount)s"
 
 #. module: project
 #. odoo-python
@@ -313,15 +313,15 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
-"<br/>\n"
+"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t><br/>\n"
 "    Det er mig en fornøjelse at kunne meddele, at vi har gennemført "
 "projektet \"<strong t-out=\"object.name or ''\">Renoveringer</strong>\".\n"
 "   <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/> \n"
 "       <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "   </t>\n"
 "</div> \n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -354,8 +354,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
-"<br/><br/>\n"
+"    Hej <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t><br/><br/>\n"
 "    Tak for din henvendelse. Vi sætter pris på din interesse for vores "
 "produkter/tjenester.<br/>\n"
 "    Vores team gennemgår i øjeblikket din forespørgsel og vil besvare din e-"
@@ -367,8 +367,8 @@ msgstr ""
 "   <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/> \n"
 "       <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "   </t>\n"
 "</div> \n"
 "        "
@@ -482,7 +482,7 @@ msgstr "<span class=\"o_stat_text\">Overordnet opgave</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr "<span class=\"o_stat_text\">Delopgaver</span>"
+msgstr "<span class=\"o_stat_text\">Underopgaver</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -716,13 +716,13 @@ msgstr "Tilføj milepæle"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr "Tilføj delopgave"
+msgstr "Tilføj underopgave"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Add a sub-task"
-msgstr "Tilføj en delopgave"
+msgstr "Tilføj en underopgave"
 
 #. module: project
 #. odoo-javascript
@@ -773,8 +773,10 @@ msgstr "Administrator"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "Administratoren kan administrere medarbejdernes vagtplaner"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1248,7 +1250,7 @@ msgstr "Kundeanmeldelse"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Close the sub-tasks list"
-msgstr "Luk listen over delopgaver"
+msgstr "Luk listen over underopgaver"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1427,7 +1429,7 @@ msgstr "Konvertér til opgave"
 #: code:addons/project/models/project_task.py:0
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 msgid "Convert to Task/Sub-Task"
-msgstr "Konvertér til opgave/delopgave"
+msgstr "Konvertér til opgave/underopgave"
 
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_project_to_template
@@ -1500,7 +1502,7 @@ msgstr "Opret en ny fase i opgavens pipeline"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Create a new sub-task"
-msgstr "Opret en ny delopgave"
+msgstr "Opret en ny underopgave"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -2240,7 +2242,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr "Giv din delopgave et <b>navn</b>"
+msgstr "Giv din underopgave et <b>navn</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3311,7 +3313,7 @@ msgstr "Åbne opgaver"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr "Åbn afsnittet med delopgaver i notesbogen"
+msgstr "Åbn afsnittet med underopgaver i notesbogen"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
@@ -3529,7 +3531,7 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
 msgstr ""
-"Private opgaver kan ikke opdeles i delopgaver. Vælg et projekt til opgaven "
+"Private opgaver kan ikke opdeles i underopgaver. Vælg et projekt til opgaven "
 "for at aktivere denne funktion."
 
 #. module: project
@@ -4371,7 +4373,7 @@ msgstr "Del opgave"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Show Sub-Tasks"
-msgstr "Vis delopgaver"
+msgstr "Vis underopgaver"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4389,13 +4391,13 @@ msgstr "Vis afsluttede opgaver"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
 msgid "Show sub-tasks"
-msgstr "Vis delopgaver"
+msgstr "Vis underopgaver"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
 msgid "Show sub-tasks & top menu"
-msgstr "Vis delopgaver og hovedmenu"
+msgstr "Vis underopgaver og hovedmenu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4586,7 +4588,7 @@ msgstr "Statustid"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Delopgaver"
+msgstr "Underopgaver"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_allocated_hours
@@ -4595,9 +4597,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
-"Summen af de tildelte timer for alle delopgaver, der er knyttet til denne "
-"opgave (inklusive deres egne delopgaver). Som regel mindre end eller lig med "
-"de tildelte timer for denne opgave."
+"Summen af de tildelte timer for alle underopgaver, der er knyttet til denne "
+"opgave (inklusive deres egne underopgaver). Som regel mindre end eller lig "
+"med de tildelte timer for denne opgave."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -5172,7 +5174,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This task has sub-tasks, so it can't be private."
-msgstr "Denne opgave består af delopgaver, så den kan ikke være privat."
+msgstr "Denne opgave består af underopgaver, så den kan ikke være privat."
 
 #. module: project
 #. odoo-javascript
@@ -5357,7 +5359,8 @@ msgstr "Samlet omsætning"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Track major progress points that must be reached to achieve success"
-msgstr "Hold øje med de vigtigste punkter, der skal opfyldes for at opnå succes"
+msgstr ""
+"Hold øje med de vigtigste punkter, der skal opfyldes for at opnå succes"
 
 #. module: project
 #. odoo-javascript
@@ -5580,8 +5583,8 @@ msgstr "Bruger indstillinger"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "Brugeren kan anvende dine medarbejderes vagtplan"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5758,15 +5761,15 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Du kan ikke ændre virksomheden i denne fase til %(company_name)s, da den i "
-"øjeblikket indeholder projekter, der er knyttet til %(project_company_name)"
-"s. Sørg for, at fasen udelukkende indeholder projekter, der er knyttet til %"
-"(company_name)s."
+"øjeblikket indeholder projekter, der er knyttet til %"
+"(project_company_name)s. Sørg for, at fasen udelukkende indeholder "
+"projekter, der er knyttet til %(company_name)s."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can change the sub-task state here!"
-msgstr "Du kan ændre status for delopgaven her!"
+msgstr "Du kan ændre status for underopgaven her!"
 
 #. module: project
 #. odoo-python
@@ -5778,13 +5781,13 @@ msgstr "Du kan kun indstille en personlig fase for en privat opgave."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr "Du kan åbne delopgaver fra Kanban-kortet!"
+msgstr "Du kan åbne underopgaver fra Kanban-kortet!"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "You cannot convert this task into a sub-task because it is recurrent."
 msgstr ""
-"Du kan ikke omdanne denne opgave til en delopgave, da det er en "
+"Du kan ikke omdanne denne opgave til en underopgave, da det er en "
 "tilbagevendende opgave."
 
 #. module: project
@@ -6055,7 +6058,7 @@ msgstr "for at markere opgaven som afsluttet."
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
-msgstr "delopgaver)"
+msgstr "underopgaver)"
 
 #. module: project
 #. odoo-python
@@ -6125,6 +6128,12 @@ msgstr "👤 Ikke tildelt"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "Administratoren kan administrere medarbejdernes vagtplaner"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "Brugeren kan anvende dine medarbejderes vagtplan"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Ugyldige felter: "

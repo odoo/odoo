@@ -315,7 +315,9 @@ export class SelfOrder extends Reactive {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
-        this.printKioskChanges(access_token);
+        if (this.kioskMode) {
+            this.printKioskChanges(access_token);
+        }
         this.resetCategorySelection();
     }
 
@@ -535,10 +537,6 @@ export class SelfOrder extends Reactive {
     }
 
     async printKioskChanges(access_token = "") {
-        if (!this.kioskMode) {
-            return;
-        }
-
         const d = new Date();
         let hours = "" + d.getHours();
         hours = hours.length < 2 ? "0" + hours : hours;
@@ -614,19 +612,17 @@ export class SelfOrder extends Reactive {
     }
 
     async initMobileData() {
-        if (this.config.self_ordering_mode !== "qr_code") {
-            if (
-                this.session &&
-                this.access_token &&
-                this.config.self_ordering_mode !== "consultation"
-            ) {
-                await this.getUserDataFromServer();
-                this.ordering = true;
-            }
+        if (
+            this.session &&
+            this.access_token &&
+            this.config.self_ordering_mode !== "consultation"
+        ) {
+            await this.getUserDataFromServer();
+            this.ordering = true;
+        }
 
-            if (!this.ordering) {
-                return;
-            }
+        if (!this.ordering) {
+            return;
         }
     }
 

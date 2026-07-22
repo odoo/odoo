@@ -19,3 +19,10 @@ export const addProductLineToOrder = async (
 
     return line;
 };
+
+export const deactivateAllProgramsExcept = (store, keepIds) => {
+    const to_delete = store.models["loyalty.program"]
+        .getAllIds()
+        .filter((id) => !keepIds.includes(id));
+    store.models["loyalty.program"].deleteMany(store.models["loyalty.program"].readMany(to_delete));
+};

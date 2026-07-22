@@ -189,8 +189,12 @@ class ProductProduct(models.Model):
             owners = self.env.context['owners']
             if owners:
                 domain_quant += [('owner_id', 'in', self.env.context['owners'])]
+                domain_move_in += [('move_line_ids.owner_id', 'in', owners)]
+                domain_move_out += [('move_line_ids.owner_id', 'in', owners)]
             else:
                 domain_quant += [('owner_id', '=', False)]
+                domain_move_in += [('move_line_ids.owner_id', '=', False)]
+                domain_move_out += [('move_line_ids.owner_id', '=', False)]
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
@@ -346,13 +350,15 @@ class ProductProduct(models.Model):
         def _search_ids(model, values):
             ids = set()
             domains = []
+            Model = self.env[model]
+            rec_names = Model._rec_names_search or [Model._rec_name]
             for item in values:
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domains.append(Domain(self.env[model]._rec_name, 'ilike', item))
+                    domains.append(Domain.OR(Domain(name, 'ilike', item) for name in rec_names))
             if domains:
-                ids |= set(self.env[model].search(Domain.OR(domains)).ids)
+                ids |= set(Model.search(Domain.OR(domains)).ids)
             return ids
 
         # We may receive a location or warehouse from the context, either by explicit
@@ -1162,6 +1168,17 @@ class ProductTemplate(models.Model):
                 inventory_ledger[move_line.product_id, move_line.location_id] -= move_line.quantity_product_uom
             if move_line.location_dest_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_dest_id] += move_line.quantity_product_uom
+        # Unticking "Track Inventory" keeps the existing quants, so on a
+        # storable -> not storable -> storable toggle only counter balance the
+        # moves that aren't already reflected on hand.
+        on_hand = self.env['stock.quant']._read_group(
+            [('product_id', 'in', self.product_variant_ids.ids),
+             ('location_id.usage', 'in', ('internal', 'transit'))],
+            ['product_id', 'location_id'], ['quantity:sum'],
+        )
+        for product, location, quantity in on_hand:
+            if (product, location) in inventory_ledger:
+                inventory_ledger[product, location] -= quantity
         quants_to_reset = self.env['stock.quant'].create([
             {
                 'product_id': product.id,

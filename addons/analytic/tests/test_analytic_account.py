@@ -20,11 +20,11 @@ class TestAnalyticAccount(AnalyticCommon):
         cls.distribution_1, cls.distribution_2 = cls.env['account.analytic.distribution.model'].create([
             {
                 'partner_id': cls.partner_a.id,
-                'analytic_distribution': {cls.analytic_account_3.id: 100}
+                'analytic_distribution': {cls.analytic_account_3.id: 100},  # analytic_plan_2
             },
             {
                 'partner_id': cls.partner_b.id,
-                'analytic_distribution': {cls.analytic_account_2.id: 100}
+                'analytic_distribution': {cls.analytic_account_2.id: 100},  # analytic_plan_1
             },
         ])
         cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company.id})
@@ -93,9 +93,9 @@ class TestAnalyticAccount(AnalyticCommon):
 
     def test_order_analytic_distribution_model(self):
         """ Test the distribution returned with company field"""
-        distribution_3 = self.env['account.analytic.distribution.model'].create({
+        self.env['account.analytic.distribution.model'].create({  # distribution_3
             'partner_id': self.partner_a.id,
-            'analytic_distribution': {self.analytic_account_1.id: 100},
+            'analytic_distribution': {self.analytic_account_1.id: 100},  # analytic_plan_1
             'company_id': self.company.id,
         })
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({})
@@ -105,7 +105,8 @@ class TestAnalyticAccount(AnalyticCommon):
             "partner_id": self.partner_a.id,
             "company_id": self.company.id,
         })
-        self.assertEqual(distribution_json, distribution_3.analytic_distribution | self.distribution_1.analytic_distribution,
+
+        self.assertEqual(distribution_json, {f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 100},
                          "Distribution 3 & 1 should be given, as the company and partner are specified in the models")
 
         distribution_json = self.env['account.analytic.distribution.model']._get_distribution({
@@ -120,9 +121,9 @@ class TestAnalyticAccount(AnalyticCommon):
             'category_id': [Command.set([partner_category.id])]
         })
 
-        distribution_4 = self.env['account.analytic.distribution.model'].create({
+        self.env['account.analytic.distribution.model'].create({  # distribution_4
             'partner_id': self.partner_a.id,
-            'analytic_distribution': {self.analytic_account_1.id: 100, self.analytic_account_2.id: 100},
+            'analytic_distribution': {self.analytic_account_1.id: 100, self.analytic_account_2.id: 100},  # analytic_plan_1, analytic_plan_1
             'partner_category_id': partner_category.id,
             'sequence': 1,
         })
@@ -133,8 +134,12 @@ class TestAnalyticAccount(AnalyticCommon):
             "partner_category_id": partner_category.ids,
         })
 
-        self.assertEqual(distribution_json, distribution_4.analytic_distribution | self.distribution_1.analytic_distribution,
-                         "Distribution 4 & 1 should be given based on sequence")
+        self.assertEqual(distribution_json, {
+            f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 50,
+            f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 50,
+            f"{self.analytic_account_1.id}": 50,
+            f"{self.analytic_account_2.id}": 50,
+        }, "Distribution 4 & 1 should be given based on sequence")
 
     def test_analytic_plan_account_child(self):
         """

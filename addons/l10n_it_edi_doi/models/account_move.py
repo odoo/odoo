@@ -88,11 +88,12 @@ class AccountMove(models.Model):
                 move.l10n_it_edi_doi_amount = 0
                 continue
             declaration_lines = move.invoice_line_ids.filtered(
-                # The declaration tax cannot be used with other taxes on a single line
+                # The declaration tax can be used with other taxes on a single line
                 # (checked in `_post`)
-                lambda line: line.tax_ids.ids == tax.ids
+                lambda line: tax.id in line.tax_ids.ids
             )
-            move.l10n_it_edi_doi_amount = sum(declaration_lines.mapped('price_total')) * -move.direction_sign
+            # Since the declaration tax is always 0% we can take the amount subtotal
+            move.l10n_it_edi_doi_amount = sum(declaration_lines.mapped('price_subtotal')) * -move.direction_sign
 
     @api.depends('l10n_it_edi_doi_id', 'l10n_it_edi_doi_amount', 'state')
     def _compute_l10n_it_edi_doi_warning(self):
