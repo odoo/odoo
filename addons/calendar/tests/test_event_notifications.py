@@ -799,6 +799,48 @@ class TestEventNotifications(CalendarMailCommon):
         for expected, actual in zip(expected_alarms, actual_alarms):
             self.assertEqual(actual, expected)
 
+    def test_get_next_notif_between_alarms(self):
+        """'now' is in between alarms of one event and before the alarm of another event."""
+        alarm_15_minutes = self.env['calendar.alarm'].create({
+            'name': 'Alarm 15 minutes',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
+        alarm_9_minutes = self.env['calendar.alarm'].create({
+            'name': 'Alarm 9 minutes',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 9,
+        })
+
+        # alarm expected at 21:00 and 21:06
+        event_1 = self.env['calendar.event'].create({
+            'name': 'Meeting 1',
+            'start': datetime(2024, 1, 10, 21, 15, 0),
+            'stop': datetime(2024, 1, 10, 21, 45, 0),
+            'alarm_ids': [(6, 0, (alarm_15_minutes | alarm_9_minutes).ids)],
+            'partner_ids': [(4, self.user.partner_id.id)],
+        })
+
+        # alarm expected at 21:15
+        event_2 = self.env['calendar.event'].create({
+            'name': 'Meeting 2',
+            'start': datetime(2024, 1, 10, 21, 30, 0),
+            'stop': datetime(2024, 1, 10, 21, 45, 0),
+            'alarm_ids': [(6, 0, alarm_15_minutes.ids)],
+            'partner_ids': [(4, self.user.partner_id.id)],
+        })
+        now = datetime(2024, 1, 10, 21, 5, 0)
+        self.user.partner_id.calendar_last_notif_ack = now
+        with self.mock_datetime_and_now(now):
+            result = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['event_id'], event_1.id)
+        self.assertEqual(result[0]['notify_at'], datetime(2024, 1, 10, 21, 6, 0))
+        self.assertEqual(result[1]['event_id'], event_2.id)
+        self.assertEqual(result[1]['notify_at'], datetime(2024, 1, 10, 21, 15, 0))
+
     def test_get_next_notif_cross_user_horizon(self):
         """An earlier alarm on another user's event must not hide the current partner's next alarm."""
         now = fields.Datetime.now()
@@ -853,4 +895,4 @@ class TestEventNotifications(CalendarMailCommon):
             result = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]['event_id'], event.id)
-        self.assertEqual(result[0]['notify_at'], '2024-01-10 14:00:00')
+        self.assertEqual(result[0]['notify_at'], datetime(2024, 1, 10, 14, 0, 0))

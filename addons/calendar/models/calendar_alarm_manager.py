@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, MINYEAR, timedelta
 
 from markupsafe import Markup
 
@@ -65,30 +65,31 @@ class CalendarAlarm_Manager(models.AbstractModel):
         events = self.env['calendar.event'].browse(event_ids)._filtered_access('read')
         return events
 
-    def do_check_alarm_for_one_date(self, one_date, event, in_the_next_X_seconds, alarm_type, after=False):
-        """ Search for some alarms in the interval of time determined by some parameters (after, in_the_next_X_seconds, ...)
-            :param one_date: date of the event to check (not the same that in the event browse if recurrent)
+    def _get_alarms_for_one_event(self, event, alarm_type, last_notif_ack: datetime, notify_at_max: datetime):
+        """ Search for some alarms in the interval of time determined by some parameters
             :param event: Event browse record
-            :param in_the_next_X_seconds: looking in the future (in seconds)
-            :param after: if not False: will return alert if after this date (date as string - todo: change in master)
-            :param notif: Looking for type notification
-            :param mail: looking for type email
+            :param alarm_type: type of the alarm ('notification' or 'email')
+            :param last_notif_ack: start of the interval to check
+            :param notify_at_max: end of the interval to check
         """
         result = []
-        past = one_date
-        future = fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds)
-
         for alarm in event.alarm_ids:
-            if alarm.alarm_type != alarm_type:
-                continue
-            notify_at = one_date - timedelta(minutes=alarm.duration_minutes)
-            if future <= notify_at or after and past <= fields.Datetime.from_string(after):
-                continue
-            result.append({
-                'alarm_id': alarm.id,
-                'event_id': event.id,
-                'notify_at': notify_at,
-            })
+            notify_at = event.start - timedelta(minutes=alarm.duration_minutes)
+            if last_notif_ack < notify_at <= notify_at_max and alarm.alarm_type == alarm_type:
+                message = event.display_time
+                if alarm.body:
+                    message += '<p>%s</p>' % plaintext2html(alarm.body)
+
+                delta = notify_at - fields.Datetime.now()
+                delta_seconds = delta.seconds + delta.days * 3600 * 24
+                result.append({
+                    'alarm_id': alarm.id,
+                    'event_id': event.id,
+                    'notify_at': notify_at,
+                    'title': event.name,
+                    'message': message,
+                    'timer': delta_seconds,
+                })
         return result
 
     @api.model
@@ -171,35 +172,11 @@ class CalendarAlarm_Manager(models.AbstractModel):
             return []
 
         all_meetings = self._get_next_potential_limit_alarm('notification', partners=partner)
-        time_limit = 3600 * 24  # return alarms of the next 24 hours
+        last_notif_ack = partner.calendar_last_notif_ack or datetime(MINYEAR, 1, 1)
+        notify_at_max = fields.Datetime.now() + timedelta(seconds=3600 * 24)  # return alarms of the next 24 hours
         for meeting in all_meetings:
-            in_date_format = fields.Datetime.from_string(meeting.start)
-            last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, time_limit, 'notification', after=partner.calendar_last_notif_ack)
-            if last_found:
-                for alert in last_found:
-                    all_notif.append(self.do_notif_reminder(alert))
+            all_notif.extend(self._get_alarms_for_one_event(meeting, 'notification', last_notif_ack, notify_at_max))
         return all_notif
-
-    def do_notif_reminder(self, alert):
-        alarm = self.env['calendar.alarm'].browse(alert['alarm_id'])
-        meeting = self.env['calendar.event'].browse(alert['event_id'])
-
-        if alarm.alarm_type == 'notification':
-            message = meeting.display_time
-            if alarm.body:
-                message += '<p>%s</p>' % plaintext2html(alarm.body)
-
-            delta = alert['notify_at'] - fields.Datetime.now()
-            delta = delta.seconds + delta.days * 3600 * 24
-
-            return {
-                'alarm_id': alarm.id,
-                'event_id': meeting.id,
-                'title': meeting.name,
-                'message': message,
-                'timer': delta,
-                'notify_at': fields.Datetime.to_string(alert['notify_at']),
-            }
 
     def _notify_next_alarm(self, partner_ids):
         """ Sends through the bus the next alarm of given partners """
