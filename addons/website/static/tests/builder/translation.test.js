@@ -218,6 +218,18 @@ test("color span is inserted in a.btn (and s_badge) with a background to show th
     expect(":iframe .s_badge .o_translation_state_inner_span").toHaveCount(1);
 });
 
+test("adjacent s_badge elements should not be merged in translate mode", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: `<span class="s_badge badge rounded-pill text-bg-primary">Badge 1</span><span class="s_badge badge rounded-pill text-bg-primary">Badge 2</span>`,
+        }),
+    });
+    const editor = getEditor();
+    // Trigger mergeAdjacentInlines.
+    editor.shared.history.addStep();
+    expect(editor.editable.querySelectorAll(".s_badge")).toHaveLength(2);
+});
+
 test("translate attribute", async () => {
     const resultSave = [];
     onRpc("/website/field/translation/update", async (data) => {

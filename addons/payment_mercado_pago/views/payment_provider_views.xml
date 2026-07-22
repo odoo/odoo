@@ -14,14 +14,17 @@
                         required="code == 'mercado_pago' and state != 'disabled'"
                         readonly="mercado_pago_access_token and mercado_pago_is_oauth_supported"
                         options="{'no_create': True}"
+                        groups="base.group_system"
                     />
                     <label
                         for="mercado_pago_access_token"
                         invisible="not mercado_pago_access_token and mercado_pago_is_oauth_supported"
+                        groups="base.group_system"
                     />
                     <div
                         class="o_row"
                         invisible="not mercado_pago_access_token and mercado_pago_is_oauth_supported"
+                        groups="base.group_system"
                     >
                         <field
                             string="Access Token"
@@ -43,6 +46,7 @@
             <group name="provider_credentials" position="after">
                 <div
                     invisible="code != 'mercado_pago' or (mercado_pago_access_token and mercado_pago_public_key) or not mercado_pago_is_oauth_supported"
+                    groups="base.group_system"
                 >
                     <div
                         class="alert alert-warning mt-2"

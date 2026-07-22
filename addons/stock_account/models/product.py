@@ -61,19 +61,22 @@ class ProductTemplate(models.Model):
     @api.depends('categ_id.property_cost_method')
     def _compute_cost_method(self):
         for product_template in self:
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
             product_template.cost_method = (
-                product_template.categ_id.with_company(
-                    product_template.company_id
-                ).property_cost_method
-                or (product_template.company_id or self.env.company).cost_method
+                product_template.categ_id.with_company(company).property_cost_method
+                or company.cost_method
             )
 
     @api.depends_context('company')
     @api.depends('categ_id.property_valuation')
     def _compute_valuation(self):
         for product_template in self:
-            product_template.valuation = product_template.categ_id.with_company(
-                product_template.company_id).property_valuation or self.env.company.inventory_valuation
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
+            product_template.valuation = product_template.categ_id.with_company(company).property_valuation or company.inventory_valuation
 
     def write(self, vals):
         product_ids_to_update = set()
@@ -369,12 +372,21 @@ class ProductProduct(models.Model):
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
-            moves, remaining_qty = product._run_fifo_get_stack()
-            moves = self.env['stock.move'].concat(*moves)
-            if not moves:
+            qty_by_move = defaultdict(float)
+            lots = [None]
+            if product.lot_valuated:
+                lots = product.stock_quant_ids.filtered(
+                    lambda q: q.lot_id and q.company_id == self.env.company and q.location_id.is_valued_internal and q.quantity > 0
+                ).lot_id or [None]
+            for lot in lots:
+                moves, remaining_qty = product._run_fifo_get_stack(lot=lot)
+                if not moves:
+                    continue
+                qty_by_move[moves[0]] += remaining_qty
+                for move in moves[1:]:
+                    qty_by_move[move] += move._get_valued_qty(lot)
+            if not qty_by_move:
                 continue
-            qty_by_move = {m: m.quantity for m in moves[1:]}
-            qty_by_move[moves[0]] = remaining_qty
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
@@ -443,6 +455,10 @@ class ProductProduct(models.Model):
             field_names=['id'],
             order='product_id, date, id'
         )
+
+        if self.env['stock.move'].search_count(moves_domain & Domain('is_dropship', '=', True), limit=1):
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
         # PERF avoid memoryerror
         move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
@@ -483,7 +499,10 @@ class ProductProduct(models.Model):
                         in_qty = move._get_valued_qty()
                         in_value = move.value
                         if move.is_dropship:
-                            in_value = move._get_value(forced_std_price=average_cost)
+                            ignore_manual_update = False
+                            if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
+                                ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
+                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -514,6 +533,7 @@ class ProductProduct(models.Model):
             std_price_by_product_id[product.id] = average_cost
             value_by_product_id[product.id] = value
 
+        self.env.cr.cache.pop('moves_with_manual_value', None)
         return std_price_by_product_id, value_by_product_id
 
     def _run_fifo_batch(self, at_date=None, lot=None, location=None):
@@ -555,8 +575,10 @@ class ProductProduct(models.Model):
                 in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
             else:
-                in_qty = move._get_valued_qty()
+                in_qty = move._get_valued_qty(lot=lot)
                 in_value = move_value
+                if lot:
+                    in_value = in_value * in_qty / move._get_valued_qty()
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity
@@ -612,7 +634,7 @@ class ProductProduct(models.Model):
         while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
             move = moves_in[0]
             moves_in = moves_in[1:]
-            in_qty = move._get_valued_qty()
+            in_qty = move._get_valued_qty(lot=lot)
             fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
@@ -657,8 +679,10 @@ class ProductProduct(models.Model):
                             and product.uom_id.compare(product.qty_available, 0) > 0
                     ):
                         new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
-                    else:
+                    elif not product.uom_id.is_zero(added_qty):
                         new_avg_cost = added_value / added_qty
+                    else:
+                        continue
                     product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
                 products = products - products_with_incremental_recompute
 
@@ -676,6 +700,27 @@ class ProductProduct(models.Model):
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    def _get_moves_with_manual_value(self, product_ids, at_date=False):
+        """Get the move IDs with manual product.value to populate the cursor cache."""
+        if not product_ids:
+            return
+        if not self.env.cr.cache.get('moves_with_manual_value'):
+            self.env.cr.cache['moves_with_manual_value'] = {}
+        query = """
+            SELECT sm.product_id, array_agg(DISTINCT pv.move_id)
+            FROM product_value pv
+            JOIN stock_move sm ON pv.move_id = sm.id
+            WHERE pv.move_id IS NOT NULL
+            AND sm.product_id IN %s
+        """
+        params = [tuple(product_ids)]
+        if at_date:
+            query += " AND sm.date <= %s"
+            params.append(at_date)
+        query += " GROUP BY sm.product_id"
+        for product, moves in self.env.execute_query(SQL(query, *params)):
+            self.env.cr.cache['moves_with_manual_value'][at_date, product] = set(moves)
 
     # -------------------------------------------------------------------------
     # Old to remove

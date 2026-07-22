@@ -14,16 +14,17 @@
 # Martin Trigaux, 2022
 # Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Martin Šiša <martin.sisa@origamis.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-02-25 14:50+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-06 08:29+0000\n"
+"Last-Translator: Martin Šiša <martin.sisa@origamis.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/cs/>\n"
 "Language: cs\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -77,7 +78,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr ""
+msgstr "(Včetně daně)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.empty_cart_svg
@@ -183,6 +184,8 @@ msgid ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                    Continue shopping"
 msgstr ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Pokračovat v nákupu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -218,7 +221,7 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "<i class=\"fa fa-long-arrow-right\"/> All Products"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right\"/> Všechny produkty"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
@@ -238,7 +241,7 @@ msgstr "<i class=\"fa fa-print me-2\"/>Vytisknout"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "<i class=\"fa fa-rotate-left me-2\"/>Quick reorder"
-msgstr ""
+msgstr "<i class=\"fa fa-rotate-left me-2\"/>Znovu objednat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -289,7 +292,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Přidat adresu"
 
 #. module: website_sale
 #. odoo-python
@@ -316,6 +319,9 @@ msgid ""
 "                                        <i class=\"oi oi-close\" "
 "role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Odebrat filtry</b></small>\n"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_terms_and_conditions
@@ -468,7 +474,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Searching</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Hledání</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -499,7 +505,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.all_products_link_name
 msgid "<span placeholder=\"All products\">All products</span>"
-msgstr ""
+msgstr "<span placeholder=\"All products\">Všechny produkty</span>"
 
 #. module: website_sale
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
@@ -965,7 +971,7 @@ msgstr "Všechny produkty"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "All products"
-msgstr ""
+msgstr "Všechny produkty"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
@@ -1242,6 +1248,12 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Bordered"
 msgstr "Orámovaný"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Bottom"
+msgstr "Spodek"
 
 #. module: website_sale
 #. odoo-python
@@ -1722,7 +1734,7 @@ msgstr "Konfigurovat"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Nastavení způsobů doručení"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2070,7 +2082,7 @@ msgstr "Doručení a instalace"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "Delivery method"
-msgstr ""
+msgstr "Způsoby dodání"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2357,7 +2369,7 @@ msgstr "E-shop"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
-msgstr "Propagační kód e-shopu"
+msgstr "Kupón e-shopu"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_europe
@@ -2738,7 +2750,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Go to Checkout"
-msgstr ""
+msgstr "Přejít k pokladně"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3245,6 +3257,7 @@ msgstr "Rozvržení"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__left
 msgid "Left"
@@ -3846,7 +3859,7 @@ msgstr "Řádky objednávek zobrazené na webstránce"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Shrnutí objednávky"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -4851,7 +4864,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_search
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in"
-msgstr ""
+msgstr "Hledat v"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
@@ -5009,13 +5022,13 @@ msgstr "Obchod - Vyberte platební metodu"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Checkout"
-msgstr ""
+msgstr "Pokladna"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Checkout - Extra Information"
-msgstr ""
+msgstr "Pokladna – další informace"
 
 #. module: website_sale
 #. odoo-python
@@ -5048,7 +5061,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5059,7 +5072,7 @@ msgstr "Viditelnost obchodu, produktů, košíku a seznamu přání"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Shopping Cart"
-msgstr ""
+msgstr "Košík"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5455,7 +5468,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "The delivery method is not compatible with your delivery address."
-msgstr ""
+msgstr "Způsob doručení není kompatibilní s vaší doručovací adresou."
 
 #. module: website_sale
 #. odoo-python
@@ -6648,9 +6661,6 @@ msgstr ""
 
 #~ msgid "Both"
 #~ msgstr "Obojí"
-
-#~ msgid "Bottom"
-#~ msgstr "Spodek"
 
 #~ msgid "Brand"
 #~ msgstr "Značka"

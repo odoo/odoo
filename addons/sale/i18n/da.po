@@ -9,16 +9,16 @@
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-24 07:37+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-07-09 11:12+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/sale/da/>"
-"\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/sale/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -921,8 +921,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'tilbud' if object.state in "
+"('draft', 'sent') else 'ordre'\"/>\n"
 "        Hej\n"
 "        <br/><br/>\n"
 "        Dit <t t-out=\"doc_name or ''\">tilbud</t> <span style=\"font-"
@@ -939,11 +939,11 @@ msgstr ""
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
-"                Her er nogle yderligere dokumenter, der kan interessere "
+"                Her er nogle yderligere dokumenter, der måske interesserer "
 "dig:\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Her er et yderligere dokument, der kan interessere dig:\n"
+"                Her er et yderligere dokument, der måske interesserer dig:\n"
 "            </t>\n"
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
@@ -956,7 +956,7 @@ msgstr ""
 "            </ul>\n"
 "        </t>\n"
 "        <br/>\n"
-"        Kontakt os venligst, hvis du har spørgsmål.\n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
@@ -999,20 +999,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'tilbud' if object.state in "
+"('draft', 'sent') else 'ordre'\"/>\n"
 "        Hej\n"
 "        <br/><br/>\n"
-"        Din proforma faktura for <t t-out=\"doc_name or ''\">tilbuddet</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
-"\n"
+"        Din proformafaktura for <t t-out=\"doc_name or ''\">tilbuddet</t> "
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
+"span>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (med nummeret: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        på <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 kr.</span> er klar.\n"
+"        på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"kr.</span> er klar.\n"
 "        <br/><br/>\n"
-"        Kontakt os venligst, hvis du har spørgsmål.\n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
@@ -2094,11 +2095,6 @@ msgstr "Bekræftelsesmeddelelse"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Opret forbindelse til din software!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Opret forbindelse med software"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4975,7 +4971,7 @@ msgstr ""
 "Det er en god idé at sende en e-mail, hvis du vil dele specifik information "
 "eller indhold om et produkt (f.eks. vejledninger, regler, links, medier "
 "m.m.). Du kan oprette og tilknytte e-mailskabelonen direkte fra produktets "
-"detaljer (under fanen Bogføring)."
+"detaljer (under fanen Regnskab)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -6280,11 +6276,6 @@ msgid "sale order"
 msgstr "salgsordre"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "for at oprette tilbud automatisk."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "for at lære om alle muligheder for at integrere din software med"
@@ -6293,11 +6284,6 @@ msgstr "for at lære om alle muligheder for at integrere din software med"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "enheder"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "med"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -6338,6 +6324,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "Opret forbindelse med software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "for at oprette tilbud automatisk."
+
+#~ msgid "with"
+#~ msgstr "med"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

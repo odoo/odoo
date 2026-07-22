@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("load_more_tour", {
             },
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread button:contains(Load More):not(:visible)",
+            trigger: "#chatterRoot:shadow .o-mail-Thread button:contains(Load More)",
         },
     ],
 });

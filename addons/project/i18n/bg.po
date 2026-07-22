@@ -13,19 +13,20 @@
 # Martin Trigaux, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # aleksandar ivanov, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Toma Tomov <toma.tomov@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-11 09:33+0000\n"
+"Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "project/bg/>\n"
 "Language: bg\n"
@@ -33,12 +34,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " Всички вътрешни потребители и поканени портални потребители"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -56,13 +57,13 @@ msgstr "# на задачи"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s затворени подзадачи от %(totalCount)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
@@ -80,19 +81,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "%(name)s Табло за управление"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "Диаграма на оставащата работа на %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "Етапи на %(name)s"
 
 #. module: project
 #. odoo-python
@@ -179,6 +180,8 @@ msgstr ""
 msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your colleagues."
 msgstr ""
+"<b>Записвайте вътрешни бележки в</b> и използвайте споменавания с @<b></b> , "
+"за да уведомите колегите си."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -717,7 +720,9 @@ msgstr "Администратор"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
 msgstr ""
 
 #. module: project
@@ -5344,7 +5349,7 @@ msgstr "Потребителски настройки"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
+msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project

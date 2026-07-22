@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * sale_pdf_quote_builder
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-12-11 06:44+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"PO-Revision-Date: 2026-06-30 23:34+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "sale_pdf_quote_builder/ko/>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -26,8 +26,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and '견적 - %s' % (object.name)) or '주문 "
-"- %s' % (object.name)"
+"(object.state in ('draft', 'sent') and '견적 - %s' % (object.name)) or "
+"'주문 - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -50,8 +50,7 @@ msgstr "<span>문서 유형:</span>"
 msgid ""
 "A form field set as used in product documents can't be linked to a quotation "
 "document."
-msgstr ""
-"제품 문서에 사용하도록 지정된 양식 필드는 견적 문서에 연결할 수 없습니다."
+msgstr "제품 문서에 사용하도록 지정된 양식 필드는 견적 문서에 연결할 수 없습니다."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -59,8 +58,7 @@ msgstr ""
 msgid ""
 "A form field set as used in quotation documents can't be linked to a product "
 "document."
-msgstr ""
-"견적 문서에 사용하도록 지정된 양식 필드는 제품 문서에 연결할 수 없습니다."
+msgstr "견적 문서에 사용하도록 지정된 양식 필드는 제품 문서에 연결할 수 없습니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -110,10 +108,10 @@ msgstr ""
 "견적서: 언제든지 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
 "예: 해당 옵션을 통해 품목에 대한 설명 파일을 편리하게 공유할 수 있습니다\n"
 "주문 확정: 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
-"예: 해당 옵션을 통해 사용자 매뉴얼이나 이커머스에서 구매한 디지털 콘텐츠를 편"
-"리하게 공유할 수 있습니다.\n"
-"내부 견적서 PDF: 문서가 머릿말 페이지 및 견적표 사이의 견적서 PDF 안에 포함됩"
-"니다. "
+"예: 해당 옵션을 통해 사용자 매뉴얼이나 이커머스에서 구매한 디지털 콘텐츠를 "
+"편리하게 공유할 수 있습니다.\n"
+"내부 견적서 PDF: 문서가 머릿말 페이지 및 견적표 사이의 견적서 PDF 안에 "
+"포함됩니다. "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -354,8 +352,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
-msgstr ""
-"이 옵션을 선택하지 않으면 머리글이나 바닥글을 제거하지 않고 숨길 수 있습니다."
+msgstr "이 옵션을 선택하지 않으면 머리글이나 바닥글을 제거하지 않고 숨길 수 있습니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -389,8 +386,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
-"잘못된 양식 필드 이름 %(field_name)s입니다. 머리글 또는 바닥글의 양식 필드 이"
-"름은 “sol_id_”로 시작할 수 없습니다."
+"잘못된 양식 필드 이름 %(field_name)s입니다. 머리글 또는 바닥글의 양식 필드 "
+"이름은 “sol_id_”로 시작할 수 없습니다."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -427,8 +424,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
-"견적서 내에서 이 PDF를 처리할 수 없습니다. 암호화되었거나 지원되지 않는 형식"
-"으로 인코딩되어 있을 수 있습니다."
+"견적서 내에서 이 PDF를 처리할 수 없습니다. 암호화되었거나 지원되지 않는 "
+"형식으로 인코딩되어 있을 수 있습니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -540,12 +537,12 @@ msgid ""
 "settings. <br/>"
 msgstr ""
 "견적서를 한층 멋지게 만들기 위해서 머리글 페이지와 바닥글 페이지에\n"
-"                        회사 및 품목, 서비스에 대해서 자세한 정보를 기재합니"
-"다.<br/>\n"
+"                        회사 및 품목, 서비스에 대해서 자세한 정보를 "
+"기재합니다.<br/>\n"
 "                        견적서의 PDF는 머리글 페이지와 품목 설명 및\n"
 "                        세부 내역, 그리고 바닥글 페이지로 구성됩니다.<br/>\n"
-"                        비워놓는 경우, 회사 설정에 정의되어 있는 내용을 사용"
-"합니다. <br/>"
+"                        비워놓는 경우, 회사 설정에 정의되어 있는 내용을 "
+"사용합니다. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

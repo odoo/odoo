@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-27 06:39+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"PO-Revision-Date: 2026-07-01 23:11+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/resource/"
 "ko/>\n"
 "Language: ko\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -36,8 +36,8 @@ msgid ""
 "%(att)s is a break attendance, You should not have such record on duration "
 "based calendar"
 msgstr ""
-"%(att)s 항목은 미참석 내역입니다. 캘린더를 기간 기준으로 하는 경우 해당 기록"
-"을 포함할 수 없습니다"
+"%(att)s 항목은 미참석 내역입니다. 캘린더를 기간 기준으로 하는 경우 해당 "
+"기록을 포함할 수 없습니다"
 
 #. module: resource
 #. odoo-python
@@ -237,8 +237,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
-"직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 근"
-"무 시간을 갖게 됩니다."
+"직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 "
+"근무 시간을 갖게 됩니다."
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -298,8 +298,7 @@ msgstr "설명"
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr ""
-"제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
+msgstr "제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -416,24 +415,22 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
-"비어 있는 경우, 이것은 회사의 일반적인 휴가입니다. 자원이 설정된 경우 이 자"
-"원 전용 휴가입니다."
+"비어 있는 경우, 이것은 회사의 일반적인 휴가입니다. 자원이 설정된 경우 이 "
+"자원 전용 휴가입니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
-msgstr ""
-"활성 필드를 아니오로 설정하면 작업 시간을 삭제하지 않고도 숨길 수 있습니다."
+msgstr "활성 필드를 아니오로 설정하면 작업 시간을 삭제하지 않고도 숨길 수 있습니다."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -620,9 +617,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"특정 프로젝트 단계에 참여해야 하는 자원 관리와 작성을 허용합니다. 또한 귀하"
-"는 자신의 주당 근로 시간을 기준으로 효율성 수준 및 업무 부하를 설정할 수 있습"
-"니다."
+"특정 프로젝트 단계에 참여해야 하는 자원 관리와 작성을 허용합니다. 또한 "
+"귀하는 자신의 주당 근로 시간을 기준으로 효율성 수준 및 업무 부하를 설정할 수 "
+"있습니다."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -778,9 +775,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"작업장에서 작업 지시에 대한 예상 소요 시간을 계산하는 데 사용되는 필드입니"
-"다. 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우 예상 소요 시간은 1시간"
-"입니다. 반면 능률계수가 200%인 경우 예상 소요 시간은 30분이 됩니다."
+"작업장에서 작업 지시에 대한 예상 소요 시간을 계산하는 데 사용되는 "
+"필드입니다. 작업 주문에 1시간이 걸리고 능률계수가 100%인 경우 예상 소요 "
+"시간은 1시간입니다. 반면 능률계수가 200%인 경우 예상 소요 시간은 30분이 "
+"됩니다."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3

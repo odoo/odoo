@@ -1,5 +1,3 @@
-from unittest import skip
-
 from odoo.exceptions import UserError
 from odoo.fields import Command, Date, Datetime
 from odoo.tools import float_is_zero, mute_logger
@@ -10,18 +8,20 @@ from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 @tagged('post_install', '-at_install')
 class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
-    @skip('Temporary to fast merge new valuation')
     def test_kit_anglo_saxo_price_diff(self):
         """
         Suppose an automated-AVCO configuration and a Price Difference Account defined on
         the product category. When buying a kit of that category at a higher price than its
-        cost, the difference should be published on the Price Difference Account
+        cost, the components are revalued to the purchase price, so no difference is routed
+        to the Price Difference Account: the whole value lands on the stock valuation account.
         """
+        price_diff_account = self._use_price_diff()
+        self.category_avco_auto.property_price_difference_account_id = price_diff_account.id
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
             'standard_price': price,
             'is_storable': True,
-            'categ_id': self.avco_category.id,
+            'categ_id': self.category_avco_auto.id,
         } for name, price in [('Kit', 0), ('Compo 01', 10), ('Compo 02', 20)]])
 
         self.env['mrp.bom'].create({
@@ -35,7 +35,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         kit.button_bom_cost()
 
         po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.vendor01
+        po_form.partner_id = self.vendor
         with po_form.order_line.new() as pol_form:
             pol_form.product_id = kit
             pol_form.price_unit = 100
@@ -49,14 +49,16 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         invoice.invoice_date = Date.today()
         invoice.action_post()
 
-        svls = po.order_line.move_ids.stock_valuation_layer_ids
-        self.assertEqual(len(svls), 2, "The invoice should have created two SVL (one by kit's component) for the price diff")
-        self.assertEqual(sum(svls.mapped('value')), 100, "Should be the standard price of both components")
+        # The kit's components are valued at the purchase price (split evenly).
+        self.assertEqual(sum(po.order_line.move_ids.mapped('value')), 100)
+        # An average-cost product is revalued to the purchase price, so nothing
+        # is routed to the Price Difference Account.
+        price_diff_amls = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
+        self.assertFalse(price_diff_amls)
+        # The whole value is posted on the stock valuation account.
+        valuation_amls = self.env['account.move.line'].search([('account_id', '=', self.account_stock_valuation.id)])
+        self.assertEqual(sum(valuation_amls.mapped('balance')), 100)
 
-        input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
-        self.assertEqual(sum(input_amls.mapped('balance')), 0)
-
-    @skip('Temporary to fast merge new valuation')
     def test_buy_deliver_and_return_kit_with_auto_avco_components(self):
         """
         A kit K with two AVCO components
@@ -83,7 +85,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         component01, component02 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
             'is_storable': True,
-            'categ_id': self.avco_category.id,
+            'categ_id': self.category_avco_auto.id,
             'uom_id': uom_litre.id,
         } for name in ['01', '02']])
 
@@ -108,7 +110,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         })
 
         po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.vendor01
+        po_form.partner_id = self.vendor
         with po_form.order_line.new() as pol_form:
             pol_form.product_id = kit
             pol_form.price_unit = 100
@@ -123,8 +125,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(receipt.move_line_ids.product_id, component01 | component02)
         self.assertEqual(po.order_line.qty_received, 1)
-        self.assertEqual(component01.stock_valuation_layer_ids.value, 25)
-        self.assertEqual(component02.stock_valuation_layer_ids.value, 75)
+        self.assertEqual(receipt.move_ids.filtered(lambda m: m.product_id == component01).value, 25)
+        self.assertEqual(receipt.move_ids.filtered(lambda m: m.product_id == component02).value, 75)
 
         delivery = self.env['stock.picking'].create({
             'picking_type_id': type_out.id,
@@ -142,8 +144,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         delivery.move_ids.move_line_ids.quantity = 1
         delivery.button_validate()
 
-        self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25])
-        self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75])
+        self.assertEqual(delivery.move_ids.filtered(lambda m: m.product_id == component01).value, 25)
+        self.assertEqual(delivery.move_ids.filtered(lambda m: m.product_id == component02).value, 75)
 
         with mute_logger('odoo.tests.form.onchange'):
             with Form(bom_kit) as kit_form:
@@ -160,10 +162,9 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         return_picking.move_ids.move_line_ids.quantity = 1
         return_picking.button_validate()
 
-        self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
-        self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75, 75])
+        self.assertEqual(return_picking.move_ids.filtered(lambda m: m.product_id == component01).value, 25)
+        self.assertEqual(return_picking.move_ids.filtered(lambda m: m.product_id == component02).value, 75)
 
-    @skip('Temporary to fast merge new valuation')
     def test_valuation_multicurrency_with_kits(self):
         """ Purchase a Kit in multi-currency and verify that the amount_currency is correctly computed.
         """
@@ -173,7 +174,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             'name': name,
             'standard_price': 0,
             'is_storable': True,
-            'categ_id': self.avco_category.id,
+            'categ_id': self.category_avco_auto.id,
         } for name in ['Kit', 'Cmp']])
 
         self.env['mrp.bom'].create({
@@ -185,6 +186,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         # Setup Currency
         usd = self.env.ref('base.USD')
         eur = self.env.ref('base.EUR')
+        eur.active = True
         self.env['res.currency.rate'].create({
             'name': Datetime.today(),
             'currency_id': usd.id,
@@ -195,23 +197,30 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             'rate': 2})
 
         # Create Purchase
-        po_form = Form(self.env['purchase.order'])
-        po_form.partner_id = self.vendor01
-        po_form.currency_id = eur
-        with po_form.order_line.new() as pol_form:
-            pol_form.product_id = kit
-            pol_form.price_unit = 100  # $50
-        po = po_form.save()
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'currency_id': eur.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_qty': 1,
+                'price_unit': 100,  # $50
+            })],
+        })
         po.button_confirm()
 
         po.picking_ids.button_validate()
 
-        svl = po.order_line.move_ids.stock_valuation_layer_ids.ensure_one()
-        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        invoice.invoice_date = Date.today()
+        invoice.action_post()
 
-        self.assertEqual(svl.value, 50)  # USD
-        self.assertEqual(input_aml.amount_currency, 100)  # EUR
-        self.assertEqual(input_aml.balance, 50)  # USD
+        move = po.order_line.move_ids.ensure_one()
+        valuation_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+
+        self.assertEqual(move.value, 50)  # USD
+        self.assertEqual(valuation_aml.amount_currency, 100)  # EUR
+        self.assertEqual(valuation_aml.balance, 50)  # USD
 
     def test_multicurrency_kit_different_uom_categories(self):
         """
@@ -268,22 +277,24 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         self.assertEqual(receipt.move_ids.state, 'done')
 
-    @skip('Temporary to fast merge new valuation')
     def test_fifo_cost_adjust_mo_quantity(self):
         """ An MO using a FIFO cost method product as a component should not zero-out the std cost
         of the product if we unlock it once it is in a validated state and adjust the quantity of
         component used to be smaller than originally entered.
         """
-        self.product_a.categ_id = self.env['product.category'].create({
-            'name': 'FIFO',
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time'
-        })
+        product_a, product_b = self.env['product.product'].create([{
+            'name': 'Component A',
+            'is_storable': True,
+            'categ_id': self.category_fifo_auto.id,
+        }, {
+            'name': 'Finished B',
+            'is_storable': True,
+        }])
 
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.vendor.id,
             'order_line': [(0, 0, {
-                'product_id': self.product_a.id,
+                'product_id': product_a.id,
                 'product_qty': 10,
                 'price_unit': 100,
             })],
@@ -292,10 +303,10 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         purchase_order.picking_ids[0].button_validate()
 
         manufacturing_order = self.env['mrp.production'].create({
-            'product_id': self.product_b.id,
+            'product_id': product_b.id,
             'product_qty': 1,
             'move_raw_ids': [(0, 0, {
-                'product_id': self.product_a.id,
+                'product_id': product_a.id,
                 'product_uom_qty': 100,
             })],
         })
@@ -308,9 +319,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         manufacturing_order.action_toggle_is_locked()
         manufacturing_order.move_raw_ids.quantity = 1
 
-        self.assertEqual(self.product_a.standard_price, 100)
+        self.assertEqual(product_a.standard_price, 100)
 
-    @skip('Temporary to fast merge new valuation')
     def test_average_cost_unbuild_valuation(self):
         """ Ensure that an unbuild for some avg cost product won't leave the `Cost of Production`
         journal in an imbalanced state if the std price of that product has changed since the MO
@@ -318,7 +328,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         """
         def make_purchase_and_production(product_ids, price_units):
             purchase_orders = self.env['purchase.order'].create([{
-                'partner_id': self.partner_a.id,
+                'partner_id': self.vendor.id,
                 'order_line': [(0, 0, {
                     'product_id': prod_id,
                     'product_qty': 2,
@@ -345,19 +355,19 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ('name', '=', 'Cost of Production'),
             ('company_ids', 'in', self.env.company.id),
         ], limit=1)
-        self.avco_category.property_stock_account_production_cost_id = cost_of_production_account.id
+        self.category_avco_auto.property_stock_account_production_cost_id = cost_of_production_account.id
         final_product = self.env['product.product'].create({
             'name': 'final product',
             'is_storable': True,
             'standard_price': 0,
-            'categ_id': self.avco_category.id,
+            'categ_id': self.category_avco_auto.id,
             'route_ids': [(6, 0, self.env['stock.route'].search([('name', '=', 'Manufacture')], limit=1).ids)],
         })
         comp_1, comp_2 = self.env['product.product'].create([{
             'name': name,
             'is_storable': True,
             'standard_price': 0,
-            'categ_id': self.avco_category.id,
+            'categ_id': self.category_avco_auto.id,
             'route_ids': [(4, self.env['stock.route'].search([('name', '=', 'Buy')], limit=1).id)],
         } for name in ('comp_1', 'comp_2')])
         final_product_bom = self.env['mrp.bom'].create({

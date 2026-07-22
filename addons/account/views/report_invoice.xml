@@ -8,8 +8,8 @@
                 <div class="row">
                     <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
                         <div class="col-6">
-                            <t t-set="information_block">
-                                <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                            <t t-set="information_block" groups="account.group_delivery_invoice_address">
+                                <div name="shipping_address_block">
                                     <strong class="d-block mt-3">Shipping Address</strong>
                                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
@@ -165,7 +165,8 @@
                             </div>
                         </div>
 
-                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
+                        <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
                         <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <t t-set="has_long_desc" t-value="any(line.name and line.name.count('\n') > 30 for line in o.invoice_line_ids if line.name)"/>
@@ -186,7 +187,6 @@
                             </thead>
                             <tbody class="invoice_tbody">
                                 <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
-                                <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
                                 <t t-set="current_section" t-value="None"/>
                                 <t t-set="current_subsection" t-value="None"/>
 

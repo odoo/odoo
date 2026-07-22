@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-05 11:11+0000\n"
+"PO-Revision-Date: 2026-06-30 20:05+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "product_expiry/ar/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product_expiry
 #. odoo-python
@@ -47,8 +47,8 @@ msgid ""
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
-"\">ستنتهي صلاحيتها بتاريخ</span>\n"
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)\">"
+"ستنتهي صلاحيتها بتاريخ</span>\n"
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">انتهت مدة صلاحيتها</span>"
 
@@ -117,8 +117,8 @@ msgstr ""
 "إزالتها)\n"
 "في سياق به موقع مخزون واحد، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي "
 "من توابعه.\n"
-"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا "
-"المستودع، أو أي من توابعه.\n"
+"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع"
+"، أو أي من توابعه.\n"
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'."
 
 #. module: product_expiry
@@ -298,8 +298,8 @@ msgstr ""
 "المراد إزالتها)\n"
 "في سياق به موقع مخزون واحد، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي "
 "من توابعه.\n"
-"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا "
-"المستودع، أو أي من توابعه.\n"
+"في سياق به مستودع واحد، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع"
+"، أو أي من توابعه.\n"
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'."
 
 #. module: product_expiry
@@ -361,9 +361,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
-"عدد الأيام بعد استلام المنتجات (من المورّد أو في المخزون بعد الإنتاج) التي "
-"ستصبح المنتجات بعدها خطرة ولا يجب استهلاكها. سوف يتم احتسابها في رقم الدفعة/"
-"الرقم التسلسلي."
+"عدد الأيام بعد استلام المنتجات (من المورّد أو في المخزون بعد الإنتاج) التي ستصبح "
+"المنتجات بعدها خطرة ولا يجب استهلاكها. سوف يتم احتسابها في رقم الدفعة/الرقم "
+"التسلسلي."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -373,8 +373,8 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
-"عدد الأيام قبل تاريخ انتهاء الصلاحية التي يجب بعدها إرسال تنبيه في رقم "
-"الدفعة/الرقم التسلسلي. سوف يتم احتسابه في رقم الدفعة/الرقم التسلسلي."
+"عدد الأيام قبل تاريخ انتهاء الصلاحية التي يجب بعدها إرسال تنبيه في رقم الدفعة/"
+"الرقم التسلسلي. سوف يتم احتسابه في رقم الدفعة/الرقم التسلسلي."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -396,8 +396,8 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the lot/"
 "serial number."
 msgstr ""
-"عدد الأيام قبل تاريخ انتهاء الصلاحية التي تبدأ حالة البضائع في التدهور "
-"بعدها، قبل أن تصبح خطرة. سوف يتم احتسابه في رقم الدفعة/الرقم التسلسلي."
+"عدد الأيام قبل تاريخ انتهاء الصلاحية التي تبدأ حالة البضائع في التدهور بعدها، "
+"قبل أن تصبح خطرة. سوف يتم احتسابه في رقم الدفعة/الرقم التسلسلي."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__available_quantity
@@ -573,8 +573,8 @@ msgid ""
 "product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
-"عندما يكون هذا المربع محدداً، لديك احتمالية تحديد التواريخ لإدارة انتهاء "
-"صلاحية المنتجات على المنتج ورقم الدفعة/الرقم التسلسلي المقابل"
+"عندما يكون هذا المربع محدداً، لديك احتمالية تحديد التواريخ لإدارة انتهاء صلاحية "
+"المنتجات على المنتج ورقم الدفعة/الرقم التسلسلي المقابل"
 
 #. module: product_expiry
 #. odoo-python

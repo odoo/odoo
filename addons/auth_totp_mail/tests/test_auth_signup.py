@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 from odoo import http
@@ -46,3 +47,38 @@ class TestAuthSignupFlowWith2faEnforced(HttpCaseWithUserPortal, HttpCaseWithUser
         new_user = self.env['res.users'].search([('name', '=', name)])
         self.assertTrue(new_user)
         self.assertEqual(response.status_code, 200, "Signup request should succeed with a 200")
+
+    def test_alert_new_device_lang(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        user = self.user_demo
+        user.lang = 'fr_BE'
+
+        view = self.env.ref('mail.account_security_alert')
+        # Disable inherited template to avoid error
+        inherit_views = self.env['ir.ui.view'].search([
+            ('inherit_id', '=', view.id),
+        ])
+        inherit_views.active = False
+        view.with_context(lang='en_US').arch = '<div>mail in EN</div>'
+        view.update_field_translations('arch_db', {
+           'fr_BE': {
+                'mail in EN': 'email en FR',
+            }
+        })
+
+        self.authenticate(None, None)
+        csrf_token = http.Request.csrf_token(self)
+        payload = {
+            'login': 'demo',
+            'password': 'demo',
+            'csrf_token': csrf_token,
+        }
+        self.env['mail.mail'].search([]).sudo().unlink()
+        with (
+            patch.object(self.env.registry['mail.mail'], 'unlink', lambda m: None),
+            patch.object(self.env.registry['res.users'], '_mfa_type', lambda u: 'totp'),
+        ):
+            res = self.url_open('/web/login', data=payload)
+            self.assertEqual(res.status_code, 200)
+            mail = self.env['mail.mail'].search([], limit=1)
+            self.assertIn('<div>email en FR</div>', mail.body_html)

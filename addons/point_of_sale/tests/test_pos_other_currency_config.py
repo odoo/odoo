@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 import odoo
 
 from odoo import fields, tools
@@ -36,6 +34,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
 
         self.expense_account = self.categ_anglo.property_account_expense_categ_id
+        self.valuation_account = self.categ_anglo.property_stock_valuation_account_id
 
     def test_01_check_product_cost(self):
         # Product price should be half of the original price because currency rate is 0.5.
@@ -223,7 +222,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             },
         })
 
-    @skip('Temporary to fast merge new valuation')
     def test_04_anglo_saxon_products(self):
         """
         ======
@@ -276,7 +274,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': False, 'amount_currency': -3576.95},
                         {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 2375.99, 'credit': 0, 'reconciled': False, 'amount_currency': 2375.99},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': True, 'amount_currency': 3576.95},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
+                        {'account_id': self.valuation_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': False, 'amount_currency': -2375.99},
                     ],
                 },
                 'cash_statement': [

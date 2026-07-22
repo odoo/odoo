@@ -14,16 +14,16 @@
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
-"PO-Revision-Date: 2026-06-23 11:08+0000\n"
-"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-07-01 22:44+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment/sl/>\n"
 "Language: sl\n"
@@ -75,10 +75,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"Nekatere od transakcij, ki jih nameravate zajeti, "
-"je mogoče zajeti le v celoti. Posamezno se ukvarjajte s transakcijami, da "
-"zajamete delni znesek.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Nekatere od "
+"transakcij, ki jih nameravate zajeti, je mogoče zajeti le v celoti. "
+"Posamezno se ukvarjajte s transakcijami, da zajamete delni znesek.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -200,8 +200,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba <em>"
-"USTVARI</em> ni podprto.\n"
+"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba "
+"<em>USTVARI</em> ni podprto.\n"
 "                        Namesto tega uporabite dejanje <em>Dvojniki</em>."
 
 #. module: payment
@@ -1023,11 +1023,6 @@ msgid "EPS"
 msgstr "EPS"
 
 #. module: payment
-#: model:payment.method,name:payment.payment_method_easypaisa
-msgid "EasyPaisa"
-msgstr ""
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_elo
 msgid "Elo"
 msgstr "Elo"
@@ -1322,11 +1317,6 @@ msgstr ""
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
 msgstr "JCB"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_jazzcash
-msgid "JazzCash"
-msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
@@ -1864,6 +1854,11 @@ msgstr "PayPal"
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
 msgstr "PaySafeCard"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_payu
+msgid "PayU"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -3281,6 +3276,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3310,6 +3306,7 @@ msgstr "Vaše plačilo je bilo potrjeno."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3339,6 +3336,7 @@ msgstr "Vaše plačilo je bilo preklicano."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3367,6 +3365,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit

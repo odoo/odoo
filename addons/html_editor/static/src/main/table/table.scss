@@ -4,9 +4,19 @@ th.o_table_header {
 }
 
 .o_table {
+    display: block;
+    overflow-x: auto;
+    tbody {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
     th, td {
         > *:last-child {
             margin-bottom: 0;
+        }
+        > .o_table {
+            overflow-x: visible;
         }
     }
 }

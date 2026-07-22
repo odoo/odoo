@@ -7,13 +7,13 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # Jérémy Kersten <jke@openerp.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"PO-Revision-Date: 2026-06-30 21:58+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/event_sms/"
 "fr/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
@@ -78,8 +78,9 @@ msgstr ""
 "tz=object.event_id.date_tz, time_format='short', "
 "lang_code=object.partner_id.lang) + (', à %s' % "
 "object.event_id.address_inline if object.event_id.address_inline else '') + "
-"'.\\nÀ bientôt !' if object.event_id.address_inline or 'website_published' "
-"not in object.event_id._fields else 'Rejoignez-nous à %s/event/%i !' % "
+"'.\\n"
+"À bientôt !' if object.event_id.address_inline or 'website_published' not in "
+"object.event_id._fields else 'Rejoignez-nous à %s/event/%i !' % "
 "(object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms

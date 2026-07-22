@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2026-06-06 20:41+0000\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"PO-Revision-Date: 2026-06-30 15:53+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/"
 "stock_picking_batch/lo/>\n"
@@ -21,11 +21,39 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
-msgid "<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "%s was removed from the batch, no quantity processed"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
-"'=', False)]}\">ຈັດກຸ່ມຕາມ</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "<span class=\"col-6\">Waves</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Wave Grouping</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
+"Grouping</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -65,21 +93,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"ການໂອນຍ້າຍຈະບໍ່ຖືກເພີ່ມເຂົ້າໃນຊຸດ (Batch) ໂດຍອັດຕະໂນມັດ ຖ້າການໂອນຍ້າຍນັ້ນເຮັດໃຫ້ຈຳນວນລາຍການເກີນ"
-"ຄ່າທີ່ກຳນົດໄວ້.\n"
+"ການໂອນຍ້າຍຈະບໍ່ຖືກເພີ່ມເຂົ້າໃນຊຸດ (Batch) ໂດຍອັດຕະໂນມັດ "
+"ຖ້າການໂອນຍ້າຍນັ້ນເຮັດໃຫ້ຈຳນວນລາຍການເກີນຄ່າທີ່ກຳນົດໄວ້.\n"
 "ໃຫ້ຕັ້ງຄ່າເປັນ '0' ຖ້າບໍ່ຕ້ອງການກຳນົດຂີດຈຳກັດຂອງລາຍການ."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"ການໂອນຍ້າຍຈະບໍ່ຖືກເພີ່ມເຂົ້າໃນຊຸດ (Batch) ໂດຍອັດຕະໂນມັດ ຖ້າເຮັດໃຫ້ຈຳນວນການໂອນຍ້າຍເກີນຄ່າທີ່ກຳນົດໄ"
-"ວ້.\n"
+"ການໂອນຍ້າຍຈະບໍ່ຖືກເພີ່ມເຂົ້າໃນຊຸດ (Batch) ໂດຍອັດຕະໂນມັດ "
+"ຖ້າເຮັດໃຫ້ຈຳນວນການໂອນຍ້າຍເກີນຄ່າທີ່ກຳນົດໄວ້.\n"
 "ໃຫ້ຕັ້ງຄ່າເປັນ '0' ຖ້າບໍ່ຕ້ອງການກຳນົດຂີດຈຳກັດການໂອນຍ້າຍ."
 
 #. module: stock_picking_batch
@@ -196,7 +226,8 @@ msgstr "ຈັດກຸ່ມຊຸດອັດຕະໂນມັດຕາມສ
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
-msgid "Automatically put pickings into batches as they are confirmed when possible."
+msgid ""
+"Automatically put pickings into batches as they are confirmed when possible."
 msgstr "ເອົາການເບີກ/ຮັບ ເຂົ້າໃນຊຸດໂດຍອັດຕະໂນມັດເມື່ອມີການຢືນຢັນຫາກເປັນໄປໄດ້."
 
 #. module: stock_picking_batch
@@ -205,9 +236,25 @@ msgid "Barcode"
 msgstr "ບາໂຄ້ດ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
 msgstr "ຊຸດ (Batch)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Batch & Wave Transfers"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Batch Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
+msgid "Batch Properties"
+msgstr ""
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -232,7 +279,6 @@ msgstr "ລາຍການໂອນຍ້າຍແບບຊຸດ"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
 msgstr "ການໂອນຍ້າຍແບບຊຸດ"
 
@@ -248,9 +294,44 @@ msgid "Batch associated to this transfer"
 msgstr "ຊຸດທີ່ກ່ຽວຂ້ອງກັບການໂອນຍ້າຍນີ້"
 
 #. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Batch transfers"
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Batch transfers cannot be merged with wave transfers and vice versa."
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Batch/Wave transfers have been merged into the following transfer"
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Batch/Wave transfers with different operation types cannot be merged."
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Batch/Wave transfers with different states cannot be merged."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
 msgstr "ຊຸດ (Batches)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_calendar
+msgid "Calendar View"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -271,6 +352,11 @@ msgid "Cannot create wave transfers"
 msgstr "ບໍ່ສາມາດສ້າງການໂອນຍ້າຍແບບຮອບ (Wave) ໄດ້"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
+msgid "Categories to consider when grouping waves."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Check Availability"
 msgstr "ກວດສອບສິນຄ້າທີ່ມີຢູ່"
@@ -288,9 +374,10 @@ msgid "Choose Type of Labels To Print"
 msgstr "ເລືອກປະເພດສະຕິກເກີທີ່ຈະພິມ"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Clear quantities"
-msgstr "ລຶບລ້າງຈຳນວນ"
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Cluster transfers"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -321,16 +408,6 @@ msgid "Count Picking Wave"
 msgstr "ຈຳນວນຮອບການເບີກ/ຮັບ"
 
 #. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid "Create a new batch transfer"
-msgstr "ສ້າງການໂອນຍ້າຍແບບຊຸດໃໝ່"
-
-#. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
-msgid "Create a new wave transfer"
-msgstr "ສ້າງການໂອນຍ້າຍແບບຮອບ (Wave) ໃໝ່"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
@@ -345,24 +422,41 @@ msgid "Created on"
 msgstr "ສ້າງເມື່ອ"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__description
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__description
+msgid "Description"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Destination Country"
 msgstr "ປະເທດປາຍທາງ"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Destination Location"
 msgstr "ສະຖານທີ່ປາຍທາງ"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Detailed Operations"
 msgstr "ລາຍລະອຽດການດຳເນີນການ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_move_tree_inherited
+msgid "Details"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__display_name
 msgid "Display Name"
 msgstr "ຊື່ທີ່ສະແດງ"
 
@@ -400,9 +494,19 @@ msgid "Future Activities"
 msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "Group By"
-msgstr "ຈັດກຸ່ມຕາມ"
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Group by Destination Location"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Group by Source Location"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Gujarat"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
@@ -411,8 +515,13 @@ msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__id
 msgid "ID"
 msgstr "ລະຫັດ"
 
@@ -440,9 +549,10 @@ msgstr "ຖ້າໝາຍໄວ້, ບາງຂໍ້ຄວາມອາດມ�
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
-msgid "If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."
-msgstr ""
-"ຖ້າເປີດໃຊ້ງານຄຸນສົມບັດສ້າງຊຸດອັດຕະໂນມັດ, ຕ້ອງເລືອກຢ່າງໜ້ອຍໜຶ່ງຕົວເລືອກ 'ຈັດກຸ່ມຕາມ'."
+msgid ""
+"If the Automatic Batches feature is enabled, at least one 'Group by' option "
+"must be selected."
+msgstr "ຖ້າເປີດໃຊ້ງານຄຸນສົມບັດສ້າງຊຸດອັດຕະໂນມັດ, ຕ້ອງເລືອກຢ່າງໜ້ອຍໜຶ່ງຕົວເລືອກ 'ຈັດກຸ່ມຕາມ'."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -458,6 +568,16 @@ msgstr "ກຳລັງດຳເນີນການ"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
 msgstr "ແມ່ນຜູ້ຕິດຕາມ"
+
+#. module: stock_picking_batch
+#: model:ir.ui.menu,name:stock_picking_batch.menu_stock_jobs
+msgid "Jobs"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "John Doe"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
@@ -479,6 +599,14 @@ msgid "Late Activities"
 msgstr "ກິດຈະກຳທີ່ຊັກຊ້າ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Launch picking orders by aisle or area and regroup at packing zone. Ideal "
+"for large warehouses."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
 msgid "Line"
 msgstr "ລາຍການ"
@@ -489,14 +617,54 @@ msgid "List of transfers associated to this batch"
 msgstr "ລາຍການໂອນຍ້າຍທີ່ກ່ຽວຂ້ອງກັບຊຸດນີ້"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "List view of detailed operations"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+msgid "Location"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location From Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location To Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
+msgid "Locations to consider when grouping waves."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Lot Number"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
-msgid "Maximum lines per batch"
-msgstr "ຈຳນວນລາຍການສູງສຸດຕໍ່ຊຸດ"
+msgid "Maximum lines"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
-msgid "Maximum transfers per batch"
-msgstr "ຈຳນວນການໂອນຍ້າຍສູງສຸດຕໍ່ຊຸດ"
+msgid "Maximum transfers"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
+msgid "Merge"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -520,6 +688,11 @@ msgid "Move Lines"
 msgstr "ລາຍການເຄື່ອນຍ້າຍ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "ກຳນົດເວລາສິ້ນສຸດກິດຈະກຳຂອງຂ້ອຍ"
@@ -528,6 +701,12 @@ msgstr "ກຳນົດເວລາສິ້ນສຸດກິດຈະກຳຂ
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "My Transfers"
 msgstr "ການໂອນຍ້າຍຂອງຂ້ອຍ"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "New"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -561,8 +740,8 @@ msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງໄດ້ດຳເນີນການ"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
@@ -580,6 +759,26 @@ msgid "Operations"
 msgstr "ການດຳເນີນການ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Package ID"
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Packages"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Pick multiple orders in one trip and prepare orders as you pick. This "
+"reduces packing time and is ideal for small products."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
 msgstr "ການເບີກ/ຮັບ"
@@ -592,9 +791,22 @@ msgstr "ປະເພດການເບີກ/ຮັບ"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-msgid "Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please select at least two batch/wave transfers to merge."
 msgstr ""
-"ກະລຸນາເພີ່ມຈຳນວນທີ່ 'ສຳເລັດແລ້ວ' ໃນຊຸດການເບີກ/ຮັບ ເພື່ອສ້າງການຫຸ້ມຫໍ່ໃໝ່."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Prepare Batch"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave_for_picking_type
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_tree
+msgid "Prepare Wave"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -607,9 +819,20 @@ msgid "Print Labels"
 msgstr "ພິມສະຕິກເກີ"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Product"
 msgstr "ສິນຄ້າ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Barcode"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+msgid "Product Category"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move_line
@@ -617,7 +840,18 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "ການເຄື່ອນຍ້າຍສິນຄ້າ (ລາຍການເຄື່ອນຍ້າຍສາງ)"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__properties
+msgid "Properties"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Put in Pack"
 msgstr "ໃສ່ໃນການຫຸ້ມຫໍ່"
 
@@ -627,9 +861,21 @@ msgid "Quantity"
 msgstr "ຈຳນວນ"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity Done"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__rating_ids
 msgid "Ratings"
 msgstr "ການໃຫ້ຄະແນນ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"Regroup multiple orders into one picking and consolidate at the packing zone."
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -643,6 +889,11 @@ msgstr "ຜູ້ຮັບຜິດຊອບ"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
 msgid "Responsible User"
 msgstr "ຜູ້ໃຊ້ທີ່ຮັບຜິດຊອບ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Result Package ID"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
@@ -659,15 +910,18 @@ msgstr "ວັນທີກຳນົດ"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "ວັນທີກຳນົດສຳລັບການໂອນຍ້າຍທີ່ຈະປະມວນຜົນ.\n"
-"              - ຖ້າຕັ້ງຄ່າດ້ວຍຕົນເອງ, ວັນທີກຳນົດສຳລັບທຸກການໂອນຍ້າຍໃນຊຸດຈະຖືກອັບເດດເປັນວັນທີນີ້ໂດຍ"
-"ອັດຕະໂນມັດ.\n"
-"              - ຖ້າບໍ່ໄດ້ປ່ຽນແປງດ້ວຍຕົນເອງ ແລະ ມີການເພີ່ມ/ລຶບ/ອັບເດດການໂອນຍ້າຍ, ວັນທີນີ້ຈະເປັນວັ"
-"ນທີກຳນົດທີ່ໄວທີ່ສຸດຂອງພວກເຂົາ\n"
+"              - ຖ້າຕັ້ງຄ່າດ້ວຍຕົນເອງ, "
+"ວັນທີກຳນົດສຳລັບທຸກການໂອນຍ້າຍໃນຊຸດຈະຖືກອັບເດດເປັນວັນທີນີ້ໂດຍອັດຕະໂນມັດ.\n"
+"              - ຖ້າບໍ່ໄດ້ປ່ຽນແປງດ້ວຍຕົນເອງ ແລະ ມີການເພີ່ມ/ລຶບ/ອັບເດດການໂອນຍ້າຍ, "
+"ວັນທີນີ້ຈະເປັນວັນທີກຳນົດທີ່ໄວທີ່ສຸດຂອງພວກເຂົາ\n"
 "                ແຕ່ວັນທີກຳນົດນີ້ຈະບໍ່ຖືກຕັ້ງໃຫ້ກັບທຸກການໂອນຍ້າຍໃນຊຸດ."
 
 #. module: stock_picking_batch
@@ -676,9 +930,19 @@ msgid "Search Batch Transfer"
 msgstr "ຄົ້ນຫາການໂອນຍ້າຍແບບຊຸດ"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Set quantities"
-msgstr "ກຳນົດຈຳນວນ"
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Select locations you want to group"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Select product categories you want to group"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
+msgid "Sequence"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
@@ -691,29 +955,39 @@ msgid "Show Check Availability"
 msgstr "ສະແດງການກວດສອບສິນຄ້າທີ່ມີຢູ່"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
-msgid "Show Clear Qty Button"
-msgstr "ສະແດງປຸ່ມລຶບລ້າງຈຳນວນ"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
-msgid "Show Set Qty Button"
-msgstr "ສະແດງປຸ່ມກຳນົດຈຳນວນ"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
-msgid "Show Validate Button"
-msgstr "ສະແດງປຸ່ມກວດສອບ"
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "Show all records which has next action date is before today"
-msgstr "ສະແດງບັນທຶກທັງໝົດທີ່ມີວັນທີດຳເນີນການຖັດໄປກ່ອນມື້ນີ້"
+msgid "Show all records whose next activity date is past"
+msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Source Location"
 msgstr "ສະຖານທີ່ຕົ້ນທາງ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+msgid ""
+"Split transfers by defined locations, then group transfers with the same "
+"location."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+msgid ""
+"Split transfers by product category, then group transfers that have the same "
+"product category."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
+msgid ""
+"Split transfers by product then group transfers that have the same product."
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -757,11 +1031,6 @@ msgid "Stock Move"
 msgstr "ການເຄື່ອນຍ້າຍສາງ"
 
 #. module: stock_picking_batch
-#: model:ir.model,name:stock_picking_batch.model_stock_package_destination
-msgid "Stock Package Destination"
-msgstr "ຈຸດໝາຍປາຍທາງການຫຸ້ມຫໍ່ສາງ"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
 msgstr "ລາຍການເຄື່ອນຍ້າຍສາງ"
@@ -778,43 +1047,37 @@ msgstr "ສະຫຼຸບ:"
 
 #. module: stock_picking_batch
 #. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+msgid "The following batch transfer has been created"
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+msgid "The following batch transfer has been updated"
+msgstr ""
+
+#. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types, if they aren't immediate transfers.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
-"Incompatibilities: %s"
+"Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"ການໂອນຍ້າຍຕໍ່ໄປນີ້ບໍ່ສາມາດເພີ່ມເຂົ້າໃນການໂອນຍ້າຍແບບຊຸດ %s ໄດ້. ກະລຸນາກວດສອບສະຖານະ ແລະ ປະເພດກ"
-"ານດຳເນີນການ ຫາກບໍ່ແມ່ນການໂອນຍ້າຍແບບທັນທີ.\n"
-"\n"
-"ຄວາມບໍ່ເຂົ້າກັນ: %s"
 
 #. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid ""
-"The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+msgid "The following wave transfer has been created"
 msgstr ""
-"ເປົ້າໝາຍຂອງການໂອນຍ້າຍແບບຊຸດແມ່ນເພື່ອຈັດກຸ່ມການດຳເນີນການທີ່ອາດຈະ\n"
-"            (ຈຳເປັນຕ້ອງ) ເຮັດຮ່ວມກັນເພື່ອເພີ່ມປະສິດທິພາບ.\n"
-"            ນອກຈາກນີ້ຍັງມີປະໂຫຍດໃນການມອບໝາຍວຽກ (ໜຶ່ງຄົນ = ໜຶ່ງຊຸດ) ຫຼື\n"
-"            ຊ່ວຍໃນການຈັດການເວລາຂອງການດຳເນີນການ (ວຽກທີ່ຕ້ອງເຮັດໃນເວລາ 1 ໂມງແລງ)."
 
 #. module: stock_picking_batch
-#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
-msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
-"                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+msgid "The following wave transfer has been updated"
 msgstr ""
-"ເປົ້າໝາຍຂອງການໂອນຍ້າຍແບບຮອບ (Wave) ແມ່ນເພື່ອຈັດກຸ່ມການດຳເນີນການຈາກການໂອນຍ້າຍທີ່ແຕກຕ່າງກັນ\n"
-"                    ເຂົ້າຮ່ວມກັນເພື່ອເພີ່ມປະສິດທິພາບ.\n"
-"                    ນອກຈາກນີ້ຍັງມີປະໂຫຍດໃນການມອບໝາຍວຽກ (ໜຶ່ງຄົນ = ໜຶ່ງຊຸດ) ຫຼື\n"
-"                    ຊ່ວຍໃນການຈັດການເວລາຂອງການດຳເນີນການ (ວຽກທີ່ຕ້ອງເຮັດໃນເວລາ 1 ໂມງແລ"
-"ງ)."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -841,6 +1104,14 @@ msgid "The selected transfers should belong to the same operation type"
 msgstr "ການໂອນຍ້າຍທີ່ເລືອກຄວນຈະຢູ່ໃນປະເພດການດຳເນີນການດຽວກັນ"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid ""
+"The sequence '%(sequence)s' is misconfigured. Its prefix should end with a "
+"'/' separator."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
 msgid "This batch is a wave"
 msgstr "ຊຸດນີ້ແມ່ນຮອບ (Wave)"
@@ -860,6 +1131,16 @@ msgstr "ກິດຈະກຳມື້ນີ້"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
 msgstr "ໂອນຍ້າຍ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Display Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Name"
+msgstr ""
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -884,14 +1165,36 @@ msgid "Type of the exception activity on record."
 msgstr "ປະເພດຂອງກິດຈະກຳທີ່ຜິດປົກກະຕິໃນບັນທຶກ."
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+msgid "Unassigned responsible from %s"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+msgid "Unreserve"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
 msgstr "ກວດສອບຄວາມຖືກຕ້ອງ"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__warehouse_id
 msgid "Warehouse"
 msgstr "ສາງສິນຄ້າ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_location_ids
+msgid "Wave Locations"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_category_ids
+msgid "Wave Product Categories"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
@@ -910,9 +1213,10 @@ msgid "Wave Transfers"
 msgstr "ການໂອນຍ້າຍແບບຮອບ (Wave)"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
-msgid "Waves"
-msgstr "ຮອບ (Waves)"
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Wave transfers"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
@@ -934,6 +1238,12 @@ msgstr "ເມື່ອໝາຍໄວ້, ຈະສ້າງຊຸດໃນສ�
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot delete Done batch transfers."
 msgstr "ທ່ານບໍ່ສາມາດລຶບການໂອນຍ້າຍແບບຊຸດທີ່ສຳເລັດແລ້ວໄດ້."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "You cannot merge done or cancelled batch/wave transfers."
+msgstr ""
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -960,3 +1270,108 @@ msgstr "ການໂອນຍ້າຍແບບຊຸດທີ່ມີຢູ່
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
 msgstr "ການໂອນຍ້າຍແບບຮອບ (Wave) ທີ່ມີຢູ່ແລ້ວ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume
+msgid "shipping_volume"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
+msgid "shipping_weight"
+msgstr ""
+
+#~ msgid ""
+#~ "<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
+#~ "'=', False)]}\">Group by</span>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
+#~ "'=', False)]}\">ຈັດກຸ່ມຕາມ</span>"
+
+#~ msgid "Clear quantities"
+#~ msgstr "ລຶບລ້າງຈຳນວນ"
+
+#~ msgid "Create a new batch transfer"
+#~ msgstr "ສ້າງການໂອນຍ້າຍແບບຊຸດໃໝ່"
+
+#~ msgid "Create a new wave transfer"
+#~ msgstr "ສ້າງການໂອນຍ້າຍແບບຮອບ (Wave) ໃໝ່"
+
+#~ msgid "Group By"
+#~ msgstr "ຈັດກຸ່ມຕາມ"
+
+#~ msgid "Maximum lines per batch"
+#~ msgstr "ຈຳນວນລາຍການສູງສຸດຕໍ່ຊຸດ"
+
+#~ msgid "Maximum transfers per batch"
+#~ msgstr "ຈຳນວນການໂອນຍ້າຍສູງສຸດຕໍ່ຊຸດ"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງໄດ້ດຳເນີນການ"
+
+#~ msgid ""
+#~ "Please add 'Done' quantities to the batch picking to create a new pack."
+#~ msgstr "ກະລຸນາເພີ່ມຈຳນວນທີ່ 'ສຳເລັດແລ້ວ' ໃນຊຸດການເບີກ/ຮັບ ເພື່ອສ້າງການຫຸ້ມຫໍ່ໃໝ່."
+
+#~ msgid "Set quantities"
+#~ msgstr "ກຳນົດຈຳນວນ"
+
+#~ msgid "Show Clear Qty Button"
+#~ msgstr "ສະແດງປຸ່ມລຶບລ້າງຈຳນວນ"
+
+#~ msgid "Show Set Qty Button"
+#~ msgstr "ສະແດງປຸ່ມກຳນົດຈຳນວນ"
+
+#~ msgid "Show Validate Button"
+#~ msgstr "ສະແດງປຸ່ມກວດສອບ"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr "ສະແດງບັນທຶກທັງໝົດທີ່ມີວັນທີດຳເນີນການຖັດໄປກ່ອນມື້ນີ້"
+
+#~ msgid "Stock Package Destination"
+#~ msgstr "ຈຸດໝາຍປາຍທາງການຫຸ້ມຫໍ່ສາງ"
+
+#~ msgid ""
+#~ "The following transfers cannot be added to batch transfer %s. Please "
+#~ "check their states and operation types, if they aren't immediate "
+#~ "transfers.\n"
+#~ "\n"
+#~ "Incompatibilities: %s"
+#~ msgstr ""
+#~ "ການໂອນຍ້າຍຕໍ່ໄປນີ້ບໍ່ສາມາດເພີ່ມເຂົ້າໃນການໂອນຍ້າຍແບບຊຸດ %s ໄດ້. ກະລຸນາກວດສອບສະຖານະ ແລະ "
+#~ "ປະເພດການດຳເນີນການ ຫາກບໍ່ແມ່ນການໂອນຍ້າຍແບບທັນທີ.\n"
+#~ "\n"
+#~ "ຄວາມບໍ່ເຂົ້າກັນ: %s"
+
+#~ msgid ""
+#~ "The goal of the batch transfer is to group operations that may\n"
+#~ "            (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "            It may also be useful to assign jobs (one person = one batch) "
+#~ "or\n"
+#~ "            help the timing management of operations (tasks to be done at "
+#~ "1pm)."
+#~ msgstr ""
+#~ "ເປົ້າໝາຍຂອງການໂອນຍ້າຍແບບຊຸດແມ່ນເພື່ອຈັດກຸ່ມການດຳເນີນການທີ່ອາດຈະ\n"
+#~ "            (ຈຳເປັນຕ້ອງ) ເຮັດຮ່ວມກັນເພື່ອເພີ່ມປະສິດທິພາບ.\n"
+#~ "            ນອກຈາກນີ້ຍັງມີປະໂຫຍດໃນການມອບໝາຍວຽກ (ໜຶ່ງຄົນ = ໜຶ່ງຊຸດ) ຫຼື\n"
+#~ "            ຊ່ວຍໃນການຈັດການເວລາຂອງການດຳເນີນການ (ວຽກທີ່ຕ້ອງເຮັດໃນເວລາ 1 ໂມງແລງ)."
+
+#~ msgid ""
+#~ "The goal of the wave transfer is to group operations from different "
+#~ "transfer\n"
+#~ "                    together in order to increase their efficiency.\n"
+#~ "                    It may also be useful to assign jobs (one person = "
+#~ "one batch) or\n"
+#~ "                    help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "ເປົ້າໝາຍຂອງການໂອນຍ້າຍແບບຮອບ (Wave) "
+#~ "ແມ່ນເພື່ອຈັດກຸ່ມການດຳເນີນການຈາກການໂອນຍ້າຍທີ່ແຕກຕ່າງກັນ\n"
+#~ "                    ເຂົ້າຮ່ວມກັນເພື່ອເພີ່ມປະສິດທິພາບ.\n"
+#~ "                    ນອກຈາກນີ້ຍັງມີປະໂຫຍດໃນການມອບໝາຍວຽກ (ໜຶ່ງຄົນ = ໜຶ່ງຊຸດ) ຫຼື\n"
+#~ "                    ຊ່ວຍໃນການຈັດການເວລາຂອງການດຳເນີນການ (ວຽກທີ່ຕ້ອງເຮັດໃນເວລາ 1 "
+#~ "ໂມງແລງ)."
+
+#~ msgid "Waves"
+#~ msgstr "ຮອບ (Waves)"

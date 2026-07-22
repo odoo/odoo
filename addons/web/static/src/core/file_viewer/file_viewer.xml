@@ -15,11 +15,11 @@
                         <span class="text-truncate" t-out="state.file.name"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="">
-                        <a t-att-href="state.file.downloadUrl" class="text-reset d-flex align-items-baseline" download="">
+                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="onClickDownload">
+                        <span class="text-reset d-flex align-items-baseline">
                             <i class="fa fa-download fa-fw me-1" role="img"/>
                             <span>Download</span>
-                        </a>
+                        </span>
                     </div>
 
                     <div t-on-click.stop="close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
@@ -61,10 +61,8 @@
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="onClickPrint" title="Print" role="button">
                         <i class="fa fa-fw fa-print" role="img"/>
                     </div>
-                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="">
-                        <a t-att-href="state.file.downloadUrl" class="text-reset" download="">
-                            <i class="fa fa-download fa-fw" role="img"/>
-                        </a>
+                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="onClickDownload">
+                        <i class="fa fa-download fa-fw" role="img"/>
                     </div>
                 </div>
                 <t t-if="props.files.length > 1">

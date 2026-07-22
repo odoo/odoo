@@ -3,6 +3,7 @@ import {
     renderStaticFileBox,
 } from "@html_editor/main/media/media_dialog/document_selector";
 import { Plugin } from "@html_editor/plugin";
+import { isEmpty } from "@html_editor/utils/dom_info";
 import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -12,7 +13,7 @@ import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history", "selection"];
+    static dependencies = ["clipboard", "dom", "history", "selection"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -59,6 +60,26 @@ export class FilePlugin extends Plugin {
         is_node_editable_predicates: (node) => {
             if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
                 return false;
+            }
+        },
+        is_powerbox_available_predicates: (node) => {
+            if (closestElement(node, ".o_file_box")) {
+                return false;
+            }
+        },
+        are_shorthands_available_predicates: (node) => {
+            if (closestElement(node, ".o_file_box")) {
+                return false;
+            }
+        },
+
+        /** Overrides */
+        paste_overrides: (selection, clipboardData) => {
+            if (closestElement(selection.anchorNode, ".o_file_box")) {
+                this.dependencies.clipboard.pasteText(
+                    clipboardData.getData("text/plain")
+                );
+                return true;
             }
         },
     };
@@ -112,8 +133,8 @@ export class FilePlugin extends Plugin {
             case "ArrowLeft":
                 if (
                     selection.isCollapsed &&
-                    selection.anchorNode === firstLeafNode &&
-                    selection.anchorOffset === 0
+                    (isEmpty(fileNameEl) ||
+                        (selection.anchorNode === firstLeafNode && selection.anchorOffset === 0))
                 ) {
                     ev.preventDefault();
                 }
@@ -121,8 +142,9 @@ export class FilePlugin extends Plugin {
             case "ArrowRight":
                 if (
                     selection.isCollapsed &&
-                    selection.anchorNode === lastLeafNode &&
-                    selection.anchorOffset === nodeSize(lastLeafNode)
+                    (isEmpty(fileNameEl) ||
+                        (selection.anchorNode === lastLeafNode &&
+                            selection.anchorOffset === nodeSize(lastLeafNode)))
                 ) {
                     ev.preventDefault();
                 }

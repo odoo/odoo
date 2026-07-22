@@ -7,15 +7,15 @@
 # Martin Trigaux, 2022
 # Larissa Manderfeld, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-05-16 09:33+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-07-06 06:18+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/de/>\n"
@@ -24,13 +24,29 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "% discount"
 msgstr "% Rabatt"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+"%(amount)s beträgt mehr als 25 % des Gesamtbetrags der Bestellung. Ist "
+"dieser Trinkgeldbetrag korrekt?"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr "%(original)s + %(tip)s Trinkgeld = %(overall)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -185,6 +201,7 @@ msgstr "Archiviert"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
@@ -729,6 +746,18 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table"
+msgstr "Tisch verknüpfen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table %(sourceTable)s with %(destinationTable)s"
+msgstr "Tisch %(sourceTable)s mit %(destinationTable)s verknüpfen"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Loading"
 msgstr "Ladevorgang"
@@ -1080,6 +1109,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
 msgstr "Die Entfernung eines Tischs kann nicht rückgängig gemacht werden."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Removing floor %s"
+msgstr "Raum %s entfernen"
 
 #. module: pos_restaurant
 #. odoo-javascript

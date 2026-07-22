@@ -385,3 +385,70 @@ class TestReportStockQuantity(tests.TransactionCase):
         )
         forecast = [qty for __, __, qty in report]
         self.assertEqual(forecast, [0, 19.5])
+
+    def test_inter_warehouse_transfer_uom(self):
+        """
+        Ensure that the forecast report correctly applies UoM conversion for done
+        inter-warehouse moves.
+        """
+        uom_box = self.env['uom.uom'].create({
+            'name': 'Box of 25',
+            'relative_uom_id': self.uom_unit.id,
+            'relative_factor': 25.0,
+        })
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'is_storable': True,
+            'uom_ids': [Command.link(uom_box.id)],
+        })
+
+        wh1, wh2 = self.env['stock.warehouse'].create([{
+            'name': 'Warehouse 1',
+            'code': 'WH1',
+        }, {
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+        }])
+
+        today = datetime.now()
+
+        # Receive 800 units into wh1 via a done move
+        self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': wh1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 800.0,
+            'quantity': 800.0,
+            'state': 'done',
+            'date': today,
+        })
+
+        # Transfer 2 boxes (= 50 units) from wh1 to wh2
+        move = self.env['stock.move'].create({
+            'location_id': wh1.lot_stock_id.id,
+            'location_dest_id': wh2.lot_stock_id.id,
+            'product_id': product.id,
+            'product_uom': uom_box.id,
+            'product_uom_qty': 2.0,
+            'date': today,
+        })
+        move._action_confirm()
+        move.quantity = 2.0
+        move.picked = True
+        move._action_done()
+
+        self.env.flush_all()
+
+        # wh1 quant = 800 - 50 = 750 units
+        # Forecast before today should use the converted qty (50), not the done qty (2)
+        # Expected: 0
+        # Bug case: -48
+        yesterday = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
+        report = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', product.id), ('warehouse_id', '=', wh1.id),
+             ('date', '=', yesterday)],
+            ['date:day', 'warehouse_id'],
+            ['product_qty:sum'],
+        )
+        self.assertEqual(report[0][2], 0.0)

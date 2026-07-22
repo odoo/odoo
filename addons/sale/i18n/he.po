@@ -22,16 +22,17 @@
 # NoaFarkash, 2022
 # hed shefer <hed@laylinetech.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# or balmas <or@laylinetech.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# or balmas <or@laylinetech.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# diego gurwicz <diegog@dnghub.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-08 19:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-07-07 17:08+0000\n"
+"Last-Translator: diego gurwicz <diegog@dnghub.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/sale/he/"
 ">\n"
 "Language: he\n"
@@ -40,7 +41,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -55,6 +56,12 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            אם הלקוח שלך משתמש ב-Odoo 18 ומעלה, נתוני הלקוח ושורות הזמנת "
+"המכירה\n"
+"            ייווצרו אוטומטית. כל PDF אחר המכיל קובץ UBL-RequestForQuotation\n"
+"            מצורף יעבוד גם כן.\n"
+"        "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -609,7 +616,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> שולם"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> בוצע היפוך"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -701,7 +708,7 @@ msgstr "<span class=\"o_stat_text\">נמכר</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr ""
+msgstr "<span id=\"o_sale_portal_use_amount_total\">בתשלום,</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -716,7 +723,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>1.00 Units</span>"
-msgstr ""
+msgstr "<span>1.00 יחידות</span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -928,7 +935,7 @@ msgstr "הפעל"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr ""
+msgstr "הפעל את Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -1049,7 +1056,7 @@ msgstr "הוספה/הסרה של עוקבים"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "יחידת מידה מותרת"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1077,6 +1084,15 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation and "
 "sale order between the header pages and the quote table. "
 msgstr ""
+"מאפשר לך לשתף את המסמך עם הלקוחות שלך במסגרת מכירה.\n"
+"השאר ריק אם אינך רוצה לשתף מסמך זה עם לקוח המכירה.\n"
+"בהצעת מחיר: המסמך יישלח ללקוחות ויהיה נגיש להם בכל עת.\n"
+"לדוגמה, אפשרות זו שימושית לשיתוף קובצי תיאור מוצר.\n"
+"באישור הזמנה: המסמך יישלח ללקוחות ויהיה נגיש להם.\n"
+"לדוגמה, אפשרות זו שימושית לשיתוף מדריך למשתמש או תוכן דיגיטלי שנרכש במסחר "
+"מקוון. \n"
+"בתוך הצעת המחיר: המסמך ייכלל בקובץ ה-PDF של הצעת המחיר והזמנת המכירה בין "
+"עמודי הכותרת לטבלת ההצעה. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1110,7 +1126,7 @@ msgstr "סכום לפני הנחה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Amount paid:"
-msgstr ""
+msgstr "סכום ששולם:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1124,6 +1140,8 @@ msgid ""
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
+"הזמנה מיועדת למכירה נוספת כאשר הכמויות שסופקו גבוהות מהכמויות\n"
+"            שהוזמנו במקור, ומדיניות החיוב מבוססת על כמויות שהוזמנו."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1180,6 +1198,8 @@ msgid ""
 "Are you sure you want to cancel this order? This may affect related "
 "documents or processes."
 msgstr ""
+"האם אתה בטוח שברצונך לבטל הזמנה זו? פעולה זו עשויה להשפיע על מסמכים או "
+"תהליכים קשורים."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1205,6 +1225,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"מאחר שיחידות מידה אחרות (למשל: %(problem_uom)s) מלבד %(uom)s כבר היו בשימוש "
+"עבור מוצר זה, לא ניתן לבצע את שינוי יחידת המידה. אם ברצונך לשנות אותה, יש "
+"להעביר את המוצר לארכיון וליצור מוצר חדש."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1261,7 +1284,7 @@ msgstr "מבוסס על מזהה מסמך"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "נצחו את המתחרים עם הצעות מחיר מרהיבות!"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1412,7 +1435,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Check a sample. It's clean!"
-msgstr ""
+msgstr "בדקו דוגמה. זה נקי!"
 
 #. module: sale
 #. odoo-javascript
@@ -1424,7 +1447,7 @@ msgstr "לחץ כאן כדי להוסיף מספר מוצרים או שירות�
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Click to configure"
-msgstr ""
+msgstr "לחץ להגדרה"
 
 #. module: sale
 #. odoo-javascript
@@ -1442,12 +1465,12 @@ msgstr "סגור"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
 msgid "Collapse Composition"
-msgstr ""
+msgstr "כווץ הרכב"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_prices
 msgid "Collapse Prices"
-msgstr ""
+msgstr "כווץ מחירים"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
@@ -1463,7 +1486,7 @@ msgstr "מוצר קומבו"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Combo Product"
-msgstr ""
+msgstr "מוצר קומבו"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1508,6 +1531,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"חשב עלויות משלוח ושלח עם DHL<br/>\n"
+"                                    <strong>(נא לעבור אל בית&gt;יישומים כדי "
+"להתקין)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1517,7 +1543,7 @@ msgstr "חשב עלויות המשלוח ושלח באמצעות Easypost"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "חשב עלויות משלוח ושלח עם Envia.com"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1526,6 +1552,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"חשב עלויות משלוח ושלח עם FedEx<br/>\n"
+"                                    <strong>(נא לעבור אל בית&gt;יישומים כדי "
+"להתקין)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1549,6 +1578,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"חשב עלויות משלוח ושלח עם UPS<br/>\n"
+"                                    <strong>(נא לעבור אל בית&gt;יישומים כדי "
+"להתקין)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1557,6 +1589,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"חשב עלויות משלוח ושלח עם USPS<br/>\n"
+"                                    <strong>(נא לעבור אל בית&gt;יישומים כדי "
+"להתקין)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1605,11 +1640,6 @@ msgstr "הודעת אישור"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "התחבר עם התוכנה שלך !"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "התחבר לתוכנה שלך"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1713,6 +1743,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"צור חשבונית אחת לכל ההזמנות של אותו לקוח, עם אותה כתובת חיוב ואותה כתובת "
+"אספקה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1826,7 +1858,7 @@ msgstr "לקוחות"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "מחבר DHL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1850,7 +1882,7 @@ msgstr "תאריך:"
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
-msgstr ""
+msgstr "ימים בין הצעת המחיר לבין פקיעתה. 0 ימים משמעו שפקיעה אוטומטית מושבתת"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -1885,6 +1917,8 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"תקופת ברירת המחדל שבה הצעת המחיר תקפה ועדיין ניתנת לאישור על ידי הלקוח. ניתן "
+"לשנות את ברירת המחדל לכל הזמנה או תבנית."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -1933,7 +1967,7 @@ msgstr "תאריך משלוח"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Delivery Date:"
-msgstr ""
+msgstr "תאריך אספקה:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2004,7 +2038,7 @@ msgstr "הנחה%(percent)s%%"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "הנחה %(percent)s%%- על מוצרים עם המסים הבאים %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2256,7 +2290,7 @@ msgstr "הכנס ערך מותאם אישית"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "מחבר Envia.com"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2286,7 +2320,7 @@ msgstr "תאריך תפוגה:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "נתוני מס נוספים"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -2350,6 +2384,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                                sale orders."
 msgstr ""
+"בתמחור לפי נוסחה או מחיר קבוע, המחיר המקורי אינו מוצג\n"
+"                                בהזמנות מכירה."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -2389,7 +2425,7 @@ msgstr "פעילויות עתידיות"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_gelato
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
@@ -2460,12 +2496,12 @@ msgstr "מכיל מוצרים בארכיון"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
 msgid "Has Authorized Transactions"
-msgstr ""
+msgstr "יש עסקאות מאושרות"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "יש הזמנה מאושרת"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2581,7 +2617,7 @@ msgstr "ייבא הזמנות של אמזון וסנכרן משלוחים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "ייבוא הזמנות Shopee וסנכרון משלוחים"
 
 #. module: sale
 #. odoo-python
@@ -2593,14 +2629,14 @@ msgstr "ייבא תבנית למוצרים"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Import Template for Quotations"
-msgstr ""
+msgstr "תבנית ייבוא להצעות מחיר"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
 msgid "Import a request for quotation from a customer"
-msgstr ""
+msgstr "ייבוא בקשה להצעת מחיר מלקוח"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2608,6 +2644,8 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                                discount column."
 msgstr ""
+"בשורת הזמנת המכירה המחיר המקורי הוא מחיר היחידה וההנחה מופיעה\n"
+"                                בעמודת ההנחה."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2630,7 +2668,7 @@ msgstr "כולל"
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "אזהרה פנימית עבור הלקוח או המוצרים כפי שהוגדרה על ידי המשתמש."
 
 #. module: sale
 #. odoo-python
@@ -2674,12 +2712,12 @@ msgstr "שורות חשבונית"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
 msgid "Invoice Paid"
-msgstr ""
+msgstr "חשבונית שולמה"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
 msgid "Invoice Posted"
-msgstr ""
+msgstr "חשבונית נרשמה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -2828,7 +2866,7 @@ msgstr "עוקב"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
-msgstr ""
+msgstr "האם המוצר בארכיון"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2917,7 +2955,7 @@ msgstr "אפשר ללקוחות שלך להתחבר כדי לראות את המ�
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "בואו ניצור הצעת מחיר יפהפייה בכמה לחיצות."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -2932,7 +2970,7 @@ msgstr "שורות הזמנה מקושרות"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "וירטואלי מקושר"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3068,13 +3106,13 @@ msgstr "Mitchell Admin"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Move Down"
-msgstr ""
+msgstr "הזז למטה"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Move Up"
-msgstr ""
+msgstr "הזז למעלה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3222,7 +3260,7 @@ msgstr "Odoo"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it"
-msgstr ""
+msgstr "כיסאות משרד עלולים לפגוע ברצפה שלכם: הגנו עליה"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3451,7 +3489,7 @@ msgstr "הזמנות ל Upsell"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3483,7 +3521,7 @@ msgstr "אריזה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "שורת מקטע אב"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3574,7 +3612,7 @@ msgstr "תנאי תשלום"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
 msgid "Pending Email Template"
-msgstr ""
+msgstr "תבנית אימייל בהמתנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
@@ -3584,7 +3622,7 @@ msgstr "אחוז"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "בצע הזמנות דרך שירות ההדפסה לפי דרישה של Gelato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -3594,7 +3632,7 @@ msgstr "כתובת גישה לפורטל"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
 msgid "Prepayment Amount"
-msgstr ""
+msgstr "סכום תשלום מראש"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
@@ -4075,7 +4113,7 @@ msgstr "שגיאה בשליחת SMS"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
@@ -4097,7 +4135,7 @@ msgstr "פרטי מכירה"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "הודעת אזהרה בשורת מכירה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4117,7 +4155,7 @@ msgstr "כמות הזמנות לקוח"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "תוכניות הזמנת מכירה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -4141,7 +4179,7 @@ msgstr "ספירת הזמנות לקוח"
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
 msgid "Sale Warning"
-msgstr ""
+msgstr "אזהרת מכירה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4249,7 +4287,7 @@ msgstr "שורת הזמנת לקוח"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Sales Order Line Warning"
-msgstr ""
+msgstr "אזהרת שורת הזמנת מכירה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
@@ -4342,7 +4380,7 @@ msgstr "מכירות: תשלום בוצע"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr ""
+msgstr "מכירות: שליחת פרופורמה"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4352,7 +4390,7 @@ msgstr "מכירות : שלח הצעות מחיר"
 #. module: sale
 #: model:ir.actions.server,name:sale.send_pending_emails_cron_ir_actions_server
 msgid "Sales: Send pending emails"
-msgstr ""
+msgstr "מכירות: שליחת אימיילים בהמתנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4395,7 +4433,7 @@ msgstr "שם פסקה (למשל מוצרים, שירותים)"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Section Summary"
-msgstr ""
+msgstr "סיכום מקטע"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4416,7 +4454,7 @@ msgstr "פריטי קומבו שנבחרו"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "מכירה ורכישה של מוצרים ביחידות מידה או אריזות שונות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4448,7 +4486,7 @@ msgstr "שלח דוא\"ל"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "מחבר Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4513,17 +4551,17 @@ msgstr "כתובת לאספקה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "מחבר Shiprocket"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
-msgstr ""
+msgstr "סנכרון Shopee"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "הצג את כל הרשומות שתאריך הפעילות הבאה שלהן עבר"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4571,7 +4609,7 @@ msgstr "נחתם ב-"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "So, are you sure you want to cancel these"
-msgstr ""
+msgstr "אם כך, האם אתה בטוח שברצונך לבטל את"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4600,7 +4638,7 @@ msgstr ""
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
-msgstr ""
+msgstr "בחלק משורות ההזמנה חסר מוצר, יש לתקן אותן לפני שממשיכים."
 
 #. module: sale
 #. odoo-python
@@ -4629,7 +4667,7 @@ msgstr "דוא\"ל מסוים"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "מחבר Starshipit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4666,17 +4704,17 @@ msgstr "Stripe"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr ""
+msgstr "Stripe Connect אינו זמין במדינה שלך, אנא השתמש בספק תשלום אחר."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "תת-מקטע"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "שם תת-מקטע"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -4867,13 +4905,13 @@ msgstr "האסימון גישה אינו חוקי."
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The amount is lower than the prepayment amount."
-msgstr ""
+msgstr "הסכום נמוך מסכום התשלום מראש."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The amount must be greater than the prepayment amount."
-msgstr ""
+msgstr "הסכום חייב להיות גדול מסכום התשלום מראש."
 
 #. module: sale
 #. odoo-python
@@ -5004,7 +5042,7 @@ msgstr "המוצר (%(product)s) מכיל ערכים שאינם תואמים: %(
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "תוקף הזמנת המכירה פג."
 
 #. module: sale
 #. odoo-python
@@ -5025,7 +5063,7 @@ msgstr "כרגע אין הזמנות לקוח בחשבונך."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "קיימים כבר"
 
 #. module: sale
 #. odoo-python
@@ -5308,7 +5346,7 @@ msgstr "מחיר יחידה:"
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "יחידות ואריזות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5355,13 +5393,13 @@ msgstr "עדכון מיסים"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
 msgid "Upload Request For Quotation"
-msgstr ""
+msgstr "העלאת בקשה להצעת מחיר"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "מכירה נוספת %(order)s ללקוח %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5381,7 +5419,7 @@ msgstr "השתמש REST URL כדי לקבל structure data של הזמנת רכ�
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
-msgstr ""
+msgstr "משמש את אנשי המכירות כאשר הם שולחים פרופורמה ללקוחות פוטנציאליים"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5425,7 +5463,7 @@ msgstr "תוקף ההזמנה – לאחר מועד זה לא יהיה ניתן 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "הערכים המוגדרים כאן הם ייחודיים לחברה."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5445,7 +5483,7 @@ msgstr "צפה בפרטים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "View Other Providers"
-msgstr ""
+msgstr "הצג ספקים אחרים"
 
 #. module: sale
 #. odoo-python
@@ -5490,12 +5528,12 @@ msgstr "אזהרה על שינוי החברה בהצעת המחיר שלך"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "אזהרה בהזמנות מכירה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "אזהרה בהזמנות מכירה ובחשבוניות"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -5611,7 +5649,7 @@ msgstr "מזהה הזמנה:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "הדפדפן שלך אינו תומך ב-iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5682,12 +5720,12 @@ msgstr "ימים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "e.g. This customer has reported recurring issues with previous orders."
-msgstr ""
+msgstr "לדוגמה: לקוח זה דיווח על בעיות חוזרות בהזמנות קודמות."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "לדוגמה: מוצר זה פגום."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -5703,7 +5741,7 @@ msgstr "להזמנת לקוח זו."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "items?"
-msgstr ""
+msgstr "פריטים?"
 
 #. module: sale
 #. odoo-javascript
@@ -5715,18 +5753,13 @@ msgstr "בוא נמשיך"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 msgid "quote."
-msgstr ""
+msgstr "הצעת מחיר."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "sale order"
 msgstr "הזמנת לקוח"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "לייצר הצעות מחיר אוטומטית"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5740,18 +5773,13 @@ msgstr "יחידות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "עם"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "you confirm acceptance on behalf of"
-msgstr ""
+msgstr "אתה מאשר קבלה בשם"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -5771,6 +5799,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'פרופורמה' or 'הזמנה'}} (סימוכין {{ object.name or 'לא זמין' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5778,6 +5808,17 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'הצעת "
+"מחיר' or 'הזמנה' }} (סימוכין {{ object.name or 'לא זמין' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "התחבר לתוכנה שלך"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "לייצר הצעות מחיר אוטומטית"
+
+#~ msgid "with"
+#~ msgstr "עם"
 
 #~ msgid "2023-12-31"
 #~ msgstr "31-12-2023"

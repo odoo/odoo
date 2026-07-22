@@ -2,16 +2,16 @@
 # This file contains the translation of the following modules:
 # * account_edi_ubl_cii
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-05-05 08:36+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-06-30 21:28+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/ar/>\n"
 "Language: ar\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -930,6 +930,17 @@ msgid "Report Action"
 msgstr "إجراء التقرير"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Reverse charge: In the absence of a written objection within one month of "
+"receipt of the invoice, the customer is deemed to acknowledge that they are "
+"a taxable person required to file periodic returns. If this condition is not "
+"met, the customer will be liable for the payment of the tax, interest, and "
+"penalties due in relation to this condition."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
 msgid "Romania VAT"
 msgstr "Romania VAT"
@@ -1314,8 +1325,8 @@ msgstr "شريك مجهول"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
-msgid "Unspported file type via %s"
-msgstr "Unspported file type via %s"
+msgid "Unsupported file type via %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2139,6 +2150,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Unspported file type via %s"
+#~ msgstr "Unspported file type via %s"
 
 #~ msgid "<span class=\"text-muted\">FROM</span>"
 #~ msgstr "<span class=\"text-muted\">من </span>"

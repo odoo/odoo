@@ -10,13 +10,13 @@
 # Martin Trigaux, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-12 14:55+0000\n"
+"PO-Revision-Date: 2026-07-02 00:23+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/event_sms/"
 "pl/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
@@ -82,7 +82,8 @@ msgstr ""
 "tz=object.event_id.date_tz, time_format='short', "
 "lang_code=object.partner_id.lang) + (', at%s' % "
 "object.event_id.address_inline if object.event_id.address_inline else '') + "
-"'.\\nWidzimy się na miejscu!' if object.event_id.address_inline or "
+"'.\\n"
+"Widzimy się na miejscu!' if object.event_id.address_inline or "
 "'website_published' not in object.event_id._fields else 'Dołącz do nas na %s/"
 "wydarzenie/%i!' % (object.get_base_url(), object.event_id.id) }}"
 

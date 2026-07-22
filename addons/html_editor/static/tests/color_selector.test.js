@@ -517,6 +517,22 @@ test("selected background color is shown in the toolbar and update when clicking
     expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
 });
 
+test.tags("desktop");
+test("colorpicker should stay open when hovering colors in an empty unbreakable node", async () => {
+    const { el } = await setupEditor(`<p>a</p><div class="oe_unbreakable">[<br></div><p>]b</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await waitFor(".o_font_color_selector");
+    await hover(queryOne("button[data-color='o-color-1']"));
+    // Allow the debounced toolbar update triggered by selectionchange.
+    await advanceTime(400);
+    expect(".o-we-toolbar").toHaveCount(1);
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(getContent(el)).toBe(
+        `<p>a</p><div class="oe_unbreakable">[<font class="text-o-color-1"><br></font></div><p>]b</p>`
+    );
+});
+
 test("clicking on button color parent does not crash", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
 

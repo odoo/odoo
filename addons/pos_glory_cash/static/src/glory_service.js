@@ -58,12 +58,14 @@ export class GloryService {
             },
             onBinaryEvent: (data) =>
                 parseGloryXml(data).then((response) => {
-                    this._logXml("RECV", response);
-                    const message = response.firstChild;
-                    if (this.resolvers[message.tagName]) {
-                        this.resolvers[message.tagName](message);
-                    } else if (this.eventHandlers[message.tagName]) {
-                        this.eventHandlers[message.tagName](message);
+                    for (const element of response) {
+                        this._logXml("RECV", element);
+                        const message = element.firstChild;
+                        if (this.resolvers[message.tagName]) {
+                            this.resolvers[message.tagName](message);
+                        } else if (this.eventHandlers[message.tagName]) {
+                            this.eventHandlers[message.tagName](message);
+                        }
                     }
                 }),
         });

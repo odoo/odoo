@@ -626,7 +626,7 @@
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
-            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title" class="opacity-0" t-att-style="'height: 0px'"/>
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title or ' '" class="opacity-0" t-att-style="'height: 0px'"/>
             <t t-out="0"/>
         </div>
 
@@ -731,7 +731,7 @@
                         </td>
                         <td class="p-0 text-end">
                             <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                            <div name="company_address">
+                            <div name="company_address" class="w-50 ms-auto">
                                 <ul class="list-unstyled" name="company_address_list">
                                     <li t-if="company.is_company_details_empty">
                                         <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 from datetime import datetime, timedelta
-from unittest import skip
 
 from odoo import Command, fields
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -517,6 +516,28 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
 
+    def test_duplicated_and_modified_picking(self):
+        """ Test that the purchase order's received quantity is not modified by a duplicated picking
+            whose picking type has been changed.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                })],
+        })
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        self.assertEqual(po.order_line.qty_received, 10.0)
+        outgoing_picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing')])
+        duplicated_picking = po.picking_ids.copy()
+        duplicated_picking.picking_type_id = outgoing_picking_type[0]
+        duplicated_picking.button_validate()
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
     def test_putaway_strategy_in_backorder(self):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         sub_loc_01 = self.env['stock.location'].create([{
@@ -649,7 +670,6 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
 
-    @skip('Temporary to fast merge new valuation')
     def test_receive_qty_invoiced_but_no_posted(self):
         """
         Create a purchase order, confirm it, invoice it, but don't post the invoice.
@@ -671,10 +691,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(receipt01.state, 'done')
         self.assertEqual(po.order_line[0].qty_received, 5)
         self.assertEqual(po.order_line[0].price_unit, 500)
-        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product_id_1.id)])
-        self.assertEqual(len(layers), 1)
-        self.assertEqual(layers.quantity, 5)
-        self.assertEqual(layers.value, 2500)
+        move = receipt01.move_ids.filtered(lambda m: m.product_id == self.product_id_1)
+        self.assertEqual(move.quantity, 5)
+        self.assertEqual(move.value, 2500)
 
     def test_stock_picking_type_for_deliveries_generated_from_po(self):
         """

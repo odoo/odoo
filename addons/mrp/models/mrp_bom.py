@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.misc import clean_context, OrderedSet
-
-from collections import defaultdict
 
 
 class MrpBom(models.Model):

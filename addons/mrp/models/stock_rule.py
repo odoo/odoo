@@ -92,16 +92,13 @@ class StockRule(models.Model):
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)
             is_batch_size = bom and bom.enable_batch_size
             if not mo or is_batch_size:
-                if not bom:
-                    # No BOM: skip MO creation, only replenishment rules should handle this
-                    continue
                 procurement_qty = procurement.product_qty
                 batch_size = bom.product_uom_id._compute_quantity(bom.batch_size, procurement.product_uom) if is_batch_size else procurement_qty
                 vals = rule._prepare_mo_vals(*procurement, bom)
                 while procurement.product_uom.compare(procurement_qty, 0) > 0:
                     new_productions_values_by_company[procurement.company_id.id]['values'].append({
                         **vals,
-                        'product_qty': procurement.product_uom._compute_quantity(batch_size, bom.product_uom_id),
+                        'product_qty': procurement.product_uom._compute_quantity(batch_size, bom.product_uom_id) if bom else procurement_qty,
                     })
                     new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
                     procurement_qty -= batch_size
@@ -120,9 +117,7 @@ class StockRule(models.Model):
             productions_vals_list = new_productions_values_by_company[company_id]['values']
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
-            for mo in productions:
-                if self._should_auto_confirm_procurement_mo(mo):
-                    mo.action_confirm()
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True
 

@@ -111,14 +111,20 @@ class MassMailCase(MailCase, MockLinkTracker):
             invalid = set(recipient_info.keys()) - {
                 'content',
                 # email_to
-                'email', 'email_to_mail', 'email_to_recipients',
+                'email',
+                'email_to_mail',
+                'email_to_recipients',
                 # mail.mail
                 'mail_values',
-                # email
+                # outgoing email
                 'email_values',
-                # trace
-                'partner', 'record', 'trace_status',
-                'failure_type', 'failure_reason',
+                # mailing.trace
+                'failure_reason',
+                'failure_type',
+                'partner',
+                'record',
+                'trace_status',
+                'trace_values',  # any other field value check on trace itself
             }
             if invalid:
                 raise AssertionError(f"assertMailTraces: invalid input {invalid}")
@@ -163,16 +169,17 @@ class MassMailCase(MailCase, MockLinkTracker):
                 self.assertFalse(self.env['mail.message'].sudo().search(
                     [('model', '=', record._name), ('res_id', '=', record.id),
                      ('id', 'in', self._new_mails.mail_message_id.ids)]))
+            if recipient_info.get('trace_values'):
+                for fname, fvalue in recipient_info['trace_values'].items():
+                    self.assertEqual(recipient_trace[fname], fvalue)
 
             if check_mail and not mail_not_created:
                 if author is None:
                     author = self.env.user.partner_id
 
                 # mail.mail specific values to check
-                email_values = recipient_info.get('email_values', {})
+                mail_values = recipient_info.get('mail_values') or {}
                 fields_values = {'mailing_id': mailing}
-                if recipient_info.get('mail_values'):
-                    fields_values.update(recipient_info['mail_values'])
                 if 'failure_type' in recipient_info:
                     fields_values['failure_type'] = failure_type
                 if 'failure_reason' in recipient_info:
@@ -181,6 +188,12 @@ class MassMailCase(MailCase, MockLinkTracker):
                     fields_values['email_to'] = recipient_info['email_to_mail']
                 if partner:
                     fields_values['recipient_ids'] = partner
+                if mail_values:
+                    fields_values.update(mail_values)
+                mail_state = fields_values.pop('state', False) or state_mapping[status]
+
+                # outgoing email specific value to check
+                email_values = recipient_info.get('email_values', {})
 
                 # specific for partner: email_formatted is used
                 if partner:
@@ -188,7 +201,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         self.assertSentEmail(author, [partner])
                     else:
                         self.assertMailMail(
-                            partner, state_mapping[status],
+                            partner, mail_state,
                             author=author,
                             content=content,
                             email_to_recipients=email_to_recipients,
@@ -198,7 +211,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and status in ('cancel', 'bounce'):
                     self.assertMailMailWId(
-                        recipient_trace.mail_mail_id_int, state_mapping[status],
+                        recipient_trace.mail_mail_id_int, mail_state,
                         author=author,
                         content=content,
                         email_to_recipients=email_to_recipients,
@@ -207,7 +220,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                     )
                 else:
                     self.assertMailMailWEmails(
-                        [email_to_mail], state_mapping[status],
+                        [email_to_mail], mail_state,
                         author=author,
                         content=content,
                         email_to_recipients=email_to_recipients,
@@ -231,7 +244,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     # TOOLS
     # ------------------------------------------------------------
 
-    def gateway_mail_trace_bounce(self, mailing, record, bounce_base_values=None):
+    def gateway_mail_trace_bounce(self, mailing, records, bounce_base_values=None):
         """ Generate a bounce at mailgateway level.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
@@ -239,98 +252,141 @@ class MassMailCase(MailCase, MockLinkTracker):
         :param record: record which should bounce;
         :param bounce_base_values: optional values given to routing;
         """
-        record_email = record[record._primary_email]
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
-        self.assertEqual(trace.email, email_normalize(record_email))
+        traces = self.env['mailing.trace']
+        for record in records:
+            record_email = record[record._primary_email]
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            self.assertEqual(trace.email, email_normalize(record_email))
 
-        parsed_bounce_values = {
-            'email_from': 'some.email@external.example.com',  # TDE check: email_from -> trace email ?
-            'to': 'bounce@test.example.com',  # TDE check: bounce alias ?
-            'message_id': mail.generate_tracking_message_id('MailTest'),
-            'bounced_partner': self.env['res.partner'].sudo(),
-            'bounced_message': self.env['mail.message'].sudo(),
-            'body': 'This is the bounce email',
-        }
-        parsed_bounce_values.update({
-            'bounced_email': trace.email,
-            'bounced_msg_ids': [trace.message_id],
-        })
-        if bounce_base_values:
-            parsed_bounce_values.update(bounce_base_values)
-        self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
-        return trace
+            parsed_bounce_values = {
+                'email_from': 'some.email@external.example.com',  # TDE check: email_from -> trace email ?
+                'to': 'bounce@test.example.com',  # TDE check: bounce alias ?
+                'message_id': mail.generate_tracking_message_id('MailTest'),
+                'bounced_partner': self.env['res.partner'].sudo(),
+                'bounced_message': self.env['mail.message'].sudo(),
+                'body': 'This is the bounce email',
+            }
+            parsed_bounce_values.update({
+                'bounced_email': trace.email,
+                'bounced_msg_ids': [trace.message_id],
+            })
+            if bounce_base_values:
+                parsed_bounce_values.update(bounce_base_values)
+            self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
+            traces += trace
+        return traces
 
-    def gateway_mail_trace_click(self, mailing, record, click_label):
+    def gateway_mail_trace_click(self, mailing, records, click_label):
         """ Simulate a click on a sent email.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
           to click;
-        :param record: record which should click;
+        :param records: record which should click;
         :param click_label: label of link on which we should click;
         """
-        record_email = record[record._primary_email]
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
-        self.assertEqual(trace.email, email_normalize(record_email))
+        traces = self.env['mailing.trace']
+        for record in records:
+            record_email = record[record._primary_email]
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            self.assertEqual(trace.email, email_normalize(record_email))
 
-        email = self._find_sent_email_wemail(record_email)
-        self.assertTrue(bool(email))
-        for (_url_href, link_url, _dummy, label) in re.findall(mail.HTML_TAG_URL_REGEX, email['body']):
-            if label == click_label and '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
-                parsed_url = werkzeug.urls.url_parse(link_url)
-                path_items = parsed_url.path.split('/')
-                code, trace_id = path_items[2], int(path_items[4])
-                self.assertEqual(trace.id, trace_id)
+            email = self._find_sent_email_wemail(record_email)
+            self.assertTrue(bool(email))
+            for (_url_href, link_url, _dummy, label) in re.findall(mail.HTML_TAG_URL_REGEX, email['body']):
+                if label == click_label and '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
+                    parsed_url = werkzeug.urls.url_parse(link_url)
+                    path_items = parsed_url.path.split('/')
+                    code, trace_id = path_items[2], int(path_items[4])
+                    self.assertEqual(trace.id, trace_id)
 
-                self.env['link.tracker.click'].sudo().add_click(
-                    code,
-                    ip='100.200.300.%3f' % random.random(),
-                    country_code='BE',
-                    mailing_trace_id=trace.id
-                )
-                break
-        else:
-            raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
-        return trace
+                    self.env['link.tracker.click'].sudo().add_click(
+                        code,
+                        ip='100.200.300.%3f' % random.random(),
+                        country_code='BE',
+                        mailing_trace_id=trace.id
+                    )
+                    break
+            else:
+                raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
+            traces += trace
+        return traces
 
-    def gateway_mail_trace_open(self, mailing, record):
-        """ Simulate opening an email through blank.gif icon access. As we
-        don't want to use the whole Http layer just for that we will just
-        call 'set_opened()' on trace, until having a better option.
+    def gateway_mail_trace_fail(self, mailing, records, failure_reason=False, failure_type=False):
+        """ Simulate a post-send update (e.g. using the queue to send emails)
+        which fails.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
           to open;
-        :param record: record which should open;
+        :param records: records to find linked mail and reply to it;
         """
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
-
-        trace.set_opened()
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace, 'Trace not found')
+            self.assertTrue(trace.mail_mail_id, 'Mail disappeared / not found')
+            # unsure this is useful actually but hey, to check a bit more
+            trace.mail_mail_id.write({
+                'state': 'exception',
+                'failure_reason': failure_reason,
+                'failure_type': failure_type,
+            })
+            trace.mail_mail_id._postprocess_sent_message(
+                [], [],
+                failure_reason=failure_reason, failure_type=failure_type,
+            )
+            traces += trace
+        self.assertEqual(len(traces), len(records))
         return trace
 
-    def gateway_mail_trace_reply(self, mailing, record):
+    def gateway_mail_trace_open(self, mailing, records):
+        """ Simulate opening an email through blank.gif icon access. As we
+        don't want to use the whole Http layer just for that we will just
+        call 'set_opened()' on trace, until having a better option. See
+        '/mail/track/<int:mail_id>/<string:token>/blank.gif' route.
+
+        :param mailing: a ``mailing.mailing`` record on which we find a trace
+          to open;
+        :param records: records which should open;
+        """
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            trace.set_opened()
+            traces += trace
+        self.assertEqual(len(traces), len(records))
+        return traces
+
+    def gateway_mail_trace_reply(self, template, mailing, records):
         """ Simulate replying to an email. As we don't want to use the whole
         mail and gateway layer just for that we will just call 'set_replied()'
         on trace.
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
           to open;
-        :param record: record which should open;
+        :param records: records to find linked mail and reply to it;
         """
-        trace = mailing.mailing_trace_ids.filtered(
-            lambda t: t.model == record._name and t.res_id == record.id
-        )
-        self.assertTrue(trace)
-
-        trace.set_replied()
-        return trace
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace, 'Trace not found')
+            self.assertTrue(trace.mail_mail_id, 'Mail disappeared / not found')
+            self.gateway_mail_reply_wmail(template, record, trace.mail_mail_id)
+            traces += trace
+        self.assertEqual(len(traces), len(records))
+        return traces
 
     @classmethod
     def _create_bounce_trace(cls, mailing, records, dt=None):

@@ -99,15 +99,18 @@ class ResCompany(models.Model):
             if not record.pdp_identifier:
                 continue
             match = PDP_identifier_re.match(record.pdp_identifier or '')
+            update = {
+                'peppol_eas': '0225',
+                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
+            }
             siren = match and match.group(1)
             if not siren:
                 raise UserError(self.env._("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
-            siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
-            record.partner_id.write({
-                'peppol_eas': '0225',
-                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
-                'company_registry': siret or siren,
-            })
+            if not record.company_registry:
+                siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
+                update['company_registry'] = siret or siren
+
+            record.partner_id.write(update)
 
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_registered(self):
@@ -119,7 +122,10 @@ class ResCompany(models.Model):
             )
 
     def _force_update_l10n_fr_f10_moves(self):
-        companies = self.filtered(lambda company: company.l10n_fr_f10_enable_reporting)
+        companies = self.filtered(
+            lambda company: company.l10n_fr_f10_enable_reporting
+            and company._pdp_get_flow_10_start_date()
+        )
         if not companies:
             return
         account_ids = self.env['account.account'].search([
@@ -230,9 +236,7 @@ class ResCompany(models.Model):
 
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'l10n_fr_pdp_periodicity')
     def _compute_l10n_fr_pdp_flow_10_start_date(self):
-        changed_companies = self.browse()
         for company in self:
-            previous_date = company.l10n_fr_pdp_flow_10_start_date
             if company.l10n_fr_pdp_annuaire_start_date:
                 period_data = self.env['l10n.fr.pdp.reports.flow']._get_period_flow_properties(
                     company,
@@ -242,9 +246,6 @@ class ResCompany(models.Model):
                 company.l10n_fr_pdp_flow_10_start_date = period_data['period_start']
             else:
                 company.l10n_fr_pdp_flow_10_start_date = None
-            if previous_date != company.l10n_fr_pdp_flow_10_start_date:
-                changed_companies += company
-        changed_companies._force_update_l10n_fr_f10_moves()
 
     @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user', 'l10n_fr_pdp_pilot_phase')
     def _compute_l10n_fr_f10_enable_reporting(self):

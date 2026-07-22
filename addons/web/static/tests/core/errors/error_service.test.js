@@ -16,6 +16,7 @@ import {
     RPCErrorDialog,
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
+import { formatTraceback } from "@web/core/errors/error_utils";
 import { UncaughtPromiseError } from "@web/core/errors/error_service";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -23,6 +24,12 @@ import { omit } from "@web/core/utils/objects";
 
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
+
+test("format traceback of an Error-like object without a stack", () => {
+    expect(formatTraceback(new DOMException("This is a DOM exception"))).toBe(
+        "DOMException: This is a DOM exception"
+    );
+});
 
 test("can handle rejected promise errors with a string as reason", async () => {
     expect.assertions(2);

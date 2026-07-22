@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+from unittest.mock import patch
 
+from odoo.addons.hr_work_entry.models.hr_employee import HrEmployee
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -181,3 +183,36 @@ class TestHrWorkEntry(TransactionCase):
         ])
         self.assertEqual(v1_we.version_id, self.employee_a_first_version)
         self.assertEqual(v2_we.version_id, second_version)
+
+    def test_change_schedule_with_validated_work_entry_skips_regeneration(self):
+        """Changing an employee schedule when the employee has validated
+        work entries should stop work entry regeneration instead of
+        regenerating work entries for All employees."""
+
+        employee = self.employee_a
+
+        # Create a validated work entry
+        validated_we = self.env['hr.work.entry'].create({
+            'employee_id': employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'date': date(2024, 1, 15),
+            'duration': 8,
+        })
+        validated_we.write({'state': 'validated'})
+
+        wizard = self.env['hr.work.entry.regeneration.wizard'].create({
+            'employee_ids': [(6, 0, employee.ids)],
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 1, 31),
+        })
+
+        with patch.object(
+            HrEmployee,
+            'generate_work_entries',
+            autospec=True,
+        ) as generate_work_entries:
+
+            wizard.with_context(
+                work_entry_skip_validation=True,
+            ).regenerate_work_entries()
+        generate_work_entries.assert_not_called()

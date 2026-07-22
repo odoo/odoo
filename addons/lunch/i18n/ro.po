@@ -6,18 +6,18 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Cozmin Candea <office@terrabit.ro>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Comaniciu Ioana <ioana@dakai.ro>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Comaniciu Ioana <ioana@dakai.ro>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-06-13 04:39+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-30 05:43+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/lunch/"
 "ro/>\n"
 "Language: ro\n"
@@ -329,14 +329,14 @@ msgstr ""
 "span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
 "user.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?"
-"company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -352,14 +352,14 @@ msgstr ""
 "    <div>\n"
 "        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "        <t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"        <t t-set=\"currency\" t-"
-"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse"
+"(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Dragă <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</"
-"t>,\n"
+"        Dragă <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>"
+",\n"
 "        </p><p>\n"
-"        Aceasta este comanda de astăzi pentru <t t-"
-"out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        Aceasta este comanda de astăzi pentru <t t-out=\"order.get"
+"('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
 "\n"
 "        <t t-if=\"sites\">\n"
@@ -434,9 +434,9 @@ msgstr ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -453,14 +453,14 @@ msgstr ""
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
 "0.7;\">\n"
-"                    <t t-out=\"user.company_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
 "                    <t t-if=\"user.company_id.phone and "
 "(user.company_id.email or user.company_id.website)\">|</t>\n"
 "                    <t t-if=\"user.company_id.email\">\n"
-"                        <a t-attf-href=\"'mailto:%s' % "
-"{{ user.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ "
+"user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"user.company_id.email and "
 "user.company_id.website\">|</t>\n"
@@ -483,8 +483,8 @@ msgstr ""
 "padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
 "        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" t-attf-"
-"style=\"color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">Odoo</a>\n"
+"style=\"color: {{user.company_id.email_secondary_color or '#875A7B'}};\">"
+"Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -682,8 +682,7 @@ msgstr ""
 #: model_terms:lunch.product,description:lunch.product_bacon
 #: model_terms:lunch.product,description:lunch.product_bacon_0
 msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
-msgstr ""
-"Carne de vita, bacon, salata, cheddar, ceapa prajita, sos pentru gratar"
+msgstr "Carne de vita, bacon, salata, cheddar, ceapa prajita, sos pentru gratar"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_cheese_burger_0
@@ -2332,8 +2331,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a "
 "new lunch order."
 msgstr ""
-"Nu există nicio comandă anterioară înregistrată. Faceți clic pe „Prânzul "
-"meu” și apoi creați o nouă comandă de prânz."
+"Nu există nicio comandă anterioară înregistrată. Faceți clic pe „Prânzul meu"
+"” și apoi creați o nouă comandă de prânz."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -2349,8 +2348,7 @@ msgstr "Acest câmp este utilizat pentru "
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr ""
-"Acest lucru este adevărat atunci când furnizorul este disponibil astăzi"
+msgstr "Acest lucru este adevărat atunci când furnizorul este disponibil astăzi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -2416,8 +2414,7 @@ msgstr "Comenzile de azi"
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_4formaggi
 msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
-msgstr ""
-"Sos de roșii, ulei de măsline, roșii proaspete, ceapă, legume, parmezan"
+msgstr "Sos de roșii, ulei de măsline, roșii proaspete, ceapă, legume, parmezan"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_Napoli

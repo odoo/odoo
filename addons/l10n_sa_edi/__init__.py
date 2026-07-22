@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import models, wizard
+from . import controllers, models, wizard
 
 
 def _l10n_sa_edi_post_init(env):

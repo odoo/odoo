@@ -321,7 +321,7 @@ export class FontPlugin extends Plugin {
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
 
         /** Predicates */
-        are_shorthands_available: (node) => {
+        are_shorthands_available_predicates: (node) => {
             if (closestElement(node, "pre")) {
                 return false;
             }

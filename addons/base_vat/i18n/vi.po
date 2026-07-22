@@ -6,14 +6,14 @@
 # Thi Huong Nguyen, 2023
 # Martin Trigaux, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-07-01 16:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "base_vat/vi/>\n"
 "Language: vi\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -237,17 +237,6 @@ msgid "The Intra-Community validity has been updated to: %s."
 msgstr ""
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Mã số thuế. Các giá trị ở đây sẽ được xác thực dựa trên định dạng quốc gia. "
-"Bạn có thể sử dụng dấu '/' để chỉ một đối tác không phải chịu thuế."
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
@@ -295,6 +284,12 @@ msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr "XXXXXXXXX [9 chữ số] và phải tuân thủ checksum thuật toán Luhn"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
@@ -305,6 +300,14 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "đối tác [%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Mã số thuế. Các giá trị ở đây sẽ được xác thực dựa trên định dạng quốc "
+#~ "gia. Bạn có thể sử dụng dấu '/' để chỉ một đối tác không phải chịu thuế."
 
 #~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
 #~ msgstr "11 chữ số cho CPF hoặc 14 chữ số cho CNPJ"

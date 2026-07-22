@@ -18,15 +18,15 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Toma Tomov <toma.tomov@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-06-18 12:54+0000\n"
+"PO-Revision-Date: 2026-07-16 08:12+0000\n"
 "Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/stock/"
 "bg/>\n"
@@ -2782,6 +2782,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Определете правило за минимални наличности, така че Odoo автоматично да "
+"създава заявки за оферти или потвърдени производствени поръчки за попълване "
+"на запасите ви."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -4726,8 +4729,7 @@ msgstr "Готовите количества може ли да се редак
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
-msgstr ""
-"Не може да се отрезервира повече от продукт %s, отколкото имате налични"
+msgstr "Не може да се отрезервира повече от продукт %s, отколкото имате налични"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -8010,18 +8012,18 @@ msgstr "Отговорник"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Презареждане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "Допълни от"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
 msgid "Resupply Routes"
-msgstr "Снабдявайте маршрути"
+msgstr "Маршрути за презареждане"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -8175,6 +8177,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
+"Маршрутите ще бъдат създадени автоматично за презареждане на този склад от "
+"отбелязаните складове"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -8183,8 +8187,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them "
 "on products and product categories"
 msgstr ""
-"Маршрутите ще бъдат създадени за тези складове за снабдяване и можете да ги "
-"изберете по продукти и продуктови категории"
+"Ще бъдат създадени маршрути за тези складове за презареждане и ще можете да "
+"ги избирате за продукти и продуктови категории"
 
 #. module: stock
 #. odoo-python
@@ -11170,8 +11174,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
-"Обработили сте по-малко продукти, отколкото са  посочени за необходими."
+msgstr "Обработили сте по-малко продукти, отколкото са  посочени за необходими."
 
 #. module: stock
 #. odoo-python

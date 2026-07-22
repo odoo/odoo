@@ -9,7 +9,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-18 08:08+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-06-30 05:15+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/mrp/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -61,9 +61,8 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Les produits fabriqués seront transportés vers <b>%"
-"(destination)s</b>, <br/> comme indiqué dans la destination de <b>%"
-"(operation)s</b>."
+" <br/><br/> Les produits fabriqués seront transportés vers <b>%(destination)"
+"s</b>, <br/> comme indiqué dans la destination de <b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -670,8 +669,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Une nomenclature du type kit n'est pas produite avec un ordre de fabrication."
-"<br/>\n"
+"Une nomenclature du type kit n'est pas produite avec un ordre de "
+"fabrication.<br/>\n"
 "Au lieu de cela, il est utilisé pour décomposer une nomenclature en ses "
 "composants lorsque :"
 
@@ -4027,10 +4026,10 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"Notez que le(s) poste(s) de travail archivé(s) : '%s' est/sont toujours "
-"lié(s) à des nomenclatures actives, ce qui signifie que des opérations "
-"peuvent toujours y être planifiées. Pour éviter cela, la suppression du "
-"poste de travail est recommandée."
+"Notez que le(s) poste(s) de travail archivé(s) : '%s' est/sont toujours lié"
+"(s) à des nomenclatures actives, ce qui signifie que des opérations peuvent "
+"toujours y être planifiées. Pour éviter cela, la suppression du poste de "
+"travail est recommandée."
 
 #. module: mrp
 #. odoo-python
@@ -4267,8 +4266,7 @@ msgstr "Filtres de recherche d'opérations"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 msgid "Operations that cannot start before this operation is completed."
-msgstr ""
-"Opérations qui ne peuvent pas démarrer avant la fin de cette opération."
+msgstr "Opérations qui ne peuvent pas démarrer avant la fin de cette opération."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
@@ -4608,8 +4606,7 @@ msgstr "Défaut de processus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr ""
-"Traiter les ordres de fabrication à partir de l'application code-barres"
+msgstr "Traiter les ordres de fabrication à partir de l'application code-barres"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -7216,10 +7213,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Veuillez revoir votre consommation de composants "
 "ou demander à un responsable de valider\n"
-"                            <span invisible=\"mrp_production_count != "
-"1\">cet ordre de fabrication</span>\n"
-"                            <span invisible=\"mrp_production_count == "
-"1\">ces ordres de fabrication</span>.\n"
+"                            <span invisible=\"mrp_production_count != 1\">"
+"cet ordre de fabrication</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">"
+"ces ordres de fabrication</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7262,8 +7259,8 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "Vous devez définir au moins une perte de productivité non active dans la "
-"catégorie 'Performance'. Créez-en une depuis l'application Fabrication, "
-"menu : Configuration / Pertes de Productivité."
+"catégorie 'Performance'. Créez-en une depuis l'application Fabrication, menu "
+": Configuration / Pertes de Productivité."
 
 #. module: mrp
 #. odoo-python

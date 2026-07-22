@@ -233,7 +233,7 @@ class DeliveryCarrier(models.Model):
             )
         elif source._name == 'stock.picking':
             total_weight = sum(
-                move.product_id.weight * move.product_uom_qty
+                move.product_id.weight * move.product_qty
                 for move in source.move_ids
             )
         else:
@@ -249,7 +249,7 @@ class DeliveryCarrier(models.Model):
             )
         elif source._name == 'stock.picking':
             total_volume = sum(
-                move.product_id.volume * move.product_uom_qty
+                move.product_id.volume * move.product_qty
                 for move in source.move_ids
             )
         else:
@@ -332,7 +332,7 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
-            res['price'] = self._apply_margins(res['price'], order)
+            res['price'] = order.currency_id.round(self._apply_margins(res['price'], order))
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough

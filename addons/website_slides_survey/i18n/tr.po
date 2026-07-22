@@ -13,17 +13,17 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # İlknur Gözütok, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
-# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 14:46+0000\n"
-"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"PO-Revision-Date: 2026-07-02 00:28+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "website_slides_survey/tr/>\n"
 "Language: tr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
@@ -81,18 +81,18 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sayın <t t-out=\"object.partner_id.name or 'participant' or "
-"''\">katılımcısı</t><br/><br/>\n"
+"        Sayın <t t-out=\"object.partner_id.name or 'participant' or ''\">"
+"katılımcısı</t><br/><br/>\n"
 "        Ne yazık ki, sertifikasyonda başarısız oldunuz ve artık kursun bir "
-"üyesi değilsiniz: <t t-out=\"object.slide_partner_id.channel_id.name or "
-"''\">Bahçeciliğin Temelleri</t>.<br/><br/>\n"
+"üyesi değilsiniz: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">"
+"Bahçeciliğin Temelleri</t>.<br/><br/>\n"
 "        Tekrar kaydolmakta tereddüt etmeyin!\n"
 "       </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"           <a t-att-"
-"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"           <a t-att-href=\""
+"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">{{user.company_id.email_primary_color or '#FFFFFF'}}; "
 "border-radius: 5px; font-size:13px;\">\n"
 "                Şimdi kaydolun\n"
@@ -668,8 +668,7 @@ msgstr "Üyelik bilgisi olmadığında ilgili kurs slaydı"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
-msgstr ""
-"Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu slaytlar"
+msgstr "Bu anketin e-öğrenme uygulaması aracılığıyla bağlantılı olduğu slaytlar"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
@@ -729,8 +728,7 @@ msgstr ""
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
 "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
-msgstr ""
-"Kursta başarısız oldunuz: {{ object.slide_partner_id.channel_id.name }}"
+msgstr "Kursta başarısız oldunuz: {{ object.slide_partner_id.channel_id.name }}"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content

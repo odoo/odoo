@@ -2,7 +2,7 @@
 
 from odoo.fields import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import Form
+from odoo.tests import freeze_time, Form
 from odoo.tests.common import tagged
 
 
@@ -18,11 +18,13 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             ('company_id', '=', cls.env.company.id),
         ], limit=1)
 
+    @freeze_time('2025-07-20')
     def test_qty_received_does_sync_after_changing_validated_move_quantity(self):
         """ After validating a picking, if it is unlocked and has its move quantity modified,
         the underlying purchase order's qty_delivered value should reflect the change.
         """
-        self.product_a.standard_price = 5.0
+        with freeze_time('2025-07-19'):
+            self.product_a.standard_price = 5.0
         cost_methods = ['standard', 'fifo', 'average']
         picking_types = [
             self.env['stock.picking.type'].search([

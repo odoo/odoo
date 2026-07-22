@@ -7,17 +7,17 @@
 # Andy Yiu, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-08 11:02+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2026-07-01 04:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "delivery/ja/>\n"
 "Language: ja\n"
@@ -209,8 +209,7 @@ msgstr "配送業者"
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
-msgstr ""
-"配送業者%sは、必須タグと除外タグの両方に同じタグを持つことはできません。"
+msgstr "配送業者%sは、必須タグと除外タグの両方に同じタグを持つことはできません。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -477,8 +476,8 @@ msgid ""
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "見積コスト：顧客に送料の見積コストが請求されます。\n"
-"実費: 顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されま"
-"す。"
+"実費: 顧客に送料の実費が請求されます。送料は納品後に販売オーダで更新されます"
+"。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -493,8 +492,7 @@ msgstr "除外済タグ"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"ピッキングに基づいて出荷品の請求をする場合は、このフィールドに入力します。"
+msgstr "ピッキングに基づいて出荷品の請求をする場合は、このフィールドに入力します。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -802,9 +800,9 @@ msgid ""
 "will only match '100' and not '1000')"
 msgstr ""
 "このキャリアが適用される郵便番号のプレフィックス。正規表現を使用すると、郵便"
-"番号の長さが異なる国にも対応できることに注意しましょう。 つまり、プレフィック"
-"スの最後の '$'は、正確な郵便番号にマッチする場合に使用できます (たとえば "
-"'100$' は '100' にのみマッチし、 '1000' にはマッチしません)。"
+"番号の長さが異なる国にも対応できることに注意しましょう。 つまり、"
+"プレフィックスの最後の '$'は、正確な郵便番号にマッチする場合に使用できます "
+"(たとえば '100$' は '100' にのみマッチし、 '1000' にはマッチしません)。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -920,8 +918,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"運送保険は、小包の紛失、盗難、および/または輸送中の損傷を補償するサービスで"
-"す。"
+"運送保険は、小包の紛失、盗難、および/または輸送中の損傷を補償するサービスです"
+"。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1026,8 +1024,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
-"このオプションは、ポータルで顧客が簡単に梱包を追跡できるリンクを追加します。"
-"<shipmenttrackingnumber>をURLのプレースホルダとして使用します。"
+"このオプションは、ポータルで顧客が簡単に梱包を追跡できるリンクを追加します"
+"。<shipmenttrackingnumber>をURLのプレースホルダとして使用します。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1181,8 +1179,7 @@ msgstr "例. UPS Express"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr ""
-"つまり https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+msgstr "つまり https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 
 #~ msgid "<strong>Shipping Description:</strong>"
 #~ msgstr "<strong>配送概要:</strong>"

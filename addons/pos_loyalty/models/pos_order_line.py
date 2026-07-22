@@ -33,3 +33,6 @@ class PosOrderLine(models.Model):
         if self.is_reward_line:
             return abs(self.price_subtotal_incl)
         return super()._get_discount_amount_for_report()
+
+    def isRefund(self):
+        return super().isRefund() and not self.is_reward_line
