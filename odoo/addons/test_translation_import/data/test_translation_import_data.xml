@@ -8,6 +8,16 @@
         <field name="name">Furniture</field>  <!-- this shoulnd't appear in the .pot because it is translated in this file-->
         <field name="name@fr_FR">Meuble</field>
     </record>
+    <!-- Second xmlid for the same record: used to test colliding translation imports. -->
+    <function model="ir.model.data" name="create">
+        <value eval="[{
+            'module': 'test_translation_import',
+            'name': 'test_translation_import_model1_record1_alias',
+            'model': 'test.translation.import.model1',
+            'res_id': ref('test_translation_import_model1_record1'),
+            'noupdate': False,
+        }]"/>
+    </function>
     <record model="test.translation.import.model2" id="test_translation_import_model2_record1">
         <field name="model1_id" ref="test_translation_import.test_translation_import_model1_record1"/>
     </record>
