@@ -18,7 +18,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         super().setUpClass()
         company = cls.company_data['company']
         company.write({
-            'vat': '91310000TEST12345X',
+            'vat': '91310115MA1K39423D',
             'l10n_cn_baiwang_org_auth_code': 'demo-org',
             'l10n_cn_baiwang_subscription_status': 'authorized',
         })
