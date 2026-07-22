@@ -1,17 +1,11 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import {
-    getService,
-    makeDialogMockEnv,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { getService, makeDialogMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { expect, destroy } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
-import { user } from "@web/core/user";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
@@ -33,13 +27,6 @@ export const setupPosEnv = async (opts = { setupCashier: true }) => {
     if (opts.setupCashier) {
         store.setCashier(store.user);
     }
-    patchWithCleanup(user, {
-        // Needed for the allowProductCreation method
-        // and for product reorder in the frontend
-        checkAccessRight: (model, operation) =>
-            (operation === "create" && model === "product.product") ||
-            (operation === "write" && model === "product.template"),
-    });
     return store;
 };
 
