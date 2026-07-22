@@ -677,3 +677,13 @@ test("Should create a list element around `li`", async () => {
         `),
     });
 });
+
+test("Should return converted elements", async () => {
+    const { editor } = await setupEditor(`<ul><li>[]</li></ul>`);
+    const insertedNodes = editor.shared.dom.insert(
+        parseHTML(editor.document, "<span>first</span><p>second</p>")
+    );
+    expect(insertedNodes.length).toBe(2);
+    expect(insertedNodes[0].tagName).toBe("SPAN");
+    expect(insertedNodes[1].tagName).toBe("LI");
+});
