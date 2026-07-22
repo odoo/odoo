@@ -27,8 +27,8 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[hasclass('oe_invoice_lines_tab')]" position="before">
-                <div class="float-end d-flex d-print-none gap-1 mb-2"
+            <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                <div class="d-flex d-print-none gap-1 mb-2 justify-content-end"
                      invisible="move_type not in ('out_invoice', 'out_refund') or state != 'draft'">
                     <button string="Descuento general"
                             name="%(distribuidora_ventas.action_factura_descuento_wizard)d"
