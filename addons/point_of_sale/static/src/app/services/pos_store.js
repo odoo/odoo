@@ -438,6 +438,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processServerData();
         await this.handleUrlParams();
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket("PRINTERS_CHANGED", this.printersChangedNotification.bind(this));
         const process = await this.afterProcessServerData();
 
         if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
@@ -496,6 +497,17 @@ export class PosStore extends WithLazyGetterTrap {
         setTimeout(() => {
             window.location.reload();
         }, 3000);
+    }
+
+    async printersChangedNotification(data) {
+        this.data.models.loadConnectedData({ "pos.printer": data["pos.printer"] });
+        this.config.update({
+            receipt_printer_ids: data.receipt_printer_ids,
+            preparation_printer_ids: data.preparation_printer_ids,
+        });
+        await this.ticketPrinter.initPrinters();
+        this.ticketPrinter.defaultPrinter = null;
+        this.ticketPrinter.selectPrinter();
     }
 
     get session() {

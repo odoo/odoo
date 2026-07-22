@@ -724,6 +724,14 @@ class PosConfig(models.Model):
         self.sudo()._check_groups_implied()
         if 'use_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
+        if 'receipt_printer_ids' in vals or 'preparation_printer_ids' in vals:
+            for config in self:
+                printers = config.receipt_printer_ids | config.preparation_printer_ids
+                config._notify('PRINTERS_CHANGED', {
+                    'pos.printer': self.env['pos.printer']._load_pos_data_read(printers, config),
+                    'receipt_printer_ids': config.receipt_printer_ids.ids,
+                    'preparation_printer_ids': config.preparation_printer_ids.ids,
+                })
         return result
 
     def copy_data(self, default=None):
