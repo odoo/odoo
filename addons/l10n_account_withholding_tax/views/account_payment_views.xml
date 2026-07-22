@@ -4,6 +4,7 @@
         <field name="name">account.payment.form</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="priority">30</field> <!-- Used to order the tabs in the notebook -->
         <field name="arch" type="xml">
             <field name="payment_type" position="after">
                 <field name="withhold" widget="withhold_selector" options="{'horizontal': True}" invisible="not display_withholding" readonly="state != 'draft'"/>
@@ -46,18 +47,20 @@
                             </list>
                         </field>
                     </group>
-                    <group>
-                        <group>
-                            <field name="outstanding_account_id"
-                                   required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
-                                   invisible="withhold != 'withhold_pay' or withholding_payment_account_id or not display_withholding"
-                                   readonly="state != 'draft'"/>
-                        </group>
-                        <group invisible="withhold != 'withhold_pay'">
-                            <field name="withholding_net_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        </group>
-                    </group>
                 </page>
+            </notebook>
+            <notebook name="payment_notebook" position="after">
+                <group invisible="withhold == 'payment'">
+                    <group>
+                        <field name="outstanding_account_id"
+                                required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
+                                invisible="withhold != 'withhold_pay' or withholding_payment_account_id or not display_withholding"
+                                readonly="state != 'draft'"/>
+                    </group>
+                    <group invisible="withhold != 'withhold_pay'">
+                        <field name="withholding_net_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </group>
             </notebook>
         </field>
     </record>

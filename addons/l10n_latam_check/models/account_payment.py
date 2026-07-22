@@ -16,6 +16,11 @@ class AccountPayment(models.Model):
         copy=False,
         string="Checks Operations"
     )
+    l10n_latam_checks_amount = fields.Monetary(
+        string="Checks Amount",
+        currency_field='currency_id',
+        compute='_compute_l10n_latam_checks_amount',
+    )
     # Warning message in case of unlogical third party check operations
     l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg')
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
@@ -30,12 +35,20 @@ class AccountPayment(models.Model):
             ):
                 raise ValidationError(_("A payment with any Third Party Check or Own Check payment methods needs an outstanding account"))
 
-    @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
+    @api.depends('l10n_latam_new_check_ids.amount', 'l10n_latam_move_check_ids.amount', 'payment_method_code')
+    def _compute_l10n_latam_checks_amount(self):
+        for payment in self:
+            if payment._is_latam_check_payment(check_subtype='new_check'):
+                payment.l10n_latam_checks_amount = sum(payment.l10n_latam_new_check_ids.mapped('amount'))
+            elif payment._is_latam_check_payment(check_subtype='move_check'):
+                payment.l10n_latam_checks_amount = sum(payment.l10n_latam_move_check_ids.mapped('amount'))
+            else:
+                payment.l10n_latam_checks_amount = 0.0
+
+    @api.depends('l10n_latam_checks_amount')
     def _compute_amount(self):
-        for rec in self:
-            checks = rec.l10n_latam_new_check_ids if rec._is_latam_check_payment(check_subtype='new_check') else rec.l10n_latam_move_check_ids
-            if checks:
-                rec.amount = sum(checks.mapped('amount'))
+        for payment in self.filtered(lambda r: r._is_latam_check_payment()):
+            payment.amount = payment.l10n_latam_checks_amount
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':

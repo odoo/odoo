@@ -168,8 +168,8 @@
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
                     <group>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Tax Type" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
-                        <filter string="Tax Scope" name="taxapp" domain="[]" context="{'group_by':'tax_scope'}"/>
+                        <filter string="Tax Type" name="type_tax_use" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Tax Scope" name="tax_scope" domain="[]" context="{'group_by':'tax_scope'}"/>
                         <filter string="Fiscal Position" name="groupfp" domain="[]" context="{'group_by': 'fiscal_position_ids'}"/>
                     </group>
                 </search>

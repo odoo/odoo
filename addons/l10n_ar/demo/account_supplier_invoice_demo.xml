@@ -11,12 +11,12 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
-            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            Command.create({'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -28,9 +28,9 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
         ]"/>
     </record>
 
@@ -42,8 +42,8 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-11'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -55,8 +55,8 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-15'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -68,12 +68,12 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-18'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
-            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
-            (0, 0, {'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            Command.create({'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+            Command.create({'product_id': ref('product_product_cero'), 'price_unit': 200.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -85,7 +85,7 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-26'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -97,8 +97,8 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-27'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': -50.0, 'quantity': 10}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 1642.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product_product_no_gravado'), 'price_unit': -50.0, 'quantity': 10}),
         ]"/>
     </record>
 
@@ -111,23 +111,23 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            Command.create({'product_id': ref('product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_ri_tax_percepcion_iibb_caba_sufrida' % ref('base.company_ri'))
             ])]
            }),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'))
             ])]
            }),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 10000.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 10000.0, 'quantity': 1,
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'))
             ])]
@@ -142,7 +142,7 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="(DateTime.now()- relativedelta(months=1)).strftime('%Y-%m-01')"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -153,7 +153,7 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="(DateTime.now()- relativedelta(months=1)).strftime('%Y-%m-01')"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
         ]"/>
     </record>
     <record id="demo_sup_invoice_11" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
@@ -165,14 +165,14 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'))
             ])]
            }),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_ri_tax_percepcion_iibb_caba_sufrida' % ref('base.company_ri'))
             ])]
@@ -188,14 +188,14 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'))
             ])]
            }),
-            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            Command.create({'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
+            'tax_ids': [Command.set([
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
                 ref('account.%s_ri_tax_percepcion_iibb_caba_sufrida' % ref('base.company_ri'))
             ])]
@@ -213,9 +213,19 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-25'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 5064.98, 'quantity': 1}),
-            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 152.08, 'quantity': 1}),
-            (0, 0, {'product_id': ref('l10n_ar.product_product_no_gravado'), 'price_unit': 10.0, 'quantity': 1}),
+            Command.create({
+                'product_id': ref('product.product_product_2'),
+                'price_unit': 5064.98,
+                'quantity': 1,
+                'tax_ids': [Command.set([ref('account.%s_ri_tax_vat_21_compras' % ref('base.company_ri'))])],
+            }),
+            Command.create({
+                'product_id': ref('product.product_product_2'),
+                'price_unit': 152.08,
+                'quantity': 1,
+                'tax_ids': [Command.set([ref('account.%s_ri_tax_vat_21_compras' % ref('base.company_ri'))])],
+            }),
+            Command.create({'product_id': ref('l10n_ar.product_product_no_gravado'), 'price_unit': 10.0, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -227,55 +237,55 @@
         <field name="move_type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {
+            Command.create({
                 'price_unit': 5064.98,
                 'name': '[ARCA_DESPACHO] Despacho de importación',
                 'product_id': ref('l10n_ar.product_product_quote_despacho'),
             }),
-            (0, 0, {
+            Command.create({
                 'price_unit': 152.08,
                 'name': '[ARCA_TASA_EST] Tasa Estadística',
                 'product_id': ref('l10n_ar.product_product_tasa_estadistica'),
             }),
-            (0, 0, {
+            Command.create({
                 'price_unit': 10.0,
                 'name': '[ARCA_ARANCEL] Arancel',
                 'product_id': ref('l10n_ar.product_product_arancel'),
             }),
-            (0, 0, {
+            Command.create({
                 'price_unit': 28.00,
                 'name': '[ARCA_SERV_GUARDA] Servicio de Guarda',
                 'product_id': ref('l10n_ar.product_product_servicio_de_guarda'),
             }),
-            (0, 0, {
+            Command.create({
                 'name': 'FOB Total',
                 'price_unit': 28936.06,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
             }),
-            (0, 0, {
+            Command.create({
                 'name': 'Flete',
                 'price_unit': 1350.00,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
             }),
-            (0, 0, {
+            Command.create({
                 'name': 'Seguro',
                 'price_unit': 130.21,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_21_compras'.format(ref('base.company_ri')))])],
             }),
-            (0, 0, {
+            Command.create({
                 'name': '-FOB Total',
                 'price_unit': -28936.06,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
             }),
-            (0, 0, {
+            Command.create({
                 'name': '-Flete',
                 'price_unit': -1350.00,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
             }),
-            (0, 0, {
+            Command.create({
                 'name': '-Seguro',
                 'price_unit': -130.21,
-                'tax_ids': [(6, 0, [ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
+                'tax_ids': [Command.set([ref('account.{}_ri_tax_vat_no_gravado_compras'.format(ref('base.company_ri')))])],
             }),
         ]"/>
     </record>

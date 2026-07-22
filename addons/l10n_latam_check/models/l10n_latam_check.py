@@ -259,12 +259,14 @@ class L10n_LatamCheck(models.Model):
     @api.onchange('issuer_vat')
     def _clean_issuer_vat(self):
         for rec in self.filtered(lambda x: x.issuer_vat and x.company_id.country_id.code):
+            # FIXME that's incorrect - use generic validation
             stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
             if hasattr(stdnum_vat, 'compact'):
                 rec.issuer_vat = stdnum_vat.compact(rec.issuer_vat)
 
     @api.constrains('issuer_vat')
     def _check_issuer_vat(self):
+        # FIXME that's incorrect - use generic validation
         for rec in self.filtered(lambda x: x.issuer_vat and x.company_id.country_id):
             self.env['res.partner']._run_vat_checks(rec.company_id.country_id, rec.issuer_vat, partner_name='Check Issuer VAT')
 

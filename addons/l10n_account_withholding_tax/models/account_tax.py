@@ -39,7 +39,7 @@ class AccountTax(models.Model):
     @api.onchange('amount')
     def _onchange_amount(self):
         """ Reset the is_withholding_tax field when the amount is set to positive; as the field will be hidden. """
-        if self.amount >= 0:
+        if self.amount > 0:
             self.is_withholding_tax = False
 
     @api.constrains('amount_type', 'is_withholding_tax')

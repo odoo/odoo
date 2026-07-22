@@ -39,6 +39,7 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     @api.onchange('issuer_vat')
     def _clean_issuer_vat(self):
         for rec in self.filtered(lambda x: x.issuer_vat and x.company_id.country_id.code):
+            # FIXME that's incorrect + constraint; use generic validation
             stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
             if hasattr(stdnum_vat, 'compact'):
                 rec.issuer_vat = stdnum_vat.compact(rec.issuer_vat)

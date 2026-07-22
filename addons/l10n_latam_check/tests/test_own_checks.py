@@ -3,6 +3,7 @@
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
 from odoo.tests import Form, tagged
 from odoo import Command, fields
+from odoo.exceptions import UserError
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -138,3 +139,24 @@ class TestOwnChecks(L10nLatamCheckTest):
             lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
         )
         self.assertTrue(payment_line.reconciled, "Original payment line should be reconciled with the void move")
+
+    def test_create_payment_without_checks_raises(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.bank_journal.company_id.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2023-01-01',
+            'l10n_latam_document_type_id': self.env.ref('l10n_ar.dc_liq_uci_a').id,
+            'l10n_latam_document_number': '001-00001',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 100.0})],
+        })
+        invoice.action_post()
+        own_check_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered(
+            lambda line: line.code == 'own_checks'
+        )[0]
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'journal_id': self.bank_journal.id,
+            'payment_method_line_id': own_check_line.id,
+        })
+        with self.assertRaisesRegex(UserError, "Please add at least one check to create a payment with a check payment method."):
+            wizard.action_create_payments()

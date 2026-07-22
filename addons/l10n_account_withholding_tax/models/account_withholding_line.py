@@ -111,6 +111,7 @@ class AccountWithholdingLine(models.AbstractModel):
         index=True,
         store=True,
     )
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     comodel_company_currency_id = fields.Many2one(
         related='company_id.currency_id',
     )

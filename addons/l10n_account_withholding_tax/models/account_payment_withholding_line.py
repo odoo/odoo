@@ -39,11 +39,6 @@ class AccountPaymentWithholdingLine(models.Model):
             else:
                 line.type_tax_use = 'sale' if line.payment_id.payment_type == 'inbound' else 'purchase'
 
-    @api.depends('payment_register_id.amount')
-    def _compute_comodel_full_amount(self):
-        for line in self:
-            line.comodel_full_amount = line.payment_register_id.amount
-
     @api.depends('payment_id.date')
     def _compute_comodel_date(self):
         for line in self:
