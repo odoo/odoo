@@ -23,3 +23,7 @@ class TestMenuOverrides(TransactionCase):
         self.assertFalse(menu.parent_id, "debe ser un menu raiz para aparecer en el switcher de apps")
         self.assertEqual(menu.action.id, self.env.ref('sale.product_template_action').id)
         self.assertEqual(menu.sequence, 32)
+
+    def test_crm_menu_is_hidden(self):
+        menu = self.env.ref('crm.crm_menu_root')
+        self.assertFalse(menu.active)
