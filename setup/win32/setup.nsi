@@ -236,7 +236,15 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     File /r /x "src" "${TOOLSDIR}\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r /x "wkhtmltopdf" /x "enterprise" "${TOOLSDIR}\server\*"
+    File /r /x "wkhtmltopdf" /x "enterprise" /x "i18n_bundle.7z"  "${TOOLSDIR}\server\*"
+
+    SetCompress off
+    SetOutPath "$INSTDIR\server"
+    File "${TOOLSDIR}\server\i18n_bundle.7z"
+    SetCompress auto
+    DetailPrint "Extracting translation files"
+    Nsis7z::ExtractWithDetails "$INSTDIR\server\i18n_bundle.7z" "Installing translations %s..."
+    Delete "$INSTDIR\server\i18n_bundle.7z"
 
     SetOutPath "$INSTDIR\vcredist"
     File /r "${TOOLSDIR}\vcredist\*.exe"
