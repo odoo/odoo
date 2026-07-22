@@ -8,6 +8,14 @@
         // We disable animation and better contrast in Safari to avoid this bug
         animation: o_mail_Typing_animation 1.5s linear infinite;
         filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, .25));
+
+        &.o-discuss-Typing-dot2 {
+            animation-delay: 0.25s;
+        }
+
+        &.o-discuss-Typing-dot3 {
+            animation-delay: .5s;
+        }
     }
 
     .o-mail-ImStatus &, .o-mail-ThreadIcon & {
@@ -22,14 +30,6 @@
     &.o-sizeSmall {
         width: 3px;
         height: 3px;
-    }
-
-    &.o-discuss-Typing-dot2 {
-        animation-delay: 0.25s;
-    }
-
-    &.o-discuss-Typing-dot3 {
-        animation-delay: .5s;
     }
 }
 
