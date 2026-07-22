@@ -35,14 +35,12 @@ export class StockValuationReport extends Component {
         })
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this._t = _t;
 
         onWillStart(async () => {
             await this.controller.load(this.data);
         })
 
         useChildSubEnv({
-            _t,
             controller: this.controller,
             formatMonetary: this.formatMonetary.bind(this),
         });
