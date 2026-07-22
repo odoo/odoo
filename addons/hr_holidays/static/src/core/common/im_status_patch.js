@@ -1,10 +1,21 @@
 import { imStatusDataRegistry } from "@mail/core/common/im_status";
 import { _t } from "@web/core/l10n/translation";
 
+const { DateTime, Interval } = luxon;
+
 imStatusDataRegistry.add(
     "hr-holidays",
     {
-        condition: ({ user }) => Boolean(user?.employee_id?.leave_date_to),
+        condition: ({ user }) => {
+            if (!user?.employee_id?.leave_date_from || !user?.employee_id?.leave_date_to) {
+                return false;
+            }
+            const leaveInterval = Interval.fromDateTimes(
+                user.employee_id.leave_date_from,
+                user.employee_id.leave_date_to
+            );
+            return leaveInterval.contains(DateTime.now());
+        },
         icon: "travel",
         iconClass: "",
         title: {
