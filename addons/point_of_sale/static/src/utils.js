@@ -21,6 +21,20 @@ export function uuidv4() {
     });
 }
 
+/**
+ * Uuid identifying this browser. It is used to pair a PoS with the customer
+ * display opened on another device.
+ * @returns {string}
+ */
+export function getDeviceUuid() {
+    let uuid = localStorage.getItem("device_uuid");
+    if (!uuid) {
+        uuid = uuidv4();
+        localStorage.setItem("device_uuid", uuid);
+    }
+    return uuid;
+}
+
 export function constructAttributeString(line) {
     let attributeString = "";
 

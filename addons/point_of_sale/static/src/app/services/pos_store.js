@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { Mutex } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -6,6 +6,7 @@ import {
     random5Chars,
     uuidv4,
     Counter,
+    getDeviceUuid,
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
     generateQRCodeDataUrl,
@@ -50,6 +51,12 @@ import { SIZES } from "@web/core/ui/ui_service";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
+
+// A customer display running on another device announces itself every minute.
+// Past this delay without any sign of life we consider it gone and stop pushing
+// updates to it. Kept at three times the ping interval so that a lost ping does
+// not disconnect a display that is still there.
+const CUSTOMER_DISPLAY_ALIVE_TIMEOUT = 180000;
 
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
@@ -122,6 +129,10 @@ export class PosStore extends WithLazyGetterTrap {
         this.router = pos_router;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
+        // Kept out of the reactivity: a ping must not by itself push the order
+        // to the customer display, only a display needing data must.
+        this.customerDisplayPresence = markRaw({ lastPing: 0 });
+        this.customerDisplayRefreshId = 0;
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
         this.searchProductDBState = null;
@@ -369,13 +380,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get customerDisplayUrl() {
-        if (!localStorage.getItem("device_uuid")) {
-            localStorage.setItem("device_uuid", uuidv4());
-        }
-        const deviceUuid = localStorage.getItem("device_uuid");
         return `${this.config._base_url}/pos_customer_display/${
             this.config.id
-        }/${deviceUuid}?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
+        }/${getDeviceUuid()}?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
     }
 
     async reloadData(fullReload = false) {
@@ -438,6 +445,10 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processServerData();
         await this.handleUrlParams();
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket(
+            "CUSTOMER_DISPLAY_ALIVE",
+            this.customerDisplayAliveNotification.bind(this)
+        );
         const process = await this.afterProcessServerData();
 
         if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
@@ -453,6 +464,29 @@ export class PosStore extends WithLazyGetterTrap {
                   };
         this.navigate(page.page, page.params);
         return process;
+    }
+
+    /**
+     * A customer display is considered connected as long as it recently pinged
+     * us. Only then is it worth pushing the order to the server.
+     */
+    isCustomerDisplayConnected() {
+        return Date.now() - this.customerDisplayPresence.lastPing < CUSTOMER_DISPLAY_ALIVE_TIMEOUT;
+    }
+
+    customerDisplayAliveNotification({ device_uuid, needs_data }) {
+        if (device_uuid !== getDeviceUuid()) {
+            // Another PoS of the same config is paired with that display.
+            return;
+        }
+        const wasConnected = this.isCustomerDisplayConnected();
+        this.customerDisplayPresence.lastPing = Date.now();
+        if (!wasConnected || needs_data) {
+            // The display has nothing to show, either because it just showed up
+            // or because it was reloaded. Bumping this makes Chrome push it the
+            // current order instead of waiting for the next change.
+            this.customerDisplayRefreshId++;
+        }
     }
 
     async closingSessionNotification(data) {
