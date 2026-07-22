@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -556,3 +556,36 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         for leave, expected_entries, expected_hours in validation_data:
             self.assertEqual(len(leave.timesheet_ids), expected_entries, f"{leave.name}: incorrect number of timesheet entries.")
             self.assertEqual(sum(leave.timesheet_ids.mapped('unit_amount')), expected_hours, f"{leave.name}: incorrect total timesheet hours.")
+
+    def test_archive_employee_timesheet_with_leave(self):
+        """ Test that future timesheets linked to leaves are successfully deleted upon departure. """
+        Timesheet = self.env['account.analytic.line']
+        today = fields.Date.context_today(self.env.user)
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+        self.empl_employee.version_ids.sudo().write({
+            'date_version': today - timedelta(days=10),
+            'contract_date_start': today - timedelta(days=10),
+        })
+        global_leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Test Public Holiday',
+            'date_from': tomorrow,
+            'date_to': tomorrow + timedelta(days=1),
+        })
+
+        leave_timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Future Timesheet (With Leave)',
+            'unit_amount': 2,
+            'employee_id': self.empl_employee.id,
+            'date': tomorrow,
+            'global_leave_id': global_leave.id,
+        })
+
+        self.env['hr.employee.departure'].with_context(employee_termination=True).create({
+            'employee_id': self.empl_employee.id,
+            'departure_date': yesterday,
+        }).action_register()
+
+        self.assertFalse(leave_timesheet.exists(), "The timesheet should be safely unlinked from the leave and deleted.")
