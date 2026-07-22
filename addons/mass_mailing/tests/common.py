@@ -281,7 +281,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         return traces
 
     def gateway_mail_trace_click(self, mailing, records, click_label):
-        """ Simulate a click on a sent email.
+        """ Simulate a click on a sent email
 
         :param mailing: a ``mailing.mailing`` record on which we find a trace
           to click;
@@ -316,6 +316,20 @@ class MassMailCase(MailCase, MockLinkTracker):
             else:
                 raise AssertionError('url %s not found in mailing %s for record %s' % (click_label, mailing, record))
             traces += trace
+        return traces
+
+    def gateway_mail_trace_click_simple(self, mailing, records):
+        """ Quickly simulate a click, without fetching emails. To use notably
+        when mock has been voided. """
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            trace.set_clicked()
+            traces += trace
+        self.assertEqual(len(traces), len(records))
         return traces
 
     def gateway_mail_trace_fail(self, mailing, records, failure_reason=False, failure_type=False):
