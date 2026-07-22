@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { Component, onWillStart, props, signal, types } from "@odoo/owl";
+import { Component, onWillStart, signal, types, useProps } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +12,7 @@ export class FollowerSubtypeDialog extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: types.function([types.instanceOf(MouseEvent)]),
             follower: types.instanceOf(this.store["mail.followers"].Class),
             onFollowerChanged: types.function([]),

@@ -7,7 +7,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 
-import { props, types } from "@odoo/owl";
+import { types, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 Object.assign(MessagingMenuItem.components, { CountryFlag });
@@ -17,7 +17,7 @@ const messagingMenuItemPatch = {
     setup() {
         super.setup(...arguments);
         this.channelDropdownState = useDropdownState();
-        this.channel = props.static(
+        this.channel = useProps.static(
             "channel",
             types.instanceOf(this.store["discuss.channel"].Class).optional()
         );

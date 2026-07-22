@@ -3,7 +3,7 @@ import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, signal, types, useProps } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -22,7 +22,7 @@ export class ScheduledMessage extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             onScheduledMessageChanged: types.function([
                 types.instanceOf(this.store["mail.thread"].Class),
             ]),

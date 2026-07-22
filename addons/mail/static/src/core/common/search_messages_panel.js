@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +14,7 @@ export class SearchMessagesPanel extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: t.function([]).optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class),
         });

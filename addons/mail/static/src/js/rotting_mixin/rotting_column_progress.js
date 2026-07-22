@@ -1,10 +1,10 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
 import { ColumnProgress, columnProgressProps } from "@web/views/view_components/column_progress";
 
 export class RottingColumnProgress extends ColumnProgress {
     static template = "mail.RottingColumnProgress";
-    props = props({
+    props = useProps({
         ...columnProgressProps,
         progressBarState: t.object(),
         onRotIconClicked: t.function(),

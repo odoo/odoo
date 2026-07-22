@@ -1,9 +1,9 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
 import { ColumnProgress, columnProgressProps } from "@web/views/view_components/column_progress";
 
 export class MailColumnProgress extends ColumnProgress {
-    props = props({
+    props = useProps({
         ...columnProgressProps,
         aggregateOn: t.object().optional(),
     });

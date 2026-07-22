@@ -1,7 +1,7 @@
 import { useEnv } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, signal, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -14,7 +14,7 @@ export class ActivityButton extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.env = useEnv();
         this.defaultActivityStateClass = "text-muted";

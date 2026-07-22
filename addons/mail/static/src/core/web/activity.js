@@ -6,7 +6,7 @@ import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, computed, onMounted, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, computed, onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -23,8 +23,8 @@ export class Activity extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
-        this.onActivityChanged = props.static("onActivityChanged", t.function([]));
-        this.reloadParentView = props.static("reloadParentView", t.function([]));
+        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]));
+        this.reloadParentView = useProps.static("reloadParentView", t.function([]));
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCard);

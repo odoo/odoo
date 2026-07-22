@@ -1,7 +1,7 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +14,7 @@ export class Poll extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             poll: types.instanceOf(this.store["mail.poll"].Class),
         });
         /** @type {import("@odoo/owl").Signal<Element>} */

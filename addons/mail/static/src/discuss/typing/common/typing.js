@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,7 @@ export class Typing extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
             displayText: t.boolean().optional(true),
             member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),

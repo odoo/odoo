@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -19,7 +19,7 @@ export class MentionList extends Component {
         super.setup();
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: t.function([]).optional(() => {}),
             composerType: t.string(),
             onSelect: t.function([t.instanceOf(Event), optionType(this.store), t.record()]),

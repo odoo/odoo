@@ -9,7 +9,7 @@ import {
 } from "@mail/discuss/call/common/call_actions";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -24,7 +24,7 @@ export class CallInvitation extends Component {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
         });
         this.ui = useService("ui");

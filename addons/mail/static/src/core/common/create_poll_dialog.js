@@ -1,6 +1,6 @@
 import { CreatePollOptionDialog } from "@mail/core/common/create_poll_option_dialog";
 
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
@@ -16,7 +16,7 @@ export class CreatePollDialog extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: types.function([types.instanceOf(MouseEvent)]),
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });

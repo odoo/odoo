@@ -6,10 +6,10 @@ import {
     computed,
     onMounted,
     onWillUnmount,
-    props,
     signal,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
@@ -31,7 +31,7 @@ export class Discuss extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             hasSidebar: t.boolean().optional(true),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });

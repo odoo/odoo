@@ -1,4 +1,4 @@
-import { Component, computed, onWillDestroy, onWillStart, props, signal, t } from "@odoo/owl";
+import { Component, computed, onWillDestroy, onWillStart, signal, t, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -15,7 +15,7 @@ export class DeviceSelect extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             icon: t.string().optional(),
             icon_class: t.string().optional(),
             kind: t.selection(["audioinput", "videoinput", "audiooutput"]),

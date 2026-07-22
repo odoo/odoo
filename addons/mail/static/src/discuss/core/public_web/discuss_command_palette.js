@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -20,7 +20,7 @@ class CreateChannelDialog extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             close: t.function([t.instanceOf(MouseEvent)]),
             name: t.string().optional(),
         });
@@ -63,7 +63,7 @@ export class DiscussCommand extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.props = props({
+        this.props = useProps({
             action: t
                 .object({
                     icon: t.string().optional(),

@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { useService } from "@web/core/utils/hooks";
 
@@ -9,7 +9,7 @@ export class PipBanner extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ compact: types.boolean().optional(false) });
+        this.props = useProps({ compact: types.boolean().optional(false) });
         this.rtc = useService("discuss.rtc");
         useSubEnv({ isDiscussPipBanner: true });
     }

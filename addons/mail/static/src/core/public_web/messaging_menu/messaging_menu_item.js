@@ -4,7 +4,7 @@ import { Priority } from "@mail/core/common/priority";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { propSignal, useLongPress } from "@mail/utils/common/hooks";
 
-import { Component, computed, props, signal, types } from "@odoo/owl";
+import { Component, computed, signal, types, useProps } from "@odoo/owl";
 
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
@@ -42,7 +42,7 @@ export class MessagingMenuItem extends Component {
             useChildSubEnv({ [DROPDOWN_NESTING]: boundary });
         }
         this.store = useService("mail.store");
-        this.message = props.static(
+        this.message = useProps.static(
             "message",
             types.instanceOf(this.store["mail.message"].Class).optional()
         );
@@ -50,7 +50,7 @@ export class MessagingMenuItem extends Component {
             "activeTab",
             types.instanceOf(this.store["MessagingMenuTab"].Class)
         );
-        this.onClick = props.static("onClick", types.function());
+        this.onClick = useProps.static("onClick", types.function());
         this.hasTouch = hasTouch;
         this.isActive = computed(() => this._isActive);
         this.messageActions = useMessageActions({

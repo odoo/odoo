@@ -1,5 +1,5 @@
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
-import { Component, props, t, useListener } from "@odoo/owl";
+import { Component, t, useListener, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { SearchInput } from "@mail/core/common/search_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -21,7 +21,7 @@ export class SearchMessageInput extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             closeSearch: t.function([]).optional(),
             messageSearch: t.instanceOf(MessageSearchState),
             thread: t.instanceOf(this.store["mail.thread"].Class),

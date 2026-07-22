@@ -1,4 +1,13 @@
-import { Component, onMounted, onWillUnmount, props, proxy, signal, status, types } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    proxy,
+    signal,
+    status,
+    types,
+    useProps,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -48,7 +57,7 @@ export class VoicePlayer extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             attachment: types.instanceOf(this.store["ir.attachment"].Class),
         });
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */

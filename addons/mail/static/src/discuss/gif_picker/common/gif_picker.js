@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useOnChange, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -51,7 +51,7 @@ export class GifPicker extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             close: t.function([]).optional(),
             onSelect: t.function([tenorGifType, t.boolean()]),
         });

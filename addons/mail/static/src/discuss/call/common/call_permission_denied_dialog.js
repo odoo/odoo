@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -8,7 +8,7 @@ import {
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDeniedDialog extends NotificationAlertDialog {
-    props = props({
+    props = useProps({
         ...notificationAlertDialogProps,
         animateMouse: t.any().optional(false),
         permissionType: t.any().optional(),

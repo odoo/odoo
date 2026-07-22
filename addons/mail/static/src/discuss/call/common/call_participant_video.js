@@ -3,11 +3,11 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
-    props,
     signal,
     status,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -20,7 +20,7 @@ export class CallParticipantVideo extends Component {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             inset: t
                 .function([
                     t.instanceOf(this.store["discuss.channel.rtc.session"].Class),

@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -15,7 +15,7 @@ export class WelcomePage extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ proceed: types.function([]).optional() });
+        this.props = useProps({ proceed: types.function([]).optional() });
         this.description = signal();
         this.store = useService("mail.store");
         this.ui = useService("ui");

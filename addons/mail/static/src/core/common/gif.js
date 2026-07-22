@@ -1,4 +1,4 @@
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
@@ -27,7 +27,7 @@ export class Gif extends Component {
 
     setup() {
         this.snapshot = signal(null);
-        this.props = props({
+        this.props = useProps({
             alt: t.string().optional(),
             class: t.string().optional(),
             loading: t.selection(["eager", "lazy"]).optional(),

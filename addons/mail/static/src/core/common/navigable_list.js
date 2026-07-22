@@ -3,7 +3,7 @@ import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick, useOnChange } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, props, proxy, signal, t, useListener } from "@odoo/owl";
+import { Component, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -19,7 +19,7 @@ export class NavigableList extends Component {
         super.setup();
         this.store = useService("mail.store");
         const option = optionType(this.store);
-        this.props = props({
+        this.props = useProps({
             anchorRef: t.signal(t.instanceOf(HTMLElement)).optional(),
             class: t.string().optional(),
             closeOnSelect: t.boolean().optional(true),

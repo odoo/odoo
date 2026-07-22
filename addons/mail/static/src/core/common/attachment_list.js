@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -19,7 +19,7 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
     static template = "mail.Actions";
-    props = props({
+    props = useProps({
         actions: t.array(
             t.object({
                 label: t.string(),
@@ -46,7 +46,7 @@ export class AttachmentList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             attachments: t.array(t.instanceOf(this.store["ir.attachment"].Class)),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             unlinkAttachment: t.function([t.instanceOf(this.store["ir.attachment"].Class)]),

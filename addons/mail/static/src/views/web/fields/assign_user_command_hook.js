@@ -1,4 +1,4 @@
-import { props } from "@odoo/owl";
+import { useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
@@ -11,7 +11,7 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
  */
 
 export function useAssignUserCommand() {
-    const compProps = props();
+    const compProps = useProps();
     const { relation, type } = compProps.record.fields[compProps.name];
     if (relation !== "res.users") {
         return;

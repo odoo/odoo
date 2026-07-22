@@ -18,11 +18,11 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
-    props,
     proxy,
     signal,
     t,
     untrack,
+    useProps,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -60,7 +60,7 @@ export class Thread extends Component {
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
-        // bound once so `onParentMessageClick` is a stable (props.static) handler
+        // bound once so `onParentMessageClick` is a stable (useProps.static) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();
@@ -69,7 +69,7 @@ export class Thread extends Component {
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             autofocus: t.or([t.number(), t.boolean()]).optional(),
             jumpPresent: t.number().optional(0),
             jumpToNewMessage: t.number().optional(),

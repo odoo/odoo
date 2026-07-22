@@ -2,7 +2,7 @@ import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -17,7 +17,7 @@ export class PinnedMessagesPanel extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.offlineService = useService("offline");
-        this.props = props({
+        this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"].Class),
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
         });

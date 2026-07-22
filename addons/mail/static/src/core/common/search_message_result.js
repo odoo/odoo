@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { MessageCardList } from "./message_card_list";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -11,7 +11,7 @@ export class SearchMessageResult extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             messageSearch: t.instanceOf(MessageSearchState),
             onClickJump: t.function([]).optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class),

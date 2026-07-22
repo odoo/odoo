@@ -1,5 +1,5 @@
 import { useForwardRefsToParent } from "@mail/utils/common/hooks";
-import { Component, htmlEscape, props, signal, t } from "@odoo/owl";
+import { Component, htmlEscape, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,7 +12,7 @@ export class NotificationMessage extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             message: t.instanceOf(this.store["mail.message"].Class),
             messageRefs: t.instanceOf(Map).optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class),

@@ -1,6 +1,6 @@
 import { ActivityCompiler } from "@mail/views/web/activity/activity_compiler";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -54,7 +54,7 @@ export class ActivityRecord extends Component {
     static template = "mail.ActivityRecord";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             archInfo: types.object({
                 fieldNodes: types.record(),
                 templateDocs: types.record(),

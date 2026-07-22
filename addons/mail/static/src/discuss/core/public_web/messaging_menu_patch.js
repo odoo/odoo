@@ -40,7 +40,7 @@ const messagingMenuPatch = {
                 this.channelSearch.searchTerm = this.searchTerm();
             }
         });
-        // Bound once so `onClickChannel` is a stable (props.static) handler.
+        // Bound once so `onClickChannel` is a stable (useProps.static) handler.
         this.onClickChannel = this.onClickChannel.bind(this);
     },
     get isEmpty() {

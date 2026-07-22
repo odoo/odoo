@@ -6,7 +6,7 @@ import {
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
-import { props, proxy, t, useScope } from "@odoo/owl";
+import { proxy, t, useProps, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -55,7 +55,7 @@ export const optionType = (store) =>
  */
 
 export class UseSuggestion {
-    props = props();
+    props = useProps();
     scope = useScope();
     composerService = useService("mail.composer");
     suggestionService = useService("mail.suggestion");

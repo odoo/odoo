@@ -1,4 +1,4 @@
-import { Component, props } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import {
@@ -10,7 +10,7 @@ import {
 export class Many2ManyFalsyValueLabelField extends Component {
     static template = "mail.Many2ManyFalsyValueLabelField";
     static components = { Many2ManyTagsField };
-    props = props({
+    props = useProps({
         ...many2ManyTagsFieldProps,
     });
 

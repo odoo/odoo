@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,7 +8,7 @@ export class MessageNotificationPopover extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             message: types.instanceOf(this.store["mail.message"].Class),
         });
     }

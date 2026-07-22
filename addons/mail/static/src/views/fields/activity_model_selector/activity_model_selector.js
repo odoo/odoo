@@ -1,4 +1,4 @@
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, proxy, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
@@ -24,7 +24,7 @@ class ActivityModelSelector extends Component {
     static template = "mail.ActivityModelSelector";
 
     setup() {
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         // Use a state for the model to not write on the record the model without record id
         this.orm = useService("orm");
         this.dialog = useService("dialog");

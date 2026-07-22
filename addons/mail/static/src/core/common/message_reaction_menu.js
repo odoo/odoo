@@ -1,6 +1,6 @@
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, props, signal, t, useListener, useEffect, untrack } from "@odoo/owl";
+import { Component, onMounted, signal, t, untrack, useEffect, useListener, useProps } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -15,7 +15,7 @@ export class MessageReactionMenu extends Component {
         super.setup();
         this.tabsRef = signal.ref();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: t.function([]),
             initialReaction: t.instanceOf(this.store.MessageReactions.Class).optional(),
             message: t.instanceOf(this.store["mail.message"].Class),

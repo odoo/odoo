@@ -1,4 +1,4 @@
-import { Component, onWillStart, props, t, useListener, xml } from "@odoo/owl";
+import { Component, onWillStart, t, useListener, useProps, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -16,7 +16,7 @@ export class CallSettings extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
             initialTab: t.string().optional(),
             isCompact: t.boolean().optional(),
@@ -112,6 +112,6 @@ export class CallSettingsDialog extends Component {
             <CallSettings initialTab="this.props.initialTab" withActionPanel="false"/>
         </Dialog>
     `;
-    props = props({ initialTab: t.string().optional() });
+    props = useProps({ initialTab: t.string().optional() });
     static components = { CallSettings, Dialog };
 }

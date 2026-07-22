@@ -1,6 +1,6 @@
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
 
-import { Component, props, types, untrack, useEffect } from "@odoo/owl";
+import { Component, types, untrack, useEffect, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -10,8 +10,8 @@ export class MessagingMenuEmptyChannel extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = props({ title: types.string(), subtitle: types.string().optional() });
-        this.close = props.static("close", types.function().optional());
+        this.props = useProps({ title: types.string(), subtitle: types.string().optional() });
+        this.close = useProps.static("close", types.function().optional());
         this.store = useService("mail.store");
         this.ui = useService("ui");
         useEffect(() => {

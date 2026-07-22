@@ -26,12 +26,12 @@ import {
     EventBus,
     immediateEffect,
     onWillDestroy,
-    props,
     proxy,
     signal,
     t,
     useListener,
     useApp,
+    useProps,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -79,7 +79,7 @@ class FullComposerRecoveryPopover extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             close: t.function([]).optional(),
             composer: t.instanceOf(this.store["Composer"].Class),
             onClickFullRecover: t.function([]),
@@ -124,7 +124,7 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             allowUpload: t.boolean().optional(true),
             autofocus: t.or([t.number(), t.boolean()]).optional(0),
             className: t.string().optional(""),

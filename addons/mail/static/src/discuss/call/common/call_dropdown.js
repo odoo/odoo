@@ -1,6 +1,6 @@
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, props, signal, t, useListener } from "@odoo/owl";
+import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
@@ -18,7 +18,7 @@ export class CallDropdown extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             class: t.string().optional(""),
             menuClass: t.string().optional(""),
             openByDefault: t.boolean().optional(false),
