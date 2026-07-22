@@ -640,12 +640,22 @@ class AccountJournal(models.Model):
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
         self.env['account.payment'].flush_model()
+        company = self.env.company
+        coa_template = self.env['account.chart.template']._get_chart_template_data(company.chart_template)
+        clean_coa_template = {model: dict(vals) for model, vals in coa_template.items()}
+        current_coa = str(clean_coa_template) if clean_coa_template else ''
+        if current_coa != company.coa:
+            show_banner = True
+        else:
+            show_banner = False
         dashboard_data = {}  # container that will be filled by functions below
         for journal in self:
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
                 'show_company': len(self.env.companies) > 1 or journal.company_id.id != self.env.company.id,
                 'company_name': journal.company_id.sudo().name,
+                'show_coa_update_banner': show_banner,
+                'coa_package_name': coa_template.get('template_data', {}).get('name', '') if coa_template else '',
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
@@ -1239,6 +1249,9 @@ class AccountJournal(models.Model):
             'type': 'ir.actions.act_window',
             'context': context,
         }
+
+    def action_reload_coa(self):
+        self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)
 
     def to_check_ids(self):
         self.ensure_one()

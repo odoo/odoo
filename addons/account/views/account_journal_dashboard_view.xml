@@ -45,6 +45,10 @@
                     </t>
 
                     <t t-name="JournalTop">
+                        <div t-if="dashboard.show_coa_update_banner" class="alert alert-info d-flex align-items-center p-2 mb-2" role="alert">
+                            <span>You have updates in your COA package <strong t-out="dashboard.coa_package_name"/>.</span>
+                            <a type="object" name="action_reload_coa" class="mx-2" role="button">Reload COA</a>
+                        </div>
                         <span class="d-flex d-flew-row align-items-baseline">
                             <a class="fs-4 fw-bold" type="object" name="open_action" context="{'is_self_billing': is_self_billing, 'show_fetch_in_einvoices_button': show_fetch_in_einvoices_button, 'show_refresh_out_einvoices_status_button': show_refresh_out_einvoices_status_button}"><field name="name"/></a>
                             <t t-if="dashboard.show_company" groups="base.group_multi_company" >
