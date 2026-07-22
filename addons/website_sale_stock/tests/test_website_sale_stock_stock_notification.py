@@ -2,6 +2,8 @@
 
 from contextlib import contextmanager
 
+from lxml import html
+
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -40,6 +42,19 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
         emails = self.env["mail.mail"].search([("email_to", "=", partner.email_formatted)])
         self.assertEqual(emails[0].subject, "Macbook Pro is back in stock")
         self.assertFalse(self.macbook._has_stock_notification(partner))
+
+    def test_back_in_stock_notification_price_tax_included(self):
+        self.macbook.stock_notification_partner_ids += self.partner
+        self._add_product_qty_to_wh(self.macbook.id, 10.0, self.warehouse.lot_stock_id.id)
+        website = self.env["website"].get_current_website()
+        website.company_id.partner_id.email = "test@test.com"
+        website.show_line_subtotals_tax_selection = "tax_included"
+        with self.setup_cron_env() as env:
+            env["product.product"]._send_availability_email()
+        emails = self.env["mail.mail"].search([("email_to", "=", self.partner.email_formatted)])
+        email_tree = html.fromstring(emails[0].body_html)
+        price_span = email_tree.find('.//span[@class="oe_currency_value"]')
+        self.assertEqual(price_span.text.strip(), "115.00")
 
     @contextmanager
     def setup_cron_env(self):

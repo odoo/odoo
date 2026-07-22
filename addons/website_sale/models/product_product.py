@@ -360,11 +360,21 @@ class ProductProduct(models.Model):
             return
         for product_id in products.ids:
             product = self.env["product.product"].browse(product_id)
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_price = product.product_tmpl_id._apply_taxes_to_price(
+                product.list_price,
+                product.currency_id,
+                product_taxes,
+                product_taxes,
+                product,
+                website=website,
+            )
             for partner_id in product.with_context(
                 # Only fetch the ids, all the other fields will be invalidated either way
                 prefetch_fields=False
             ).stock_notification_partner_ids.ids:
                 partner = self.env["res.partner"].browse(partner_id)
+<<<<<<< d1403379ee43b244a8df0e7c3d4ff807ab1d0a96
                 email_template.with_user(self.env.website.salesperson_id).with_context(
                     customer_name=partner.name, lang=partner.lang
                 ).send_mail(
@@ -374,6 +384,39 @@ class ProductProduct(models.Model):
                         "email_to": partner.email_formatted,
                         "email_from": self.env.website.company_id.partner_id.email_formatted,
                     },
+||||||| 5b7cba6892ca45b266af7cd4399e1ca3107fc0ba
+                self_ctxt = self.with_context(lang=partner.lang).with_user(website.salesperson_id)
+                product_ctxt = product.with_context(lang=partner.lang)
+                body_html = self_ctxt.env["mail.render.mixin"]._render_template(
+                    "website_sale.availability_email_body",
+                    "res.partner",
+                    partner.ids,
+                    engine="qweb_view",
+                    add_context={"product": product_ctxt},
+                    options={"post_process": True},
+                )[partner.id]
+                full_mail = product_ctxt.env["mail.render.mixin"]._render_encapsulate(
+                    "mail.mail_notification_light",
+                    body_html,
+                    add_context={"model_description": self_ctxt.env._("Product")},
+                    context_record=product_ctxt,
+=======
+                self_ctxt = self.with_context(lang=partner.lang).with_user(website.salesperson_id)
+                product_ctxt = product.with_context(lang=partner.lang)
+                body_html = self_ctxt.env["mail.render.mixin"]._render_template(
+                    "website_sale.availability_email_body",
+                    "res.partner",
+                    partner.ids,
+                    engine="qweb_view",
+                    add_context={"product": product_ctxt, "product_price": product_price},
+                    options={"post_process": True},
+                )[partner.id]
+                full_mail = product_ctxt.env["mail.render.mixin"]._render_encapsulate(
+                    "mail.mail_notification_light",
+                    body_html,
+                    add_context={"model_description": self_ctxt.env._("Product")},
+                    context_record=product_ctxt,
+>>>>>>> 55543fd3371a625ed7577444cfc4c01893dd2553
                 )
 
                 product.stock_notification_partner_ids -= partner
