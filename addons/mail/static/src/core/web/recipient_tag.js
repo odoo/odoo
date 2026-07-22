@@ -9,7 +9,7 @@ import { Component, EventBus, useEffect } from "@odoo/owl";
 export class RecipientTag extends Component {
     static template = "mail.RecipientTag";
     static components = { BadgeTag };
-    static props = ["bus", "color?", "email", "id", "name", "onClick?", "onDelete", "resId?", "text", "tooltip", "updateRecipient"];
+    static props = ["bus", "color?", "email", "id", "name", "onClick?", "onDelete?", "resId?", "text", "tooltip", "updateRecipient"];
 
     setup() {
         this.ref = useChildRef();
