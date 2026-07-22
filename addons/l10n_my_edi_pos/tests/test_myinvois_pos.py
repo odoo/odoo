@@ -231,7 +231,8 @@ class TestMyInvoisPoS(TestPoSCommon):
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_individual_invoice_prepayment_unlink(self):
-        """Ensure that individual POS e-invoices have a PaidAmount of 0.00 and the correct PayableAmount."""
+        """Ensure that individual POS e-invoices with no genuine prepayment omit the PrepaidPayment node
+        entirely and report the correct PayableAmount."""
         with freeze_time("2025-01-01"):
             with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)], 'customer': self.invoicing_customer, 'is_invoiced': True})
@@ -242,7 +243,7 @@ class TestMyInvoisPoS(TestPoSCommon):
             self.assertTrue(tax_inclusive_node, "TaxInclusiveAmount node is missing from the XML.")
             expected_total = tax_inclusive_node[0].text
 
-            self._assert_node_values(xml_tree, "cac:PrepaidPayment/cbc:PaidAmount", '0.00')
+            self.assertFalse(xml_tree.xpath("cac:PrepaidPayment", namespaces=NS_MAP), "PrepaidPayment node should be omitted when there is no genuine prepayment.")
             self._assert_node_values(xml_tree, "cac:LegalMonetaryTotal/cbc:PayableAmount", expected_total)
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
