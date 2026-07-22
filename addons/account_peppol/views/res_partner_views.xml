@@ -49,16 +49,4 @@
             </data>
         </field>
     </record>
-
-    <record id="partner_action_verify_peppol" model="ir.actions.server">
-        <field name="name">Verify Peppol</field>
-        <field name="model_id" ref="account_peppol.model_res_partner"/>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
-        <field name="binding_view_types">list,kanban</field>
-        <field name="state">code</field>
-        <field name="code">
-            for record in records:
-                record.button_account_peppol_check_partner_endpoint()
-        </field>
-    </record>
 </odoo>
