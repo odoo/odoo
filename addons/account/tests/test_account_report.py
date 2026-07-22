@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAccountReport(AccountTestInvoicingCommon):
+class TestAccountReport(BaseCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
