@@ -1256,3 +1256,34 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'withholding_residual_amount_currency': 0.00,
             'withholding_net_residual_amount_currency': 0.00,
         }])
+
+    def test_withholding_only_manual_line_creation(self):
+        """ Test creating a withholding-only payment when tax is manually added in the payment register wizard. """
+        wth_tax = self.percent_tax(-2, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'company_id': self.company_data['company'].id,
+            'invoice_date': '2026-06-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Product Line',
+                'price_unit': 30.0,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({})
+        with Form(wizard) as wizard_form:
+            wizard_form.withhold = 'withhold'
+            with wizard_form.withholding_line_ids.new() as line:
+                line.tax_id = wth_tax
+                line.base_amount = 30.0
+
+        self.assertEqual(wizard.withholding_line_ids.amount, 0.60)
+        payment = wizard._create_payments()
+        self.assertEqual(payment.amount, 0.60)
+        self.assertTrue(payment.move_id)
+        self.assertEqual(payment.move_id.state, 'posted')
