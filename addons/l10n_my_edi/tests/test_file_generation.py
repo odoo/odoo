@@ -576,7 +576,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
 
     def test_13_prepaid_amount_on_debit_credit_refund_notes(self):
         """
-        Ensure that the prepaid amount is 0 and payable_amount is invoice.amount_total
+        Ensure that the prepaid amount node is omitted and payable_amount is invoice.amount_total
         """
         basic_invoice = self.init_invoice('out_invoice', currency=self.other_currency, amounts=[2000],
                                           post=True)
@@ -594,12 +594,8 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
         root = etree.fromstring(file)
 
-        # Check that the prepaid amount is 0
-        self._assert_node_values(
-            root,
-            'cac:PrepaidPayment/cbc:PaidAmount',
-            '0.00',
-        )
+        # Check that the prepaid amount node is not present, since there is no prepaid amount
+        self.assertFalse(root.xpath('cac:PrepaidPayment', namespaces=NS_MAP))
 
         # Check that the payable amount is the total amount of the invoice
         self._assert_node_values(
@@ -607,6 +603,141 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cac:LegalMonetaryTotal/cbc:PayableAmount',
             '2000.00',
         )
+
+    def _reconcile_invoice_with_payment(self, invoice, amount, date, currency=None):
+        payment = self.init_payment(amount, post=True, date=date, partner=invoice.partner_id, currency=currency)
+        (invoice + payment.move_id).line_ids.filtered_domain([
+            ('account_type', 'in', ('asset_receivable', 'liability_payable')),
+        ]).reconcile()
+        return payment
+
+    def _reconcile_invoice_with_credit_note(self, invoice, amount, date):
+        credit_note = self.init_invoice(
+            'out_refund', invoice_date=date, amounts=[amount], partner=invoice.partner_id, post=True,
+        )
+        (invoice + credit_note).line_ids.filtered_domain([
+            ('account_type', 'in', ('asset_receivable', 'liability_payable')),
+        ]).reconcile()
+        return credit_note
+
+    def _get_prepaid_and_payable_amounts(self, invoice):
+        file, _errors = invoice._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+        prepaid_node = root.xpath('cac:PrepaidPayment/cbc:PaidAmount', namespaces=NS_MAP)
+        prepaid_amount = float(prepaid_node[0].text) if prepaid_node else 0.0
+        payable_amount = float(root.xpath('cac:LegalMonetaryTotal/cbc:PayableAmount', namespaces=NS_MAP)[0].text)
+        return prepaid_amount, payable_amount
+
+    def test_13_prepaid_amount_same_day_payment(self):
+        """ A payment made on the invoice date is a regular settlement, not a prepayment. """
+        invoice = self.init_invoice('out_invoice', invoice_date='2024-10-10', amounts=[500], post=True)
+        self._reconcile_invoice_with_payment(invoice, 500, '2024-10-10')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 0.0)
+        self.assertEqual(payable_amount, 500.0)
+
+    def test_14_prepaid_amount_late_payment(self):
+        """ A payment made after the invoice date is a regular settlement, not a prepayment. """
+        invoice = self.init_invoice('out_invoice', invoice_date='2024-10-10', amounts=[500], post=True)
+        self._reconcile_invoice_with_payment(invoice, 500, '2024-10-15')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 0.0)
+        self.assertEqual(payable_amount, 500.0)
+
+    def test_15_prepaid_amount_true_partial_deposit(self):
+        """ Only the portion paid before the invoice date counts as a prepayment. """
+        invoice = self.init_invoice('out_invoice', invoice_date='2024-10-10', amounts=[1000], post=True)
+        self._reconcile_invoice_with_payment(invoice, 200, '2024-10-05')
+        self._reconcile_invoice_with_payment(invoice, 800, '2024-10-10')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 200.0)
+        self.assertEqual(payable_amount, 800.0)
+
+    def test_16_prepaid_amount_full_advance_payment_override(self):
+        """ A full advanced payment should not be considered as prepayment. """
+        invoice = self.init_invoice('out_invoice', invoice_date='2024-10-10', amounts=[1000], post=True)
+        self._reconcile_invoice_with_payment(invoice, 1000, '2024-10-01')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 0.0)
+        self.assertEqual(payable_amount, 1000.0)
+
+    def test_17_prepaid_amount_foreign_currency_true_partial_deposit(self):
+        """ Same as test_15, but the invoice is in a foreign currency; the prepaid amount must stay expressed
+        in the invoice currency. """
+        foreign_currency = self.other_currency
+        invoice = self.init_invoice(
+            'out_invoice', invoice_date='2017-10-10', amounts=[1000], currency=foreign_currency, post=True,
+        )
+        self._reconcile_invoice_with_payment(invoice, 200, '2017-10-05', currency=foreign_currency)
+        self._reconcile_invoice_with_payment(invoice, 800, '2017-10-10', currency=foreign_currency)
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 200.0)
+        self.assertEqual(payable_amount, 800.0)
+
+    def test_18_prepaid_amount_foreign_currency_full_advance_payment_override(self):
+        """ Same as test_16, but the invoice is in a foreign currency. """
+        foreign_currency = self.other_currency
+        invoice = self.init_invoice(
+            'out_invoice', invoice_date='2017-10-10', amounts=[1000], currency=foreign_currency, post=True,
+        )
+        self._reconcile_invoice_with_payment(invoice, 1000, '2017-10-01', currency=foreign_currency)
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 0.0)
+        self.assertEqual(payable_amount, 1000.0)
+
+    def test_19_prepaid_amount_excludes_exchange_difference(self):
+        """ A prepayment reconciled at a different exchange rate than the invoice generates a separate
+        exchange difference entry. That entry must not be counted as part of the prepaid amount, which
+        should only reflect the actual amount paid in advance, expressed in invoice currency. """
+        foreign_currency = self.other_currency
+        # invoice_date falls under the 2017 rate (2.0), the payment under the 2016 rate (3.0):
+        # same amount in foreign currency, different amount once converted to company currency.
+        invoice = self.init_invoice(
+            'out_invoice', invoice_date='2017-10-10', amounts=[1000], currency=foreign_currency, post=True,
+        )
+        self._reconcile_invoice_with_payment(invoice, 200, '2016-10-05', currency=foreign_currency)
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 200.0)
+        self.assertEqual(payable_amount, 800.0)
+
+    def test_20_prepaid_amount_excludes_cash_basis_moves(self):
+        """ When the invoice has a cash basis (tax on payment) tax, reconciling it with a payment also
+        generates a separate cash basis journal entry. That entry must not be counted as part of the
+        prepaid amount. """
+        self.company_data['company'].tax_exigibility = True
+        cash_basis_tax = self.env['account.tax'].create({
+            'name': 'cash basis 15%',
+            'type_tax_use': 'sale',
+            'amount': 15,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.company_data['default_account_assets'].id,
+        })
+        invoice = self.init_invoice(
+            'out_invoice', invoice_date='2024-10-10', amounts=[1000], taxes=cash_basis_tax, post=True,
+        )
+        self._reconcile_invoice_with_payment(invoice, 200, '2024-10-05')
+        self._reconcile_invoice_with_payment(invoice, 950, '2024-10-10')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 200.0)
+        self.assertEqual(payable_amount, 950.0)
+
+    def test_21_prepaid_amount_excludes_credit_note(self):
+        """ A credit note reconciled against the invoice is not a prepayment: it is reported to LHDN as its
+        own separate document, and must not also be counted as a prepaid amount on the invoice. """
+        invoice = self.init_invoice('out_invoice', invoice_date='2024-10-10', amounts=[1000], post=True)
+        self._reconcile_invoice_with_credit_note(invoice, 200, '2024-10-05')
+
+        prepaid_amount, payable_amount = self._get_prepaid_and_payable_amounts(invoice)
+        self.assertEqual(prepaid_amount, 0.0)
+        self.assertEqual(payable_amount, 1000.0)
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
