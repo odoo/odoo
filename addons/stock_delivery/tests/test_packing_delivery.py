@@ -224,11 +224,10 @@ class TestPackingDelivery(TestPackingCommon):
                 (0, 0, {'name': self.product_aw.name, 'product_id': self.product_aw.id, 'product_uom_qty': 1, 'price_unit': 1})
             ]
         })
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.test_carrier.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.test_carrier.id,
+        })
         choose_delivery_carrier.button_confirm()
         so.action_confirm()
 

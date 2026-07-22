@@ -3,7 +3,7 @@
 from unittest.mock import patch, DEFAULT
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -73,11 +73,10 @@ class TestCarrierPropagation(TransactionCase):
                 (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
             ]
         })
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
         # Confirm the SO
         so.action_confirm()
@@ -107,11 +106,10 @@ class TestCarrierPropagation(TransactionCase):
                     (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
                 ]
             })
-            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': so.id,
-                'default_carrier_id': self.normal_delivery.id,
-            }))
-            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+                'order_id': so.id,
+                'carrier_id': self.normal_delivery.id,
+            })
             choose_delivery_carrier.button_confirm()
             # Confirm the SO
             so.action_confirm()
@@ -200,11 +198,10 @@ class TestCarrierPropagation(TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': sale_order1.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order1.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
 
         sale_order1.action_confirm()
@@ -221,11 +218,10 @@ class TestCarrierPropagation(TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': sale_order2.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order2.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
 
         sale_order2.action_confirm()
@@ -269,11 +265,10 @@ class TestCarrierPropagation(TransactionCase):
             },
         ])
         for so in sale_orders:
-            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': so.id,
-                'default_carrier_id': self.normal_delivery.id,
-            }))
-            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+                'order_id': so.id,
+                'carrier_id': self.normal_delivery.id,
+            })
             choose_delivery_carrier.button_confirm()
 
         def fail_send_to_shipper(pick):

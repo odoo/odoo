@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests import common, Form
+from odoo.tests import common
 
 @common.tagged('post_install', '-at_install')
 class TestDeliveryCost(common.TransactionCase):
@@ -42,11 +42,10 @@ class TestDeliveryCost(common.TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.delivery_carrier.id,
-        }))
-        delivery_wizard.save().button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.delivery_carrier.id,
+        }).button_confirm()
 
         delivery_line = so.order_line.filtered('is_delivery')
         self.assertEqual(len(delivery_line), 1)
@@ -100,11 +99,10 @@ class TestDeliveryCost(common.TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.delivery_carrier.id,
-        }))
-        delivery_wizard.save().button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.delivery_carrier.id,
+        }).button_confirm()
 
         delivery_line = so.order_line.filtered('is_delivery')
         self.assertEqual(len(delivery_line), 1)

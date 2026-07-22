@@ -1062,7 +1062,7 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_ids[0].picked = True
 
         res_dict = delivery_order.button_validate()
-        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(res_dict['context']).create({})
         backorder_wizard.process_cancel_backorder()
 
         # No backorder should be created and the move corresponding to the missing product should be cancelled

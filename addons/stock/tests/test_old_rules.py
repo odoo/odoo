@@ -318,7 +318,7 @@ class TestOldRules(TestStockCommon):
         picking.move_ids[0].picked = True
 
         action_data = picking.button_validate()
-        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_data['context'])).save()
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(action_data['context']).create({})
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
 

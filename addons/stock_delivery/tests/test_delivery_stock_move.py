@@ -59,12 +59,10 @@ class TestStockMoveInvoice(TestSaleCommon):
         })
 
         # I add delivery cost in Sales order
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': self.sale_prepaid.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
-        choose_delivery_carrier.button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': self.sale_prepaid.id,
+            'carrier_id': self.normal_delivery.id,
+        }).button_confirm()
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()
@@ -135,12 +133,10 @@ class TestStockMoveInvoice(TestSaleCommon):
         })
 
         # I add delivery cost in Sales order
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': self.sale_prepaid.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
-        choose_delivery_carrier.button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': self.sale_prepaid.id,
+            'carrier_id': self.normal_delivery.id,
+        }).button_confirm()
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()
@@ -187,12 +183,10 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.assertEqual(so.invoice_status, 'no')
 
         # Add delivery fee
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.normal_delivery.id
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
-        choose_delivery_carrier.button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.normal_delivery.id,
+        }).button_confirm()
 
         self.assertEqual(so.invoice_status, 'no', 'The status should still be "Nothing To Invoice"')
 
@@ -232,12 +226,10 @@ class TestStockMoveInvoice(TestSaleCommon):
         })
 
         # Add delivery cost in Sales order
-        delivery_wizard = Form(self.env["choose.delivery.carrier"].with_context({
-            "default_order_id": sale_order.id,
-            "default_carrier_id": self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
-        choose_delivery_carrier.button_confirm()
+        self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': self.normal_delivery.id,
+        }).button_confirm()
 
         # Check the carrier in picking after confirm sale order
         delivery_for_product_11 = sale_order.picking_ids.filtered(lambda p: self.product_11 in p.move_ids.product_id)
