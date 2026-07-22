@@ -1,4 +1,4 @@
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList, openReactionMenuType } from "@mail/core/common/message_reaction_list";
@@ -18,7 +18,10 @@ export class MessageReactions extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
-        this.openReactionMenu = props.static("openReactionMenu", openReactionMenuType(this.store));
+        this.openReactionMenu = useProps.static(
+            "openReactionMenu",
+            openReactionMenuType(this.store)
+        );
         this.ui = useService("ui");
         this.isMobileOS = isMobileOS();
         this.messageActions = useMessageActions({ message: this.message });

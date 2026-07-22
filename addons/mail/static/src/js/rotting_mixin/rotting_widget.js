@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
@@ -28,7 +28,7 @@ export class RottingDaysField extends Component {
     static template = "mail.RottingDaysField";
 
     setup() {
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         // Preprocess all sentences as childless strings so they're easier to format in the DOM
         this.dayCount = _t("%(numberOfDays)sd", {
             numberOfDays: this.props.record.data.rotting_days,

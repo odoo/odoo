@@ -5,7 +5,7 @@ import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, props, signal, types } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, types, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { user } from "@web/core/user";
@@ -35,7 +35,7 @@ export class Meeting extends Component {
     };
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             autoOpenAction: types.string().optional(),
             isPip: types.boolean().optional(),
         });

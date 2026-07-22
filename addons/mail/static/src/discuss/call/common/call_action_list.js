@@ -1,4 +1,4 @@
-import { Component, computed, props, signal, toRaw, types } from "@odoo/owl";
+import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -20,7 +20,7 @@ export class CallActionList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             className: types.string().optional(),
             compact: types.boolean().optional(),

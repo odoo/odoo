@@ -1,7 +1,7 @@
 import { propSignal } from "@mail/utils/common/hooks";
 
 import { imageUrl } from "@web/core/utils/urls";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -16,9 +16,9 @@ export class ActivityAssignPopover extends Component {
         this.orm = useService("orm");
         this.responsibleLabel = _t("Responsible");
         this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
-        this.close = props.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
-        this.hasHeader = props.static("hasHeader", t.boolean().optional(false));
-        this.onActivityChanged = props.static(
+        this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
+        this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
+        this.onActivityChanged = useProps.static(
             "onActivityChanged",
             t.function([t.instanceOf(this.store["mail.thread"].Class)])
         );

@@ -6,7 +6,7 @@ import { computeDelay } from "@mail/utils/common/dates";
 import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, computed, props, signal, t } from "@odoo/owl";
+import { Component, computed, signal, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -21,19 +21,19 @@ export class ActivityListPopoverItem extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
-        this.onActivityChanged = props.static("onActivityChanged", t.function([]).optional());
-        this.onClickDoneAndScheduleNext = props.static(
+        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]).optional());
+        this.onClickDoneAndScheduleNext = useProps.static(
             "onClickDoneAndScheduleNext",
             t.function([]).optional()
         );
-        this.onClickEditActivityButtonProp = props.static(
+        this.onClickEditActivityButtonProp = useProps.static(
             "onClickEditActivityButton",
             t.function([]).optional()
         );
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
-        // bound once so `close` can be passed as a stable (props.static) handler
+        // bound once so `close` can be passed as a stable (useProps.static) handler
         this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
         if (this.activity().activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(

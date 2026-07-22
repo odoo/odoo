@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,7 +8,7 @@ export class AvatarStack extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             avatarClass: t
                 .function(
                     [

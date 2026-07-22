@@ -4,12 +4,12 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
-    props,
     proxy,
     signal,
     t,
     untrack,
     useEffect,
+    useProps,
     xml,
 } from "@odoo/owl";
 
@@ -252,7 +252,7 @@ export class UseHoverOverlay extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             hover: t.object({
                 _contains: t.array(t.function([t.instanceOf(EventTarget)], t.boolean())),
                 addTarget: t.function([t.object({ ref: t.any() })], t.function([])),
@@ -963,7 +963,7 @@ export class UseForwardRefsToParent {
      * @param {import("@odoo/owl").Signal<Element>} ref
      */
     constructor(propName, getRefIdFn, ref) {
-        const compProps = props();
+        const compProps = useProps();
         this.ref = ref;
         // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
         // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
@@ -1027,12 +1027,12 @@ export function useOnChange(dependencies, callback, { initialRun } = { initialRu
  *   (read-only) signal, which always exists (never `undefined`), even when the prop is optional.
  */
 export function propComputed(name, shape) {
-    const rawProps = props({ [name]: shape });
+    const rawProps = useProps({ [name]: shape });
     return computed(() => rawProps[name]);
 }
 
 /**
- * Single signal for one prop that is itself a signal: a thin wrapper over `props.static` that adds
+ * Single signal for one prop that is itself a signal: a thin wrapper over `useProps.static` that adds
  * the `t.signal(...)` typing. The parent must pass a stable signal reference (but its inner value
  * may change).
  *
@@ -1045,5 +1045,5 @@ export function propComputed(name, shape) {
  */
 export function propSignal(name, shape, { optional = false } = {}) {
     const type = t.signal(shape);
-    return props.static(name, optional ? type.optional() : type);
+    return useProps.static(name, optional ? type.optional() : type);
 }

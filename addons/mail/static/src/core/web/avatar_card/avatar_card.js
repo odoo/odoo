@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 
-import { Component, props, signal, t, useListener } from "@odoo/owl";
+import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -20,7 +20,7 @@ export class AvatarCard extends Component {
     viewProfileBtnRef = signal.ref();
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             close: t.function([]),
             id: t.number(),
             model: t.selection(AvatarCard.allowedModels),

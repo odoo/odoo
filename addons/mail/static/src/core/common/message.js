@@ -14,7 +14,7 @@ import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, computed, props, proxy, signal, t, useApp } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useApp, useProps } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -80,7 +80,7 @@ export class Message extends Component {
         super.setup();
         this.nbsp = nbsp;
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
@@ -94,7 +94,7 @@ export class Message extends Component {
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
-        this.onParentMessageClick = props.static(
+        this.onParentMessageClick = useProps.static(
             "onParentMessageClick",
             onParentMessageClickType(this.store).optional()
         );

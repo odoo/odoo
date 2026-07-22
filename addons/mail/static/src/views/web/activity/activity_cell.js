@@ -1,7 +1,7 @@
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -18,7 +18,7 @@ export class ActivityCell extends Component {
     contentRef = signal.ref();
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             activityIds: t.array(t.number()),
             activityTypeId: t.number(),
             attachmentsInfo: t

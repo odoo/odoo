@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -19,7 +19,7 @@ export class MailActivityListRescheduleDropdown extends Component {
     static template = "mail.MailActivityListRescheduleDropdown";
 
     setup() {
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         this.orm = useService("orm");
         this.action = useService("action");
         const today = DateTime.now().startOf("day");

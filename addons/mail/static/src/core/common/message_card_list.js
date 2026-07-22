@@ -3,7 +3,7 @@ import { Message } from "@mail/core/common/message";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { useVisible } from "@mail/utils/common/hooks";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -17,7 +17,7 @@ export class MessageCardList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             emptyText: t.string().optional(),
             loadMore: t.boolean().optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),

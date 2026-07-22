@@ -1,4 +1,4 @@
-import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { Component, onMounted, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { propSignal } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -12,14 +12,14 @@ export class ActivityMarkAsDone extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
-        this.close = props.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
-        this.hasHeader = props.static("hasHeader", t.boolean().optional(false));
-        this.onActivityChanged = props.static(
+        this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
+        this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
+        this.onActivityChanged = useProps.static(
             "onActivityChanged",
             t.function([t.instanceOf(this.store["mail.thread"].Class)])
         );
-        this.onClickDoneProp = props.static("onClickDone", t.function([]).optional());
-        this.onClickDoneAndScheduleNextProp = props.static(
+        this.onClickDoneProp = useProps.static("onClickDone", t.function([]).optional());
+        this.onClickDoneAndScheduleNextProp = useProps.static(
             "onClickDoneAndScheduleNext",
             t.function([]).optional()
         );

@@ -1,6 +1,6 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -11,7 +11,10 @@ class ListActivityButton extends ActivityButton {
 
     setup() {
         super.setup();
-        this.props = props({ record: types.instanceOf(Record), slots: types.object().optional() });
+        this.props = useProps({
+            record: types.instanceOf(Record),
+            slots: types.object().optional(),
+        });
         this.defaultActivityStateClass = "";
         this.defaultActivityDecorationClass = "schedule";
     }
@@ -32,7 +35,7 @@ export class ListActivity extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
     }
 
     get summaryText() {

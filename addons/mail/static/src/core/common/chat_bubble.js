@@ -2,7 +2,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, computed, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
@@ -18,7 +18,7 @@ class ChatBubblePreview extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             chatWindow: types.instanceOf(this.store.ChatWindow.Class),
         });
     }
@@ -43,7 +43,7 @@ export class ChatBubble extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             chatWindow: types.instanceOf(this.store.ChatWindow.Class),
         });
         const popoverRef = signal.ref();

@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Record } from "@web/model/relational_model/record";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class MailComposerAttachmentSelector extends Component {
@@ -12,7 +12,7 @@ export class MailComposerAttachmentSelector extends Component {
     static components = { FileUploader };
 
     setup() {
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);

@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -8,7 +8,7 @@ export class Priority extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });
     }

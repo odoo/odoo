@@ -3,7 +3,7 @@ import { isToday } from "@mail/utils/common/dates";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -26,7 +26,10 @@ export class SubChannelPreview extends Component {
         this.store = useService("mail.store");
         this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"].Class));
         this.class = propComputed("class", t.string().optional());
-        this.onClick = props.static("onClick", subChannelPreviewOnClickType(this.store).optional());
+        this.onClick = useProps.static(
+            "onClick",
+            subChannelPreviewOnClickType(this.store).optional()
+        );
     }
 
     dateText(message) {
