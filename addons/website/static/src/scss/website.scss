@@ -2188,6 +2188,22 @@ header {
     > header:not(.o_header_affixed):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
+        background-color: var(--header-background-color);
+
+        // For rounded-box menu over the content: apply the background
+        // to the navbar and neutralize theme color like other menu
+        &:has(> .container > .navbar) {
+            background-color: transparent !important;
+
+            > .container > .navbar {
+                background-color: var(--header-background-color);
+                color: inherit;
+
+                .nav-item > .nav-link {
+                    color: inherit;
+                }
+            }
+        }
 
         > .navbar {
             // Prevent the nav color/gradient to impact the header color.
