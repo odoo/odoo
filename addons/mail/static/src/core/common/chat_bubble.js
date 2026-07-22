@@ -4,7 +4,7 @@ import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_ind
 
 import { Component, computed, props, signal, types, useEffect } from "@odoo/owl";
 
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
@@ -46,7 +46,7 @@ export class ChatBubble extends Component {
         this.props = props({
             chatWindow: types.instanceOf(this.store.ChatWindow.Class),
         });
-        const popoverRef = useChildRef();
+        const popoverRef = signal.ref();
         this.isMobileOS = isMobileOS();
         this.isPopoverOpen = signal(false);
         this.popover = usePopover(ChatBubblePreview, {

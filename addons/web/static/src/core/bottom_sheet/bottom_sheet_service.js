@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
  *   onClose?: () => void;
  *   class?: string;
  *   role?: string;
- *   ref?: Function;
+ *   ref?: import("@odoo/owl").Signal; // signal ref filled with the sheet body element
  *   useBottomSheet?: Boolean;
  * }} PopoverServiceAddOptions
  *

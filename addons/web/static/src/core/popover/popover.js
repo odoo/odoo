@@ -1,11 +1,11 @@
-import { Component, onMounted, onWillDestroy, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, signal, t, useProps } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { reverseForRTL } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton } from "@web/core/utils/hooks";
 
 /**
  * @param {EventTarget} target
@@ -62,7 +62,7 @@ function useClickAway(popover, callback, targetWindow = window) {
                 iframeEl.contentWindow,
                 "pointerdown",
                 () => {
-                    const popupEl = popover.popoverRef();
+                    const popupEl = popover.ref();
                     let checkEl = iframeEl.parentElement;
                     while (checkEl) {
                         if (checkEl === popupEl) {
@@ -137,28 +137,24 @@ export const popoverProps = {
     setActiveElement: t.boolean().optional(false),
 
     // Technical props
-    ref: t.function().optional(),
     slots: t.object().optional(),
 };
 
 export class Popover extends Component {
     static template = "web.Popover";
-    props = props(popoverProps);
     static animationTime = 200;
-
-    popoverRef = signal(null);
+    props = useProps(popoverProps);
+    ref = useProps.static(
+        "ref",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     setup() {
         if (this.props.setActiveElement) {
-            useActiveElement(this.popoverRef);
+            useActiveElement(this.ref);
         }
 
-        useForwardRefToParent(this.popoverRef, "ref");
-        this.position = usePosition(
-            this.popoverRef,
-            () => this.props.target,
-            this.positioningOptions
-        );
+        this.position = usePosition(this.ref, () => this.props.target, this.positioningOptions);
 
         const resizeObserver = new ResizeObserver(() => {
             if (!this.props.fixedPosition && (!this.props.animation || this.animationDone)) {
@@ -167,8 +163,8 @@ export class Popover extends Component {
         });
 
         onMounted(() => {
-            POPOVERS.set(this.props.target, this.popoverRef());
-            resizeObserver.observe(this.popoverRef());
+            POPOVERS.set(this.props.target, this.ref());
+            resizeObserver.observe(this.ref());
         });
         onWillDestroy(() => POPOVERS.delete(this.props.target));
 
@@ -215,16 +211,13 @@ export class Popover extends Component {
             bottom: ["translateY(5%)", "translateY(0)"],
             left: ["translateX(-5%)", "translateX(0)"],
         }[direction];
-        return this.popoverRef().animate(
-            { opacity: [0, 1], transform },
-            this.constructor.animationTime
-        );
+        return this.ref().animate({ opacity: [0, 1], transform }, this.constructor.animationTime);
     }
 
     isInside(target) {
         return (
             this.props.target?.contains(target) ||
-            this.popoverRef()?.contains(target) ||
+            this.ref()?.contains(target) ||
             this.env[OVERLAY_SYMBOL]?.contains(target)
         );
     }
@@ -264,7 +257,7 @@ export class Popover extends Component {
     }
 
     updateArrow(direction, variant, variantOffset) {
-        const el = this.popoverRef();
+        const el = this.ref();
 
         // Reverse the direction if RTL as bootstrap expects it that way
         [direction, variant] = reverseForRTL(direction, variant);

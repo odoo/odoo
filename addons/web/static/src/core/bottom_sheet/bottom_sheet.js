@@ -3,9 +3,9 @@
  *
  * @class
  */
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
@@ -15,7 +15,7 @@ import { browser } from "@web/core/browser/browser";
 export class BottomSheet extends Component {
     static template = "web.BottomSheet";
 
-    props = props({
+    props = useProps({
         // Main props
         component: t.function(),
         componentProps: t.object().optional(),
@@ -23,15 +23,18 @@ export class BottomSheet extends Component {
 
         class: t.any().optional(""),
         role: t.string().optional(),
-
-        // Technical props
-        ref: t.function().optional(),
     });
+
+    // The sheet body element is exposed to the parent (the popover/bottom_sheet
+    // service caller) through the `ref` prop, an Owl 3 signal ref.
+    ref = useProps.static(
+        "ref",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     containerRef = signal(null);
     scrollRailRef = signal(null);
     sheetRef = signal(null);
-    sheetBodyRef = signal(null);
 
     setup() {
         this.maxHeightPercent = 90;
@@ -50,11 +53,6 @@ export class BottomSheet extends Component {
             maxHeight: 0,
             dismissThreshold: 0,
         };
-
-        // Popover Ref Requirement
-        // The body element is forwarded to the parent (the popover/bottom_sheet
-        // service caller) through the `ref` prop.
-        useForwardRefToParent(this.sheetBodyRef, "ref");
 
         // Create throttled version for onScroll
         this.throttledOnScroll = useThrottleForAnimation(this.onScroll.bind(this));
@@ -203,7 +201,7 @@ export class BottomSheet extends Component {
      */
     positionSheet() {
         const scrollRail = this.scrollRailRef();
-        const bodyContent = this.sheetBodyRef();
+        const bodyContent = this.ref();
 
         const scrollValue = this.measurements.maxHeight;
 

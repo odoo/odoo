@@ -15,7 +15,7 @@ import { registry } from "@web/core/registry";
  *   popoverClass?: string;
  *   role?: string;
  *   position?: import("@web/core/position/position_hook").UsePositionOptions["position"];
- *   ref?: Function;
+ *   ref?: import("@odoo/owl").Signal; // signal ref filled with the popover element
  * }} PopoverServiceAddOptions
  *
  * @typedef {ReturnType<popoverService["start"]>["add"]} PopoverServiceAddFunction
