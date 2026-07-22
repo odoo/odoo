@@ -573,7 +573,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             move = sol.move_ids
             move.quantity = sol.product_uom_qty
             delivery = move.picking_id
-            delivery.button_validate()
+            delivery.with_context({'skip_backorder': True}).button_validate()
             self.assertEqual(sol.product_uom_qty, 1)
             self.assertEqual(sol.qty_delivered, 1)
             self.assertEqual(sol.purchase_price, self.product_avco_auto.standard_price, "purchase_price should match product's standard_price")

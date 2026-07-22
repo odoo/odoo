@@ -5,6 +5,8 @@ from datetime import timedelta
 from operator import itemgetter
 from re import findall as regex_findall
 
+from markupsafe import Markup
+
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -2452,6 +2454,18 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _unlink_if_draft_or_cancel(self):
         if any(move.state not in ('draft', 'cancel') and (move.move_orig_ids or move.move_dest_ids) for move in self):
             raise UserError(_('You can not delete moves linked to another operation'))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_picking_id(self):
+        for move_line in self.filtered(lambda ml: ml.state != 'cancel' and ml.picking_id):
+            move_line.picking_id.message_post(body=Markup("<strong>%(remove_message)s</strong><br/><ul><li>%(product_label)s: %(product_name)s</li><li>%(quantity_label)s: %(quantity)s</li></ul>") % {
+                "remove_message": _("The following demand has been removed from this transfer by %(user_name)s.", user_name=self.env.user.display_name),
+                "product_label": _("Product"),
+                "product_name": move_line.product_id.display_name,
+                "quantity_label": _("Quantity"),
+                "quantity": move_line.product_uom_qty,
+                "uom": move_line.uom_id.name,
+            })
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
