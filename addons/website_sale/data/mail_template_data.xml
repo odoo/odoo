@@ -361,7 +361,7 @@
                                     align="right"
                                     style="max-width: 100%; vertical-align: top;"
                                 >
-                                    <t t-out="format_amount(object.list_price, object.currency_id)">$ 450</t>
+                                    <t t-out="format_amount(ctx.get('product_price') or 0, object.currency_id)">$ 450</t>
                                 </td>
                             </tr>
                         </table>

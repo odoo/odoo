@@ -524,13 +524,21 @@ class ProductProduct(models.Model):
             website = notification.website_id
             partner = notification.partner_id
             product = notification.product_id
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_price = product._apply_taxes_to_price(
+                product.list_price,
+                product.currency_id,
+                product_taxes=product_taxes,
+                taxes=product_taxes,
+                website=website,
+            )
             sender_email = (
                 website.company_id.partner_id.email_formatted
                 or website.salesperson_id.email_formatted
                 or website.company_id.email_formatted
             )
             email_template.with_user(website.salesperson_id).sudo().with_context(
-                customer_name=partner.name, lang=partner.lang, website_id=website.id
+                customer_name=partner.name, lang=partner.lang, website_id=website.id, product_price=product_price,
             ).send_mail(
                 product.id,
                 force_send=True,
