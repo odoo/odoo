@@ -328,6 +328,33 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(downpayment_line.price_unit, 80,
                          "The downpayment line amount should be equal to the sum of the invoice and credit note amount")
 
+    def test_downpayment_reference_after_reverse_and_create_invoice(self):
+        """Test that the down payment line shows the re-issued invoice reference
+        after a "Reverse and Create Invoice" on the down payment invoice."""
+        self.sale_order.action_confirm()
+
+        payment = self.env["sale.advance.payment.inv"].with_context(self.context).create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": 100,
+        })
+        payment.create_invoices()
+        downpayment_line = self.sale_order.order_line.filtered(
+            lambda l: l.is_downpayment and not l.display_type)
+        downpayment_invoice = downpayment_line.invoice_lines.move_id
+        downpayment_invoice.action_post()
+
+        move_reversal = self.env["account.move.reversal"].with_context(
+            active_model="account.move",
+            active_ids=downpayment_invoice.ids,
+        ).create({
+            "date": downpayment_invoice.date,
+            "journal_id": downpayment_invoice.journal_id.id,
+        })
+        new_invoice = self.env["account.move"].browse(move_reversal.modify_moves()["res_id"])
+        new_invoice.action_post()
+
+        self.assertIn(new_invoice.payment_reference, downpayment_line.name)
+
     def test_invoice_with_discount(self):
         """ Test invoice with a discount and check discount applied on both SO lines and an invoice lines """
         # Update discount and delivered quantity on SO lines
