@@ -1140,6 +1140,7 @@ class WebsocketConnectionHandler:
                     websocket.close(CloseCode.TRY_LATER)
                 except Exception:
                     _logger.exception("Exception occurred during websocket request handling")
+                del req
 
 
 def _kick_all(code=CloseCode.GOING_AWAY):
