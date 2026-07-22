@@ -874,3 +874,22 @@ class TestItEdiImport(TestItEdi):
             ('message_ids.body', 'like', 'Error importing attachment'),
         ], limit=1)
         self.assertTrue(move)
+
+    def test_receive_bill_xml_and_p7m_arbitrary_filename(self):
+        """ Test the correct import of an XML and P7M file based on their content """
+        expected_data = [{
+            'invoice_date': fields.Date.from_string('2026-07-21'),
+            'ref': 'test/2026/01',
+            'amount_untaxed': 80.0,
+            'amount_tax': 17.60,
+            'invoice_line_ids': [
+                {
+                    'name': 'Prodotto test acquisto',
+                    'quantity': 2.0,
+                    'price_unit': 40.0,
+                },
+            ],
+        }]
+
+        self._assert_import_invoice('arbitary_name_it_edi.xml', expected_data)
+        self._assert_import_invoice('arbitary_name_it_edi.xml.p7m', expected_data)
