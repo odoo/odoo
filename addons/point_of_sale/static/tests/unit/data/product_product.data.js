@@ -20,6 +20,10 @@ export class ProductProduct extends models.ServerModel {
         ];
     }
 
+    has_access(operation) {
+        return true;
+    }
+
     _records = [
         {
             id: 1,

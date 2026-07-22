@@ -29,14 +29,14 @@ test("shouldShowOpeningControl", async () => {
     store.hasLoggedIn = true;
     expect(store.shouldShowOpeningControl()).toBe(true);
 });
-test("allowProductCreation", async () => {
+test("hasProductCreationAccess", async () => {
     const store = await setupPosEnv();
     const admin = store.models["hr.employee"].get(2);
     store.setCashier(admin);
-    expect(await store.allowProductCreation()).toBe(true);
+    expect(await store.hasProductCreationAccess).toBe(true);
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
-    expect(await store.allowProductCreation()).toBe(false);
+    expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();
