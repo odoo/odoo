@@ -41,12 +41,12 @@ class TestProcurement(TestMrpCommon):
         #    Product2 12 Unit
         # -----------------------
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = self.bom_3
-        production_form.product_qty = 24
-        production_form.uom_id = self.product_6.uom_id
-        production_product_6 = production_form.save()
+        production_product_6 = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_3.id,
+            'product_qty': 24,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production_product_6.action_confirm()
         production_product_6.action_assign()
 
@@ -136,11 +136,11 @@ class TestProcurement(TestMrpCommon):
 
         # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
-            production_form = Form(self.env['mrp.production'])
-            production_form.product_id = self.product_4
-            production_form.uom_id = self.product_4.uom_id
-            production_form.product_qty = 1
-            production_product_4 = production_form.save()
+            production_product_4 = self.env['mrp.production'].create({
+                'product_id': self.product_4.id,
+                'uom_id': self.product_4.uom_id.id,
+                'product_qty': 1,
+            })
             production_product_4.action_confirm()
 
     def test_procurement_3(self):
@@ -181,13 +181,13 @@ class TestProcurement(TestMrpCommon):
             'bom_line_ids': [
                 Command.create({'product_id': component.id, 'product_qty': 1.0}),
             ]})
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 5
-        mo_form.uom_id = finished_product.uom_id
-        mo_form.location_src_id = warehouse.lot_stock_id
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'bom_id': bom.id,
+            'product_qty': 5,
+            'uom_id': finished_product.uom_id.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+        })
         mo.action_confirm()
         pickings = self.env['stock.picking'].search([('product_id', '=', component.id)])
         self.assertEqual(len(pickings), 2.0)
@@ -661,12 +661,12 @@ class TestProcurement(TestMrpCommon):
 
         # make sure next MO auto-reserves components now that they are in stock since
         # default reservation_method = 'at_confirm'
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_1
-        mo_form.bom_id = bom1
-        mo_form.product_qty = 5
-        mo_form.uom_id = product_1.uom_id
-        mo_assign_at_confirm = mo_form.save()
+        mo_assign_at_confirm = self.env['mrp.production'].create({
+            'product_id': product_1.id,
+            'bom_id': bom1.id,
+            'product_qty': 5,
+            'uom_id': product_1.uom_id.id,
+        })
         mo_assign_at_confirm.action_confirm()
 
         info_p2._compute_json_replenishment_graph()

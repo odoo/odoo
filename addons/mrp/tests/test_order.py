@@ -1782,10 +1782,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         self.bom_2.unlink()  # remove the kit bom of product_5
         now = fields.Datetime.now()
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_3  # product_5 (2), product_4 (8), product_2 (12)
-        mo_form.date_start = now
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,  # product_5 (2), product_4 (8), product_2 (12)
+            'date_start': now,
+        })
         self.assertEqual(mo.components_availability, False)  # no compute for draft
         mo.action_confirm()
         self.assertEqual(mo.components_availability, 'Not Available')
@@ -1871,11 +1871,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
         })
         self.env['stock.quant']._update_available_quantity(component, self.stock_location_components, 25.0)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.uom_id = self.uom_dozen
-        mo_form.product_qty = 1
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'uom_id': self.uom_dozen.id,
+            'product_qty': 1,
+        })
         mo.action_confirm()
         mo.action_assign()
         mo.button_mark_done()
@@ -1925,9 +1925,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 })],
             })
 
-            mo_form = Form(self.env['mrp.production'])
-            mo_form.bom_id = bom
-            mo = mo_form.save()
+            mo = self.env['mrp.production'].create({
+                'bom_id': bom.id,
+            })
             mo.action_confirm()
             mo.button_mark_done()
 
@@ -2021,12 +2021,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         })
 
         # create a MO for this BOM
-        mo_product_final_form = Form(self.env['mrp.production'])
-        mo_product_final_form.product_id = product_final
-        mo_product_final_form.uom_id = uom_L
-        mo_product_final_form.bom_id = test_bom
-        mo_product_final_form.product_qty = 0.5
-        mo_product_final_form = mo_product_final_form.save()
+        mo_product_final_form = self.env['mrp.production'].create({
+            'product_id': product_final.id,
+            'uom_id': uom_L.id,
+            'bom_id': test_bom.id,
+            'product_qty': 0.5,
+        })
 
         mo_product_final_form.action_confirm()
         mo_product_final_form.action_assign()
@@ -2121,9 +2121,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
 
-        mo_3 = Form(self.env['mrp.production'])
-        mo_3.bom_id = self.bom_3
-        mo_3 = mo_3.save()
+        mo_3 = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
 
         self.assertEqual(len(mo_3.workorder_ids), 2)
 
@@ -2131,13 +2131,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo_3.state, 'confirmed')
         self.assertEqual(mo_3.workorder_ids[0].state, 'ready')  # No matter the MO Reservation state, the first WO is always ready
 
-        mo_1 = Form(self.env['mrp.production'])
-        mo_1.bom_id = self.bom_3
-        mo_1 = mo_1.save()
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
 
-        mo_2 = Form(self.env['mrp.production'])
-        mo_2.bom_id = self.bom_3
-        mo_2 = mo_2.save()
+        mo_2 = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
 
         self.assertEqual(mo_1.product_id, self.product_6)
         self.assertEqual(mo_2.product_id, self.product_6)
@@ -2184,10 +2184,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # Next Monday at 6:00 am UTC
         date_start = (fields.Datetime.now() + timedelta(days=7 - fields.Datetime.now().weekday())).replace(hour=6, minute=0, second=0)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.date_start = date_start
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'date_start': date_start,
+        })
 
         mo.workorder_ids[0].duration_expected = 240
         mo.workorder_ids[1].duration_expected = 60
@@ -2320,9 +2320,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'inventory_quantity': 10
         }).action_apply_inventory()
 
-        mo = Form(self.env['mrp.production'])
-        mo.bom_id = bom
-        mo = mo.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
 
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "ready"])  # default is ready
 
@@ -2380,12 +2380,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         })
 
         # First behavior to check, is changing the product (same product but another variant) after saving the MO a first time.
-        mo_form_1 = Form(self.env['mrp.production'])
-        mo_form_1.product_id = variant_1
-        mo_1 = mo_form_1.save()
-        mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
-        mo_form_1.product_id = variant_2
-        mo_1 = mo_form_1.save()
+        mo_1 = self.env['mrp.production'].create({
+            'product_id': variant_2.id,
+        })
         mo_1.action_confirm()
         mo_1.action_assign()
         mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
@@ -2400,10 +2397,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(move_finished_ids_1.product_id, variant_2, "Incorrect variant produced")
 
         # Second behavior is changing the product before saving the MO
-        mo_form_2 = Form(self.env['mrp.production'])
-        mo_form_2.product_id = variant_1
-        mo_form_2.product_id = variant_2
-        mo_2 = mo_form_2.save()
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': variant_2.id,
+        })
         mo_2.action_confirm()
         mo_2.action_assign()
         mo_form_2 = Form(self.env['mrp.production'].browse(mo_2.id))
@@ -2418,13 +2414,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(move_finished_ids_2.product_id, variant_2, "Incorrect variant produced")
 
         # Third behavior is changing the product before saving the MO, then another time after
-        mo_form_3 = Form(self.env['mrp.production'])
-        mo_form_3.product_id = variant_1
-        mo_form_3.product_id = variant_2
-        mo_3 = mo_form_3.save()
-        mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
-        mo_form_3.product_id = variant_1
-        mo_3 = mo_form_3.save()
+        mo_3 = self.env['mrp.production'].create({
+            'product_id': variant_1.id,
+        })
         mo_3.action_confirm()
         mo_3.action_assign()
         mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
@@ -2577,9 +2569,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         # It is saved and done, registered in the db. There are now 1 productions of that operation
 
         # Same production, let's see what the duration_expected is, last prod was 15 minutes for 1 item
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_4
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         self.assertEqual(production.workorder_ids[0].duration_expected, 15.0, "Duration is now 0+0+1*15")
         production.action_confirm()
         production.button_plan()
@@ -2594,9 +2586,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # Same production, let's see what the duration_expected is, last prod was 10 minutes for 1 item
         # Total average time would be 12.5 but we compute the duration based on the last 1 item
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_4
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         self.assertNotEqual(production.workorder_ids[0].duration_expected, 12.5, "Duration expected is based on the last 1 production, not last 2")
         self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Duration is now 0+0+1*10")
 
@@ -2607,9 +2599,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """
         # Required for `workorder_ids` to be visible in the view
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_5
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_5.id,
+        })
         production.action_confirm()
         production.button_plan()
 
@@ -2623,10 +2615,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         # It is saved and done, registered in the db. There are now 1 productions of that operation
 
         # Same production, let's see what the duration_expected is, last prod was 10 minutes for 1 item
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_5
-        production_form.product_qty = 2  # We want to produce 2 items (the capacity) now
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_5.id,
+            'product_qty': 2,  # We want to produce 2 items (the capacity) now
+        })
         self.assertNotEqual(production.workorder_ids[0].duration_expected, 20.0, "We made 1 item with capacity 2 in 10mn -> so 2 items shouldn't be double that")
         self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Producing 1 or 2 items with capacity 2 is the same duration")
         production.action_confirm()
@@ -2640,9 +2632,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 2 productions of that operation but they have the same duration
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_5
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_5.id,
+        })
         self.assertNotEqual(production.workorder_ids[0].duration_expected, 15, "Producing 1 or 2 in 10mn with capacity 2 take the same amount of time : 10mn")
         self.assertEqual(production.workorder_ids[0].duration_expected, 10.0, "Duration is indeed (10+10)/2")
 
@@ -2658,9 +2650,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """
         # Required for `workorder_ids` to be visible in the view
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_6
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom_6.id,
+        })
         production.action_confirm()
         production.button_plan()
 
@@ -2695,9 +2687,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_workorder_set_duration(self):
         """ Test that manually setting duration correctly creates/updates time_ids """
-        mo = Form(self.env['mrp.production'])
-        mo.bom_id = self.bom_4
-        mo = mo.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         mo.action_confirm()
 
         workorder = mo.workorder_ids[0]
@@ -2731,9 +2723,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_duration_handles_overlaps_and_loss_types(self):
         """Duration must merge overlapping intervals by time type."""
-        mo = Form(self.env['mrp.production'])
-        mo.bom_id = self.bom_4
-        mo = mo.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         mo.action_confirm()
         workorder = mo.workorder_ids[0]
 
@@ -2822,10 +2814,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # create a manufacturing order for 20 products
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product.product_variant_id
-        mo_form.product_qty = 20
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.product_variant_id.id,
+            'product_qty': 20,
+        })
 
         self.assertEqual(mo.state, 'draft')
         mo.action_confirm()

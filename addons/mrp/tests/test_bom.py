@@ -1682,10 +1682,10 @@ class TestBoM(TestMrpCommon):
         })
 
         # Creates a MO.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 10
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 10,
+        })
         self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 10)
         self.assertEqual(mo_1.is_outdated_bom, False)
         # Update MO's component quantity.
@@ -1842,11 +1842,11 @@ class TestBoM(TestMrpCommon):
         })
 
         # Creates a MO.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 4
-        mo_form.uom_id = self.uom_dozen
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 4,
+            'uom_id': self.uom_dozen.id,
+        })
         self.assertRecordValues(mo_1.move_raw_ids, [{
             'product_id': component_1.id, 'product_uom_qty': 24, 'uom_id': self.uom_unit.id,
         }, {
@@ -1946,9 +1946,9 @@ class TestBoM(TestMrpCommon):
         bom.bom_line_ids[0].operation_id = bom.operation_ids[0].id
         bom.bom_line_ids[1].operation_id = bom.operation_ids[1].id
         # Creates a MO and confirms it.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
         mo_1.action_confirm()
         self.assertRecordValues(mo_1.move_raw_ids, [
             {'operation_id': bom.operation_ids[0].id, 'workorder_id': mo_1.workorder_ids[0].id},
@@ -1999,10 +1999,10 @@ class TestBoM(TestMrpCommon):
         self.warehouse_1.manufacture_steps = 'pbm'
 
         # Creates a MO.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_1
-        mo_form.picking_type_id = self.picking_type_manu
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'picking_type_id': self.picking_type_manu.id,
+        })
         # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
         picking_type_manu_clone = self.picking_type_manu.sudo().copy({'sequence_code': 'NEW_CODE'})
         mo_1.picking_type_id = picking_type_manu_clone
@@ -2085,19 +2085,19 @@ class TestBoM(TestMrpCommon):
         bom.operation_ids[1].blocked_by_operation_ids = [Command.link(bom.operation_ids[0].id)]
 
         # Make MO for red big
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_template.product_variant_ids[0]
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1.0
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product_template.product_variant_ids[0].id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         # Make MO for blue big
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_template.product_variant_ids[2]
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1.0
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product_template.product_variant_ids[2].id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         mo.qty_producing = 1.0
@@ -2525,9 +2525,9 @@ class TestBoM(TestMrpCommon):
             ],
         })
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_1
-        mo_order = mo_form.save()
+        mo_order = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+        })
 
         # no never values, so only the first bom line should be used
         self.assertEqual(len(mo_order.move_raw_ids), 1, "Only one move with no never_product_template_attribute_value_ids should be created")
@@ -2632,11 +2632,11 @@ class TestBoM(TestMrpCommon):
                 ],
             },
         ])
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
-        mo_form.product_qty = 1.0
-        mo_form.bom_id = bom_1
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_qty': 1.0,
+            'bom_id': bom_1.id,
+        })
         self.assertEqual(mo.workorder_ids.mapped('name'), ['op1', 'op2'])
         # test simple on change
         with Form(mo) as mo_form:
@@ -2818,11 +2818,11 @@ class TestBoM(TestMrpCommon):
                 ],
             },
         ])
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product
-        mo_form.product_qty = 1.0
-        mo_form.bom_id = test_bom
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 1.0,
+            'bom_id': test_bom.id,
+        })
         self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))
 
     def test_correct_bom_final_product_unit(self):
@@ -2832,11 +2832,11 @@ class TestBoM(TestMrpCommon):
         final_product = self.env['product.product'].create(dict({'is_storable': True}, name="Product to manufacture"))
         final_product.tracking = 'lot'
         # Create MO.with a different UOM
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = final_product
-        mo_form.product_qty = 1
-        mo_form.uom_id = self.uom_dozen
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_qty': 1,
+            'uom_id': self.uom_dozen.id,
+        })
         mo.action_confirm()
         mo.button_mark_done()
         self.assertEqual(mo.finished_move_line_ids.uom_id, self.uom_dozen)
