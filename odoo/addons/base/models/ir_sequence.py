@@ -323,7 +323,9 @@ class IrSequenceDate_Range(models.Model):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
         for seq in self:
-            if seq.sequence_id.implementation != 'standard':
+            if not seq.id:
+                seq.number_next_actual = 0
+            elif seq.sequence_id.implementation != 'standard':
                 seq.number_next_actual = seq.number_next
             else:
                 seq_id = "%03d_%03d" % (seq.sequence_id.id, seq.id)
