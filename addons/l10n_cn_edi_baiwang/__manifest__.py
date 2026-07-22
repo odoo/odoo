@@ -20,7 +20,6 @@ Features:
     'data': [
         'data/ir_cron.xml',
         'data/l10n_cn_edi.tax.category.csv',
-        'data/neutralize.sql',
         'views/account_move_view.xml',
         'views/account_move_reversal_view.xml',
         'views/account_tax_view.xml',
