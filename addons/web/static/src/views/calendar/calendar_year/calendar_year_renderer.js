@@ -9,25 +9,27 @@ import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_com
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
+
+export const calendarYearRendererProps = {
+    model: t.object(),
+    initialDate: t.object(),
+    createRecord: t.function(),
+    editRecord: t.function(),
+    deleteRecord: t.function(),
+    isDisabled: t.boolean().optional(),
+    isWeekendVisible: t.boolean().optional(),
+};
 
 export class CalendarYearRenderer extends Component {
     static components = {
         Popover: CalendarYearPopover,
     };
     static template = "web.CalendarYearRenderer";
-    static props = {
-        model: Object,
-        initialDate: Object,
-        createRecord: Function,
-        editRecord: Function,
-        deleteRecord: Function,
-        isDisabled: { type: Boolean, optional: true },
-        isWeekendVisible: { type: Boolean, optional: true },
-    };
+    props = useProps(calendarYearRendererProps);
 
     setup() {
         this.months = luxon.Info.months();

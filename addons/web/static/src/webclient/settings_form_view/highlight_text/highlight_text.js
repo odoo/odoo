@@ -1,11 +1,11 @@
-import { Component, computed, proxy } from "@odoo/owl";
+import { Component, computed, proxy, t, useProps } from "@odoo/owl";
 import { highlightText } from "@web/core/utils/html";
 
 export class HighlightText extends Component {
     static template = "web.HighlightText";
-    static props = {
-        originalText: String,
-    };
+    props = useProps({
+        originalText: t.string(),
+    });
     setup() {
         this.searchState = proxy(this.env.searchState);
         this.text = computed(() =>

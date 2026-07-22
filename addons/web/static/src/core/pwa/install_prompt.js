@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { isIOS } from "@web/core/browser/feature_detection";
 
 export class InstallPrompt extends Component {
-    static props = {
-        close: true,
-        onClose: { type: Function },
-    };
+    props = useProps({
+        close: t.any(),
+        onClose: t.function(),
+    });
     static components = {
         Dialog,
     };

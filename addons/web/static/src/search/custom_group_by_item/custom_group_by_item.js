@@ -1,11 +1,11 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class CustomGroupByItem extends Component {
     static template = "web.CustomGroupByItem";
-    static props = {
-        fields: Array,
-        onAddCustomGroup: Function,
-    };
+    props = useProps({
+        fields: t.array(),
+        onAddCustomGroup: t.function(),
+    });
 
     get choices() {
         return this.props.fields.map((f) => ({ label: f.string, value: f.name }));

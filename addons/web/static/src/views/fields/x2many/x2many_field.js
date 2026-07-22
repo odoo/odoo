@@ -23,24 +23,26 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
+
+export const x2ManyFieldProps = {
+    ...standardFieldProps,
+    addLabel: t.string().optional(),
+    editable: t.string().optional(),
+    viewMode: t.string().optional(),
+    widget: t.string().optional(),
+    crudOptions: t.object().optional(),
+    string: t.string().optional(),
+    relatedFields: t.object().optional(),
+    views: t.object().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+    context: t.object(),
+};
 
 export class X2ManyField extends Component {
     static template = "web.X2ManyField";
     static components = { Pager, KanbanRenderer, ListRenderer, ViewButton };
-    static props = {
-        ...standardFieldProps,
-        addLabel: { type: String, optional: true },
-        editable: { type: String, optional: true },
-        viewMode: { type: String, optional: true },
-        widget: { type: String, optional: true },
-        crudOptions: { type: Object, optional: true },
-        string: { type: String, optional: true },
-        relatedFields: { type: Object, optional: true },
-        views: { type: Object, optional: true },
-        domain: { type: [Array, Function], optional: true },
-        context: { type: Object },
-    };
+    props = useProps(x2ManyFieldProps);
 
     setup() {
         this.field = this.props.record.fields[this.props.name];

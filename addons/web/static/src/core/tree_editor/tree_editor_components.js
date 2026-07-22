@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
 import { toLocaleDateString } from "@web/core/l10n/dates";
@@ -6,7 +6,13 @@ import { toLocaleDateString } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 export class Input extends Component {
-    static props = ["value", "update", "type?", "placeholder?", "startEmpty?"];
+    props = useProps({
+        value: t.any(),
+        update: t.any(),
+        type: t.any().optional(),
+        placeholder: t.any().optional(),
+        startEmpty: t.any().optional(),
+    });
     static template = "web.TreeEditor.Input";
 
     update(value) {
@@ -16,7 +22,13 @@ export class Input extends Component {
 }
 
 export class Select extends Component {
-    static props = ["value", "update", "options", "placeholder?", "addBlankOption?"];
+    props = useProps({
+        value: t.any(),
+        update: t.any(),
+        options: t.any(),
+        placeholder: t.any().optional(),
+        addBlankOption: t.any().optional(),
+    });
     static template = "web.TreeEditor.Select";
 
     get selectedTooltip() {
@@ -33,7 +45,7 @@ export class Select extends Component {
 }
 
 export class Range extends Component {
-    static props = ["value", "update", "editorInfo"];
+    props = useProps(["value", "update", "editorInfo"]);
     static template = "web.TreeEditor.Range";
 
     update(index, newValue) {
@@ -44,7 +56,7 @@ export class Range extends Component {
 }
 
 export class RelativeRange extends Component {
-    static props = ["value", "update", "relativeInput", "relativeSelect"];
+    props = useProps(["value", "update", "relativeInput", "relativeSelect"]);
     static template = "web.TreeEditor.relativeRange";
 
     static options = [
@@ -62,13 +74,13 @@ export class RelativeRange extends Component {
 }
 
 export class InRange extends Component {
-    static props = [
+    props = useProps([
         "value",
         "update",
         "valueTypeEditorInfo",
         "betweenEditorInfo",
         "relativeEditorInfo",
-    ];
+    ]);
     static template = "web.TreeEditor.InRange";
     static get options() {
         const now = DateTime.now();
@@ -115,7 +127,7 @@ export class InRange extends Component {
 
 export class List extends Component {
     static components = { BadgeTag };
-    static props = ["value", "update", "editorInfo"];
+    props = useProps(["value", "update", "editorInfo"]);
     static template = "web.TreeEditor.List";
 
     get tags() {

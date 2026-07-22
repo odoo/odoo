@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllAttributes, queryAllTexts, queryFirst, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -190,7 +190,7 @@ class TestClientAction extends Component {
             ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>
     `;
-    static props = ["*"];
+    props = useProps();
 
     setup() {
         onMounted(() => {
@@ -281,7 +281,7 @@ describe(`new urls`, () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
             static path = "test";
-            static props = ["*"];
+            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
         browser.sessionStorage.setItem("menu_id", 2);
@@ -456,7 +456,7 @@ describe(`new urls`, () => {
     test(`properly load client actions`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -481,7 +481,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with path`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static path = "my-action";
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
@@ -514,7 +514,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with resId`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static displayName = "Client Action DisplayName";
             static components = { ControlPanel };
 
@@ -550,7 +550,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with updateActionState`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static displayName = "Client Action DisplayName";
             static components = { ControlPanel };
 
@@ -587,7 +587,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with resId and path (1)`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static displayName = "Client Action DisplayName";
             static components = { ControlPanel };
             static path = "my_client";
@@ -622,7 +622,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with resId and path (2)`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static displayName = "Client Action DisplayName";
             static components = { ControlPanel };
             static path = "my_client";
@@ -657,7 +657,7 @@ describe(`new urls`, () => {
     test(`properly load client actions with LazyTranslatedString displayName`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
             static displayName = _t("translatable displayname");
             static components = { ControlPanel };
             static path = "my_client";
@@ -2139,7 +2139,7 @@ describe(`legacy urls`, () => {
     test(`properly load client actions`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            static props = ["*"];
+            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
 

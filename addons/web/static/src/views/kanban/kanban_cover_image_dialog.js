@@ -2,14 +2,20 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 
 let nextDialogId = 1;
 
 export class KanbanCoverImageDialog extends Component {
     static template = "web.KanbanCoverImageDialog";
     static components = { Dialog, FileInput };
-    static props = ["*"];
+    props = useProps({
+        close: t.function(),
+        record: t.object(),
+        fieldName: t.string(),
+        // comes from an XML attribute, so it may be a string
+        autoOpen: t.any().optional(),
+    });
     setup() {
         this.id = `o_cover_image_upload_${nextDialogId++}`;
         this.orm = useService("orm");

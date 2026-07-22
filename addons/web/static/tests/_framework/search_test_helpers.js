@@ -1,5 +1,5 @@
 import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { assignTestEnv } from "./app_test_helpers";
@@ -23,41 +23,6 @@ const ensureSearchBarMenu = async () => {
     }
 };
 
-/**
- * This function is aim to be used only in the tests.
- * It will filter the props that are needed by the Component.
- * This is to avoid errors of props validation. This occurs for example, on ControlPanel tests.
- * In production, View use WithSearch for the Controllers, and the Layout send only the props that
- * need to the ControlPanel.
- *
- * @param {Component} Component
- * @param {Object} props
- * @returns {Object} filtered props
- */
-function filterPropsForComponent(Component, props) {
-    // This if, can be removed once all the Components have the props defined
-    if (Component.props) {
-        let componentKeys = null;
-        if (Component.props instanceof Array) {
-            componentKeys = Component.props.map((x) => x.replace("?", ""));
-        } else {
-            componentKeys = Object.keys(Component.props);
-        }
-        if (componentKeys.includes("*")) {
-            return props;
-        } else {
-            return Object.keys(props)
-                .filter((k) => componentKeys.includes(k))
-                .reduce((o, k) => {
-                    o[k] = props[k];
-                    return o;
-                }, {});
-        }
-    } else {
-        return props;
-    }
-}
-
 //-----------------------------------------------------------------------------
 // Search view
 //-----------------------------------------------------------------------------
@@ -79,7 +44,7 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
             </WithSearch>
         `;
         static components = { WithSearch };
-        static props = ["*"];
+        props = useProps();
 
         setup() {
             this.withSearchProps = searchProps;
@@ -87,7 +52,9 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
         }
 
         getProps(search) {
-            const props = {
+            // Every prop is forwarded: owl3 validation is loose, and a
+            // component only ever sees the props it declares.
+            return {
                 context: search.context,
                 domain: search.domain,
                 groupBy: search.groupBy,
@@ -95,7 +62,6 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
                 comparison: search.comparison,
                 display: search.display,
             };
-            return filterPropsForComponent(componentConstructor, props);
         }
     }
 

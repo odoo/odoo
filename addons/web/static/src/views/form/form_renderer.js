@@ -20,7 +20,7 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    props,
+    useProps,
     signal,
     t,
     useEffect,
@@ -56,7 +56,7 @@ export class FormRenderer extends Component {
         InnerGroup,
         StatusBarButtons,
     };
-    props = props(formRendererProps);
+    props = useProps(formRendererProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

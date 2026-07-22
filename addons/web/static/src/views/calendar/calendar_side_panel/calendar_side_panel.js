@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -12,7 +12,7 @@ export class CalendarSidePanel extends Component {
         ScheduleSection: CalendarScheduleSection,
     };
     static template = "web.CalendarSidePanel";
-    static props = ["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"];
+    props = useProps(["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"]);
 
     setup() {
         this.state = proxy({ isDragging: false });

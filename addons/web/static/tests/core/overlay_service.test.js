@@ -1,6 +1,15 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, Plugin, providePlugins, useConfig, usePlugin, useScope, xml } from "@odoo/owl";
+import {
+    Component,
+    Plugin,
+    providePlugins,
+    useConfig,
+    usePlugin,
+    useProps,
+    useScope,
+    xml,
+} from "@odoo/owl";
 import {
     assignTestEnv,
     getService,
@@ -19,7 +28,7 @@ test("simple case", async () => {
         static template = xml`
             <div class="overlayed"></div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     const remove = getService("overlay").add(MyComp, {});
@@ -36,7 +45,7 @@ test("shadow DOM overlays are visible when registered before main component is m
         static template = xml`
             <div class="overlayed"></div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     const root = document.createElement("div");
@@ -59,7 +68,7 @@ test("onRemove callback", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml``;
-        static props = ["*"];
+        props = useProps();
     }
 
     const onRemove = () => expect.step("onRemove");
@@ -76,7 +85,7 @@ test("multiple overlays", async () => {
         static template = xml`
             <div class="overlayed" t-att-class="this.props.className"></div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     const remove1 = getService("overlay").add(MyComp, { className: "o1" });
@@ -110,7 +119,7 @@ test("sequence", async () => {
         static template = xml`
             <div class="overlayed" t-att-class="this.props.className"></div>
         `;
-        static props = ["*"];
+        props = useProps();
     }
 
     const remove1 = getService("overlay").add(MyComp, { className: "o1" }, { sequence: 50 });
@@ -145,6 +154,7 @@ test("allow scope as option", async () => {
     }
 
     class Overlay extends Component {
+        props = useProps();
         static template = xml`
             <ul class="outer">
                 <li>A=<t t-out="this.p.A"/></li>

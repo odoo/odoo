@@ -1,5 +1,5 @@
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { documentationUrl } from "@web/core/utils/urls";
 
@@ -7,7 +7,7 @@ const LINK_REGEX = new RegExp("^https?://");
 
 export class DocumentationLink extends Component {
     static template = "web.DocumentationLink";
-    props = props({
+    props = useProps({
         ...standardWidgetProps,
         class: t.or([t.string(), t.object()]).optional("me-2"),
         record: t.object().optional(), // The record is not needed in this widget

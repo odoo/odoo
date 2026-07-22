@@ -3,17 +3,17 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 export class WeekDays extends Component {
     static template = "web.WeekDays";
     static components = { CheckBox };
-    static props = {
-        record: Object,
-        readonly: Boolean,
-    };
+    props = useProps({
+        record: t.object(),
+        readonly: t.boolean(),
+    });
 
     get weekdays() {
         return [

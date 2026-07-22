@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
@@ -19,7 +19,7 @@ const mountInput = async (setup) => {
 class Root extends Component {
     static components = { DateTimeInput };
     static template = xml`<input type="text" class="datetime_hook_input" t-ref="this.startDateRef"/>`;
-    static props = ["*"];
+    props = useProps();
 
     startDateRef = signal(null);
 
@@ -179,7 +179,6 @@ test("value is not updated if it did not change", async () => {
 test("close popover when owner component is unmounted", async () => {
     class Child extends Component {
         static components = { DateTimeInput };
-        static props = [];
         static template = xml`
             <div>
                 <input type="text" class="datetime_hook_input" t-ref="this.startDateRef"/>
@@ -205,7 +204,6 @@ test("close popover when owner component is unmounted", async () => {
 
     class DateTimeToggler extends Component {
         static components = { Child };
-        static props = [];
         static template = xml`<Child t-if="!this.state.hidden"/>`;
 
         setup() {

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,7 @@ const { DateTime } = luxon;
 
 export class TimezoneMismatchField extends SelectionField {
     static template = "web.TimezoneMismatchField";
-    props = props({
+    props = useProps({
         // inlined from SelectionField props (still in old descriptor style)
         ...standardFieldProps,
         placeholder: t.string().optional(),

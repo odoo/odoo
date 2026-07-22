@@ -1,13 +1,15 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
+
+export const dropzoneProps = {
+    extraClass: t.string().optional(),
+    onDrop: t.function().optional(),
+    ref: t.or([t.object(), t.function()]),
+    slots: t.object().optional(),
+};
 
 export class Dropzone extends Component {
-    static props = {
-        extraClass: { type: String, optional: true },
-        onDrop: { type: Function, optional: true },
-        ref: [Object, Function],
-        slots: { type: Object, optional: true },
-    };
+    props = useProps(dropzoneProps);
     static template = "web.Dropzone";
 
     root = signal(null);

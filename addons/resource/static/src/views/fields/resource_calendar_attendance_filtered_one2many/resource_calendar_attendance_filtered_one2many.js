@@ -1,12 +1,13 @@
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
 import { Domain } from "@web/core/domain";
 
 export class ResourceCalendarAttendanceFilteredOne2Many extends X2ManyField {
-    static props = {
-        ...X2ManyField.props,
-        domainFilter: { type: Domain },
-    };
+    props = useProps({
+        ...x2ManyFieldProps,
+        domainFilter: t.instanceOf(Domain),
+    });
 
     /**
      * @override

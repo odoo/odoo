@@ -1,13 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { TagsList } from "@web/core/tags_list/tags_list";
 
 test("Limiting the visible tags displays a clickable counter badge", async () => {
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { TagsList };
         static template = xml`
             <TagsList tags="this.tags" tagLimit="this.state.tagLimit" t-slot-scope="tag">

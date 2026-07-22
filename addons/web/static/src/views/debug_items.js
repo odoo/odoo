@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-import { Component, onWillStart, xml, proxy, plugin } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, t, useProps, xml } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "../core/l10n/dates";
 import { ORM } from "@web/core/orm_plugin";
 
@@ -21,10 +21,10 @@ const debugRegistry = registry.category("debug");
 class GetViewDialog extends Component {
     static template = "web.DebugMenu.GetViewDialog";
     static components = { Dialog };
-    static props = {
-        arch: { type: String },
-        close: { type: Function },
-    };
+    props = useProps({
+        arch: t.string(),
+        close: t.function(),
+    });
 }
 
 export function getView({ component }) {
@@ -104,11 +104,11 @@ debugRegistry.category("view").add("editSearchView", editSearchView);
 class GetMetadataDialog extends Component {
     static template = "web.DebugMenu.GetMetadataDialog";
     static components = { Dialog };
-    static props = {
-        resModel: String,
-        resId: Number,
-        close: Function,
-    };
+    props = useProps({
+        resModel: t.string(),
+        resId: t.number(),
+        close: t.function(),
+    });
     setup() {
         this.orm = plugin(ORM);
         this.dialogService = useService("dialog");
@@ -204,11 +204,11 @@ class RawRecordDialog extends Component {
         </Dialog>
     `;
     static components = { Dialog };
-    static props = {
-        record: { type: Object },
-        title: { type: String },
-        close: { type: Function },
-    };
+    props = useProps({
+        record: t.object(),
+        title: t.string(),
+        close: t.function(),
+    });
     get content() {
         const record = this.props.record;
         return JSON.stringify(sortKeysDeep(record), null, 2);
@@ -250,11 +250,11 @@ debugRegistry.category("form").add("viewRawRecord", viewRawRecord);
 class SetDefaultDialog extends Component {
     static template = "web.DebugMenu.SetDefaultDialog";
     static components = { Dialog };
-    static props = {
-        record: { type: Object },
-        fieldNodes: { type: Object },
-        close: { type: Function },
-    };
+    props = useProps({
+        record: t.object(),
+        fieldNodes: t.object(),
+        close: t.function(),
+    });
 
     setup() {
         this.orm = useService("orm");

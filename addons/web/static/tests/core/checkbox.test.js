@@ -17,7 +17,6 @@ test("has a slot for translatable text", async () => {
 
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<div t-translation-context="web"><CheckBox>ragabadabadaba</CheckBox></div>`;
     }
 
@@ -31,7 +30,6 @@ test("call onChange prop when some change occurs", async () => {
     let value = false;
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<CheckBox onChange="this.onChange" />`;
         onChange(checked) {
             value = checked;
@@ -54,7 +52,6 @@ test("call onChange prop when some change occurs", async () => {
 test("checkbox with props disabled", async () => {
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<CheckBox disabled="true" />`;
     }
 
@@ -68,7 +65,6 @@ test.tags("desktop");
 test("can toggle value by pressing ENTER", async () => {
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<CheckBox onChange.bind="this.onChange" value="this.state.value" />`;
 
         setup() {
@@ -98,7 +94,6 @@ test.tags("desktop");
 test("toggling through multiple ways", async () => {
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<CheckBox onChange.bind="this.onChange" value="this.state.value" />`;
 
         setup() {
@@ -137,7 +132,6 @@ test("toggling through multiple ways", async () => {
 test("checkbox with props indeterminate", async () => {
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`<CheckBox indeterminate="true" />`;
     }
 
@@ -150,7 +144,6 @@ test("checkbox with props indeterminate", async () => {
 test("indeterminate style attribute renders a visible dash", async () => {
     class Parent extends Component {
         static components = { CheckBox };
-        static props = {};
         static template = xml`
             <CheckBox indeterminate="true" className="'cb-indeterminate'" />
             <CheckBox value="true" className="'cb-checked'" />

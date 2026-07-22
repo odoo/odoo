@@ -2,14 +2,14 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export class EmailField extends Component {
     static template = "web.EmailField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-    };
+        placeholder: t.string().optional(),
+    });
 
     inputRef = signal(null);
 

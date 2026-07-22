@@ -5,8 +5,8 @@ import {
     onMounted,
     onWillDestroy,
     proxy,
-    props,
     signal,
+    useProps,
     status,
     t,
     untrack,
@@ -104,7 +104,7 @@ export const dropdownProps = {
 export class Dropdown extends Component {
     static template = xml`<t t-call-slot="default"/>`;
     static components = {};
-    props = props(dropdownProps);
+    props = useProps(dropdownProps);
 
     setup() {
         // The menu element lives in the popover/bottom sheet, which now fills an

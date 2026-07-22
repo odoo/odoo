@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, xml, onWillStart, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
@@ -23,7 +23,12 @@ class StandaloneRelationalModel extends RelationalModel {
 
 class _Record extends Component {
     static template = xml`<t t-call-slot="default" record="this.model.root"/>`;
-    static props = ["slots", "info", "fields", "values?"];
+    props = useProps({
+        slots: t.any(),
+        info: t.any(),
+        fields: t.any(),
+        values: t.any().optional(),
+    });
     setup() {
         this.orm = useService("orm");
         const resModel = this.props.info.resModel;
@@ -166,7 +171,7 @@ class _Record extends Component {
 export class Record extends Component {
     static template = xml`<_Record fields="this.fields" slots="this.props.slots" values="this.props.values" info="this.props" />`;
     static components = { _Record };
-    props = props({
+    props = useProps({
         slots: t.any(),
         resModel: t.any().optional(),
         fieldNames: t.any().optional(),

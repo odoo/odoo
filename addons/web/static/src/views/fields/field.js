@@ -7,7 +7,7 @@ import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-import { Component, plugin, t, xml } from "@odoo/owl";
+import { Component, plugin, t, useProps, xml } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const isSmall = utils.isSmall;
@@ -109,7 +109,7 @@ fieldRegistry.addValidation(
 
 class DefaultField extends Component {
     static template = xml``;
-    static props = ["*"];
+    props = useProps();
 }
 
 export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
@@ -216,7 +216,9 @@ export function getPropertyFieldInfo(propertyField) {
 }
 export class Field extends Component {
     static template = "web.Field";
-    static props = ["fieldInfo?", "*"];
+    // Field forwards arbitrary props to the underlying field component, so it
+    // accepts any prop (fieldInfo among them).
+    props = useProps();
     static parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         const name = node.getAttribute("name");
         const widget = node.getAttribute("widget");

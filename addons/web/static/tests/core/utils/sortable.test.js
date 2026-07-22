@@ -3,7 +3,7 @@ import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { advanceFrame, animationFrame, disableAnimations } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 beforeEach(disableAnimations);
@@ -11,7 +11,7 @@ beforeEach(disableAnimations);
 test("Parameters error handling", async () => {
     const mountListAndAssert = async (setupList) => {
         class List extends Component {
-            static props = ["*"];
+            props = useProps();
             static template = xml`
                     <div t-ref="this.rootRef" class="root">
                         <ul class="list">
@@ -75,7 +75,7 @@ test("Simple sorting in single group", async () => {
     expect.assertions(18);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">
@@ -133,7 +133,7 @@ test("Simple sorting in multiple groups", async () => {
     expect.assertions(16);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
@@ -208,7 +208,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
     };
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div style="left:0;top:0; position: fixed; width: 100%; height: 100%;">
                 <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
@@ -334,7 +334,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
 
 test("draggable area contains overflowing visible elements", async () => {
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div class="controller" style="max-width: 900px; min-width: 900px;">
                     <div class="content" style="max-width: 600px;">
@@ -397,7 +397,7 @@ test("Dynamically disable sortable feature", async () => {
 
     const state = proxy({ enableSortable: true });
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -442,7 +442,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
     expect.assertions(2);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -491,7 +491,7 @@ test("Ignore specified elements", async () => {
     expect.assertions(4);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -540,7 +540,7 @@ test("the classes parameters (placeholderElement, helpElement)", async () => {
     let dragElement;
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -580,7 +580,7 @@ test("applyChangeOnDrop option", async () => {
     expect.assertions(2);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -613,7 +613,7 @@ test("clone option", async () => {
     expect.assertions(2);
 
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -642,7 +642,7 @@ test("clone option", async () => {
 
 test("dragged element is removed from the DOM while being dragged", async () => {
     class List extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">

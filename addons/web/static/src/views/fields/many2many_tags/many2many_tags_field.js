@@ -19,7 +19,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 export const DEFAULT_TAG_LIMIT = 8;
@@ -30,12 +30,12 @@ class Many2ManyTagsFieldColorListPopover extends Component {
         CheckBox,
         ColorList,
     };
-    static props = {
-        tag: Object,
-        switchTagColor: Function,
-        onTagVisibilityChange: Function,
-        close: Function,
-    };
+    props = useProps({
+        tag: t.object(),
+        switchTagColor: t.function(),
+        onTagVisibilityChange: t.function(),
+        close: t.function(),
+    });
 }
 
 export const many2ManyTagsFieldProps = {
@@ -63,7 +63,7 @@ export class Many2ManyTagsField extends Component {
         Many2XAutocomplete,
         Popover: Many2ManyTagsFieldColorListPopover,
     };
-    props = props(many2ManyTagsFieldProps);
+    props = useProps(many2ManyTagsFieldProps);
 
     many2ManyTagsFieldRef = signal(null);
     autoCompleteRef = signal(null);

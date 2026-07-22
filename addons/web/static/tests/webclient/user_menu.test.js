@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockMatchMedia } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -20,7 +20,11 @@ import { user } from "@web/core/user";
 import { getOrigin } from "@web/core/utils/urls";
 
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
-import { odooAccountItem, preferencesItem, shareUrlMenuItem } from "@web/webclient/user_menu/user_menu_items";
+import {
+    odooAccountItem,
+    preferencesItem,
+    shareUrlMenuItem,
+} from "@web/webclient/user_menu/user_menu_items";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
@@ -169,7 +173,7 @@ test("click on odoo account item", async () => {
 test("can use component as registry item", async () => {
     class ExampleComponent extends Component {
         static template = xml`<span class='component-class'>Example Component</span>`;
-        static props = ["*"];
+        props = useProps();
     }
     userMenuRegistry.add("component-item", () => ({
         type: "component",
@@ -188,7 +192,7 @@ test("Share URL item is present in the user menu when running as PWA", async () 
         },
     });
     startRouter(); // reload the router to make sure navigator.share is defined
-            
+
     mockMatchMedia({ ["display-mode"]: "standalone" });
     userMenuRegistry.add("share_url", shareUrlMenuItem);
     await mountWithCleanup(UserMenu);

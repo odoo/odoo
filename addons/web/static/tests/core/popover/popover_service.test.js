@@ -1,4 +1,4 @@
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, useProps, xml } from "@odoo/owl";
 import { test, expect, beforeEach, getFixture } from "@odoo/hoot";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -15,7 +15,7 @@ beforeEach(async () => {
 test("simple use", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     expect(".o_popover").toHaveCount(0);
@@ -36,7 +36,7 @@ test("simple use", async () => {
 test("close on click away", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     getService("popover").add(target, Comp);
@@ -56,7 +56,7 @@ test("close on click away when loading", async () => {
     const def = Promise.withResolvers();
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             onWillStart(async () => {
                 await def.promise;
@@ -87,7 +87,7 @@ test.tags("desktop");
 test("close on 'Escape' keydown", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     getService("popover").add(target, Comp);
@@ -106,7 +106,7 @@ test("close on 'Escape' keydown", async () => {
 test("do not close on click away", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     const remove = getService("popover").add(target, Comp, {}, { closeOnClickAway: false });
@@ -131,7 +131,7 @@ test("do not close on click away", async () => {
 test("close callback", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     function onClose() {
@@ -150,7 +150,7 @@ test("close callback", async () => {
 test("sub component triggers close", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp" t-on-click="() => this.props.close()">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     getService("popover").add(target, Comp);
@@ -169,7 +169,7 @@ test("sub component triggers close", async () => {
 test("close popover if target is removed", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     const popoverTarget = document.createElement("div");
@@ -194,7 +194,7 @@ test("close and do not crash if target parent does not exist", async () => {
 
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     function onClose() {
@@ -210,12 +210,12 @@ test("close and do not crash if target parent does not exist", async () => {
 test("keep popover if target sibling is removed", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     class Sibling extends Component {
         static template = xml`<div id="sibling">Sibling</div>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Sibling, { noMainContainer: true });

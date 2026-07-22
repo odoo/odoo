@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { getService, mountWithCleanup } from "../web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -49,7 +49,7 @@ test("a component can be the  UI active element: simple usage", async () => {
             </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             useActiveElement(this.delegatedRef);
@@ -79,7 +79,7 @@ test("UI active element: trap focus", async () => {
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             useActiveElement(this.delegatedRef);
@@ -112,7 +112,7 @@ test("UI active element: trap focus - default focus with autofocus", async () =>
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         autofocusRef = signal(null);
         setup() {
@@ -152,7 +152,7 @@ test("do not become UI active element if no element to focus", async () => {
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             useActiveElement(this.delegatedRef);
@@ -176,7 +176,7 @@ test("become UI active element if no element to focus but the container is focus
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             useActiveElement(this.delegatedRef);
@@ -202,7 +202,7 @@ test("UI active element: trap focus - first or last tabable changes", async () =
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             this.show = proxy({ a: true, c: false });
@@ -245,7 +245,7 @@ test("UI active element: trap focus is not bypassed using invisible elements", a
                 </div>
             </div>
         `;
-        static props = ["*"];
+        props = useProps();
         delegatedRef = signal(null);
         setup() {
             useActiveElement(this.delegatedRef);

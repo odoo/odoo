@@ -1,6 +1,11 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { booleanField, BooleanField } from "@web/views/fields/boolean/boolean_field";
+import {
+    booleanField,
+    BooleanField,
+    booleanFieldProps,
+} from "@web/views/fields/boolean/boolean_field";
 
 
 /**
@@ -16,11 +21,11 @@ import { booleanField, BooleanField } from "@web/views/fields/boolean/boolean_fi
  * See also `IntegerUpdateFlagField`.
  */
 export class BooleanUpdateFlagField extends BooleanField {
-    static props= {
-        ...BooleanField.props,
-        flagFieldName: { type: String },
-        referenceValue: { type: Boolean },
-    }
+    props = useProps({
+        ...booleanFieldProps,
+        flagFieldName: t.string(),
+        referenceValue: t.boolean(),
+    });
     /**
      * @override
      */

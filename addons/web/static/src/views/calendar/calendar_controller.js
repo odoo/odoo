@@ -20,7 +20,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
@@ -56,14 +56,14 @@ export class CalendarController extends Component {
         MultiSelectionButtons,
     };
     static template = "web.CalendarController";
-    static props = {
+    props = useProps({
         ...standardViewProps,
-        Model: Function,
-        Renderer: Function,
-        archInfo: Object,
-        buttonTemplate: String,
-        itemCalendarProps: { type: Object, optional: true },
-    };
+        Model: t.function(),
+        Renderer: t.function(),
+        archInfo: t.object(),
+        buttonTemplate: t.string(),
+        itemCalendarProps: t.object().optional(),
+    });
 
     setup() {
         this.action = useService("action");

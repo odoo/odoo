@@ -1,5 +1,5 @@
 import { onWillRender, render, useLayoutEffect } from "@web/owl2/utils";
-import { Component, signal, useListener } from "@odoo/owl";
+import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -50,15 +50,15 @@ export class StatusBarField extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        domain: { type: [Array, Function], optional: true },
-        foldField: { type: String, optional: true },
-        isDisabled: { type: Boolean, optional: true },
-        visibleSelection: { type: Array, element: String, optional: true },
-        withCommand: { type: Boolean, optional: true },
-        context: { type: Object, optional: true },
-    };
+        domain: t.or([t.array(), t.function()]).optional(),
+        foldField: t.string().optional(),
+        isDisabled: t.boolean().optional(),
+        visibleSelection: t.array(t.string()).optional(),
+        withCommand: t.boolean().optional(),
+        context: t.object().optional(),
+    });
 
     beforeRef = signal(null);
     rootRef = signal(null);

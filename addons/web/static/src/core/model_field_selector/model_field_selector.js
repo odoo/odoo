@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -10,7 +10,7 @@ export class ModelFieldSelector extends Component {
     static components = {
         Popover: ModelFieldSelectorPopover,
     };
-    props = props({
+    props = useProps({
         resModel: t.string(),
         path: t.any().optional(),
         allowEmpty: t.boolean().optional(false),

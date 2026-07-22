@@ -7,7 +7,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, plugin, props, proxy, signal, status, t } from "@odoo/owl";
+import { Component, plugin, proxy, signal, status, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -50,7 +50,7 @@ export class SearchBar extends Component {
         SearchBarDropdown,
         DropdownItem,
     };
-    props = props({
+    props = useProps({
         autofocus: t.boolean().optional(true),
         slots: t
             .object({

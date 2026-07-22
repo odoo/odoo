@@ -5,7 +5,7 @@ import { View } from "@web/views/view";
 
 import { FormViewDialog } from "./form_view_dialog";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 let _defaultNoContentHelp;
@@ -35,7 +35,7 @@ export const selectCreateDialogProps = {
 export class SelectCreateDialog extends Component {
     static components = { Dialog, View };
     static template = "web.SelectCreateDialog";
-    props = props(selectCreateDialogProps);
+    props = useProps(selectCreateDialogProps);
 
     setup() {
         this.viewService = useService("view");

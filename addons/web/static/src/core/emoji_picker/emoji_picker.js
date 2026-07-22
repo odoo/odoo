@@ -13,6 +13,7 @@ import {
     signal,
     types as t,
     useEffect,
+    useProps,
     xml,
 } from "@odoo/owl";
 
@@ -45,18 +46,24 @@ export function useEmojiPickerStoreScroll() {
     return storeScroll;
 }
 
-export const PICKER_PROPS = [
-    "PickerComponent?",
-    "close?",
-    "onClose?",
-    "onSelect",
-    "state?",
-    "storeScroll?",
-    "mobile?",
-];
+export const PICKER_PROPS = {
+    PickerComponent: t.any().optional(),
+    close: t.any().optional(),
+    onClose: t.any().optional(),
+    onSelect: t.any(),
+    state: t.any().optional(),
+    storeScroll: t.any().optional(),
+    mobile: t.any().optional(),
+};
+
+export const emojiPickerProps = {
+    ...PICKER_PROPS,
+    class: t.any().optional(),
+    initialSearchTerm: t.any().optional(),
+};
 
 export class EmojiPicker extends Component {
-    static props = [...PICKER_PROPS, "class?", "initialSearchTerm?"];
+    props = useProps(emojiPickerProps);
     static template = "web.EmojiPicker";
 
     shouldScrollElem = null;
@@ -585,7 +592,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
 }
 
 class PickerMobile extends Component {
-    static props = [...PICKER_PROPS, "onClose?"];
+    props = useProps({ ...PICKER_PROPS });
     static template = xml`
         <t t-component="this.props.PickerComponent" t-props="this.pickerProps"/>
     `;
@@ -601,7 +608,7 @@ class PickerMobile extends Component {
 
 class PickerMobileInDialog extends PickerMobile {
     static components = { Dialog };
-    static props = [...PICKER_PROPS, "onClose?"];
+    props = useProps({ ...PICKER_PROPS });
     static template = xml`
         <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
             <div class="h-100" t-ref="this.root">

@@ -3,14 +3,14 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class PriorityField extends Component {
     static template = "web.PriorityField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        withCommand: { type: Boolean, optional: true },
-    };
+        withCommand: t.boolean().optional(),
+    });
 
     setup() {
         this.state = proxy({

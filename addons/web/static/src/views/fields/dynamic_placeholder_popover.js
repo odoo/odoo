@@ -1,6 +1,6 @@
 import { useAutofocus } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { Component, onWillStart, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
 
@@ -28,7 +28,7 @@ export class DynamicPlaceholderPopover extends Component {
     static components = {
         ModelFieldSelectorPopover,
     };
-    static props = ["resModel", "validate", "close"];
+    props = useProps(["resModel", "validate", "close"]);
 
     autofocusRef = signal(null);
 

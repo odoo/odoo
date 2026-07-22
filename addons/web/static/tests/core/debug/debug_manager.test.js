@@ -8,7 +8,7 @@ import {
     queryText,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     assignDialogTestEnv,
     clearRegistry,
@@ -37,7 +37,7 @@ import { WebClient } from "@web/webclient/webclient";
 class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
     static components = { DebugMenu };
-    static props = ["*"];
+    props = useProps();
     setup() {
         useOwnDebugContext({ categories: ["default", "custom"] });
     }

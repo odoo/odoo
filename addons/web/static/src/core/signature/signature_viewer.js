@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -7,7 +7,7 @@ const PLACEHOLDER = "/web/static/img/placeholder.png";
 
 export class SignatureViewer extends Component {
     static template = "web.SignatureViewer";
-    props = props({
+    props = useProps({
         defaultFont: t.string().optional(),
         defaultName: t.string().optional(),
         height: t.number().optional(),

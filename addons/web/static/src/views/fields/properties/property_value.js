@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { getCurrency } from "@web/core/currency";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -32,13 +32,13 @@ import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 class PropertyValueTag extends Component {
     static template = "web.PropertyValueTag";
     static components = { BadgeTag, AvatarTag };
-    static props = {
-        imageUrl: { type: String, optional: true },
-        onClick: { type: Function, optional: true },
-        onAvatarClick: { type: Function, optional: true },
-        onDelete: { type: Function, optional: true },
-        text: { type: String },
-    };
+    props = useProps({
+        imageUrl: t.string().optional(),
+        onClick: t.function().optional(),
+        onAvatarClick: t.function().optional(),
+        onDelete: t.function().optional(),
+        text: t.string(),
+    });
 }
 
 function extractData(record) {
@@ -80,23 +80,24 @@ export class PropertyValue extends Component {
         SignatureViewer,
     };
 
-    static props = {
-        id: { type: String, optional: true },
-        type: { type: String, optional: true },
-        comodel: { type: String, optional: true },
-        currencyField: { type: String, optional: true },
-        domain: { type: String, optional: true },
-        string: { type: String, optional: true },
-        value: { optional: true },
-        context: { type: Object },
-        readonly: { type: Boolean, optional: true },
-        canChangeDefinition: { type: Boolean, optional: true },
-        selection: { type: Array, optional: true },
-        tags: { type: Array, optional: true },
-        onChange: { type: Function, optional: true },
-        onTagsChange: { type: Function, optional: true },
-        record: { type: Object, optional: true },
-    };
+    props = useProps({
+        id: t.string().optional(),
+        type: t.string().optional(),
+        comodel: t.string().optional(),
+        currencyField: t.string().optional(),
+        domain: t.string().optional(),
+        string: t.string().optional(),
+        value: t.any().optional(),
+        context: t.object(),
+        readonly: t.boolean().optional(),
+        canChangeDefinition: t.boolean().optional(),
+        selection: t.array().optional(),
+        tags: t.array().optional(),
+        onChange: t.function().optional(),
+        onTagsChange: t.function().optional(),
+        record: t.object().optional(),
+        model: t.string().optional(),
+    });
 
     setup() {
         this.nbsp = nbsp;

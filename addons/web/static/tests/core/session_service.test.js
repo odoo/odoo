@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useProps, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -76,7 +76,7 @@ test("Only call once lazy session info data on action", async () => {
     const actionRegistry = registry.category("actions");
     class TestClientAction extends Component {
         static template = xml`<div/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             expect.step("myaction_before");
             this.lazySession = useService("lazy_session");
@@ -141,7 +141,7 @@ test("Call lazy session info after webclient init with action and service", asyn
     const actionRegistry = registry.category("actions");
     class TestClientAction extends Component {
         static template = xml`<div/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             expect.step("myaction_before");
             this.lazySession = useService("lazy_session");

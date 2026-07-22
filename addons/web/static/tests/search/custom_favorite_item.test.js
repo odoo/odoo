@@ -1,5 +1,5 @@
 import { after, expect, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     defineModels,
     editFavoriteName,
@@ -58,7 +58,7 @@ test("save filter", async () => {
     class TestComponent extends Component {
         static components = { SearchBarMenu };
         static template = xml`<div><SearchBarMenu/></div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             useSetupAction({
                 getContext: () => ({ someKey: "foo" }),
@@ -93,7 +93,7 @@ test("save and edit filter", async () => {
     class TestComponent extends Component {
         static components = { SearchBarMenu };
         static template = xml`<div><SearchBarMenu/></div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             useSetupAction({
                 getContext: () => ({ someKey: "foo" }),

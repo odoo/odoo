@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
@@ -11,9 +11,9 @@ export class ShareTargetItem extends Component {
     static name = null;
     static sequence = 10;
     static components = { Record, Field };
-    static props = {
-        files: { type: Array, element: File },
-    };
+    props = useProps({
+        files: t.array(t.instanceOf(File)),
+    });
 
     setup() {
         super.setup();

@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-import { Component, signal, toRaw, useEffect } from "@odoo/owl";
+import { Component, signal, toRaw, useEffect, useProps } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 /**
@@ -20,7 +20,9 @@ import { localeCompare } from "@web/core/l10n/utils";
 class ResUserGroupIdsField extends Component {
     static template = "web.ResUserGroupIdsField";
     static components = { Record, FormRenderer };
-    static props = { ...standardFieldProps };
+    props = useProps({
+        ...standardFieldProps,
+    });
 
     setup() {
         const { groups, privileges, categories } = toRaw(

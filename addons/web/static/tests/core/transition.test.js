@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { Transition, useTransition, config as transitionConfig } from "@web/core/transition";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 test("useTransition hook (default params)", async () => {
@@ -11,7 +11,7 @@ test("useTransition hook (default params)", async () => {
     });
     class Parent extends Component {
         static template = xml`<div t-if="this.transition.shouldMount" t-att-class="this.transition.className"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.transition = useTransition({
                 name: "test",
@@ -43,7 +43,7 @@ test("useTransition hook (initially visible and immediate=true)", async () => {
     });
     class Parent extends Component {
         static template = xml`<div t-if="this.transition.shouldMount" t-att-class="this.transition.className"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.transition = useTransition({
                 name: "test",
@@ -80,7 +80,7 @@ test("useTransition hook (initially not visible)", async () => {
     });
     class Parent extends Component {
         static template = xml`<div t-if="this.transition.shouldMount" t-att-class="this.transition.className"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.transition = useTransition({
                 name: "test",
@@ -119,7 +119,7 @@ test("Transition HOC", async () => {
             </Transition>
         `;
         static components = { Transition };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.state = proxy({ show: true });
         }

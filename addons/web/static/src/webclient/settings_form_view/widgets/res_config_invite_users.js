@@ -3,15 +3,15 @@ import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { rpc } from "@web/core/network/rpc";
 
 class ResConfigInviteUsers extends Component {
     static template = "res_config_invite_users";
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-    };
+    });
 
     setup() {
         this.orm = useService("orm");

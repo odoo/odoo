@@ -25,7 +25,17 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, plugin, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    plugin,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
@@ -47,7 +57,7 @@ export class KanbanController extends Component {
         CogMenu: KanbanCogMenu,
         SelectionBox,
     };
-    props = props({
+    props = useProps({
         ...standardViewProps,
         editable: t.boolean().optional(),
         forceGlobalClick: t.boolean().optional(false),

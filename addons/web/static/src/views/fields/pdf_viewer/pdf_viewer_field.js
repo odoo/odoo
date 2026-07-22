@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 
-import { Component, onWillUpdateProps, proxy, signal } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 export class PdfViewerField extends Component {
@@ -14,10 +14,10 @@ export class PdfViewerField extends Component {
     static components = {
         FileUploader,
     };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        fileNameField: { type: String, optional: true },
-    };
+        fileNameField: t.string().optional(),
+    });
 
     iframeViewerPdfRef = signal(null);
 

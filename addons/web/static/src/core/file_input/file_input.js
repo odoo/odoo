@@ -1,4 +1,4 @@
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -21,7 +21,7 @@ import { useFileUploader } from "@web/core/utils/files";
  */
 export class FileInput extends Component {
     static template = "web.FileInput";
-    props = props({
+    props = useProps({
         acceptedFileExtensions: t.string().optional("*"),
         autoOpen: t.boolean().optional(),
         hidden: t.boolean().optional(false),
@@ -91,10 +91,7 @@ export class FileInput extends Component {
         const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
         if (parsedFileData) {
             // When calling onUpload, also pass the files to allow to get data like their names
-            this.props.onUpload(
-                parsedFileData,
-                this.fileInputRef()?.files ?? []
-            );
+            this.props.onUpload(parsedFileData, this.fileInputRef()?.files ?? []);
             // Because the input would not trigger this method if the same file name is uploaded,
             // we must clear the value after handling the upload
             const el = this.fileInputRef();

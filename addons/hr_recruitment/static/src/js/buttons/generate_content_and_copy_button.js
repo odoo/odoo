@@ -1,11 +1,12 @@
-import { CopyButton } from "@web/core/copy_button/copy_button";
+import { CopyButton, copyButtonProps } from "@web/core/copy_button/copy_button";
 import { useService } from "@web/core/utils/hooks";
+import { t, useProps } from "@odoo/owl";
 
 export class GenerateContentAndCopyButton extends CopyButton {
-    static props = {
-        ...CopyButton.props,
-        contentGenerationFunction: { type: Function, optional: true },
-    };
+    props = useProps({
+        ...copyButtonProps,
+        contentGenerationFunction: t.function().optional(),
+    });
 
     setup() {
         super.setup();

@@ -5,7 +5,7 @@ import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, useProps } from "@odoo/owl";
 
 /**
  * Most of the time reports are printed as pdfs.
@@ -21,7 +21,7 @@ import { Component, signal } from "@odoo/owl";
 export class ReportAction extends Component {
     static components = { Layout };
     static template = "web.ReportAction";
-    static props = ["*"];
+    props = useProps();
 
     iframeRef = signal(null);
 

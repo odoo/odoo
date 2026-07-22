@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -65,7 +65,7 @@ test("error in a client action (at rendering)", async () => {
     expect.assertions(9);
     class Boom extends Component {
         static template = xml`<div><t t-out="this.a.b.c"/></div>`;
-        static props = ["*"];
+        props = useProps();
     }
     actionRegistry.add("Boom", Boom);
     onRpc("web_search_read", () => {
@@ -100,7 +100,7 @@ test("error in a client action (after the first rendering)", async () => {
                 <t t-if="this.boom" t-out="this.a.b.c"/>
                 <button t-else="" class="my_button" t-on-click="this.onClick">Click Me</button>
             </div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.boom = false;
         }

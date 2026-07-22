@@ -6,7 +6,6 @@ import { imageUrl } from "@web/core/utils/urls";
 
 export class UserSwitch extends Component {
     static template = "web.login_user_switch";
-    static props = {};
     static components = { Portal };
 
     rootRef = signal(null);

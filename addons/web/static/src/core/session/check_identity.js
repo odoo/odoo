@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -21,10 +21,10 @@ import { session } from "@web/session";
  */
 export class CheckIdentityForm extends Component {
     static template = "web.CheckIdentityForm";
-    static props = {
-        redirect: { type: String, optional: true },
-        close: { type: Function, optional: true },
-    };
+    props = useProps({
+        redirect: t.string().optional(),
+        close: t.function().optional(),
+    });
 
     async setup() {
         this.authMethodTemplates = {
@@ -131,9 +131,10 @@ export class CheckIdentityForm extends Component {
 export class CheckIdentityDialog extends Component {
     static template = "web.CheckIdentityDialog";
     static components = { Dialog, CheckIdentityForm };
-    static props = {
-        close: Function, // prop added by the Dialog service
-    };
+    props = useProps({
+        close: t.function(),
+        // prop added by the Dialog service
+    });
 
     setup() {
         this.formProps = {

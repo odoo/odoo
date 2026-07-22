@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "./many2one";
@@ -92,27 +92,29 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
     };
 }
 
+export const many2OneFieldProps = {
+    ...standardFieldProps,
+    canCreate: t.boolean().optional(),
+    canCreateEdit: t.boolean().optional(),
+    canOpen: t.boolean().optional(),
+    canQuickCreate: t.boolean().optional(),
+    canScanBarcode: t.boolean().optional(),
+    canWrite: t.boolean().optional(),
+    context: t.object().optional(),
+    decorations: t.object().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+    nameCreateField: t.string().optional(),
+    openActionContext: t.string().optional(),
+    placeholder: t.string().optional(),
+    searchLimit: t.number().optional(),
+    searchThreshold: t.number().optional(),
+    string: t.string().optional(),
+};
+
 export class Many2OneField extends Component {
     static template = "web.Many2OneField";
     static components = { Many2One };
-    static props = {
-        ...standardFieldProps,
-        canCreate: { type: Boolean, optional: true },
-        canCreateEdit: { type: Boolean, optional: true },
-        canOpen: { type: Boolean, optional: true },
-        canQuickCreate: { type: Boolean, optional: true },
-        canScanBarcode: { type: Boolean, optional: true },
-        canWrite: { type: Boolean, optional: true },
-        context: { type: Object, optional: true },
-        decorations: { type: Object, optional: true },
-        domain: { type: [Array, Function], optional: true },
-        nameCreateField: { type: String, optional: true },
-        openActionContext: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
-        searchLimit: { type: Number, optional: true },
-        searchThreshold: { type: Number, optional: true },
-        string: { type: String, optional: true },
-    };
+    props = useProps(many2OneFieldProps);
 
     get m2oProps() {
         return computeM2OProps(this.props);

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { NotificationAlertDialog } from "@web/core/notification_alert_dialog/notification_alert_dialog";
@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class NotificationAlert extends Component {
-    static props = standardWidgetProps;
+    props = useProps(standardWidgetProps);
     static template = "web.NotificationAlert";
 
     setup() {

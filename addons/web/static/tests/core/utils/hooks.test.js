@@ -13,13 +13,13 @@ import {
     Component,
     onMounted,
     Plugin,
-    props,
     providePlugins,
     proxy,
     signal,
     t,
     useConfig,
     usePlugin,
+    useProps,
     xml,
 } from "@odoo/owl";
 import {
@@ -747,7 +747,7 @@ describe("useBackButton", () => {
         class DummyComponent extends Component {
             static template = xml`<div t-out="this.props.name" />`;
 
-            props = props({ name: t.string() });
+            props = useProps({ name: t.string() });
 
             setup() {
                 useBackButton(this.onBack.bind(this));

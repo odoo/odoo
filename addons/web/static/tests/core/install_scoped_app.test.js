@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     contains,
     makeTestApp,
@@ -52,7 +52,7 @@ test("Installation page displays the app info correctly", async () => {
     });
 
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { InstallScopedApp };
         static template = xml`<InstallScopedApp/>`;
     }
@@ -99,7 +99,7 @@ test("Installation page displays the error message when browser is not supported
     });
 
     class Parent extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { InstallScopedApp };
         static template = xml`<InstallScopedApp/>`;
     }

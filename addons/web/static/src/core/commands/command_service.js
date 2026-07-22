@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { CommandPalette } from "./command_palette";
 
-import { Component, EventBus } from "@odoo/owl";
+import { Component, EventBus, t, useProps } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -40,9 +40,9 @@ const commandSetupRegistry = registry.category("command_setup");
 
 class DefaultFooter extends Component {
     static template = "web.DefaultFooter";
-    static props = {
-        switchNamespace: { type: Function },
-    };
+    props = useProps({
+        switchNamespace: t.function(),
+    });
     setup() {
         this.elements = commandSetupRegistry
             .getEntries()

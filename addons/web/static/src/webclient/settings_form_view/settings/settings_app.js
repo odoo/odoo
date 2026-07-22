@@ -1,14 +1,14 @@
-import { Component, onMounted, onPatched, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
-    static props = {
-        string: String,
-        imgurl: String,
-        key: String,
-        selectedTab: { type: String, optional: true },
-        slots: Object,
-    };
+    props = useProps({
+        string: t.string(),
+        imgurl: t.string(),
+        key: t.string(),
+        selectedTab: t.string().optional(),
+        slots: t.object(),
+    });
     settingsAppRef = signal(null);
     setup() {
         this.state = proxy({

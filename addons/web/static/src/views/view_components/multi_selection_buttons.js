@@ -1,5 +1,5 @@
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, toRaw } from "@odoo/owl";
+import { Component, proxy, signal, t, toRaw, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -13,25 +13,24 @@ import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { MultiCreatePopover } from "./multi_create_popover";
 
+export const multiSelectionButtonsProps = {
+    reactive: t.object({
+        onAdd: t.function(),
+        onCancel: t.function(),
+        onDelete: t.function(),
+        nbSelected: t.number(),
+        multiCreateView: t.string(),
+        resModel: t.string(),
+        context: t.object(),
+        showMultiCreateTimeRange: t.boolean(),
+        visible: t.boolean(),
+        multiCreateValues: t.object().optional(),
+    }),
+};
+
 export class MultiSelectionButtons extends Component {
     static template = "web.MultiSelectionButtons";
-    static props = {
-        reactive: {
-            type: Object,
-            shape: {
-                onAdd: Function,
-                onCancel: Function,
-                onDelete: Function,
-                nbSelected: Number,
-                multiCreateView: String,
-                resModel: String,
-                context: Object,
-                showMultiCreateTimeRange: Boolean,
-                visible: Boolean,
-                multiCreateValues: { type: Object, optional: true },
-            },
-        },
-    };
+    props = useProps(multiSelectionButtonsProps);
     static components = {
         Popover: MultiCreatePopover,
     };

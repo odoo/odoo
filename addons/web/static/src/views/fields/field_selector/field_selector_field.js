@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { registry } from "@web/core/registry";
@@ -8,12 +8,13 @@ import { formatChar } from "../formatters";
 export class FieldSelectorField extends Component {
     static template = "web.FieldSelectorField";
     static components = { ModelFieldSelector };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        model: { type: String },
-        allowProperties: { type: Boolean, optional: true },
-        followRelation: { type: [Boolean, Function], optional: true },
-    };
+        model: t.string(),
+        allowProperties: t.boolean().optional(),
+        followRelation: t.or([t.boolean(), t.function()]).optional(),
+        required: t.boolean().optional(),
+    });
 
     filter(fieldDef) {
         if (fieldDef.type === "separator") {

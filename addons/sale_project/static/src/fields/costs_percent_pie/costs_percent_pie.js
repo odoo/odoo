@@ -1,14 +1,19 @@
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { formatMonetary } from "@web/views/fields/formatters";
-import { PercentPieField, percentPieField } from "@web/views/fields/percent_pie/percent_pie_field";
+import {
+    PercentPieField,
+    percentPieField,
+    percentPieFieldProps,
+} from "@web/views/fields/percent_pie/percent_pie_field";
 
 export class CostsPercentPieField extends PercentPieField {
     static template = "sale_project.CostsPercentPieField";
 
-    static props = {
-        ...PercentPieField.props,
-        cost_field_name: { type: String, optional: true },
-    };
+    props = useProps({
+        ...percentPieFieldProps,
+        cost_field_name: t.string().optional(),
+    });
 
     get formattedCost() {
         const value = this.props.record.data[this.props.cost_field_name] || 0;

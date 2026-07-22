@@ -1,4 +1,13 @@
-import { Component, onMounted, onWillStart, onWillUnmount, plugin, proxy } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    plugin,
+    proxy,
+    t,
+    useProps,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -6,11 +15,11 @@ import { useDebounced } from "@web/core/utils/timing";
 
 export class SearchBarToggler extends Component {
     static template = "web.SearchBar.Toggler";
-    static props = {
-        isSmall: Boolean,
-        showSearchBar: Boolean,
-        toggleSearchBar: Function,
-    };
+    props = useProps({
+        isSmall: t.boolean(),
+        showSearchBar: t.boolean(),
+        toggleSearchBar: t.function(),
+    });
 }
 
 export class OfflineSearchBarToggler extends SearchBarToggler {

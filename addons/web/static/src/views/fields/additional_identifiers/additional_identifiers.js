@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -28,7 +28,9 @@ function parseJson(value) {
 
 export class AdditionalIdentifiersCommon extends Component {
     static template = "";
-    static props = { ...standardFieldProps };
+    props = useProps({
+        ...standardFieldProps,
+    });
 
     setup() {
         super.setup();

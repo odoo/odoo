@@ -3,7 +3,6 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 export class OfflineActionHelper extends Component {
     static template = "web.OfflineActionHelper";
-    static props = [];
 
     setup() {
         const offlinePlugin = plugin(OfflinePlugin);

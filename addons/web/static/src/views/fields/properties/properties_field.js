@@ -22,8 +22,10 @@ import {
     onWillUpdateProps,
     proxy,
     signal,
+    t,
     untrack,
     useEffect,
+    useProps,
 } from "@odoo/owl";
 import { deepCopy } from "@web/core/utils/objects";
 
@@ -35,16 +37,12 @@ export class PropertiesField extends Component {
         PropertyDefinition,
         PropertyValue,
     };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        context: { type: Object, optional: true },
-        columns: {
-            type: Number,
-            optional: true,
-            validate: (columns) => [1, 2].includes(columns),
-        },
-        editMode: { type: Boolean, optional: true },
-    };
+        context: t.object().optional(),
+        columns: t.customValidator(t.number(), (columns) => [1, 2].includes(columns)).optional(),
+        editMode: t.boolean().optional(),
+    });
 
     setup() {
         this.notification = useService("notification");

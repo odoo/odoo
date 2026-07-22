@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Setting } from "@web/views/form/setting/setting";
 
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 const { DateTime } = luxon;
 
@@ -13,9 +13,9 @@ const { DateTime } = luxon;
 class ResConfigEdition extends Component {
     static template = "res_config_edition";
     static components = { Setting };
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-    };
+    });
 
     setup() {
         this.serverVersion = session.server_version;

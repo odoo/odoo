@@ -24,7 +24,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { onRendered } from "@web/owl2/utils";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -36,7 +36,7 @@ const systrayRegistry = registry.category("systray");
 const waitNavbarAdaptation = () => advanceTime(500);
 
 class MySystrayItem extends Component {
-    static props = ["*"];
+    props = useProps();
     static template = xml`<li class="my-item">my item</li>`;
 }
 
@@ -200,22 +200,22 @@ test("navbar can display systray items", async () => {
 
 test("navbar can display systray items ordered based on their sequence", async () => {
     class MyItem1 extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
 
     class MyItem2 extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<li class="my-item-2">my item 2</li>`;
     }
 
     class MyItem3 extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<li class="my-item-3">my item 3</li>`;
     }
 
     class MyItem4 extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<li class="my-item-4">my item 4</li>`;
     }
 
@@ -241,7 +241,7 @@ test("navbar can display systray items ordered based on their sequence", async (
 
 test("navbar updates after adding a systray item", async () => {
     class MyItem1 extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`<li class="my-item-1">my item 1</li>`;
     }
 
@@ -255,7 +255,7 @@ test("navbar updates after adding a systray item", async () => {
             onRendered(() => {
                 if (!systrayRegistry.contains("addon.myitem2")) {
                     class MyItem2 extends Component {
-                        static props = ["*"];
+                        props = useProps();
                         static template = xml`<li class="my-item-2">my item 2</li>`;
                     }
                     systrayRegistry.add("addon.myitem2", { Component: MyItem2 });

@@ -1,7 +1,7 @@
 import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
-import { Component, computed, proxy, signal } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
 import { normalize } from "@web/core/l10n/utils";
 
 export class SettingsBlock extends Component {
@@ -9,12 +9,12 @@ export class SettingsBlock extends Component {
     static components = {
         HighlightText,
     };
-    static props = {
-        title: { type: String, optional: true },
-        tip: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        class: { type: String, optional: true },
-    };
+    props = useProps({
+        title: t.string().optional(),
+        tip: t.string().optional(),
+        slots: t.object().optional(),
+        class: t.string().optional(),
+    });
     settingsContainerRef = signal(null);
     settingsContainerTitleRef = signal(null);
     settingsContainerTipRef = signal(null);

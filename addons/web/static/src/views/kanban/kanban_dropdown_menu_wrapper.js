@@ -1,11 +1,11 @@
-import { Component, onMounted, onPatched, signal } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal, t, useProps } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
 export class KanbanDropdownMenuWrapper extends Component {
     static template = "web.KanbanDropdownMenuWrapper";
-    static props = {
-        slots: Object,
-    };
+    props = useProps({
+        slots: t.object(),
+    });
 
     rootRef = signal(null);
 

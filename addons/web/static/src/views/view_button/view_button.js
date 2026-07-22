@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
@@ -55,7 +55,7 @@ export const viewButtonProps = {
 
 export class ViewButton extends Component {
     static template = "web.views.ViewButton";
-    props = props(viewButtonProps);
+    props = useProps(viewButtonProps);
 
     setup() {
         if (this.props.icon) {

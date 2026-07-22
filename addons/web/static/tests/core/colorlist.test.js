@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { ColorList } from "@web/core/colorlist/colorlist";
@@ -9,7 +9,7 @@ class Parent extends Component {
         <t t-component="this.Component" t-props="this.componentProps"/>
         <div class="outsideDiv">Outside div</div>
     `;
-    static props = ["*"];
+    props = useProps();
 
     get Component() {
         return this.props.Component || ColorList;
@@ -28,7 +28,7 @@ class Parent extends Component {
 test("basic rendering", async () => {
     await mountWithCleanup(Parent, {
         props: {
-            onColorSelected:(color) => expect.step(`color ${color} selected`),
+            onColorSelected: (color) => expect.step(`color ${color} selected`),
         },
     });
 
@@ -43,7 +43,7 @@ test("use 'disableTransparent' props to hide the transparent option", async () =
     await mountWithCleanup(Parent, {
         props: {
             disableTransparent: true,
-            onColorSelected:(color) => expect.step(`color ${color} selected`),
+            onColorSelected: (color) => expect.step(`color ${color} selected`),
         },
     });
 

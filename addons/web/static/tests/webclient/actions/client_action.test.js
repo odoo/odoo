@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -27,7 +27,7 @@ class TestClientAction extends Component {
         <div class="test_client_action">
             ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>`;
-    static props = ["*"];
+    props = useProps();
     setup() {
         onMounted(() => this.env.config.setDisplayName(`Client action ${this.props.action.id}`));
     }
@@ -208,7 +208,7 @@ test("soft_reload when there is no controller", async () => {
 test("can execute client actions from tag name", async () => {
     class ClientAction extends Component {
         static template = xml`<div class="o_client_action_test">Hello World</div>`;
-        static props = ["*"];
+        props = useProps();
     }
     actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -250,7 +250,7 @@ test("ClientAction receives breadcrumbs and exports title", async () => {
 
     class ClientAction extends Component {
         static template = xml`<div class="my_action" t-on-click="this.onClick">client action</div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.breadcrumbTitle = "myAction";
             const { breadcrumbs } = this.env.config;
@@ -280,7 +280,7 @@ test("ClientAction receives arbitrary props from doAction", async () => {
     expect.assertions(1);
     class ClientAction extends Component {
         static template = xml`<div></div>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             expect(this.props.division).toBe("bell");
         }
@@ -306,7 +306,7 @@ test("ClientAction with extractProps", async () => {
     ]);
     class ClientAction extends Component {
         static template = xml`<div class="my_client_action" t-out="this.props.myProp"/>`;
-        static props = ["*"];
+        props = useProps();
         static extractProps(action) {
             return { myProp: action.params.my_prop };
         }

@@ -1,15 +1,15 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 
 export class ResUserGroupIdsPopover extends Component {
     static template = "web.ResUserGroupIdsPopover";
-    static props = {
-        close: Function,
-        groupId: [Number, Boolean],
-        groups: Object,
-        privileges: Object,
-    };
+    props = useProps({
+        close: t.function(),
+        groupId: t.or([t.number(), t.boolean()]),
+        groups: t.object(),
+        privileges: t.object(),
+    });
 
     setup() {
         this.actionService = useService("action");

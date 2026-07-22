@@ -5,7 +5,22 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { CardRenderer } from "./card_renderer";
 import { CARD_ATTRIBUTE, CardArchParser } from "./card_arch_parser";
 
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, t, useProps, xml } from "@odoo/owl";
+
+export const cardProps = {
+    card: t.any(),
+    resModel: t.any(),
+    resId: t.any().optional(),
+    fields: t.any(),
+    className: t.any().optional(),
+    Compiler: t.any().optional(),
+    context: t.any().optional(),
+    hooks: t.any().optional(),
+    readonly: t.any().optional(),
+    archiveRecord: t.any().optional(),
+    deleteRecord: t.any().optional(),
+    openRecord: t.any().optional(),
+};
 
 export class Card extends Component {
     static template = xml`
@@ -18,18 +33,7 @@ export class Card extends Component {
         Record,
         CardRenderer,
     };
-    static props = [
-        "card",
-        "resModel",
-        "resId",
-        "fields",
-        "className?",
-        "Compiler?",
-        "context?",
-        "hooks?",
-        "readonly?",
-    ];
-    static defaultProps = {};
+    props = useProps(cardProps);
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
 
     rootRef = signal(null);

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
@@ -14,15 +14,15 @@ export class CalendarYearPopover extends Component {
         footer: "web.CalendarYearPopover.footer",
         record: "web.CalendarYearPopover.record",
     };
-    static props = {
-        close: Function,
-        date: true,
-        model: Object,
-        records: Array,
-        createRecord: Function,
-        deleteRecord: Function,
-        editRecord: Function,
-    };
+    props = useProps({
+        close: t.function(),
+        date: t.any(),
+        model: t.object(),
+        records: t.array(),
+        createRecord: t.function(),
+        deleteRecord: t.function(),
+        editRecord: t.function(),
+    });
 
     setup() {
         this.uiService = useService("ui");

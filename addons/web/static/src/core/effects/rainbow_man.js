@@ -1,6 +1,6 @@
 import { browser } from "@web/core/browser/browser";
 
-import { Component, onMounted, onWillUnmount, proxy, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, t, useListener, useProps } from "@odoo/owl";
 
 /**
  * @typedef Common
@@ -33,14 +33,14 @@ import { Component, onMounted, onWillUnmount, proxy, useListener } from "@odoo/o
 export class RainbowMan extends Component {
     static template = "web.RainbowMan";
     static rainbowFadeouts = { slow: 4500, medium: 3500, fast: 2000, no: false };
-    static props = {
-        fadeout: String,
-        close: Function,
-        message: String,
-        imgUrl: String,
-        Component: { type: Function, optional: true },
-        props: { type: Object, optional: true },
-    };
+    props = useProps({
+        fadeout: t.string(),
+        close: t.function(),
+        message: t.string(),
+        imgUrl: t.string(),
+        Component: t.function().optional(),
+        props: t.object().optional(),
+    });
 
     setup() {
         useListener(document.body, "click", this.closeRainbowMan.bind(this));

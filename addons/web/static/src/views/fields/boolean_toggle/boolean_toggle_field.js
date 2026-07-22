@@ -3,10 +3,6 @@ import { registry } from "@web/core/registry";
 import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
-    static props = {
-        ...BooleanField.props,
-    };
-
     async onChange(newValue) {
         this.state.value = newValue;
         const changes = { [this.props.name]: newValue };

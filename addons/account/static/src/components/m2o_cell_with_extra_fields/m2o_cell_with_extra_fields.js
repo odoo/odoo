@@ -2,7 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Many2One, computeM2OProps } from "@web/views/fields/many2one/many2one";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2OneField, extractM2OFieldProps } from "@web/views/fields/many2one/many2one_field";
+import {
+    Many2OneField,
+    extractM2OFieldProps,
+    many2OneFieldProps,
+} from "@web/views/fields/many2one/many2one_field";
+import { t, useProps } from "@odoo/owl";
 
 export class Many2XAccountAccountAutocomplete extends Many2XAutocomplete {
     addSearchMoreSuggestion(options) {
@@ -39,10 +44,10 @@ export class M2OCellWithExtraFields extends Many2OneField {
         Many2One: Many2OneAccountAccount,
     };
     static template = "account.M2OCellWithExtraFields";
-    static props = {
-        ...Many2OneField.props,
-        parentField: { type: String, optional: true },
-    };
+    props = useProps({
+        ...many2OneFieldProps,
+        parentField: t.string().optional(),
+    });
     get isReadonlyList() {
         return this.props.record._parentRecord._isReadonly(this.props.parentField);
     }

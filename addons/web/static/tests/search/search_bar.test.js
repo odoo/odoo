@@ -14,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
     addNewRule,
@@ -287,7 +287,7 @@ test("search input is focused when being toggled", async () => {
             </div>
         `;
         static components = { SearchBar };
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.searchBarToggler = useSearchBarToggler();
         }
@@ -414,7 +414,7 @@ test("select an autocomplete field with `context` key", async () => {
     class TestComponent extends Component {
         static template = xml`<SearchBar/>`;
         static components = { SearchBar };
-        static props = ["*"];
+        props = useProps();
         setup() {
             onWillUpdateProps(() => {
                 updateCount++;
@@ -471,7 +471,7 @@ test("no search text triggers a reload", async () => {
     class TestComponent extends Component {
         static template = xml`<SearchBar/>`;
         static components = { SearchBar };
-        static props = ["*"];
+        props = useProps();
         setup() {
             onWillUpdateProps(() => {
                 updateCount++;

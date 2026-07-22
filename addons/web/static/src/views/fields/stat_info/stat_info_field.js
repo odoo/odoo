@@ -3,12 +3,12 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class StatInfoField extends Component {
     static template = "web.StatInfoField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         labelField: t.string().optional(),
         noLabel: t.boolean().optional(),

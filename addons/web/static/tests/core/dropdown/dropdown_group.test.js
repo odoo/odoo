@@ -16,7 +16,6 @@ test("DropdownGroup: when one Dropdown is open, others with same group name can 
 
     class Parent extends Component {
         static components = { Dropdown, DropdownGroup };
-        static props = [];
         static template = xml`
                     <div>
                         <div class="outside">OUTSIDE</div>
@@ -125,7 +124,6 @@ test("DropdownGroup: when non-sibling Dropdown is open, other must not be toggle
                     </div>
                 `;
         static components = { Dropdown, DropdownGroup };
-        static props = [];
     }
     await mountWithCleanup(Parent);
     // Click on One
@@ -146,7 +144,6 @@ test.tags("desktop");
 test("DropdownGroup: when one is open, then non-sibling toggled, siblings must not be toggled on mouse-enter", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownGroup };
-        static props = [];
         static template = xml`
                     <div>
                         <DropdownGroup>
@@ -190,7 +187,6 @@ test.tags("desktop");
 test("DropdownGroup: toggler focused on mouseenter", async () => {
     class Parent extends Component {
         static components = { Dropdown, DropdownGroup };
-        static props = [];
         static template = xml`
             <DropdownGroup>
                 <Dropdown>

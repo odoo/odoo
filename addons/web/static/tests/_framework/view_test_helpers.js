@@ -10,7 +10,7 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, t, useProps, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSubEnv } from "@web/owl2/utils";
@@ -65,12 +65,12 @@ const isNil = (value) => value === null || value === undefined;
 class ViewDialog extends Component {
     static components = { Dialog, View };
 
-    static props = {
-        onMounted: Function,
-        viewEnv: Object,
-        viewProps: Object,
-        close: Function,
-    };
+    props = useProps({
+        onMounted: t.function(),
+        viewEnv: t.object(),
+        viewProps: t.object(),
+        close: t.function(),
+    });
 
     static template = xml`
         <Dialog>

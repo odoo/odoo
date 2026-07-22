@@ -17,12 +17,14 @@ import { useService } from "@web/core/utils/hooks";
 
 import {
     Component,
-    onWillUnmount,
-    onWillStart,
     markup,
     onMounted,
     onPatched,
+    onWillStart,
+    onWillUnmount,
     signal,
+    t,
+    useProps,
 } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -125,7 +127,11 @@ function shortenLabel(label) {
 export class GraphRenderer extends Component {
     static template = "web.GraphRenderer";
     static components = { Dropdown, DropdownItem, ReportViewMeasures, Widget };
-    static props = ["class?", "model", "buttonTemplate"];
+    props = useProps({
+        class: t.any().optional(),
+        model: t.any(),
+        buttonTemplate: t.any(),
+    });
     rootRef = signal(null);
     canvasRef = signal(null);
     containerRef = signal(null);

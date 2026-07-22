@@ -1,13 +1,13 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 class KanbanExamplesNotebookTemplate extends Component {
     static template = "web.KanbanExamplesNotebookTemplate";
-    props = props({
+    props = useProps({
         columns: t.any().optional([]),
         foldedColumns: t.any().optional([]),
         description: t.any().optional(),
@@ -35,7 +35,12 @@ class KanbanExamplesNotebookTemplate extends Component {
 export class KanbanColumnExamplesDialog extends Component {
     static template = "web.KanbanColumnExamplesDialog";
     static components = { Dialog, Notebook };
-    static props = ["*"];
+    props = useProps({
+        examples: t.array(),
+        applyExamples: t.function(),
+        applyExamplesText: t.string().optional(), // read by the template
+        close: t.function(),
+    });
 
     navList = signal(null);
 

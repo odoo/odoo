@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
@@ -6,7 +6,7 @@ import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
-    Many2OneField,
+    many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
 import { user } from "@web/core/user";
@@ -14,10 +14,10 @@ import { user } from "@web/core/user";
 export class CardMany2OneAvatarUserField extends Component {
     static template = "mail.CardMany2OneAvatarUserField";
     static components = { Avatar, KanbanMany2One };
-    static props = {
-        ...Many2OneField.props,
-        displayAvatarName: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        ...many2OneFieldProps,
+        displayAvatarName: t.boolean().optional(),
+    });
 
     get displayName() {
         return this.props.displayAvatarName && this.value ? this.value.display_name : "";

@@ -9,16 +9,25 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, onMounted, onWillStart, onWillUnmount, proxy, signal } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    proxy,
+    signal,
+    t,
+    useProps,
+} from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
     static template = "web.DeleteExportListDialog";
-    static props = {
-        text: String,
-        close: Function,
-        delete: Function,
-    };
+    props = useProps({
+        text: t.string(),
+        close: t.function(),
+        delete: t.function(),
+    });
     async onDelete() {
         await this.props.delete();
         this.props.close();
@@ -28,16 +37,17 @@ class DeleteExportListDialog extends Component {
 class ExportDataItem extends Component {
     static template = "web.ExportDataItem";
     static components = { ExportDataItem };
-    static props = {
-        exportList: { type: Object, optional: true },
-        field: { type: Object, optional: true },
-        filterSubfields: Function,
-        isDebug: Boolean,
-        isExpanded: Boolean,
-        isFieldExpandable: Function,
-        onAdd: Function,
-        loadFields: Function,
-    };
+    props = useProps({
+        // array of export templates — legacy `{ type: Object }` was never enforced
+        exportList: t.array().optional(),
+        field: t.object().optional(),
+        filterSubfields: t.function(),
+        isDebug: t.boolean(),
+        isExpanded: t.boolean(),
+        isFieldExpandable: t.function(),
+        onAdd: t.function(),
+        loadFields: t.function(),
+    });
 
     setup() {
         this.state = proxy({
@@ -83,14 +93,14 @@ class ExportDataItem extends Component {
 export class ExportDataDialog extends Component {
     static template = "web.ExportDataDialog";
     static components = { CheckBox, Dialog, ExportDataItem };
-    static props = {
-        close: { type: Function },
-        context: { type: Object, optional: true },
-        defaultExportList: { type: Array },
-        download: { type: Function },
-        getExportedFields: { type: Function },
-        root: { type: Object },
-    };
+    props = useProps({
+        close: t.function(),
+        context: t.object().optional(),
+        defaultExportList: t.array(),
+        download: t.function(),
+        getExportedFields: t.function(),
+        root: t.object(),
+    });
 
     draggableRef = signal(null);
     exportListRef = signal(null);

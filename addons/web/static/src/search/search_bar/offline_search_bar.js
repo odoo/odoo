@@ -1,6 +1,6 @@
 import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, plugin, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, signal, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -16,10 +16,10 @@ export class OfflineSearchBar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        autofocus: { type: Boolean, optional: true },
-        toggler: { type: Object, optional: true },
-    };
+    props = useProps({
+        autofocus: t.boolean().optional(),
+        toggler: t.object().optional(),
+    });
 
     rootRef = signal(null);
     autofocusRef = signal(null);

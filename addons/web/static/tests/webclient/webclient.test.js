@@ -14,7 +14,6 @@ test("can be rendered", async () => {
 
 test("can render a main component", async () => {
     class MyComponent extends Component {
-        static props = {};
         static template = xml`<span class="chocolate">MyComponent</span>`;
     }
 
@@ -28,7 +27,6 @@ test("can render a main component", async () => {
 test.tags("desktop");
 test("control-click <a href/> in a standalone component", async () => {
     class MyComponent extends Component {
-        static props = {};
         static template = xml`<a href="#" class="MyComponent" t-on-click="this.onclick">Some link</a>`;
 
         /** @param {MouseEvent} ev */
@@ -69,7 +67,6 @@ test("control-click propagation stopped on <a href/>", async () => {
     });
 
     class MyComponent extends Component {
-        static props = {};
         static template = xml`<a href="#" class="MyComponent" t-on-click="this.onclick">Some link</a>`;
 
         /** @param {MouseEvent} ev */

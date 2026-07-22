@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { Component, onWillDestroy, onWillStart, xml, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, proxy, useProps, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -13787,7 +13787,7 @@ test("one2many list with monetary aggregates and different currencies", async ()
 test.tags("desktop");
 test("one2many custom which can clear the relation", async () => {
     class ClearWidget extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div>
                 <span t-out="this.props.record.data[this.props.name].count"/>
@@ -13824,7 +13824,7 @@ test("one2many custom which can clear the relation", async () => {
 test.tags("desktop");
 test("one2many custom which can set the relation", async () => {
     class SetWidget extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <div>
                 <span t-out="this.props.record.data[this.props.name].count"/>

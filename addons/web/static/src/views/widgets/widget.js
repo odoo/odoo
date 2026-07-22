@@ -1,7 +1,7 @@
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 
-import { Component, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
 const supportedInfoValidation = t.array(
@@ -86,9 +86,7 @@ export class Widget extends Component {
 
         return widgetInfo;
     };
-    static props = {
-        "*": true,
-    };
+    props = useProps();
 
     setup() {
         if (this.props.widgetInfo) {

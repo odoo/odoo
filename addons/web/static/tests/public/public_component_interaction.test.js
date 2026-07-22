@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "./helpers";
 import { registry } from "@web/core/registry";
 
@@ -12,7 +12,7 @@ const publicComponentRegistry = registry.category("public_components");
 test(`render Public Component`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div class="my_public_comp" t-out="this.value"/>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             const { info } = this.props;
             this.value = typeof info === "object" ? JSON.stringify(info) : info;
@@ -47,7 +47,7 @@ test(`render Public Component`, async () => {
 test(`content of owl-component tag is cleared`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>component</div>`;
-        static props = ["*"];
+        props = useProps();
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
 

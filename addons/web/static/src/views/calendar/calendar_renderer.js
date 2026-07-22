@@ -3,7 +3,19 @@ import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { CalendarCommonRenderer } from "./calendar_common/calendar_common_renderer";
 import { CalendarYearRenderer } from "./calendar_year/calendar_year_renderer";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
+
+export const calendarRendererProps = {
+    model: t.object(),
+    isWeekendVisible: t.boolean(),
+    createRecord: t.function(),
+    editRecord: t.function(),
+    deleteRecord: t.function(),
+    setDate: t.function(),
+    callbackRecorder: t.object(),
+    onSquareSelection: t.function(),
+    cleanSquareSelection: t.function(),
+};
 
 export class CalendarRenderer extends Component {
     static template = "web.CalendarRenderer";
@@ -14,17 +26,7 @@ export class CalendarRenderer extends Component {
         year: CalendarYearRenderer,
         ActionSwiper,
     };
-    static props = {
-        model: Object,
-        isWeekendVisible: Boolean,
-        createRecord: Function,
-        editRecord: Function,
-        deleteRecord: Function,
-        setDate: Function,
-        callbackRecorder: Object,
-        onSquareSelection: Function,
-        cleanSquareSelection: Function,
-    };
+    props = useProps(calendarRendererProps);
     get concreteRenderer() {
         return this.constructor.components[this.props.model.scale];
     }
@@ -52,7 +54,7 @@ export class CalendarRenderer extends Component {
             onLeftSwipe: this.getSwiperProps("next"),
             onRightSwipe: this.getSwiperProps("previous"),
             animationType: "forwards",
-            enabledDuration: TOUCH_SELECTION_THRESHOLD
+            enabledDuration: TOUCH_SELECTION_THRESHOLD,
         };
     }
     getSwiperProps(direction) {
@@ -62,8 +64,10 @@ export class CalendarRenderer extends Component {
                 component: this.concreteRenderer,
                 props: {
                     ...this.concreteRendererProps,
-                    initialDate: this.props.model.date[direction === "next" ? "plus" : "minus"]({[`${this.props.model.scale}s`]: 1}),
-                    isDisabled: true
+                    initialDate: this.props.model.date[direction === "next" ? "plus" : "minus"]({
+                        [`${this.props.model.scale}s`]: 1,
+                    }),
+                    isDisabled: true,
                 },
             },
         };

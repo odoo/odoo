@@ -15,7 +15,7 @@ import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -48,6 +48,20 @@ const HOUR_FORMATS = {
 
 const { DateTime } = luxon;
 
+export const calendarCommonRendererProps = {
+    model: t.object(),
+    initialDate: t.object(),
+    isDisabled: t.boolean().optional(),
+    isWeekendVisible: t.boolean().optional(),
+    createRecord: t.function(),
+    editRecord: t.function(),
+    deleteRecord: t.function(),
+    setDate: t.function().optional(),
+    callbackRecorder: t.object(),
+    onSquareSelection: t.function(),
+    cleanSquareSelection: t.function(),
+};
+
 export class CalendarCommonRenderer extends Component {
     static components = {
         Popover: CalendarCommonPopover,
@@ -55,19 +69,7 @@ export class CalendarCommonRenderer extends Component {
     static template = "web.CalendarCommonRenderer";
     static eventTemplate = "web.CalendarCommonRenderer.event";
     static headerTemplate = "web.CalendarCommonRendererHeader";
-    static props = {
-        model: Object,
-        initialDate: Object,
-        isDisabled: { type: Boolean, optional: true },
-        isWeekendVisible: { type: Boolean, optional: true },
-        createRecord: Function,
-        editRecord: Function,
-        deleteRecord: Function,
-        setDate: { type: Function, optional: true },
-        callbackRecorder: Object,
-        onSquareSelection: Function,
-        cleanSquareSelection: Function,
-    };
+    props = useProps(calendarCommonRendererProps);
 
     ref = signal.ref();
 

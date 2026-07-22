@@ -1,5 +1,5 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
@@ -7,10 +7,10 @@ import { _t } from "@web/core/l10n/translation";
 export class SwitchCompanyItem extends Component {
     static template = "web.SwitchCompanyItem";
     static components = { DropdownItem, SwitchCompanyItem, CheckBox };
-    static props = {
-        company: {},
-        level: { type: Number },
-    };
+    props = useProps({
+        company: t.any(),
+        level: t.number(),
+    });
 
     setup() {
         this.companySelector = proxy(this.env.companySelector);

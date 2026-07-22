@@ -1,10 +1,10 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { floatField, FloatField, floatFieldProps } from "../float/float_field";
 import { _t } from "@web/core/l10n/translation";
 
 export class FloatFactorField extends FloatField {
-    props = props({
+    props = useProps({
         ...floatFieldProps,
         factor: t.number().optional(1),
     });

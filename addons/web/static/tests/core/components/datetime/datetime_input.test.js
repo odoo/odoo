@@ -1,5 +1,5 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     assertDateTimePicker,
     editTime,
@@ -21,7 +21,7 @@ const { DateTime } = luxon;
 class DateTimeInputComp extends Component {
     static components = { DateTimeInput };
     static template = xml`<DateTimeInput t-props="this.props" />`;
-    static props = ["*"];
+    props = useProps();
 }
 
 async function changeLang(lang) {
@@ -223,7 +223,7 @@ describe("DateTimeInput (date)", () => {
         class Root extends Component {
             static components = { DateTimeInput };
             static template = xml`<div class="d-flex"><DateTimeInput t-props="this.props" /></div>`;
-            static props = ["*"];
+            props = useProps();
         }
         await mountWithCleanup(Root, {
             props: {

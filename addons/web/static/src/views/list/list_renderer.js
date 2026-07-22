@@ -35,8 +35,8 @@ import {
     onWillStart,
     onWillUnmount,
     plugin,
-    props,
     proxy,
+    useProps,
     signal,
     status,
     t,
@@ -138,7 +138,7 @@ export class ListRenderer extends Component {
         ActionHelper,
         GroupConfigMenu,
     };
-    props = props(listRendererProps);
+    props = useProps(listRendererProps);
 
     setup() {
         this.uiService = useService("ui");

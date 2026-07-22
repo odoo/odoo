@@ -6,15 +6,15 @@ import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export class PercentageField extends Component {
     static template = "web.PercentageField";
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        digits: { type: Array, optional: true },
-        noSymbol: { type: Boolean, optional: true },
-    };
+        digits: t.array().optional(),
+        noSymbol: t.boolean().optional(),
+    });
 
     numpadDecimalRef = signal(null);
 

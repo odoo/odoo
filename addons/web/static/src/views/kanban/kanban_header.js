@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -15,27 +15,27 @@ import { QuickCreateState } from "./kanban_record_quick_create";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
-    static props = {
-        tooltip: Array,
-        close: Function,
-    };
+    props = useProps({
+        tooltip: t.array(),
+        close: t.function(),
+    });
 }
 
 export class KanbanHeader extends Component {
     static template = "web.KanbanHeader";
     static components = { ColumnProgress, Dropdown, DropdownItem, GroupConfigMenu };
-    static props = {
-        activeActions: { type: Object },
-        canQuickCreate: { type: Boolean },
-        deleteGroup: { type: Function },
-        dialogClose: { type: Array },
-        group: { type: Object },
-        list: { type: Object },
-        quickCreateState: QuickCreateState,
-        scrollTop: { type: Function },
-        tooltipInfo: { type: Object },
-        progressBarState: { type: true, optional: true },
-    };
+    props = useProps({
+        activeActions: t.object(),
+        canQuickCreate: t.boolean(),
+        deleteGroup: t.function(),
+        dialogClose: t.array(),
+        group: t.object(),
+        list: t.object(),
+        quickCreateState: t.instanceOf(QuickCreateState),
+        scrollTop: t.function(),
+        tooltipInfo: t.object(),
+        progressBarState: t.any().optional(),
+    });
 
     rootRef = signal(null);
 

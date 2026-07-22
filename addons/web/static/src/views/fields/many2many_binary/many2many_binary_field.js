@@ -5,19 +5,19 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class Many2ManyBinaryField extends Component {
     static template = "web.Many2ManyBinaryField";
     static components = {
         FileInput,
     };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        acceptedFileExtensions: { type: String, optional: true },
-        className: { type: String, optional: true },
-        numberOfFiles: { type: Number, optional: true },
-    };
+        acceptedFileExtensions: t.string().optional(),
+        className: t.string().optional(),
+        numberOfFiles: t.number().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");

@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
@@ -9,20 +9,20 @@ const SEARCH_LIMIT = 7;
 const SEARCH_MORE_LIMIT = 1000;
 
 export class RecordAutocomplete extends Component {
-    static props = {
-        resModel: String,
-        update: Function,
-        multiSelect: Boolean,
-        getIds: Function,
-        value: String,
-        domain: { type: Array, optional: true },
-        context: { type: Object, optional: true },
-        className: { type: String, optional: true },
-        fieldString: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
-        slots: { optional: true },
-        buildQuickCreate: { type: Function, optional: true },
-    };
+    props = useProps({
+        resModel: t.string(),
+        update: t.function(),
+        multiSelect: t.boolean(),
+        getIds: t.function(),
+        value: t.string(),
+        domain: t.array().optional(),
+        context: t.object().optional(),
+        className: t.string().optional(),
+        fieldString: t.string().optional(),
+        placeholder: t.string().optional(),
+        slots: t.any().optional(),
+        buildQuickCreate: t.function().optional(),
+    });
     static components = { AutoComplete };
     static template = "web.RecordAutocomplete";
 

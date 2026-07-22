@@ -1,12 +1,16 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
+import {
+    CustomFavoriteItem,
+    customFavoriteItemProps,
+} from "@web/search/custom_favorite_item/custom_favorite_item";
 
 export class DashboardCustomFavoriteItem extends CustomFavoriteItem {
-    static props = {
-        ...CustomFavoriteItem.props,
-        currentGlobalFilters: Object,
-    };
+    props = useProps({
+        ...customFavoriteItemProps,
+        currentGlobalFilters: t.array(),
+    });
 
     setup() {
         super.setup();

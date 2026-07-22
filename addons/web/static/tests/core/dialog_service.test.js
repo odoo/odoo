@@ -3,7 +3,7 @@ import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom"
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, useProps, xml } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -16,7 +16,7 @@ test("Simple rendering with a single dialog", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     getService("dialog").add(CustomDialog);
@@ -32,7 +32,7 @@ test("Simple rendering and close a single dialog", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     const removeDialog = getService("dialog").add(CustomDialog);
@@ -54,7 +54,7 @@ test("rendering with two dialogs", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="this.props.title">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     getService("dialog").add(CustomDialog, { title: "Hello" });
@@ -76,7 +76,7 @@ test("multiple dialogs can become the UI active element", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="this.props.title">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     getService("dialog").add(CustomDialog, { title: "Hello" });
     await animationFrame();
@@ -101,7 +101,7 @@ test.tags("desktop");
 test("a popover with an autofocus child can become the UI active element", async () => {
     class TestPopover extends Component {
         static template = xml`<input type="text" t-ref="this.autofocusRef" />`;
-        static props = ["*"];
+        props = useProps();
         autofocusRef = signal(null);
         setup() {
             useAutofocus({ ref: this.autofocusRef });
@@ -112,7 +112,7 @@ test("a popover with an autofocus child can become the UI active element", async
         static template = xml`<Dialog title="this.props.title">
             <button class="btn test" t-on-click="this.showPopover">show</button>
         </Dialog>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             this.popover = usePopover(TestPopover);
         }
@@ -151,7 +151,7 @@ test("Interactions between multiple dialogs", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="this.props.title">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
 
     getService("dialog").add(CustomDialog, { title: "Hello" });
@@ -193,7 +193,7 @@ test("dialog component crashes", async () => {
     class FailingDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Error'">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
         setup() {
             throw new Error("Some Error");
         }
@@ -209,7 +209,7 @@ test("two dialogs, close the first one, closeAll", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="this.props.title">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     const close = getService("dialog").add(CustomDialog, { title: "Hello" });
@@ -236,7 +236,7 @@ test("two dialogs, close the first one twice, then closeAll", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="this.props.title">content</Dialog>`;
-        static props = ["*"];
+        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     getService("dialog").add(

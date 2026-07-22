@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, queryOne, queryText } from "@odoo/hoot-dom";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Macro } from "@web/core/macro";
@@ -37,7 +37,7 @@ class TestComponent extends Component {
             <span class="value"><t t-out="this.state.value"/></span>
             <input />
         </div>`;
-    static props = ["*"];
+    props = useProps();
     setup() {
         this.state = proxy({ value: 0 });
     }

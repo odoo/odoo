@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
-import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field";
+import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 
 export class Many2OneReferenceField extends Component {
     static template = "web.Many2OneReferenceField";
     static components = { Many2One };
-    static props = { ...Many2OneField.props };
+    props = useProps(many2OneFieldProps);
 
     get m2oProps() {
         const props = computeM2OProps(this.props);

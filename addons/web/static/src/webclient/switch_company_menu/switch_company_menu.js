@@ -188,7 +188,6 @@ export class CompanySelector {
 export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
     static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem, CheckBox };
-    static props = {};
     static CompanySelector = CompanySelector;
 
     searchInputRef = signal(null);

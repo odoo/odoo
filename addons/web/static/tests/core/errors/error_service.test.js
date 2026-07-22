@@ -6,7 +6,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     test,
 } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     makeTestApp,
@@ -84,7 +84,9 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     class CustomDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         static components = { RPCErrorDialog };
-        static props = { ...standardErrorDialogProps };
+        props = useProps({
+            ...standardErrorDialogProps,
+        });
     }
     const error = new RPCError();
     error.code = 701;
@@ -127,12 +129,12 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     class CustomDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         static components = { RPCErrorDialog };
-        static props = ["*"];
+        props = useProps();
     }
     class NormalDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
         static components = { RPCErrorDialog };
-        static props = ["*"];
+        props = useProps();
     }
     const error = new RPCError();
     error.code = 701;

@@ -353,7 +353,6 @@ test("can mount a component", async () => {
     class Test extends Component {
         static selector = ".test";
         static template = xml`owl component`;
-        static props = {};
     }
     const { core } = await startInteraction(Test, `<div class="test"></div>`);
     expect(".test").toHaveInnerHTML(

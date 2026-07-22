@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -8,17 +8,19 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { standardFieldProps } from "../standard_field_props";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
+export const selectionFieldProps = {
+    ...standardFieldProps,
+    placeholder: t.string().optional(),
+    required: t.boolean().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+};
+
 export class SelectionField extends Component {
     static components = {
         SelectMenu,
     };
     static template = "web.SelectionField";
-    static props = {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-        required: { type: Boolean, optional: true },
-        domain: { type: [Array, Function], optional: true },
-    };
+    props = useProps(selectionFieldProps);
 
     setup() {
         this.type = this.props.record.fields[this.props.name].type;

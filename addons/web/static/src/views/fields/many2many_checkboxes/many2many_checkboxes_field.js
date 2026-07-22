@@ -1,4 +1,4 @@
-import { Component, onWillUnmount } from "@odoo/owl";
+import { Component, onWillUnmount, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,11 +13,11 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 export class Many2ManyCheckboxesField extends Component {
     static template = "web.Many2ManyCheckboxesField";
     static components = { CheckBox };
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        domain: { type: [Array, Function], optional: true },
-        context: { type: Object, optional: true },
-    };
+        domain: t.or([t.array(), t.function()]).optional(),
+        context: t.object().optional(),
+    });
 
     setup() {
         this.specialData = useSpecialData((orm, props) => {

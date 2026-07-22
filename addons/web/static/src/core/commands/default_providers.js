@@ -6,7 +6,7 @@ import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -17,7 +17,14 @@ commandSetupRegistry.add("default", {
 
 export class HotkeyCommandItem extends Component {
     static template = "web.HotkeyCommandItem";
-    static props = ["hotkey", "hotkeyOptions?", "name?", "searchValue?", "executeCommand", "slots"];
+    props = useProps({
+        hotkey: t.any(),
+        hotkeyOptions: t.any().optional(),
+        name: t.any().optional(),
+        searchValue: t.any().optional(),
+        executeCommand: t.any(),
+        slots: t.any(),
+    });
     setup() {
         useHotkey(this.props.hotkey, this.props.executeCommand);
     }

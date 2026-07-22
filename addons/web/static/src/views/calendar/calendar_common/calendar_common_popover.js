@@ -3,13 +3,13 @@ import { is24HourFormat } from "@web/core/l10n/time";
 import { useService } from "@web/core/utils/hooks";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { createElement, parseXML } from "@web/core/utils/xml";
-import { Card } from "@web/views/card/card";
+import { Card, cardProps } from "@web/views/card/card";
 import { CARD_ATTRIBUTE } from "@web/views/card/card_arch_parser";
 import { CardRenderer } from "@web/views/card/card_renderer";
 import { getColor, getFormattedDateSpan } from "@web/views/calendar/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 
-import { Component, onWillStart, useListener } from "@odoo/owl";
+import { Component, onWillStart, t, useListener, useProps } from "@odoo/owl";
 
 export const BODY_ATTRIBUTE = "popover-body";
 export const FOOTER_ATTRIBUTE = "popover-footer";
@@ -29,7 +29,12 @@ class CalendarCardRenderer extends CardRenderer {
 
 class CalendarCard extends Card {
     static components = { ...Card.components, CardRenderer: CalendarCardRenderer };
-    static props = [...Card.props, "afterButtonClicked"];
+    props = useProps({
+        ...cardProps,
+        afterButtonClicked: t.any(),
+        // read in `rendererProps`; owl3 only exposes declared props
+        slots: t.any().optional(),
+    });
 
     setup() {
         super.setup();
@@ -50,21 +55,15 @@ export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
     static defaultFooterButtonsTemplate = "web.CalendarCommonPopover.DefaultFooterButtons";
     static components = { CalendarCard };
-    static props = [
-        "close",
-        "model",
-        "record",
-        "context?",
-        "reloadOnClose?",
-        "openRecord?",
-        "deleteRecord?",
-    ];
-    static defaultProps = {
-        context: {},
-        reloadOnClose: () => {},
-        openRecord: () => {},
-        deleteRecord: () => {},
-    };
+    props = useProps({
+        close: t.any(),
+        model: t.any(),
+        record: t.any(),
+        context: t.any().optional(() => ({})),
+        reloadOnClose: t.any().optional(() => () => {}),
+        openRecord: t.any().optional(() => () => {}),
+        deleteRecord: t.any().optional(() => () => {}),
+    });
 
     setup() {
         this.viewService = useService("view");

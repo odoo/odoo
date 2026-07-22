@@ -3,17 +3,18 @@ import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class SignatureWidget extends Component {
     static template = "web.SignatureWidget";
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        fullName: { type: String, optional: true },
-        highlight: { type: Boolean, optional: true },
-        string: { type: String },
-        signatureField: { type: String, optional: true },
-    };
+        fullName: t.string().optional(),
+        highlight: t.boolean().optional(),
+        string: t.string(),
+        signatureField: t.string().optional(),
+        defaultFont: t.string().optional(),
+    });
 
     setup() {
         this.dialogService = useService("dialog");

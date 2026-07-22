@@ -1,20 +1,15 @@
-import { Component, onPatched, signal } from "@odoo/owl";
+import { Component, onPatched, signal, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isIOS } from "@web/core/browser/feature_detection";
 import { clamp } from "@web/core/utils/numbers";
 
 export class CropOverlay extends Component {
     static template = "web.CropOverlay";
-    static props = {
-        onResize: Function,
-        isReady: Boolean,
-        slots: {
-            type: Object,
-            shape: {
-                default: {},
-            },
-        },
-    };
+    props = useProps({
+        onResize: t.function(),
+        isReady: t.boolean(),
+        slots: t.object({ default: t.any() }),
+    });
 
     cropContainerRef = signal(null);
 

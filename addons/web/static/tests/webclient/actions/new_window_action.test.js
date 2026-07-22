@@ -11,7 +11,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class TestClientAction extends Component {
@@ -19,7 +19,7 @@ class TestClientAction extends Component {
         <div class="test_client_action">
             ClientAction
         </div>`;
-    static props = ["*"];
+    props = useProps();
 }
 
 class Partner extends models.Model {
@@ -106,7 +106,7 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for window action", async () 
 test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for client actions", async () => {
     class ClientAction extends Component {
         static template = xml`<div class="o_client_action_test">Hello World</div>`;
-        static props = ["*"];
+        props = useProps();
     }
     registry.category("actions").add("my_action", ClientAction);
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -19,9 +19,9 @@ export const DEBOUNCED_DELAY = 250;
 class SelectMenuTagsList extends Component {
     static template = "web.SelectMenuTagsList";
     static components = { BadgeTag };
-    static props = {
-        tags: { type: Array },
-    };
+    props = useProps({
+        tags: t.array(),
+    });
 }
 
 export const selectMenuProps = {
@@ -85,7 +85,7 @@ export class SelectMenu extends Component {
 
     static components = { Dropdown, DropdownItem, TagsList: SelectMenuTagsList };
 
-    props = props(selectMenuProps);
+    props = useProps(selectMenuProps);
 
     static SCROLL_SETTINGS = {
         defaultCount: 500,

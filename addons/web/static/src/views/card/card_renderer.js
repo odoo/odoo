@@ -9,7 +9,7 @@ import { getFormattedValue } from "../utils";
 import { CARD_ATTRIBUTE } from "./card_arch_parser";
 import { CardCompiler } from "./card_compiler";
 
-import { Component, computed, onWillUpdateProps, plugin, proxy } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, plugin, proxy, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const formatters = registry.category("formatters");
@@ -79,7 +79,12 @@ export class CardRenderer extends Component {
         ViewButton,
         Widget,
     };
-    static props = ["archInfo", "Compiler?", "readonly?", "record"];
+    props = useProps({
+        archInfo: t.any(),
+        Compiler: t.any().optional(),
+        readonly: t.any().optional(),
+        record: t.any(),
+    });
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
     static template = "web.CardRenderer";
     static Compiler = CardCompiler;
