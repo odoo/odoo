@@ -28,11 +28,11 @@ class TestMrpProductQty(TestMrpCommon):
         """Helper: create an MO, produce it, and mark it as done.
         If qty_producing < qty, a backorder is created for the remainder.
         Returns the completed manufacturing order."""
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
-        mo_form.bom_id = bom
-        mo_form.product_qty = qty
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'bom_id': bom.id,
+            'product_qty': qty,
+        })
         mo.action_confirm()
 
         mo_form = Form(mo)
@@ -125,12 +125,12 @@ class TestMrpProductQty(TestMrpCommon):
         self._create_and_complete_mo(self.product_4, self.bom_1, qty=3.0)
 
         # MO 2: 6 units (= 0.5 dozen)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_4
-        mo_form.bom_id = self.bom_1
-        mo_form.uom_id = self.uom_unit
-        mo_form.product_qty = 6
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+            'uom_id': self.uom_unit.id,
+            'product_qty': 6,
+        })
         mo.action_confirm()
         mo_form = Form(mo)
         mo_form.qty_producing = 6

@@ -74,8 +74,7 @@ class TestMrpCancelMO(TestMrpCommon):
         mo_form.qty_producing = 2
         manufacturing_order = mo_form.save()
         backorder_action = manufacturing_order.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**backorder_action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**backorder_action['context']).create({}).action_backorder()
         # Unlink the MO must raises an UserError since it cannot be really cancelled
         self.assertEqual(manufacturing_order.exists().state, 'done')
         with self.assertRaises(UserError):
@@ -86,9 +85,9 @@ class TestMrpCancelMO(TestMrpCommon):
         product_form.name = "SuperProduct"
         product = product_form.save()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+        })
 
         mo.action_confirm()
         mo.action_cancel()

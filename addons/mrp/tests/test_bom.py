@@ -165,9 +165,9 @@ class TestBoM(TestMrpCommon):
         self.assertNotIn(test_bom_l2, [l[0] for l in lines])
         self.assertIn(test_bom_l3, [l[0] for l in lines])
 
-        mrp_order_form = Form(self.env['mrp.production'])
-        mrp_order_form.product_id = self.product_7_3
-        mrp_order = mrp_order_form.save()
+        mrp_order = self.env['mrp.production'].create({
+            'product_id': self.product_7_3.id,
+        })
         self.assertEqual(mrp_order.bom_id, test_bom)
         self.assertEqual(mrp_order.bom_id.operation_ids[0].time_total, 165)
         self.assertEqual(len(mrp_order.workorder_ids), 1)
@@ -188,9 +188,9 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(len(mrp_order.move_byproduct_ids), 2)
         self.assertEqual(mrp_order.move_byproduct_ids.product_id, self.product_1 | self.product_2)
 
-        mrp_order_form = Form(self.env['mrp.production'])
-        mrp_order_form.product_id = self.product_7_2
-        mrp_order = mrp_order_form.save()
+        mrp_order = self.env['mrp.production'].create({
+            'product_id': self.product_7_2.id,
+        })
         self.assertEqual(mrp_order.bom_id, test_bom)
         self.assertEqual(len(mrp_order.workorder_ids), 2)
         self.assertEqual(mrp_order.workorder_ids.operation_id, test_bom.operation_ids[0] | test_bom.operation_ids[2])
@@ -390,9 +390,9 @@ class TestBoM(TestMrpCommon):
         # Create production order for all variants.
         for combination, consumed_products in dict_consumed_products.items():
             product = product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == combination)
-            mrp_order_form = Form(self.env['mrp.production'])
-            mrp_order_form.product_id = product
-            mrp_order = mrp_order_form.save()
+            mrp_order = self.env['mrp.production'].create({
+                'product_id': product.id,
+            })
 
             # Check consumed materials in production order.
             self.assertEqual(mrp_order.move_raw_ids.product_id, consumed_products)
@@ -621,11 +621,11 @@ class TestBoM(TestMrpCommon):
             'uom_id': uom_kg.id,
             'standard_price': 1.5
         })
-        bom_form_crumble = Form(self.env['mrp.bom'])
-        bom_form_crumble.product_tmpl_id = crumble.product_tmpl_id
-        bom_form_crumble.product_qty = 11
-        bom_form_crumble.uom_id = uom_kg
-        bom_crumble = bom_form_crumble.save()
+        bom_crumble = self.env['mrp.bom'].create({
+            'product_tmpl_id': crumble.product_tmpl_id.id,
+            'product_qty': 11,
+            'uom_id': uom_kg.id,
+        })
 
         workcenter = self.env['mrp.workcenter'].create({
             'costs_hour': 10,
@@ -718,11 +718,11 @@ class TestBoM(TestMrpCommon):
             'uom_id': uom_litre.id,
             'standard_price': 5.17,
         })
-        bom_form_cheese_cake = Form(self.env['mrp.bom'])
-        bom_form_cheese_cake.product_tmpl_id = cheese_cake.product_tmpl_id
-        bom_form_cheese_cake.product_qty = 60
-        bom_form_cheese_cake.uom_id = self.uom_unit
-        bom_cheese_cake = bom_form_cheese_cake.save()
+        bom_cheese_cake = self.env['mrp.bom'].create({
+            'product_tmpl_id': cheese_cake.product_tmpl_id.id,
+            'product_qty': 60,
+            'uom_id': self.uom_unit.id,
+        })
 
         workcenter_2 = self.env['mrp.workcenter'].create({
             'name': 'cake mounting',
@@ -799,11 +799,11 @@ class TestBoM(TestMrpCommon):
             'standard_price': 7.01
         })
 
-        bom_form_drawer = Form(self.env['mrp.bom'])
-        bom_form_drawer.product_tmpl_id = drawer.product_tmpl_id
-        bom_form_drawer.product_qty = 11
-        bom_form_drawer.uom_id = self.uom_dozen
-        bom_drawer = bom_form_drawer.save()
+        bom_drawer = self.env['mrp.bom'].create({
+            'product_tmpl_id': drawer.product_tmpl_id.id,
+            'product_qty': 11,
+            'uom_id': self.uom_dozen.id,
+        })
 
         workcenter = self.env['mrp.workcenter'].create({
             'costs_hour': 10,
@@ -856,10 +856,10 @@ class TestBoM(TestMrpCommon):
             'is_storable': True,
         })
 
-        bom_form_pickaxe = Form(self.env['mrp.bom'])
-        bom_form_pickaxe.product_tmpl_id = pickaxe.product_tmpl_id
-        bom_form_pickaxe.product_qty = 1
-        bom_pickaxe = bom_form_pickaxe.save()
+        bom_pickaxe = self.env['mrp.bom'].create({
+            'product_tmpl_id': pickaxe.product_tmpl_id.id,
+            'product_qty': 1,
+        })
 
         workcenter = self.env['mrp.workcenter'].create({
             'costs_hour': 10,

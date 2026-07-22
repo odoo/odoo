@@ -116,20 +116,20 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'default_location_src_id': pre_2.id,
         })
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.picking_type_id = pick_1
-        production_form.product_id = self.finished_product
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'picking_type_id': pick_1.id,
+            'product_id': self.finished_product.id,
+        })
         production.action_confirm()
         # check that picking is created
         pick = production.picking_ids
         self.assertEqual(pick.location_id, self.stock_location)
         self.assertEqual(pick.location_dest_id, pre_1)
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.picking_type_id = pick_2
-        production_form.product_id = self.finished_product
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'picking_type_id': pick_2.id,
+            'product_id': self.finished_product.id,
+        })
         production.action_confirm()
         # check that picking is created
         pick = production.picking_ids
@@ -144,10 +144,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.finished_product
-        production_form.picking_type_id = self.picking_type_manu
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'picking_type_id': self.picking_type_manu.id,
+        })
         production.action_confirm()
 
         move_raw_ids = production.move_raw_ids
@@ -305,10 +305,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         """
         with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.finished_product
-        production_form.picking_type_id = self.picking_type_manu
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'picking_type_id': self.picking_type_manu.id,
+        })
         production.move_raw_ids.product_uom_qty = 0
         production.action_confirm()
         production.action_assign()
@@ -327,10 +327,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'name': 'New product',
             'is_storable': True,
         })
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.finished_product
-        production_form.picking_type_id = self.picking_type_manu
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'picking_type_id': self.picking_type_manu.id,
+        })
 
         production.action_confirm()
         production.is_locked = False
@@ -476,10 +476,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         confirms it, the associated picking should includes this new product"""
         self.warehouse_1.manufacture_steps = 'pbm'
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.bom.product_id
-        mo_form.picking_type_id = self.picking_type_manu
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom.product_id.id,
+            'picking_type_id': self.picking_type_manu.id,
+        })
 
         component_move = mo.move_raw_ids[0]
         mo.with_context(default_raw_material_production_id=mo.id).move_raw_ids = [
@@ -520,8 +520,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo = mo_form.save()
 
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
 
         self.assertEqual(mo.mrp_production_child_count, 0, "Children MOs counted as existing where there should be none")
         self.assertEqual(mo.mrp_production_source_count, 0, "Source MOs counted as existing where there should be none")
@@ -548,16 +547,16 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             }).id,
         })
 
-        mo1_form = Form(self.env['mrp.production'])
-        mo1_form.product_id = self.finished_product
-        mo1_form.picking_type_id = picking_type
-        mo1 = mo1_form.save()
+        mo1 = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'picking_type_id': picking_type.id,
+        })
         mo1.action_confirm()
 
-        mo2_form = Form(self.env['mrp.production'])
-        mo2_form.product_id = self.finished_product
-        mo2_form.picking_type_id = picking_type
-        mo2 = mo2_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'picking_type_id': picking_type.id,
+        })
         mo2.action_confirm()
 
         action = (mo1 + mo2).action_merge()
@@ -867,7 +866,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo = mo_form.save()
         action = mo.button_mark_done()
 
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
             {'product_consumed_qty_uom': 1.0, 'product_expected_qty_uom': 0.0},
         ])

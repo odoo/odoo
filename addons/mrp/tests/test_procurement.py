@@ -989,19 +989,19 @@ class TestProcurement(TestMrpCommon):
             ]
         })
         # MO 1
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = super_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'product_id': super_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo_1.action_confirm()
 
         # MO 2
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = super_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo_2 = mo_form.save()
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': super_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo_2.action_confirm()
 
         res_mo_id = (mo_1 | mo_2).action_merge()['res_id']
@@ -1051,9 +1051,9 @@ class TestProcurement(TestMrpCommon):
         """
         self.warehouse_1.manufacture_steps = 'pbm'
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_4
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         mo.action_confirm()
 
         if not mo.is_locked:

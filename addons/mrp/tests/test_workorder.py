@@ -68,9 +68,9 @@ class TestWorkorder(TestMrpCommon):
         """Test that moves aren't automatically assigned to the last workorder
         when the quantity to produce (`product_qty`) is changed.
         """
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_2
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_2.id,
+        })
         mo.action_confirm()
         wiz = self.env['change.production.qty'].create({
             'mo_id': mo.id,
@@ -83,9 +83,9 @@ class TestWorkorder(TestMrpCommon):
         """Test that in progress workorder duration are correctly adapted according to the
         quantity to produce (`product_qty`).
         """
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_4
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
         mo.action_confirm()
         wo = mo.workorder_ids[0]
         initial_duration = wo.duration_expected

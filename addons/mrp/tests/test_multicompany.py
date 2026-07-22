@@ -105,9 +105,9 @@ class TestMrpMulticompany(common.TransactionCase):
             'company_id': self.company_a.id,
             'bom_line_ids': [(0, 0, {'product_id': component_a.id})]
         })
-        mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
-        mo_form.product_id = product_a
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].with_user(self.user_a).create({
+            'product_id': product_a.id,
+        })
         mo.with_user(self.user_b).action_confirm()
         self.assertEqual(mo.move_raw_ids.company_id, self.company_a)
         self.assertEqual(mo.move_finished_ids.company_id, self.company_a)
@@ -133,11 +133,9 @@ class TestMrpMulticompany(common.TransactionCase):
             'company_id': self.company_a.id,
             'bom_line_ids': [(0, 0, {'product_id': component.id})]
         })
-        mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
-        mo_form.product_id = product
-        # The mo must be confirmed, no longer in draft, in order for `lot_producing_ids` to be visible in the view
-        # <div class="o_row" invisible="state == 'draft' or product_tracking in ('none', False)">
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].with_user(self.user_a).create({
+            'product_id': product.id,
+        })
         mo.action_confirm()
         mo_form = Form(mo)
         mo_form.lot_producing_ids.set(lot_b)
@@ -166,9 +164,9 @@ class TestMrpMulticompany(common.TransactionCase):
             'company_id': self.company_a.id,
             'bom_line_ids': [(0, 0, {'product_id': component.id})]
         })
-        mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
-        mo_form.product_id = product
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].with_user(self.user_a).create({
+            'product_id': product.id,
+        })
         mo.with_user(self.user_b).action_confirm()
         mo_form = Form(mo)
         mo_form.qty_producing = 1

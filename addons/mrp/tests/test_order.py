@@ -59,13 +59,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_access_rights_manager(self):
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
-        man_order_form.product_id = self.product_4
-        man_order_form.product_qty = 5.0
-        man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.shelf_1
-        man_order_form.location_dest_id = self.output_location
-        man_order = man_order_form.save()
+        man_order = self.env['mrp.production'].with_user(self.user_mrp_manager).create({
+            'product_id': self.product_4.id,
+            'product_qty': 5.0,
+            'bom_id': self.bom_1.id,
+            'location_src_id': self.shelf_1.id,
+            'location_dest_id': self.output_location.id,
+        })
         man_order.action_confirm()
         man_order.action_cancel()
         self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
@@ -73,13 +73,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_access_rights_user(self):
         """ Checks an MRP user can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
-        man_order_form.product_id = self.product_4
-        man_order_form.product_qty = 5.0
-        man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.shelf_1
-        man_order_form.location_dest_id = self.output_location
-        man_order = man_order_form.save()
+        man_order = self.env['mrp.production'].with_user(self.user_mrp_user).create({
+            'product_id': self.product_4.id,
+            'product_qty': 5.0,
+            'bom_id': self.bom_1.id,
+            'location_src_id': self.shelf_1.id,
+            'location_dest_id': self.output_location.id,
+        })
         man_order.action_confirm()
         man_order.action_cancel()
         self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
@@ -103,15 +103,15 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         date_start = fields.Datetime.now() - timedelta(days=1)
         test_quantity = 3.0
-        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
-        man_order_form.product_id = self.product_4
-        man_order_form.bom_id = self.bom_1
-        man_order_form.uom_id = self.product_4.uom_id
-        man_order_form.product_qty = test_quantity
-        man_order_form.date_start = date_start
-        man_order_form.location_src_id = self.shelf_1
-        man_order_form.location_dest_id = self.output_location
-        man_order = man_order_form.save()
+        man_order = self.env['mrp.production'].with_user(self.user_mrp_user).create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+            'uom_id': self.product_4.uom_id.id,
+            'product_qty': test_quantity,
+            'date_start': date_start,
+            'location_src_id': self.shelf_1.id,
+            'location_dest_id': self.output_location.id,
+        })
 
         self.assertEqual(man_order.state, 'draft', "Production order should be in draft state.")
         man_order.action_confirm()
@@ -142,7 +142,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         action = man_order.button_mark_done()
         self.assertEqual(man_order.state, 'progress', "Production order should be open a backorder wizard, then not done yet.")
 
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
+        backorder = self.env['mrp.production.backorder'].with_context(**action['context']).create({})
         Form.from_action(self.env, backorder.action_close_mo()).save().action_confirm()
         self.assertEqual(man_order.state, 'done', "Production order should be done.")
 
@@ -170,12 +170,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_4).unlink()
         self.bom_3.ready_to_produce = 'all_available'
 
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = self.bom_3
-        production_form.product_qty = 5.0
-        production_form.uom_id = self.product_6.uom_id
-        production_2 = production_form.save()
+        production_2 = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_3.id,
+            'product_qty': 5.0,
+            'uom_id': self.product_6.uom_id.id,
+        })
 
         production_2.action_confirm()
         production_2.action_assign()
@@ -207,9 +207,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_workorder_sequence(self):
         """ Test that workorders are correctly sequenced after creation and confirmation. """
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_3
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
         self.assertEqual(len(mo.workorder_ids), 3)
         self.assertListEqual(mo.workorder_ids.mapped('sequence'), [0, 1, 2])
         self.assertEqual(mo.workorder_ids[0].operation_id.bom_id.type, 'phantom')    # Kit operations should go first
@@ -385,8 +385,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # Produce & backorder
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo_backorder = mo.production_group_id.production_ids[-1]
         self.assertEqual(mo_backorder.product_qty, 1)
 
@@ -424,12 +423,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 }),
             ]
         })
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom
-        production_form.product_qty = 1
-        production_form.uom_id = self.product_6.uom_id
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'uom_id': self.product_6.uom_id.id,
+        })
         self.assertEqual(production.workorder_ids.duration_expected, 90)
         self.assertEqual([production.date_finished], production.move_finished_ids.mapped('date'))
         mo_form = Form(production)
@@ -463,12 +462,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 Command.create({'product_id': self.product_8.id, 'product_qty': 4.16}),
             ],
         })
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom
-        production_form.product_qty = 1
-        production_form.uom_id = self.product_6.uom_id
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production_form = Form(production)
         with production_form.workorder_ids.new() as wo:
             wo.name = 'OP1'
@@ -528,12 +527,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 Command.create({'product_id': self.product_2.id, 'product_qty': 2.00}),
             ],
         })
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom
-        production_form.product_qty = 5
-        production_form.uom_id = self.product_6.uom_id
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 5,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production_form = Form(production)
         with production_form.workorder_ids.new() as wo:
             wo.name = 'OP1'
@@ -586,12 +585,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 Command.create({'product_id': self.product_2.id, 'product_qty': 3}),
             ],
         })
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom
-        production_form.product_qty = 1
-        production_form.uom_id = self.product_6.uom_id
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production.action_confirm()
         production.action_assign()
         production.is_locked = False
@@ -607,12 +606,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_update_plan_date(self):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
         date_start = datetime(2023, 5, 15, 9, 0)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_4
-        mo_form.bom_id = self.bom_1
-        mo_form.product_qty = 1
-        mo_form.date_start = date_start
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 1,
+            'date_start': date_start,
+        })
         self.assertEqual(mo.move_finished_ids[0].date, datetime(2023, 5, 15, 10, 0))
         mo.action_confirm()
         mo.button_plan()
@@ -639,12 +638,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             ]
         })
         self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom_eff
-        production_form.product_qty = 20
-        production_form.uom_id = self.product_6.uom_id
-        production = production_form.save()
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': bom_eff.id,
+            'product_qty': 20,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production.action_confirm()
         #Check the production order has the right quantities
         self.assertEqual(production.move_raw_ids[0].product_qty, 41, 'The quantity should be rounded up')
@@ -722,8 +721,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         remaining_lot = (lot_p1_1 | lot_p1_2) - consumed_lots
         remaining_lot.ensure_one()
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
 
         # Check MO backorder
         mo_backorder = mo.production_group_id.production_ids[-1]
@@ -823,8 +821,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         consumption_issues = mo._get_consumption_issues()
         action = mo._action_generate_consumption_wizard(consumption_issues)
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
-        warning = warning.save()
+        warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
 
         self.assertEqual(len(warning.mrp_consumption_warning_line_ids), 1)
         self.assertEqual(warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 5)
@@ -890,11 +887,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 bp.product_qty = 2.0
                 bp.uom_id = self.uom_dozen
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_4
-        mo_form.bom_id = self.bom_1
-        mo_form.product_qty = 2
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 2,
+        })
 
         mo.action_confirm()
         move_byproduct_1 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct1)
@@ -945,8 +942,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             ml.lot_id = self.lot_1
         details_operation_form.save()
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo2 = mo.production_group_id.production_ids[-1]
 
         mo_form = Form(mo2)
@@ -1065,11 +1061,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         ]
 
         # Create a MO for 2 product_4
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_4
-        mo_form.bom_id = self.bom_1
-        mo_form.product_qty = 2
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 2,
+        })
         mo.action_confirm()
         self.assertRecordValues(mo.move_byproduct_ids, [
             {'product_id': byproduct1.id, 'quantity': 2, 'picked': False},
@@ -1106,11 +1102,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         sn = mo1.lot_producing_ids
         mo1.button_mark_done()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = p_final
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo2 = mo_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo2.action_confirm()
 
         mo_form = Form(mo2)
@@ -1138,11 +1134,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo1.move_raw_ids.picked = True
         mo1.button_mark_done()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = p_final
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo2 = mo_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo2.action_confirm()
 
         mo_form = Form(mo2)
@@ -1174,11 +1170,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'byproduct_ids': [
                 Command.create({'product_id': byproduct.id, 'product_qty': 1, 'uom_id': byproduct.uom_id.id}),
             ]})
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo.action_confirm()
 
         sn = self.env['stock.lot'].create({
@@ -1196,11 +1192,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         details_operation_form.save()
         mo.button_mark_done()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished_product
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo2 = mo_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo2.action_confirm()
 
         mo_form = Form(mo2)
@@ -1229,19 +1225,19 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo1.move_raw_ids.picked = True
         mo1.button_mark_done()
 
-        unbuild_form = Form(self.env['mrp.unbuild'])
-        unbuild_form.product_id = p_final
-        unbuild_form.bom_id = bom
-        unbuild_form.product_qty = 1
-        unbuild_form.mo_id = mo1
-        unbuild_order = unbuild_form.save()
+        unbuild_order = self.env['mrp.unbuild'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+            'mo_id': mo1.id,
+        })
         unbuild_order.action_unbuild()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = p_final
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo2 = mo_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo2.action_confirm()
 
         mo_form = Form(mo2)
@@ -1272,9 +1268,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             }
         )
 
-        subassembly_mo1_form = Form(self.env["mrp.production"])
-        subassembly_mo1_form.product_id = subassembly_product
-        subassembly_mo1 = subassembly_mo1_form.save()
+        subassembly_mo1 = self.env["mrp.production"].create({
+            'product_id': subassembly_product.id,
+        })
         subassembly_mo1.action_confirm()
         subassembly_mo1.lot_producing_ids = subassembly_sn
         subassembly_mo1.button_mark_done()
@@ -1296,10 +1292,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 ],
             }
         )
-        finished_good_mo_form = Form(self.env["mrp.production"])
-        finished_good_mo_form.product_id = finished_good_product
-        finished_good_mo_form.bom_id = finished_good_product_bom
-        finished_good_mo = finished_good_mo_form.save()
+        finished_good_mo = self.env["mrp.production"].create({
+            'product_id': finished_good_product.id,
+            'bom_id': finished_good_product_bom.id,
+        })
         finished_good_mo.action_confirm()
         finished_good_mo.qty_producing = 1
         finished_good_mo.action_generate_serial()
@@ -1314,21 +1310,21 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         finished_good_mo.move_raw_ids.picked = True
         finished_good_mo.button_mark_done()
 
-        finished_good_ub_form = Form(self.env["mrp.unbuild"])
-        finished_good_ub_form.mo_id = finished_good_mo
-        finished_good_ub_form.lot_ids = finished_good_mo.lot_producing_ids[:1]
-        finished_good_ub = finished_good_ub_form.save()
+        finished_good_ub = self.env["mrp.unbuild"].create({
+            'mo_id': finished_good_mo.id,
+            'lot_ids': [Command.link(finished_good_mo.lot_producing_ids[:1].id)],
+        })
         finished_good_ub.action_unbuild()
 
-        subassembly_ub_form = Form(self.env["mrp.unbuild"])
-        subassembly_ub_form.mo_id = subassembly_mo1
-        subassembly_ub_form.lot_ids = subassembly_mo1.lot_producing_ids[:1]
-        subassembly_ub = subassembly_ub_form.save()
+        subassembly_ub = self.env["mrp.unbuild"].create({
+            'mo_id': subassembly_mo1.id,
+            'lot_ids': [Command.link(subassembly_mo1.lot_producing_ids[:1].id)],
+        })
         subassembly_ub.action_unbuild()
 
-        subassembly_mo2_form = Form(self.env["mrp.production"])
-        subassembly_mo2_form.product_id = subassembly_product
-        subassembly_mo2 = subassembly_mo2_form.save()
+        subassembly_mo2 = self.env["mrp.production"].create({
+            'product_id': subassembly_product.id,
+        })
         subassembly_mo2.action_confirm()
         subassembly_mo2.lot_producing_ids = subassembly_sn
         subassembly_mo2.button_mark_done()
@@ -1351,17 +1347,17 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             }
         )
 
-        mo1_form = Form(self.env["mrp.production"])
-        mo1_form.product_id = product
-        mo1 = mo1_form.save()
+        mo1 = self.env["mrp.production"].create({
+            'product_id': product.id,
+        })
         mo1.action_confirm()
         mo1.lot_producing_ids = sn
         mo1.button_mark_done()
 
-        ub_form = Form(self.env["mrp.unbuild"])
-        ub_form.mo_id = mo1
-        ub_form.lot_ids = sn
-        ub = ub_form.save()
+        ub = self.env["mrp.unbuild"].create({
+            'mo_id': mo1.id,
+            'lot_ids': [Command.link(sn.id)],
+        })
         ub.action_unbuild()
 
         scrap = self.env['stock.move'].create({
@@ -1398,9 +1394,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         })
         unscrap_picking.button_validate()
 
-        mo2_form = Form(self.env["mrp.production"])
-        mo2_form.product_id = product
-        mo2 = mo2_form.save()
+        mo2 = self.env["mrp.production"].create({
+            'product_id': product.id,
+        })
         mo2.action_confirm()
         mo2.lot_producing_ids = sn
         mo2.button_mark_done()
@@ -1423,9 +1419,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'name': 'Product no BoM',
             'is_storable': True,
         })
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+        })
         move = self.env['stock.move'].create({
             'product_id': self.product_2.id,
             'uom_id': self.uom_unit.id,
@@ -1460,9 +1456,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'name': 'Product no BoM',
             'is_storable': True,
         })
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+        })
         moves = self.env['stock.move'].create([{
             'product_id': self.product_2.id,
             'uom_id': self.uom_unit.id,
@@ -1541,10 +1537,10 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             wo.button_start()
             wo.button_finish()
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 5
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 5,
+        })
         mo.action_confirm()
         self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
             {'picked': False, 'quantity': 5},
@@ -1624,12 +1620,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             })]
         })
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = plastic_laminate
-        mo_form.bom_id = bom
-        mo_form.uom_id = self.uom_dozen
-        mo_form.product_qty = 1
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': plastic_laminate.id,
+            'bom_id': bom.id,
+            'uom_id': self.uom_dozen.id,
+            'product_qty': 1,
+        })
 
         final_product_lot = self.env['stock.lot'].create({
             'name': 'lot1',
@@ -1677,12 +1673,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'bom_line_ids': [Command.clear(), Command.create({'product_id': product_raw.id})],
         })
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished_product
-        mo_form.bom_id = bom
-        mo_form.uom_id = self.uom_unit
-        mo_form.product_qty = 1
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'bom_id': bom.id,
+            'uom_id': self.uom_unit.id,
+            'product_qty': 1,
+        })
 
         # Check Mo is created or not
         self.assertTrue(mo, "Mo is created")
@@ -1756,18 +1752,18 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo1.action_assign()
-        mo2_form = Form(self.env['mrp.production'])
-        mo2_form.product_id = p_final
-        mo2_form.bom_id = bom
-        mo2_form.product_qty = 1
-        mo2 = mo2_form.save()
+        mo2 = self.env['mrp.production'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo2.action_confirm()
         mo2.action_assign()
-        mo3_form = Form(self.env['mrp.production'])
-        mo3_form.product_id = p_final
-        mo3_form.bom_id = bom
-        mo3_form.product_qty = 1
-        mo3 = mo3_form.save()
+        mo3 = self.env['mrp.production'].create({
+            'product_id': p_final.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo3.action_confirm()
         mo3.action_assign()
         mos = mo1 | mo2 | mo3
@@ -2221,14 +2217,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.move_raw_ids[1].quantity = 70
         mo.move_raw_ids.picked = True
         action = mo.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
             {'product_consumed_qty_uom': 90, 'product_expected_qty_uom': 30},
             {'product_consumed_qty_uom': 70, 'product_expected_qty_uom': 20},
         ])
         action = warning.action_confirm()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo_backorder = mo.production_group_id.production_ids[-1]
 
         # Check quantities of the original MO
@@ -2268,13 +2263,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity = 5
         mo.move_raw_ids.filtered(lambda m: m.product_id == p2).quantity = 10
         action = mo.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
             {'product_consumed_qty_uom': 5, 'product_expected_qty_uom': 10},
         ])
         action = warning.action_confirm()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo_backorder = mo.production_group_id.production_ids[-1]
 
         # Check quantities of the original MO
@@ -3419,8 +3413,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.workorder_ids[2].button_finish()
 
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo_backorder = mo.production_group_id.production_ids[-1]
         mo_backorder.button_plan()
 
@@ -3807,13 +3800,11 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 200)
         self.assertEqual(mo.move_raw_ids[0].quantity, 80)
         action = mo.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
-        consumption = warning.save()
+        consumption = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertEqual(consumption.mrp_consumption_warning_line_ids.product_consumed_qty_uom, 80, "qty consumed incorrectly passed to wizard")
         self.assertEqual(consumption.mrp_consumption_warning_line_ids.product_expected_qty_uom, 40, "expected qty should match current BoM qty for qty being produced")
         action = consumption.action_set_qty()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 80, "current bom expected qty should remain unchanged")
         self.assertEqual(mo.move_raw_ids[0].quantity, 40, "current bom expected qty was not applied as qty to be done")
         self.assertEqual(mo.move_raw_ids[1].product_uom_qty, 48, "line without consumption issue was incorrectly changed")
@@ -3847,8 +3838,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo2.move_raw_ids[1].quantity, 40, "current MO Consumed qty should match expected qty to produce based on manually set value")
 
         action = mo2.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
-        consumption = warning.save()
+        consumption = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertEqual(len(consumption.mrp_consumption_warning_line_ids), 3, "deleted move should also show as an consumption line diff from BoM")
         for line in consumption.mrp_consumption_warning_line_ids:
             if line.product_id == p1:
@@ -3862,8 +3852,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 self.assertEqual(line.product_expected_qty_uom, 0, "additional component should have no expected qty")
 
         action = consumption.action_set_qty()
-        backorder2 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder2.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         # expect 3 moves: 1 for the originally missing product p2 with qty demand/done = 40
         #                 1 for the overused product p1 one with qty demand/done = 48/12 = 4 dozens
         #                 1 for the additional product self.product_1 with demand/done = 40/0
@@ -3922,7 +3911,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.move_raw_ids[0].move_line_ids.quantity = 1.5
         action = mo.button_mark_done()
 
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
             {'product_consumed_qty_uom': 1.5, 'product_expected_qty_uom': 1.0},
         ])
@@ -3966,7 +3955,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.move_raw_ids[0].quantity = 0
         # Set MO Done and create backorder
         action = mo.button_mark_done()
-        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        consumption_warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
 
         self.assertEqual(len(consumption_warning.mrp_consumption_warning_line_ids), 1)
         self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 0)
@@ -4288,8 +4277,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo_form.qty_producing = 3.0
         mo = mo_form.save()
         action = mo.button_mark_done()
-        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder_form.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         self.assertRecordValues(mo.workorder_ids, [
             {'qty_produced': 3.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 165.0, 'state': 'done'}
         ])
@@ -4315,8 +4303,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         # Set a different expected duration and validate the bo for 3 units
         bo.workorder_ids.duration_expected = 120.0
         action = bo.button_mark_done()
-        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder_form.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         self.assertRecordValues(bo.workorder_ids, [
             {'qty_produced': 3.0, 'qty_remaining': 0.0, 'duration_expected': 120.0, 'duration': 120.0, 'state': 'done'}
         ])

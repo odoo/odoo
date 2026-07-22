@@ -45,12 +45,11 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
             'bom_line_ids': [(0, 0, {'product_id': p[0]['id'], 'product_qty': 1}) for p in raw_materials]
         })
 
-        form = Form(self.env['mrp.production'])
-        form.product_id = finished
-        form.bom_id = bom
-        form.product_qty = total_quantity
-
-        mo = form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': finished.id,
+            'bom_id': bom.id,
+            'product_qty': total_quantity,
+        })
 
         mo.action_confirm()
 
