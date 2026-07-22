@@ -3881,6 +3881,7 @@ class MailThread(models.AbstractModel):
             'options': {
                 'icon': icon,
                 'data': {
+                    "message_id": message.id,
                     'model': model if model else '',
                     'res_id': res_id if res_id else '',
                 }
