@@ -618,12 +618,9 @@ class HrLeave(models.Model):
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
-                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    days = 1
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                elif leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
+                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
                     # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                     # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                     # the leave should count the full day even if it falls on a public holiday.
