@@ -216,7 +216,8 @@ export class SplitBillScreen extends Component {
                     newOrder.last_order_preparation_change.lines,
                     line,
                     newLine,
-                    this.qtyTracker[line.uuid]
+                    this.qtyTracker[line.uuid],
+                    true
                 );
             }
         }

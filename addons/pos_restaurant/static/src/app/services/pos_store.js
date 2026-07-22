@@ -123,28 +123,39 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, cancelled);
     },
-    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty, markAsTransferred = false) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
-        const existingDestQty = destPrep[destKey]?.quantity || 0;
+        const srcEntry = srcPrep[srcKey];
+        const srcQty = srcEntry?.quantity;
+        const destEntry = destPrep[destKey];
+        const existingDestQty = destEntry?.quantity || 0;
+        const existingDestTransferredQty = destEntry?.transferredQty || 0;
 
         if (srcQty) {
+            // Only mark as transferred on Split. Table merge/link deletes the source
+            // order (and its prep tickets), so those quantities must be re-sent.
+            const movedQty = Math.min(srcQty, qty);
+            const addedTransferredQty = markAsTransferred
+                ? srcEntry.transferredQty ?? movedQty
+                : srcEntry.transferredQty || 0;
+            const transferredQty = existingDestTransferredQty + addedTransferredQty;
+            const newPrep = {
+                ...srcEntry,
+                uuid: destLine.uuid,
+                quantity: existingDestQty + movedQty,
+            };
+            if (transferredQty) {
+                newPrep.transferredQty = transferredQty;
+            } else {
+                delete newPrep.transferredQty;
+            }
+            destPrep[destKey] = newPrep;
+
             if (srcQty <= qty) {
-                const newPrep = {
-                    ...srcPrep[srcKey],
-                    uuid: destLine.uuid,
-                    quantity: existingDestQty + srcQty,
-                };
-                destPrep[destKey] = newPrep;
                 delete srcPrep[srcKey];
             } else {
                 srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = {
-                    ...srcPrep[srcKey],
-                    uuid: destLine.uuid,
-                    quantity: existingDestQty + qty,
-                };
             }
         }
     },
