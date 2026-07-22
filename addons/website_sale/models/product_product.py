@@ -358,21 +358,30 @@ class ProductProduct(models.Model):
         )
         if not email_template:
             return
+        website = self.env["website"].get_current_website(fallback=True)
         for product_id in products.ids:
             product = self.env["product.product"].browse(product_id)
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_price = product._apply_taxes_to_price(
+                product.list_price,
+                product.currency_id,
+                product_taxes=product_taxes,
+                taxes=product_taxes,
+                website=website,
+            )
             for partner_id in product.with_context(
                 # Only fetch the ids, all the other fields will be invalidated either way
                 prefetch_fields=False
             ).stock_notification_partner_ids.ids:
                 partner = self.env["res.partner"].browse(partner_id)
-                email_template.with_user(self.env.website.salesperson_id).with_context(
-                    customer_name=partner.name, lang=partner.lang
+                email_template.with_user(website.salesperson_id).with_context(
+                    customer_name=partner.name, lang=partner.lang, product_price=product_price
                 ).send_mail(
                     product.id,
                     force_send=True,
                     email_values={
                         "email_to": partner.email_formatted,
-                        "email_from": self.env.website.company_id.partner_id.email_formatted,
+                        "email_from": website.company_id.partner_id.email_formatted,
                     },
                 )
 
