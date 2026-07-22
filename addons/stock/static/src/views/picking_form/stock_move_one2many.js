@@ -3,11 +3,32 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { user } from "@web/core/user";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
-import { onWillStart, usePlugin } from "@odoo/owl";
+import { onWillStart, usePlugin, t, Component, useProps, signal } from "@odoo/owl";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/core/dialog/dialog";
 import { ORM } from "@web/core/orm_plugin";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+
+const BackorderConfirmationDialogProps = {
+    removeDemand: t.function(),
+    isProcessing: t.signal(),
+    close: t.function(),
+};
+
+class BackorderConfirmationDialog extends Component {
+    static template = "stock.BackorderConfirmationDialog";
+    static components = { Dialog };
+    props = useProps(BackorderConfirmationDialogProps);
+
+    async removeDemand(createBackorder) {
+        try {
+            await this.props.removeDemand(createBackorder);
+        } finally {
+            this.props.close();
+        }
+    }
+}
 
 export class MovesListRenderer extends ListRenderer {
     static createRowTemplate = "stock.AddPackageListRendererRow";
@@ -17,6 +38,7 @@ export class MovesListRenderer extends ListRenderer {
         this.addDialog = useOwnedDialogs();
         this.orm = usePlugin(ORM);
         this.actionPlugin = usePlugin(ActionPlugin);
+        this.isProcessing = signal(false);
 
         onWillStart(async () => {
             this.hasPackageActive = await user.hasGroup("stock.group_tracking_lot");
@@ -74,6 +96,42 @@ export class MovesListRenderer extends ListRenderer {
         this.pickingId = record.data.id;
         this.locationId = record.data.location_id?.id;
         return result;
+    }
+
+    async removeDemand(record, createBackorder) {
+        if (this.isProcessing()) {
+            return;
+        }
+        this.isProcessing.set(true);
+        try {
+            if (await record.model.root.save()) {
+                await this.orm.call("stock.move", "action_remove_demand", [[record.resId], createBackorder]);
+                await record.model.root.load();
+            }
+        } finally {
+            this.isProcessing.set(false);
+        }
+    }
+
+    async onDeleteRecord(record) {
+        const picking = record.model.root.data;
+        if (!record.resId || ["draft", "cancel"].includes(picking.state)) {
+            return super.onDeleteRecord(record);
+        }
+        const [pickingType] = await this.orm.webRead("stock.picking.type", [picking.picking_type_id.id], {
+            specification: { create_backorder: {} },
+        });
+        const createBackorder = pickingType.create_backorder;
+        if (createBackorder === "always") {
+            await this.removeDemand(record, true);
+        } else if (createBackorder === "never") {
+            await this.removeDemand(record, false);
+        } else {
+            this.addDialog(BackorderConfirmationDialog, {
+                isProcessing: this.isProcessing,
+                removeDemand: (createBackorder) => this.removeDemand(record, createBackorder),
+            });
+        }
     }
 }
 

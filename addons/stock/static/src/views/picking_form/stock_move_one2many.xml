@@ -5,4 +5,21 @@
             <a t-if="this.canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
         </td>
     </t>
+
+    <t t-name="stock.BackorderConfirmationDialog">
+        <Dialog size="'lg'" title.translate="Create Backorder?">
+            <p name="explanation-text">
+                You are removing products initially demanded.
+            </p>
+            <p class="text-muted">
+                Create a backorder if you expect to process the remaining products later. Do not create a backorder if
+                you will not process the remaining products.
+            </p>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-att-disabled="this.props.isProcessing()" data-hotkey="q" t-on-click="() => this.removeDemand(true)">Backorder</button>
+                <button class="btn btn-danger" t-att-disabled="this.props.isProcessing()" data-hotkey="w" t-on-click="() => this.removeDemand(false)">No Backorder</button>
+                <button class="btn btn-secondary" t-att-disabled="this.props.isProcessing()" data-hotkey="x" t-on-click="this.props.close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
 </templates>
