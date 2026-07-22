@@ -100,15 +100,20 @@ $o-theme-text-colors: (
 $o-opacity-disabled: .5 !default;
 $o-opacity-muted: .76 !default;
 
-$o-opacities: (
-    0: 0,
+$o-opacities-bg: (
+    15: .15,
     25: .25,
     50: .5,
     75: .75,
+    85: .85,
+) !default;
+
+$o-opacities: map-merge($o-opacities-bg, (
+    0: 0,
     100: 1,
     disabled: $o-opacity-disabled,
     muted: $o-opacity-muted,
-) !default;
+)) !default;
 
 // Font families
 $o-font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;

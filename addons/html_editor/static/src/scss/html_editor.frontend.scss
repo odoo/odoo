@@ -1,3 +1,63 @@
+// Emit combination 1's resolved --o-cc-* and Bootstrap component vars on :root
+// as the global defaults for elements outside any .o_cc{N} wrapper. Body/link
+// --body-*/--link-* are already contrast-correct: bootstrap_overridden.scss now
+// computes $body-bg/$body-color/$link-color through the same resolver, so no
+// correction pass is needed here.
+//
+// Shares o-cc-resolve-colors with the @for loop in html_editor.common.scss, so
+// a threshold change stays consistent. Placed here (not in common.scss) because
+// common.scss is also loaded in backend/report contexts where these global
+// defaults must not be emitted.
+$-cc1-bg: o-color(map-get($colors, 'o-cc1-bg'));
+@include o-cc-resolve-colors(
+    $bg-color: $-cc1-bg,
+    $index: 1,
+    $use-user-palette: true,
+    $btn-fill-threshold: 1.05
+);
+@include o-cc-variables(
+    $resolved-bg-color,
+    $resolved-text-color,
+    $resolved-headings-color,
+    $resolved-link-color,
+    $resolved-link-hover-color,
+    $resolved-btn-primary-color,
+    $resolved-btn-primary-border-color,
+    $resolved-btn-primary-outline-color,
+    $resolved-btn-secondary-color,
+    $resolved-btn-secondary-border-color,
+    $resolved-btn-secondary-outline-color,
+    $scope: ':root',
+    $nested-scope: null
+);
+
+// Extend bg-* utility classes with the full o-cc-* component token set so that
+// buttons, dropdowns, navbars, cards, etc. remain readable when a user applies
+// one of these classes to a block in the website builder.
+//
+// Placed here (not in bootstrap_review_frontend.scss) because o-bg-color-cc is
+// defined in html_editor.common.scss, which loads after bootstrap_review_frontend.scss
+// in the asset bundle and would therefore be unavailable there.
+//
+// Gray classes (.bg-100 … .bg-900): bg-variant in bootstrap_review_frontend.scss
+// already sets background-color and basic --color/--heading-color via o-bg-color.
+// These blocks add the full component vars on top; the later declaration wins for
+// shared properties (same selector, same specificity, source order wins).
+@each $color, $value in $grays {
+    .bg-#{$color} {
+        @include o-bg-color-cc($value);
+    }
+}
+
+// Theme-color classes (.bg-success, .bg-primary, …): Bootstrap's utilities API
+// only sets background-color:; o-bg-color-cc adds --color/--background-color
+// compat vars, a readable text color, and all component token vars.
+@each $color, $value in $theme-colors {
+    .bg-#{$color} {
+        @include o-bg-color-cc($value);
+    }
+}
+
 .o_wysiwyg_loader {
     @extend :disabled;
     pointer-events: none;
