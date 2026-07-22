@@ -36,30 +36,61 @@ class TestFleet(common.TransactionCase):
         car.with_user(self.manager).plan_to_change_vehicle = True
 
     def test_change_future_driver(self):
+        registered_state = self.env.ref(
+            "fleet.fleet_vehicle_state_registered"
+        )
         car1, car2, bike1, bike2 = self.env["fleet.vehicle"].create([
             {
                 "model_id": self.car_model.id,
                 "driver_id": self.user.partner_id.id,
+<<<<<<< 6efd9a5286b3df25c7ed8872f409aa35391ea035
                 "plan_to_change_vehicle": False,
                 "state_id": self.env.ref("fleet.fleet_vehicle_state_registered").id,
+||||||| 47d4dc8e48bff9ece8ea048bd340ddbe789a37ea
+                "plan_to_change_car": False,
+=======
+                "plan_to_change_car": False,
+                "state_id": registered_state.id,
+>>>>>>> 55d287b8e2bed7a3cd8619350d7058fca2adb158
             },
             {
                 "model_id": self.car_model.id,
                 "driver_id": self.manager.partner_id.id,
+<<<<<<< 6efd9a5286b3df25c7ed8872f409aa35391ea035
                 "plan_to_change_vehicle": False,
                 "state_id": self.env.ref("fleet.fleet_vehicle_state_registered").id,
+||||||| 47d4dc8e48bff9ece8ea048bd340ddbe789a37ea
+                "plan_to_change_car": False,
+=======
+                "plan_to_change_car": False,
+                "state_id": registered_state.id,
+>>>>>>> 55d287b8e2bed7a3cd8619350d7058fca2adb158
             },
             {
                 "model_id": self.bike_model.id,
                 "driver_id": self.user.partner_id.id,
+<<<<<<< 6efd9a5286b3df25c7ed8872f409aa35391ea035
                 "plan_to_change_vehicle": False,
                 "state_id": self.env.ref("fleet.fleet_vehicle_state_registered").id,
+||||||| 47d4dc8e48bff9ece8ea048bd340ddbe789a37ea
+                "plan_to_change_car": False,
+=======
+                "plan_to_change_car": False,
+                "state_id": registered_state.id,
+>>>>>>> 55d287b8e2bed7a3cd8619350d7058fca2adb158
             },
             {
                 "model_id": self.bike_model.id,
                 "driver_id": self.manager.partner_id.id,
+<<<<<<< 6efd9a5286b3df25c7ed8872f409aa35391ea035
                 "plan_to_change_vehicle": False,
                 "state_id": self.env.ref("fleet.fleet_vehicle_state_registered").id,
+||||||| 47d4dc8e48bff9ece8ea048bd340ddbe789a37ea
+                "plan_to_change_car": False,
+=======
+                "plan_to_change_car": False,
+                "state_id": registered_state.id,
+>>>>>>> 55d287b8e2bed7a3cd8619350d7058fca2adb158
             },
         ])
         self.assertFalse(car1.future_driver_id)
