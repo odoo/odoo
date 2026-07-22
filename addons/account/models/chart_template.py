@@ -233,6 +233,8 @@ class AccountChartTemplate(models.AbstractModel):
                     records.with_context(force_delete=True).unlink()
 
         data = self._get_chart_template_data(template_code)
+        clean_data = {model: dict(vals) for model, vals in data.items()}
+        company.coa = str(clean_data)
         template_data = data.pop('template_data')
         if company.parent_id:
             data = {
