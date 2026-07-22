@@ -17,7 +17,7 @@ export class RecipientTag extends Component {
         "id",
         "name",
         "onClick?",
-        "onDelete",
+        "onDelete?",
         "resId?",
         "text",
         "tooltip",
