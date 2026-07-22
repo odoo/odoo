@@ -3787,9 +3787,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(len(invoice.invoice_line_ids), 2)
 
     def test_quick_edit_total_amount_with_mixed_epd(self):
-        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
-        move_form.invoice_date = fields.Date.from_string('2022-01-01')
-
         # Quick edit total amount activated
         self.env.company.quick_edit_mode_enabled = True
         # 21% sale tax
@@ -3806,10 +3803,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'early_discount': True,
             'early_pay_discount_computation': 'mixed',
         })
-        # Set the payment term to the one we just created
-        move_form.invoice_payment_term_id = epd_payment_term
-
-        invoice = move_form.save()
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2022-01-01'),
+            'invoice_payment_term_id': epd_payment_term.id,
+        })
 
         # Invoice of one item of price 100, discount 2% and tax 21%:
         # 21% tax = 100 * (1 - 0.2) * 0.21 = 20.58
