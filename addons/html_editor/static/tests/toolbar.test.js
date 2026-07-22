@@ -509,7 +509,7 @@ test("toolbar disable link button when table cells are selected", async () => {
             </tbody>
         </table>
     `);
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".btn[name='link']").toHaveClass("disabled");
 });
 

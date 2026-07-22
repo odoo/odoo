@@ -54,10 +54,12 @@ export class TableBorderPlugin extends Plugin {
 
     /** @type {import("plugins").EditorResources} */
     resources = {
+        toolbar_groups: withSequence(25, { id: "table_border", namespaces: ["expanded", "table"] }),
         toolbar_items: [
             withSequence(10, {
                 id: "table_border_color",
-                groupId: "table",
+                groupId: "table_border",
+                namespaces: ["expanded", "table"],
                 description: _t("Table border color"),
                 isAvailable: () =>
                     this.dependencies.selection
@@ -71,11 +73,13 @@ export class TableBorderPlugin extends Plugin {
                     enabledTabs: ["solid", "custom"],
                     colorPrefix: "--",
                     getSelectedColors: () => {
-                        this.selectedBorderColors.color =
+                        const borderColor =
                             this.getTableSelectedBorder("color", "default") || "transparent";
-                        if (this.selectedBorderColors.color === "default") {
+                        if (borderColor === "default") {
                             // Do not specify selection and display solid tab.
                             this.selectedBorderColors.color = "";
+                        } else {
+                            this.selectedBorderColors.color = borderColor;
                         }
                         return this.selectedBorderColors;
                     },
@@ -92,7 +96,8 @@ export class TableBorderPlugin extends Plugin {
             }),
             withSequence(11, {
                 id: "table_border_width",
-                groupId: "table",
+                groupId: "table_border",
+                namespaces: ["expanded", "table"],
                 description: _t("Table border width"),
                 isAvailable: () =>
                     this.dependencies.selection
@@ -113,7 +118,8 @@ export class TableBorderPlugin extends Plugin {
             }),
             withSequence(12, {
                 id: "table_border_style",
-                groupId: "table",
+                groupId: "table_border",
+                namespaces: ["expanded", "table"],
                 description: _t("Table border style"),
                 isAvailable: () =>
                     this.dependencies.selection

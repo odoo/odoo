@@ -153,7 +153,7 @@ export class FormatPlugin extends Plugin {
                 id: "bold",
                 description: _t("Bold (Ctrl + B)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded", "text"],
+                namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatBold",
                 isActive: () =>
                     this.activeFormats["bold"]?.applyStyle ?? this.isFormatActive("bold"),
@@ -162,7 +162,7 @@ export class FormatPlugin extends Plugin {
                 id: "italic",
                 description: _t("Italic (Ctrl + I)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded", "text"],
+                namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatItalic",
                 isActive: () =>
                     this.activeFormats["italic"]?.applyStyle ?? this.isFormatActive("italic"),
@@ -171,7 +171,7 @@ export class FormatPlugin extends Plugin {
                 id: "underline",
                 description: _t("Underline (Ctrl + U)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded", "text"],
+                namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatUnderline",
                 isActive: () =>
                     this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
