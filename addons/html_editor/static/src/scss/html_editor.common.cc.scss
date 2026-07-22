@@ -169,49 +169,53 @@ $resolved-btn-secondary-outline-color: null !default;
 @mixin o-cc-apply($index) {
 
     // ── Shared resolution ──────────────────────────────────────────────────────
-    $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-h2: map-get($colors, 'o-cc#{$index}-h2');
-    $-h3: map-get($colors, 'o-cc#{$index}-h3');
-    $-h4: map-get($colors, 'o-cc#{$index}-h4');
-    $-h5: map-get($colors, 'o-cc#{$index}-h5');
-    $-h6: map-get($colors, 'o-cc#{$index}-h6');
-    $-bg-color: o-color($-bg);
+    $-bg-color: o-color('o-cc#{$index}-bg');
+    $-h2: o-color('o-cc#{$index}-h2');
+    $-h3: o-color('o-cc#{$index}-h3');
+    $-h4: o-color('o-cc#{$index}-h4');
+    $-h5: o-color('o-cc#{$index}-h5');
+    $-h6: o-color('o-cc#{$index}-h6');
 
-    // Resolve all colors using shared logic
-    @include o-cc-resolve-colors(
-        $bg-color: $-bg-color,
-        $index: $index,
-        $use-user-palette: true,
-    );
+    // Guard so this works in bundles that do NOT include bootstrap_overridden.scss
+    // which is what populates $colors with o-cc* entries.
+    @if $-bg-color {
 
-    // ── :root — named CSS vars for builder JS / color pickers ─────────────
-    // Emits --o-cc{N}-* so the builder can read every combination's resolved
-    // values regardless of which .o_cc{N} class is currently active.
-    :root {
-        @include print-variable('o-cc#{$index}-bg', $resolved-bg-color);
-        @include print-variable('o-cc#{$index}-text', $resolved-text-color);
-        @include print-variable('o-cc#{$index}-headings', $resolved-headings-color);
-        @if o-color($-h2) { @include print-variable('o-cc#{$index}-h2', o-color($-h2)); }
-        @if o-color($-h3) { @include print-variable('o-cc#{$index}-h3', o-color($-h3)); }
-        @if o-color($-h4) { @include print-variable('o-cc#{$index}-h4', o-color($-h4)); }
-        @if o-color($-h5) { @include print-variable('o-cc#{$index}-h5', o-color($-h5)); }
-        @if o-color($-h6) { @include print-variable('o-cc#{$index}-h6', o-color($-h6)); }
-        @include print-variable('o-cc#{$index}-link', $resolved-link-color);
-        @include print-variable('o-cc#{$index}-link-hover', $resolved-link-hover-color);
-        @include print-variable('o-cc#{$index}-btn-primary', $resolved-btn-primary-color);
-        @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($resolved-btn-primary-color));
-        @include print-variable('o-cc#{$index}-btn-primary-border', $resolved-btn-primary-border-color);
-        @include print-variable('o-cc#{$index}-btn-secondary', $resolved-btn-secondary-color);
-        @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($resolved-btn-secondary-color));
-        @include print-variable('o-cc#{$index}-btn-secondary-border', $resolved-btn-secondary-border-color);
-    }
+        // Resolve all colors using shared logic
+        @include o-cc-resolve-colors(
+            $bg-color: $-bg-color,
+            $index: $index,
+            $use-user-palette: true,
+        );
 
-    // ── .o_cc{N} — scoped CSS vars for page rendering ─────────────────────
-    // Those color classes color multiple elements when applied on a snippet.
-    // Those rules are not important so that they can be overridden through
-    // bg and text utility classes.
-    .o_cc#{$index} {
-        @include o-cc-extend($index);
+        // ── :root — named CSS vars for builder JS / color pickers ─────────────
+        // Emits --o-cc{N}-* so the builder can read every combination's resolved
+        // values regardless of which .o_cc{N} class is currently active.
+        :root {
+            @include print-variable('o-cc#{$index}-bg', $resolved-bg-color);
+            @include print-variable('o-cc#{$index}-text', $resolved-text-color);
+            @include print-variable('o-cc#{$index}-headings', $resolved-headings-color);
+            @if $-h2 { @include print-variable('o-cc#{$index}-h2', $-h2); }
+            @if $-h3 { @include print-variable('o-cc#{$index}-h3', $-h3); }
+            @if $-h4 { @include print-variable('o-cc#{$index}-h4', $-h4); }
+            @if $-h5 { @include print-variable('o-cc#{$index}-h5', $-h5); }
+            @if $-h6 { @include print-variable('o-cc#{$index}-h6', $-h6); }
+            @include print-variable('o-cc#{$index}-link', $resolved-link-color);
+            @include print-variable('o-cc#{$index}-link-hover', $resolved-link-hover-color);
+            @include print-variable('o-cc#{$index}-btn-primary', $resolved-btn-primary-color);
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($resolved-btn-primary-color));
+            @include print-variable('o-cc#{$index}-btn-primary-border', $resolved-btn-primary-border-color);
+            @include print-variable('o-cc#{$index}-btn-secondary', $resolved-btn-secondary-color);
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($resolved-btn-secondary-color));
+            @include print-variable('o-cc#{$index}-btn-secondary-border', $resolved-btn-secondary-border-color);
+        }
+
+        // ── .o_cc{N} — scoped CSS vars for page rendering ─────────────────────
+        // Those color classes color multiple elements when applied on a snippet.
+        // Those rules are not important so that they can be overridden through
+        // bg and text utility classes.
+        .o_cc#{$index} {
+            @include o-cc-extend($index);
+        }
     }
 }
 
@@ -697,46 +701,41 @@ $resolved-btn-secondary-outline-color: null !default;
 /// @extend.
 ///
 @mixin o-cc-extend($index) {
-    // Resolve background and heading-level overrides (h2–h6)
-    $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-h2: map-get($colors, 'o-cc#{$index}-h2');
-    $-h3: map-get($colors, 'o-cc#{$index}-h3');
-    $-h4: map-get($colors, 'o-cc#{$index}-h4');
-    $-h5: map-get($colors, 'o-cc#{$index}-h5');
-    $-h6: map-get($colors, 'o-cc#{$index}-h6');
-    $-bg-color: o-color($-bg);
+    $-bg-color: o-color('o-cc#{$index}-bg');
+    $-h2: o-color('o-cc#{$index}-h2');
+    $-h3: o-color('o-cc#{$index}-h3');
+    $-h4: o-color('o-cc#{$index}-h4');
+    $-h5: o-color('o-cc#{$index}-h5');
+    $-h6: o-color('o-cc#{$index}-h6');
 
-    // Resolve all colors using shared logic
-    @include o-cc-resolve-colors(
-            $bg-color: $-bg-color,
-            $index: $index,
-            $use-user-palette: true,
-    );
+    @if $-bg-color {
+        // Resolve all colors using shared logic
+        @include o-cc-resolve-colors(
+                $bg-color: $-bg-color,
+                $index: $index,
+                $use-user-palette: true,
+        );
 
-    // ── Emit styles on current selector ────────────────────────────────────────
-    @include o-cc-variables(
-        $resolved-bg-color,
-        $resolved-text-color,
-        $resolved-headings-color,
-        $resolved-link-color,
-        $resolved-link-hover-color,
-        $resolved-btn-primary-color,
-        $resolved-btn-primary-border-color,
-        $resolved-btn-primary-outline-color,
-        $resolved-btn-secondary-color,
-        $resolved-btn-secondary-border-color,
-        $resolved-btn-secondary-outline-color,
-    );
-    background-color: var(--o-cc-bg);
-    color: var(--o-cc-text);
-    :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }
-    // User's arbitrary heading-level overrides (h2–h6; h1 inherits
-    // from text/headings and is rarely pinned per-combination).
-    @if o-color($-h2) { --heading-color: #{o-color($-h2)}; }
-    @if o-color($-h3) { --heading-color: #{o-color($-h3)}; }
-    @if o-color($-h4) { --heading-color: #{o-color($-h4)}; }
-    @if o-color($-h5) { --heading-color: #{o-color($-h5)}; }
-    @if o-color($-h6) { --heading-color: #{o-color($-h6)}; }
+        // ── Emit styles on current selector ────────────────────────────────────────
+        @include o-cc-variables(
+                $resolved-bg-color,
+                $resolved-text-color,
+                $resolved-headings-color,
+                $resolved-link-color,
+                $resolved-link-hover-color,
+                $resolved-btn-primary-color,
+                $resolved-btn-primary-border-color,
+                $resolved-btn-primary-outline-color,
+                $resolved-btn-secondary-color,
+                $resolved-btn-secondary-border-color,
+                $resolved-btn-secondary-outline-color,
+        );
+        background-color: var(--o-cc-bg);
+        color: var(--o-cc-text);
+        :where(.btn-close) {
+            filter: var(--o-cc-btn-close-filter);
+        }
+    }
 }
 
 
