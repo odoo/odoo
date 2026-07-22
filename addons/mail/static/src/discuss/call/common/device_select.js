@@ -30,6 +30,7 @@ export class DeviceSelect extends Component {
         this.store = useService("mail.store");
         this.notification = useService("notification");
         this.state = useState({
+            /** @type {MediaDeviceInfo[]} */
             userDevices: [],
             selectedDevice: undefined,
         });
@@ -122,15 +123,32 @@ export class DeviceSelect extends Component {
         }
     }
 
-    onSelectAudioDevice(device) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {Object} [param1={}]
+     * @param {MediaDeviceInfo} [param1.device]
+     */
+    onSelectAudioDevice(ev, { device } = {}) {
         this.state.selectedDevice = device;
         const deviceId = device?.deviceId ?? "";
         switch (this.props.kind) {
             case "audioinput":
-                this.store.settings.audioInputDeviceId = deviceId;
+                this.store.rtc
+                    .askForBrowserPermission({ audio: true, deviceId })
+                    .then((granted) => {
+                        if (granted) {
+                            this.store.settings.audioInputDeviceId = deviceId;
+                        }
+                    });
                 return;
             case "videoinput":
-                this.store.settings.cameraInputDeviceId = deviceId;
+                this.store.rtc
+                    .askForBrowserPermission({ video: true, deviceId })
+                    .then((granted) => {
+                        if (granted) {
+                            this.store.settings.cameraInputDeviceId = deviceId;
+                        }
+                    });
                 return;
             case "audiooutput":
                 this.store.settings.audioOutputDeviceId = deviceId;
