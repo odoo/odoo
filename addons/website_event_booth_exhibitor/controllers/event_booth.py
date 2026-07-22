@@ -4,10 +4,15 @@
 import base64
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.http import request
 from odoo.tools import plaintext2html
 
 
 class WebsiteEventBoothController(WebsiteEventController):
+
+    def _check_booth_registration_values(self, booths, contact_email, booth_category=False):
+        contact_email = contact_email or request.params.get('sponsor_email')
+        return super()._check_booth_registration_values(booths, contact_email, booth_category=booth_category)
 
     def _prepare_booth_registration_values(self, event, kwargs):
         booth_values = super(WebsiteEventBoothController, self)._prepare_booth_registration_values(event, kwargs)
