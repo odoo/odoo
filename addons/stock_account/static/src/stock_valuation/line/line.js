@@ -1,4 +1,5 @@
 import { Component, props, proxy, t } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 
 export class StockValuationReportLine extends Component {
@@ -63,7 +64,7 @@ export class StockValuationReportLine extends Component {
     get totalProps() {
         const props = {
             class: "total",
-            label: this.env._t("Total"),
+            label: _t("Total"),
             level: this.props.level,
             value: this.props.value,
         };
