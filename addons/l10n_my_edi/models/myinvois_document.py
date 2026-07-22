@@ -503,7 +503,12 @@ class MyInvoisDocument(models.Model):
     def action_view_linked_invoices(self):
         """ Return the action used to open the order(s) linked to the selected consolidated invoice. """
         self.ensure_one()
-        return self.invoice_ids._get_records_action(name=self.env._("Invoice(s)"))
+        # Once consolidated, invoices should not be sent to MyInvois individually anymore; disabling the
+        # toolbar here hides the "Action" button from the invoices list view.
+        return self.invoice_ids._get_records_action(
+            name=self.env._("Invoice(s)"),
+            context={**self.env.context, 'disable_toolbar': True},
+        )
 
     # ----------------
     # Business methods
