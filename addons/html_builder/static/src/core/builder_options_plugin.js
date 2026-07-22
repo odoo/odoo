@@ -309,6 +309,7 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             this.target = target;
         }
+        // The diff with the previous commit from AGE's is that this.target.isConnected equals false. It equated to true before.
         if (!this.target || !this.target.isConnected) {
             const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
             this.target = connectedContainers.at(-1)?.element;
@@ -343,6 +344,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
+        // Calls the function for overlay position change
         this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
 

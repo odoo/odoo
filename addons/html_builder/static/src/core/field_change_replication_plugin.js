@@ -116,6 +116,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
                         }
                     } else {
                         if (targetEl.innerHTML !== cloneEl.innerHTML) {
+                            // This is where the target gets disconnected
                             targetEl.replaceChildren(...cloneEl.cloneNode(true).childNodes);
                             touchedEls.add(targetEl);
                         }

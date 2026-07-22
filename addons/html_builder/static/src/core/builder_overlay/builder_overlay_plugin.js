@@ -129,6 +129,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 isRtl: this.config.isEditableRTL,
             });
             this.overlays.push(overlay);
+            // Location where the overlay container position changes unexpectedly
             this.overlayContainer.append(overlay.overlayElement);
             this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
         });
