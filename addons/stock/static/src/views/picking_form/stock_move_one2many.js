@@ -5,6 +5,8 @@ import { user } from "@web/core/user";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+
 import { _t } from "@web/core/l10n/translation";
 
 export class MovesListRenderer extends ListRenderer {
@@ -14,6 +16,7 @@ export class MovesListRenderer extends ListRenderer {
         super.setup();
         this.addDialog = useOwnedDialogs();
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
         this.actionService = useService("action");
 
         onWillStart(async () => {
@@ -72,6 +75,40 @@ export class MovesListRenderer extends ListRenderer {
         this.pickingId = record.data.id;
         this.locationId = record.data.location_id?.id;
         return result;
+    }
+
+    async confirmBackorder(record) {
+        await this.orm.call("stock.move", "action_add_to_backorder", [[record.resId]]);
+        await record.model.root.load();
+}
+
+    async onDeleteRecord(record){
+        if (!record.resId) {
+            return super.onDeleteRecord(record);
+        }
+        const [move] = await this.orm.webRead('stock.move', [record.resId], {
+            specification: {
+                picking_type_id: {
+                    fields: { create_backorder: {} },
+                },
+            },
+        });
+        const createBackorder = move.picking_type_id?.create_backorder;
+        if (createBackorder === 'always') {
+            await this.confirmBackorder(record);
+        }else if (createBackorder === 'never') {
+            await super.onDeleteRecord(record);
+        }else{
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Backorder?"),
+                body: _t("Do you want to add this move to a backorder instead of removing it?"),
+                confirmLabel: _t("Backorder"),
+                confirm: () => this.confirmBackorder(record),
+                cancelLabel: _t("Remove"),
+                cancel: () => super.onDeleteRecord(record),
+                dismiss: () => {},
+            })
+        }
     }
 }
 
