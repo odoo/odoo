@@ -60,6 +60,12 @@ class Location extends models.Model {
     tortoise_ids = fields.One2many({ string: "Turtles", relation: "tortoise" });
 }
 
+class TortoiseOwner extends models.Model {
+    _name = "tortoise.owner";
+
+    name = fields.Char();
+}
+
 class Species extends models.Model {
     name = fields.Char();
     definitions = fields.PropertiesDefinition();
@@ -80,6 +86,12 @@ class Species extends models.Model {
                     type: "many2many",
                     relation: "location",
                 },
+                {
+                    name: "owner_id",
+                    string: "Owner",
+                    type: "many2one",
+                    relation: "tortoise.owner",
+                },
             ],
         },
         {
@@ -93,7 +105,7 @@ class Species extends models.Model {
     ];
 }
 
-defineModels([Tortoise, Location, Species]);
+defineModels([Tortoise, Location, TortoiseOwner, Species]);
 
 test("loadPath", async () => {
     await makeMockEnv();
@@ -344,6 +356,63 @@ test("loadPath follow relational properties", async () => {
         }
     }
     expect.verifySteps(errorToTest.map(() => "error"));
+});
+
+test("loadPath with property accessors", async () => {
+    await makeMockEnv();
+
+    const toTest = [
+        {
+            resModel: "tortoise",
+            path: "property_field.get('galapagos_lifespans')",
+            expectedResult: {
+                names: ["property_field", "galapagos_lifespans"],
+                modelsInfo: [getModelInfo(Tortoise), getDefinitions()],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.get('owner_id', env['tortoise.owner'])",
+            expectedResult: {
+                names: ["property_field", "owner_id"],
+                modelsInfo: [getModelInfo(Tortoise), getDefinitions()],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.get('owner_id', env['tortoise.owner']).name",
+            followRelationalProperties: true,
+            expectedResult: {
+                names: ["property_field", "owner_id", "name"],
+                modelsInfo: [
+                    getModelInfo(Tortoise),
+                    getDefinitions("tortoise"),
+                    getModelInfo(TortoiseOwner),
+                ],
+            },
+        },
+    ];
+    for (const { resModel, path, followRelationalProperties, expectedResult } of toTest) {
+        const result = await getService("field").loadPath(
+            resModel,
+            path,
+            followRelationalProperties
+        );
+        expect(result).toEqual(expectedResult);
+    }
+
+    const { resModel, fieldDef } = await getService("field").loadFieldInfo(
+        "tortoise",
+        "property_field.get('galapagos_lifespans')"
+    );
+    expect(resModel).toBe("*");
+    expect(fieldDef.string).toBe("Lifespans");
+
+    const description = await getService("field").loadPathDescription(
+        "tortoise",
+        "property_field.get('galapagos_lifespans')"
+    );
+    expect(description).toEqual({ isInvalid: false, displayNames: ["Properties", "Lifespans"] });
 });
 
 test("store loadFields calls in cache in success", async () => {

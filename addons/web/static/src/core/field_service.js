@@ -17,6 +17,31 @@ function getRelation(fieldDef, followRelationalProperties = false) {
     return null;
 }
 
+const PROPERTY_ACCESSOR_REGEX = /^get\('([^']+)'(?:,\s*env\['[^']*'\])?\)$/;
+
+/**
+ * @param {string} path
+ * @returns {string[]}
+ */
+function splitPath(path) {
+    const names = [];
+    let current = "";
+    let quoted = false;
+    for (const char of path) {
+        if (char === "'") {
+            quoted = !quoted;
+        }
+        if (char === "." && !quoted) {
+            names.push(current);
+            current = "";
+        } else {
+            current += char;
+        }
+    }
+    names.push(current);
+    return names.map((name) => name.match(PROPERTY_ACCESSOR_REGEX)?.[1] ?? name);
+}
+
 export const fieldService = {
     dependencies: ["orm"],
     async: [
@@ -166,7 +191,7 @@ export const fieldService = {
             if (typeof path !== "string" || !path) {
                 throw new Error(`Invalid path: ${path}`);
             }
-            return _loadPath(resModel, fieldDefs, path.split("."), followRelationalProperties);
+            return _loadPath(resModel, fieldDefs, splitPath(path), followRelationalProperties);
         }
 
         /**
