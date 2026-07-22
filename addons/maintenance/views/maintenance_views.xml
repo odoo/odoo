@@ -457,6 +457,7 @@
                         <field t-if="record.serial_no.raw_value" name="serial_no"/>
                         <!-- below div is used in hr_maintenance and fleet_maintenance-->
                         <div id="unassigned" invisible="1">Unassigned</div>
+                        <field name="equipment_properties" widget="properties"/>
                         <footer>
                             <div class="badge rounded-pill text-bg-danger" t-if="record.maintenance_open_count.raw_value">
                                 <field name="maintenance_open_count" /> Request
