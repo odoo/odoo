@@ -72,6 +72,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'partner_id': cls.env.company.partner_id.id,
             'allow_out_payment': True,
         })
+        cls.self_billing_journal = cls.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
 
     def create_move(self, partner, company=None):
         return self.env['account.move'].create({
@@ -629,17 +635,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
-        self_billing_journal = self.env['account.journal'].create({
-            'name': 'Self Billing',
-            'code': 'SB',
-            'type': 'purchase',
-            'is_self_billing': True,
-        })
-
         # Create a vendor bill (in_invoice) that can be sent as self-billed
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'journal_id': self_billing_journal.id,
+            'journal_id': self.self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
@@ -685,16 +684,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """Test that self-billing sending constraints are properly handled."""
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
-        self_billing_journal = self.env['account.journal'].create({
-            'name': 'Self Billing',
-            'code': 'SB',
-            'type': 'purchase',
-            'is_self_billing': True,
-        })
-
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'journal_id': self_billing_journal.id,
+            'journal_id': self.self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
