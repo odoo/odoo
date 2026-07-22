@@ -539,7 +539,7 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── Cards ────────────────────────────────────────────────────────────────
-    #{if($nested-scope, '.card, #{$nested-scope}.card, #{$nested-scope} .card', '.card')} {
+    #{$scope+'.card'}, #{if($nested-scope, '.card, #{$nested-scope}.card, #{$nested-scope} .card', '.card')} {
         --card-color: #{$text-color};
         --card-bg: #{$bg-color};
         --card-border-color: #{$-border-color};
@@ -678,19 +678,17 @@ $resolved-btn-secondary-outline-color: null !default;
 
     // ── Emit styles on current selector ────────────────────────────────────────
     @include o-cc-variables(
-                    $resolved-bg-color,
-                    $resolved-text-color,
-                    $resolved-headings-color,
-                    $resolved-link-color,
-                    $resolved-link-hover-color,
-                    $resolved-btn-primary-color,
-                    $resolved-btn-primary-border-color,
-                    $resolved-btn-primary-outline-color,
-                    $resolved-btn-secondary-color,
-                    $resolved-btn-secondary-border-color,
-                    $resolved-btn-secondary-outline-color,
-            //$scope: '&',
-            //$nested-scope: '.o_cc &'
+        $resolved-bg-color,
+        $resolved-text-color,
+        $resolved-headings-color,
+        $resolved-link-color,
+        $resolved-link-hover-color,
+        $resolved-btn-primary-color,
+        $resolved-btn-primary-border-color,
+        $resolved-btn-primary-outline-color,
+        $resolved-btn-secondary-color,
+        $resolved-btn-secondary-border-color,
+        $resolved-btn-secondary-outline-color,
     );
     background-color: var(--o-cc-bg);
     color: var(--o-cc-text);
@@ -758,8 +756,6 @@ $resolved-btn-secondary-outline-color: null !default;
             $resolved-btn-secondary-color,
             $resolved-btn-secondary-color,
             $resolved-btn-secondary-outline-color,
-            //$scope: '&',
-            //$nested-scope: '.o_cc &'
     );
     // Mirror .o_cc{N} behavior: ensure .btn-close is visible on the bg.
     :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }
