@@ -1,9 +1,8 @@
-import { useComponent } from "@web/owl2/utils";
+import { untrack, useListener, useProps } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
-import { untrack, useListener } from "@odoo/owl";
 
 const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell, .fc-timegrid-col)`;
 const ROW_SELECTOR = `tr[role="row"]`;
@@ -100,7 +99,7 @@ const useBlockSelection = makeDraggableHook({
 });
 
 export function useSquareSelection(fullCalendarRef) {
-    const component = useComponent();
+    const props = useProps();
     const ref = {
         get el() {
             return untrack(fullCalendarRef);
@@ -134,7 +133,7 @@ export function useSquareSelection(fullCalendarRef) {
         });
     };
 
-    useCallbackRecorder(component.props.callbackRecorder, () => {
+    useCallbackRecorder(props.callbackRecorder, () => {
         allSelectedCells = new Set();
         prevSelectedCell = null;
         removeHighlight();
@@ -148,7 +147,7 @@ export function useSquareSelection(fullCalendarRef) {
     };
 
     const selectState = useBlockSelection({
-        enable: () => component.props.model.hasMultiCreate,
+        enable: () => props.model.hasMultiCreate,
         ignore: IGNORE_SELECTOR,
         elements: CELL_SELECTOR,
         ref,
@@ -164,7 +163,7 @@ export function useSquareSelection(fullCalendarRef) {
             allSelectedCells = getAllCells(selectedCells, action);
             action = null;
             highlight({ selectedCells: allSelectedCells });
-            component.props.onSquareSelection([...allSelectedCells]);
+            props.onSquareSelection([...allSelectedCells]);
         },
         onDragEnd() {
             ref.el.classList.remove("o_interacting", "o_selecting");
@@ -206,14 +205,10 @@ export function useSquareSelection(fullCalendarRef) {
             prevSelectedCell = selectedCell;
         }
         highlight({ selectedCells: allSelectedCells });
-        component.props.onSquareSelection([...allSelectedCells]);
+        props.onSquareSelection([...allSelectedCells]);
     };
 
-    useListener(
-        () => (component.props.model.hasMultiCreate ? fullCalendarRef() : null),
-        "click",
-        onClick
-    );
+    useListener(() => (props.model.hasMultiCreate ? fullCalendarRef() : null), "click", onClick);
 
     let ctrlPressed = false;
     let shiftPressed = false;

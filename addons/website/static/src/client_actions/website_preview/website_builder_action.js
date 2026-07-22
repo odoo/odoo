@@ -1,40 +1,40 @@
-import { useComponent, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
-    useEffect,
+    immediateEffect,
     onMounted,
     onPatched,
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    signal,
-    status,
-    immediateEffect,
     proxy,
+    signal,
+    useEffect,
+    useScope,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { LazyComponent } from "@web/core/lazy_component";
 import { browser } from "@web/core/browser/browser";
+import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
+import { router } from "@web/core/browser/router";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
+import { LazyComponent } from "@web/core/lazy_component";
+import { post } from "@web/core/network/http_service";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { rpc, RPCError } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { renderToElement } from "@web/core/utils/render";
+import { getScrollingElement } from "@web/core/utils/scrolling";
 import { redirect } from "@web/core/utils/urls";
+import { useSubEnv } from "@web/owl2/utils";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
+import { CreatePageMessage } from "./create_page_message";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
-import { renderToElement } from "@web/core/utils/render";
-import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
-import { router } from "@web/core/browser/router";
-import { getScrollingElement } from "@web/core/utils/scrolling";
-import { CreatePageMessage } from "./create_page_message";
-import { post } from "@web/core/network/http_service";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -92,7 +92,8 @@ export class WebsiteBuilderClientAction extends Component {
         });
         this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
         this.websiteContext = proxy(this.websiteService.context);
-        this.component = useComponent();
+
+        const scope = useScope();
 
         useBus(
             websiteSystrayRegistry,
@@ -106,10 +107,9 @@ export class WebsiteBuilderClientAction extends Component {
             // page style synchronously.
             disposeToggleMobileEffect = immediateEffect(() => {
                 this.websiteContext.isMobile; // consume signal
-                if (status(this.component) !== "mounted") {
-                    return;
+                if (!scope.isDestroyed()) {
+                    this.toggleIsMobile(this.websiteContext.isMobile);
                 }
-                this.toggleIsMobile(this.websiteContext.isMobile);
             });
         });
         onWillDestroy(disposeToggleMobileEffect);
@@ -722,7 +722,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     toggleIsMobile(isMobile) {
-        this.websitePreviewRef().classList.toggle("o_is_mobile", isMobile);
+        this.websitePreviewRef()?.classList.toggle("o_is_mobile", isMobile);
         this.websiteContent()?.contentDocument.documentElement.classList.toggle(
             "o_is_mobile",
             isMobile

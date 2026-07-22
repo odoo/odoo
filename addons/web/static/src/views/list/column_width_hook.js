@@ -1,9 +1,4 @@
-import { useComponent } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { utils } from "@web/core/ui/ui_service";
-import { renderToElement } from "@web/core/utils/render";
-import { useDebounced } from "@web/core/utils/timing";
 import {
     formatDate,
     formatDateTime,
@@ -11,8 +6,12 @@ import {
     toLocaleDateTimeString,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
+import { utils } from "@web/core/ui/ui_service";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { renderToElement } from "@web/core/utils/render";
+import { useDebounced } from "@web/core/utils/timing";
 
-import { onMounted, onPatched, onWillUnmount, status, useListener, xml } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, useListener, useScope, xml } from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
@@ -394,8 +393,7 @@ function getHorizontalPadding(el) {
     return parseFloat(paddingLeft) + parseFloat(paddingRight);
 }
 
-export function useMagicColumnWidths(tableRef, getState) {
-    const renderer = useComponent();
+export function useMagicColumnWidths(tableRef, canUseMagicColumnWidths, getState) {
     const getTableEl = () => resolveRefEl(tableRef);
     let columnWidths = null;
     let allowedWidth = 0;
@@ -563,7 +561,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     }
 
     // Side effects
-    if (renderer.constructor.useMagicColumnWidths) {
+    if (canUseMagicColumnWidths) {
         onMounted(forceColumnWidths);
         onPatched(forceColumnWidths);
         // Forget computed widths (and potential manual column resize) on window resize
@@ -574,14 +572,10 @@ export function useMagicColumnWidths(tableRef, getState) {
         // with an x2many list and a chatter (when it is displayed below the form) as it may happen
         // that the display of chatter messages introduces a vertical scrollbar, thus reducing the
         // available width.
-        const component = useComponent();
+        const scope = useScope();
         let parentWidth;
         const debouncedForceColumnWidths = useDebounced(
-            () => {
-                if (status(component) !== "destroyed") {
-                    forceColumnWidths();
-                }
-            },
+            () => !scope.isDestroyed() && forceColumnWidths(),
             200,
             { immediate: true, trailing: true }
         );

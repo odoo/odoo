@@ -11,8 +11,9 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
     static template = "hr_skills.ResumeListRenderer";
     static rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
     static recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
-    static useMagicColumnWidths = false;
+
     linkRef = new Resource({ name: "link-target-blank" });
+    useMagicColumnWidths = false;
 
     setup() {
         super.setup();

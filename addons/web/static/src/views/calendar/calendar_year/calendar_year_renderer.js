@@ -62,22 +62,22 @@ export class CalendarYearRenderer extends Component {
     get interactiveOptions() {
         return {
             ...this.options,
-            dateClick: this.handleDateClick,
+            dateClick: this.handleDateClick.bind(this),
             dayMaxEventRows: this.props.model.eventLimit,
             droppable: true,
             editable: this.props.model.canEdit,
-            eventClassNames: this.eventClassNames,
-            eventDidMount: this.onEventDidMount,
-            eventReceive: this.onEventScheduled,
+            eventClassNames: this.eventClassNames.bind(this),
+            eventDidMount: this.onEventDidMount.bind(this),
+            eventReceive: this.onEventScheduled.bind(this),
             eventResizableFromStart: true,
             longPressDelay: TOUCH_SELECTION_THRESHOLD,
-            select: this.onSelect,
+            select: this.onSelect.bind(this),
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
             selectable: this.props.model.canCreate,
             unselectAuto: false,
-            windowResize: this.onWindowResize,
-            eventContent: this.onEventContent,
+            windowResize: this.onWindowResize.bind(this),
+            eventContent: this.onEventContent.bind(this),
             weekends: this.props.isWeekendVisible,
         };
     }
@@ -85,7 +85,7 @@ export class CalendarYearRenderer extends Component {
     get options() {
         return {
             dayHeaderFormat: "EEEEE",
-            dayCellClassNames: this.getDayCellClassNames,
+            dayCellClassNames: this.getDayCellClassNames.bind(this),
             initialDate: this.props.initialDate.toISO(),
             initialView: "dayGridMonth",
             direction: localization.direction,
@@ -99,7 +99,7 @@ export class CalendarYearRenderer extends Component {
             showNonCurrentDates: false,
             timeZone: luxon.Settings.defaultZone.name,
             titleFormat: { month: "long", year: "numeric" },
-            viewDidMount: this.viewDidMount,
+            viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
             weekNumberFormat: { week: "numeric" },
