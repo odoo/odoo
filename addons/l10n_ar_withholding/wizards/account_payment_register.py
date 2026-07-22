@@ -16,7 +16,40 @@ class AccountPaymentRegister(models.TransientModel):
         'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute="_compute_l10n_ar_withholding_ids", readonly=False, store=True)
     l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True, help="Net amount after withholdings")
-    l10n_ar_adjustment_warning = fields.Boolean(compute="_compute_l10n_ar_adjustment_warning")
+
+    @api.depends(
+        'country_code',
+        'can_edit_wizard',
+        'can_group_payments',
+        'group_payment',
+        'amount',
+        'l10n_latam_move_check_ids',
+        'l10n_latam_new_check_ids',
+        'payment_method_code',
+    )
+    def _compute_alerts(self):
+        super()._compute_alerts()
+        for wizard in self:
+            if wizard.country_code == 'AR':
+                if not wizard.can_edit_wizard or (wizard.can_group_payments and not wizard.group_payment):
+                    wizard.alerts = {
+                        **(wizard.alerts or {}),
+                        'l10n_ar_withholding_group_warning': {
+                            'message': self.env._("You can't register withholdings when paying invoices of different partners or same partner without grouping"),
+                            'level': 'info',
+                        }
+                    }
+                checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
+                checks_amount = sum(checks.mapped('amount'))
+                currency_id = wizard.currency_id or wizard.company_currency_id
+                if not currency_id.is_zero(checks_amount) and currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0:
+                    wizard.alerts = {
+                        **(wizard.alerts or {}),
+                        'l10n_ar_adjustment_warning_alert': {
+                            'message': self.env._("Adjust total amount or withholdings amount so that the check amount is the correct one."),
+                            'level': 'warning',
+                        }
+                    }
 
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode', 'l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
@@ -56,14 +89,6 @@ class AccountPaymentRegister(models.TransientModel):
                     if i == 200:
                         # Adjustment failed, resetting
                         wizard.amount = original_amount
-
-    @api.depends('amount', 'l10n_latam_move_check_ids', 'l10n_latam_new_check_ids', 'payment_method_code')
-    def _compute_l10n_ar_adjustment_warning(self):
-        for wizard in self:
-            checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
-            checks_amount = sum(checks.mapped('amount'))
-            currency_id = wizard.currency_id or wizard.company_currency_id
-            wizard.l10n_ar_adjustment_warning = not currency_id.is_zero(checks_amount) and currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0
 
     @api.depends('amount', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):

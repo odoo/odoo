@@ -16,8 +16,6 @@ class AccountPayment(models.Model):
         copy=False,
         string="Checks Operations"
     )
-    # Warning message in case of unlogical third party check operations
-    l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg')
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
 
     @api.constrains('state', 'move_id')
@@ -138,19 +136,8 @@ class AccountPayment(models.Model):
             check.outstanding_line_id.move_id.button_draft()
             check.outstanding_line_id.move_id.unlink()
 
-    @api.depends(
-        'payment_method_line_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
-        'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.payment_id.date',
-        'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
-        'l10n_latam_new_check_ids.bank_account_id', 'l10n_latam_move_check_ids.bank_account_id',
-    )
-    def _compute_l10n_latam_check_warning_msg(self):
-        """
-        Compute warning message for latam checks checks
-        We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
-        Another approach could be to add an onchange on _inverse_l10n_latam_check_number method
-        """
-        self.l10n_latam_check_warning_msg = False
+    def _get_alerts(self):
+        alerts = super()._get_alerts()
         for rec in self.filtered(lambda x: x._is_latam_check_payment()):
             msgs = rec._get_blocking_l10n_latam_warning_msg()
             # new third party check uniqueness warning (on own checks it's done by a sql constraint)
@@ -170,11 +157,16 @@ class AccountPayment(models.Model):
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
                     msgs.append(
-                        _("Other checks were found with same number, issuer and bank. Please double check you are not "
+                        self.env._("Other checks were found with same number, issuer and bank. Please double check you are not "
                           "encoding the same check more than once. List of other payments/checks: %s",
                           ", ".join(same_checks.mapped('display_name')))
                     )
-            rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
+            if msgs:
+                alerts['l10n_latam_check_warning'] = {
+                    'message': "\n".join(f"* {msg}" for msg in msgs),
+                    'level': 'danger',
+                }
+        return alerts
 
     @api.model
     def _get_trigger_fields_to_synchronize(self):
