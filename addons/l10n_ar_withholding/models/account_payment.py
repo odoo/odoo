@@ -1,23 +1,24 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+from odoo import api, models
+from odoo.exceptions import ValidationError
 
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    l10n_ar_withholding_ids = fields.One2many(related='move_id.l10n_ar_withholding_ids')
+    @api.constrains('state', 'withholding_line_ids')
+    def _check_withholding_line_sequence_number(self):
+        # AR withholdings are certificates: they must be numbered once the payment is posted.
+        for payment in self.filtered(lambda p: p.state in ('paid', 'reconciled') and p.country_code == 'AR'):
+            for line in payment.withholding_line_ids:
+                if not line.name and not line.withholding_sequence_id:
+                    raise ValidationError(self.env._(
+                        "Please enter Sequence Number for tax %(tax_name)s",
+                        tax_name=line.tax_id.name,
+                    ))
 
-    def _synchronize_to_moves(self, changed_fields):
-        ''' If we change a payment with withholdings, delete all withholding lines as the synchronization mechanism is not
-        implemented yet
-        '''
-        if not any(field_name in changed_fields for field_name in self._get_trigger_fields_to_synchronize()):
-            return
-        for pay in self:
-            pay.move_id.line_ids.filtered(
-                lambda x:
-                x.account_id == pay.company_id.l10n_ar_tax_base_account_id or
-                x.tax_line_id.l10n_ar_withholding_payment_type
-            ).unlink()
-        res = super()._synchronize_to_moves(changed_fields)
-        return res
+    @api.depends('company_id.account_fiscal_country_id')
+    def _compute_withholding_hide_name(self):
+        # EXTENDS 'l10n_account_withholding_tax' - always display sequence/name for AR
+        ar_payments = self.filtered(lambda p: p.country_code == 'AR')
+        ar_payments.withholding_hide_name = False
+        super(AccountPayment, self - ar_payments)._compute_withholding_hide_name()

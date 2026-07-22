@@ -64,15 +64,19 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 moves = self.env['account.move']
 
-            withholding_residual = sum(moves.mapped('withholding_residual_amount_currency'))
-            withholding_net_residual = sum(moves.mapped('withholding_net_residual_amount_currency'))
-
-            if withholding_residual > 0:
-                res['withhold'] = 'withhold_pay' if withholding_net_residual else 'withhold'
-            else:
-                res['withhold'] = 'payment'
+            res['withhold'] = self._get_default_withhold(moves)
 
         return res
+
+    @api.model
+    def _get_default_withhold(self, moves):
+        """ Return the withholding mode the wizard defaults to when registering a payment on the given documents. """
+        withholding_residual = sum(moves.mapped('withholding_residual_amount_currency'))
+        withholding_net_residual = sum(moves.mapped('withholding_net_residual_amount_currency'))
+
+        if withholding_residual > 0:
+            return 'withhold_pay' if withholding_net_residual else 'withhold'
+        return 'payment'
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -225,13 +229,15 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('withhold')
     def _compute_journal_id(self):
-        super()._compute_journal_id()
         for wizard in self:
             if wizard.withhold == 'withhold':
                 wizard.journal_id = self.env['account.journal'].search([
                     *self.env['account.journal']._check_company_domain(wizard.company_id),
                     ('type', '=', 'general'),
                 ], limit=1)
+            elif not wizard.journal_id or wizard.journal_id.type == 'general':
+                # Compute if not set or not withhold only and general journal set (most likely from previous setting).
+                super(AccountPaymentRegister, wizard)._compute_journal_id()
 
     @api.depends("withholding_line_ids.withholding_sequence_id")
     def _compute_withholding_hide_name(self):

@@ -1,8 +1,5 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import logging
-# from dateutil.relativedelta import relativedelta
-_logger = logging.getLogger(__name__)
 
 
 class L10n_ArPartnerTax(models.Model):
@@ -36,6 +33,6 @@ class L10n_ArPartnerTax(models.Model):
     )
 
     @api.constrains('from_date', 'to_date')
-    def check_partner_tax_dates(self):
+    def _check_partner_tax_dates(self):
         if self.filtered(lambda x: x.from_date and x.to_date and x.from_date >= x.to_date):
-            raise ValidationError(_('"From date" must be lower than "To date" on Withholding (AR) taxes.'))
+            raise ValidationError(self.env._('"From date" must be lower than "To date" on Withholding (AR) taxes.'))

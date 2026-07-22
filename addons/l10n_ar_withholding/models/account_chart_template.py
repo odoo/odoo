@@ -36,6 +36,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ar_base_withholding_res_company(self):
         return {
             self.env.company.id: {
-                'l10n_ar_tax_base_account_id': 'base_tax_account',
+                'withholding_tax_base_account_id': 'base_tax_account',
             },
         }

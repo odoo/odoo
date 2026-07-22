@@ -25,7 +25,6 @@
                             <field name="to_amount"/>
                             <field name="fixed_amount"/>
                             <field name="percentage"/>
-                            <field name="excess_amount"/>
                         </list>
                     </field>
                     </group>
@@ -33,7 +32,7 @@
                     <div>
                         <ul>
                             <li>Base amount = Tax base + tax bases applied this month to the same tax and partner - non-taxable amount</li>
-                            <li>Withholding amount = (Base amount - immediately previous amount of the column 'S/ Exceeding $') * row percentage / 100 + row fixed amount ('$' column)</li>
+                            <li>Withholding amount = (Base amount - row 'From $') * row percentage / 100 + row fixed amount ('$' column)</li>
                             <li>If the base amount is lower than 0.0 then the withholding is 0.0</li>
                             <li>If the withholding amount is lower than the minimum threshold on the tax then the final withholding amount is 0.0</li>
                         </ul>

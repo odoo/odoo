@@ -21,8 +21,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template(template='ar_ri', model='account.tax', demo=True)
     def _get_ar_witholding_account_tax_demo(self):
         return {
-            'ex_tax_withholding_profits_regimen_119_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
-            'ex_tax_withholding_profits_regimen_78_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
+            'ex_tax_withholding_profits_regimen_119_insc': {'withholding_sequence_id': 'earning_wth_sequence'},
+            'ex_tax_withholding_profits_regimen_78_insc': {'withholding_sequence_id': 'earning_wth_sequence'},
         }
 
     @template(template='ar_ri', model='l10n_ar.partner.tax', demo=True)
@@ -45,3 +45,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'l10n_ar.res_partner_mipyme',
             },
         }
+
+    @template('ar_base', 'account.tax', demo=True)
+    def _get_ar_base_withholding_demo_account_tax(self):
+        # Archive the default 2% WTH tax, it's misleading for AR
+        if not self.ref('withholding_demo_tax', raise_if_not_found=False):
+            return {}
+        return {'withholding_demo_tax': {'active': False}}

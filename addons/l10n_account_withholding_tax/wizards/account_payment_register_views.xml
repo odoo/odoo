@@ -4,6 +4,7 @@
         <field name="name">account.payment.register.form</field>
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="priority">30</field> <!-- Used to order the tabs in the notebook -->
         <field name="arch" type="xml">
             <group name="group1" position="before">
                 <field name="withhold" widget="radio" options="{'horizontal': True}" nolabel="1" invisible="not display_withholding"/>
@@ -14,55 +15,55 @@
             <xpath expr="//group[@name='group2']/field[@name='installments_switch_html']" position="attributes">
                 <attribute name="invisible" add="withhold == 'withhold'" separator=" or "/>
             </xpath>
-            <footer position="before">
-                <notebook name="payment_register_notebook" colspan="2" invisible="withhold == 'payment' or not display_withholding">
-                    <page name="withholding_page" string="Withholding">
-                        <group>
-                            <field name="withholding_line_ids" nolabel="1" colspan="2">
-                                <list editable="bottom">
-                                    <field name="source_base_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="source_base_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="source_tax_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="source_tax_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="source_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="comodel_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
-                                    <field name="placeholder_value" column_invisible="True"/> <!-- Needed for the placeholder widget -->
-                                    <field name="name"
-                                           column_invisible="parent.withholding_hide_name"
-                                           widget="char_with_placeholder_field"
-                                           options="{'placeholder_field': 'placeholder_value'}"
-                                           width="92px"
-                                           optional="show"/>
-                                    <field name="account_id"
-                                           column_invisible="parent.withholding_hide_tax_base_account"
-                                           width="184px"
-                                           optional="show"/>
-                                    <field name="base_amount"/>
-                                    <field name="tax_id"
-                                           options="{'no_open': True, 'no_create': True}"
-                                           width="92px"/>  <!-- Tax names tend to be short -->
-                                    <field name="analytic_distribution"
-                                           widget="analytic_distribution"
-                                           groups="analytic.group_analytic_accounting"
-                                           optional="hide"
-                                           width="200px"/> <!-- Can be opened if needed -->
-                                    <field name="amount" sum="Total Withheld Amount"/>
-                                </list>
-                            </field>
-                        </group>
-                        <group>
-                            <group>
-                                <field name="withholding_outstanding_account_id"
-                                       required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
-                                       invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding or withhold != 'withhold_pay'"/>
-                            </group>
-                            <group>
-                                <field name="withholding_net_amount" invisible="withhold == 'withhold'"/>
-                            </group>
-                        </group>
-                    </page>
-                </notebook>
-            </footer>
+            <xpath expr="//notebook[@name='payment_register_notebook']" position="inside">
+                <page name="withholding_page" string="Withholdings" invisible="withhold == 'payment' or not display_withholding">
+                    <group>
+                        <field name="withholding_line_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="source_base_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_base_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_tax_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_tax_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="comodel_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="placeholder_value" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                                <field name="name"
+                                       column_invisible="parent.withholding_hide_name"
+                                       widget="char_with_placeholder_field"
+                                       options="{'placeholder_field': 'placeholder_value'}"
+                                       width="92px"
+                                       optional="show"/>
+                                <field name="account_id"
+                                       column_invisible="parent.withholding_hide_tax_base_account"
+                                       width="184px"
+                                       optional="show"/>
+                                <field name="base_amount"/>
+                                <field name="tax_id"
+                                       options="{'no_open': True, 'no_create': True}"
+                                       width="92px"/>  <!-- Tax names tend to be short -->
+                                <field name="analytic_distribution"
+                                       widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting"
+                                       optional="hide"
+                                       width="200px"/> <!-- Can be opened if needed -->
+                                <field name="amount" sum="Total withheld:"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//notebook[@name='payment_register_notebook']" position="after">
+                <group invisible="withhold == 'payment' or not display_withholding">
+                    <group>
+                        <field name="withholding_outstanding_account_id"
+                                required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
+                                invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding or withhold != 'withhold_pay'"/>
+                    </group>
+                    <group>
+                        <field name="withholding_net_amount" invisible="withhold == 'withhold'"/>
+                    </group>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>
