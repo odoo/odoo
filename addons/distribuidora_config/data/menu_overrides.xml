@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="point_of_sale.menu_point_root" model="ir.ui.menu">
+        <field name="active">False</field>
+    </record>
+
+    <menuitem id="menu_productos_root"
+        name="Productos"
+        action="sale.product_template_action"
+        web_icon="product,static/description/icon.png"
+        groups="sales_team.group_sale_salesman"
+        sequence="32"/>
+
+    <!--
+        El nombre de contacts.menu_contacts y sale.sale_menu_root se
+        renombra vía _distribuidora_config_apply_menu_names en vez de un
+        <field name="name"> directo, porque "name" es un campo traducible:
+        escribirlo aquí solo tocaría el idioma de referencia (en_US), no
+        el idioma real de los usuarios (es_CR). El método recorre todos
+        los idiomas instalados. Se ejecuta en cada -u de este addon, no
+        solo en la instalación inicial.
+    -->
+    <function model="ir.ui.menu" name="_distribuidora_config_apply_menu_names" eval="[]"/>
+</odoo>
