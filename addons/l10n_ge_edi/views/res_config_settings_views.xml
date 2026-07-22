@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form_inherit_l10n_ge_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.ge.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="Georgia Electronic Integrations" id="l10n_ge_edi_settings" invisible="country_code != 'GE'">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">RS.ge Details</span>
+                                <span class="oi oi-lg" data-icon="business" title="Values set here are company-specific."/>
+                            </div>
+                            <div class="text-muted oe_inline mb-3">
+                                Configure your RS.ge service-user credentials below to register invoices with
+                                Georgia's Revenue Service directly from Odoo.
+                                <ul>
+                                    <li>Service User / Service Password: the credentials of the dedicated
+                                        sub-user created on RS.ge for API access (not your personal login).</li>
+                                    <li>Test Connection: validates the credentials against RS.ge.</li>
+                                </ul>
+                            </div>
+                            <div class="row">
+                                <label string="Service User" for="l10n_ge_edi_su" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ge_edi_su" placeholder="e.g. myuser:123456"/>
+                            </div>
+                            <div class="row">
+                                <label string="Service Password" for="l10n_ge_edi_sp" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_ge_edi_sp" password="True"/>
+                            </div>
+                            <div class="mt16">
+                                <button name="action_l10n_ge_edi_test_connection" type="object" class="btn-link"
+                                        invisible="not l10n_ge_edi_su or not l10n_ge_edi_sp">
+                                    <i title="Test connection" role="img" aria-label="Test connection" class="oi oi-fw" data-icon="power"/>
+                                    Test connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
