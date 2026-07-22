@@ -626,14 +626,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           ``_find_mail_mail_wemail``);
         :param status: mail.mail state used to filter mails. If ``sent`` this method
           also check that emails have been sent trough gateway;
+        :param recipients_cc_list: an ``res.partner`` recordset or a list of
+            emails;
+        :param email_to_all: list of email addresses used in email_to, checking
+          all of them are in the same email. This is in addition to checking recipients
+          individually.;
         :param email_to_recipients: used for assertSentEmail to find email based
           on 'email_to' when doing the match directly based on recipients_list
           being partners it nos easy (e.g. multi emails, ...);
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
-        :param email_to_all: list of email addresses used in email_to, checking
-        all of them are in the same email. This is in addition to checking recipients
-        individually.;
         :param fields_values: if given, should be a dictionary of field names /
           values allowing to check ``mail.mail`` additional values (subject,
           reply_to, ...);
@@ -1189,8 +1191,9 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             self._new_notifs += res.sudo()
             return res
 
-        with patch.object(MailMessage, 'create', autospec=True, wraps=MailMessage, side_effect=_mail_message_create) as _mail_message_create_mock, \
+        with patch.object(MailMessage, 'create', autospec=True, wraps=MailMessage, side_effect=_mail_message_create) as mail_message_create_mock, \
                 patch.object(MailNotification, 'create', autospec=True, wraps=MailNotification, side_effect=_mail_notification_create) as _mail_notification_create_mock:
+            self._mock_mail_message_create = mail_message_create_mock
             yield
 
     def _init_mock_mail(self):
