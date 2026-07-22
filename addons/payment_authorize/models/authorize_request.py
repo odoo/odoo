@@ -321,20 +321,29 @@ class AuthorizeAPI:
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        card = (
-            tx_details
-            .get("transaction", {})
-            .get("payment", {})
-            .get("creditCard", {})
-            .get("cardNumber")
-        )
+        tx_payment = tx_details.get("transaction", {}).get("payment", {})
+        if "bankAccount" in tx_payment:
+            payment_data = {
+                "bankAccount": {
+                    "routingNumber": tx_payment["bankAccount"].get("routingNumber"),
+                    "accountNumber": tx_payment["bankAccount"].get("accountNumber"),
+                    "nameOnAccount": tx_payment["bankAccount"].get("nameOnAccount"),
+                }
+            }
+        else:
+            payment_data = {
+                "creditCard": {
+                    "cardNumber": tx_payment.get("creditCard", {}).get("cardNumber"),
+                    "expirationDate": "XXXX",
+                }
+            }
         response = self._make_request(
             "createTransactionRequest",
             {
                 "transactionRequest": {
                     "transactionType": "refundTransaction",
                     "amount": str(amount),
-                    "payment": {"creditCard": {"cardNumber": card, "expirationDate": "XXXX"}},
+                    "payment": payment_data,
                     "refTransId": transaction_id,
                 }
             },
