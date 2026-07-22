@@ -859,7 +859,7 @@ class Website(Home):
             tree = html.fromstring(str(record[img['field']]))
             modified = False
             for index, element in enumerate(tree.xpath('//img')):
-                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
+                imgId = f"{img['res_model']}-{img['res_id']}-{img['field']}-{index!s}"
                 if imgId == img['id']:
                     if (img['decorative']):
                         element.set('alt', '')
