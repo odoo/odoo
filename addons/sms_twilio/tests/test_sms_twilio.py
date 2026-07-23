@@ -19,9 +19,9 @@ class TestSmsTwilio(MockSmsTwilio):
         for number, twilio_error, expected_status, expected_failure_type, expected_to_delete in [
             (self.twilio_valid_phone_number, False, "pending", False, True),
             # check some error code support
-            (self.twilio_valid_phone_number, "twilio_callback", "error", "twilio_callback", False),
-            (self.twilio_invalid_phone_number, "wrong_number_format", "error", "sms_number_format", False),
-            (self.twilio_invalid_phone_number, "sms_number_missing", "error", "sms_number_missing", False),
+            (self.twilio_valid_phone_number, "twilio_callback", "error", "twilio_callback", True),
+            (self.twilio_invalid_phone_number, "wrong_number_format", "error", "sms_number_format", True),
+            (self.twilio_invalid_phone_number, "sms_number_missing", "error", "sms_number_missing", True),
         ]:
             with self.subTest(number=number, twilio_error=twilio_error):
                 with self.mock_sms_twilio_gateway(error_type=twilio_error):
@@ -48,18 +48,18 @@ class TestSmsTwilio(MockSmsTwilio):
             # twilio specific issues
             (
                 self.invalid_partner, "twilio_acc_unverified", "exception", "sms_acc",
-                "Unverified recipient on Trial Account", False
+                "Unverified recipient on Trial Account", True
             ), (
                 self.invalid_partner, "twilio_callback", "exception", "twilio_callback",
-                "Twilio StatusCallback URL is incorrect", False
+                "Twilio StatusCallback URL is incorrect", True
             ),
             # check some error code support
             (
                 self.invalid_partner, "wrong_number_format", "exception", "sms_number_format",
-                "The number you're trying to reach is not correctly formatted", False
+                "The number you're trying to reach is not correctly formatted", True
             ), (
                 self.invalid_partner, "sms_number_missing", "exception", "sms_number_missing",
-                "A 'To' phone number is required", False
+                "A 'To' phone number is required", True
             ),
         ]:
             with self.subTest(partner=partner, number=partner.phone, twilio_error=twilio_error):

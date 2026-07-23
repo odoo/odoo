@@ -37,7 +37,6 @@ class SmsController(Controller):
                 else:
                     sms_trackers_sudo._action_update_from_provider_error(iap_status)
             all_uuids += uuids
-        request.env['sms.sms'].sudo().search([('uuid', 'in', all_uuids), ('to_delete', '=', False)]).to_delete = True
         return 'OK'
 
     @staticmethod

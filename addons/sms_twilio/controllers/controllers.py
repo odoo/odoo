@@ -73,9 +73,6 @@ class SmsTwilioController(Controller):
         else:
             sms_tracker_sudo._action_update_from_sms_state(TWILIO_TO_SMS_STATE[SmsStatus])
 
-        # Mark Sms as to be deleted
-        request.env['sms.sms'].sudo().search([('uuid', '=', uuid), ('to_delete', '=', False)]).to_delete = True
-
         return "OK"
 
     def _validate_twilio_signature(self, request, uuid):
