@@ -135,7 +135,7 @@ class AccountChartTemplate(models.AbstractModel):
         return [
             (template_code, template['name'])
             for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
-                t[1]['name'] != 'generic_coa' if not country
+                t[0] != 'generic_coa' if not country
                 else t[1]['country_id'] != country.id
             )))
         ]
