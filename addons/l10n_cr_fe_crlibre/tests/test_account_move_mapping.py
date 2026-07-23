@@ -161,3 +161,38 @@ class TestAccountMoveMapping(TransactionCase):
         params = credit_note._l10n_cr_fe_build_clave_params()
         self.assertEqual(params['tipoDocumento'], 'NC')
         self.assertEqual(len(params['consecutivo']), 10)
+
+    def test_build_genxml_params_nota_credito_includes_informacion_referencia(self):
+        import json as json_module
+        original = self.invoice
+        original.write({
+            'l10n_cr_fe_clave': '5' * 50,
+            'l10n_cr_fe_fecha_emision': '2026-07-01T10:00:00-06:00',
+            'l10n_cr_fe_state': 'aceptado',
+        })
+        credit_note = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'reversed_entry_id': original.id,
+            'l10n_cr_fe_codigo_referencia': '06',
+            'l10n_cr_fe_razon': 'Mercancía dañada en tránsito',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 500.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        detalles = credit_note._l10n_cr_fe_build_detalles()
+        params = credit_note._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
+        referencia = json_module.loads(params['informacion_referencia'])
+        self.assertEqual(len(referencia), 1)
+        self.assertEqual(referencia[0]['tipoDoc'], '01')
+        self.assertEqual(referencia[0]['numero'], '5' * 50)
+        self.assertEqual(referencia[0]['fechaEmision'], '2026-07-01T10:00:00-06:00')
+        self.assertEqual(referencia[0]['codigo'], '06')
+        self.assertEqual(referencia[0]['razon'], 'Mercancía dañada en tránsito')
+
+    def test_build_genxml_params_factura_has_no_informacion_referencia(self):
+        detalles = self.invoice._l10n_cr_fe_build_detalles()
+        params = self.invoice._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
+        self.assertNotIn('informacion_referencia', params)

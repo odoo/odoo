@@ -197,7 +197,7 @@ class AccountMove(models.Model):
 
         resumen = self._l10n_cr_fe_build_resumen_totals(detalles)
         medios_pago = [{'tipoMedioPago': '01', 'totalMedioPago': resumen['total_comprobante']}]
-        return {
+        params = {
             'clave': clave,
             'proveedor_sistemas': config.identification_number,
             'codigo_actividad_emisor': config.economic_activity_code,
@@ -221,6 +221,16 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
             **resumen,
         }
+        if self.move_type == 'out_refund':
+            original = self.reversed_entry_id
+            params['informacion_referencia'] = json.dumps([{
+                'tipoDoc': '01',  # Factura electrónica (catálogo TipoDocReferenciaType)
+                'numero': original.l10n_cr_fe_clave,
+                'fechaEmision': original.l10n_cr_fe_fecha_emision,
+                'codigo': self.l10n_cr_fe_codigo_referencia,
+                'razon': self.l10n_cr_fe_razon or '',
+            }])
+        return params
 
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
