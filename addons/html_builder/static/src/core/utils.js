@@ -1,10 +1,4 @@
-import {
-    useComponent,
-    useEnv,
-    useLayoutEffect,
-    useRef,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
@@ -158,14 +152,27 @@ export function useDependencyDefinition(id, item, { onReady } = {}) {
     const ignore = comp.env.ignoreBuilderItem;
     if (onReady) {
         onReady.then(() => {
-            comp.env.dependencyManager.add(id, item, ignore);
+            if (status(comp) !== "destroyed") {
+                comp.env.dependencyManager.add(id, item, ignore);
+            }
         });
     } else {
         comp.env.dependencyManager.add(id, item, ignore);
     }
 
     onWillDestroy(() => {
-        comp.env.dependencyManager.removeByValue(item);
+        if (status(comp) === "mounted") {
+            comp.env.dependencyManager.removeByValue(item);
+        } else {
+            // A component destroyed before being mounted was cancelled by a
+            // new render of an ancestor, which usually recreates a
+            // replacement that re-registers the same dependency, but
+            // asynchronously. Removing the dependency right away would make
+            // dependents observe a transient hole and flip their state back
+            // and forth on each recreation, up to an infinite render loop:
+            // keep serving this entry until the replacement supersedes it.
+            comp.env.dependencyManager.retireByValue(item);
+        }
     });
 }
 
@@ -962,27 +969,35 @@ export function useInputBuilderComponent({
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
     const operationWithReload = useOperationWithReload(callApply, reload);
+    function getValueFromDom(editingElement) {
+        const actionWithGetValue = getAllActions().find(
+            ({ actionId }) => getAction(actionId).getValue
+        );
+        const { actionId, actionParam } = actionWithGetValue;
+        try {
+            const actionValue = getAction(actionId).getValue({
+                editingElement,
+                params: actionParam,
+            });
+            return actionValue === undefined ? defaultValue : actionValue;
+        } catch (error) {
+            handleBuilderActionError(error, editingElement, comp);
+        }
+    }
+
     async function getState(editingElement) {
         await onReady;
         if (!isConnectedElement(editingElement)) {
             // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
         }
-        const actionWithGetValue = getAllActions().find(
-            ({ actionId }) => getAction(actionId).getValue
-        );
-        const { actionId, actionParam } = actionWithGetValue;
-        try {
-            let actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
-            if (actionValue === undefined) {
-                actionValue = defaultValue;
-            }
-            return {
-                value: actionValue,
-            };
-        } catch (error) {
-            handleBuilderActionError(error, editingElement, comp);
-        }
+        const value = getValueFromDom(editingElement);
+        // When no value could be computed (a swallowed action error, e.g. an
+        // outdated snippet), leave the state empty rather than populating
+        // `value: undefined`: the dependency getValue() below keys its DOM
+        // fallback on `"value" in state`, so a spurious `value` key would
+        // disarm it.
+        return value === undefined ? {} : { value };
     }
 
     function commit(userInputValue) {
@@ -1035,7 +1050,19 @@ export function useInputBuilderComponent({
             id,
             {
                 type: "input",
-                getValue: () => state.value,
+                getValue: () => {
+                    // state is populated asynchronously: until then, compute
+                    // the value from the DOM, so that a component recreated
+                    // after being cancelled (destroyed before being mounted)
+                    // doesn't transiently expose `undefined` to dependents.
+                    if ("value" in state) {
+                        return state.value;
+                    }
+                    const editingElement = comp.env.getEditingElement();
+                    return isConnectedElement(editingElement)
+                        ? getValueFromDom(editingElement)
+                        : undefined;
+                },
             },
             { onReady }
         );
