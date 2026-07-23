@@ -34,7 +34,7 @@ export class Map extends Component {
         setSelectedLocation: Function,
     };
 
-    mapRef = signal(null);
+    mapRef = signal.ref();
 
     setup() {
         this.leafletMap = null;

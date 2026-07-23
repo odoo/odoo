@@ -33,7 +33,7 @@ export class ListConfirmationDialog extends Component {
         changes: t.object(),
     });
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

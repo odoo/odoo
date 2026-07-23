@@ -31,7 +31,7 @@ export class HistoryDialog extends Component {
     });
 
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
-    listboxRef = signal(null);
+    listboxRef = signal.ref();
 
     state = proxy({
         revisionsData: [],

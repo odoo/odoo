@@ -11,7 +11,7 @@ export class AccountPickCurrencyDate extends Component {
         record: { type: Object, optional: true },
     };
 
-    datetimePickerTargetRef = signal(null);
+    datetimePickerTargetRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

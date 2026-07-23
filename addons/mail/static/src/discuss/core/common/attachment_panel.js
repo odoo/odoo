@@ -10,7 +10,7 @@ export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };
     static template = "mail.AttachmentPanel";
 
-    loadOlderRef = signal(null);
+    loadOlderRef = signal.ref();
 
     setup() {
         super.setup();

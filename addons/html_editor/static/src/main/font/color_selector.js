@@ -31,7 +31,7 @@ export class ColorSelector extends Component {
         useDefaultThemeColors: t.boolean().optional(true),
     });
 
-    colorSelectorBtn = signal(null);
+    colorSelectorBtn = signal.ref();
 
     setup() {
         this.state = proxy({});

@@ -12,7 +12,7 @@ import { Component, props, signal, types, useListener } from "@odoo/owl";
 export class RecipientsInputTagsListPopover extends Component {
     static template = "mail.RecipientsInputTagsListPopover";
 
-    popoverRef = signal(null);
+    popoverRef = signal.ref();
 
     setup() {
         this.props = props({

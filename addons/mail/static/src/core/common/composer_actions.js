@@ -101,7 +101,7 @@ registerComposerAction("upload-files", {
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
-    setup: ({ owner }) => (owner.fileUploaderRef = signal(null)),
+    setup: ({ owner }) => (owner.fileUploaderRef = signal.ref()),
     sequence: 20,
 });
 registerComposerAction("open-full-composer", {

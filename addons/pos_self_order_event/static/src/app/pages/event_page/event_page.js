@@ -14,8 +14,8 @@ export class EventPage extends Component {
     props = props({ eventTemplate: t.object() });
     static components = { Stepper };
 
-    eventNameRef = signal(null);
-    scrollContainerRef = signal(null);
+    eventNameRef = signal.ref();
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

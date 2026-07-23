@@ -29,7 +29,7 @@ export class ThemeSelector extends Component {
         FavoritePreview,
     };
 
-    themeSelectorWrapperRef = signal(null);
+    themeSelectorWrapperRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

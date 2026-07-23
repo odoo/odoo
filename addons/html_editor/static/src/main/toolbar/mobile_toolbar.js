@@ -14,7 +14,7 @@ export class ToolbarMobile extends Component {
         Toolbar,
     };
 
-    toolbarRef = signal(null);
+    toolbarRef = signal.ref();
 
     setup() {
         try {

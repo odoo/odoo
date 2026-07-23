@@ -14,7 +14,7 @@ export class HighlightPicker extends Component {
         style: { type: String, optional: true },
     };
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
     setup() {
         onMounted(() => {
             for (const textEl of this.rootRef().querySelectorAll(".o_text_highlight")) {

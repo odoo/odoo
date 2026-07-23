@@ -10,7 +10,7 @@ test(`resizable input`, async () => {
     class ResizableInput extends Component {
         static template = xml`<input class="resizable-input" t-ref="this.inputRef"/>`;
         props = useProps();
-        inputRef = signal(null);
+        inputRef = signal.ref();
 
         setup() {
             useAutoresize(this.inputRef);
@@ -27,7 +27,7 @@ test(`resizable textarea`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
         props = useProps();
-        textareaRef = signal(null);
+        textareaRef = signal.ref();
 
         setup() {
             useAutoresize(this.textareaRef);
@@ -44,7 +44,7 @@ test(`resizable textarea with minimum height`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
         props = useProps();
-        textareaRef = signal(null);
+        textareaRef = signal.ref();
 
         setup() {
             useAutoresize(this.textareaRef, { minimumHeight: 100 });
@@ -62,7 +62,7 @@ test(`call onResize callback`, async () => {
     class ResizableInput extends Component {
         static template = xml`<input class="resizable-input" t-ref="this.inputRef"/>`;
         props = useProps();
-        inputRef = signal(null);
+        inputRef = signal.ref();
 
         setup() {
             useAutoresize(this.inputRef, {
@@ -86,7 +86,7 @@ test(`call onResize callback after resizing text area`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
         props = useProps();
-        textareaRef = signal(null);
+        textareaRef = signal.ref();
 
         setup() {
             useAutoresize(this.textareaRef, {

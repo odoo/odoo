@@ -37,7 +37,7 @@ export class KanbanHeader extends Component {
         progressBarState: t.any().optional(),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

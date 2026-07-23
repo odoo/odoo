@@ -132,9 +132,9 @@ export class GraphRenderer extends Component {
         model: t.any(),
         buttonTemplate: t.any(),
     });
-    rootRef = signal(null);
-    canvasRef = signal(null);
-    containerRef = signal(null);
+    rootRef = signal.ref();
+    canvasRef = signal.ref();
+    containerRef = signal.ref();
 
     setup() {
         this.model = this.props.model;

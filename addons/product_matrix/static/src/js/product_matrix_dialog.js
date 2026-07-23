@@ -16,7 +16,7 @@ export class ProductMatrixDialog extends Component {
     };
     static components = { Dialog };
 
-    productMatrixRef = signal(null);
+    productMatrixRef = signal.ref();
 
     setup() {
         this.size = "xl";

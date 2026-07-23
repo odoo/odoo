@@ -22,7 +22,7 @@ export class AccountLabelTextField extends ListTextField {
         options: t.object().optional({}),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

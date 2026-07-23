@@ -25,7 +25,7 @@ export class MultiRecordSelector extends Component {
     static components = { AvatarTag, BadgeTag, RecordAutocomplete };
     static template = "web.MultiRecordSelector";
 
-    multiRecordSelectorRef = signal(null);
+    multiRecordSelectorRef = signal.ref();
 
     setup() {
         this.nameService = useService("name");

@@ -44,9 +44,9 @@ export class ProductNameAndDescriptionField extends Component {
         this.labelVisibility = proxy({ value: false });
         this.switchToLabel = false;
         this.columnIsProductAndLabel = proxy({ value: this.props.record.columnIsProductAndLabel });
-        this.labelNode = signal(null);
+        this.labelNode = signal.ref();
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
-        this.productNode = signal(null);
+        this.productNode = signal.ref();
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
 
         this.descriptionColumn = this.constructor.descriptionColumn;

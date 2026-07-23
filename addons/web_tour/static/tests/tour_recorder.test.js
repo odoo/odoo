@@ -406,7 +406,7 @@ test("Edit input after autofocus", async () => {
         `;
         static props = ["*"];
 
-        inputRef = signal(null);
+        inputRef = signal.ref();
 
         setup() {
             useAutofocus({ ref: this.inputRef });

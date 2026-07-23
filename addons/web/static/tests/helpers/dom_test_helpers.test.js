@@ -116,7 +116,7 @@ test("only one drag sequence is allowed at a time", async () => {
                     <li>Second item</li>
                 </ul>
             `;
-            listRef = signal(null);
+            listRef = signal.ref();
 
             setup() {
                 useDraggable({

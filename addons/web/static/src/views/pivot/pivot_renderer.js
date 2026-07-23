@@ -48,7 +48,7 @@ export class PivotRenderer extends Component {
     };
     props = useProps(["model", "buttonTemplate"]);
 
-    tableRef = signal(null);
+    tableRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

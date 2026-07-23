@@ -10,7 +10,7 @@ export class AttendanceVideoStream extends Component {
         onStreamStateChange: { type: Function },
     };
 
-    attendanceVideoRef = signal(null);
+    attendanceVideoRef = signal.ref();
 
     setup() {
         this.camera = useCamera({

@@ -18,11 +18,11 @@ export class GenerateDialog extends Component {
         close: { type: Function },
     };
 
-    nextSerial = signal(null);
-    nextSerialCount = signal(null);
-    totalReceived = signal(null);
-    keepLines = signal(null);
-    lots = signal(null);
+    nextSerial = signal.ref();
+    nextSerialCount = signal.ref();
+    totalReceived = signal.ref();
+    keepLines = signal.ref();
+    lots = signal.ref();
 
     setup() {
         this.size = "md";

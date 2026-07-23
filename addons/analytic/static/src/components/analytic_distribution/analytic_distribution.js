@@ -36,10 +36,10 @@ export class AnalyticDistribution extends Component {
         Field,
     }
 
-    widgetRef = signal(null);
-    dropdownRef = signal(null);
-    mainRef = signal(null);
-    addLineButton = signal(null);
+    widgetRef = signal.ref();
+    dropdownRef = signal.ref();
+    mainRef = signal.ref();
+    addLineButton = signal.ref();
 
     static props = {
         ...standardFieldProps,

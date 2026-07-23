@@ -16,7 +16,7 @@ export class PercentageField extends Component {
         noSymbol: t.boolean().optional(),
     });
 
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         useInputField({

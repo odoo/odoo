@@ -72,7 +72,7 @@ export class KanbanRecord extends CardRenderer {
     };
     props = useProps(kanbanRecordProps);
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     static MENU_ATTRIBUTE = MENU_ATTRIBUTE;
     static CANCEL_GLOBAL_CLICK = CANCEL_GLOBAL_CLICK;

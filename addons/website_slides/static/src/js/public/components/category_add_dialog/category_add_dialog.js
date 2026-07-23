@@ -12,7 +12,7 @@ export class CategoryAddDialog extends ConfirmationDialog {
         channelId: t.string(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         super.setup();

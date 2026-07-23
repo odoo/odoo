@@ -41,9 +41,9 @@ export class AutoComplete extends Component {
     static template = "web.AutoComplete";
     props = useProps(autoCompleteProps);
 
-    listRef = signal(null);
-    root = signal(null);
-    inputRef = signal(null);
+    listRef = signal.ref();
+    root = signal.ref();
+    inputRef = signal.ref();
 
     get timeout() {
         return this.props.inputDebounceDelay;

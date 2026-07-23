@@ -230,7 +230,7 @@ export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
     props = useProps(many2XAutocompleteProps);
-    autocompleteContainerRef = signal(null);
+    autocompleteContainerRef = signal.ref();
     setup() {
         this.orm = useService("orm");
         this.offlinePlugin = plugin(OfflinePlugin);

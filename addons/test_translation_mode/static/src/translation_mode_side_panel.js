@@ -86,7 +86,7 @@ export class TranslationModeSidePanel extends Component {
      */
     hiddenTranslations = new Set();
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

@@ -25,7 +25,7 @@ export class AddToBoard extends Component {
     static components = { Dropdown };
     static props = {};
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

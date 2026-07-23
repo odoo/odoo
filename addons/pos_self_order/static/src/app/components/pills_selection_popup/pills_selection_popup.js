@@ -37,7 +37,7 @@ export class PillsSelectionPopup extends Component {
         selectionType: t.string(),
     });
 
-    categoryListRef = signal(null);
+    categoryListRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

@@ -21,7 +21,7 @@ export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
     static props = productImageViewerProps;
 
-    imageContainerRef = signal(null);
+    imageContainerRef = signal.ref();
 
     setup() {
         super.setup();

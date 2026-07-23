@@ -37,7 +37,7 @@ export class TimePicker extends Component {
         placeholder: t.string().optional(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.menuRef = useChildRef();

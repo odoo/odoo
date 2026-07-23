@@ -17,7 +17,7 @@ export class CopyButton extends Component {
     static template = "web.CopyButton";
     props = useProps(copyButtonProps);
 
-    buttonRef = signal(null);
+    buttonRef = signal.ref();
 
     setup() {
         this.popover = usePopover(Tooltip);

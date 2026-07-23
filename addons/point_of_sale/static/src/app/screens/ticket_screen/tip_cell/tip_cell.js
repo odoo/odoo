@@ -8,7 +8,7 @@ export class TipCell extends Component {
         order: t.instanceOf(PosOrder),
     });
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.state = proxy({ isEditing: false });

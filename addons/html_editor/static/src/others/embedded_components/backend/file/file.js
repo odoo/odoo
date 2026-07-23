@@ -11,7 +11,7 @@ import { ReadonlyEmbeddedFileComponent } from "@html_editor/others/embedded_comp
 export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
     static template = "html_editor.EmbeddedFile";
 
-    nameInput = signal(null);
+    nameInput = signal.ref();
 
     setup() {
         super.setup();

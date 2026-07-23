@@ -9,7 +9,7 @@ export class BarcodeInput extends Component {
         onSubmit: t.function(),
         placeholder: t.string().optional(_t("Enter a barcode...")),
     });
-    barcodeManual = signal(null);
+    barcodeManual = signal.ref();
 
     setup() {
         this.state = proxy({

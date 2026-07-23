@@ -9,7 +9,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
     static id = "google_maps_option";
     static template = "website.GoogleMapsOption";
     static dependencies = ["googleMapsOption"];
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     async setup() {
         super.setup();

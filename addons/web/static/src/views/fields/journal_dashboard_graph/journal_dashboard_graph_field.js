@@ -17,7 +17,7 @@ export class JournalDashboardGraphField extends Component {
         graphType: t.string(),
     });
 
-    canvasRef = signal(null);
+    canvasRef = signal.ref();
 
     setup() {
         this.chart = null;

@@ -14,7 +14,7 @@ export class LocalOverlayContainer extends MainComponentsContainer {
         identifier: t.string().optional("overlay_components"),
     });
 
-    overlayRef = signal(null);
+    overlayRef = signal.ref();
 
     setup() {
         const overlayComponents = registry.category(this.props.identifier);

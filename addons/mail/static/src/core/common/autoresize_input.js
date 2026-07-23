@@ -13,7 +13,7 @@ export class AutoresizeInput extends Component {
         value: t.signal(t.string()),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         super.setup();

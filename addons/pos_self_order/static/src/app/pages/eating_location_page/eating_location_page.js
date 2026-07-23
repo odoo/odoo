@@ -7,7 +7,7 @@ import { SIZES } from "@web/core/ui/ui_service";
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
 
-    scrollContainerRef = signal(null);
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

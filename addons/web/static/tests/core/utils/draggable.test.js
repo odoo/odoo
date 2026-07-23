@@ -25,7 +25,7 @@ test("Parameters error handling", async () => {
                     </ul>
                 </div>`;
             props = useProps();
-            rootRef = signal(null);
+            rootRef = signal.ref();
             setup() {
                 setupList(this);
             }
@@ -79,7 +79,7 @@ test("Simple dragging in single group", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -128,7 +128,7 @@ test("Dynamically disable draggable feature", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             this.state = proxy(state);
             useDraggable({
@@ -176,7 +176,7 @@ test("Ignore specified elements", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -230,7 +230,7 @@ test("Ignore specific elements in a nested draggable", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -283,7 +283,7 @@ test("Dragging element with touch event", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -325,7 +325,7 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -365,7 +365,7 @@ test("Elements are confined within their container and keep their initial width 
             </div>
         `;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
 
         setup() {
             useDraggable({
@@ -435,7 +435,7 @@ test("Focusing is not lost after clicking", async () => {
                 <input type="checkbox" class="item">Something</input>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 ref: this.rootRef,
@@ -460,7 +460,7 @@ test("allowDisconnected option", async () => {
                 </ul>
             </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             this.state = proxy({ hasHandle: true });
             useDraggable({
@@ -494,7 +494,7 @@ test("draggable in iframe", async () => {
             <iframe class="mydroppable" t-att-srcdoc="this.srcdoc" />
         </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 iframeSelector: ".mydroppable",
@@ -563,7 +563,7 @@ test("dragging element in iframe offset", async () => {
             </div>
         </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useDraggable({
                 iframeSelector: ".mydroppable",
@@ -626,7 +626,7 @@ test("Dragging cancels previous drag sequences", async () => {
                     </ul>
                 </div>`;
         props = useProps();
-        rootRef = signal(null);
+        rootRef = signal.ref();
 
         setup() {
             useDraggable({

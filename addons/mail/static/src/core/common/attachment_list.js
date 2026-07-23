@@ -41,7 +41,7 @@ export class AttachmentList extends Component {
 
     // make this available for class evaluation in the template
     attClassObjectToString = attClassObjectToString;
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

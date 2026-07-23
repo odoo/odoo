@@ -17,7 +17,7 @@ export class FieldSelectorPopover extends Component {
         filter: t.function().optional(),
     });
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

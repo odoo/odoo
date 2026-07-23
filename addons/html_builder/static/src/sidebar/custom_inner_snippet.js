@@ -13,7 +13,7 @@ export class CustomInnerSnippet extends Component {
     };
     static components = { Image };
 
-    renameInputRef = signal(null);
+    renameInputRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.renameInputRef });

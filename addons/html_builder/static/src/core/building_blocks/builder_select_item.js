@@ -51,7 +51,7 @@ export class BuilderSelectItemInternal extends Component {
     });
     static components = { BuilderComponent };
 
-    itemRef = signal(null);
+    itemRef = signal.ref();
 
     setup() {
         if (!this.env.selectableContext) {

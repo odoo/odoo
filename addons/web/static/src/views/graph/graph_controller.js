@@ -20,7 +20,7 @@ export class GraphController extends Component {
         Renderer: t.function(),
         buttonTemplate: t.string(),
     });
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.model = useModelWithSampleData(

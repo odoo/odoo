@@ -14,7 +14,7 @@ import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
 export class CallDropdown extends Component {
     static template = "discuss.CallDropdown";
 
-    menuRef = signal(null);
+    menuRef = signal.ref();
 
     setup() {
         super.setup();

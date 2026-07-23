@@ -110,7 +110,7 @@ export class Action {
     rootRef;
     /** @type {import("models").Store} */
     store;
-    actionRef = signal(null);
+    actionRef = signal.ref();
 
     /**
      * param `store` is required for actions made with new Action() by hand in components and outside component.setup()

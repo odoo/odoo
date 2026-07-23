@@ -9,7 +9,7 @@ export class SettingsApp extends Component {
         selectedTab: t.string().optional(),
         slots: t.object(),
     });
-    settingsAppRef = signal(null);
+    settingsAppRef = signal.ref();
     setup() {
         this.state = proxy({
             search: this.env.searchState,

@@ -27,7 +27,7 @@ export class Notification extends Component {
         autocloseDelay: t.number().optional(AUTOCLOSE_DELAY),
         close: t.function(),
     });
-    autocloseProgress = signal(null);
+    autocloseProgress = signal.ref();
 
     setup() {
         onMounted(() => this.startNotificationTimer());

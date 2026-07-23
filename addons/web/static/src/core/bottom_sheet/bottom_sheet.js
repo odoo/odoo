@@ -32,9 +32,9 @@ export class BottomSheet extends Component {
         t.signal(t.ref()).optional(() => signal.ref())
     );
 
-    containerRef = signal(null);
-    scrollRailRef = signal(null);
-    sheetRef = signal(null);
+    containerRef = signal.ref();
+    scrollRailRef = signal.ref();
+    sheetRef = signal.ref();
 
     setup() {
         this.maxHeightPercent = 90;

@@ -139,8 +139,8 @@ export class ResizablePanel extends Component {
     static components = {};
     props = useProps(resizablePanelProps);
 
-    containerRef = signal(null);
-    handleRef = signal(null);
+    containerRef = signal.ref();
+    handleRef = signal.ref();
 
     setup() {
         useResizable({

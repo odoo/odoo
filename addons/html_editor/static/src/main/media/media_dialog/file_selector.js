@@ -123,8 +123,8 @@ export class FileSelectorControlPanel extends Component {
         useUnsplash: { type: Boolean, optional: true },
     };
 
-    fileInput = signal(null);
-    urlInputRef = signal(null);
+    fileInput = signal.ref();
+    urlInputRef = signal.ref();
 
     setup() {
         this.state = proxy({
@@ -200,8 +200,8 @@ export class FileSelector extends Component {
     };
     static props = ["*"];
 
-    loadMoreButtonRef = signal(null);
-    existingAttachmentsRef = signal(null);
+    loadMoreButtonRef = signal.ref();
+    existingAttachmentsRef = signal.ref();
 
     setup() {
         this.notificationService = useService("notification");

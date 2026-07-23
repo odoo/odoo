@@ -44,9 +44,9 @@ export class ImageTransformation extends Component {
         onComponentMounted: t.function().optional(() => () => {}),
     });
 
-    transfoContainer = signal(null);
-    transfoControls = signal(null);
-    transfoCenter = signal(null);
+    transfoContainer = signal.ref();
+    transfoControls = signal.ref();
+    transfoCenter = signal.ref();
 
     setup() {
         this.isCurrentlyTransforming = false;

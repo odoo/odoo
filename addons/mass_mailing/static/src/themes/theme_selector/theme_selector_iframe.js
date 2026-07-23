@@ -27,7 +27,7 @@ export class ThemeSelectorIframe extends Component {
 
     app = useApp();
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         this.themeService = useService("mass_mailing.themes");

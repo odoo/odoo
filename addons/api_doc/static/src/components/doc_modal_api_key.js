@@ -6,7 +6,7 @@ export class ApiKeyModal extends Component {
     static components = {};
     static props = {};
 
-    modalRef = signal(null);
+    modalRef = signal.ref();
 
     setup() {
         useListener(window, "keydown", (event) => {

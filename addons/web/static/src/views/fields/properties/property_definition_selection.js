@@ -16,8 +16,8 @@ export class PropertyDefinitionSelection extends Component {
         // we select a default value
     });
 
-    propertyDefinitionSelectionRef = signal(null);
-    addButtonRef = signal(null);
+    propertyDefinitionSelectionRef = signal.ref();
+    addButtonRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

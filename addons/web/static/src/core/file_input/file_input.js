@@ -34,7 +34,7 @@ export class FileInput extends Component {
         route: t.string().optional("/web/binary/upload_attachment"),
     });
 
-    fileInputRef = signal(null);
+    fileInputRef = signal.ref();
 
     setup() {
         this.uploadFiles = useFileUploader();

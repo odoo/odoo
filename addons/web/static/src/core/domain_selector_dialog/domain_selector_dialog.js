@@ -30,7 +30,7 @@ export class DomainSelectorDialog extends Component {
         context: t.object().optional({}),
     });
 
-    confirmButtonRef = signal(null);
+    confirmButtonRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

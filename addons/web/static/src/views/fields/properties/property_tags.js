@@ -49,7 +49,7 @@ export class PropertyTags extends Component {
         // argument to update the current selected value)
         onTagsChange: t.function().optional(),
     });
-    propertyTagsRef = signal(null);
+    propertyTagsRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

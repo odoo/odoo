@@ -9,7 +9,7 @@ export class FavoritePreview extends Component {
         styleSheetsPromise: Promise,
     };
 
-    shadowRootRef = signal(null);
+    shadowRootRef = signal.ref();
 
     setup() {
         this.isRTL = localization.direction === "rtl";

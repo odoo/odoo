@@ -34,7 +34,7 @@ export class BuilderInputBase extends Component {
         value: { type: [String, { value: null }], optional: true },
     };
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.isEditing = false;

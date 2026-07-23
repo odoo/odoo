@@ -71,7 +71,7 @@ export class VideoSelector extends Component {
         media: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
     });
 
-    urlInputRef = signal(null);
+    urlInputRef = signal.ref();
 
     setup() {
         this.http = useService("http");

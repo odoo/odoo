@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 export class CallParticipantVideo extends Component {
     static template = "discuss.CallParticipantVideo";
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

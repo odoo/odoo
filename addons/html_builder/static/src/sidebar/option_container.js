@@ -27,8 +27,8 @@ export class OptionsContainer extends BaseOptionComponent {
         containerTitle: t.object().optional({}),
         headerMiddleButtons: t.array().optional([]),
     });
-    rootRef = signal(null);
-    contentRef = signal(null);
+    rootRef = signal.ref();
+    contentRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);

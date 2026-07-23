@@ -11,7 +11,7 @@ export class ThemeTab extends Component {
         colorPresetToShow: t.or([t.number(), t.literal(null)]).optional(),
         shadowSizeToShow: t.or([t.string(), t.literal(null)]).optional(),
     });
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);

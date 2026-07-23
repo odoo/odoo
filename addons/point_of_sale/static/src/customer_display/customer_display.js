@@ -12,7 +12,7 @@ export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
     static components = { OdooLogo, MainComponentsContainer, BadgeTag, FeedbackPaymentSummary };
 
-    scrollableRef = signal(null);
+    scrollableRef = signal.ref();
 
     setup() {
         this.session = session;

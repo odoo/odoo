@@ -106,9 +106,9 @@ export class CommandPalette extends Component {
 
     scope = useScope();
 
-    root = signal(null);
-    listboxRef = signal(null);
-    inputRef = signal(null);
+    root = signal.ref();
+    listboxRef = signal.ref();
+    inputRef = signal.ref();
 
     setup() {
         if (this.props.bus) {

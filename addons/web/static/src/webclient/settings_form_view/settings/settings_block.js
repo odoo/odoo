@@ -15,9 +15,9 @@ export class SettingsBlock extends Component {
         slots: t.object().optional(),
         class: t.string().optional(),
     });
-    settingsContainerRef = signal(null);
-    settingsContainerTitleRef = signal(null);
-    settingsContainerTipRef = signal(null);
+    settingsContainerRef = signal.ref();
+    settingsContainerTitleRef = signal.ref();
+    settingsContainerTipRef = signal.ref();
     setup() {
         this.state = proxy({
             search: this.env.searchState,

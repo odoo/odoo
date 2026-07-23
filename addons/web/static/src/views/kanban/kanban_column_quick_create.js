@@ -12,8 +12,8 @@ export class KanbanColumnQuickCreate extends Component {
         groupByField: t.object(),
     });
 
-    root = signal(null);
-    inputRef = signal(null);
+    root = signal.ref();
+    inputRef = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

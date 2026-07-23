@@ -75,18 +75,18 @@ export class WebsiteBuilderClientAction extends Component {
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
         this.iframeFallbackUrl = "/website/iframefallback";
-        this.iframefallback = signal(null);
+        this.iframefallback = signal.ref();
         this.newInstalledModule = router.current.module_installed;
 
-        this.websiteContent = signal(null);
-        this.builderSidebarRef = signal(null);
+        this.websiteContent = signal.ref();
+        this.builderSidebarRef = signal.ref();
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
         // Track iframe navigation state
         this.isNavigatingToAnotherPage = null;
 
-        this.containerRef = signal(null);
+        this.containerRef = signal.ref();
         useSubEnv({
             builderRef: this.containerRef,
         });
@@ -118,7 +118,7 @@ export class WebsiteBuilderClientAction extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("website"),
         });
-        this.websitePreviewRef = signal(null);
+        this.websitePreviewRef = signal.ref();
 
         onWillStart(async () => {
             const updateWebsiteId = (websiteId) => {

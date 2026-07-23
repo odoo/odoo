@@ -11,7 +11,7 @@ const { DateTime } = luxon;
 export class DebugWidget extends Component {
     static template = "point_of_sale.DebugWidget";
 
-    importOrderInput = signal(null);
+    importOrderInput = signal.ref();
 
     setup() {
         this.pos = usePos();

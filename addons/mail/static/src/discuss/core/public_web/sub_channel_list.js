@@ -11,7 +11,7 @@ export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
     static components = { ActionPanel, NotificationItem, SearchInput, SubChannelPreview };
 
-    loadMoreRef = signal(null);
+    loadMoreRef = signal.ref();
 
     setup() {
         this.store = useService("mail.store");

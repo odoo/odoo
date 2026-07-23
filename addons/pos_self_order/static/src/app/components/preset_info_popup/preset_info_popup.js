@@ -94,7 +94,7 @@ export class PresetInfoPopup extends Component {
         getPayload: t.function(),
     });
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.selfOrder = useService("self_order");

@@ -11,7 +11,7 @@ export class CropOverlay extends Component {
         slots: t.object({ default: t.any() }),
     });
 
-    cropContainerRef = signal(null);
+    cropContainerRef = signal.ref();
 
     setup() {
         this.localStorageKey = "o-barcode-scanner-overlay";

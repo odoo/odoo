@@ -3,7 +3,7 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export class HrFleetKanbanController extends KanbanController {
-    uploadFileInputRef = signal(null);
+    uploadFileInputRef = signal.ref();
 
     setup() {
         super.setup(...arguments);

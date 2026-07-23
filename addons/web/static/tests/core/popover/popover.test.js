@@ -467,8 +467,8 @@ test("popover repositions when content changes", async () => {
 });
 
 test("arrow follows target and can get sucked", async () => {
-    const containerRef = signal(null);
-    const targetRef = signal(null);
+    const containerRef = signal.ref();
+    const targetRef = signal.ref();
 
     patchWithCleanup(Popover.prototype, {
         get positioningOptions() {

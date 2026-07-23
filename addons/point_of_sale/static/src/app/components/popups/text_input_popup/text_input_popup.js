@@ -15,7 +15,7 @@ export class TextInputPopup extends Component {
         close: t.function(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
     setup() {
         this.state = proxy({ inputValue: this.props.startingValue });
         onMounted(this.onMounted);

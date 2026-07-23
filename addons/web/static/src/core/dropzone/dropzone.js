@@ -12,7 +12,7 @@ export class Dropzone extends Component {
     props = useProps(dropzoneProps);
     static template = "web.Dropzone";
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

@@ -26,7 +26,7 @@ export class TextField extends Component {
         TranslationButton,
     };
     props = useProps(textFieldProps);
-    textareaRef = signal(null);
+    textareaRef = signal.ref();
 
     setup() {
         if (this.props.dynamicPlaceholder) {

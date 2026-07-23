@@ -43,8 +43,8 @@ export class Call extends Component {
     static template = "discuss.Call";
 
     overlayTimeout;
-    gridRef = signal(null);
-    rootRef = signal(null);
+    gridRef = signal.ref();
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

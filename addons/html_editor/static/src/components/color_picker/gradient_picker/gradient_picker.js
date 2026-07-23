@@ -15,7 +15,7 @@ import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 export class GradientPicker extends Component {
     static components = { ColorPicker, CheckBox, Dropdown, DropdownItem, IframeInput };
     static template = "html_editor.GradientPicker";
-    knobRef = signal(null);
+    knobRef = signal.ref();
     static props = {
         onGradientChange: { type: Function, optional: true },
         onGradientPreview: { type: Function, optional: true },

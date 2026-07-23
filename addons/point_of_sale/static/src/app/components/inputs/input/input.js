@@ -32,7 +32,7 @@ export class Input extends TModelInput {
     static template = "point_of_sale.input";
     props = props(inputProps);
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.state = proxy({ isOpen: false });

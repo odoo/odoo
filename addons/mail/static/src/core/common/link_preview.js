@@ -10,8 +10,8 @@ export class LinkPreview extends Component {
     static components = { Gif };
     static template = "mail.LinkPreview";
 
-    videoRef = signal(null);
-    imageRef = signal(null);
+    videoRef = signal.ref();
+    imageRef = signal.ref();
 
     setup() {
         super.setup();

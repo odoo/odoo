@@ -18,9 +18,9 @@ export class ShapeSelector extends BaseOptionComponent {
         getShapeStyle: { type: Function, optional: true },
     };
     static components = { ImgGroup };
-    rootRef = signal(null);
-    tabsRef = signal(null);
-    backButtonRef = signal(null);
+    rootRef = signal.ref();
+    tabsRef = signal.ref();
+    backButtonRef = signal.ref();
 
     setup() {
         super.setup();

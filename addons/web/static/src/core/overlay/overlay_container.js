@@ -13,7 +13,7 @@ class OverlayItem extends Component {
     componentProps = useProps.static("props", t.object());
     parentScope = useProps.static("scope", t.object().optional());
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         OVERLAY_ITEMS.push(this);
@@ -52,7 +52,7 @@ export class OverlayContainer extends Component {
 
     overlays = useProps.static("overlays", t.object());
 
-    root = signal(null);
+    root = signal.ref();
 
     sortedOverlays = computed(() =>
         sortBy(Object.values(this.overlays), (overlay) => overlay.sequence)

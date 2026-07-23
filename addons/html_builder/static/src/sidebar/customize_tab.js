@@ -9,7 +9,7 @@ export class CustomizeTab extends Component {
     props = props({
         currentOptionsContainers: t.array().optional([]),
     });
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         this.state = proxy({

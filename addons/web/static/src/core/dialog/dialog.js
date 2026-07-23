@@ -62,7 +62,7 @@ export class Dialog extends Component {
     // overridden.
     static props = dialogProps;
     props = useProps(this.constructor.props);
-    modalRef = signal(null);
+    modalRef = signal.ref();
 
     setup() {
         this.uiService = useService("ui");

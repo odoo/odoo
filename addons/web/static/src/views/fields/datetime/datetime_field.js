@@ -61,8 +61,8 @@ export class DateTimeField extends Component {
 
     static template = "web.DateTimeField";
 
-    startDateRef = signal(null);
-    endDateRef = signal(null);
+    startDateRef = signal.ref();
+    endDateRef = signal.ref();
 
     //-------------------------------------------------------------------------
     // Getters

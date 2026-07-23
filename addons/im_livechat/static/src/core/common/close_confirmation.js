@@ -6,7 +6,7 @@ export class CloseConfirmation extends Component {
     static template = "im_livechat.CloseConfirmation";
     static props = ["onCloseConfirmationDialog", "onClickLeaveConversation", "channelName?"];
 
-    confirmRef = signal(null);
+    confirmRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.confirmRef });

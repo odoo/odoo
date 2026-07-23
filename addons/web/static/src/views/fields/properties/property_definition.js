@@ -119,7 +119,7 @@ export class PropertyDefinition extends Component {
     };
     props = useProps(propertyDefinitionProps);
 
-    propertyDefinitionRef = signal(null);
+    propertyDefinitionRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

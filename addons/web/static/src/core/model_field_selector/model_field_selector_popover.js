@@ -126,7 +126,7 @@ export const modelFieldSelectorPopoverProps = {
 export class ModelFieldSelectorPopover extends Component {
     static template = "web.ModelFieldSelectorPopover";
     props = useProps(modelFieldSelectorPopoverProps);
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.fieldService = useService("field");

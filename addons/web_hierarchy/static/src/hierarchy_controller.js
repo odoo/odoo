@@ -27,7 +27,7 @@ export class HierarchyController extends Component {
     };
     static template = "web_hierarchy.HierarchyView";
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         const { parentFieldName, childFieldName } = this.props.archInfo;

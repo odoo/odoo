@@ -30,8 +30,8 @@ class BasicHookParent extends Component {
         </div>
     `;
 
-    outsideRef = signal(null);
-    containerRef = signal(null);
+    outsideRef = signal.ref();
+    containerRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.outsideRef });
@@ -230,7 +230,7 @@ test("insert item before current", async () => {
             </div>
         `;
 
-        containerRef = signal(null);
+        containerRef = signal.ref();
         setup() {
             this.navigation = useNavigation(this.containerRef);
             this.state = proxy({ items: [1, 2, 3] });
@@ -296,8 +296,8 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
             </div>
         `;
 
-        outsideRef = signal(null);
-        containerRef = signal(null);
+        outsideRef = signal.ref();
+        containerRef = signal.ref();
         setup() {
             this.navigation = useNavigation(this.containerRef);
             onMounted(() => this.navigation.items[0]?.setActive());
@@ -327,7 +327,7 @@ test("mousehover only set active if navigation is availible", async () => {
             </div>
         `;
 
-        containerRef = signal(null);
+        containerRef = signal.ref();
         setup() {
             this.navigation = useNavigation(this.containerRef);
         }
@@ -365,7 +365,7 @@ test("active item is unset when focusing out", async () => {
             </div>
         `;
 
-        containerRef = signal(null);
+        containerRef = signal.ref();
         setup() {
             this.navigation = useNavigation(this.containerRef);
         }
@@ -393,8 +393,8 @@ test("set focused element as active item", async () => {
             </div>
         `;
 
-        containerRef = signal(null);
-        inputRef = signal(null);
+        containerRef = signal.ref();
+        inputRef = signal.ref();
         setup() {
             useAutofocus({ ref: this.inputRef });
             this.navigation = useNavigation(this.containerRef);
@@ -424,8 +424,8 @@ test("browser default navigation is not captured", async () => {
             <button class="outside-two">outside two</button>
         `;
 
-        outsideRef = signal(null);
-        containerRef = signal(null);
+        outsideRef = signal.ref();
+        containerRef = signal.ref();
         setup() {
             useAutofocus({ ref: this.outsideRef });
             this.navigation = useNavigation(this.containerRef, {});
@@ -471,8 +471,8 @@ test("focus not stolen from search input during typing, hovering, and clearing",
             </div>
         `;
 
-        containerRef = signal(null);
-        inputRef = signal(null);
+        containerRef = signal.ref();
+        inputRef = signal.ref();
         setup() {
             this.state = proxy({
                 searchFilter: "",

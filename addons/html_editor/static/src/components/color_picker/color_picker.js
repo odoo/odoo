@@ -67,7 +67,7 @@ export class ColorPicker extends Component {
         useDefaultThemeColors: t.boolean().optional(true),
         onEscape: t.function().optional(() => () => {}),
     });
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.tabs = registry

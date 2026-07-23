@@ -617,7 +617,7 @@ class PickerMobileInDialog extends PickerMobile {
         </Dialog>
     `;
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

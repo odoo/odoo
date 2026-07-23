@@ -317,7 +317,7 @@ describe("Mount and Destroy embedded components", () => {
                 innerValue: HTMLElement,
                 index: Number,
             };
-            innerEditableRef = signal(null);
+            innerEditableRef = signal.ref();
             setup() {
                 this.state = proxy({
                     value: this.props.index,
@@ -777,7 +777,7 @@ describe("Mount processing", () => {
             static props = {
                 label: HTMLElement,
             };
-            labelRef = signal(null);
+            labelRef = signal.ref();
             setup() {
                 onWillStart(async () => {
                     expect.step("willstart");

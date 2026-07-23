@@ -21,7 +21,7 @@ export class FontFamilySelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
-    fontFamilySelector = signal(null);
+    fontFamilySelector = signal.ref();
 
     setup() {
         this.menuRef = useChildRef();

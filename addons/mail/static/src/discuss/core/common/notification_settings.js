@@ -22,8 +22,8 @@ export class NotificationSettings extends Component {
     static components = { ActionPanel, Dropdown, DropdownItem };
     static template = "discuss.NotificationSettings";
 
-    muteButtonRef = signal(null);
-    muteMenuRef = signal(null);
+    muteButtonRef = signal.ref();
+    muteMenuRef = signal.ref();
 
     setup() {
         this.store = useService("mail.store");

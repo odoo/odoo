@@ -11,7 +11,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
     static template = "mass_mailing.SocialMediaLinks";
     static dependencies = ["builderActions", "history", "massMailingSocialMediaOptionPlugin"];
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     /** @override */
     setup() {

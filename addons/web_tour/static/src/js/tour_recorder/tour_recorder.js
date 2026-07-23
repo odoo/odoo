@@ -128,7 +128,7 @@ export class TourRecorder extends Component {
         tourName: "",
     };
 
-    tourRecorderRef = signal(null);
+    tourRecorderRef = signal.ref();
 
     setup() {
         this.originClickEvent = false;

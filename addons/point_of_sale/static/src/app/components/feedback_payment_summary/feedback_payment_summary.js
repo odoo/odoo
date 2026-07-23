@@ -11,8 +11,8 @@ export class FeedbackPaymentSummary extends Component {
         loading: t.boolean().optional(),
     });
 
-    amountTextRef = signal(null);
-    summaryContainerRef = signal(null);
+    amountTextRef = signal.ref();
+    summaryContainerRef = signal.ref();
 
     setup() {
         onMounted(() => {

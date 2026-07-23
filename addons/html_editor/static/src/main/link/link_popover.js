@@ -55,9 +55,9 @@ export class LinkPopover extends Component {
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
-    editingWrapper = signal(null);
-    urlRef = signal(null);
-    labelRef = signal(null);
+    editingWrapper = signal.ref();
+    urlRef = signal.ref();
+    labelRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

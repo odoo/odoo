@@ -29,10 +29,10 @@ export class ImagePositionOverlay extends Component {
         scrollToElement: t.boolean().optional(true),
     });
 
-    overlayRef = signal(null);
-    overlayMaskRef = signal(null);
-    overlayContentRef = signal(null);
-    draggerRef = signal(null);
+    overlayRef = signal.ref();
+    overlayMaskRef = signal.ref();
+    overlayContentRef = signal.ref();
+    draggerRef = signal.ref();
 
     setup() {
         this.iframeEl = this.props.editable.ownerDocument.defaultView.frameElement;

@@ -11,7 +11,7 @@ export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem, Follower };
 
-    loadMoreRef = signal(null);
+    loadMoreRef = signal.ref();
 
     setup() {
         super.setup();

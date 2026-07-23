@@ -21,7 +21,7 @@ export class MailingPreviewIframe extends Component {
         MailingPreviewDisplayModeToggle,
     };
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         this.state = proxy(this.env.displayState);

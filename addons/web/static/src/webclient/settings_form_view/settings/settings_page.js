@@ -14,7 +14,7 @@ export class SettingsPage extends Component {
         initialTab: t.string().optional(),
         slots: t.object(),
     });
-    settingsRef = signal(null);
+    settingsRef = signal.ref();
     setup() {
         this.uiService = useService("ui");
         this.state = proxy({

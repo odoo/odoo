@@ -7,7 +7,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 class ActionsOne2ManyField extends Component {
     static props = ["*"];
     static template = "base_automation.ActionsOne2ManyField";
-    root = signal(null);
+    root = signal.ref();
     setup() {
         let adaptCounter = 0;
         useLayoutEffect(

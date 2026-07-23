@@ -98,7 +98,7 @@ class MrpTimerField extends Component {
     static components = { MrpTimer };
     props = props(standardFieldProps);
 
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

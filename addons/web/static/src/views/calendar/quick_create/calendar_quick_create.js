@@ -17,7 +17,7 @@ export class CalendarQuickCreate extends Component {
         editRecord: t.function(),
     });
 
-    titleRef = signal(null);
+    titleRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.titleRef });

@@ -33,10 +33,10 @@ export class ChatWindow extends Component {
     };
     static template = "mail.ChatWindow";
 
-    actionsMenuButtonRef = signal(null);
-    parentChannelRef = signal(null);
-    needactionCounterRef = signal(null);
-    composerHiddenContainerRef = signal(null);
+    actionsMenuButtonRef = signal.ref();
+    parentChannelRef = signal.ref();
+    needactionCounterRef = signal.ref();
+    composerHiddenContainerRef = signal.ref();
 
     setup() {
         super.setup(...arguments);

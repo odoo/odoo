@@ -12,7 +12,7 @@ export class PasswordField extends Component {
         placeholder: t.string().optional(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.state = proxy({ isRevealed: false });

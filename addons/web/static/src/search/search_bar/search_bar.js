@@ -60,9 +60,9 @@ export class SearchBar extends Component {
             .optional(),
         toggler: t.object().optional(),
     });
-    root = signal(null);
-    facetContainerRef = signal(null);
-    inputRef = signal(null);
+    root = signal.ref();
+    facetContainerRef = signal.ref();
+    inputRef = signal.ref();
 
     setup() {
         this.dialogService = useService("dialog");

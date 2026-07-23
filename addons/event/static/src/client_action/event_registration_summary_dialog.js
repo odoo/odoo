@@ -13,7 +13,7 @@ export class EventRegistrationSummaryDialog extends Component {
         registration: { type: Object },
     };
 
-    continueButtonRef = signal(null);
+    continueButtonRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

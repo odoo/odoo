@@ -18,7 +18,7 @@ export class OrderDisplay extends Component {
     static components = { CenteredIcon, Orderline, BadgeTag };
     props = props(orderDisplayProps);
 
-    scrollableRef = signal(null);
+    scrollableRef = signal.ref();
 
     setup() {
         useLayoutEffect(() => {

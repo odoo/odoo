@@ -12,7 +12,7 @@ export class SubtaskCreate extends Component {
         onBlur: { type: Function },
     };
 
-    input = signal(null);
+    input = signal.ref();
 
     setup() {
         this.placeholder = _t("Write a task name");

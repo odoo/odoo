@@ -24,7 +24,7 @@ export class CharField extends Component {
         TranslationButton,
     };
     props = useProps(charFieldProps);
-    input = signal(null);
+    input = signal.ref();
 
     setup() {
         if (this.props.dynamicPlaceholder) {

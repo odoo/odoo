@@ -17,10 +17,10 @@ export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
     static template = "mail.ChatHub";
 
-    ref = signal(null);
-    root = signal(null);
-    moreButtonRef = signal(null);
-    moreMenuRef = signal(null);
+    ref = signal.ref();
+    root = signal.ref();
+    moreButtonRef = signal.ref();
+    moreMenuRef = signal.ref();
 
     get chatHub() {
         return this.store.chatHub;

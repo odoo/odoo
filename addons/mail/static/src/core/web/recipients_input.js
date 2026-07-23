@@ -18,7 +18,7 @@ export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
     static components = { AutoComplete, RecipientTag, BadgeTag };
 
-    recipientsInputRef = signal(null);
+    recipientsInputRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

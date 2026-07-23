@@ -15,7 +15,7 @@ export class ActivityCell extends Component {
     };
     static template = "mail.ActivityCell";
 
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         this.props = props({

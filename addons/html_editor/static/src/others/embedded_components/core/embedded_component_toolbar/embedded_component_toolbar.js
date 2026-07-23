@@ -22,7 +22,7 @@ export class EmbeddedComponentToolbarButton extends Component {
     };
     static template = "html_editor.EmbeddedComponentToolbarButton";
 
-    buttonRef = signal(null);
+    buttonRef = signal.ref();
 
     setup() {
         useForwardRefToParent(this.buttonRef, "buttonRef");

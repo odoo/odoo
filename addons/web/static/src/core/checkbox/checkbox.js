@@ -32,7 +32,7 @@ export class CheckBox extends Component {
         ariaLabel: t.string().optional(),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;

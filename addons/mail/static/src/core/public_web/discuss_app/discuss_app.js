@@ -26,7 +26,7 @@ export class Discuss extends Component {
     };
     static template = "mail.Discuss";
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

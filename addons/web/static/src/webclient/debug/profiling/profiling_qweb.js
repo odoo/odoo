@@ -42,7 +42,7 @@ export class ProfilingQwebView extends Component {
         ...standardFieldProps,
     });
 
-    ace = signal(null);
+    ace = signal.ref();
 
     setup() {
         super.setup();

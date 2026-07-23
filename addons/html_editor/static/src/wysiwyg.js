@@ -40,7 +40,7 @@ export class Wysiwyg extends Component {
     static components = { Toolbar, LocalOverlayContainer };
     props = props(wysiwygProps);
 
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         this.overlayRef = useChildRef();

@@ -13,7 +13,7 @@ export class PasswordField extends Component {
     static components = { Meter };
     static template = "auth_password_policy.PasswordField";
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.state = proxy({

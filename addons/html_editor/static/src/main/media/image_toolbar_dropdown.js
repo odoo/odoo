@@ -22,7 +22,7 @@ export class ImageToolbarDropdown extends Component {
     };
     static template = "html_editor.ImageToolbarDropdown";
 
-    imageToolbarBtn = signal(null);
+    imageToolbarBtn = signal.ref();
 
     setup() {
         this.items = this.props.items;

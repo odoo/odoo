@@ -153,7 +153,7 @@ export class ListRenderer extends Component {
         const onGlobalClick = this.onGlobalClick.bind(this);
         onMounted(() => window.addEventListener("click", onGlobalClick, { capture: true }));
         onWillUnmount(() => window.removeEventListener("click", onGlobalClick, { capture: true }));
-        this.tableRef = signal(null);
+        this.tableRef = signal.ref();
         this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;
 
@@ -237,11 +237,11 @@ export class ListRenderer extends Component {
                 this.currencyRates = await getCurrencyRates();
             }
         });
-        this.groupInputRef = signal(null);
+        this.groupInputRef = signal.ref();
         useAutofocus({ ref: this.groupInputRef });
         let dataRowId;
         let dataGroupId;
-        this.rootRef = signal(null);
+        this.rootRef = signal.ref();
         this.resequencePromise = Promise.resolve();
         useSortable({
             enable: () => this.canResequenceRows,

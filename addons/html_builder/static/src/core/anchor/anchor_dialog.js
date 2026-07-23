@@ -13,7 +13,7 @@ export class AnchorDialog extends Component {
         close: { type: Function },
     };
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.title = _t("Link Anchor");

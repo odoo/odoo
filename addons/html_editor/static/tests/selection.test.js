@@ -331,7 +331,7 @@ test("restore a selection when you are not in the editable shouldn't move the fo
         static template = xml`<input t-ref="this.inputRef" t-att-value="'eee'" class="test"/>`;
         static props = ["*"];
 
-        inputRef = signal(null);
+        inputRef = signal.ref();
 
         setup() {
             useAutofocus({ ref: this.inputRef, mobile: true });

@@ -25,7 +25,7 @@ export class BaseBadgesField extends Component {
         DropdownItem,
     };
 
-    badgesContainerRef = signal(null);
+    badgesContainerRef = signal.ref();
 
     setup() {
         useNavigation(this.badgesContainerRef, {

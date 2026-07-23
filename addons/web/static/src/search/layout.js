@@ -21,7 +21,7 @@ export class Layout extends Component {
         display: t.object().optional({}),
         slots: t.object().optional(),
     });
-    contentRef = signal(null);
+    contentRef = signal.ref();
     setup() {
         this.components = extractLayoutComponents(this.env.config);
     }

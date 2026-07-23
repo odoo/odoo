@@ -33,7 +33,7 @@ export class ControlPanel extends Component {
         display: t.object().optional(DEFAULT_DISPLAY),
     });
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         this.embeddedPanelState = useEmbeddedActions();

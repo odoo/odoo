@@ -16,7 +16,7 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
         params: { type: Object, optional: true },
     };
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     getVideoDataFromSrc(src) {
         for (const platform of Object.values(PLATFORMS)) {

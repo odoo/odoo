@@ -72,7 +72,7 @@ export class KanbanController extends Component {
         selectRecord: t.function().optional(() => () => {}),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

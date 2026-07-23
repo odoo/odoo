@@ -41,7 +41,7 @@ export class TableMenu extends Component {
     });
     static components = { Dropdown, DropdownItem };
 
-    menuRef = signal(null);
+    menuRef = signal.ref();
 
     setup() {
         this.editableDocument = this.props.editable.ownerDocument;

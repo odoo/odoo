@@ -15,8 +15,8 @@ export class HierarchyNavbar extends Component {
         searchView: Function,
     };
 
-    navbarRef = signal(null);
-    searchInput = signal(null);
+    navbarRef = signal.ref();
+    searchInput = signal.ref();
 
     setup() {
         this.websiteNamesState = proxy(Array.from(this.props.websites.names));

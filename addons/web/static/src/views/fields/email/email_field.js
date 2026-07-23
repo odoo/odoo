@@ -11,7 +11,7 @@ export class EmailField extends Component {
         placeholder: t.string().optional(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         useInputField({

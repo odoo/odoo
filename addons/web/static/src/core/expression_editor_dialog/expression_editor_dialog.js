@@ -17,7 +17,7 @@ export class ExpressionEditorDialog extends Component {
         onConfirm: t.function(),
     });
 
-    confirmButtonRef = signal(null);
+    confirmButtonRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

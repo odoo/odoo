@@ -18,8 +18,8 @@ export class NotificationItem extends Component {
     static components = { ActionSwiper, DiscussAvatar, MessageSeenIndicator };
     static template = "mail.NotificationItem";
 
-    markAsReadRef = signal(null);
-    rootRef = signal(null);
+    markAsReadRef = signal.ref();
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

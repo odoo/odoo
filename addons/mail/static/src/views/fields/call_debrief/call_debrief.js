@@ -37,8 +37,8 @@ export class CallDebrief extends Component {
         this.skipNextTimeUpdate = false;
         this.isSwitchingSegment = false;
 
-        this.mediaPlayer = signal(null);
-        this.rootElement = signal(null);
+        this.mediaPlayer = signal.ref();
+        this.rootElement = signal.ref();
 
         this.orm = useService("orm");
         this.state = proxy({

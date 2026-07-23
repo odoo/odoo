@@ -82,7 +82,7 @@ export class KanbanQuickCreateController extends Component {
     });
     static template = "web.KanbanQuickCreateController";
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

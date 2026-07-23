@@ -18,8 +18,8 @@ export class ProductPage extends Component {
     static components = { AttributeSelection };
     props = props({ productTemplate: t.instanceOf(ProductTemplate) });
 
-    productNameRef = signal(null);
-    scrollContainerRef = signal(null);
+    productNameRef = signal.ref();
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

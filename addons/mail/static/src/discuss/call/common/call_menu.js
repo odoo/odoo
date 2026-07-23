@@ -13,7 +13,7 @@ export class CallMenu extends Component {
     static template = "discuss.CallMenu";
     static components = { ActionList, Dropdown };
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

@@ -13,9 +13,9 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
         onCancel: Function,
     };
 
-    inputRef = signal(null);
-    formRef = signal(null);
-    sequenceRef = signal(null);
+    inputRef = signal.ref();
+    formRef = signal.ref();
+    sequenceRef = signal.ref();
 
     setup() {
         this.slidesService = useService("website_slides");

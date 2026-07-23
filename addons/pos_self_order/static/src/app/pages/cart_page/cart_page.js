@@ -18,7 +18,7 @@ export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
     static components = { OrderWidget };
 
-    scrollContainerRef = signal(null);
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

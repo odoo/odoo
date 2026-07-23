@@ -65,8 +65,8 @@ export class Many2ManyTagsField extends Component {
     };
     props = useProps(many2ManyTagsFieldProps);
 
-    many2ManyTagsFieldRef = signal(null);
-    autoCompleteRef = signal(null);
+    many2ManyTagsFieldRef = signal.ref();
+    autoCompleteRef = signal.ref();
 
     setup() {
         this.state = proxy({ expanded: false });

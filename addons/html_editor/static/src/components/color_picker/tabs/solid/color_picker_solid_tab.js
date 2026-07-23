@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 export class ColorPickerSolidTab extends Component {
     static template = "html_editor.ColorPickerSolidTab";
 
-    solidTabRef = signal(null);
+    solidTabRef = signal.ref();
 
     static props = {
         colorPickerNavigation: Function,

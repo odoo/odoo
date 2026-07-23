@@ -71,9 +71,9 @@ export class TourPointer extends Component {
     static width = 28; // in pixels
     static height = 28; // in pixels
 
-    anchorRef = signal(null);
-    pointerRef = signal(null);
-    dropzoneRef = signal(null);
+    anchorRef = signal.ref();
+    pointerRef = signal.ref();
+    dropzoneRef = signal.ref();
 
     setup() {
         this.closeTimeout = null;

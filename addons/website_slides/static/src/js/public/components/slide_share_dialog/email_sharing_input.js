@@ -14,7 +14,7 @@ export class EmailSharingInput extends Component {
         category: { type: String, optional: true },
     };
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

@@ -116,7 +116,7 @@ export class ColorPickerButton extends Component {
         colorPickerConfig: { type: Object, optional: true },
     };
 
-    colorButtonRef = signal(null);
+    colorButtonRef = signal.ref();
 
     setup() {
         useColorPicker(

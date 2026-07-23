@@ -52,7 +52,7 @@ export class ProductScreen extends Component {
         orderUuid: t.string(),
     });
 
-    productsRootRef = signal(null);
+    productsRootRef = signal.ref();
 
     setup() {
         this.pos = usePos();

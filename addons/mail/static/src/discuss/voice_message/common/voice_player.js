@@ -40,10 +40,10 @@ export class VoicePlayer extends Component {
     waveCtx;
     /** @type {CanvasRenderingContext2D} */
     progressCtx;
-    wrapperRef = signal(null);
-    drawerRef = signal(null);
-    waveRef = signal(null);
-    progressRef = signal(null);
+    wrapperRef = signal.ref();
+    drawerRef = signal.ref();
+    waveRef = signal.ref();
+    progressRef = signal.ref();
 
     setup() {
         super.setup();
