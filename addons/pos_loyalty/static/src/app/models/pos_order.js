@@ -3,6 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -1210,23 +1211,26 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
-            const price = discountProduct.getTaxDetails({
+            const baseLine = discountProduct.getBaseLine({
                 overridedValues: {
                     tax_ids: discountProduct.taxes_id,
                     price_unit: -Math.min(maxDiscount, discountable),
+                    quantity: 1,
                     special_mode: "total_included",
                 },
             });
-            const priceUnit =
-                price.total_excluded +
-                price.taxes_data
-                    .filter((taxData) => taxData.tax.price_include)
-                    .reduce((sum, taxData) => sum + taxData.tax_amount, 0);
+            accountTaxHelpers.add_tax_details_in_base_line(baseLine, this.company);
+            accountTaxHelpers.round_base_lines_tax_details([baseLine], this.company);
+            accountTaxHelpers.fix_base_lines_tax_details_on_manual_tax_amounts(
+                [baseLine],
+                this.company
+            );
+            const extraTaxData = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
 
             return [
                 {
                     product_id: discountProduct,
-                    price_unit: priceUnit,
+                    price_unit: baseLine.price_unit,
                     qty: 1,
                     reward_id: reward,
                     is_reward_line: true,
@@ -1234,6 +1238,7 @@ patch(PosOrder.prototype, {
                     points_cost: pointCost,
                     reward_identifier_code: rewardCode,
                     tax_ids: discountProduct.taxes_id,
+                    extra_tax_data: extraTaxData,
                 },
             ];
         }
