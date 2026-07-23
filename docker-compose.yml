@@ -1,0 +1,56 @@
+# Production stack — Odoo behind an existing reverse proxy.
+# The proxy must forward HTTP to 127.0.0.1:8069 and route /websocket to
+# 127.0.0.1:8072, passing X-Forwarded-* headers (Odoo runs with proxy_mode).
+#
+# Usage:
+#   cp .env.example .env   # then set real secrets
+#   docker compose up -d --build
+
+name: aidt-odoo
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-odoo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-odoo} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging: &default-logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  odoo:
+    build:
+      context: .
+      target: runtime
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:-odoo}
+      DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      ODOO_ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD:?set ODOO_ADMIN_PASSWD in .env}
+      ODOO_WORKERS: ${ODOO_WORKERS:-5}
+    volumes:
+      - odoo-filestore:/var/lib/odoo
+    ports:
+      - "127.0.0.1:8069:8069"  # HTTP
+      - "127.0.0.1:8072:8072"  # websocket (gevent)
+    restart: unless-stopped
+    logging: *default-logging
+
+volumes:
+  db-data:
+  odoo-filestore:

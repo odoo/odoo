@@ -1,0 +1,58 @@
+# Development stack — source bind-mounted, hot-reload enabled.
+# Separate project name and volumes so dev and production data never mix.
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Then open http://localhost:8069 (database manager is enabled in dev).
+#
+# Remote debugging (VS Code "attach" on port 5678):
+#   docker compose -f docker-compose.dev.yml run --rm --service-ports odoo \
+#     python -m debugpy --listen 0.0.0.0:5678 --wait-for-client \
+#     /opt/odoo/odoo-bin -c /etc/odoo/odoo.conf
+
+name: aidt-odoo-dev
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-odoo}
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  odoo:
+    build:
+      context: .
+      target: dev
+    # reload: restart on Python changes; qweb/xml: reload views/templates
+    command: ["odoo", "--dev=reload,qweb,xml"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: odoo
+      DB_PASSWORD: ${DB_PASSWORD:-odoo}
+      ODOO_ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD:-admin}
+      ODOO_WORKERS: "0"        # threaded mode — required for --dev and debuggers
+      ODOO_LIST_DB: "True"
+      ODOO_LOG_LEVEL: ${ODOO_LOG_LEVEL:-info}
+    volumes:
+      - .:/opt/odoo            # live source — host edits apply immediately
+      - odoo-filestore-dev:/var/lib/odoo
+    ports:
+      - "8069:8069"  # HTTP (websocket is served here too in threaded mode)
+      - "5678:5678"  # debugpy
+
+volumes:
+  db-data-dev:
+  odoo-filestore-dev:
