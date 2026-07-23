@@ -18,7 +18,7 @@ from odoo.exceptions import (
 from odoo.http import Controller, request, route
 from odoo.http.session import logout
 from odoo.http.stream import content_disposition
-from odoo.tools import clean_context, consteq, single_email_re, str2bool
+from odoo.tools import clean_context, consteq, format_date, single_email_re, str2bool
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -150,6 +150,46 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
 class CustomerPortal(Controller):
 
     _items_per_page = 80
+
+    def _format_portal_list_columns(self, model_name, columns):
+        """ Resolve the ``options`` the default cell renders each ``field``
+        column of a ``portal.portal_list_table`` from the field itself: its
+        type is the widget that formats its value, so a spec only spells out
+        the ``options`` its field does not carry (e.g. a short date format). """
+        model = request.env[model_name]
+        for column in columns:
+            field = model._fields.get(column.get('field'))
+            if not field or column.get('options'):
+                continue
+            if field.type == 'monetary':
+                column['options'] = {'widget': 'monetary'}
+                # Resolved per record, as the currency is a field of the record.
+                column['currency_field'] = field.get_currency_field(model)
+            elif field.type == 'selection':
+                column['options'] = {
+                    'widget': 'selection',
+                    'selection': dict(field._description_selection(model.env)),
+                }
+            else:
+                # e.g. a relational value renders as the display name of its
+                # records, a plain char value as its escaped text.
+                column['options'] = {'widget': field.type}
+        return columns
+
+    def _portal_group_label(self, records, groupby, empty_label=None):
+        """ Human readable label of the ``groupby`` value shared by ``records``,
+        used as the ``label`` of a ``portal.portal_list_table`` group. """
+        field = records._fields[groupby]
+        value = records[:1].sudo()[groupby]
+        if not value:
+            return empty_label if empty_label is not None else request.env._("None")
+        if field.type == 'many2one':
+            return value.display_name
+        if field.type == 'selection':
+            return dict(field._description_selection(records.env))[value]
+        if field.type in ('date', 'datetime'):
+            return format_date(request.env, value)
+        return value
 
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.

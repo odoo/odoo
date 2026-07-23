@@ -88,6 +88,15 @@ class PortalAccount(CustomerPortal):
         })
         return request.render("account.portal_my_invoices", values)
 
+    def _get_invoice_portal_columns(self):
+        return [
+            {'name': 'invoice_number', 'label': _("Invoice #"), 'cell': 'account.portal_invoice_cell_number'},
+            {'name': 'invoice_date', 'label': _("Invoice Date"), 'field': 'invoice_date'},
+            {'name': 'due_date', 'label': _("Due Date"), 'class': 'd-none d-md-table-cell', 'cell': 'account.portal_invoice_cell_due_date'},
+            {'name': 'amount_due', 'label': _("Amount Due"), 'class': 'text-end pe-3', 'cell': 'account.portal_invoice_cell_amount'},
+            {'name': 'status', 'label': _("Status"), 'cell': 'account.portal_invoice_cell_status'},
+        ]
+
     def _prepare_my_invoices_values(self, page, date_begin, date_end, sortby, filterby, domain=None, url="/my/invoices"):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
@@ -138,6 +147,9 @@ class PortalAccount(CustomerPortal):
             'filterby': filterby,
             'overdue_invoice_count': request.env['account.move'].search_count(self._get_overdue_invoices_domain())
                 if request.env['account.move'].has_access('read') else 0,
+            'columns': self._format_portal_list_columns(
+                'account.move', self._get_invoice_portal_columns()
+            ),
         })
         return values
 

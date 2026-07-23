@@ -40,10 +40,51 @@ class TimesheetCustomerPortal(CustomerPortal):
             'none': {'label': _('None'), 'sequence': 10},
             'date': {'label': _('Date'), 'sequence': 20},
             'project_id': {'label': _('Project'), 'sequence': 30},
-            'parent_task_id': {'label': _('Parent Task'), 'sequence': 40},
-            'task_id': {'label': _('Task'), 'sequence': 50},
+            'parent_task_id': {'label': _('Parent Task'), 'sequence': 40, 'empty_label': _('No Parent Task')},
+            'task_id': {'label': _('Task'), 'sequence': 50, 'empty_label': _('No Task')},
             'employee_id': {'label': _('Employee'), 'sequence': 70},
         }
+
+    def _get_timesheets_portal_columns(self, groupby='none'):
+        return [
+            {
+                'name': 'date', 'label': _('Date'), 'field': 'date',
+                'hidden': groupby == 'date',
+            },
+            {
+                'name': 'employee_id', 'label': _('Employee'), 'field': 'employee_id',
+                'hidden': groupby == 'employee_id',
+            },
+            {
+                'name': 'project_id', 'label': _('Project'),
+                'field': 'project_id', 'class': 'text-wrap',
+                'hidden': groupby == 'project_id',
+            },
+            {
+                'name': 'task_id', 'label': _('Task'),
+                'cell': 'hr_timesheet.portal_timesheet_cell_task',
+                'hidden': groupby == 'task_id',
+            },
+            {
+                'name': 'name', 'label': _('Description'),
+                'field': 'name', 'class': 'text-wrap',
+            },
+            {
+                'name': 'unit_amount', 'label': _('Time Spent'),
+                'cell': 'hr_timesheet.portal_timesheet_cell_unit_amount', 'class': 'text-end',
+            },
+        ]
+
+    def _prepare_timesheets_portal_groups(self, grouped_timesheets, groupby, searchbar_groupby):
+        empty_label = searchbar_groupby.get(groupby, {}).get('empty_label')
+        groups = []
+        for timesheets, hours_spent in grouped_timesheets:
+            group = {'records': timesheets, 'hours_spent': hours_spent}
+            if groupby != 'none':
+                group['label'] = self._portal_group_label(timesheets, groupby, empty_label)
+                group['row'] = 'hr_timesheet.portal_timesheet_group_row'
+            groups.append(group)
+        return groups
 
     def _get_search_domain(self, search_in, search):
         if search_in in self._get_searchbar_inputs():
@@ -151,7 +192,10 @@ class TimesheetCustomerPortal(CustomerPortal):
 
         values.update({
             'timesheets': timesheets,
-            'grouped_timesheets': grouped_timesheets,
+            'groups': self._prepare_timesheets_portal_groups(grouped_timesheets, groupby, searchbar_groupby),
+            'columns': self._format_portal_list_columns(
+                'account.analytic.line', self._get_timesheets_portal_columns(groupby)
+            ),
             'page_name': 'timesheet',
             'default_url': '/my/timesheets',
             'pager': pager,
@@ -185,3 +229,31 @@ class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
         )
 
         return values
+
+    def _get_tasks_portal_columns(self, groupby='none', project=False, **kwargs):
+        columns = super()._get_tasks_portal_columns(groupby=groupby, project=project, **kwargs)
+        index = next(index for index, column in enumerate(columns) if column['name'] == 'stage_id')
+        columns.insert(index, {
+            'name': 'time_spent', 'label': _('Time Spent'),
+            'cell': 'hr_timesheet.portal_task_cell_time_spent', 'class': 'text-end',
+            'hidden': not (
+                (not project or project.allow_timesheets)
+                and request.env['account.analytic.line']._show_portal_timesheets()
+            ),
+        })
+        return columns
+
+    def _prepare_tasks_portal_groups(self, grouped_tasks, groupby, searchbar_groupby):
+        groups = super()._prepare_tasks_portal_groups(grouped_tasks, groupby, searchbar_groupby)
+        for group in groups:
+            tasks = group['records']
+            total_hours = tasks._get_portal_total_hours_dict()
+            if not total_hours:
+                continue
+            group['row'] = 'hr_timesheet.portal_task_group_row'
+            group['effective_hours'] = total_hours['effective_hours']
+            group['allocated_hours'] = (
+                tasks.project_id.allocated_hours if groupby == 'project_id'
+                else total_hours['allocated_hours']
+            )
+        return groups

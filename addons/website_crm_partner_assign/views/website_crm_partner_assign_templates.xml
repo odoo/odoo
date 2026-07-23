@@ -259,32 +259,18 @@
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
             <t t-call="portal.portal_searchbar" title.translate="Leads"/>
-            <div t-if="not leads" class="alert alert-warning" role="alert">
-                There are no leads.
-            </div>
-            <t t-if="leads" t-call="portal.portal_table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th class="w-25">Lead</th>
-                        <th>Contact Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr t-foreach="leads" t-as="lead">
-                        <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
-                        <td class="text-wrap">
-                            <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
-                        </td>
-                        <td><span t-field="lead.contact_name"/></td>
-                        <td><span t-field="lead.email_from"/></td>
-                        <td><span t-field="lead.phone"/></td>
-                    </tr>
-                </tbody>
+            <t t-call="portal.portal_list_table" rows="leads">
+                <div class="alert alert-warning" role="alert">
+                    There are no leads.
+                </div>
             </t>
         </t>
+    </template>
+
+    <template id="portal_lead_cell_name" name="Portal Lead Name Cell">
+        <td class="text-wrap">
+            <a t-attf-href="/my/lead/#{record.id}"><span t-field="record.name"/></a>
+        </td>
     </template>
 
     <template id="portal_my_opportunities" name="My Opportunities">
@@ -328,45 +314,33 @@
                     </form>
                 </div>
             </div>
-            <t t-if="not opportunities">
+            <t t-call="portal.portal_list_table" rows="opportunities">
                 <div class="alert alert-warning" role="alert">
                     There are no opportunities.
                 </div>
             </t>
-            <t t-if="opportunities" t-call="portal.portal_table">
-                <thead>
-                    <tr class="active">
-                        <th>Date</th>
-                        <th class="w-25">Opportunity</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Expected</th>
-                        <th>Stage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr t-foreach="opportunities" t-as="opp">
-                        <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
-                        <td class="text-wrap">
-                            <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
-                        </td>
-                        <td><span t-field="opp.contact_name"/></td>
-                        <td><span t-field="opp.email_from"/></td>
-                        <td><span t-field="opp.phone"/></td>
-                        <td>
-                            <span t-if="opp.company_currency" class="text-nowrap" t-out="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
-                            <span t-else="" class="text-nowrap" t-out="opp.expected_revenue"/>
-                            <span> at </span>
-                            <span t-field="opp.probability" />%
-                        </td>
-                        <td>
-                            <span class="badge text-bg-info" title="Current stage of the opportunity" t-out="opp.stage_id.name" />
-                        </td>
-                    </tr>
-                </tbody>
-            </t>
         </t>
+    </template>
+
+    <template id="portal_opportunity_cell_name" name="Portal Opportunity Name Cell">
+        <td class="text-wrap">
+            <a t-attf-href="/my/opportunity/#{record.id}"><span t-field="record.name"/></a>
+        </td>
+    </template>
+
+    <template id="portal_opportunity_cell_expected" name="Portal Opportunity Expected Revenue Cell">
+        <td>
+            <span t-if="record.company_currency" class="text-nowrap" t-out="record.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': record.company_currency}"/>
+            <span t-else="" class="text-nowrap" t-out="record.expected_revenue"/>
+            <span> at </span>
+            <span t-field="record.probability" />%
+        </td>
+    </template>
+
+    <template id="portal_opportunity_cell_stage" name="Portal Opportunity Stage Cell">
+        <td>
+            <span class="badge text-bg-info" title="Current stage of the opportunity" t-out="record.stage_id.name" />
+        </td>
     </template>
 
     <template id="portal_my_lead" name="My Lead">

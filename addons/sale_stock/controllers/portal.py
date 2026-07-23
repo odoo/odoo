@@ -10,6 +10,22 @@ from odoo.tools import consteq
 
 class SaleStockPortal(CustomerPortal):
 
+    def _get_order_portal_columns(self):
+        # EXTENDS sale
+        columns = super()._get_order_portal_columns()
+        delivery_column = {
+            'name': 'order_delivery',
+            'label': request.env._("Shipping Status"),
+            'class': 'text-end',
+            'cell': 'sale_stock.portal_order_cell_delivery',
+        }
+        index = next(
+            (i for i, col in enumerate(columns) if col['name'] == 'amount_total'),
+            len(columns),
+        )
+        columns.insert(index, delivery_column)
+        return columns
+
     def _stock_picking_check_access(self, picking_id, access_token=None):
         picking = request.env['stock.picking'].browse([picking_id])
         picking_sudo = picking.sudo()

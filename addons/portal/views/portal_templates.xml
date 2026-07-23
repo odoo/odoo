@@ -306,6 +306,109 @@
         </div>
     </template>
 
+    <template id="portal_list_table" name="My Portal List Table">
+        <!--
+            Column-driven portal table: header, cell order and visibility all
+            come from the `columns` spec.
+
+              * columns: ordered list of column dicts. Keys: `name`, `label`,
+                    `label_mobile`, `class` (of the header cell, and of the body
+                    cells the default cell renders); `cell` (template of
+                    the <td>, else portal.portal_list_cell renders `field`);
+                    `hidden` (column that does not apply to this rendering, e.g.
+                    the field the list is grouped by).
+              * rows: one <tr> per item. Ignored when `groups` is set.
+              * groups: one <tbody> per group. Each group is a dict with
+                    `records` and optionally `label`, `aggregates` ({column name:
+                    value} shown in the group row) and `row` (group row template,
+                    default portal.portal_list_group_row).
+              * record_key: record = row[record_key] (unset when the row is
+                    itself the record).
+              * hide_header: keep the header out of sight but in the DOM, so
+                    that the website builder still lists the columns.
+              * tbody_class, classes, pager.
+
+            The body of the t-call is the empty state, rendered instead of the
+            table when there is nothing to list. It stays in the caller's
+            template so that a designer can still edit its text.
+        -->
+        <t t-set="visible_columns" t-value="[column for column in columns if not column.get('hidden')]"/>
+        <t t-set="has_rows" t-value="rows or groups"/>
+        <div t-if="not has_rows" class="o_portal_list_empty">
+            <t t-out="0"/>
+        </div>
+        <div t-else="" t-attf-class="table-responsive border-0 #{classes if classes else ''}">
+            <table class="o_list_table position-relative table table-sm o_list_table_ungrouped table-striped o_portal_my_doc_table mb-0">
+                <thead t-attf-class="#{'d-none' if hide_header else ''}">
+                    <tr class="active">
+                        <t t-foreach="visible_columns" t-as="column">
+                            <th t-att-name="column['name']" t-attf-class="#{column.get('class') or ''}">
+                                <t t-if="column.get('label_mobile')">
+                                    <span class="d-none d-md-inline" t-out="column['label']"/>
+                                    <span class="d-block d-md-none" t-out="column['label_mobile']"/>
+                                </t>
+                                <t t-else="" t-out="column['label']"/>
+                            </th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody t-foreach="groups if groups else [{'records': rows}]" t-as="group" t-attf-class="#{tbody_class if tbody_class else ''}">
+                    <t t-if="group.get('label')" t-call="{{group.get('row') or 'portal.portal_list_group_row'}}"/>
+                    <t t-foreach="group['records']" t-as="row">
+                        <t t-set="record" t-value="row[record_key] if record_key else row"/>
+                        <tr>
+                            <t t-foreach="visible_columns" t-as="column">
+                                <t t-call="{{column.get('cell') or 'portal.portal_list_cell'}}"/>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+        <div t-if="has_rows and pager" class="o_portal_pager d-flex justify-content-center my-3">
+            <t t-call="portal.pager"/>
+        </div>
+    </template>
+
+    <template id="portal_list_group_row" name="My Portal List Table Group Row">
+        <!-- The `label` spans up to the first aggregated column, then comes one
+             cell per remaining column, holding its `aggregates` value if any.
+             A group `row` template may set the `label` and `aggregates`
+             variables (e.g. to render them through a widget) and call this one
+             to lay the row out. -->
+        <t t-set="label" t-value="label if label else group['label']"/>
+        <t t-set="aggregates" t-value="aggregates if aggregates else group.get('aggregates') or {}"/>
+        <t t-set="column_names" t-value="[column['name'] for column in visible_columns]"/>
+        <t t-set="label_colspan" t-value="max(1, min([column_names.index(name) for name in aggregates if name in column_names] or [len(column_names)]))"/>
+        <tr class="table-light">
+            <th t-att-colspan="label_colspan">
+                <span class="text-truncate" t-out="label"/>
+            </th>
+            <t t-foreach="visible_columns[label_colspan:]" t-as="column">
+                <th class="text-end text-muted" t-out="aggregates.get(column['name']) or ''"/>
+            </t>
+        </tr>
+    </template>
+
+    <template id="portal_list_cell" name="My Portal List Table Cell">
+        <!-- Renders `field` of the current `record` through its `options`,
+             resolved from the field itself (see
+             CustomerPortal._format_portal_list_columns). `link` wraps the value
+             in a link: True links to record.get_portal_url() (which assigns an
+             access token), a string names the field holding the url instead
+             (e.g. 'access_url'). -->
+        <td t-att-name="column['name']" t-attf-class="#{column.get('class') or ''}">
+            <t t-if="column.get('field')">
+                <t t-set="value" t-value="record[column['field']]"/>
+                <t t-set="options" t-value="column.get('options') or {}"/>
+                <t t-if="column.get('currency_field')" t-set="options" t-value="dict(options, display_currency=record[column['currency_field']])"/>
+                <a t-if="column.get('link')" t-out="value" t-options="options"
+                   t-att-href="record.get_portal_url() if column['link'] is True else record[column['link']]"/>
+                <span t-else="" t-out="value" t-options="options"/>
+            </t>
+        </td>
+    </template>
+
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
         <div t-attf-class="d-flex #{classes}">
             <div class="o_portal_sidebar_content flex-grow-1 mb-4 mb-lg-0 pe-lg-4" id="sidebar_content">

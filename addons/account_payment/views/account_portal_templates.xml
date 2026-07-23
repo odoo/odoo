@@ -55,55 +55,55 @@
         </t>
     </template>
 
-    <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-        <xpath expr="//t[@t-call='portal.portal_table']//th[@name='status']" position="after">
-            <th class="d-none d-lg-table-cell"/>
-            <th/>
-        </xpath>
-        <xpath expr="//t[@t-foreach='invoices']/tr/td[@name='invoice_status']" position="after">
-            <td class="d-none d-lg-table-cell text-center">
-                <t t-if="invoice_data.get('installment_state', False) in ('next', 'overdue')">
-                    <span
-                        t-attf-class="{{'text-danger' if invoice_data['installment_state'] == 'overdue' else ''}}"
-                        t-out="invoice_data['next_amount_to_pay']"
-                        t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
-                    />
-                    <small
-                        t-if="invoice_data['installment_state'] == 'next'"
-                        class="o_portal_invoice_due_date"
-                        t-att-datetime="invoice_data['next_due_date']"
-                    />
-                    <small t-if="invoice_data['installment_state'] == 'overdue'" class="text-danger">
-                        overdue
-                    </small>
-                </t>
-            </td>
-            <td class="text-center">
-                <a t-if="invoice._has_to_be_paid()"
-                    t-att-href="invoice.get_portal_url(anchor='portal_pay', query_string='&amp;payment=True')"
-                    title="Pay Now"
-                    aria-label="Pay now"
-                    class="btn btn-sm btn-primary"
-                    role="button"
-                >
-                    <i class="oi oi-filled" data-icon="arrow_circle_right"/><span class='d-none d-md-inline'> Pay Now</span>
-                </a>
-            </td>
-        </xpath>
+    <template id="portal_invoice_cell_installment" name="Portal Invoice Installment Cell">
+        <td t-attf-class="#{column.get('class') or ''} text-center">
+            <t t-if="row.get('installment_state', False) in ('next', 'overdue')">
+                <span
+                    t-attf-class="{{'text-danger' if row['installment_state'] == 'overdue' else ''}}"
+                    t-out="row['next_amount_to_pay']"
+                    t-options="{'widget': 'monetary', 'display_currency': record.currency_id}"
+                />
+                <small
+                    t-if="row['installment_state'] == 'next'"
+                    class="o_portal_invoice_due_date"
+                    t-att-datetime="row['next_due_date']"
+                />
+                <small t-if="row['installment_state'] == 'overdue'" class="text-danger">
+                    overdue
+                </small>
+            </t>
+        </td>
+    </template>
+
+    <template id="portal_invoice_cell_paynow" name="Portal Invoice Pay Now Cell">
+        <td class="text-center">
+            <a t-if="record._has_to_be_paid()"
+                t-att-href="record.get_portal_url(anchor='portal_pay', query_string='&amp;payment=True')"
+                title="Pay Now"
+                aria-label="Pay now"
+                class="btn btn-sm btn-primary"
+                role="button"
+            >
+                <i class="oi oi-filled" data-icon="arrow_circle_right"/><span class='d-none d-md-inline'> Pay Now</span>
+            </a>
+        </td>
+    </template>
+
+    <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_cell_status">
         <xpath expr="//t[@name='invoice_status_posted']/span[1]" position="before">
-            <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
+            <t t-set="tx_sudo" t-value="record.get_portal_last_transaction()"/>
         </xpath>
         <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
-            <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
+            <span t-elif="record.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
                     class="badge rounded-pill text-bg-primary">
                 <i class="oi oi-fw" data-icon="check"/>
                 <span class="d-none d-md-inline"> Authorized</span>
             </span>
-            <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
+            <span t-elif="record.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
                     class="badge rounded-pill text-bg-warning">
                 <span class="d-none d-md-inline"> Pending</span>
             </span>
-            <span t-elif="invoice.payment_state in ('paid', 'in_payment') and tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
+            <span t-elif="record.payment_state in ('paid', 'in_payment') and tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
                 <i class="oi oi-fw" data-icon="check"></i>
                 <span class="d-none d-md-inline"> Paid</span>
             </span>

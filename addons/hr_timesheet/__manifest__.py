@@ -46,8 +46,12 @@ up a management by affair.
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',
     'assets': {
+        'web.assets_frontend': [
+            'hr_timesheet/static/src/scss/portal.scss',
+        ],
         'web.assets_backend': [
             'hr_timesheet/static/src/**/*',
+            ('remove', 'hr_timesheet/static/src/scss/portal.scss'),
             ('remove', 'hr_timesheet/static/src/views/project_task_analysis_graph/**/*'),
             ('remove', 'hr_timesheet/static/src/views/project_task_graph/**/*'),
             ('remove', 'hr_timesheet/static/src/views/timesheet_graph/**/*'),

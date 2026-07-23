@@ -36,6 +36,22 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def _get_sale_searchbar_sortings(self):
         return {"date": {"label": self.env._("Order Date"), "order": "date_order desc"}}
 
+    def _get_order_portal_columns(self):
+        return [
+            {'name': 'name', 'label': self.env._("Sales Order #"), 'label_mobile': self.env._("Ref."), 'field': 'name', 'link': True},
+            {'name': 'date_order', 'label': self.env._("Order Date"), 'class': 'text-end', 'cell': 'sale.portal_order_cell_date'},
+            {'name': 'amount_total', 'label': self.env._("Total"), 'class': 'text-end', 'field': 'amount_total'},
+        ]
+
+    def _get_quotation_portal_columns(self):
+        return [
+            {'name': 'name', 'label': self.env._("Quotation #"), 'field': 'name', 'link': True},
+            {'name': 'date_order', 'label': self.env._("Quotation Date"), 'class': 'text-end', 'field': 'date_order'},
+            {'name': 'validity_date', 'label': self.env._("Valid Until"), 'class': 'text-end', 'field': 'validity_date'},
+            {'name': 'state', 'label': "", 'class': 'text-center', 'cell': 'sale.portal_quotation_cell_state'},
+            {'name': 'amount_total', 'label': self.env._("Total"), 'class': 'text-end', 'field': 'amount_total'},
+        ]
+
     def _prepare_sale_portal_rendering_values(
         self,
         page=1,
@@ -86,6 +102,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             if SaleOrder.has_access("read")
             else SaleOrder
         )
+        columns = (
+            self._get_quotation_portal_columns() if quotation_page
+            else self._get_order_portal_columns()
+        )
 
         values.update({
             "date": date_begin,
@@ -94,6 +114,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             "page_name": "quote" if quotation_page else "order",
             "pager": pager_values,
             "default_url": url,
+            "columns": self._format_portal_list_columns("sale.order", columns),
         })
 
         if len(searchbar_sortings) > 1:

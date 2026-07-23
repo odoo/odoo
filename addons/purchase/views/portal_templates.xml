@@ -21,74 +21,45 @@
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
           <t t-call="portal.portal_searchbar" title.translate="Requests For Quotation"/>
-          <t t-if="not rfqs">
+          <t t-call="portal.portal_list_table" rows="rfqs">
               <p class="alert alert-warning">There are currently no requests for quotation for your account.</p>
           </t>
-          <t t-if="rfqs" t-call="portal.portal_table">
-              <thead>
-                  <tr class="active">
-                    <th>
-                        <span class='d-none d-md-inline'>Request for Quotation #</span>
-                        <span class='d-block d-md-none'>Ref.</span>
-                    </th>
-                      <th class="text-end">Order Deadline</th>
-                  </tr>
-              </thead>
-              <t t-foreach="rfqs" t-as="rfq">
-                  <tr>
-                      <td><a t-att-href="rfq.get_portal_url()"><t t-out="rfq.name"/></a></td>
-                      <td class="text-end">
-                          <span t-field="rfq.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                          <span class='d-none d-md-inline' t-field="rfq.date_order" t-options="{'time_only': True}"/>
-                      </td>
-                  </tr>
-              </t>
-          </t>
       </t>
+  </template>
+
+  <template id="portal_rfq_cell_date" name="Portal RFQ Deadline Cell">
+      <td t-attf-class="#{column.get('class') or ''}">
+          <span t-field="record.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
+          <span class='d-none d-md-inline' t-field="record.date_order" t-options="{'time_only': True}"/>
+      </td>
   </template>
 
   <template id="portal_my_purchase_orders" name="My Purchase Orders">
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
           <t t-call="portal.portal_searchbar" title.translate="Purchase Orders"/>
-          <t t-if="not orders">
+          <t t-call="portal.portal_list_table" rows="orders">
               <p class="alert alert-warning">There are currently no purchase orders for your account.</p>
           </t>
-          <t t-if="orders" t-call="portal.portal_table">
-              <thead>
-                  <tr class="active">
-                      <th id="order_name_header">
-                          <span class='d-none d-md-inline'>Purchase Order #</span>
-                          <span class='d-block d-md-none'>Ref.</span>
-                      </th>
-                      <th id="order_confirmation_header" class="text-end">
-                          <span class='d-none d-md-inline'>Confirmation Date</span>
-                          <span class='d-block d-md-none'>Confirmation</span>
-                      </th>
-                      <th id="order_badge_header" class="text-center"/>
-                      <th id="order_total_header" class="text-end">Total</th>
-                  </tr>
-              </thead>
-              <t t-foreach="orders" t-as="order">
-                  <tr>
-                      <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-out="order.name"/></a></td>
-                      <td id="order_confirmation" class="text-end">
-                          <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                          <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
-                      </td>
-                      <td id="order_badge" class="text-center">
-                          <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
-                              <i class="oi oi-fw oi-filled" data-icon="article" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
-                          </span>
-                          <span t-if="order.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
-                              <i class="oi oi-fw" data-icon="close" role="img" aria-label="Cancelled" title="Cancelled"></i><span class="d-none d-md-inline"> Cancelled</span>
-                          </span>
-                      </td>
-                      <td id="order_total" class="text-end"><span t-field="order.amount_total"/></td>
-                  </tr>
-              </t>
-          </t>
       </t>
+  </template>
+
+  <template id="portal_order_cell_date" name="Portal Purchase Order Confirmation Date Cell">
+      <td t-attf-class="#{column.get('class') or ''}">
+          <span t-field="record.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
+          <span class='d-none d-md-inline' t-field="record.date_approve" t-options="{'time_only': True}"/>
+      </td>
+  </template>
+
+  <template id="portal_order_cell_badge" name="Portal Purchase Order Status Cell">
+      <td t-attf-class="#{column.get('class') or ''}">
+          <span t-if="record.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
+              <i class="oi oi-fw oi-filled" data-icon="article" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
+          </span>
+          <span t-if="record.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
+              <i class="oi oi-fw" data-icon="close" role="img" aria-label="Cancelled" title="Cancelled"></i><span class="d-none d-md-inline"> Cancelled</span>
+          </span>
+      </td>
   </template>
 
   <template id="portal_my_purchase_order" name="Purchase Order" inherit_id="portal.portal_sidebar" primary="True">
