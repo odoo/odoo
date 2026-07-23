@@ -9,6 +9,45 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
+    def _withholding_tax_account_tax_group_demo(self, template_code):
+        # The generic "WTH" demo group is redundant for Pakistan: the demo
+        # withholding tax below is reassigned to the local Income Tax Withholding
+        # group, so drop the generic one to avoid an unused demo tax group.
+        res = super()._withholding_tax_account_tax_group_demo(template_code)
+        if template_code == 'pk':
+            res.pop('withholding_demo_tax_group', None)
+        return res
+
+    @template(template='pk', model='account.tax', demo=True)
+    def _l10n_pk_withholding_tax_account_tax_demo(self):
+        return {
+            'withholding_demo_tax': {
+                'name': 'ITWHT 5%',
+                'amount': -5,
+                'tax_group_id': 'tax_group_pk_income_wh',
+                'description': '153(1)(a) Supplies',
+                'invoice_label': 'Income Tax Withheld 5%',
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': 'l10n_pk_2110900',
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'repartition_type': 'tax',
+                        'account_id': 'l10n_pk_2110900',
+                    }),
+                ],
+            },
+        }
+
     @template(template='pk', model='account.move', demo=True)
     def _l10n_pk_account_move_demo(self):
         return {
