@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     url: "/odoo",
@@ -32,23 +31,9 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             run: "edit Contact",
         },
         {
-            content: "Wait for the autocomplete RPC",
-            trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
-            run: async() => {
-                await delay(300);
-            }
-        },
-        {
             content: "Click on contact",
-            trigger: 'div[name="model_id"] .ui-autocomplete',
-            run: async function () {
-                const contact = Array.from(
-                    document.querySelectorAll(
-                        'div[name="model_id"] .ui-autocomplete .dropdown-item'
-                    )
-                ).find((el) => el.textContent === "Contact");
-                await contact.click();
-            },
+            trigger: 'div[name="model_id"] .ui-autocomplete .dropdown-item:text(Contact)',
+            run: "click",
         },
         {
             content: "Wait for the drop down to disappear",
