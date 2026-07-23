@@ -87,10 +87,10 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_uom_qty', 'date_planned')
     def _compute_forecasted_issue(self):
         for line in self:
-            warehouse = line.order_id.picking_type_id.warehouse_id
+            warehouse = line.order_id.sudo().picking_type_id.warehouse_id  # sudo() in case of multi-company
             line.forecasted_issue = False
             if line.product_id:
-                virtual_available = line.product_id.with_context(warehouse_id=warehouse.id, to_date=line.date_planned).virtual_available
+                virtual_available = line.product_id.sudo().with_context(warehouse_id=warehouse.id, to_date=line.date_planned).virtual_available
                 if line.state == 'draft':
                     virtual_available += line.product_uom_qty
                 if virtual_available < 0:
@@ -308,16 +308,23 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
-        self._check_orderpoint_picking_type()
+        purchase_line = self
+        if self.company_id != self.order_id.sudo().picking_type_id.company_id:
+            # Multi-company purchase order, need to sudo in some places.
+            purchase_line = purchase_line.sudo()
+        purchase_line._check_orderpoint_picking_type()
         if not self.order_id.reference_ids:
             self.order_id.reference_ids = self.order_id.reference_ids.create(self.order_id._prepare_reference_vals())
         if not self.order_id.partner_id.property_stock_supplier.id:
             raise UserError(_("You must set a Vendor Location for partner %(partner_name)s", partner_name=self.partner_id.name))
         location_dest = picking.location_dest_id if picking else self.env['stock.location'].browse(self.order_id._get_destination_location())
-        location_final = self.forecasted_location_id or self.order_id._get_final_location_record()
+        location_final = self.forecasted_location_id or purchase_line.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
+        origin = f"{self.order_id.name} - {self.order_id.partner_ref}" if self.order_id.partner_ref else self.order_id.name
+        if self.order_id.company_id != self.order_id.sudo().picking_type_id.company_id:
+            origin += f" ({self.order_id.company_id.name})"
         return {
             'product_id': self.product_id.id,
             'date': date_planned,
@@ -335,7 +342,7 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'priority': self.order_id.priority,
             'reference_ids': [Command.set(self.order_id.reference_ids.ids)],
-            'origin': f"{self.order_id.name} - {self.order_id.partner_ref}" if self.order_id.partner_ref else self.order_id.name,
+            'origin': origin,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
@@ -396,6 +403,13 @@ class PurchaseOrderLine(models.Model):
         values = []
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
+                if line.order_id.picking_type_id.company_id != line.order_id.company_id:
+                    if line.order_id.partner_id.company_id and line.order_id.partner_id.company_id != line.order_id.picking_type_id.company_id:
+                        raise UserError(self.env._(
+                            "There is a mismatch between the company the Vendor is restricted to and the company receiving the purchased products. "
+                            "Please ensure the company is the same or that the Contact has no company restriction set."
+                            ))
+                    val['company_id'] = line.order_id.picking_type_id.company_id.id
                 values.append(val)
 
         return self.env['stock.move'].create(values)
