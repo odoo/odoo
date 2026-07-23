@@ -256,7 +256,7 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
             </main>
         `;
         props = useProps();
-        numpadDecimalRef = signal(null);
+        numpadDecimalRef = signal.ref();
         setup() {
             useNumpadDecimal(this.numpadDecimalRef);
             this.state = proxy({ showOtherInput: false });

@@ -29,8 +29,8 @@ export class AddSnippetDialog extends Component {
         editor: t.object(),
     });
 
-    iframeRef = signal(null);
-    autofocusRef = signal(null);
+    iframeRef = signal.ref();
+    autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

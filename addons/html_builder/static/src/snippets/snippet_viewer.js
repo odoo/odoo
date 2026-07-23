@@ -20,7 +20,7 @@ export class SnippetViewer extends Component {
         frontendDirection: { type: String },
     };
 
-    content = signal(null);
+    content = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

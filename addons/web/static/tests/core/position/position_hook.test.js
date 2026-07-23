@@ -39,10 +39,10 @@ function getTestComponent(popperOptions, styles = {}, target = false) {
             </div>
         `;
         props = useProps();
-        containerRef = signal(null);
-        targetRef = signal(null);
-        popperRef = signal(null);
-        contentRef = signal(null);
+        containerRef = signal.ref();
+        targetRef = signal.ref();
+        popperRef = signal.ref();
+        contentRef = signal.ref();
         setup() {
             if (!target) {
                 target = this.targetRef;
@@ -202,7 +202,7 @@ test("popper is an inner element", async () => {
             </div>
         `;
         props = useProps();
-        popperRef = signal(null);
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => getFixture(), {
                 onPositioned: (el) => {
@@ -297,8 +297,8 @@ test("does not reposition when scroll is in an unrelated container", async () =>
             </div>
         `;
         props = useProps();
-        targetRef = signal(null);
-        popperRef = signal(null);
+        targetRef = signal.ref();
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => this.targetRef(), {
                 onPositioned: () => {
@@ -379,7 +379,7 @@ function getPopperComponent(popperOptions, target) {
             </div>
         `;
         props = useProps();
-        popperRef = signal(null);
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => target, {
                 ...popperOptions,
@@ -693,7 +693,7 @@ test("iframe: default container is the popper owner's document", async () => {
     class Popper extends Component {
         props = useProps();
         static template = xml`<div id="popper" t-ref="this.popperRef" />`;
-        popperRef = signal(null);
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => target, {
                 position: "top-start",
@@ -720,8 +720,8 @@ test("popper as child of another", async () => {
             </div>
         `;
         props = useProps();
-        childTargetRef = signal(null);
-        popperRef = signal(null);
+        childTargetRef = signal.ref();
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => this.childTargetRef(), { position: "left" });
         }
@@ -735,9 +735,9 @@ test("popper as child of another", async () => {
             </div>
         `;
         props = useProps();
-        containerRef = signal(null);
-        targetRef = signal(null);
-        popperRef = signal(null);
+        containerRef = signal.ref();
+        targetRef = signal.ref();
+        popperRef = signal.ref();
         setup() {
             usePosition(this.popperRef, () => this.targetRef());
         }
@@ -776,9 +776,9 @@ test("batch update call", async () => {
             </div>
         `;
         props = useProps();
-        containerRef = signal(null);
-        targetRef = signal(null);
-        popperRef = signal(null);
+        containerRef = signal.ref();
+        targetRef = signal.ref();
+        popperRef = signal.ref();
         setup() {
             position = usePosition(this.popperRef, () => this.targetRef(), {
                 onPositioned: () => {
@@ -805,8 +805,8 @@ test("not positioned if target not connected", async () => {
             <div t-ref="this.container"><div t-ref="this.popperRef"/></div>
         `;
         props = useProps();
-        container = signal(null);
-        popperRef = signal(null);
+        container = signal.ref();
+        popperRef = signal.ref();
         setup() {
             this.position = usePosition(this.popperRef, () => target, {
                 onPositioned: () => {
@@ -842,9 +842,9 @@ function shrinkPopperTest(position, offset, onPositioned, popperStyle = {}) {
                 </div>
             `;
             props = useProps();
-            containerRef = signal(null);
-            targetRef = signal(null);
-            popperRef = signal(null);
+            containerRef = signal.ref();
+            targetRef = signal.ref();
+            popperRef = signal.ref();
             setup() {
                 const target = this.targetRef;
                 const container = this.containerRef;

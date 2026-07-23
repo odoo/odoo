@@ -21,7 +21,7 @@ class Root extends Component {
     static template = xml`<input type="text" class="datetime_hook_input" t-ref="this.startDateRef"/>`;
     props = useProps();
 
-    startDateRef = signal(null);
+    startDateRef = signal.ref();
 
     setup() {
         this.props.setup(this.startDateRef);
@@ -185,7 +185,7 @@ test("close popover when owner component is unmounted", async () => {
             </div>
         `;
 
-        startDateRef = signal(null);
+        startDateRef = signal.ref();
 
         setup() {
             useDateTimePicker({

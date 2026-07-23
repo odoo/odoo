@@ -9,7 +9,7 @@ export class SurveyQuestionTriggerWidget extends Component {
     ...standardWidgetProps,
     };
 
-    buttonRef = signal(null);
+    buttonRef = signal.ref();
 
     setup() {
         super.setup();

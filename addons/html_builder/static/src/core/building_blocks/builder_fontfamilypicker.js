@@ -22,7 +22,7 @@ export class BuilderFontFamilyPicker extends Component {
         BuilderSelectItem,
     };
     contentRef = signal.ref();
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

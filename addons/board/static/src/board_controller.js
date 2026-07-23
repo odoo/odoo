@@ -20,7 +20,7 @@ export class BoardController extends Component {
         board: Object,
     };
 
-    mainRef = signal(null);
+    mainRef = signal.ref();
 
     setup() {
         this.board = proxy(this.props.board);

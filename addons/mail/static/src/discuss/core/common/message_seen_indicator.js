@@ -8,7 +8,7 @@ class MessageSeenIndicatorDialog extends Component {
     static components = { Dialog };
     static template = "mail.MessageSeenIndicatorDialog";
 
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         super.setup();

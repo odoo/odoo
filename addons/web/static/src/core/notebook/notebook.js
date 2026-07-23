@@ -67,7 +67,7 @@ export class Notebook extends Component {
     static template = "web.Notebook";
     props = useProps(notebookProps);
 
-    activePane = signal(null);
+    activePane = signal.ref();
 
     setup() {
         this.pages = this.computePages(this.props);

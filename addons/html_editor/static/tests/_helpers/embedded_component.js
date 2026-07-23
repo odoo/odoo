@@ -13,7 +13,7 @@ export class Counter extends Component {
         <span t-ref="this.ref" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
 
     state = proxy({ value: 0 });
-    ref = signal(null);
+    ref = signal.ref();
 
     increment() {
         this.state.value++;

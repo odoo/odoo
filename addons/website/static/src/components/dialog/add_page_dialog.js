@@ -47,7 +47,7 @@ export class AddPageConfirmDialog extends Component {
         Switch,
         WebsiteDialog,
     };
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         super.setup();
@@ -85,9 +85,9 @@ class AddPageTemplatePreview extends Component {
         },
         onPageKeydown: { type: Function },
     };
-    iframeRef = signal(null);
-    previewRef = signal(null);
-    holderRef = signal(null);
+    iframeRef = signal.ref();
+    previewRef = signal.ref();
+    holderRef = signal.ref();
 
     setup() {
         super.setup();
@@ -333,7 +333,7 @@ class AddPageTemplatePreviews extends Component {
     static components = {
         AddPageTemplatePreview,
     };
-    container = signal(null);
+    container = signal.ref();
 
     setup() {
         super.setup();
@@ -364,10 +364,10 @@ class AddPageTemplates extends Component {
     static components = {
         AddPageTemplatePreviews,
     };
-    tabsRef = signal(null);
-    panesRef = signal(null);
-    autofocusRef = signal(null);
-    inactiveTabRef = signal(null);
+    tabsRef = signal.ref();
+    panesRef = signal.ref();
+    autofocusRef = signal.ref();
+    inactiveTabRef = signal.ref();
 
     setup() {
         super.setup();
@@ -506,7 +506,7 @@ export class AddPageDialog extends Component {
         AddPageTemplates,
         AddPageTemplatePreviews,
     };
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         super.setup();

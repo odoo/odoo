@@ -90,7 +90,7 @@ export class BuilderList extends Component {
         withScrollbar: t.boolean().optional(true),
     });
 
-    tableRef = signal(null);
+    tableRef = signal.ref();
 
     setup() {
         if (this.props.default) {

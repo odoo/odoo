@@ -10,7 +10,7 @@ import { Record } from "@web/model/relational_model/record";
 export class ActivityButton extends Component {
     static template = "mail.ActivityButton";
 
-    buttonRef = signal(null);
+    buttonRef = signal.ref();
 
     setup() {
         super.setup();

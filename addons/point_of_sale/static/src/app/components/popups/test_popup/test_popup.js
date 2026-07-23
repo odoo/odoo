@@ -8,7 +8,7 @@ export class TestPopup extends Component {
     static template = "point_of_sale.TestPopup";
     static components = { Dialog };
 
-    ref = signal(null);
+    ref = signal.ref();
 
     setup() {
         this.pos = usePos();

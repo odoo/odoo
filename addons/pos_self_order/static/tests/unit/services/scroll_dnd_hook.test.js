@@ -14,7 +14,7 @@ const setupComponent = async () => {
             <div style="width: 1000px; height: 20px;">Scrollable Content</div>
         </div>`;
         static props = [];
-        scrollRef = signal(null);
+        scrollRef = signal.ref();
         setup() {
             useDraggableScroll(this.scrollRef);
         }

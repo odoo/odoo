@@ -10,9 +10,9 @@ export class SearchModal extends Component {
         close: { type: Function },
     };
 
-    seachRef = signal(null);
-    modalRef = signal(null);
-    scrollRef = signal(null);
+    seachRef = signal.ref();
+    modalRef = signal.ref();
+    scrollRef = signal.ref();
 
     setup() {
         this.results = [];

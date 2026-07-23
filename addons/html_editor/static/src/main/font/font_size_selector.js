@@ -30,7 +30,7 @@ export class FontSizeSelector extends Component {
     });
     static components = { Dropdown, DropdownItem, IframeInput };
 
-    fontSizeSelector = signal(null);
+    fontSizeSelector = signal.ref();
 
     setup() {
         this.items = this.props.getItems();

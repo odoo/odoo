@@ -136,9 +136,9 @@ class BuilderContainer extends Component {
         builderProps: { type: Object, optional: true },
     };
 
-    containerRef = signal(null);
-    websitePreviewRef = signal(null);
-    iframeRef = signal(null);
+    containerRef = signal.ref();
+    websitePreviewRef = signal.ref();
+    iframeRef = signal.ref();
 
     setup() {
         this.state = proxy({ isMobile: false, isEditing: false, showSidebar: true });

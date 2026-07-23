@@ -17,7 +17,7 @@ export class AnimateTextPopover extends BaseOptionComponent {
         close: { type: Function, optional: true },
     };
     static components = { AnimateOption };
-    contentRef = signal(null);
+    contentRef = signal.ref();
 
     setup() {
         super.setup();
@@ -44,7 +44,7 @@ export class AnimateText extends Component {
         isDisabled: Function,
     };
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         this.state = proxy({});

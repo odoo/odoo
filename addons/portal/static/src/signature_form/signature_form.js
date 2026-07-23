@@ -16,7 +16,7 @@ export class SignatureForm extends Component {
     static components = { NameAndSignature }
     static props = ["*"];
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.csrfToken = odoo.csrf_token;

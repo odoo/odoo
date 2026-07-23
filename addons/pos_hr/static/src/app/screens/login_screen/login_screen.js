@@ -19,7 +19,7 @@ patch(LoginScreen.prototype, {
                 exclusive: true,
             });
 
-            this.autofocusRef = signal(null);
+            this.autofocusRef = signal.ref();
             useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {

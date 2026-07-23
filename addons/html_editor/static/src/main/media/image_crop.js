@@ -38,10 +38,10 @@ export class ImageCrop extends Component {
         onSave: { type: Function, optional: true },
     };
 
-    elRef = signal(null);
-    imageRef = signal(null);
-    discardButtonRef = signal(null);
-    cropperWrapperRef = signal(null);
+    elRef = signal.ref();
+    imageRef = signal.ref();
+    discardButtonRef = signal.ref();
+    cropperWrapperRef = signal.ref();
 
     setup() {
         this.aspectRatios = cropperAspectRatios;

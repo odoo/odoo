@@ -35,13 +35,13 @@ export class CustomColorPicker extends Component {
         setOperationCallbacks: t.function().optional(),
     });
 
-    elRef = signal(null);
-    colorPickerAreaRef = signal(null);
-    colorPickerPointerRef = signal(null);
-    colorSliderRef = signal(null);
-    colorSliderPointerRef = signal(null);
-    opacitySliderRef = signal(null);
-    opacitySliderPointerRef = signal(null);
+    elRef = signal.ref();
+    colorPickerAreaRef = signal.ref();
+    colorPickerPointerRef = signal.ref();
+    colorSliderRef = signal.ref();
+    colorSliderPointerRef = signal.ref();
+    opacitySliderRef = signal.ref();
+    opacitySliderPointerRef = signal.ref();
 
     setup() {
         this.pickerFlag = false;

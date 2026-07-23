@@ -30,7 +30,7 @@ export class DynamicPlaceholderPopover extends Component {
     };
     props = useProps(["resModel", "validate", "close"]);
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

@@ -30,7 +30,7 @@ export class Pager extends Component {
         updateTotal: t.function().optional(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.state = proxy({

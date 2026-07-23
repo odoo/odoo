@@ -3,7 +3,7 @@ import { onMounted, signal } from "@odoo/owl";
 
 export class ThemeShadowOption extends BaseOptionComponent {
     static template = "website.ThemeShadowOption";
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

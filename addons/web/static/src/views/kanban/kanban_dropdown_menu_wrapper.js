@@ -7,7 +7,7 @@ export class KanbanDropdownMenuWrapper extends Component {
         slots: t.object(),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.dropdownControl = useDropdownCloser();

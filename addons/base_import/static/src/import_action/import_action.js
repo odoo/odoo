@@ -28,7 +28,7 @@ export class ImportAction extends Component {
     static path = "import";
     static displayName = _t("Import");
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

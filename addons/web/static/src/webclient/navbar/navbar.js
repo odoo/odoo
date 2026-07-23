@@ -39,9 +39,9 @@ export class NavBar extends Component {
         ErrorHandler,
         Transition,
     };
-    root = signal(null);
-    appSubMenus = signal(null);
-    menuApps = signal(null);
+    root = signal.ref();
+    appSubMenus = signal.ref();
+    menuApps = signal.ref();
 
     setup() {
         this.currentAppSectionsExtra = [];

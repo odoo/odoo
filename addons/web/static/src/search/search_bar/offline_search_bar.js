@@ -21,8 +21,8 @@ export class OfflineSearchBar extends Component {
         toggler: t.object().optional(),
     });
 
-    rootRef = signal(null);
-    autofocusRef = signal(null);
+    rootRef = signal.ref();
+    autofocusRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

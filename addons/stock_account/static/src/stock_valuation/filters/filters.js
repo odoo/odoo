@@ -11,7 +11,7 @@ export class StockValuationReportFilters extends Component {
     };
     static props = {};
 
-    dateFilterRef = signal(null);
+    dateFilterRef = signal.ref();
 
     setup() {
         const getPickerProps = () => {

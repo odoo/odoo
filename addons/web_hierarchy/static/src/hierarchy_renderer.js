@@ -18,7 +18,7 @@ export class HierarchyRenderer extends Component {
     };
     static template = "web_hierarchy.HierarchyRenderer";
 
-    rendererRef = signal(null);
+    rendererRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

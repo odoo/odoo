@@ -17,7 +17,7 @@ export class SettingsFormController extends formView.Controller {
         Renderer: SettingsFormRenderer,
     };
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         super.setup();

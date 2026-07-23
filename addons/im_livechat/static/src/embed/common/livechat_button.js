@@ -10,7 +10,7 @@ export class LivechatButton extends Component {
     static props = {};
     static DEBOUNCE_DELAY = 500;
 
-    buttonRef = signal(null);
+    buttonRef = signal.ref();
 
     setup() {
         this.store = useService("mail.store");

@@ -12,7 +12,7 @@ export class AttributeSelection extends Component {
         isCombo: t.boolean().optional(),
     });
 
-    customValueInputRef = signal(null);
+    customValueInputRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

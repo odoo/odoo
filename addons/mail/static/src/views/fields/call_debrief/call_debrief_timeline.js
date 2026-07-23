@@ -17,8 +17,8 @@ export class CallDebriefTimeline extends Component {
             // The current playback position in global call seconds.
             currentTime: t.number().optional(),
         });
-        this.timeline = signal(null);
-        this.timestamp = signal(null);
+        this.timeline = signal.ref();
+        this.timestamp = signal.ref();
         this.isDragging = false;
         this.state = proxy({
             hoverTimestamp: 0,

@@ -20,7 +20,7 @@ export class TableAlignSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
-    tableAlignSelector = signal(null);
+    tableAlignSelector = signal.ref();
 
     setup() {
         this.items = this.props.getItems();

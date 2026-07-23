@@ -31,7 +31,7 @@ export class DateTimeInput extends Component {
     pickerProps = useProps(dateTimePickerProps);
     static template = "web.DateTimeInput";
 
-    startDateRef = signal(null);
+    startDateRef = signal.ref();
 
     setup() {
         // const getPickerProps = () => omit(this.props, ...Object.keys(dateTimeInputOwnProps));

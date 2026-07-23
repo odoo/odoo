@@ -15,8 +15,8 @@ export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
     static components = { Dropdown };
 
-    reactionButtonRef = signal(null);
-    reactionListRef = signal(null);
+    reactionButtonRef = signal.ref();
+    reactionListRef = signal.ref();
 
     setup() {
         super.setup(...arguments);

@@ -23,7 +23,7 @@ export class ReportAction extends Component {
     static template = "web.ReportAction";
     props = useProps();
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         useSubEnv({

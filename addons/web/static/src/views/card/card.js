@@ -36,7 +36,7 @@ export class Card extends Component {
     props = useProps(cardProps);
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         const resModel = this.props.resModel;

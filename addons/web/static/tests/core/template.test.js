@@ -59,7 +59,7 @@ async function mountTestComponentWithTemplate(name) {
     class TestComponent extends Component {
         props = useProps();
         static template = xml`<div t-ref="this.rootRef"><t t-call="${name}"/></div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
     }
     const component = await mountWithCleanup(TestComponent);
     return component.rootRef();

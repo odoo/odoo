@@ -12,7 +12,7 @@ export class LivechatCommandDialog extends Component {
     static components = { ActionPanel };
     static props = ["thread", "close", "commandName", "placeholderText", "title", "icon"];
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.state = proxy({ inputText: "" });

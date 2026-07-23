@@ -239,12 +239,12 @@ export class DescriptionScreen extends Component {
         navigate: Function,
         skip: Function,
     };
-    industrySelection = signal(null);
-    purposeSelectionRef = signal(null);
-    autofocusRef = signal(null);
-    scratchTypeRef = signal(null);
-    scratchPositioningRef = signal(null);
-    positioningDropdownRef = signal(null);
+    industrySelection = signal.ref();
+    purposeSelectionRef = signal.ref();
+    autofocusRef = signal.ref();
+    scratchTypeRef = signal.ref();
+    scratchPositioningRef = signal.ref();
+    positioningDropdownRef = signal.ref();
     setup() {
         this.state = useStore();
         this.orm = useService("orm");
@@ -603,7 +603,7 @@ export class PaletteSelectionScreen extends Component {
         navigate: Function,
         skip: Function,
     };
-    logoInputRef = signal(null);
+    logoInputRef = signal.ref();
     setup() {
         this.state = useStore();
         this.notification = useService("notification");

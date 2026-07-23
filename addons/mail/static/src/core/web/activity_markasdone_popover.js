@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
 
-    textArea = signal(null);
+    textArea = signal.ref();
 
     setup() {
         super.setup();

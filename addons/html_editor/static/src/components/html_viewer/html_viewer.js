@@ -26,8 +26,8 @@ export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
 
     app = useApp();
-    iframeRef = signal(null);
-    readonlyElementRef = signal(null);
+    iframeRef = signal.ref();
+    readonlyElementRef = signal.ref();
     props = props({
         config: t.object(),
         migrateHTML: t.boolean().optional(true),

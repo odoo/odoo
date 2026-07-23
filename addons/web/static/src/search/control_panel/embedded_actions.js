@@ -394,8 +394,8 @@ export class EmbeddedActionsPanel extends Component {
     };
     props = useProps({ state: t.object() });
 
-    root = signal(null);
-    newActionNameRef = signal(null);
+    root = signal.ref();
+    newActionNameRef = signal.ref();
 
     setup() {
         this.uiService = useService("ui");

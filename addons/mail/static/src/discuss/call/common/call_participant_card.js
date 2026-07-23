@@ -18,7 +18,7 @@ export class CallParticipantCard extends Component {
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

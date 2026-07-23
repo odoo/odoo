@@ -300,7 +300,7 @@ class HighlightToolbarButton extends Component {
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer"/>
         </button>
     `;
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());

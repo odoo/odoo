@@ -16,8 +16,8 @@ export class DocTable extends Component {
     };
 
     items = computed(() => this.computeItems());
-    subTableRef = signal(null);
-    tooltipRef = signal(null);
+    subTableRef = signal.ref();
+    tooltipRef = signal.ref();
 
     setup() {
         this.state = proxy({

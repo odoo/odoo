@@ -12,7 +12,7 @@ export class UploadButton extends Component {
         uploadRoute: t.string(),
     });
 
-    uploadFileInputRef = signal(null);
+    uploadFileInputRef = signal.ref();
 
     setup() {
         this.fileUploadService = useService("file_upload");

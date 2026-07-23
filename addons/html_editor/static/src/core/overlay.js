@@ -32,7 +32,7 @@ export class EditorOverlay extends Component {
         hasAutofocus: t.boolean().optional(false),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.uiService = useService("ui");

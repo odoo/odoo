@@ -107,7 +107,7 @@ test("useCommand hook when the activeElement change", async () => {
     class OtherComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><div tabindex="1">visible</div></div>`;
         props = useProps();
-        activeRef = signal(null);
+        activeRef = signal.ref();
         setup() {
             useActiveElement(this.activeRef);
             useCommand("I'm taking the throne", () => {});
@@ -185,7 +185,7 @@ test("global command with hotkey", async () => {
     class MyComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><button>visible</button></div>`;
         props = useProps();
-        activeRef = signal(null);
+        activeRef = signal.ref();
         setup() {
             useActiveElement(this.activeRef);
         }

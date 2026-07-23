@@ -57,7 +57,7 @@ export class Toolbar extends Component {
         },
     };
 
-    toolbarEl = signal(null);
+    toolbarEl = signal.ref();
 
     setup() {
         this.state = proxy(this.props.state);

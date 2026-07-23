@@ -30,9 +30,9 @@ export class BlockTab extends Component {
         newInstalledModule: { type: String, optional: true },
     };
 
-    blockTabRef = signal(null);
-    groupSnippetsContainer = signal(null);
-    innerSnippetsContainer = signal(null);
+    blockTabRef = signal.ref();
+    groupSnippetsContainer = signal.ref();
+    innerSnippetsContainer = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

@@ -33,7 +33,7 @@ export class SearchBar extends Component {
         onFilterSelected: t.function(),
     });
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

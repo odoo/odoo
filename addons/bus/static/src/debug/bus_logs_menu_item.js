@@ -11,7 +11,7 @@ export class BusLogsMenuItem extends Component {
     static template = "bus.BusLogsMenuItem";
     static props = {};
 
-    downloadButtonRef = signal(null);
+    downloadButtonRef = signal.ref();
 
     setup() {
         this.busLogsService = useService("bus.logs_service");

@@ -103,7 +103,7 @@ const chatterPatch = {
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(this.thread);
-        this.unfollowRef = signal(null);
+        this.unfollowRef = signal.ref();
         this.unfollowHover = useHover(this.unfollowRef);
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */

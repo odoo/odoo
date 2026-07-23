@@ -11,7 +11,7 @@ export class ButtonNewContractWidget extends Component {
         ...standardWidgetProps,
     };
 
-    datetimePickerTargetRef = signal(null);
+    datetimePickerTargetRef = signal.ref();
 
     /** @override **/
     setup() {

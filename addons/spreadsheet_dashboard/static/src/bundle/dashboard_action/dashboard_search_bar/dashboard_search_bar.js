@@ -26,7 +26,7 @@ export class DashboardSearchBar extends Component {
     };
     static props = { model: Object, toggler: Object };
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         this.nameService = useService("name");

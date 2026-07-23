@@ -14,7 +14,7 @@ export class CustomFavoriteItem extends Component {
     static template = "web.CustomFavoriteItem";
     static components = { CheckBox, AccordionItem };
 
-    descriptionRef = signal(null);
+    descriptionRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");

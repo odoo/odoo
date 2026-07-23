@@ -9,7 +9,7 @@ export class PropertyText extends Component {
         value: t.string(),
     });
 
-    textareaRef = signal(null);
+    textareaRef = signal.ref();
 
     setup() {
         useAutoresize(this.textareaRef);

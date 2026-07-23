@@ -11,7 +11,7 @@ export class QuickReactionMenu extends Component {
     static components = { Dropdown };
     static DEFAULT_EMOJIS = ["👍", "❤️", "🤣", "😯", "😅", "🙏"];
 
-    toggle = signal(null);
+    toggle = signal.ref();
 
     setup() {
         super.setup(...arguments);

@@ -108,7 +108,7 @@ export class Many2One extends Component {
     static template = "web.Many2One";
     static components = { Many2XAutocomplete };
     props = useProps(many2OneProps);
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.action = useService("action");

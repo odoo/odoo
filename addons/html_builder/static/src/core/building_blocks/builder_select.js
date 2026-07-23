@@ -51,9 +51,9 @@ export class BuilderSelect extends Component {
         BuilderComponent,
         WithIgnoreItem,
     };
-    buttonRef = signal(null);
-    rootRef = signal(null);
-    contentRef = signal(null);
+    buttonRef = signal.ref();
+    rootRef = signal.ref();
+    contentRef = signal.ref();
 
     setup() {
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));

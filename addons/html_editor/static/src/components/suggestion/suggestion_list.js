@@ -9,7 +9,7 @@ export class SuggestionList extends Component {
     };
     static template = "html_editor.SuggestionList";
 
-    suggestionListRef = signal(null);
+    suggestionListRef = signal.ref();
 
     setup() {
         this.navigation = useNavigation(this.suggestionListRef, {

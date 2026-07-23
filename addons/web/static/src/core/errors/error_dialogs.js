@@ -53,7 +53,7 @@ export class ErrorDialog extends Component {
         ...standardErrorDialogProps,
     });
 
-    copyButtonRef = signal(null);
+    copyButtonRef = signal.ref();
 
     setup() {
         this.state = proxy({

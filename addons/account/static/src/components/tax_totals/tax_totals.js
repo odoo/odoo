@@ -28,8 +28,8 @@ class TaxGroupComponent extends Component {
     };
     static template = "account.TaxGroupComponent";
 
-    inputTaxRef = signal(null);
-    numpadDecimalRef = signal(null);
+    inputTaxRef = signal.ref();
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.state = proxy({ value: "readonly" });

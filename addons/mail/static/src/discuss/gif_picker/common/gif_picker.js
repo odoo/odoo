@@ -46,8 +46,8 @@ export class GifPicker extends Component {
     static template = "discuss.GifPicker";
     static components = { Gif };
 
-    autofocusRef = signal(null);
-    scrollerRef = signal(null);
+    autofocusRef = signal.ref();
+    scrollerRef = signal.ref();
 
     setup() {
         super.setup();

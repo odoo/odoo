@@ -20,7 +20,7 @@ export class AlignSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
-    alignSelector = signal(null);
+    alignSelector = signal.ref();
 
     setup() {
         this.items = this.props.getItems();

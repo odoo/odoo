@@ -60,10 +60,10 @@ export class StatusBarField extends Component {
         context: t.object().optional(),
     });
 
-    beforeRef = signal(null);
-    rootRef = signal(null);
-    afterRef = signal(null);
-    dropdownRef = signal(null);
+    beforeRef = signal.ref();
+    rootRef = signal.ref();
+    afterRef = signal.ref();
+    dropdownRef = signal.ref();
 
     setup() {
         // Properties

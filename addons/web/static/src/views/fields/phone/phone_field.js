@@ -20,7 +20,7 @@ export class PhoneField extends Component {
     props = useProps(phoneFieldProps);
     static components = { Dropdown, DropdownItem };
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         useInputField({ ref: this.inputRef, getValue: () => this.value || "" });

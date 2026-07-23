@@ -35,7 +35,7 @@ export class BomOverviewControlPanel extends Component {
         allFolded: t.boolean(),
     });
 
-    quantity = signal(null);
+    quantity = signal.ref();
 
     setup() {
         this.action = useService("action");

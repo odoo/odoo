@@ -15,7 +15,7 @@ export class CallActionList extends Component {
     static template = "discuss.CallActionList";
 
     more = signal(null);
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

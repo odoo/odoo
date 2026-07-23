@@ -149,7 +149,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
 }
 
 export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends AbstractExpenseDocumentUpload(T) {
-    fileInput = signal(null);
+    fileInput = signal.ref();
 
     setup() {
         super.setup();

@@ -20,7 +20,7 @@ export class ImageAlignSelector extends Component {
         ...toolbarButtonProps,
     };
 
-    imageAlignSelector = signal(null);
+    imageAlignSelector = signal.ref();
 
     setup() {
         this.state = proxy(this.props.getDisplay());

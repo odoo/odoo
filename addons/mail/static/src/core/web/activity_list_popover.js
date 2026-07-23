@@ -10,7 +10,7 @@ export class ActivityListPopover extends Component {
     static components = { ActivityListPopoverItem };
     static template = "mail.ActivityListPopover";
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

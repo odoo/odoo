@@ -12,7 +12,7 @@ export class MessageReactions extends Component {
     static template = "mail.MessageReactions";
     static components = { MessageReactionList, QuickReactionMenu };
 
-    addRef = signal(null);
+    addRef = signal.ref();
 
     setup() {
         super.setup();

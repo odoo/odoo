@@ -4,8 +4,8 @@ import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 export const ELEM_ID_PREFIX = "fpe-";
 
 export class FloorPlanBase extends Component {
-    containerRef = signal(null);
-    canvasRef = signal(null);
+    containerRef = signal.ref();
+    canvasRef = signal.ref();
 
     setup() {
         super.setup();

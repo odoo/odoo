@@ -38,11 +38,11 @@ export class FileViewer extends Component {
         canUnlink: t.function().optional(() => () => false),
     });
 
-    autofocusRef = signal(null);
-    iframeViewerPdfRef = signal(null);
-    imageRef = signal(null);
-    imageToolbarRef = signal(null);
-    zoomerRef = signal(null);
+    autofocusRef = signal.ref();
+    iframeViewerPdfRef = signal.ref();
+    imageRef = signal.ref();
+    imageToolbarRef = signal.ref();
+    zoomerRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

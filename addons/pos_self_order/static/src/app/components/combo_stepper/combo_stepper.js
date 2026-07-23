@@ -11,8 +11,8 @@ export class Stepper extends Component {
         onStepClicked: t.function(),
     });
 
-    containerRef = signal(null);
-    scrollContainerRef = signal(null);
+    containerRef = signal.ref();
+    scrollContainerRef = signal.ref();
 
     setup() {
         useHorizontalScrollShadow(this.scrollContainerRef, this.containerRef);

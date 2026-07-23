@@ -18,11 +18,11 @@ export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
     static components = { OrderWidget, ProductNameWidget };
 
-    categoryListRef = signal(null);
-    subCategoryListRef = signal(null);
-    productListRef = signal(null);
-    subCategoryContainerRef = signal(null);
-    categoryContainerRef = signal(null);
+    categoryListRef = signal.ref();
+    subCategoryListRef = signal.ref();
+    productListRef = signal.ref();
+    subCategoryContainerRef = signal.ref();
+    categoryContainerRef = signal.ref();
 
     setup() {
         this.selfOrder = useSelfOrder();

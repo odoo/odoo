@@ -60,7 +60,7 @@ export class Image extends Component {
         `;
 
     loaded = signal(false);
-    svgRef = signal(null);
+    svgRef = signal.ref();
 
     setup() {
         this.svg = {};

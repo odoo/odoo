@@ -22,7 +22,7 @@ export class SlideShareDialog extends Component {
         url: { type: String },
     };
 
-    codeInputRef = signal(null);
+    codeInputRef = signal.ref();
 
     setup() {
         this.copyUrlText = _t("Copy Link");

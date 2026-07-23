@@ -9,7 +9,7 @@ export class AccordionItem extends Component {
         slots: t.object(),
     });
 
-    content = signal(null);
+    content = signal.ref();
 
     setup() {
         this.state = proxy({

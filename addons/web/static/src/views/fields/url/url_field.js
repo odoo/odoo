@@ -14,7 +14,7 @@ export class UrlField extends Component {
         websitePath: t.boolean().optional(),
     });
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         useInputField({ getValue: () => this.value, ref: this.inputRef });

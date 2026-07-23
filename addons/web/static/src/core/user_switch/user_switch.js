@@ -8,7 +8,7 @@ export class UserSwitch extends Component {
     static template = "web.login_user_switch";
     static components = { Portal };
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         const users = getLastConnectedUsers();

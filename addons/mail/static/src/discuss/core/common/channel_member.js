@@ -15,7 +15,7 @@ export class ChannelMember extends Component {
     static components = { ActionList, ActionPanel, DiscussAvatar, Dropdown };
     static template = "discuss.ChannelMember";
 
-    displayNameRef = signal(null);
+    displayNameRef = signal.ref();
 
     setup() {
         super.setup();

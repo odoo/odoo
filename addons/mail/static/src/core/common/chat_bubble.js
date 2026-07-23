@@ -38,7 +38,7 @@ export class ChatBubble extends Component {
     static components = { CountryFlag, DiscussAvatar };
     static template = "mail.ChatBubble";
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

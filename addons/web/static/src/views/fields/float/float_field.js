@@ -24,7 +24,7 @@ export class FloatField extends Component {
     static template = "web.FloatField";
     props = useProps(floatFieldProps);
 
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.state = proxy({

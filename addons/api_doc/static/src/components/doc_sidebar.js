@@ -9,7 +9,7 @@ export class DocSidebar extends Component {
     static components = {};
     static props = {};
 
-    containerRef = signal(null);
+    containerRef = signal.ref();
 
     setup() {
         this.modelStore = proxy(this.env.modelStore);

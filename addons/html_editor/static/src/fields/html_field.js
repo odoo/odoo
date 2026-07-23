@@ -71,7 +71,7 @@ export class HtmlField extends Component {
 
     app = useApp();
     props = props(htmlFieldProps);
-    codeViewRef = signal(null);
+    codeViewRef = signal.ref();
 
     get classList() {
         return ["o-html-field"];

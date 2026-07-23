@@ -87,7 +87,7 @@ export class AddFontDialog extends Component {
         uploadedFontFaces: undefined,
         previewText: _t("The quick brown fox jumps over the lazy dog."),
     });
-    fileInput = signal(null);
+    fileInput = signal.ref();
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");

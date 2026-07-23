@@ -569,7 +569,7 @@ export class TitleDescription extends Component {
     static components = {
         SEOPreview,
     };
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.seoContext = proxy(seoContext);
@@ -686,7 +686,7 @@ export class BrokenLink extends Component {
         link: Object,
     };
 
-    urlInputRef = signal(null);
+    urlInputRef = signal.ref();
 
     setup() {
         this.website = useService("website");

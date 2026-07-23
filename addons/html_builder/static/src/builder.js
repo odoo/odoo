@@ -68,7 +68,7 @@ export class Builder extends Component {
         onlyCustomizeTab: t.boolean().optional(false),
     });
 
-    builderSidebarRef = signal(null);
+    builderSidebarRef = signal.ref();
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();

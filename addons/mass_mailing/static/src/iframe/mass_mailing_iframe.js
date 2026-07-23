@@ -53,9 +53,9 @@ export class MassMailingIframe extends Component {
         withBuilder: t.boolean().optional(),
     });
 
-    sidebarRef = signal(null);
-    iframeRef = signal(null);
-    iframeWrapperRef = signal(null);
+    sidebarRef = signal.ref();
+    iframeRef = signal.ref();
+    iframeWrapperRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

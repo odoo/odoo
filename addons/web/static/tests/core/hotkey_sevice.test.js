@@ -130,7 +130,7 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     class UIOwnershipTakerComponent extends Component {
         static template = xml`<p class="owner" t-ref="this.bouhRef"><button>a</button></p>`;
         props = useProps();
-        bouhRef = signal(null);
+        bouhRef = signal.ref();
         setup() {
             useActiveElement(this.bouhRef);
         }
@@ -601,7 +601,7 @@ test("registrations and elements belong to the correct UI owner", async () => {
 
     class MyComponent2 extends Component {
         static template = xml`<div t-ref="this.activeRef"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
-        activeRef = signal(null);
+        activeRef = signal.ref();
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
             useActiveElement(this.activeRef);
@@ -838,7 +838,7 @@ test("operating area can be restricted", async () => {
             <div class="two" tabindex="0" t-ref="this.areaRef">two</div>
         `;
         props = useProps();
-        areaRef = signal(null);
+        areaRef = signal.ref();
         setup() {
             useHotkey(
                 "space",
@@ -867,7 +867,7 @@ test("operating area and UI active element", async () => {
     class UIOwnershipTakerComponent extends Component {
         static template = xml`<p class="owner" t-ref="this.bouhRef"><button>a</button></p>`;
         props = useProps();
-        bouhRef = signal(null);
+        bouhRef = signal.ref();
         setup() {
             useActiveElement(this.bouhRef);
         }
@@ -882,7 +882,7 @@ test("operating area and UI active element", async () => {
             </main>
         `;
         props = useProps();
-        areaRef = signal(null);
+        areaRef = signal.ref();
         setup() {
             this.state = proxy({ foo: false });
             useHotkey(
@@ -964,7 +964,7 @@ test("operation area with validating option", async () => {
             <div class="two" tabindex="0" t-ref="this.areaRef">two</div>
         `;
         props = useProps();
-        areaRef = signal(null);
+        areaRef = signal.ref();
         setup() {
             useHotkey(
                 "space",
@@ -1004,7 +1004,7 @@ test("mixing hotkeys with and without operation area", async () => {
     class A extends Component {
         static template = xml`<div class="root" tabindex="0" t-ref="this.areaRef">root</div>`;
         props = useProps();
-        areaRef = signal(null);
+        areaRef = signal.ref();
         setup() {
             useHotkey("space", () => expect.step("withoutArea"));
             useHotkey("space", () => expect.step("withArea"), { area: () => this.areaRef() });

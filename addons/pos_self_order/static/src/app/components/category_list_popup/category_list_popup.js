@@ -9,7 +9,7 @@ export class CategoryListPopup extends Component {
         onCategorySelected: t.function(),
     });
 
-    scrollContainerRef = signal(null);
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);

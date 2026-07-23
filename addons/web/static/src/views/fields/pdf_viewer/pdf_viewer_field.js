@@ -19,7 +19,7 @@ export class PdfViewerField extends Component {
         fileNameField: t.string().optional(),
     });
 
-    iframeViewerPdfRef = signal(null);
+    iframeViewerPdfRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

@@ -40,10 +40,10 @@ export class ActionSwiper extends Component {
     static swipeEffectiveThreshold = 20;
     static animationLength = 400;
 
-    root = signal(null);
-    targetContainer = signal(null);
-    leftPanel = signal(null);
-    rightPanel = signal(null);
+    root = signal.ref();
+    targetContainer = signal.ref();
+    leftPanel = signal.ref();
+    rightPanel = signal.ref();
 
     setup() {
         super.setup();

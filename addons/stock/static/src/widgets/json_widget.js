@@ -42,7 +42,7 @@ registry.category("fields").add("lead_days_widget", popOverLeadDays);
 
 export class ReplenishmentGraphWidget extends JsonPopOver {
     static template = "stock.replenishmentGraph";
-    canvasRef = signal(null);
+    canvasRef = signal.ref();
     setup() {
         super.setup();
         this.chart = null;

@@ -10,8 +10,8 @@ import { isSrcCorsProtected } from "@html_editor/utils/image";
 export class AutoResizeImage extends Attachment {
     static template = "html_editor.AutoResizeImage";
 
-    image = signal(null);
-    container = signal(null);
+    image = signal.ref();
+    container = signal.ref();
 
     setup() {
         super.setup();

@@ -68,7 +68,7 @@ export class MenuDialog extends Component {
         close: Function,
     };
 
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.website = useService("website");
@@ -187,7 +187,7 @@ export class EditMenuDialog extends Component {
     };
     static props = ["rootID?", "close", "save?"];
 
-    menuEditor = signal(null);
+    menuEditor = signal.ref();
 
     setup() {
         this.orm = useService("orm");

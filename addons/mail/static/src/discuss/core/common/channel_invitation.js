@@ -33,7 +33,7 @@ export class ChannelInvitation extends Component {
     static components = { ActionPanel, DiscussAvatar };
     static template = "discuss.ChannelInvitation";
 
-    inputRef = signal(null);
+    inputRef = signal.ref();
 
     setup() {
         super.setup();

@@ -6,7 +6,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
  */
 export const EmojisFieldCommon = (T) =>
     class EmojisFieldCommon extends T {
-        emojisButtonRef = signal(null);
+        emojisButtonRef = signal.ref();
 
         /**
          * Create an emoji textfield view to enable opening an emoji popover

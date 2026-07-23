@@ -11,7 +11,7 @@ export class CustomFieldCard extends Component {
         readonly: t.boolean().optional(),
     });
 
-    customFormFieldTextAreaRef = signal(null);
+    customFormFieldTextAreaRef = signal.ref();
 
     setup() {
         this.value = signal(this.props.value || "");

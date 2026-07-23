@@ -16,7 +16,7 @@ export class EmbeddedCaptionComponent extends Component {
         host: { type: Object },
     };
 
-    captionInput = signal(null);
+    captionInput = signal.ref();
 
     setup() {
         super.setup();

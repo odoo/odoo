@@ -9,7 +9,7 @@ export class ProductsItemOption extends BaseOptionComponent {
     static template = "website_sale.ProductsItemOptionPlugin";
     static dependencies = ["productsItemOptionPlugin"];
 
-    tableRef = signal(null);
+    tableRef = signal.ref();
 
     setup() {
         super.setup();

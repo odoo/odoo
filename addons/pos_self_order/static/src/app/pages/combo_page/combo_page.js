@@ -21,8 +21,8 @@ export class ComboPage extends Component {
         ProductNameWidget,
     };
 
-    productNameRef = signal(null);
-    scrollContainerRef = signal(null);
+    productNameRef = signal.ref();
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.router = useService("router");

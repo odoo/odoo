@@ -102,9 +102,9 @@ export class ExportDataDialog extends Component {
         root: t.object(),
     });
 
-    draggableRef = signal(null);
-    exportListRef = signal(null);
-    searchRef = signal(null);
+    draggableRef = signal.ref();
+    exportListRef = signal.ref();
+    searchRef = signal.ref();
 
     setup() {
         this.dialog = useService("dialog");

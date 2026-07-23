@@ -8,7 +8,7 @@ export class PosPaymentProviderCards extends Component {
     static components = {};
     props = props(standardWidgetProps);
 
-    cardsContainerRef = signal(null);
+    cardsContainerRef = signal.ref();
 
     setup() {
         super.setup();

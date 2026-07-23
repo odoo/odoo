@@ -19,7 +19,7 @@ export class ListSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
-    listSelector = signal(null);
+    listSelector = signal.ref();
 
     setup() {
         this.menuRef = useChildRef();

@@ -36,8 +36,8 @@ export class ProfileDialog extends Component {
         canEditCountry: t.boolean().optional(true),
     });
 
-    nameRef = signal(null);
-    profileImgRef = signal(null);
+    nameRef = signal.ref();
+    profileImgRef = signal.ref();
 
     setup() {
         super.setup();

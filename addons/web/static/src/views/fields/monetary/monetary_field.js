@@ -23,7 +23,7 @@ export class MonetaryField extends Component {
     static template = "web.MonetaryField";
     props = useProps(monetaryFieldProps);
 
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.inputRef = useInputField(this.inputOptions);

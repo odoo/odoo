@@ -10,8 +10,8 @@ export class MobileTablePicker extends Component {
         },
     };
 
-    rowCountRef = signal(null);
-    columnCountRef = signal(null);
+    rowCountRef = signal.ref();
+    columnCountRef = signal.ref();
     rowCount = signal(3);
     columnCount = signal(3);
 

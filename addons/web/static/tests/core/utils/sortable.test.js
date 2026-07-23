@@ -18,7 +18,7 @@ test("Parameters error handling", async () => {
                             <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                         </ul>
                     </div>`;
-            rootRef = signal(null);
+            rootRef = signal.ref();
             setup() {
                 setupList(this);
             }
@@ -82,7 +82,7 @@ test("Simple sorting in single group", async () => {
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -140,7 +140,7 @@ test("Simple sorting in multiple groups", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="l + ' ' + i" class="item" />
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -227,7 +227,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
                 </div>
             </div>
             `;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -347,7 +347,7 @@ test("draggable area contains overflowing visible elements", async () => {
                     </div>
                 </div>
             `;
-        rendererRef = signal(null);
+        rendererRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rendererRef,
@@ -404,7 +404,7 @@ test("Dynamically disable sortable feature", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             this.state = proxy(state);
             useSortable({
@@ -450,7 +450,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
                     </ul>
                 </div>`;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -501,7 +501,7 @@ test("Ignore specified elements", async () => {
                         </li>
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -547,7 +547,7 @@ test("the classes parameters (placeholderElement, helpElement)", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -587,7 +587,7 @@ test("applyChangeOnDrop option", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -620,7 +620,7 @@ test("clone option", async () => {
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useSortable({
                 ref: this.rootRef,
@@ -649,7 +649,7 @@ test("dragged element is removed from the DOM while being dragged", async () => 
                     <li t-foreach="this.state.items" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             this.state = proxy({
                 items: [1, 2, 3],

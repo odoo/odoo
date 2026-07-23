@@ -24,7 +24,7 @@ export class TableDragDrop extends Component {
         tableGrid: Object,
     };
 
-    overlayRef = signal(null);
+    overlayRef = signal.ref();
 
     setup() {
         this.pointerPos = { ...this.props.pointerPos };

@@ -35,8 +35,8 @@ export class MultiSelectionButtons extends Component {
         Popover: MultiCreatePopover,
     };
 
-    addButtonRef = signal(null);
-    rootRef = signal(null);
+    addButtonRef = signal.ref();
+    rootRef = signal.ref();
 
     setup() {
         this.viewService = useService("view");

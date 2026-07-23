@@ -9,7 +9,7 @@ class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
     static components = {};
 
-    iframeViewerPdfRef = signal(null);
+    iframeViewerPdfRef = signal.ref();
 
     setup() {
         super.setup();

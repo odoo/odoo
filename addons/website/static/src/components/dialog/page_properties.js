@@ -28,7 +28,7 @@ export class PageDependencies extends Component {
         onDependenciesLoaded: { type: Function, optional: true },
     };
 
-    action = signal(null);
+    action = signal.ref();
 
     setup() {
         super.setup();
@@ -177,7 +177,7 @@ export class DuplicatePageDialog extends Component {
         close: Function,
         pageIds: { type: Array, element: Number },
     };
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

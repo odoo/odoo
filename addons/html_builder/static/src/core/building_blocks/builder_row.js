@@ -35,12 +35,12 @@ export class BuilderRow extends Component {
         disabled: t.boolean().optional(),
         fullRowToggler: t.boolean().optional(false),
     });
-    rootRef = signal(null);
-    contentRef = signal(null);
-    collapseRef = signal(null);
-    collapseContentRef = signal(null);
-    labelWrapperRef = signal(null);
-    labelRef = signal(null);
+    rootRef = signal.ref();
+    contentRef = signal.ref();
+    collapseRef = signal.ref();
+    collapseContentRef = signal.ref();
+    labelWrapperRef = signal.ref();
+    labelRef = signal.ref();
 
     setup() {
         useBuilderComponent();

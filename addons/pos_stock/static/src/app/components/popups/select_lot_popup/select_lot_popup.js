@@ -21,7 +21,7 @@ export class SelectLotPopup extends Component {
         isLotNameUsed: t.function().optional(),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this._id = 0;

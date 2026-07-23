@@ -105,10 +105,10 @@ export class Thread extends Component {
             },
             () => [this.messageHighlight?.highlightedMessageId]
         );
-        this.present = signal(null);
-        this.jumpPresentRef = signal(null);
-        this.loadOlderRef = signal(null);
-        this.presentThresholdRef = signal(null);
+        this.present = signal.ref();
+        this.jumpPresentRef = signal.ref();
+        this.loadOlderRef = signal.ref();
+        this.presentThresholdRef = signal.ref();
         this.rootRef = signal.ref(HTMLDivElement);
         this.visibleState = useVisible(this.rootRef, () => {
             this.updateShowJumpPresent();

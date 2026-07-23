@@ -34,7 +34,7 @@ export class BarcodeVideoScanner extends Component {
         placeholder: t.string().optional(),
         delayBetweenScan: t.number().optional(),
     });
-    videoPreviewRef = signal(null);
+    videoPreviewRef = signal.ref();
 
     /**
      * @override

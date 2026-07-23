@@ -11,7 +11,7 @@ export class TodoChatterPanel extends Component {
         ...standardWidgetProps,
     };
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         this.uiService = useService("ui");

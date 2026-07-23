@@ -31,8 +31,8 @@ export class BuilderSlidingPanel extends Component {
         openByDefault: t.boolean().optional(false),
     });
 
-    slidingPanelRef = signal(null);
-    openButtonRef = signal(null);
+    slidingPanelRef = signal.ref();
+    openButtonRef = signal.ref();
 
     setup() {
         useBuilderComponent();

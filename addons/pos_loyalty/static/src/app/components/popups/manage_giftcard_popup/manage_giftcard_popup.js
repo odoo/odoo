@@ -24,8 +24,8 @@ export class ManageGiftCardPopup extends Component {
         close: t.function(),
     });
 
-    inputRef = signal(null);
-    amountInputRef = signal(null);
+    inputRef = signal.ref();
+    amountInputRef = signal.ref();
 
     setup() {
         this.ui = useService("ui");

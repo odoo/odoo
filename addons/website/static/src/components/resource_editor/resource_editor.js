@@ -45,7 +45,7 @@ export class ResourceEditor extends Component {
         close: t.function().optional(() => () => {}),
     });
 
-    editorRef = signal(null);
+    editorRef = signal.ref();
 
     setup() {
         this.website = useService("website");

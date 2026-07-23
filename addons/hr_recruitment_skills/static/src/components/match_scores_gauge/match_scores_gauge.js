@@ -29,7 +29,7 @@ export class GaugeChartWidget extends Component {
 
     setup() {
         this.chart = null;
-        this.canvasRef = signal(null);
+        this.canvasRef = signal.ref();
         this.orm = useService("orm");
 
         onWillStart(async () => {

@@ -13,7 +13,7 @@ export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup();

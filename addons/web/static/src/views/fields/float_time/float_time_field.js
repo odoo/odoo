@@ -19,7 +19,7 @@ export const floatTimeFieldProps = {
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
     props = useProps(floatTimeFieldProps);
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.inputFloatTimeRef = useInputField({

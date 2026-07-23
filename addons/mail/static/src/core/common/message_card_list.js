@@ -11,8 +11,8 @@ export class MessageCardList extends Component {
     static components = { Message };
     static template = "mail.MessageCardList";
 
-    messageListRef = signal(null);
-    loadMoreRef = signal(null);
+    messageListRef = signal.ref();
+    loadMoreRef = signal.ref();
 
     setup() {
         super.setup();

@@ -33,7 +33,7 @@ export class DocErrorDialog extends Component {
         traceback: { type: String, optional: true },
     };
 
-    copyButtonRef = signal(null);
+    copyButtonRef = signal.ref();
 
     setup() {
         this.state = proxy({

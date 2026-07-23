@@ -190,7 +190,7 @@ export class SwitchCompanyMenu extends Component {
     static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem, CheckBox };
     static CompanySelector = CompanySelector;
 
-    searchInputRef = signal(null);
+    searchInputRef = signal.ref();
 
     setup() {
         this.dropdown = useDropdownState();

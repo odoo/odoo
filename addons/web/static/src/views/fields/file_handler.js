@@ -21,7 +21,7 @@ export class FileUploader extends Component {
         allowedMIMETypes: t.string().optional(),
     });
 
-    fileInputRef = signal(null);
+    fileInputRef = signal.ref();
 
     setup() {
         this.notification = useService("notification");

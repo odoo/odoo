@@ -26,7 +26,7 @@ export class IframeInput extends Component {
         onKeydown: { type: Function, optional: true },
     };
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         useForwardRefToParent(this.iframeRef, "iframeRef");

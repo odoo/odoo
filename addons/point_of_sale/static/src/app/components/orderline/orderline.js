@@ -18,7 +18,7 @@ export class Orderline extends Component {
         toRefund: t.number().optional(),
     });
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         if (this.props.mode === "display") {

@@ -17,7 +17,7 @@ export class AccountMoveSendAttachmentsSelector extends Component {
     static components = { Dropdown, DropdownItem, FileUploader };
     static props = { ...standardFieldProps };
 
-    fileUploadTriggerRef = signal(null);
+    fileUploadTriggerRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");

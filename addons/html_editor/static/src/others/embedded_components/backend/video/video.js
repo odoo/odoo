@@ -31,7 +31,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         openVideoSelectorDialog: { type: Function, optional: true },
     };
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         super.setup();
@@ -142,7 +142,7 @@ export class VideoSettings extends Component {
         dropdown: { type: Object },
     };
 
-    menuRef = signal(null);
+    menuRef = signal.ref();
 
     setup() {
         onMounted(() => {

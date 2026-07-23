@@ -11,7 +11,7 @@ export class CreatePollDialog extends Component {
     static template = "mail.CreatePollDialog";
     static components = { Dialog, EmojiPicker, CreatePollOptionDialog };
 
-    questionRef = signal(null);
+    questionRef = signal.ref();
 
     setup() {
         super.setup(...arguments);

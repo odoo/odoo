@@ -18,7 +18,7 @@ export class CallInvitation extends Component {
     static template = "discuss.CallInvitation";
     static components = { ActionList, CallPreview };
 
-    root = signal(null);
+    root = signal.ref();
 
     setup() {
         super.setup();

@@ -23,7 +23,7 @@ export class IntegerField extends Component {
     static template = "web.IntegerField";
     props = useProps(integerFieldProps);
 
-    numpadDecimalRef = signal(null);
+    numpadDecimalRef = signal.ref();
 
     setup() {
         this.state = proxy({

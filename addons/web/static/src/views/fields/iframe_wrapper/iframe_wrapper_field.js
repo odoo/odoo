@@ -9,7 +9,7 @@ export class IframeWrapperField extends Component {
         ...standardFieldProps,
     });
 
-    iframeRef = signal(null);
+    iframeRef = signal.ref();
 
     setup() {
         useEffect(() => {

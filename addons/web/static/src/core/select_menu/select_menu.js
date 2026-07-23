@@ -93,7 +93,7 @@ export class SelectMenu extends Component {
         distanceBeforeReload: 500,
     };
 
-    choicesRef = signal(null);
+    choicesRef = signal.ref();
     inputRefs = {
         toggler: signal(null),
         menu: signal(null),

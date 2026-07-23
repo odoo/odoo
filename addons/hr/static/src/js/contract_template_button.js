@@ -72,7 +72,7 @@ export class ContractTemplateField extends Component {
     static template = "hr.ContractTemplateField";
     static props = standardFieldProps;
 
-    templateButtonRef = signal(null);
+    templateButtonRef = signal.ref();
 
     setup() {
         this.templatePopover = usePopover(TemplateSelectionPopover, {

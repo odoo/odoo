@@ -25,7 +25,7 @@ export class GaugeField extends Component {
         title: t.string().optional(),
     });
 
-    canvasRef = signal(null);
+    canvasRef = signal.ref();
 
     setup() {
         this.chart = null;

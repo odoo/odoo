@@ -19,7 +19,7 @@ export class FontTypeSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
-    fontTypeSelector = signal(null);
+    fontTypeSelector = signal.ref();
 
     setup() {
         this.items = this.props.getItems();

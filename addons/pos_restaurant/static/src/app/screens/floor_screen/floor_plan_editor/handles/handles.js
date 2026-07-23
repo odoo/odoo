@@ -18,7 +18,7 @@ export class Handles extends Component {
         actionMenuPosition: t.string().optional(),
     });
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     get el() {
         return this.rootRef();

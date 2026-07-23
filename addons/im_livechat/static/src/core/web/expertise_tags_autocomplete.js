@@ -18,7 +18,7 @@ export class ExpertiseTagsAutocomplete extends Component {
     static props = ["channel", "disabled?"];
     static components = { BadgeTag, Many2XAutocomplete };
 
-    rootRef = signal(null);
+    rootRef = signal.ref();
 
     setup() {
         super.setup(...arguments);

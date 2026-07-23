@@ -36,7 +36,7 @@ export class ColorPickerGradientTab extends Component {
         "*": { optional: true },
     };
 
-    customGradientButton = signal(null);
+    customGradientButton = signal.ref();
 
     setup() {
         this.state = proxy({

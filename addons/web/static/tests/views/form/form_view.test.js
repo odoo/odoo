@@ -5321,7 +5321,7 @@ test(`discard has to wait for changes in each field`, async () => {
         props = useProps({
             ...standardFieldProps,
         });
-        input = signal(null);
+        input = signal.ref();
 
         setup() {
             useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>

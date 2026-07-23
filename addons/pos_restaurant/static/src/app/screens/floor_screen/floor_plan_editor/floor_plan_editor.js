@@ -43,8 +43,8 @@ export class FloorPlanEditor extends FloorPlanBase {
         initActionHandler: t.function(),
     });
 
-    snapGuidesRef = signal(null);
-    actionMenuRef = signal(null);
+    snapGuidesRef = signal.ref();
+    actionMenuRef = signal.ref();
 
     setup() {
         super.setup();

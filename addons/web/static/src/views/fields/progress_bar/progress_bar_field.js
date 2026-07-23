@@ -18,8 +18,8 @@ export class ProgressBarField extends Component {
         decorations: t.object().optional({}),
     });
 
-    root = signal(null);
-    currentValueRef = signal(null);
+    root = signal.ref();
+    currentValueRef = signal.ref();
 
     setup() {
         useNumpadDecimal(this.root);

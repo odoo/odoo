@@ -8,7 +8,7 @@ export class SearchMedia extends Component {
     static props = ["searchPlaceholder", "search", "needle"];
 
     input = signal(this.props.needle || "");
-    autofocusRef = signal(null);
+    autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef, mobile: true });

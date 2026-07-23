@@ -34,7 +34,7 @@ test("Parameters error handling", async () => {
                         </ul>
                     </div>
                 `;
-            rootRef = signal(null);
+            rootRef = signal.ref();
 
             setup() {
                 setupList(this);
@@ -105,7 +105,7 @@ test("Sorting in a single group without nesting", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -188,7 +188,7 @@ test("Sorting in groups without nesting", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -278,7 +278,7 @@ test("Sorting with nesting - move right", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -385,7 +385,7 @@ test("Sorting with nesting - move left", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -477,7 +477,7 @@ test("Sorting with nesting - move root down", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -565,7 +565,7 @@ test("Sorting with nesting - move child down", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -650,7 +650,7 @@ test("Sorting with nesting - move root up", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -733,7 +733,7 @@ test("Sorting with nesting - move child up", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -807,7 +807,7 @@ test("Dynamically disable NestedSortable feature", async () => {
                 </div>
             `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             this.state = proxy(state);
             useNestedSortable({
@@ -851,7 +851,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
                     </div>
                 `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -909,7 +909,7 @@ test("shouldn't drag above max level", async () => {
             </div>
         `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -977,7 +977,7 @@ test("shouldn't drag outside a nest level", async () => {
             </div>
         `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -1055,7 +1055,7 @@ test("shouldn't drag when not allowed", async () => {
             </div>
         `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             let firstAllowedCheck = true;
             useNestedSortable({
@@ -1114,7 +1114,7 @@ test("placeholder and drag element have same size", async () => {
             </div>
         `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,
@@ -1155,7 +1155,7 @@ test("Ignore specified elements", async () => {
             </div>
         `;
 
-        rootRef = signal(null);
+        rootRef = signal.ref();
         setup() {
             useNestedSortable({
                 ref: this.rootRef,

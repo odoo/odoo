@@ -9,7 +9,7 @@ export class ProductInfoPopup extends Component {
         close: t.function(),
     });
 
-    scrollContainerRef = signal(null);
+    scrollContainerRef = signal.ref();
 
     setup() {
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);

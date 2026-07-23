@@ -21,8 +21,8 @@ export class CallPreview extends Component {
     static template = "mail.CallPreview";
     static components = { ActionList, DeviceSelect };
 
-    audioRef = signal(null);
-    videoRef = signal(null);
+    audioRef = signal.ref();
+    videoRef = signal.ref();
 
     setup() {
         this.props = props({
