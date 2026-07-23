@@ -1,5 +1,6 @@
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, usePlugin } from "@odoo/owl";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { useService } from "@web/core/utils/hooks";
 
@@ -11,7 +12,7 @@ export class SaverScreen extends Component {
     setup() {
         this.time = useTime();
         this.uiService = useService("ui");
-        this.overlayService = useService("overlay");
+        this.overlayService = usePlugin(OverlayPlugin);
         this.closeAllOverlays();
     }
 
