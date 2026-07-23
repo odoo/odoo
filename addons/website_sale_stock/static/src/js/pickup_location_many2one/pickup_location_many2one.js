@@ -78,7 +78,7 @@ export class PickupLocationMany2OneField extends Many2OneField {
     }
 
     get countryId() {
-        return this.partnerRecord.country_id;
+        return this.partnerRecord.country_id?.id;
     }
 
     get parentId() {
