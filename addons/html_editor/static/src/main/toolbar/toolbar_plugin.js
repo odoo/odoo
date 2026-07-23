@@ -369,7 +369,11 @@ export class ToolbarPlugin extends Plugin {
             )
             .filter((node) => {
                 const element = closestElement(node);
-                const style = this.document.defaultView.getComputedStyle(element);
+                const view = node.ownerDocument?.defaultView || this.document?.defaultView;
+                if (!view || !element) {
+                    return false;
+                }
+                const style = view.getComputedStyle(element);
                 return style.display !== "none" && style.visibility !== "hidden";
             });
     }
