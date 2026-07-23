@@ -6950,6 +6950,59 @@ class StockMove(TransactionCase):
         self.assertEqual(move_1.state, 'assigned')
         self.assertEqual(move_2.state, 'partially_available')
 
+    def test_free_reservation_checks_displaced_picking_packages(self):
+        """Check package levels after a reserved package is consumed elsewhere."""
+        product = self.env['product.product'].create({
+            'name': 'Product in displaced package',
+            'is_storable': True,
+        })
+        package_a, package_b = self.env['stock.quant.package'].create([
+            {'name': 'Package A'},
+            {'name': 'Package B'},
+        ])
+        yesterday = fields.Datetime.subtract(fields.Datetime.now(), days=1)
+        self.env['stock.quant']._update_available_quantity(
+            product, self.stock_location, 1, package_id=package_a, in_date=yesterday,
+        )
+        self.env['stock.quant']._update_available_quantity(
+            product, self.stock_location, 1, package_id=package_b,
+        )
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'Delivery',
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': product.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+
+        self.assertEqual(delivery.move_line_ids.package_id, package_a)
+        self.assertEqual(delivery.move_line_ids.result_package_id, package_a)
+        self.assertEqual(delivery.package_level_ids.package_id, package_a)
+
+        # Consume package A despite its reservation on the delivery. This frees
+        # that reservation and immediately reassigns the delivery to package B.
+        scrap = self.env['stock.scrap'].create({
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'scrap_qty': 1,
+            'location_id': self.stock_location.id,
+            'package_id': package_a.id,
+        })
+        scrap.action_validate()
+
+        self.assertEqual(delivery.move_line_ids.package_id, package_b)
+        self.assertEqual(delivery.move_line_ids.result_package_id, package_b)
+        self.assertEqual(delivery.package_level_ids.package_id, package_b)
+
     def test_compute_show_info(self):
         """
         Test that `lot_name` and `lot_id` are hidden in the view and that

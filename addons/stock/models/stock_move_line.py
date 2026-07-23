@@ -684,6 +684,7 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
+        moves_to_check_pack = set()
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
             extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
@@ -694,11 +695,17 @@ class StockMoveLine(models.Model):
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
-                ml.with_context(quants_cache=None)._free_reservation(
+                moves_to_check = ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
                     ml.product_id, ml.location_id,
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
-                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
+                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore).ids
+                if moves_to_check:
+                    moves_to_check_pack.update(moves_to_check)
             ml_ids_to_ignore.add(ml.id)
+
+        pickings_to_check_pack = self.env['stock.move'].browse(moves_to_check_pack).picking_id
+        if pickings_to_check_pack:
+            pickings_to_check_pack._check_entire_pack()
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.write({
             'date': fields.Datetime.now(),
@@ -796,7 +803,7 @@ class StockMoveLine(models.Model):
         ml_ids_to_ignore |= self.ids
 
         if self.move_id._should_bypass_reservation(location_id):
-            return
+            return self.env['stock.move']
 
         # We now have to find the move lines that reserved our now unavailable quantity. We
         # take care to exclude ourselves and the move lines were work had already been done.
@@ -847,6 +854,7 @@ class StockMoveLine(models.Model):
             })
         move_line_to_unlink.unlink()
         move_to_reassign[::-1]._action_assign()
+        return move_to_reassign
 
     def _get_aggregated_description(self, move):
         return move.description_picking or ""
