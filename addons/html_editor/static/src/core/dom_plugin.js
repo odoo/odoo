@@ -44,6 +44,7 @@ import {
     createBaseContainer,
 } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * Get distinct connected parents of nodes
@@ -63,6 +64,7 @@ function getConnectedParents(nodes) {
 
 /**
  * @typedef {Object} DomShared
+ * @property { DomPlugin['normalize'] } normalize
  * @property { DomPlugin['insert'] } insert
  * @property { DomPlugin['copyAttributes'] } copyAttributes
  * @property { DomPlugin['canSetBlock'] } canSetBlock
@@ -74,7 +76,10 @@ function getConnectedParents(nodes) {
 /**
  * @typedef {((insertedNodes: Node[]) => void)[]} on_inserted_handlers
  * @typedef {((el: HTMLElement) => void)[]} on_will_set_tag_handlers
+ * @typedef {((root: HTMLElement) => void)[]} on_will_normalize_handlers
+ * @typedef {((root: HTMLElement) => void)[]} on_normalized_handlers
  *
+ * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
@@ -89,6 +94,7 @@ export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
     static shared = [
+        "normalize",
         "insert",
         "copyAttributes",
         "canSetBlock",
@@ -107,6 +113,7 @@ export class DomPlugin extends Plugin {
             },
         ],
         /** Handlers */
+        on_editor_started_handlers: withSequence(0, this.normalize.bind(this)),
         clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
             return root;
@@ -131,6 +138,18 @@ export class DomPlugin extends Plugin {
     }
 
     // Shared
+
+    /**
+     * Normalize the contents of the given root element (or the editable if none
+     * was given).
+     *
+     * @param {HTMLElement} [root = this.editable]
+     */
+    normalize(root = this.editable) {
+        this.trigger("on_will_normalize_handlers", root);
+        this.processThrough("normalize_processors", root);
+        this.trigger("on_normalized_handlers", root);
+    }
 
     /**
      * Wrap inline children nodes in Blocks, optionally updating cursors for
@@ -234,10 +253,10 @@ export class DomPlugin extends Plugin {
             container.textContent = content;
         } else {
             if (content.nodeType === Node.ELEMENT_NODE) {
-                this.processThrough("normalize_processors", content);
+                this.normalize(content);
             } else {
                 for (const child of children(content)) {
-                    this.processThrough("normalize_processors", child);
+                    this.normalize(child);
                 }
             }
             container.replaceChildren(content);

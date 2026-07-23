@@ -125,7 +125,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             }
         }
         for (const touchedEl of touchedEls) {
-            this.processThrough("normalize_processors", touchedEl);
+            this.dependencies.dom.normalize(touchedEl);
         }
     }
 }
