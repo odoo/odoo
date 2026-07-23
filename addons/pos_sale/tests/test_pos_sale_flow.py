@@ -179,12 +179,24 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
             'taxes': self.env['account.tax'],
             'extra_values': {
                 'refunded_orderline_id': self.env['pos.order'].browse(order_id).lines.id,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
             },
         }], partner=sale_order.partner_id)
 
-        self.assertEqual(len(sale_order.order_line), 4)
+        self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.order_line[2].qty_invoiced, 0)
-        self.assertEqual(sale_order.order_line[3].qty_invoiced, -1)
+        self.assertEqual(sale_order.order_line[2].price_unit, 0)
+        self.assertEqual(sale_order.amount_invoiced, 0)
+        payment = self.env['sale.advance.payment.inv'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+            active_id=sale_order.id,
+        ).create({
+            'advance_payment_method': 'delivered',
+        })
+        payment.create_invoices()
+        self.assertEqual(sale_order.invoice_ids.amount_untaxed, 100)
 
     def test_pos_not_groupable_product(self):
         #Create a UoM Category that is not pos_groupable
