@@ -54,6 +54,18 @@ class IrActionsReport(models.Model):
             self._l10n_pt_report_compliance(model, res_ids, compute_hash, update_print_version)
         return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
 
+    def _render_qweb_html(self, report_ref, docids, data=None):
+        report_ref_2_report_compliance_params = {
+            'account.report_hash_integrity': ('account.move', True, False),
+            'account.report_invoice_with_payments': ('account.move', True, True),
+            'account.report_invoice': ('account.move', True, True),
+            'account.report_payment_receipt': ('account.payment', False, True),
+        }
+        if params := report_ref_2_report_compliance_params.get(self._get_report(report_ref).report_name):
+            model, compute_hash, update_print_version = params
+            self._l10n_pt_report_compliance(model, docids, compute_hash, update_print_version)
+        return super()._render_qweb_html(report_ref, docids, data=data)
+
     def _get_rendering_context(self, report, docids, data):
         data = super()._get_rendering_context(report, docids, data)
         data['l10n_pt_certification_number'] = PT_CERTIFICATION_NUMBER

@@ -2,14 +2,15 @@ import logging
 import re
 
 from odoo import _, api, fields, models
-from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 
 from odoo.addons.l10n_pt_certification.const import (
     PT_AT_DOCUMENT_TYPE_MAPPING,
     PT_AT_MEIO_PROCESSAMENTO,
     PT_CERTIFICATION_NUMBER,
 )
+from odoo.addons.l10n_pt_certification.utils.series_ws import L10nPtAtSeriesWS
 
 _logger = logging.getLogger(__name__)
 
@@ -92,10 +93,7 @@ class L10nPtATSeries(models.Model):
     def _compute_active(self):
         today = fields.Date.today()
         for at_series in self:
-            at_series.active = (
-                at_series.date_start <= today
-                and (at_series.date_end >= today if at_series.date_end else True)
-            )
+            at_series.active = at_series.date_end >= today if at_series.date_end else True
 
     def _search_active(self, operator, value):
         if value is None:
@@ -105,19 +103,13 @@ class L10nPtATSeries(models.Model):
         if operator not in ['not in', 'in', '=', '!=']:
             raise ValueError(_('Operator (%s) is not supported', operator))
         today = fields.Date.today()
-        active_domain = Domain.AND([
-            Domain('date_start', '<=', today),
-            Domain.OR([
-                Domain('date_end', '=', False),
-                Domain('date_end', '>=', today),
-            ]),
+        active_domain = Domain.OR([
+            Domain('date_end', '=', False),
+            Domain('date_end', '>=', today),
         ])
-        not_active_domain = Domain.OR([
-            Domain('date_start', '>', today),
-            Domain.AND([
-                Domain('date_end', '=', False),
-                Domain('date_end', '<', today),
-            ]),
+        not_active_domain = Domain.AND([
+            Domain('date_end', '!=', False),
+            Domain('date_end', '<', today),
         ])
         if len(value) == 1:
             if (
@@ -181,46 +173,6 @@ class L10nPtATSeries(models.Model):
             raise UserError(_("The series %(prefix)s is not active.", prefix=self.prefix))
         return self.at_code
 
-    def write(self, vals):
-        protected_fields = {'name', 'training_series', 'company_exclusive_series', 'document_type', 'prefix'}
-        if any(field in vals for field in protected_fields | {'at_code'}):
-            for at_series in self:
-                if at_series.env['account.move'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                    ('l10n_pt_document_type', '=', at_series.document_type),
-                ], limit=1) or at_series.env['account.payment'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                ], limit=1):
-                    if any(field in vals for field in protected_fields):
-                        raise UserError(_("You cannot change the properties of a series that has already been used in a move."))
-                    if 'at_code' in vals and at_series.at_code:
-                        raise UserError(_("You cannot change the AT Validation Code of a series that has already been used."))
-        return super().write(vals)
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_used(self):
-        for at_series in self:
-            if (
-                self.env['account.move'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                    ('l10n_pt_document_type', '=', at_series.document_type),
-                ], limit=1)
-                or self.env['account.payment'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('paid', 'canceled')),
-                ], limit=1)
-            ):
-                raise UserError(_("You cannot delete a series that is used. It will automatically be archived after the End Date"))
-
-    @api.onchange('company_exclusive_series')
-    def _onchange_company_exclusive_series(self):
-        """ Reset the company_id field when the company_exclusive_series field is unchecked. """
-        if not self.company_exclusive_series:
-            self.company_id = self.env.company
-
     def _l10n_pt_get_document_number_sequence(self):
         """
         Returns the document number sequence for this AT series (company and document type dependent),
@@ -243,6 +195,64 @@ class L10nPtATSeries(models.Model):
                 'code': sequence_code,
             })
         return sequence
+
+    @api.onchange('company_exclusive_series')
+    def _onchange_company_exclusive_series(self):
+        """ Reset the company_id field when the company_exclusive_series field is unchecked. """
+        if not self.company_exclusive_series:
+            self.company_id = self.env.company
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.at_code:
+                continue
+            if not record.company_id.sudo().l10n_pt_at_ws_username:
+                continue
+            try:
+                record.action_register_at_series()
+            except Exception:
+                _logger.warning(
+                    "Failed to auto-register AT series %(name)s (type: %(type)s)",
+                    {'name': record.name, 'type': record.document_type},
+                    exc_info=True,
+                )
+        return records
+
+    def write(self, vals):
+        protected_fields = {'prefix', 'name', 'document_type', 'date_start', 'date_end', 'training_series', 'journal_id', 'company_exclusive_series', 'company_id'}
+        if any(field in vals for field in protected_fields | {'at_code'}):
+            for at_series in self:
+                if at_series.env['account.move'].search_count([
+                    ('l10n_pt_at_series_id', '=', at_series.id),
+                    ('state', "in", ('posted', 'cancel')),
+                    ('l10n_pt_document_type', '=', at_series.document_type),
+                ], limit=1) or at_series.env['account.payment'].search_count([
+                    ('l10n_pt_at_series_id', '=', at_series.id),
+                    ('state', "in", ('posted', 'cancel')),
+                ], limit=1):
+                    if any(field in vals for field in protected_fields):
+                        raise UserError(_("You cannot change the properties of a series that has already been used by a journal entry."))
+                    if 'at_code' in vals and at_series.at_code:
+                        raise UserError(_("You cannot change the AT Validation Code of a series that has already been used."))
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used(self):
+        for at_series in self:
+            if (
+                self.env['account.move'].search_count([
+                    ('l10n_pt_at_series_id', '=', at_series.id),
+                    ('state', "in", ('posted', 'cancel')),
+                    ('l10n_pt_document_type', '=', at_series.document_type),
+                ], limit=1)
+                or self.env['account.payment'].search_count([
+                    ('l10n_pt_at_series_id', '=', at_series.id),
+                    ('state', "in", ('paid', 'canceled')),
+                ], limit=1)
+            ):
+                raise UserError(_("You cannot delete a series that is used. It will automatically be archived after the End Date"))
 
     def _l10n_pt_at_ws_get_registration_params(self):
         self.ensure_one()
@@ -271,30 +281,11 @@ class L10nPtATSeries(models.Model):
                 "Please configure it in the Accounting Settings.",
                 company=self.company_id.name,
             ))
-        from odoo.addons.l10n_pt_certification.utils.series_ws import L10nPtAtSeriesWS
         ws = L10nPtAtSeriesWS(self.env, self.company_id)
         if ws.testing_env and not self.training_series:
             self.training_series = True
         params = self._l10n_pt_at_ws_get_registration_params()
         self.at_code = ws.registar_serie(**params)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        for record in records:
-            if record.at_code:
-                continue
-            if not record.company_id.sudo().l10n_pt_at_ws_username:
-                continue
-            try:
-                record.action_register_at_series()
-            except Exception:
-                _logger.warning(
-                    "Failed to auto-register AT series %(name)s (type: %(type)s)",
-                    {'name': record.name, 'type': record.document_type},
-                    exc_info=True,
-                )
-        return records
 
     def get_formview_action(self):
         self.ensure_one()

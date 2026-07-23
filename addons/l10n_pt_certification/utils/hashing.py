@@ -1,6 +1,7 @@
 import base64
 import binascii
 import re
+
 import requests
 import stdnum.pt.nif
 from cryptography.exceptions import InvalidSignature
@@ -93,10 +94,10 @@ def verify_integrity(message, inalterable_hash, public_key_string):
 def verify_prerequisites_qr_code(record, hash_value, atcud):
     company_vat_ok = record.company_id.vat and stdnum.pt.nif.is_valid(record.company_id.vat)
     if not company_vat_ok or not hash_value or not atcud:
-        error_msg = _lt("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
-        error_msg += _lt('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-        error_msg += _lt("- The `ATCUD` is not defined. Please verify the AT series\n") if not atcud else ""
-        error_msg += _lt("- The `hash` is not defined. You can contact the support.") if not hash_value else ""
+        error_msg = record.env._("Some fields required for the generation of the document are missing or invalid. Please verify them:") + "\n"
+        error_msg += record.env._("- The `VAT` of your company should be defined and match the following format: PT123456789") + "\n" if not company_vat_ok else ""
+        error_msg += record.env._("- The `ATCUD` is not defined. Please verify the AT series") + "\n" if not atcud else ""
+        error_msg += record.env._("- The `hash` is not defined. You can contact the support") if not hash_value else ""
         raise UserError(error_msg)
 
 

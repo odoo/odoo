@@ -1,6 +1,10 @@
+from contextlib import contextmanager
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.models import Model
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -45,8 +49,8 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
         cls.tax_sale_0 = cls.env['account.chart.template'].ref('iva_pt_sale_eu_isenta')
 
     @classmethod
-    def create_invoice(cls, move_type='out_invoice', invoice_date='2024-01-01', l10n_pt_hashed_on=None, amount=1000.0,
-                       tax=None, product_id=False, do_hash=False):
+    def create_invoice(cls, move_type='out_invoice', invoice_date='2024-01-01', post=True, l10n_pt_hashed_on=None, amount=1000.0,
+                       quantity=1, tax=None, product_id=False, do_hash=False, mock_hash=False):
         invoice_data = {
             'company_id': cls.company_pt.id,
             'move_type': move_type,
@@ -56,20 +60,40 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
                 Command.create({
                     'name': 'Product A',
                     'product_id': product_id,
-                    'quantity': 1,
+                    'quantity': quantity,
                     'price_unit': amount,
                     'tax_ids': [tax.id if tax else cls.tax_sale_23.id],
                 }),
             ],
         }
-        # Explicitly assign the AT series matching the invoice year
         year = str(invoice_data['invoice_date'].year)
         series_for_year = cls.series_2017 if year == '2017' else cls.series_2024
         invoice_data['l10n_pt_at_series_id'] = series_for_year.filtered(lambda s: s.document_type == move_type).id
 
         move = cls.env['account.move'].with_company(cls.company_pt).create(invoice_data)
-        move.action_post()
+        if post:
+            move.action_post()
         if do_hash:
-            with freeze_time(l10n_pt_hashed_on):
-                move.button_hash()
+            if not l10n_pt_hashed_on:
+                l10n_pt_hashed_on = fields.Date.today()
+            if mock_hash:
+                with freeze_time(l10n_pt_hashed_on), cls._mock_sign_records():
+                    move.button_hash()
+            else:
+                with freeze_time(l10n_pt_hashed_on):
+                    move.button_hash()
         return move
+
+    @classmethod
+    @contextmanager
+    def _mock_sign_records(cls):
+        def fake_sign(env, docs_to_sign, model):
+            return {env[model].browse(int(d['id'])): f"$1${'A' * 40}" for d in docs_to_sign}
+        with patch('odoo.addons.l10n_pt_certification.utils.hashing.sign_records', fake_sign):
+            yield
+
+    @classmethod
+    def _inject_fake_hash(cls, move, hash_str=None):
+        hash_str = hash_str or ('A' * 40)
+        Model.write(move, {'inalterable_hash': f'$1${hash_str}'})
+        move.flush_recordset()

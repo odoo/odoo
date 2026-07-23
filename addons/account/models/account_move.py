@@ -2913,7 +2913,7 @@ class AccountMove(models.Model):
             if only_reconciled:
                 reversals = original_move._get_reconciled_invoices().filtered(lambda move: move.move_type == 'out_refund')
             else:
-                reversals = move
+                reversals = (move | original_move.reversal_move_ids)
 
             # Unless all the invoices / credit notes are made in the same currency, we can't conveniently
             # check that the credit notes don't exceed the invoices (due to exchange rate differences),

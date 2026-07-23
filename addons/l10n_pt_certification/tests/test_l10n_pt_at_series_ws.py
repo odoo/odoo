@@ -1,6 +1,9 @@
-from unittest.mock import patch, MagicMock
+import base64
+from unittest.mock import MagicMock, patch
 
-from odoo import fields
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
@@ -28,9 +31,6 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
 
     @staticmethod
     def _get_test_rsa_public_key_pem_b64():
-        import base64
-        from cryptography.hazmat.primitives.asymmetric import rsa
-        from cryptography.hazmat.primitives import serialization
         key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         pem = key.public_key().public_bytes(
             encoding=serialization.Encoding.PEM,

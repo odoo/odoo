@@ -13,7 +13,7 @@ class L10nPtCancelWizard(models.TransientModel):
 
     def button_cancel(self):
         self.ensure_one()
-        model = self._context.get('active_model')
+        model = self.env.context.get('active_model')
         records = self.env[model].browse(self.env.context.get('active_ids'))
         if model == 'account.move':
             res = records.with_context(allow_draft_hashed_entries=True).button_cancel()

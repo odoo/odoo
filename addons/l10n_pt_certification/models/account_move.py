@@ -7,12 +7,14 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, float_repr
 
-from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
-from odoo.addons.l10n_pt_certification.models.l10n_pt_at_series import AT_SERIES_ACCOUNTING_DOCUMENT_TYPES
 from odoo.addons.l10n_pt_certification.const import (
     PT_SIMPLIFIED_INVOICE_GOODS_LIMIT,
     PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT,
 )
+from odoo.addons.l10n_pt_certification.models.l10n_pt_at_series import (
+    AT_SERIES_ACCOUNTING_DOCUMENT_TYPES,
+)
+from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 AT_SERIES_TYPE_SAFT_TYPE_MAP = {
     'out_invoice': 'FT',
@@ -181,16 +183,28 @@ class AccountMove(models.Model):
         Portuguese certification requirements: "The program must not allow the creation of credit notes regarding
         previously cancelled documents or already fully rectified."
         """
-        if self.filtered(lambda m: m.country_code == "PT" and m.payment_state == 'reversed'):
-            raise UserError(_("You cannot reverse an invoice that has already been fully reversed."))
+        if self.filtered(lambda m: m.country_code == "PT" and (m.payment_state == 'reversed' or m.state == 'cancel')):
+            raise UserError(_("You cannot reverse an invoice that has already been fully reversed or cancelled."))
         return super().action_reverse()
+
+    def button_cancel(self):
+        """Cannot cancel an already reversed or cancelled invoice"""
+        if self.filtered(lambda m: m.country_code == "PT" and (m.payment_state == 'reversed' or m.state == 'cancel')):
+            raise UserError(_("You cannot cancel an invoice that has already been fully reversed or cancelled."))
+        return super(AccountMove, self.with_context(_pt_button_cancel=True)).button_cancel()
+
+    def button_draft(self):
+        """Cannot reset to draft an invoice with a document number"""
+        if not self.env.context.get('_pt_button_cancel') and self.filtered(lambda m: m.country_code == "PT" and m.l10n_pt_document_number):
+            raise UserError(_("You cannot reset to draft a Portuguese certified document with a document number."))
+        return super().button_draft()
 
     def write(self, vals):
         # Since the AT Series defines the document number, it cannot be changed to avoid holes in the
         # document number sequence.
         for move in self:
             if move.state in ('posted', 'cancel') and 'l10n_pt_at_series_id' in vals:
-                raise UserError(_("The AT Series of a posted account move cannot be changed."))
+                raise UserError(_("The AT Series of a posted document cannot be changed."))
         return super().write(vals)
 
     @api.depends('state', 'l10n_pt_document_number')
@@ -290,8 +304,8 @@ class AccountMove(models.Model):
     def _onchange_l10n_pt_name(self):
         if self._is_pt_move() and self.name and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', self.name):
             raise ValidationError(_(
-                "The document number (%s) is invalid. It must start with the internal code "
-                "of the document type, a space, the name of the series followed by a slash and the number of the "
+                "The document number (%s) is invalid. It must start with the internal code of the document type, "
+                "a space, the name of the series followed by a single slash and the number of the "
                 "document within the series (e.g. INV 2025A/1).",
                 self.name
             ))
@@ -403,7 +417,6 @@ class AccountMove(models.Model):
 
         if (
             max_invoice_date
-            and max_invoice_date > fields.Date.today()
             and (self.invoice_date or fields.Date.context_today(self)) < max_invoice_date
         ):
             raise UserError(_("You cannot create an invoice with a date earlier than the date of the last "
@@ -413,7 +426,8 @@ class AccountMove(models.Model):
             raise UserError(_("There exists secured invoices with a lock date ahead of the present time."))
 
     def _post(self, soft=True):
-        for move in self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date'):
+        pt_moves = self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date')
+        for move in pt_moves:
             if not move.journal_id:
                 raise UserError(_("You cannot post an invoice without a journal. Please select a journal and try again."))
 
@@ -430,8 +444,14 @@ class AccountMove(models.Model):
             move.name = move.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
             move._check_l10n_pt_document_number()
 
-        self.filtered(lambda m: m.country_code == 'PT')._check_reversal_amounts_and_quantities(only_reconciled=False)
+        pt_moves._check_l10n_pt_reversal()
         return super()._post(soft)
+
+    def _check_l10n_pt_reversal(self):
+        pt_moves = self.filtered(lambda m: m._is_pt_move())
+        if any(m.move_type == 'out_refund' and not m.reversed_entry_id for m in pt_moves):
+            raise UserError(self.env._("You cannot post a credit note without referencing the original invoice."))
+        pt_moves._check_reversal_amounts_and_quantities(only_reconciled=False)
 
     def _l10n_pt_get_vat_exemptions_reasons(self):
         """ Returns a list of all the exemption reasons of all lines with exempt taxes in the move """
@@ -473,7 +493,7 @@ class AccountMove(models.Model):
         """
         for move in self.filtered(lambda m: m._is_pt_move()):
             if move.line_ids.filtered(lambda l: l.display_type == 'product' and not l.tax_ids):
-                raise ValidationError(_("You cannot create a move line without VAT tax."))
+                raise ValidationError(_("You cannot create an invoice line without VAT tax."))
 
     ####################################
     # PT FIELDS - ATCUD, AT SERIES
@@ -516,6 +536,17 @@ class AccountMove(models.Model):
         else:
             series_name = f"{prefix}{year}"
 
+        suffix_key_map = {
+            'year': 'prefix2',
+            'month': 'prefix3',
+            'year_range': 'prefix3',
+            'year_range_month': 'prefix4',
+        }
+        if suffix_key := suffix_key_map.get(sequence_number_reset):
+            raw_suffix = format_values.get(suffix_key, '') or ''
+            alpha_suffix = re.sub(r'[^a-zA-Z]', '', raw_suffix)
+            series_name = f"{series_name}{alpha_suffix}"
+
         return self.env['l10n_pt.at.series'].create({
             'name': series_name,
             'prefix': prefix,
@@ -530,10 +561,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self._is_pt_move():
             if not self.l10n_pt_at_series_id:
-                raise UserError(_("Please select a series for this move."))
+                raise UserError(_("Please select a series for this invoice."))
             series = self.l10n_pt_at_series_id
             if self.l10n_pt_document_type != series.document_type:
-                raise UserError(_("The series does not match the document type of the move."))
+                raise UserError(_("The series does not match the document type of the invoice."))
             invoice_date = self.invoice_date or fields.Date.context_today(self)
             series_date_valid = (
                 (not series.date_start or series.date_start <= invoice_date)
@@ -556,7 +587,7 @@ class AccountMove(models.Model):
                     "requirements.", move.l10n_pt_document_number
                 ))
 
-    @api.depends('move_type', 'company_id', 'date', 'journal_id', 'l10n_pt_document_type', 'name', 'invoice_date')
+    @api.depends('move_type', 'l10n_pt_document_type', 'invoice_date', 'journal_id', 'company_id')
     def _compute_l10n_pt_at_series_id(self):
         # Do not recompute AT series if move already has one and journal of AT series matches the move journal
         today = fields.Date.today()
@@ -583,10 +614,10 @@ class AccountMove(models.Model):
                 ('l10n_pt_document_type', '=', move.l10n_pt_document_type),
                 ('l10n_pt_at_series_id', '!=', False),
                 ('l10n_pt_at_series_id.active', '=', True),
-                ('l10n_pt_at_series_id.date_start', '<', move.invoice_date or today),
+                ('l10n_pt_at_series_id.date_start', '<=', move.invoice_date or today),
                 '|',
                 ('l10n_pt_at_series_id.date_end', '=', False),
-                ('l10n_pt_at_series_id.date_end', '>', move.invoice_date or today),
+                ('l10n_pt_at_series_id.date_end', '>=', move.invoice_date or today),
             ], order='id desc', limit=1)
             # If no AT series used in a move in this journal, fallback to an active series for this journal
             at_series = last_move.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
@@ -600,10 +631,10 @@ class AccountMove(models.Model):
                 ('journal_id', '=', move.journal_id.id),
                 ('document_type', '=', move.l10n_pt_document_type),
                 ('active', '=', True),
-                ('date_start', '<', move.invoice_date or today),
+                ('date_start', '<=', move.invoice_date or today),
                 '|',
                 ('date_end', '=', False),
-                ('date_end', '>', move.invoice_date or today),
+                ('date_end', '>=', move.invoice_date or today),
             ], limit=1)
 
             move.l10n_pt_at_series_id = at_series
@@ -611,11 +642,7 @@ class AccountMove(models.Model):
     @api.depends('name', 'move_type', 'company_id', 'state')
     def _compute_l10n_pt_document_number(self):
         for move in self:
-            if (
-                move._is_pt_move()
-                and move.move_type in self.env['account.move'].get_sale_types(include_receipts=True)
-                and move.name and move.name != '/'
-            ):
+            if move._is_pt_move() and move.state in ['posted', 'cancel'] and move.name and move.name != '/':
                 move.l10n_pt_document_number = move.name
             else:
                 move.l10n_pt_document_number = False
@@ -623,10 +650,7 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_l10n_pt_document_type(self):
         for move in self:
-            if (
-                move._is_pt_move()
-                and move.move_type in self.env['account.move'].get_sale_types(include_receipts=True)
-            ):
+            if move._is_pt_move():
                 if 'debit_origin_id' in self.env['account.move']._fields and move.debit_origin_id:
                     move.l10n_pt_document_type = 'debit_note'
                 else:
@@ -701,15 +725,6 @@ class AccountMove(models.Model):
         } for move in self]
         return pt_hash_utils.sign_records(self.env, docs_to_sign, 'account.move')
 
-    def _get_max_system_date(self):
-        self.env['account.move'].flush_model(['l10n_pt_hashed_on'])
-        self.env.cr.execute(SQL("""
-            SELECT
-                MAX(l10n_pt_hashed_on) AS max_hashed_on_date
-            FROM account_move
-        """))
-        return self.env.cr.fetchone()[0]
-
     @api.model
     def _l10n_pt_compute_missing_hashes(self):
         """
@@ -738,7 +753,7 @@ class AccountMove(models.Model):
 
     def l10n_pt_verify_prerequisites_qr_code(self):
         self.ensure_one()
-        if self._is_pt_move() and self.move_type in self.get_sale_types(include_receipts=True):
+        if self._is_pt_move():
             return pt_hash_utils.verify_prerequisites_qr_code(self, self.inalterable_hash, self.l10n_pt_atcud)
         return None
 
@@ -781,7 +796,6 @@ class AccountMove(models.Model):
 
         for move in self.filtered(lambda m: (
             m._is_pt_move()
-            and m.move_type in self.get_sale_types(include_receipts=True)
             and m.inalterable_hash
             and not m.l10n_pt_qr_code_str  # Skip if already computed
         )):
