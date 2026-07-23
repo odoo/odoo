@@ -2033,7 +2033,7 @@ class TestQueries(TransactionCase):
         Model = self.env['ir.model']
 
         # search on both 'name' and 'model'
-        self.assertEqual(Model._rec_names_search, ['name', 'model'])
+        self.assertEqual(Model._rec_names_search, ('name', 'model'))
 
         with self.assertQueries(['''
             SELECT "ir_model"."id", "ir_model"."name"->>%s
