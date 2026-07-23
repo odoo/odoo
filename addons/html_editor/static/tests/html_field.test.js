@@ -2497,7 +2497,7 @@ describe("save image", () => {
         // Resolve the image modification (simulate end of RPC roundtrip).
         modifyImagePromise.resolve();
         await modifyImagePromise;
-        await animationFrame();
+        await waitFor(`img[src="${newImageSrc}"]`);
 
         // Simulate the last urgent save, with the modified image.
         sendBeaconDef = new Deferred();
