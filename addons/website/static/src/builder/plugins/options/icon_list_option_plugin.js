@@ -30,11 +30,9 @@ export class ReplaceListIconAction extends BuilderAction {
         if (!savedIconEl) {
             return;
         }
-        // Temporarily add the icon to the DOM to read its unicode.
-        savedIconEl.style.display = "none";
-        editingElement.appendChild(savedIconEl);
-        const iconContent = getComputedStyle(savedIconEl, "::before").content;
-        editingElement.removeChild(savedIconEl);
+        const iconName = savedIconEl.getAttribute("data-icon");
+        const isFilled = savedIconEl.classList.contains("oi-filled");
+        const iconContent = `"${iconName}${isFilled ? "_f" : ""}"`;
         editingElement.style.setProperty("--icon-list-icon-content", iconContent);
     }
 }

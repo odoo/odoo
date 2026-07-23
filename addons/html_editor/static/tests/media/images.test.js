@@ -67,6 +67,9 @@ test("Replace an image with link by a document should remove the link", async ()
 
 test("Replace an image by icon should remove invalid classes", async () => {
     onRpc("ir.attachment", "search_read", () => []);
+    onRpc("/web/material_symbols/search", () => [
+        { name: "mail", variant: "outline", source: "ms" },
+    ]);
     await setupEditor(`<p><img class="img-fluid w-100" src="/web/static/img/logo.png"></p>`);
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     expect("img[src='/web/static/img/logo.png']").toHaveClass("img-fluid w-100");
@@ -113,6 +116,9 @@ test("Selection is collapsed after the image after replacing it", async () => {
 
 test("should not preserve image styles when replacing an image with an icon", async () => {
     onRpc("ir.attachment", "search_read", () => []);
+    onRpc("/web/material_symbols/search", () => [
+        { name: "local_bar", variant: "outline", source: "ms" },
+    ]);
     const { el } = await setupEditor(
         `<p><img class="img-fluid" src="/web/static/img/logo.png" style="width: 25%; transform: scaleX(2) scaleY(1);"></p>`
     );
@@ -134,6 +140,9 @@ test("should not preserve image styles when replacing an image with an icon", as
 
 test("should not preserve image shape classes when replacing an image with an icon", async () => {
     onRpc("ir.attachment", "search_read", () => []);
+    onRpc("/web/material_symbols/search", () => [
+        { name: "local_bar", variant: "outline", source: "ms" },
+    ]);
     const { el } = await setupEditor(
         `<p><img class="img-fluid rounded rounded-circle shadow img-thumbnail" src="/web/static/img/logo.png"></p>`
     );

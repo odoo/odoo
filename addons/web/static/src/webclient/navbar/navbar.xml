@@ -108,7 +108,7 @@
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!this.state.isAllAppsMenuOpened and this.currentApp" class="d-flex align-items-center m-3 mb-0">
                   <img style="height: 2em;" t-if="this.currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{this.currentApp.webIconData}}"/>
-                  <i t-elif="this.currentApp.webIcon" class="oi oi-2x me-2" t-att-data-icon="this.currentApp.webIconClass"  t-att-style="'color:' + this.currentApp.webIconColor"></i>
+                  <i t-elif="this.currentApp.webIcon" class="oi oi-2x me-2" t-att-class="{'oi-filled': this.currentApp.webIconVariant === 'filled'}" t-att-data-icon="this.currentApp.webIconClass"  t-att-style="'color:' + this.currentApp.webIconColor"></i>
                   <span class="fs-4 fw-bolder"><t t-out="this.currentApp.name"/></span>
                 </div>
                 <ul class="list-unstyled py-2 ps-0 mb-0">

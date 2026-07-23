@@ -22,7 +22,7 @@ import {
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { ensureDistinctHistoryCommit, insertText, redo, undo } from "./_helpers/user_actions";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -476,6 +476,7 @@ describe("search", () => {
     });
     describe("media dialog tabs", () => {
         test("/icon + enter should open the media dialog directly on the Icons tab", async () => {
+            onRpc("/web/material_symbols/search", () => []);
             const { el, editor } = await setupEditor("<p>[]<br></p>");
             await insertText(editor, "/icon");
             await waitFor(".o-we-powerbox");

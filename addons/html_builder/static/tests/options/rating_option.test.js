@@ -1,7 +1,7 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame, clear, click, fill, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -59,6 +59,9 @@ test("change rating score", async () => {
     );
 });
 test("Ensure order of operations when clicking very fast on two options", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "local_bar", variant: "outline", source: "ms" },
+    ]);
     await setupHTMLBuilder(websiteContent);
     await contains(":iframe .s_rating").click();
     await waitFor("[data-label='Icon']");

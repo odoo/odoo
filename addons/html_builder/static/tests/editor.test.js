@@ -21,6 +21,9 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 describe.current.tags("desktop");
 
 test("should add an icon from the media modal dialog", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "favorite", variant: "outline", source: "ms" },
+    ]);
     const { getEditor } = await setupHTMLBuilder(`<p>x</p>`);
     const editor = getEditor();
     const p = editor.document.querySelector("p");

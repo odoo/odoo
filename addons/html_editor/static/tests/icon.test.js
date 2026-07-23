@@ -10,6 +10,26 @@ import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 
+onRpc("/web/material_symbols/search", async (request) => {
+    const { params } = await request.json();
+    const icons = [
+        { name: "local_bar", variant: "outline", source: "ms" },
+        { name: "favorite", variant: "outline", source: "ms" },
+        { name: "favorite", variant: "filled", source: "ms" },
+        { name: "search", variant: "outline", source: "ms" },
+        { name: "add", variant: "outline", source: "ms" },
+    ];
+    return icons.filter((icon) => {
+        if (params.variant && icon.variant !== params.variant) {
+            return false;
+        }
+        if (params.needle && !icon.name.includes(params.needle.toLowerCase())) {
+            return false;
+        }
+        return true;
+    });
+});
+
 async function setupIcon(icon = "local_bar", extraClass = "") {
     extraClass = (icon.startsWith("fa-") ? extraClass : `oi ${extraClass}`).trim();
     const attr =
@@ -165,6 +185,8 @@ test("Can replace icon using toolbar", async () => {
     // Corresponding icon should be highlighted in dialog
     expect("main.modal-body span[data-icon='favorite'].o_we_attachment_selected").toHaveCount(1);
 
+    await click("label:contains('Outline')");
+    await animationFrame();
     await contains("main.modal-body span[data-icon='search']").click();
     await animationFrame();
     expect("main.modal-body").toHaveCount(0);
@@ -189,6 +211,9 @@ test("Should be able to replace a filled icon with the same unfilled version", a
     await setupIcon("favorite", "oi-filled");
 
     await contains("button[name='icon_replace']").click();
+    await animationFrame();
+    // Dialog opens on the Filled tab; switch to Outline first
+    await click("label:contains('Outline')");
     await animationFrame();
     await contains("main.modal-body span[data-icon='favorite']:not(.oi-filled)").click();
     await animationFrame();
