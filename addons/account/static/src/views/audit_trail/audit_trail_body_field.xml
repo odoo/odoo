@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account.AuditTrailBodyField">
+        <div t-att-class="{'o_track': isTracking}">
+            <div t-att-class="{'o-mail-Message-body': isTracking}" t-out="this.props.record.data[props.name]"/>
+        </div>
+    </t>
+</templates>
