@@ -17,6 +17,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.sa',
+                'tax_calculation_rounding_method': 'round_globally',
                 'bank_account_code_prefix': '160',
                 'cash_account_code_prefix': '105',
                 'transfer_account_id': 'sa_account_170101',
