@@ -2705,6 +2705,13 @@ export class Model extends Array {
     }
 
     /**
+     * @param {MaybeIterable<number>} idOrIds
+     */
+    web_unlink(idOrIds) {
+        return this.unlink(...arguments);
+    }
+
+    /**
      * @param {string} name
      * @param {Record<string, any>} specification
      * @param {DomainListRepr} [domain]

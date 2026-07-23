@@ -190,14 +190,14 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(async () => {
             let unlinked = false;
             try {
-                unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+                unlinked = await this.model.orm.webUnlink(this.resModel, [this.resId], {
                     context: this.context,
                 });
             } catch (e) {
                 if (e instanceof ConnectionLostError) {
                     return this.model.offlinePlugin.scheduleORM(
                         this.resModel,
-                        "unlink",
+                        "web_unlink",
                         [[this.resId]],
                         { context: this.context },
                         {

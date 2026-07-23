@@ -10,13 +10,14 @@ from zoneinfo import ZoneInfo
 
 import babel
 import babel.dates
+import psycopg2
 
 from odoo import api, models
 from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
 from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes, BinaryValue, date_utils, get_lang, unique, OrderedSet
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyTranslate
 
@@ -35,6 +36,13 @@ class lazymapping(defaultdict):
         value = self.default_factory(key)
         self[key] = value
         return value
+
+
+class UnlinkBlockedError(ValidationError):
+    """ Raised by :meth:`~.Base.web_unlink`. Its dotted name is what makes the
+    web client show `UnlinkBlockedErrorDialog` (see
+    `@web/core/errors/error_dialogs`), which reads the ``context`` below, so
+    no delete flow has to handle this error itself. """
 
 
 class Base(models.AbstractModel):
@@ -256,6 +264,58 @@ class Base(models.AbstractModel):
             record.write(val)
 
         return self.web_read(specification)
+
+    def web_unlink(self) -> typing.Literal[True]:
+        """ Delete the records in ``self``, the way the web client's own
+        delete flows do it.
+
+        This is deliberately a separate method from :meth:`~.unlink`, called
+        only by the web client, so that the error-recovery below never runs
+        for internal ``unlink()`` calls made by other server-side code.
+
+        If deleting ``self`` in one go is blocked by a foreign key/RESTRICT
+        violation, pinpoint exactly which records of ``self`` are the actual
+        problem by retrying the deletion record by record (each attempt
+        rolled back regardless of its outcome, so nothing is ever partially
+        deleted), then raise a :class:`UnlinkBlockedError` enriched with that
+        information - the blocking model's display name, whether the records
+        can be archived instead, and which of them are actually blocked.
+        """
+        try:
+            with self.env.cr.savepoint():
+                return self.unlink()
+        except (psycopg2.errors.RestrictViolation, psycopg2.errors.ForeignKeyViolation) as e:
+            blocking_model = next(
+                (rclass._name for rclass in self.env.registry.values() if rclass._table == e.diag.table_name),
+                None,
+            )
+            if not blocking_model:
+                raise
+            blocked_ids = []
+            with self.env.cr.savepoint() as sp:
+                for record in self:
+                    try:
+                        record.unlink()
+                    except (psycopg2.errors.RestrictViolation, psycopg2.errors.ForeignKeyViolation):
+                        blocked_ids.append(record.id)
+                    finally:
+                        sp.rollback()
+            if not blocked_ids:
+                raise
+            blocking_model_name = self.env['ir.model']._get(blocking_model).name or blocking_model
+            error = UnlinkBlockedError(self.env._(
+                "The operation cannot be completed: %s",
+                self.env._("this record is used by %(model_name)s", model_name=blocking_model_name),
+            ))
+            error.context = {
+                'archivable': bool(self._active_name),
+                'model_name': blocking_model_name,
+                'res_model': self._name,
+                # the whole selection, which "Archive" acts on
+                'res_ids': self.ids,
+                'blocked_ids': blocked_ids,
+            }
+            raise error from None
 
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:

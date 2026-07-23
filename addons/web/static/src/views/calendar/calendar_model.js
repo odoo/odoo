@@ -305,13 +305,13 @@ export class CalendarModel extends Model {
         }
     }
     async unlinkRecord(recordId) {
-        await this.orm.unlink(this.meta.resModel, [recordId]);
+        await this.orm.webUnlink(this.meta.resModel, [recordId]);
         await this.load();
     }
 
     async unlinkRecords(recordsId) {
         if (recordsId.length) {
-            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.orm.webUnlink(this.meta.resModel, recordsId);
             await this.load();
         }
     }
