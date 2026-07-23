@@ -1,7 +1,28 @@
 import { SearchMedia } from "./search_media";
-import { Component, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { mapCSSRules } from "@html_editor/utils/formatting";
-import MS_ICONS from "./ms_icons";
+import { rpc } from "@web/core/network/rpc";
+
+/**
+ * Search the Material Symbols icons, matched against their name and tags in
+ * the backend.
+ *
+ * @param {string} [needle] search term; every icon is returned when empty
+ * @returns {Promise<Array.<{id: string, name: string, dataIcon: string, hasFilledVersion: boolean, source: string}>>}
+ */
+async function searchMsIcons(needle = "") {
+    // The full list only changes with the icon font, so it is served from the
+    // cache until the assets version changes. Searches always hit the server.
+    const settings = needle ? {} : { cache: { type: "disk" } };
+    const rows = await rpc("/html_editor/material_symbols_search", { needle }, settings);
+    return rows.map(({ name, has_fill }) => ({
+        id: name,
+        name,
+        dataIcon: name,
+        hasFilledVersion: has_fill,
+        source: "ms",
+    }));
+}
 
 export class IconSelector extends Component {
     static mediaSpecificClasses = ["oi"];
@@ -15,10 +36,17 @@ export class IconSelector extends Component {
     static props = ["*"];
 
     setup() {
-        // Pre-populate filled state when editing an existing filled icon
         this.state = proxy({
             needle: "",
-            filteredIcons: this.props.icons,
+            filteredIcons: [],
+        });
+        // Odoo UI icons are derived from CSS and searched client-side; Material
+        // Symbols (name + tags) live in the backend and are fetched on demand,
+        // so their large search-terms list never ships to the browser.
+        this.oiIcons = IconSelector.getOiIcons();
+        onWillStart(async () => {
+            this.allIcons = [...(await searchMsIcons()), ...this.oiIcons];
+            this.state.filteredIcons = this.allIcons;
         });
     }
 
@@ -28,16 +56,15 @@ export class IconSelector extends Component {
         );
     }
 
-    search(needle) {
+    async search(needle) {
         this.state.needle = needle;
-        const lower = this.state.needle.toLowerCase();
+        const lower = needle.toLowerCase();
         if (!lower) {
-            this.state.filteredIcons = this.props.icons;
+            this.state.filteredIcons = this.allIcons;
             return;
         }
-        this.state.filteredIcons = this.props.icons.filter((icon) =>
-            icon.searchTerms.includes(lower)
-        );
+        const oiIcons = this.oiIcons.filter((icon) => icon.searchTerms.includes(lower));
+        this.state.filteredIcons = [...(await searchMsIcons(lower)), ...oiIcons];
     }
 
     /**
@@ -84,14 +111,13 @@ export class IconSelector extends Component {
     }
 
     /**
-     * Builds the full list of icons for the picker, merging:
-     *   1. Material Symbols
-     *   2. Odoo UI custom icons
+     * Builds the list of Odoo UI custom icons from the CSS rules. These are
+     * cheap to discover client-side and searched by name only.
      *
-     * @returns {Array.<{id: string, label: string, source: string, base: string, icons: Array}>}
+     * @returns {Array.<{id: string, name: string, dataIcon: string, searchTerms: string, source: string}>}
      */
-    static initFonts() {
-        const oiIcons = [
+    static getOiIcons() {
+        const names = [
             ...new Set(
                 mapCSSRules((rule) => {
                     const match = rule.selectorText.match(/\[data-icon=["'](oi_[^"']+)["']\]/);
@@ -101,22 +127,12 @@ export class IconSelector extends Component {
                 })
             ),
         ];
-        return [
-            ...Object.entries(MS_ICONS).map(([name, icon]) => ({
-                id: `ms_${name}`,
-                name,
-                dataIcon: name,
-                hasFilledVersion: icon.has_fill,
-                searchTerms: `${name} ${icon.tags}`.toLowerCase(),
-                source: "ms",
-            })),
-            ...oiIcons.map((name) => ({
-                id: name,
-                name,
-                dataIcon: name,
-                searchTerms: name.slice("oi_".length).toLowerCase().replace(/-/g, " "),
-                source: "oi",
-            })),
-        ];
+        return names.map((name) => ({
+            id: name,
+            name,
+            dataIcon: name,
+            searchTerms: name.slice("oi_".length).toLowerCase().replace(/-/g, " "),
+            source: "oi",
+        }));
     }
 }
