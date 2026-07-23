@@ -300,7 +300,7 @@
                                 <span class="o_stat_text">Traceability</span>
                             </div>
                         </button>
-                        <button name="%(action_mrp_production_moves)d" type="action" class="oe_stat_button" icon="swap_horiz" invisible="state not in ('progress', 'done')">
+                        <button name="%(action_mrp_production_moves)d" type="action" class="oe_stat_button" icon="swap_horiz" invisible="state != 'done'">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Product Moves</span>
                             </div>
