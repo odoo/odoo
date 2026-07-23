@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="benchmark_leave_attendance_report" model="populate.blueprint">
+        <field name="name">Benchmark: Time Off Ledger</field>
+        <field name="definition_xml" type="xml">
+            <model name="resource.calendar" count="100" id="ledger_calendars" scale="False">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Ledger Schedule {v_counter}'"/>
+                <field name="company_id" eval="env.company.id"/>
+            </model>
+
+            <!-- Calendar creation supplies 500 weekday rows. These additional
+                 unique half-day rows bring the total to 800. -->
+            <model name="resource.calendar.attendance" count="300" scale="False">
+                <field name="v_calendar_id" virtual="True" generator="relation.one"
+                       comodel_name="resource.calendar" ref="ledger_calendars"/>
+                <field name="v_dayofweek" virtual="True" generator="choice.sample"
+                       values="['0', '1', '2', '3', '4']"/>
+                <field name="v_slot" virtual="True" eval="(v_calendar_id, v_dayofweek)" unique="True"/>
+                <field name="calendar_id" eval="v_slot[0]"/>
+                <field name="dayofweek" eval="v_slot[1]"/>
+                <field name="duration_hours" eval="4.0"/>
+                <field name="hour_from" eval="0.0"/>
+                <field name="hour_to" eval="0.0"/>
+            </model>
+
+            <model name="hr.work.entry.type" count="2" id="ledger_leave_types" scale="False">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="0"/>
+                <field name="code" generator="textual.char" length="16" unique="True"/>
+                <field name="name" eval="f'Ledger Leave {code}'"/>
+                <field name="count_as" eval="'absence'"/>
+                <field name="requires_allocation" eval="False"/>
+                <field name="include_public_holidays_in_duration" eval="v_counter % 2 == 1"/>
+            </model>
+
+            <model name="hr.employee" count="5000" id="ledger_employees">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Ledger Benchmark Employee {v_counter}'"/>
+                <field name="company_id" eval="env.company.id"/>
+                <field name="resource_calendar_id" ref="ledger_calendars"/>
+                <field name="tz" values="{'UTC': 5, 'Europe/Brussels': 3, 'America/New_York': 1, 'Asia/Kolkata': 1}"/>
+                <field name="date_version" generator="temporal.date" start="today -2y" end="today -2y +1d"/>
+                <field name="contract_date_start" generator="temporal.date" start="today -2y" end="today -2y +1d"/>
+            </model>
+
+            <!-- Global closures reproduce the expensive calendar_id IS NULL arm;
+                 calendar-specific closures also validate the other OR arm. -->
+            <model name="resource.calendar.leaves" count="80" scale="False">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="v_day" virtual="True" generator="temporal.date"
+                       start="today -13m" end="today -7m" unique="True"/>
+                <field name="name" eval="f'Ledger Global Closure {v_counter}'"/>
+                <field name="company_id" eval="env.company.id"/>
+                <field name="calendar_id" eval="False"/>
+                <field name="date_from" eval="v_day + ' 06:00:00'"/>
+                <field name="date_to" eval="v_day + ' 18:00:00'"/>
+                <field name="resource_id" eval="False"/>
+            </model>
+            <model name="resource.calendar.leaves" count="20" scale="False">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="v_day" virtual="True" generator="temporal.date" start="today -6m" end="today -2d"/>
+                <field name="v_calendar_id" virtual="True" generator="relation.one"
+                       comodel_name="resource.calendar" ref="ledger_calendars"/>
+                <field name="v_closure" virtual="True" eval="(v_calendar_id, v_day)" unique="True"/>
+                <field name="name" eval="f'Ledger Schedule Closure {v_counter}'"/>
+                <field name="company_id" eval="env.company.id"/>
+                <field name="calendar_id" eval="v_closure[0]"/>
+                <field name="date_from" eval="v_closure[1] + ' 06:00:00'"/>
+                <field name="date_to" eval="v_closure[1] + ' 18:00:00'"/>
+                <field name="resource_id" eval="False"/>
+            </model>
+
+            <!-- One attendance per employee/day avoids manufacturing invalid
+                 overlaps while preserving a production-like density (40/employee). -->
+            <model name="hr.attendance" count="200000" id="ledger_attendances" parallel="False">
+                <field name="v_employee_id" virtual="True" generator="relation.one"
+                       comodel_name="hr.employee" ref="ledger_employees"/>
+                <field name="v_day" virtual="True" generator="temporal.date" start="today -13m" end="today -1d"/>
+                <field name="v_employee_day" virtual="True" eval="(v_employee_id, v_day)" unique="True"/>
+                <field name="employee_id" eval="v_employee_day[0]"/>
+                <field name="check_in" eval="v_employee_day[1] + ' 08:00:00'"/>
+                <field name="check_out" eval="v_employee_day[1] + ' 16:00:00'"/>
+            </model>
+
+            <model name="hr.leave" count="10000" id="ledger_leaves"
+                   context="{'leave_fast_create': True, 'leave_skip_date_check': True, 'leave_skip_state_check': True, 'skip_allocation_check': True}">
+                <!-- Two dates in the same ten-day window produce realistic
+                     short multi-day leaves without relying on wall-clock
+                     values inside an eval expression. -->
+                <field name="v_date_a" virtual="True" generator="temporal.date" start="today -45d" end="today -35d"/>
+                <field name="v_date_b" virtual="True" generator="temporal.date" start="today -45d" end="today -35d"/>
+                <field name="v_date_range" virtual="True" eval="(min(v_date_a, v_date_b), max(v_date_a, v_date_b))"/>
+                <field name="employee_id" ref="ledger_employees"/>
+                <field name="work_entry_type_id" ref="ledger_leave_types"/>
+                <field name="request_date_from" eval="v_date_range[0]"/>
+                <field name="request_date_to" eval="v_date_range[1]"/>
+                <field name="state" eval="'validate'"/>
+            </model>
+
+            <model name="hr.version" count="1500" id="ledger_extra_versions" parallel="False">
+                <field name="v_employee_id" virtual="True" generator="relation.one"
+                       comodel_name="hr.employee" ref="ledger_employees"
+                       unique="True"/>
+                <field name="employee_id" eval="v_employee_id"/>
+                <field name="date_version" generator="temporal.date" start="today -6m" end="today -6m +1d"/>
+                <field name="contract_date_start" eval="env['hr.employee'].browse(v_employee_id).contract_date_start"/>
+                <field name="resource_calendar_id" eval="env['hr.employee'].browse(v_employee_id).resource_calendar_id.id"/>
+                <field name="tz" eval="env['hr.employee'].browse(v_employee_id).tz"/>
+            </model>
+        </field>
+    </record>
+</odoo>
