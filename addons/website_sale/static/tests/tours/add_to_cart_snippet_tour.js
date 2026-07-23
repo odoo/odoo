@@ -61,8 +61,14 @@ registerWebsitePreviewTour(
         ...editAddToCartSnippet(),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2"),
         {
-            content: "Check if variant option is visible",
-            trigger: "[data-container-title='Add to Cart Button'] [data-label='Variant']"
+            content: "Wait for variant choices to load",
+            trigger:
+                "[data-container-title='Add to Cart Button'] [data-label='Variant'] .dropdown-toggle",
+            run: "click",
+        },
+        {
+            trigger: ".o_popover .o-dropdown-item:contains(Pink)",
+            run: "click",
         },
         ...changeOptionInPopover("Add to Cart Button", "Variant", "Product Yes Variant 2 (Pink)"),
         ...clickOnSave(),
@@ -84,6 +90,10 @@ registerWebsitePreviewTour(
         {
             content: "Check if the pink variant is selected",
             trigger: ":iframe .modal li:contains(Pink) input:checked",
+        },
+        {
+            content: "Wait for Pink combination to be confirmed",
+            trigger: ":iframe .modal .h6:contains(Pink)",
         },
         clickOnElement('add to cart', ':iframe .modal button:contains(Add to Cart)'),
         checkQuanityInCart("3"),
