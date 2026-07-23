@@ -4,20 +4,19 @@ from odoo import models, _
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    def _get_lead_days(self, product, **values):
+    def _get_lead_days(self, product, bypass_delay_description=False, **values):
         """For subcontracting, we need to consider both vendor lead time and
         manufacturing lead time, and DTPMO (Days To Prepare MO).
         Subcontracting delay =
             max(Vendor lead time, Manufacturing lead time + DTPMO) + Days to Purchase
         """
         if not product.sudo().bom_ids:
-            return super()._get_lead_days(product, **values)
+            return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
 
-        bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule or not seller:
-            return super()._get_lead_days(product, **values)
+            return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         seller = seller[0]
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
             product,
@@ -25,10 +24,10 @@ class StockRule(models.Model):
             bom_type='subcontract',
             subcontractor=seller.partner_id)
         if not bom:
-            return super()._get_lead_days(product, **values)
+            return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
 
-        delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, **values)
-        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, global_horizon_days=0))._get_lead_days(product, **values)
+        delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
+        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, global_horizon_days=0))._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
             delays['total_delay'] += seller.delay
             delays['purchase_delay'] += seller.delay
