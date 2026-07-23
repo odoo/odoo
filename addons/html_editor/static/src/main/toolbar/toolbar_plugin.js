@@ -153,7 +153,12 @@ export class ToolbarPlugin extends Plugin {
         this.updateSelection = null;
 
         this.onSelectionChangeActive = true;
-        this.debouncedUpdateToolbar = debounce(this.updateToolbar, DELAY_TOOLBAR_OPEN);
+        // Re-enable selection tracking only after the debounced update finishes,
+        // so async selectionchange events don't open the toolbar early.
+        this.debouncedUpdateToolbar = debounce(() => {
+            this.updateToolbar();
+            this.onSelectionChangeActive = true;
+        }, DELAY_TOOLBAR_OPEN);
 
         if (!this.isMobileToolbar) {
             // Mouse interaction behavior:
@@ -166,7 +171,6 @@ export class ToolbarPlugin extends Plugin {
             this.addDomListener(this.document, "mouseup", (ev) => {
                 if (ev.detail >= 2) {
                     // Delayed open, waiting for a possible triple click.
-                    this.onSelectionChangeActive = true;
                     this.triggerDebouncedUpdateToolbar();
                 } else {
                     // Fast open, just wait for a possible selection change due
@@ -196,7 +200,6 @@ export class ToolbarPlugin extends Plugin {
             this.addDomListener(this.editable, "keyup", (ev) => {
                 if (ev.key?.startsWith("Arrow")) {
                     this.pendingArrowKey = false;
-                    this.onSelectionChangeActive = true;
                     this.triggerDebouncedUpdateToolbar();
                 }
             });
@@ -204,7 +207,6 @@ export class ToolbarPlugin extends Plugin {
                 this.addDomListener(this.document, "selectionchange", () => {
                     if (this.pendingArrowKey && !this.isMouseDown) {
                         this.pendingArrowKey = false;
-                        this.onSelectionChangeActive = true;
                         this.triggerDebouncedUpdateToolbar();
                     }
                 });

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame, tick, advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
@@ -303,7 +303,8 @@ test("create bold with shortcut + selected with arrow", async () => {
 
     await simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
     await tick(); // await selectionchange
-    await animationFrame();
+    // wait for the debounced toolbar update
+    await advanceTime(500);
     await expectElementCount(".o-we-toolbar", 1);
     expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">\u200B</strong>[c]d</p>`);
 
