@@ -1101,6 +1101,7 @@ SERVICES_MAPPING = {
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
+    "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
