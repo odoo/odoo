@@ -1,24 +1,32 @@
-import { asyncComputed, Component, computed, onWillStart, plugin } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 
 export class PurchaseDashBoard extends Component {
     static template = "purchase.PurchaseDashboard";
-    static props = { list: { type: Object, optional: true } };
 
     orm = plugin(ORM);
 
-    purchaseData = asyncComputed(() => {
-        this.props.list;
-        return this.orm.call("purchase.order", "retrieve_dashboard");
-    });
-
-    multiuser = computed(
-        () => JSON.stringify(this.purchaseData().global) !== JSON.stringify(this.purchaseData().my)
-    );
-
     setup() {
+        this.state = proxy({
+            purchaseData: {},
+            multiuser: false,
+        });
         onWillStart(async () => {
-            await this.purchaseData.currentPromise();
+            const update = (data) => {
+                this.state.purchaseData = data;
+                this.state.multiuser = JSON.stringify(data.global) !== JSON.stringify(data.my);
+            };
+            const cache = {
+                type: "disk",
+                update: "always",
+                callback(freshData, hasChanged) {
+                    if (hasChanged) {
+                        update(freshData);
+                    }
+                },
+            };
+            const data = await this.orm.cache(cache).call("purchase.order", "retrieve_dashboard");
+            update(data);
         });
     }
 
