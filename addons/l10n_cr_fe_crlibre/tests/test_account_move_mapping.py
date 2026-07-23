@@ -144,3 +144,20 @@ class TestAccountMoveMapping(TransactionCase):
         invoice = self._create_invoice_with_tax(7)
         with self.assertRaises(UserError):
             invoice._l10n_cr_fe_build_detalles()
+
+    def test_build_clave_params_nota_credito_uses_nc(self):
+        original = self.invoice
+        original.write({'l10n_cr_fe_clave': '5' * 50, 'l10n_cr_fe_state': 'aceptado'})
+        credit_note = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'reversed_entry_id': original.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 500.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = credit_note._l10n_cr_fe_build_clave_params()
+        self.assertEqual(params['tipoDocumento'], 'NC')
+        self.assertEqual(len(params['consecutivo']), 10)

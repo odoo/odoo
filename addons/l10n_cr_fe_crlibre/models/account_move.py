@@ -138,12 +138,13 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_build_clave_params(self):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
+        tipo_doc = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]
         return {
-            'tipoDocumento': 'FE',
+            'tipoDocumento': tipo_doc['clave'],
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
             'cedula': config.identification_number,
             'situacion': 'normal',
-            'consecutivo': config._l10n_cr_fe_next_consecutivo('01'),
+            'consecutivo': config._l10n_cr_fe_next_consecutivo(tipo_doc['consecutivo_codigo']),
             'codigoSeguridad': str(random.randint(0, 99999999)).zfill(8),
             'sucursal': config.branch_number,
             'terminal': config.terminal_number,
