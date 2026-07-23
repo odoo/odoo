@@ -12,7 +12,6 @@ import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -32,13 +31,6 @@ export const setupPosEnv = async () => {
     onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);
-    patchWithCleanup(user, {
-        // Needed for the allowProductCreation method
-        // and for product reorder in the frontend
-        checkAccessRight: (model, operation) =>
-            (operation === "create" && model === "product.product") ||
-            (operation === "write" && model === "product.template"),
-    });
     patchWithCleanup(store.router, {
         navigate(routeName, routeParams = {}) {
             this.state.current = routeName;

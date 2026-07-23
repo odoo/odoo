@@ -6,7 +6,7 @@ import { OrderTrackerDropdown } from "@point_of_sale/app/components/order_tracke
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -43,9 +43,6 @@ export class Navbar extends Component {
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
-        onMounted(async () => {
-            this.hasProductCreationAccess = await this.pos.allowProductCreation();
-        });
         useListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming.bind(this));
     }
@@ -197,7 +194,7 @@ export class Navbar extends Component {
     }
 
     get showCreateProductButton() {
-        return this.hasProductCreationAccess;
+        return this.pos.hasProductCreationAccess;
     }
 
     get showPrinterButton() {
