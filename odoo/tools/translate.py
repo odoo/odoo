@@ -16,7 +16,6 @@ import json
 import locale
 import logging
 import os
-import polib
 import re
 import tarfile
 import typing
@@ -27,25 +26,34 @@ from datetime import datetime
 from difflib import get_close_matches
 from os.path import join
 from pathlib import Path
-from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
+from tokenize import DEDENT, INDENT, NEWLINE, STRING, generate_tokens
 
+import polib
 from babel.messages import extract
 from lxml import etree, html
-from markupsafe import escape, Markup
+from markupsafe import Markup, escape
 from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
+
 from .config import config
 from .i18n import format_list
-from .misc import file_open, file_path, frozendict, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
+from .misc import (
+    SKIPPED_ELEMENT_TYPES,
+    OrderedSet,
+    file_open,
+    file_path,
+    frozendict,
+    split_every,
+)
 from .sql import SQL
 
 if typing.TYPE_CHECKING:
     import types
-
     from collections.abc import Callable
     from typing import Literal
+
     from odoo.api import Environment
     from odoo.orm.fields_textual import BaseString
 
