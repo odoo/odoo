@@ -19,16 +19,66 @@ L10N_CR_FE_TARIFA_IVA_CODES = {
     13: '08',
 }
 
+# Qué tipo de comprobante Hacienda genera este módulo, por move_type de Odoo.
+# 'clave': valor de tipoDocumento para el endpoint w=clave.
+# 'consecutivo_codigo': prefijo de 2 dígitos del consecutivo (Anexo v4.4: 01=FE, 03=NC).
+# 'gen_xml_action': método de CrlibreFeClient a invocar para generar el XML.
+L10N_CR_FE_TIPO_DOCUMENTO = {
+    'out_invoice': {'clave': 'FE', 'consecutivo_codigo': '01', 'gen_xml_action': 'gen_xml_fe'},
+    'out_refund': {'clave': 'NC', 'consecutivo_codigo': '03', 'gen_xml_action': 'gen_xml_nc'},
+}
+
+# Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
+# de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
+L10N_CR_FE_MOTIVO_NC = [
+    ('anulacion_total', "Anulación total"),
+    ('correccion_monto', "Corrección de monto, precio, cantidad o descuento"),
+    ('devolucion_mercancia', "Devolución de mercancía"),
+    ('referencia_otro_documento', "Referencia a otro documento"),
+    ('otros', "Otros"),
+]
+
+L10N_CR_FE_MOTIVO_CODIGO_MAP = {
+    'anulacion_total': '01',
+    'correccion_monto': '02',
+    'devolucion_mercancia': '06',
+    'referencia_otro_documento': '04',
+    'otros': '99',
+}
+
+# Catálogo completo de "Código de referencia" de Hacienda v4.4 (CodigoReferenciaType
+# en NotaCreditoElectronica_V4.4.xsd), para selección avanzada por usuarios contables.
+L10N_CR_FE_CODIGO_REFERENCIA = [
+    ('01', "01 - Anula documento de referencia"),
+    ('02', "02 - Corrige texto de documento de referencia"),
+    ('04', "04 - Referencia a otro documento"),
+    ('05', "05 - Sustituye comprobante provisional por contingencia"),
+    ('06', "06 - Devolución de mercancía"),
+    ('07', "07 - Sustituye comprobante electrónico"),
+    ('08', "08 - Factura Endosada"),
+    ('09', "09 - Nota de crédito financiera"),
+    ('10', "10 - Nota de débito financiera"),
+    ('11', "11 - Proveedor No Domiciliado"),
+    ('12', "12 - Crédito por exoneración posterior a la facturación"),
+    ('99', "99 - Otros"),
+]
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_cr_fe_clave = fields.Char(string="Clave FE", readonly=True, copy=False)
     l10n_cr_fe_consecutivo = fields.Char(string="Consecutivo FE", readonly=True, copy=False)
+    l10n_cr_fe_fecha_emision = fields.Char(string="Fecha de emisión FE", readonly=True, copy=False)
     l10n_cr_fe_xml = fields.Text(string="XML FE", readonly=True, copy=False)
     l10n_cr_fe_xml_firmado = fields.Text(string="XML Firmado FE", readonly=True, copy=False)
     l10n_cr_fe_respuesta_xml = fields.Text(string="Respuesta Hacienda", readonly=True, copy=False)
     l10n_cr_fe_motivo_rechazo = fields.Char(string="Motivo de rechazo", readonly=True, copy=False)
+    l10n_cr_fe_motivo = fields.Selection(
+        L10N_CR_FE_MOTIVO_NC, string="Motivo de la nota de crédito", copy=False)
+    l10n_cr_fe_codigo_referencia = fields.Selection(
+        L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
+    l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
