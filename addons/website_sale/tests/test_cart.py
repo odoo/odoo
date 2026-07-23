@@ -125,6 +125,32 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             # service_tracking 'no' should not raise error
             request.cart._cart_add(product_id=product_service.id, quantity=1)
 
+    def test_add_to_cart_zero_price_product_with_no_variant_extra(self):
+        """Ensure that a zero-priced product with a no-variant attribute
+        extra price can be added to cart.
+        """
+        self.website.prevent_sale = True
+        self.product.list_price = 0
+        self.product.product_tmpl_id.attribute_line_ids = [
+            Command.create({
+                "attribute_id": self.no_variant_attribute.id,
+                "value_ids": [Command.set(self.no_variant_attribute.value_ids.ids)],
+            })
+        ]
+        ptav = self.product.product_tmpl_id.attribute_line_ids.product_template_value_ids[0]
+        ptav.price_extra = 100
+        website = self.website.with_user(self.public_user)
+
+        with self.mock_request(website=website) as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                no_variant_attribute_value_ids=ptav.ids,
+                quantity=1,
+            )
+
+        self.assertEqual(request.cart.order_line.product_no_variant_attribute_value_ids, ptav)
+
     @mute_logger("odoo.http")
     def test_update_cart_before_payment(self):
         with self.mock_request() as request:
