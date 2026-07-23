@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.tools.translate import _, xml_translate, LazyTranslate
+from odoo.tools.translate import LazyTranslate, _, dict_values_translate, xml_translate
 
 _lt = LazyTranslate(__name__)
 
@@ -19,6 +19,7 @@ class TestTranslationModel1(models.Model):
         ('bar', 'Selection Bar'),
     ], export_string_translation=False)
     xml = fields.Text('XML', translate=xml_translate)
+    dict_values = fields.Text('Dict Values', translate=dict_values_translate)
 
     def get_code_translation(self):
         _('slot')  # a code translation for both python and js(static/src/xml/js_template.xml)

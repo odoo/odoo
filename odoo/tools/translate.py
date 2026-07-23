@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import ast
 import codecs
 import fnmatch
 import functools
@@ -454,6 +455,28 @@ def is_text(term):
     return next(it, None) is None
 
 
+def dict_values_translate(callback, value: str) -> str:
+    """Translate the values of dicts present in the given Python expression (``value``) using ``callback``.
+
+    It just passes through if the given value is not a valid Python expression or if it does not contain any dicts.
+    """
+
+    try:
+        expr = ast.parse(value, mode='exec')
+    except Exception:  # ruff:ignore[blind-except]
+        # There are several exceptions that can occur when parsing user-editable input. Better safe than sorry.
+        return value
+
+    class DictValueTranslator(ast.NodeTransformer):
+        def visit_Dict(self, node: ast.Dict) -> ast.Dict:
+            for i, val_node in enumerate(node.values):
+                if isinstance(val_node, ast.Constant) and isinstance(val_node.value, str):
+                    node.values[i] = ast.Constant(value=callback(val_node.value) or val_node.value)
+            return node
+
+    return ast.unparse(DictValueTranslator().visit(expr))
+
+
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
 
@@ -467,6 +490,7 @@ xml_translate.term_adapter = xml_term_adapter
 
 FIELD_TRANSLATE['html_translate'] = html_translate
 FIELD_TRANSLATE['xml_translate'] = xml_translate
+FIELD_TRANSLATE['dict_values_translate'] = dict_values_translate
 
 
 """

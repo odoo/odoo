@@ -1,9 +1,18 @@
 from markupsafe import Markup
 
-from odoo.tests import common, tagged
-from odoo.tools.misc import mute_logger, file_path
-from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
 from odoo import Command
+from odoo.tests import common, tagged
+from odoo.tools.misc import file_path, mute_logger
+from odoo.tools.translate import (
+    JAVASCRIPT_TRANSLATION_COMMENT,
+    PYTHON_TRANSLATION_COMMENT,
+    CodeTranslations,
+    TranslationModuleReader,
+    TranslationRecordReader,
+    code_translations,
+    translation_file_reader,
+)
+
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
 
@@ -44,6 +53,11 @@ class TestImport(common.TransactionCase):
             record.with_context(lang='fr_FR').name,
             'Test de traduction CSV depuis les données'
         )
+        record = self.env.ref('test_translation.test_translation_model1_record5')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Options de vaisselle',
+        )
 
     def test_import_model_term_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -53,6 +67,16 @@ class TestImport(common.TransactionCase):
         self.assertEqual(
             record.with_context(lang='fr_FR').xml,
             '<form string="Fourchette"><div>Couteau</div><div>Cuillère</div></form>'
+        )
+
+    def test_import_dict_values_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['ir.module.module']._load_module_terms(['test_translation'], ['fr_FR'])
+
+        record = self.env.ref('test_translation.test_translation_model1_record5')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').dict_values,
+            "options = {'fork': 'Fourchette', 'knife': 'Couteau', 'spoon': 'Cuillère'}",
         )
 
     def test_noupdate(self):

@@ -8,6 +8,10 @@
         <field name="name">Furniture</field>  <!-- this shoulnd't appear in the .pot because it is translated in this file-->
         <field name="name@fr_FR">Meuble</field>
     </record>
+    <record model="test.translation.model1" id="test_translation_model1_record5">
+        <field name="name">Tableware Options</field>
+        <field name="dict_values">options={'fork': 'Fork', 'knife': 'Knife', 'spoon': 'Spoon'}</field>
+    </record>
     <record model="test.translation.model2" id="test_translation_model2_record1">
         <field name="model1_id" ref="test_translation.test_translation_model1_record1"/>
     </record>

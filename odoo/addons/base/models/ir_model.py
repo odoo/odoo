@@ -604,6 +604,7 @@ class IrModelFields(models.Model):
         ('standard', 'Translate as a whole'),
         ('html_translate', 'Translate HTML terms'),
         ('xml_translate', 'Translate XML terms'),
+        ('dict_values_translate', 'Translate dict values in Python expressions'),
     ], string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
     company_dependent = fields.Boolean(string='Company Dependent', help="Whether values for this field is company dependent", readonly=True)
     size = fields.Integer()
