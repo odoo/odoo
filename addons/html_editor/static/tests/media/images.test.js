@@ -355,6 +355,23 @@ test("cropper should not open for external image", async () => {
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
 
+/**
+ * Returns a promise resolved once `ImageCrop.show` has completed, i.e. once
+ * the cropper library bundle has been fetched and the cropper is ready.
+ *
+ * @returns {Promise<void>}
+ */
+function waitForCropperReady() {
+    return new Promise((resolve) => {
+        patchWithCleanup(ImageCrop.prototype, {
+            async show(...args) {
+                await super.show(...args);
+                resolve();
+            },
+        });
+    });
+}
+
 test("Image cropper disappear on backspace", async () => {
     const base64Image =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
@@ -363,14 +380,7 @@ test("Image cropper disappear on backspace", async () => {
     // before destroying the cropper as it sets `isCropperActive` true
     // at the end. In `closeCropper` method `isCropperActive` must be true
     // to close the cropper.
-    const cropperReadyPromise = new Promise((resolve) => {
-        patchWithCleanup(ImageCrop.prototype, {
-            async show(...args) {
-                await super.show(...args);
-                resolve();
-            },
-        });
-    });
+    const cropperReadyPromise = waitForCropperReady();
     // Mock backend image RPCs
     onRpc("/html_editor/get_image_info", async () => {
         await delay(50);
@@ -389,6 +399,55 @@ test("Image cropper disappear on backspace", async () => {
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
 
+<<<<<<< bb9fcbb062887ab6b1c4c17870201d789afa9dbc:addons/html_editor/static/tests/media/images.test.js
+||||||| 6f637b8695766cb99111ec31b5ccf7233de5b26a:addons/html_editor/static/tests/media.test.js
+test("shape remain present in cropper preview", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => ({
+        original: { image_src: base64Image },
+    }));
+
+    await setupEditor(`
+        <p>[<img src="${base64Image}">]</p>
+    `);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[name='shape_rounded']");
+    await animationFrame();
+    expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
+    expect("img").toHaveClass("rounded");
+
+    await click('.btn[name="image_crop"]');
+    await waitFor(".cropper-face.cropper-move.rounded");
+    expect(".cropper-face.cropper-move.rounded").toHaveCount(1);
+});
+
+=======
+test("shape remain present in cropper preview", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+    const cropperReadyPromise = waitForCropperReady();
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => ({
+        original: { image_src: base64Image },
+    }));
+
+    await setupEditor(`
+        <p>[<img src="${base64Image}">]</p>
+    `);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[name='shape_rounded']");
+    await animationFrame();
+    expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
+    expect("img").toHaveClass("rounded");
+
+    await click('.btn[name="image_crop"]');
+    await cropperReadyPromise;
+    expect(".cropper-face.cropper-move.rounded").toHaveCount(1);
+});
+
+>>>>>>> 1fe3adf87e1794c34a536a3468100d505e59cb0a:addons/html_editor/static/tests/media.test.js
 test("double-click on image in Media Dialog executes onClickAttachment only once", async () => {
     onRpc("ir.attachment", "search_read", () => [
         {
