@@ -39,6 +39,10 @@ export class ProductTemplate extends models.ServerModel {
         ];
     }
 
+    has_access(operation) {
+        return true;
+    }
+
     _records = [
         {
             id: 1,
