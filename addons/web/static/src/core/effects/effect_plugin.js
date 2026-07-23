@@ -2,8 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RainbowMan } from "./rainbow_man";
-import { useScope } from "@odoo/owl";
+import { Plugin, usePlugin, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { services } from "@web/core/services";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 
 const effectRegistry = registry.category("effects");
 
@@ -16,7 +18,6 @@ const effectRegistry = registry.category("effects");
  * the RainbowMan component to instantiate and its props. If the effects are
  * disabled, displays the message in a notification.
  *
- * @param {Object} env
  * @param {Object} [params={}]
  * @param {string} [params.message="Well Done!"]
  *    The message in the notice the rainbowman holds or the content of the notification if effects are disabled
@@ -34,7 +35,7 @@ const effectRegistry = registry.category("effects");
  * @param {Object} [params.props]
  *    If params.Component is given, its props can be passed with this argument
  */
-function rainbowMan(env, params = {}) {
+function rainbowMan(params = {}) {
     const notification = useService("notification");
     let message = params.message;
     if (message instanceof Element) {
@@ -64,28 +65,40 @@ effectRegistry.add("rainbow_man", rainbowMan);
 // Effect service
 // -----------------------------------------------------------------------------
 
+export class EffectPlugin extends Plugin {
+    /** @private */
+    overlay = usePlugin(OverlayPlugin);
+    /** @private */
+    scope = useScope();
+
+    /**
+     * @param {Object} [params] various params depending on the type of effect
+     * @param {string} [params.type="rainbow_man"] the effect to display
+     */
+    add(params = {}) {
+        const type = params.type || "rainbow_man";
+        const effect = effectRegistry.get(type);
+        const { Component, props } = this.scope.run(() => effect(params)) || {};
+        if (Component) {
+            const remove = this.overlay.add(Component, {
+                ...props,
+                close: () => remove(),
+            });
+        }
+    }
+}
+
+services.add(EffectPlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the effect service are removed
+ * -----------------------------------------------------------------------------
+ */
 export const effectService = {
-    dependencies: ["overlay"],
-    start(env, { overlay }) {
-        const scope = useScope();
-
-        /**
-         * @param {Object} [params] various params depending on the type of effect
-         * @param {string} [params.type="rainbow_man"] the effect to display
-         */
-        const add = (params = {}) => {
-            const type = params.type || "rainbow_man";
-            const effect = effectRegistry.get(type);
-            const { Component, props } = scope.run(() => effect(env, params)) || {};
-            if (Component) {
-                const remove = overlay.add(Component, {
-                    ...props,
-                    close: () => remove(),
-                });
-            }
-        };
-
-        return { add };
+    start() {
+        return usePlugin(EffectPlugin);
     },
 };
 

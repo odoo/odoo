@@ -5,6 +5,7 @@ import { Component, markup, useProps, xml } from "@odoo/owl";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { user } from "@web/core/user";
+import { EffectPlugin } from "@web/core/effects/effect_plugin";
 
 let effectParams;
 
@@ -16,7 +17,7 @@ beforeEach(async () => {
 });
 
 test("effect service displays a rainbowman by default", async () => {
-    getService("effect").add();
+    getService(EffectPlugin).add();
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -26,7 +27,7 @@ test("effect service displays a rainbowman by default", async () => {
 test("rainbowman effect with show_effect: false", async () => {
     patchWithCleanup(user, { showEffect: false });
 
-    getService("effect").add();
+    getService(EffectPlugin).add();
     await animationFrame();
 
     expect(".o_reward").toHaveCount(0);
@@ -34,7 +35,7 @@ test("rainbowman effect with show_effect: false", async () => {
 });
 
 test("rendering a rainbowman destroy after animation", async () => {
-    getService("effect").add(effectParams);
+    getService(EffectPlugin).add(effectParams);
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -49,7 +50,7 @@ test("rendering a rainbowman destroy after animation", async () => {
 });
 
 test("rendering a rainbowman destroy on click", async () => {
-    getService("effect").add(effectParams);
+    getService(EffectPlugin).add(effectParams);
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -61,7 +62,7 @@ test("rendering a rainbowman destroy on click", async () => {
 });
 
 test("rendering a rainbowman with an escaped message", async () => {
-    getService("effect").add(effectParams);
+    getService(EffectPlugin).add(effectParams);
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -81,7 +82,7 @@ test("rendering a rainbowman with a custom component", async () => {
         }
     }
 
-    getService("effect").add({ Component: Custom, props });
+    getService(EffectPlugin).add({ Component: Custom, props });
     await animationFrame();
 
     expect(".o_reward_msg_content").toHaveInnerHTML(`<div class="custom">foo is bar</div>`);
