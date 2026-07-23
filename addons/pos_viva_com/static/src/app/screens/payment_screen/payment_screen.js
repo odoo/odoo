@@ -26,13 +26,14 @@ patch(PaymentScreen.prototype, {
             await this.vivaApp.process();
         });
     },
-    async validateOrder(isForceValidate = false) {
-        const fastPaymentMethod = this.validationOptions.fastPaymentMethod;
+    async onClickValidate(args = {}) {
+        const validationOptions = this.pos.getValidationOrderOptions(args);
+        const fastPaymentMethod = validationOptions.fastPaymentMethod;
         if (fastPaymentMethod && this.vivaApp.use(fastPaymentMethod)) {
             await this.addNewPaymentLine(fastPaymentMethod);
             return;
         }
-        return super.validateOrder(isForceValidate);
+        return super.onClickValidate(...arguments);
     },
     async addNewPaymentLine(pm) {
         if (this.vivaApp.use(pm)) {
