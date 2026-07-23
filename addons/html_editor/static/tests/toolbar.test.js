@@ -1696,7 +1696,8 @@ describe("toolbar open and close on user interaction", () => {
             manuallyDispatchProgrammaticEvent(document, "selectionchange");
             await tick();
 
-            await waitFor(".o-we-toolbar");
+            // wait for the debounced toolbar update
+            await advanceTime(500);
             await expectElementCount(".o-we-toolbar", 1);
         });
 
