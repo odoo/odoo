@@ -15,13 +15,14 @@ export class PlaceholderPlugin extends Plugin {
                     text: this.config.placeholder,
                 }),
             ],
+            placeholder_hint_target_overrides: (el) => el.matches(baseContainerGlobalSelector),
             hint_targets_providers: (selectionData, editable) => {
                 const el = editable.firstChild;
                 if (
                     !selectionData.documentSelectionIsInEditable &&
                     childNodes(editable).length === 1 &&
                     isEmptyBlock(el) &&
-                    el.matches(baseContainerGlobalSelector)
+                    this.delegateTo("placeholder_hint_target_overrides", el)
                 ) {
                     return [el];
                 } else {
