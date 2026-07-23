@@ -309,6 +309,8 @@ class AccountMove(models.Model):
                 err_messages.append(_("Entry %s is not an invoice", record.name))
             if not record.line_ids.tax_ids:
                 err_messages.append(_("Invoice %s does not contain any taxes", record.name))
+            if record.line_ids._get_downpayment_lines():
+                err_messages.append(_("Coretax e-Faktur does not support XML uploads for transactions involving down payments. Please enter these transactions manually into the Coretax system"))
             if record.l10n_id_kode_transaksi == "07":
                 if not (record.l10n_id_coretax_add_info_07 and record.l10n_id_coretax_facility_info_07):
                     err_messages.append(_("Invoice %s doesn't contain the Additional info and Facility Stamp yet (Kode 07)", record.name))
@@ -394,19 +396,26 @@ class AccountMove(models.Model):
             vals['AddInfo'] = self.l10n_id_coretax_add_info_08
             vals['FacilityStamp'] = self.l10n_id_coretax_facility_info_08
 
-    def prepare_efaktur_vals(self):
+    def _prepare_efaktur_vals(self):
         """ Get information required from invoice and lines to generate E-Faktur that will be used
         to load in the XML template later on"""
         invoice_vals = []
-        idr = self.env.ref('base.IDR')
-
         for move in self.filtered(lambda m: m.state == 'posted'):
+            taxed_lines = move.invoice_line_ids.filtered(lambda ml: ml.tax_ids)
+            total_price_pos = sum(
+                line.price_subtotal
+                for line in taxed_lines
+                if line.price_subtotal >= 0
+            )
+            total_price_neg = sum(
+                line.price_subtotal
+                for line in taxed_lines
+                if line.price_subtotal < 0
+            )
+
             vals = {}
             move._l10n_id_coretax_build_invoice_vals(vals)
-
-            for line in move.invoice_line_ids.filtered(lambda ml: ml.tax_ids):
-                line._l10n_id_coretax_build_invoice_line_vals(vals)
-
+            for line in taxed_lines.filtered(lambda ml: ml.price_subtotal >= 0):
+                line._l10n_id_coretax_build_invoice_line_vals(vals, total_price_pos, total_price_neg)
             invoice_vals.append(vals)
-
         return invoice_vals
