@@ -234,13 +234,20 @@ class AccountMove(models.Model):
 
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
-        if self.move_type != 'out_invoice':
+        if self.move_type not in L10N_CR_FE_TIPO_DOCUMENTO:
             return
         if not self.partner_id:
-            raise UserError(_("La factura no tiene cliente (receptor)."))
+            raise UserError(_("El comprobante no tiene cliente (receptor)."))
 
         client = self.env['l10n_cr.fe.client']
         try:
+            if self.move_type == 'out_refund':
+                original = self.reversed_entry_id
+                if not original or original.l10n_cr_fe_state != 'aceptado':
+                    raise UserError(_(
+                        "No se puede generar la nota de crédito: la factura original "
+                        "aún no ha sido aceptada por Hacienda."))
+
             config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
@@ -248,16 +255,16 @@ class AccountMove(models.Model):
             detalles = self._l10n_cr_fe_build_detalles()
             genxml_params = self._l10n_cr_fe_build_genxml_params(
                 clave_res['clave'], clave_res['consecutivo'], detalles)
-            xml = client.gen_xml_fe(genxml_params)
+            gen_xml_action = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]['gen_xml_action']
+            xml = getattr(client, gen_xml_action)(genxml_params)
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
             xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-            fecha_iso = fields.Datetime.context_timestamp(self, datetime.now()).strftime('%Y-%m-%dT%H:%M:%S-06:00')
             client.send_fe(
-                token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                token=token, clave=clave_res['clave'], fecha_iso=genxml_params['fecha_emision'],
                 emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                receptor_tipo='01',
-                receptor_num=(self.partner_id.vat or '').replace('-', '') or '000000000',
+                receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
+                receptor_num=self.partner_id.vat.replace('-', '').strip(),
                 xml_firmado=xml_firmado, environment=config.environment)
         except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
@@ -267,6 +274,7 @@ class AccountMove(models.Model):
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
+            'l10n_cr_fe_fecha_emision': genxml_params['fecha_emision'],
             'l10n_cr_fe_xml': xml,
             'l10n_cr_fe_xml_firmado': xml_firmado,
             'l10n_cr_fe_state': 'enviado',
@@ -350,6 +358,6 @@ class AccountMove(models.Model):
     def action_post(self):
         res = super().action_post()
         for move in self:
-            if move.move_type == 'out_invoice':
+            if move.move_type in L10N_CR_FE_TIPO_DOCUMENTO:
                 move._l10n_cr_fe_generate_and_send()
         return res
