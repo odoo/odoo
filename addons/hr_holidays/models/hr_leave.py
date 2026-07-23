@@ -664,7 +664,10 @@ Versions:
             if leave.leave_type_request_unit == 'day' and check_leave_type:
                 days = ceil(days)
             elif leave.request_unit_half and calendar.duration_based:
-                days = float_round(days, precision_rounding=0.5)
+                if leave.request_date_from == leave.request_date_to and leave.request_date_from_period == leave.request_date_to_period:
+                    days = 0.5
+                else:
+                    days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
 
