@@ -89,6 +89,9 @@ export class ORM extends Plugin {
     }
 
     rpc = rpc; // to be overridable by the SampleORM
+
+    unscoped = this;
+
     /** @protected */
     _silent = false;
     _cache = false;
