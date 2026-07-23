@@ -1040,7 +1040,7 @@ class AccountMove(models.Model):
             return False
 
         # Create the attachment, an empty move, then attach the two and commit
-        move = self.with_company(proxy_user.company_id).create({})
+        move = self.with_company(proxy_user.company_id).create({'move_type': 'in_invoice'})
         attachment = Attachment.create({
             'name': filename,
             'raw': decrypted_content,
