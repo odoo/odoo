@@ -1,9 +1,7 @@
-import { Component, computed, onPatched, t, useProps } from "@odoo/owl";
+import { computed, onPatched, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { ListTextField, TextField } from "@web/views/fields/text/text_field";
 import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
 import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 
@@ -555,21 +553,6 @@ export class SectionAndNoteFieldOne2Many extends X2ManyField {
     }
 }
 
-export class SectionAndNoteText extends Component {
-    static template = "account.SectionAndNoteText";
-    static props = { ...standardFieldProps };
-
-    get componentToUse() {
-        return TextField;
-    }
-}
-
-export class ListSectionAndNoteText extends SectionAndNoteText {
-    get componentToUse() {
-        return ListTextField;
-    }
-}
-
 export const sectionAndNoteFieldOne2Many = {
     ...x2ManyField,
     component: SectionAndNoteFieldOne2Many,
@@ -587,16 +570,4 @@ export const sectionAndNoteFieldOne2Many = {
     },
 };
 
-export const sectionAndNoteText = {
-    component: SectionAndNoteText,
-    additionalClasses: ["o_field_text"],
-};
-
-export const listSectionAndNoteText = {
-    ...sectionAndNoteText,
-    component: ListSectionAndNoteText,
-};
-
 registry.category("fields").add("section_and_note_one2many", sectionAndNoteFieldOne2Many);
-registry.category("fields").add("section_and_note_text", sectionAndNoteText);
-registry.category("fields").add("list.section_and_note_text", listSectionAndNoteText);
