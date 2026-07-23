@@ -3,7 +3,7 @@
 
 import hashlib
 
-from odoo import api, models, _
+from odoo import api, models, Command, _
 from odoo.exceptions import UserError
 
 
@@ -79,3 +79,24 @@ class HrEmployee(models.Model):
                     error_msg += _("Employee: %(employee)s - PoS Config(s): %(config_list)s \n", employee=employee.name, config_list=config_ids.mapped("name"))
 
             raise UserError(error_msg)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'active' in vals or 'company_id' in vals:
+            for emp in self:
+                domain = [
+                    '|', '|',
+                    ('minimal_employee_ids', 'in', emp.id),
+                    ('basic_employee_ids', 'in', emp.id),
+                    ('advanced_employee_ids', 'in', emp.id)
+                ]
+                if emp.active and emp.company_id:
+                    domain = [('company_id', '!=', emp.company_id.id)] + domain
+                configs_to_clean = self.env['pos.config'].sudo().search(domain)
+                if configs_to_clean:
+                    configs_to_clean.write({
+                        'minimal_employee_ids': [Command.unlink(emp.id)],
+                        'basic_employee_ids': [Command.unlink(emp.id)],
+                        'advanced_employee_ids': [Command.unlink(emp.id)],
+                    })
+        return res
