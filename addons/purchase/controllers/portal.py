@@ -46,7 +46,6 @@ class CustomerPortal(portal.CustomerPortal):
     def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key, columns=None):
         values = self._prepare_portal_layout_values()
         PurchaseOrder = request.env['purchase.order']
-        columns = columns or []
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
@@ -94,7 +93,7 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'default_url': url,
-            'columns': self._format_portal_list_columns('purchase.order', columns or []),
+            **self._portal_list_values('purchase.order', template, columns or []),
         })
         return request.render(template, values)
 

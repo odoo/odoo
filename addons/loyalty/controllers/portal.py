@@ -86,8 +86,10 @@ class CustomerPortalLoyalty(CustomerPortal):
             "page_name": "loyalty_history",
             "sortby": sortby,
             "history_lines": history_lines,
-            "columns": self._format_portal_list_columns(
-                "loyalty.history", self._get_loyalty_history_portal_columns()
+            **self._portal_list_values(
+                "loyalty.history",
+                "loyalty.loyalty_card_history_template",
+                self._get_loyalty_history_portal_columns(),
             ),
         }
 

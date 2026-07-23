@@ -316,7 +316,9 @@
                     cells the default cell renders); `cell` (template of
                     the <td>, else portal.portal_list_cell renders `field`);
                     `hidden` (column that does not apply to this rendering, e.g.
-                    the field the list is grouped by).
+                    the field the list is grouped by: not rendered, but still
+                    known to the website builder, which restores its original
+                    rendering when it applies again).
               * rows: one <tr> per item. Ignored when `groups` is set.
               * groups: one <tbody> per group. Each group is a dict with
                     `records` and optionally `label`, `aggregates` ({column name:
@@ -326,23 +328,33 @@
                     itself the record).
               * hide_header: keep the header out of sight but in the DOM, so
                     that the website builder still lists the columns.
+              * list_model, list_ref: identify the list for the website builder.
               * tbody_class, classes, pager.
 
             The body of the t-call is the empty state, rendered instead of the
             table when there is nothing to list. It stays in the caller's
             template so that a designer can still edit its text.
+
+            In edit mode both the empty state and the table are in the DOM, the
+            inactive one hidden, so that a designer can reach either one through
+            the `Display Empty Message` option even on a list that has nothing
+            to show (see ToggleEmptyMessageAction).
         -->
         <t t-set="visible_columns" t-value="[column for column in columns if not column.get('hidden')]"/>
         <t t-set="has_rows" t-value="rows or groups"/>
-        <div t-if="not has_rows" class="o_portal_list_empty">
+        <t t-set="shown_classes" t-value="'o_enable_preview' if editable else ''"/>
+        <t t-set="hidden_classes" t-value="'d-none ' + ('o_disable_preview' if editable else '')"/>
+        <div t-if="not has_rows or editable" t-attf-class="o_portal_list_empty #{hidden_classes if has_rows else shown_classes}">
             <t t-out="0"/>
         </div>
-        <div t-else="" t-attf-class="table-responsive border-0 #{classes if classes else ''}">
-            <table class="o_list_table position-relative table table-sm o_list_table_ungrouped table-striped o_portal_my_doc_table mb-0">
+        <div t-if="has_rows or editable" t-attf-class="o_portal_list_filled table-responsive border-0 #{shown_classes if has_rows else hidden_classes} #{classes if classes else ''}">
+            <table t-att-data-list-model="list_model" t-att-data-list-ref="list_ref"
+                   t-att-data-list-builtins="','.join([column['name'] for column in columns if not column.get('added')])"
+                   class="o_list_table position-relative table table-sm o_list_table_ungrouped table-striped o_portal_my_doc_table mb-0">
                 <thead t-attf-class="#{'d-none' if hide_header else ''}">
                     <tr class="active">
                         <t t-foreach="visible_columns" t-as="column">
-                            <th t-att-name="column['name']" t-attf-class="#{column.get('class') or ''}">
+                            <th t-att-name="column['name']" t-att-data-added="column.get('added') and '1' or None" t-attf-class="#{column.get('class') or ''}">
                                 <t t-if="column.get('label_mobile')">
                                     <span class="d-none d-md-inline" t-out="column['label']"/>
                                     <span class="d-block d-md-none" t-out="column['label_mobile']"/>

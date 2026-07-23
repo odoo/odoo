@@ -31,7 +31,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = [('project_id', '=', project.id)]
         # pager
         url = "/my/projects/%s" % project.id
-        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token) and request.env.user.has_group('base.group_public'), project=project)
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, 'project.portal_my_project', url, domain, su=bool(access_token) and request.env.user.has_group('base.group_public'), project=project)
         # adding the access_token to the pager's url args,
         # so we are not prompted for loging when switching pages
         # if access_token is None, the arg is not present in the URL
@@ -66,6 +66,8 @@ class ProjectCustomerPortal(CustomerPortal):
         }
 
     def _get_projects_portal_columns(self):
+        """ The table is rendered without a visible header (`hide_header`), but
+        the labels are still what the website builder lists. """
         return [
             {'name': 'name', 'label': self.env._("Project"), 'field': 'name', 'link': 'access_url'},
             {'name': 'task_count', 'label': self.env._("Tasks"), 'cell': 'project.portal_project_cell_task_count'},
@@ -119,8 +121,10 @@ class ProjectCustomerPortal(CustomerPortal):
             'searchbar_inputs': searchbar_inputs,
             'search_in': 'name',
             'sortby': sortby,
-            'columns': self._format_portal_list_columns(
-                'project.project', self._get_projects_portal_columns()
+            **self._portal_list_values(
+                'project.project',
+                'project.portal_my_projects',
+                self._get_projects_portal_columns(),
             ),
         })
         return request.render("project.portal_my_projects", values)
@@ -219,6 +223,7 @@ class ProjectCustomerPortal(CustomerPortal):
             domain = Domain(searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain'])
 
             values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby,
+                'project.portal_my_tasks',
                 url=f'/my/projects/{project_id}/task/{task_id}/subtasks', domain=task_domain & domain)
             values['page_name'] = 'project_subtasks'
 
@@ -256,6 +261,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
             values = self._prepare_tasks_values(
                 page, date_begin, date_end, sortby, search, search_in, groupby,
+                'project.portal_my_tasks',
                 url=f'/my/projects/{project_id}/task/{task_id}/recurrent_tasks',
                 domain=task_domain & domain,
             )
@@ -350,7 +356,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['milestone_id'] = {'label': _('Milestone'), 'sequence': 50, 'empty_label': _('No Milestone')}
         return values
 
-    def _get_tasks_portal_columns(self, groupby='none', project=False, **kwargs):
+    def _get_tasks_portal_columns(self, project=False, **kwargs):
         return [
             {'name': 'name', 'label': _('Name'), 'cell': 'project.portal_task_cell_name'},
             {
@@ -360,12 +366,11 @@ class ProjectCustomerPortal(CustomerPortal):
             {
                 'name': 'project_id', 'label': _('Project'),
                 'cell': 'project.portal_task_cell_project',
-                'hidden': bool(project) or groupby == 'project_id',
+                'hidden': bool(project),
             },
             {
                 'name': 'stage_id', 'label': _('Stage'),
                 'cell': 'project.portal_task_cell_stage', 'class': 'text-end',
-                'hidden': groupby == 'stage_id',
             },
         ]
 
@@ -429,7 +434,7 @@ class ProjectCustomerPortal(CustomerPortal):
         else:
             return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
 
-    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
+    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, list_ref, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
 
         Task = request.env['project.task']
@@ -527,8 +532,11 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': date_begin,
             'date_end': date_end,
             'grouped_tasks': get_grouped_tasks,
-            'columns': self._format_portal_list_columns(
-                'project.task', self._get_tasks_portal_columns(groupby=groupby, project=project)
+            **self._portal_list_values(
+                'project.task',
+                list_ref,
+                self._get_tasks_portal_columns(project=project),
+                groupby=groupby,
             ),
             'allow_milestone': milestones_allowed,
             'multiple_projects': True,
@@ -585,7 +593,7 @@ class ProjectCustomerPortal(CustomerPortal):
             filterby = 'all'
         domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
 
-        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, domain=domain)
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, 'project.portal_my_tasks', domain=domain)
 
         # pager
         pager_vals = values['pager']

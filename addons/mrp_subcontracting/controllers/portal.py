@@ -72,8 +72,10 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'default_url': '/my/productions',
-            'columns': self._format_portal_list_columns(
-                'stock.picking', self._get_production_portal_columns()
+            **self._portal_list_values(
+                'stock.picking',
+                'mrp_subcontracting.portal_my_productions',
+                self._get_production_portal_columns(),
             ),
         }
 

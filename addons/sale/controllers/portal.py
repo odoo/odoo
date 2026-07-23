@@ -102,6 +102,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             if SaleOrder.has_access("read")
             else SaleOrder
         )
+        list_ref = (
+            "sale.portal_my_quotations" if quotation_page
+            else "sale.portal_my_orders"
+        )
         columns = (
             self._get_quotation_portal_columns() if quotation_page
             else self._get_order_portal_columns()
@@ -114,7 +118,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             "page_name": "quote" if quotation_page else "order",
             "pager": pager_values,
             "default_url": url,
-            "columns": self._format_portal_list_columns("sale.order", columns),
+            **self._portal_list_values("sale.order", list_ref, columns),
         })
 
         if len(searchbar_sortings) > 1:

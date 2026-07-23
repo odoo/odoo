@@ -47,23 +47,15 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_timesheets_portal_columns(self, groupby='none'):
         return [
-            {
-                'name': 'date', 'label': _('Date'), 'field': 'date',
-                'hidden': groupby == 'date',
-            },
-            {
-                'name': 'employee_id', 'label': _('Employee'), 'field': 'employee_id',
-                'hidden': groupby == 'employee_id',
-            },
+            {'name': 'date', 'label': _('Date'), 'field': 'date'},
+            {'name': 'employee_id', 'label': _('Employee'), 'field': 'employee_id'},
             {
                 'name': 'project_id', 'label': _('Project'),
                 'field': 'project_id', 'class': 'text-wrap',
-                'hidden': groupby == 'project_id',
             },
             {
                 'name': 'task_id', 'label': _('Task'),
                 'cell': 'hr_timesheet.portal_timesheet_cell_task',
-                'hidden': groupby == 'task_id',
             },
             {
                 'name': 'name', 'label': _('Description'),
@@ -193,8 +185,11 @@ class TimesheetCustomerPortal(CustomerPortal):
         values.update({
             'timesheets': timesheets,
             'groups': self._prepare_timesheets_portal_groups(grouped_timesheets, groupby, searchbar_groupby),
-            'columns': self._format_portal_list_columns(
-                'account.analytic.line', self._get_timesheets_portal_columns(groupby)
+            **self._portal_list_values(
+                'account.analytic.line',
+                'hr_timesheet.portal_my_timesheets',
+                self._get_timesheets_portal_columns(groupby),
+                groupby=groupby,
             ),
             'page_name': 'timesheet',
             'default_url': '/my/timesheets',
@@ -222,16 +217,16 @@ class TimesheetProjectCustomerPortal(ProjectCustomerPortal):
         return self._show_report(model=timesheets,
             report_type=report_type, report_ref='hr_timesheet.timesheet_report_task_timesheets', download=download)
 
-    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
-        values = super()._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su, project)
+    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, list_ref, url="/my/tasks", domain=None, su=False, project=False):
+        values = super()._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, list_ref, url, domain, su, project)
         values.update(
             is_uom_day=request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
         )
 
         return values
 
-    def _get_tasks_portal_columns(self, groupby='none', project=False, **kwargs):
-        columns = super()._get_tasks_portal_columns(groupby=groupby, project=project, **kwargs)
+    def _get_tasks_portal_columns(self, project=False, **kwargs):
+        columns = super()._get_tasks_portal_columns(project=project, **kwargs)
         index = next(index for index, column in enumerate(columns) if column['name'] == 'stage_id')
         columns.insert(index, {
             'name': 'time_spent', 'label': _('Time Spent'),

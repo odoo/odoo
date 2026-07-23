@@ -85,6 +85,9 @@ class PortalAccount(CustomerPortal):
         values.update({
             'invoices': invoices,
             'pager': pager,
+            **self._portal_list_values(
+                'account.move', 'account.portal_my_invoices', values['columns']
+            ),
         })
         return request.render("account.portal_my_invoices", values)
 
@@ -147,9 +150,7 @@ class PortalAccount(CustomerPortal):
             'filterby': filterby,
             'overdue_invoice_count': request.env['account.move'].search_count(self._get_overdue_invoices_domain())
                 if request.env['account.move'].has_access('read') else 0,
-            'columns': self._format_portal_list_columns(
-                'account.move', self._get_invoice_portal_columns()
-            ),
+            'columns': self._get_invoice_portal_columns(),
         })
         return values
 

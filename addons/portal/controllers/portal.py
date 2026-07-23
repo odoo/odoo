@@ -151,11 +151,31 @@ class CustomerPortal(Controller):
 
     _items_per_page = 80
 
+    def _portal_list_values(self, model_name, list_ref, columns, groupby=None):
+        """ Values a ``portal.portal_list_table`` needs to render ``columns``:
+        the effective column spec, and the identity of the list for the website
+        builder. ``list_ref`` is the external id of the template holding the
+        list, and identifies its stored customization.
+
+        Meant to be spread into the rendering values::
+
+            values.update({
+                ...,
+                **self._portal_list_values('account.move', 'account.portal_my_invoices', columns),
+            })
+        """
+        columns = self._apply_portal_list_columns(model_name, list_ref, columns, groupby=groupby)
+        return {
+            'list_model': model_name,
+            'list_ref': list_ref,
+            'columns': self._format_portal_list_columns(model_name, columns),
+        }
+
     def _format_portal_list_columns(self, model_name, columns):
         """ Resolve the ``options`` the default cell renders each ``field``
-        column of a ``portal.portal_list_table`` from the field itself: its
-        type is the widget that formats its value, so a spec only spells out
-        the ``options`` its field does not carry (e.g. a short date format). """
+        column from the field itself: its type is the widget that formats
+        its value, so a spec only spells out the ``options`` its field does
+        not carry (e.g. a short date format). """
         model = request.env[model_name]
         for column in columns:
             field = model._fields.get(column.get('field'))
@@ -175,6 +195,70 @@ class CustomerPortal(Controller):
                 # records, a plain char value as its escaped text.
                 column['options'] = {'widget': field.type}
         return columns
+
+    def _apply_portal_list_columns(self, model_name, list_ref, columns, groupby=None):
+        """ Reorder/hide/extend the given ``portal.portal_list_table`` column
+        spec according to the per-list customization stored in
+        ``portal.list.column`` (managed from the website builder). Returns the
+        effective ordered list of column dicts.
+
+        ``groupby`` hides the column of the field the list is grouped by, whose
+        value is already spelled out in the group rows. A column that has to be
+        hidden for another reason still declares its own ``hidden``. """
+        for column in columns:
+            if column['name'] == groupby:
+                column['hidden'] = True
+        overrides = request.env['portal.list.column'].sudo().search([
+            ('list_ref', '=', list_ref),
+        ])
+        if not overrides:
+            return columns
+        overrides_by_name = {override.name: override for override in overrides}
+        ordered = []
+        default_names = set()
+        for index, column in enumerate(columns):
+            default_names.add(column['name'])
+            override = overrides_by_name.get(column['name'])
+            if override and not override.show_in_portal:
+                continue
+            sequence = override.sequence if override else (index + 1) * 10
+            ordered.append((sequence, index, column))
+        extra_overrides = overrides.filtered(
+            lambda override: (
+                override.name not in default_names
+                and override.field_name
+                and override.show_in_portal
+            )
+        )
+        fields_by_name = {}
+        if extra_overrides:
+            fields_by_name = request.env[model_name].sudo().fields_get(
+                extra_overrides.mapped('field_name')
+            )
+        extra_index = len(columns)
+        for override in extra_overrides:
+            field = fields_by_name.get(override.field_name)
+            if not field:
+                continue
+            extra_index += 1
+            ordered.append((
+                override.sequence,
+                extra_index,
+                self._build_portal_field_column(override, field),
+            ))
+        ordered.sort(key=lambda item: (item[0], item[1]))
+        return [column for __, __, column in ordered]
+
+    def _build_portal_field_column(self, override, field):
+        """ Build a column dict for a builder-added model field, rendered by
+        the default cell ``portal.portal_list_cell``. Its formatting comes from
+        the field, like any other field column. """
+        return {
+            'name': override.name,
+            'label': field.get('string') or override.field_name,
+            'field': override.field_name,
+            'added': True,
+        }
 
     def _portal_group_label(self, records, groupby, empty_label=None):
         """ Human readable label of the ``groupby`` value shared by ``records``,

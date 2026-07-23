@@ -78,15 +78,11 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             {
                 'name': 'so_line', 'label': _('Sales Order Item'),
                 'cell': 'sale_timesheet.portal_timesheet_cell_so_line',
-                'hidden': (
-                    groupby == 'so_line'
-                    or not request.env['account.analytic.line']._show_portal_timesheets()
-                ),
+                'hidden': not request.env['account.analytic.line']._show_portal_timesheets(),
             },
             {
                 'name': 'reinvoice_move_id', 'label': _('Invoice'),
                 'field': 'reinvoice_move_id',
-                'hidden': groupby == 'reinvoice_move_id',
             },
         ]
         return columns

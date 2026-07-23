@@ -1,0 +1,12 @@
+// The empty state and the table are both in the DOM in edit mode (see
+// portal.portal_list_table): the `Display Empty Message` option shows one of
+// them at a time, overriding the `d-none` of the one the page rendered hidden.
+.o_portal_list_empty, .o_portal_list_filled {
+    &.o_enable_preview {
+        display: block !important;
+    }
+
+    &.o_disable_preview {
+        display: none !important;
+    }
+}

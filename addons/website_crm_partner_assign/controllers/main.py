@@ -80,8 +80,10 @@ class WebsiteAccount(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
-            'columns': self._format_portal_list_columns(
-                'crm.lead', self._get_lead_portal_columns()
+            **self._portal_list_values(
+                'crm.lead',
+                'website_crm_partner_assign.portal_my_leads',
+                self._get_lead_portal_columns(),
             ),
         })
         return request.render("website_crm_partner_assign.portal_my_leads", values)
@@ -172,8 +174,10 @@ class WebsiteAccount(CustomerPortal):
             'sortby': sortby,
             'searchbar_filters': searchbar_filters,
             'filterby': filterby,
-            'columns': self._format_portal_list_columns(
-                'crm.lead', self._get_opportunity_portal_columns()
+            **self._portal_list_values(
+                'crm.lead',
+                'website_crm_partner_assign.portal_my_opportunities',
+                self._get_opportunity_portal_columns(),
             ),
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
