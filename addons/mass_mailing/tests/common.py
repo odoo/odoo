@@ -85,6 +85,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         """
         # map trace state to email state
         state_mapping = {
+            'outgoing': 'outgoing',
             'sent': 'sent',
             'open': 'sent',  # opened implies something has been sent
             'reply': 'sent',  # replied implies something has been sent
