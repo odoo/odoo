@@ -11,6 +11,7 @@
                 <field name="date"/>
                 <field name="author_id" widget="many2one_avatar"/>
                 <field name="res_id" string="Name"/>
+                <field name="body" string="Description" widget="audit_trail_body_field"/>
             </list>
         </field>
     </record>
@@ -56,7 +57,7 @@
             <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>
         </field>
         <field name="domain">[
-            ('message_type', '=', 'notification'),
+            ('message_type', 'in', ('notification', 'tracking')),
             ('model', 'in', ('account.move', 'account.account', 'account.tax', 'res.partner', 'res.company')),
         ]</field>
         <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
