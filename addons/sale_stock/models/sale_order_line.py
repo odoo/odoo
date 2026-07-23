@@ -58,8 +58,9 @@ class SaleOrderLine(models.Model):
             else:
                 line.display_qty_widget = False
 
-    def _read_qties(self, date, wh):
-        return self.mapped('product_id').with_context(to_date=date, warehouse_id=wh).read([
+    def _read_qties(self, date, wh_id):
+        # sudo needed in case cross company warehouse
+        return self.mapped('product_id').with_context(to_date=date, warehouse_id=wh_id).sudo().read([
             'qty_available',
             'free_qty',
             'virtual_available',
@@ -117,10 +118,10 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
             if not (line.product_id and line.display_qty_widget):
                 continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+            grouped_lines[line.warehouse_id, line.order_id.commitment_date or line._expected_date()] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines._read_qties(scheduled_date, warehouse)
+            product_qties = lines._read_qties(scheduled_date, warehouse.id)
             qties_per_product = {
                 product['id']: (product['qty_available'], product['free_qty'], product['virtual_available'])
                 for product in product_qties
@@ -160,8 +161,8 @@ class SaleOrderLine(models.Model):
             product = line.product_id
             product_routes = line.route_ids or (product.route_ids + product.categ_id.total_route_ids)
 
-            # Check MTO
-            mto_route = line.warehouse_id.mto_pull_id.route_id
+            # Check MTO. sudo needed in case cross-company warehouse
+            mto_route = line.warehouse_id.sudo().mto_pull_id.route_id
             if not mto_route:
                 try:
                     mto_route = self.env['stock.warehouse']._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), create=False)
@@ -185,7 +186,10 @@ class SaleOrderLine(models.Model):
         delivered_qties = super()._prepare_qty_delivered()
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
-                qty = 0.0
+                qty = 0.
+                if line.order_id.sudo().warehouse_id.company_id != self.order_id.company_id:
+                    # If the selected warehouse belongs to another company, need to fetch their moves regardless.
+                    line = line.sudo()
                 outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
                 for move in outgoing_moves:
                     if move.state != 'done':
@@ -281,11 +285,11 @@ class SaleOrderLine(models.Model):
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_ids,
-            'warehouse_id': self.warehouse_id,
+            'warehouse_id': self.sudo().warehouse_id,  # sudo() in case cross-company warehouse
             'partner_id': self.order_id.partner_shipping_id.id,
             'forecasted_location_id': self._get_location_final(),
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants().strip(),
-            'company_id': self.order_id.company_id,
+            'company_id': self.sudo().warehouse_id.company_id or self.order_id.company_id,  # sudo() in case cross-company warehouse
             'sequence': self.sequence,
             'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'packaging_uom_id': self.product_uom_id,
@@ -318,7 +322,7 @@ class SaleOrderLine(models.Model):
         outgoing_moves_ids = set()
         incoming_moves_ids = set()
 
-        moves = self.move_ids.filtered(lambda m: m.location_dest_usage != 'inventory' and self.product_id == m.product_id and m.company_id == self.company_id)
+        moves = self.move_ids.filtered(lambda m: m.location_dest_usage != 'inventory' and self.product_id == m.product_id)
         if moves and not strict:
             # The first move created was the one created from the intial rule that started it all.
             # Look at every move ever created for this line, including cancelled ones: if the
@@ -361,9 +365,12 @@ class SaleOrderLine(models.Model):
 
     def _create_procurements(self, product_qty, procurement_uom, values):
         self.ensure_one()
+        origin = self.order_id.name
+        if self.order_id.company_id != self.sudo().warehouse_id.company_id:
+            origin += f" ({self.order_id.company_id.name})"
         return [self.env['stock.rule'].Procurement(
             self.product_id, product_qty, procurement_uom, self._get_location_final(),
-            self.product_id.display_name, self.order_id.name, self.order_id.company_id, values)]
+            self.product_id.display_name, origin, self.order_id.company_id, values)]
 
     def _action_launch_stock_rule(self, *, previous_product_uom_qty=False):
         """
