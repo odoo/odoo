@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_delivery_document_inherit_sale_stock" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@t-call='web.html_container']" position="before">
+            <t t-if="o.sudo().sale_id and o.sudo().sale_id.company_id != o.company_id" t-set="company" t-value="o.sudo().sale_id.company_id"/>
+        </xpath>
         <xpath expr="//div[@name='div_sched_date']" position="after">
             <div class="col col-3 mw-100 mb-2" t-if="o.sudo().sale_id.client_order_ref">
                 <strong>Customer Reference</strong>
