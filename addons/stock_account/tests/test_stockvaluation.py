@@ -2246,6 +2246,49 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).total_value, 300)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).avg_cost, 15)
 
+    def test_avco_at_date_when_move_locations_mismatch_with_move_lines(self):
+        """ At-date AVCO must follow move lines when move.location_* is rewritten to a parent/view.
+        """
+        product = self.product_avco
+        child_location_a = self.env['stock.location'].create({
+            'name': 'Child A',
+            'location_id': self.stock_location.id,
+            'usage': 'internal',
+        })
+        child_location_b = self.env['stock.location'].create({
+            'name': 'Child B',
+            'location_id': self.stock_location.id,
+            'usage': 'internal',
+        })
+
+        price_date = Datetime.now() - timedelta(days=5)
+        with freeze_time(price_date):
+            product.standard_price = 100
+        with freeze_time(price_date + timedelta(days=1)):
+            self._make_in_move(product, 10, unit_cost=100, location_dest_id=child_location_a.id)
+        with freeze_time(price_date + timedelta(days=2)):
+            internal_move = self.env['stock.move'].create({
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 9,
+                'location_id': child_location_a.id,
+                'location_dest_id': child_location_b.id,
+            })
+            internal_move._action_confirm()
+            internal_move._action_assign()
+            internal_move.move_line_ids.quantity = 9
+            internal_move.picked = True
+            internal_move._action_done()
+            internal_move.location_id = self.warehouse.view_location_id
+
+        self.assertFalse(internal_move.is_in)
+        self.assertFalse(internal_move.is_out)
+        for to_date in [False, Datetime.now(), Datetime.now() - timedelta(days=1)]:
+            product_at_date = product._with_valuation_context().with_context(to_date=to_date)
+            self.assertEqual(product_at_date.qty_available, 10)
+            self.assertEqual(product_at_date.total_value, 1000)
+            self.assertEqual(product_at_date.avg_cost, 100)
+
     def test_forecast_report_value(self):
         """ Create a SVL for two companies using different currency, and open
         the forecast report. Checks the forecast report use the good currency to

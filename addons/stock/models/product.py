@@ -197,9 +197,6 @@ class ProductProduct(models.Model):
                 domain_move_out += [('move_line_ids.owner_id', '=', False)]
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
-        if dates_in_the_past:
-            domain_move_in_done = list(domain_move_in)
-            domain_move_out_done = list(domain_move_out)
         if from_date:
             date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
@@ -220,18 +217,31 @@ class ProductProduct(models.Model):
             max_date = self.env.context['to_date'] if self.env.context.get('to_date') and self.env.context.get('fresh_qty_forecast') else self.env.context['with_expiration']
             domain_quant += [('removal_date', '<=', max_date)]
             expired_unreserved_quants_res = {product.id: quantity - reserved_quantity for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
-        moves_in_res_past = defaultdict(float)
-        moves_out_res_past = defaultdict(float)
+        moves_in_res_past = {}
+        moves_out_res_past = {}
         if dates_in_the_past:
-            # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
-            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            groupby = ['product_id', 'product_uom']
-            for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
-                moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
-
-            for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum']):
-                moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            # Roll back done qty via move lines: move.location_* can diverge from move line locations
+            # (e.g. rewritten to a parent/view). skip_in_progress: location_final_id is move-only.
+            domain_ml_in_loc, domain_ml_out_loc = self.with_context(skip_in_progress=True)._get_domain_locations()[1:]
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
+            domain_ml_done = [
+                ('product_id', 'in', self.ids),
+                ('state', '=', 'done'),
+                ('move_id.date', '>', to_date),
+            ]
+            if lot_id is not None:
+                domain_ml_done += [('lot_id', '=', lot_id)]
+            if owner_id is not None:
+                domain_ml_done += [('owner_id', '=', owner_id)]
+            if 'owners' in self.env.context:
+                owners = self.env.context['owners']
+                if owners:
+                    domain_ml_done += [('owner_id', 'in', owners)]
+                else:
+                    domain_ml_done += [('owner_id', '=', False)]
+            domain_ml_done = Domain(domain_ml_done)
+            moves_in_res_past = {product.id: qty for product, qty in MoveLine._read_group(domain_ml_done & domain_ml_in_loc, ['product_id'], ['quantity_product_uom:sum'])}
+            moves_out_res_past = {product.id: qty for product, qty in MoveLine._read_group(domain_ml_done & domain_ml_out_loc, ['product_id'], ['quantity_product_uom:sum'])}
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
