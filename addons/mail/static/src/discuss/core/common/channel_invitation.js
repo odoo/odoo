@@ -230,7 +230,6 @@ export class ChannelInvitation extends Component {
             return;
         }
         let channelId = this.props.channel.id;
-        const invitePromises = [];
         if (this.props.channel?.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.channel.correspondent?.partner_id) {
@@ -252,23 +251,14 @@ export class ChannelInvitation extends Component {
             } else {
                 await this.store.startChat(partnerIds);
             }
-        } else if (this.selectedPartners.length) {
-            invitePromises.push(
-                this.store.fetchStoreData("/discuss/channel/add_members", {
-                    channel_id: channelId,
-                    partner_ids: this.selectedPartners.map((partner) => partner.id),
-                    invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
-                })
-            );
+        } else if (this.selectedPartners.length || this.state.selectedEmails.length) {
+            await this.store.fetchStoreData("/discuss/channel/add_members", {
+                channel_id: channelId,
+                partner_ids: this.selectedPartners.map((partner) => partner.id),
+                emails: this.state.selectedEmails,
+                invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
+            });
         }
-        if (this.state.selectedEmails.length) {
-            invitePromises.push(
-                this.orm.call("discuss.channel", "invite_by_email", [channelId], {
-                    emails: this.state.selectedEmails,
-                })
-            );
-        }
-        await Promise.all(invitePromises);
         this.state.selectedEmails = [];
         this.state.selectedPartners = [];
         this.props.close?.();

@@ -2,17 +2,18 @@ import { DiscussSearch } from "@mail/core/public_web/discuss_search";
 import { MessageInDialog } from "@mail/core/public_web/messaging_menu/message_in_dialog";
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
+import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 
 import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
-import { isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
+import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenu extends Component {
-    static components = { DiscussSearch, MessagingMenuItem, MessagingMenuEmpty };
+    static components = { DiscussSearch, MessagingMenuItem, MessagingMenuEmpty, NotificationItem };
     static template = "mail.MessagingMenu";
 
     isIosPwa = isIOS() && isDisplayStandalone();
@@ -35,6 +36,7 @@ export class MessagingMenu extends Component {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
+        this.notification = useService("mail.notification.permission");
         this.messageSearch = useSearch({
             fetch: (term) =>
                 this.activeTab().loadMore({
@@ -73,10 +75,11 @@ export class MessagingMenu extends Component {
         useEffect(() => {
             this.messageSearch.searchTerm = this.searchTerm();
         });
+        this.hasTouch = hasTouch;
     }
 
     get isEmpty() {
-        return !this.messages().length;
+        return !this.messages().length && !this.showPushPermissionRequest;
     }
 
     get noSearchResultText() {
@@ -85,6 +88,27 @@ export class MessagingMenu extends Component {
 
     get noFilterResultText() {
         return _t("No conversation matches this filter.");
+    }
+
+    /**
+     * Whether the OdooBot extras (delivery failures, push permission request) may be
+     * shown for the active tab.
+     */
+    get showNotificationHubExtras() {
+        const menu = this.store.messagingMenu;
+        return !this.searchTerm() && this.state().activeTab.eq(menu.odooBotNotificationsTab);
+    }
+
+    get showPushPermissionRequest() {
+        return this.store.showPushPermissionRequest && this.showNotificationHubExtras;
+    }
+
+    get notificationRequest() {
+        return {
+            body: _t("Stay tuned! Enable push notifications to never miss a message."),
+            displayName: _t("Turn on notifications"),
+            partner: this.store.odoobot,
+        };
     }
 
     /** @param {import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabAction} action */

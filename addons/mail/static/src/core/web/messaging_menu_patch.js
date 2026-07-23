@@ -1,6 +1,5 @@
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -13,32 +12,12 @@ const messagingMenuPatch = {
         super.setup(...arguments);
         this.action = useService("action");
         this.dialog = useService("dialog");
-        this.notification = useService("mail.notification.permission");
-        this.hasTouch = hasTouch;
-    },
-    /**
-     * Whether the OdooBot extras (delivery failures, push permission request) may be
-     * shown for the active tab.
-     */
-    get showNotificationHubExtras() {
-        const menu = this.store.messagingMenu;
-        return !this.searchTerm() && this.state().activeTab.eq(menu.odooBotNotificationsTab);
     },
     get showFailures() {
         return this.store.failures.length > 0 && this.showNotificationHubExtras;
     },
     get isEmpty() {
-        return super.isEmpty && !this.showFailures && !this.showPushPermissionRequest;
-    },
-    get showPushPermissionRequest() {
-        return this.store.showPushPermissionRequest && this.showNotificationHubExtras;
-    },
-    get notificationRequest() {
-        return {
-            body: _t("Stay tuned! Enable push notifications to never miss a message."),
-            displayName: _t("Turn on notifications"),
-            partner: this.store.odoobot,
-        };
+        return super.isEmpty && !this.showFailures;
     },
     /**
      * @param {import("models").Failure} failure

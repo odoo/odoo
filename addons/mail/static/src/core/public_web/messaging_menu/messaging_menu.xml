@@ -38,6 +38,21 @@
                 </div>
             </div>
             <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5">
+                <NotificationItem
+                    t-if="this.showPushPermissionRequest"
+                    important="1"
+                    onClick="() => this.notification.requestPermission()"
+                    persona="this.notificationRequest.partner"
+                >
+                    <t t-set-slot="body" t-out="this.notificationRequest.body"/>
+                    <t t-set-slot="name"><t t-out="this.notificationRequest.displayName"/></t>
+                    <t t-set-slot="sideContent">
+                        <div class="d-flex align-items-center justify-content-center o-gap-1_5">
+                            <a class="btn btn-primary btn-sm px-1 py-0">Enable</a>
+                            <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
+                        </div>
+                    </t>
+                </NotificationItem>
                 <t name="messagingMenuExtraItems"/>
                 <MessagingMenuItem
                     t-foreach="this.messages()" t-as="message" t-key="message.localId"

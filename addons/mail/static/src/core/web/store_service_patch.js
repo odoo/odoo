@@ -26,14 +26,6 @@ const StorePatch = {
         this.messagingMenuSystrayState = fields.One("MessagingMenuUIState", {
             compute: () => ({ id: "mail.systray", activeTab: MENU_TABS.CHATS }),
         });
-        this.showPushPermissionRequest = fields.Attr(false, {
-            compute() {
-                return (
-                    this.env.services["mail.notification.permission"]?.permission === "prompt" &&
-                    !this.isNotificationPermissionDismissed
-                );
-            },
-        });
         /** @type {Object[]} */
         this.activity_groups = fields.Attr(undefined, {
             onUpdate() {
