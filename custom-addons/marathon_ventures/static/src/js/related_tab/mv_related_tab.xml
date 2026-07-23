@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="marathon_ventures.MvRelatedTab">
+        <div class="mv-related">
+            <div t-if="!resId" class="mv-related__hint">
+                Save this record to see its related items.
+            </div>
+            <div t-elif="state.loading" class="mv-related__hint">
+                Loading related records...
+            </div>
+            <div t-elif="state.error" class="mv-related__error">
+                <i class="fa fa-exclamation-triangle"/> <t t-esc="state.error"/>
+            </div>
+            <div t-elif="state.specs.length === 0" class="mv-related__hint">
+                No related relationships defined on this model.
+            </div>
+            <div t-else="" class="mv-related__grid">
+                <t t-foreach="state.specs" t-as="spec" t-key="spec.field_name">
+                    <div class="mv-related-section">
+                        <div class="mv-related-section__head">
+                            <span class="mv-related-section__title">
+                                <t t-esc="spec.label"/>
+                            </span>
+                            <span class="mv-related-section__count"
+                                  t-att-class="'mv-related-section__count ' + (spec.count === 0 ? 'is-empty' : '')">
+                                (<t t-esc="spec.count"/>)
+                            </span>
+                            <button t-if="spec.accessible and spec.count > 0"
+                                    class="mv-related-section__view-all btn btn-link"
+                                    t-on-click.prevent="() => this.onViewAll(spec)">
+                                View All <i class="fa fa-arrow-right"/>
+                            </button>
+                        </div>
+
+                        <t t-if="!spec.accessible">
+                            <div class="mv-related-section__denied">
+                                <i class="fa fa-lock"/> Access denied
+                            </div>
+                        </t>
+                        <t t-elif="spec.count === 0">
+                            <div class="mv-related-section__empty">
+                                No related records found.
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <!-- Salesforce-style table: one row per record.
+                                 The first column is ALWAYS the display_name
+                                 link opening the record. Additional columns
+                                 come from spec.columns (built server-side
+                                 from RELATED_TAB_COLUMNS[comodel]) - any
+                                 entry whose name is "display_name" is
+                                 filtered out to avoid duplicating that
+                                 first column. -->
+                            <table class="mv-related-section__table">
+                                <thead>
+                                    <tr>
+                                        <th class="mv-related-section__th mv-related-section__th--name">Name</th>
+                                        <t t-foreach="spec.columns" t-as="col" t-key="col.name">
+                                            <th t-if="col.name !== 'display_name'"
+                                                class="mv-related-section__th">
+                                                <t t-esc="col.label"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="spec.preview" t-as="rec"
+                                        t-key="rec.id"
+                                        class="mv-related-section__tr">
+                                        <td class="mv-related-section__td mv-related-section__td--name">
+                                            <a href="#"
+                                               class="mv-related-section__record-name"
+                                               t-on-click.prevent="() => this.onOpenRecord(spec, rec)">
+                                                <t t-esc="rec.display_name"/>
+                                            </a>
+                                        </td>
+                                        <t t-foreach="spec.columns" t-as="col" t-key="col.name">
+                                            <td t-if="col.name !== 'display_name'"
+                                                class="mv-related-section__td">
+                                                <t t-esc="rec[col.name] || '-'"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div t-if="spec.count > spec.preview.length"
+                                 class="mv-related-section__more">
+                                +<t t-esc="spec.count - spec.preview.length"/> more...
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

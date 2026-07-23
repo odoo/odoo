@@ -133,3 +133,5 @@ from . import phase14_reports
 from . import phase14_reports_rpc
 from . import phase16_program_daypart
 from . import phase17_dataloader
+from . import phase18_chatter_tracking
+from . import phase19_related_tab

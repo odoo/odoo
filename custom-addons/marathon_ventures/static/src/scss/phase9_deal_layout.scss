@@ -194,6 +194,13 @@
 
 /* ============================================================================
    FOOTER (Cancel | Save Deal)
+   ----------------------------------------------------------------------------
+   Hidden by default. mv_deal_footer.js watches Odoo's built-in
+   .o_form_status_indicator_buttons visibility and mirrors it into the
+   .mv-form--dirty class on the form root, so the footer only appears
+   while the record has unsaved changes. On a freshly-saved (or freshly-
+   loaded) deal, the buttons stay out of the way; the first edit brings
+   them back.
    ============================================================================ */
 .mv-deal-redesign .mv-form-footer {
     display: flex;
@@ -202,6 +209,14 @@
     padding: 18px 0 4px 0;
     margin-top: 14px;
     border-top: 1px solid #eceef1;
+}
+
+.mv-deal-redesign .mv-form-footer {
+    display: none;
+}
+
+.mv-deal-redesign .o_form_dirty .mv-form-footer {
+    display: flex;
 }
 
 .mv-deal-redesign .mv-form-footer .btn {
