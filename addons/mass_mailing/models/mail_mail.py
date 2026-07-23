@@ -130,5 +130,6 @@ class MailMail(models.Model):
             return
         history_deadline = datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept
         canceled_mails = self.with_context(active_test=False).search([('state', '=', 'cancel'), ('write_date', '<=', history_deadline)], order="id asc", limit=10000)
-
-        canceled_mails.with_context(prefetch_fields=False).mail_message_id.unlink()
+        # about linked mail_message: 'is_notification' is in charge of choosing to
+        # delete the mail.message or not, see MailMail.unlink()
+        canceled_mails.with_context(prefetch_fields=False).unlink()
