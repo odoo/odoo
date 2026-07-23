@@ -97,11 +97,14 @@ patch(PosStore.prototype, {
             raw_grouping_key: { product_id: product.id },
         });
 
+        // A fixed discount ignores the base sign, so negate it on refunds to mirror the
+        // negative base (percentages already follow it). Keep `discount_value` as-is below.
+        const discountAmount = type === "fixed" && order.is_refund ? -value : value;
         const globalDiscountBaseLines = accountTaxHelpers.prepare_global_discount_lines(
             baseLines,
             order.company_id,
             type,
-            value,
+            discountAmount,
             {
                 computation_key: "global_discount",
                 grouping_function: groupingFunction,
