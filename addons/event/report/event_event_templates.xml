@@ -388,8 +388,12 @@
     <span t-if="use_map_marker" class="fa fa-map-marker"/>
     <t t-if="event.address_id.contact_address.strip()">
         <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
-        <span t-if="address_bits" t-out="address_bits[0]">Rue de la Paix 123</span>
-        <t t-if="len(address_bits) > 1">
+        <t t-if="event.address_id.name and event.address_id.name.strip()">
+            <span t-out="event.address_id.name">1000 Brussels</span>
+            <br t-if="address_bits"/>
+        </t>
+        <span t-if="address_bits" class="text-muted" t-out="address_bits[0]">Rue de la Paix 123</span>
+        <t t-if="len(address_bits) > 1 and multi_line_address">
             <br/>
         </t>
         <t t-set="remaining_bits" t-value="address_bits[1:]"/>
