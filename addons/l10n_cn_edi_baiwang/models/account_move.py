@@ -227,9 +227,8 @@ class AccountMove(models.Model):
             client.ensure_connection()
         except UserError as e:
             return str(e)
-        serial_no = self.l10n_cn_baiwang_serial_no or f"OURBLUE_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}"
-        self.l10n_cn_baiwang_serial_no = serial_no
-        invoice_data = self._l10n_cn_baiwang_prepare_invoice_data(serial_no)
+        self.l10n_cn_baiwang_serial_no = self.l10n_cn_baiwang_serial_no or f"BLUE_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}"
+        invoice_data = self._l10n_cn_baiwang_prepare_invoice_data()
         try:
             result = client.issue_invoice(invoice_data)
         except UserError as e:
@@ -272,10 +271,8 @@ class AccountMove(models.Model):
         self.message_post(body=error_msg)
         return error_msg
 
-    def _l10n_cn_baiwang_prepare_invoice_data(self, serial_no: str) -> dict:
-        """Map Odoo invoice data to Baiwang invoice.issue request format."""
+    def _l10n_cn_baiwang_prepare_invoice_data(self) -> dict:
         self.ensure_one()
-        # Calculate totals (always tax-exclusive)
         total_price = sum(
             line.price_subtotal
             for line in self.invoice_line_ids
@@ -289,7 +286,7 @@ class AccountMove(models.Model):
             'priceTaxMark': '0',  # 0=prices exclude tax
             'invoiceListMark': '0',  # 0=no list attachment
             'taxationMethod': '0',  # 0=general taxation
-            'serialNo': serial_no,
+            'serialNo': self.l10n_cn_baiwang_serial_no,
             'buyerName': self.partner_id.name or '',
             'buyerTaxNo': self.partner_id.vat or '',
             'invoiceTotalPrice': round(total_price, 2),
@@ -315,8 +312,6 @@ class AccountMove(models.Model):
                 force_format='E164',
                 raise_exception=False,
             ) or ''
-
-            # If phonenumbers successfully parsed it as a Chinese number, it will start with +86
             if formatted_phone.startswith('+86'):
                 invoice_data['buyerPhone'] = formatted_phone[3:]
             else:
@@ -326,7 +321,6 @@ class AccountMove(models.Model):
             invoice_data['buyerEmail'] = self.partner_id.email
         if self.l10n_cn_buyer_bank_id:
             # Fapiao prints these on a single line ("开户行及账号").
-            # Baiwang API silently overwrote buyerBankName with buyerBankAccount because it expects the combined string there.
             invoice_data['buyerBankName'] = f"{self.l10n_cn_buyer_bank_id.bank_name or ''} {self.l10n_cn_buyer_bank_id.account_number or ''}".strip()
         invoice_data['drawer'] = self.env.user.name
         invoice_data['buyerNaturalPerson'] = 'Y' if not self.partner_id.vat else 'N'
@@ -417,7 +411,6 @@ class AccountMove(models.Model):
             raise UserError(self.env._("Please select a Red Form Reason before requesting."))
         if self.l10n_cn_baiwang_state in ('sent', 'issued'):
             raise UserError(self.env._("Cannot request a Red Form for an invoice in 'sent' or 'issued' state."))
-
         company = self.company_id
         client = BaiwangClient(company)
         client.ensure_connection()
@@ -428,8 +421,7 @@ class AccountMove(models.Model):
             'move_id': self.id,
             'state': 'draft',
         })
-        serial_no = f"OURRED_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}"
-        red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move, serial_no)
+        red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move)
         try:
             result = client.add_red_confirmation(red_form_data)
         except UserError as e:
@@ -480,38 +472,30 @@ class AccountMove(models.Model):
             self.write({'l10n_cn_baiwang_state': 'failed'})
             self.message_post(body=self.env._("Baiwang Red Form rejection: %s", error_msg))
 
-    def _l10n_cn_baiwang_prepare_red_form_data(self, original_move, serial_no: str) -> dict:
-        """Build red letter confirmation form payload from credit note + normal invoice."""
+    def _l10n_cn_baiwang_prepare_red_form_data(self, original_move) -> dict:
         self.ensure_one()
         total_price = -abs(sum(
             line.price_subtotal for line in self.invoice_line_ids if line.display_type == 'product'
         ))
-        total_tax = -abs(self.amount_tax)
-        orig_date = original_move.l10n_cn_baiwang_invoice_date.strftime('%Y-%m-%d %H:%M:%S') if original_move.l10n_cn_baiwang_invoice_date else (f"{original_move.invoice_date} 00:00:00" if original_move.invoice_date else "")
+        date = original_move.l10n_cn_baiwang_invoice_date or original_move.invoice_date
         orig_total_price = sum(
             line.price_subtotal for line in original_move.invoice_line_ids if line.display_type == 'product'
         )
-        orig_total_tax = original_move.amount_tax
-        orig_type = original_move.l10n_cn_baiwang_invoice_type_code or '02'
-        origin_invoice_type = '01' if orig_type in ('01', '004', '028') else '02'
-        raw_phone = getattr(original_move.partner_id, 'mobile', None) or original_move.partner_id.phone or ''
-        clean_phone = ''.join(c for c in raw_phone if c.isdigit())
-        valid_phone = clean_phone if clean_phone and clean_phone[0] in ('0', '1') and 10 <= len(clean_phone) <= 12 else ''
         return {
-            'redConfirmSerialNo': serial_no,
+            'redConfirmSerialNo': self.l10n_cn_baiwang_serial_no or f"RED_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}",
             'entryIdentity': '01',  # 01=seller side
             'sellerTaxNo': self.company_id.vat,
             'sellerTaxName': self.company_id.name,
             'buyerTaxName': self.partner_id.name or '',
-            'buyerTaxNo': self.partner_id.vat or '',
+            'buyerTaxNo': self.partner_id.vat,  # since entryIdentity=01
             'originInvoiceIsPaper': 'N',
             'originalInvoiceNo': original_move.l10n_cn_baiwang_invoice_no,
-            'originInvoiceDate': orig_date,
+            'originInvoiceDate': f"{date:%Y-%m-%d %H:%M:%S}" if date else "",
             'originInvoiceTotalPrice': round(orig_total_price, 2),
-            'originInvoiceTotalTax': round(orig_total_tax, 2),
-            'originInvoiceType': origin_invoice_type,
+            'originInvoiceTotalTax': round(original_move.amount_tax, 2),
+            'originInvoiceType': '01' if (original_move.l10n_cn_baiwang_invoice_type_code in ('01', '004', '028')) else '02',
             'invoiceTotalPrice': round(total_price, 2),
-            'invoiceTotalTax': round(total_tax, 2),
+            'invoiceTotalTax': round(-abs(self.amount_tax), 2),
             'redInvoiceLabel': self.l10n_cn_baiwang_red_form_type or '01',
             'invoiceSource': '2',  # 2=digital platform (全电)
             'priceTaxMark': '0',
@@ -519,19 +503,7 @@ class AccountMove(models.Model):
             'deliverFlag': '0',
             'redInvoiceIsPaper': 'N',
             'redConfirmDetailReqEntityList': self._l10n_cn_baiwang_prepare_red_form_lines(),
-            # Optional fields
-            'originalPaperInvoiceCode': '',
-            'originalPaperInvoiceNo': '',
-            'orgCode': '',
-            'accessPlatformNo': '',
-            'taxUserName': '',
-            'drawer': '',
-            'drawerCredentialsType': '',
-            'drawerCredentialsNo': '',
             'buyerEmail': self.partner_id.email or '',
-            'buyerPhone': valid_phone,
-            'originInvoiceSetCode': '',
-            'ext': {},
         }
 
     def _l10n_cn_baiwang_prepare_red_form_lines(self) -> list:
