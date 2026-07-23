@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "../core/base_option_component";
 import { useOperation } from "../core/operation_plugin";
 import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
@@ -29,6 +28,7 @@ export class OptionsContainer extends BaseOptionComponent {
     });
     rootRef = signal.ref();
     contentRef = signal.ref();
+    titleRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);
@@ -38,7 +38,6 @@ export class OptionsContainer extends BaseOptionComponent {
         this.getItemValue = useGetItemValue();
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
-        this.titleRef = useRef("title");
         useListener(browser, "focusin", this.updateOverlayPreview.bind(this));
         useListener(browser, "pointermove", this.updateOverlayPreview.bind(this));
         useListener(this.document, "pointermove", this.updateOverlayPreview.bind(this));
@@ -88,7 +87,7 @@ export class OptionsContainer extends BaseOptionComponent {
 
     updateTitleTooltip(ev) {
         if (!ev.currentTarget.dataset.tooltip) {
-            const titleEl = this.titleRef.el;
+            const titleEl = this.titleRef();
             if (titleEl.offsetWidth < titleEl.scrollWidth) {
                 ev.currentTarget.dataset.tooltip = this.title;
             }

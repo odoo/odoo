@@ -1,4 +1,4 @@
-import { useChildSubEnv, useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -45,20 +45,8 @@ export const POSITION_BUS = Symbol("position-bus");
  */
 export function usePosition(popperRef, getTarget, options = {}) {
     const rememberPosition = options.rememberPosition ?? true;
-    // Transitional shim (Owl 2 -> 3): `popperRef` may be either a legacy
-    // ref-name string (resolved through `useRef`) or an Owl 3 signal (a
-    // function returning the element). Resolve "the current popper element"
-    // once here so the rest of the hook is agnostic to which form was passed.
-    // To remove once all callers pass a signal.
-    let getPopperEl;
-    if (typeof popperRef === "function") {
-        // Owl 3 signal: calling it returns the current element.
-        getPopperEl = popperRef;
-    } else {
-        // Legacy Owl 2 ref name: keep the original useRef(name).el behavior.
-        const ref = useRef(popperRef);
-        getPopperEl = () => ref.el;
-    }
+    // `popperRef` is an Owl 3 signal: calling it returns the current element.
+    const getPopperEl = popperRef;
     let lock = false;
     const update = () => {
         const popperEl = getPopperEl();

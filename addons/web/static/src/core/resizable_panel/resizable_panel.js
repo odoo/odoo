@@ -8,7 +8,7 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 function useResizable({
@@ -19,8 +19,6 @@ function useResizable({
     onResize = () => {},
     getResizeSide = () => "end",
 }) {
-    containerRef = typeof containerRef == "string" ? useRef(containerRef) : containerRef;
-    handleRef = typeof handleRef == "string" ? useRef(handleRef) : handleRef;
     const resizeableProps = useProps(resizablePanelProps);
 
     let minWidth = getMinWidth(resizeableProps);

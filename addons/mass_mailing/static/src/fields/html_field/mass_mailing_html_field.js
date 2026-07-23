@@ -20,6 +20,7 @@ import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -125,13 +126,14 @@ export class MassMailingHtmlField extends HtmlField {
 
         useLayoutEffect(
             () => {
-                if (!this.codeViewRef.el) {
+                const codeViewEl = resolveRefEl(this.codeViewRef);
+                if (!codeViewEl) {
                     return;
                 }
                 // Set the initial textArea height.
-                this.codeViewRef.el.style.height = this.codeViewRef.el.scrollHeight + "px";
+                codeViewEl.style.height = codeViewEl.scrollHeight + "px";
             },
-            () => [this.codeViewRef.el]
+            () => [resolveRefEl(this.codeViewRef)]
         );
 
         useListener(window, "pointerdown", this.onPointerDown.bind(this));

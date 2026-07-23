@@ -5,8 +5,8 @@
             <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" t-on-click="this.onToggle" t-on-pointerdown.prevent="" type="button">
                 <i class="oi align-self-center" t-attf-data-icon="{{this.state.showContent ? 'arrow_drop_down' : 'arrow_right'}}"/>
             </button>
-            <div class="flex-fill ms-1" t-custom-ref="title"/>
+            <div class="flex-fill ms-1" t-ref="this.editableDescendantRefs.title"/>
         </div>
-        <div class="ps-4 ms-1" t-att-class="{ 'd-none': !this.state.showContent }" t-custom-ref="content"/>
+        <div class="ps-4 ms-1" t-att-class="{ 'd-none': !this.state.showContent }" t-ref="this.editableDescendantRefs.content"/>
     </t>
 </templates>

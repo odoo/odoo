@@ -23,7 +23,7 @@ export class Counter extends Component {
 export const EmbeddedWrapperMixin = (editableDescendantName) =>
     class extends Component {
         static props = ["*"];
-        static template = xml`<t><div class="${editableDescendantName}" t-custom-ref="${editableDescendantName}"/></t>`;
+        static template = xml`<t><div class="${editableDescendantName}" t-ref="this.editableDescendantRefs.${editableDescendantName}"/></t>`;
 
         setup() {
             useEditableDescendants(this.props.host);
@@ -34,13 +34,13 @@ export class EmbeddedWrapper extends Component {
     static props = ["*"];
     static template = xml`
         <t>
-            <div t-if="this.editableDescendants.shallow" class="shallow" t-custom-ref="shallow"/>
+            <div t-if="this.editableDescendants.shallow" class="shallow" t-ref="this.editableDescendantRefs.shallow"/>
             <div t-if="!this.state.switch">
-                <div class="deep" t-custom-ref="deep"/>
+                <div class="deep" t-ref="this.editableDescendantRefs.deep"/>
             </div>
             <div t-else="">
                 <div class="switched">
-                    <div class="deep" t-custom-ref="deep"/>
+                    <div class="deep" t-ref="this.editableDescendantRefs.deep"/>
                 </div>
             </div>
         </t>`;

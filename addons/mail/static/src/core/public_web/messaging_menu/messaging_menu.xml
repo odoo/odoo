@@ -37,7 +37,7 @@
                     />
                 </div>
             </div>
-            <div t-custom-ref="tabContent" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5">
+            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5">
                 <t name="messagingMenuExtraItems"/>
                 <MessagingMenuItem
                     t-foreach="this.messages()" t-as="message" t-key="message.localId"

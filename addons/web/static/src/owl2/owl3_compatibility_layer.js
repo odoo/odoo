@@ -11,7 +11,6 @@
  *
  * 1. Update template directives:
  *    - replace `t-portal` → `t-custom-portal`
- *    - replace `t-ref`    → `t-custom-ref`
  *    - replace `t-model`  → `t-custom-model`
  *
  * 2. Load this file immediately after Owl 3.
@@ -27,7 +26,6 @@
  * Gradually remove the compatibility layer by migrating to native Owl 3:
  *
  * - replace `t-custom-portal` with proper Owl 3 portal usage
- * - replace `t-custom-ref` with `t-ref` + signals
  * - replace `t-custom-model` with `t-model` + signals
  * - convert `useLayoutEffect` back to `useEffect` where appropriate
  *
@@ -91,31 +89,6 @@ owl.onRendered = function onRendered(cb) {
         const result = renderFn();
         cb.call(node.component);
         return result;
-    };
-};
-
-/**
- * @param {string} name
- */
-owl.useRef = function useRef(name, { asSignal = false } = {}) {
-    const node = owl.useScope();
-    if (!node.__refs__) {
-        node.__refs__ = {};
-    }
-    if (!node.__refs__[name]) {
-        node.__refs__[name] = owl.signal(null);
-    }
-    if (asSignal) {
-        return node.__refs__[name];
-    }
-    return {
-        get el() {
-            const signal = node.__refs__[name];
-            // untrack all the time to do what owl2 did
-            // while having an actual signal under the hood
-            // fully recognizable by owl3
-            return owl.untrack(signal);
-        },
     };
 };
 
@@ -302,16 +275,7 @@ class Portal extends owl.Component {
     }
 }
 
-let refId = 0;
 const customDirectives = {
-    /**
-     * @param {HTMLElement} node
-     * @param {string} value
-     */
-    ref: (node, value) => {
-        const refName = `"` + value.replaceAll(/\{\{(.+?)\}\}/g, `" + $1 + "`) + `"`;
-        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName}, ${++refId})`);
-    },
     /**
      * @param {HTMLElement} node
      * @param {string} value
@@ -340,20 +304,6 @@ const customDirectives = {
 };
 
 const globalValues = {
-    /**
-     * @param {any} component
-     * @param {string} refName
-     */
-    createRefSignal: (component, refName, refId) => {
-        const node = component.__owl__;
-        if (!node.__refs__) {
-            node.__refs__ = {};
-        }
-        if (!node.__refs__[refName]) {
-            node.__refs__[refName] = owl.signal(null);
-        }
-        return node.__refs__[refName];
-    },
     /**
      * @param {Function} getter
      * @param {Function} setter

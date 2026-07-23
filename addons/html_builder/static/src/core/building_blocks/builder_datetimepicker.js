@@ -1,5 +1,5 @@
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component, useEffect, proxy, props, t } from "@odoo/owl";
+import { Component, useEffect, proxy, props, signal, t } from "@odoo/owl";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -51,6 +51,8 @@ export class BuilderDateTimePicker extends Component {
         BuilderTextInputBase,
     };
 
+    rootRef = signal.ref();
+
     setup() {
         useBuilderComponent();
         this.defaultValue = DateTime.now().toUnixInteger().toString();
@@ -94,7 +96,7 @@ export class BuilderDateTimePicker extends Component {
             : localization.dateTimeFormat.replace(":ss", "").replace(".ss", "");
 
         this.dateTimePicker = useDateTimePicker({
-            target: "root",
+            target: this.rootRef,
             format: this.props.format,
             get pickerProps() {
                 return getPickerProps();

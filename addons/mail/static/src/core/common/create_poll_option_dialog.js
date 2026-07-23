@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { useSelection } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -12,6 +11,9 @@ import { isEventHandled } from "@web/core/utils/misc";
 export class CreatePollOptionDialog extends Component {
     static components = { Dropdown, DropdownItem };
     static template = "mail.CreatePollOptionDialog";
+
+    pickerRef = signal.ref();
+    rootRef = signal.ref();
 
     setup() {
         this.props = props({
@@ -24,17 +26,15 @@ export class CreatePollOptionDialog extends Component {
             }),
             onClickRemove: t.function([t.instanceOf(MouseEvent)]),
         });
-        this.pickerRef = useRef("picker");
-        this.rootRef = useAutofocus({ refName: "root" });
+        useAutofocus({ ref: this.rootRef });
         this.ui = useService("ui");
         useSelection({
-            refName: "root",
+            ref: this.rootRef,
             model: this.props.model,
             preserveOnClickAwayPredicate: async (ev) => {
                 await new Promise(setTimeout);
                 return (
-                    isEventHandled(ev, "emoji.selectEmoji") ||
-                    this.pickerRef.el?.contains(ev.target)
+                    isEventHandled(ev, "emoji.selectEmoji") || this.pickerRef()?.contains(ev.target)
                 );
             },
         });
@@ -42,7 +42,7 @@ export class CreatePollOptionDialog extends Component {
             onSelect: (emoji) => {
                 this.props.model.emoji = emoji;
                 if (!this.ui.isSmall) {
-                    this.rootRef.el?.focus();
+                    this.rootRef()?.focus();
                 }
             },
         });

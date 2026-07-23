@@ -11,7 +11,7 @@ import {
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { useChildEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildEnv, useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * This file contains various custom hooks.
@@ -40,7 +40,6 @@ import { useChildEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 export const autofocusParamsType = t.object({
     mobile: t.boolean().optional(),
     ref: t.signal(t.instanceOf(HTMLElement)).optional(),
-    refName: t.string().optional(),
     selectAll: t.boolean().optional(),
 });
 
@@ -49,16 +48,13 @@ export const autofocusParamsType = t.object({
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
  * @param {Object} [params]
- * @param {string} [params.refName] override the ref name "autofocus"
- * @param {Ref | import("@odoo/owl").Signal<HTMLElement>} [params.ref] use this ref
- *  directly instead of looking one up by name. Accepts both a legacy `.el` ref and
- *  an Owl 3 signal ref.
+ * @param {Ref | import("@odoo/owl").Signal<HTMLElement>} params.ref the ref to
+ *  focus. Accepts both a legacy `.el` ref and an Owl 3 signal ref.
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
  * @returns {Ref | import("@odoo/owl").Signal<HTMLElement>} the element reference
  */
-export function useAutofocus({ refName, ref, selectAll, mobile } = {}) {
-    ref ||= useRef(refName || "autofocus");
+export function useAutofocus({ ref, selectAll, mobile } = {}) {
     // Resolve through resolveRefEl so reading the ref in the layout-effect deps
     // (run during the render phase) never subscribes the component to the signal.
     // Otherwise setting the ref on mount schedules a spurious re-render that can
@@ -200,10 +196,9 @@ useService.handleCallWhenDestroyed = function handleCallWhenDestroyed() {
  * longer in focus. We only add this attribute when needed. To disable this
  * behavior, use the spellcheck attribute on the element.
  */
-export function useSpellCheck({ refName, ref } = {}) {
+export function useSpellCheck({ ref } = {}) {
     const elements = [];
-    // Accept an explicit ref/signal (Owl 3) or fall back to the legacy named ref.
-    const r = ref ?? useRef(refName || "spellcheck");
+    const r = ref;
     function toggleSpellcheck(ev) {
         ev.target.spellcheck = document.activeElement === ev.target;
     }
@@ -266,40 +261,20 @@ export function useChildRef() {
  * Forwards a ref to the parent by calling the corresponding ForwardRef received
  * as prop. @see useChildRef
  *
- * Accepts either:
- *  - a string `refName` (legacy Owl 2): a ref is created with `useRef(refName)`
- *    (tied to the compat `t-custom-ref`) and forwarded to the prop of the same
- *    name;
- *  - an Owl 3 signal ref together with the prop name to forward it to: the
- *    signal is forwarded as-is (the child already owns it via `t-ref`) and
- *    returned unchanged.
+ * The signal ref is forwarded as-is (the child already owns it via `t-ref`) and
+ * returned unchanged.
  *
- * @overload
- * @param {string} refName name of the ref to create, forward and return
- * @returns {Ref} the ref that is forwarded to the parent
- *
- * @overload
  * @param {(() => HTMLElement | null) | Ref} ref an Owl 3 signal ref (or legacy
  *  ref object) to forward as-is
  * @param {string} propName name of the prop to forward the ref to
  * @returns {(() => HTMLElement | null) | Ref} the same ref, unchanged
  */
-export function useForwardRefToParent(refOrName, propName) {
+export function useForwardRefToParent(ref, propName) {
     const compProps = useProps();
-    // Legacy: a string refName creates a (compat) ref and forwards it under the
-    // same prop name.
-    if (typeof refOrName === "string") {
-        const ref = useRef(refOrName);
-        if (compProps[refOrName]) {
-            compProps[refOrName](ref);
-        }
-        return ref;
-    }
-    // Owl 3: forward the given signal/ref as-is to the named prop.
     if (compProps[propName]) {
-        compProps[propName](refOrName);
+        compProps[propName](ref);
     }
-    return refOrName;
+    return ref;
 }
 /**
  * Use the dialog service while also automatically closing the dialogs opened

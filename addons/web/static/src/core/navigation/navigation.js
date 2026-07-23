@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { onWillUnmount, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
@@ -428,22 +428,17 @@ export class Navigator {
  * - Focus on mouse enter
  *
  * The container reference can be:
- * - a string: resolved through the (compat) `useRef`, then read via `.el`;
  * - an Owl 2 ref-like object exposing `.el`;
  * - an Owl 3 native ref, which is a signal: a function returning the element
  *   (or `null` when unmounted).
  *
- * @param {string|Object|Function} containerRef
+ * @param {Object|Function} containerRef
  * @param {NavigationOptions} options
  * @returns {Navigator}
  */
 export function useNavigation(containerRef, options = {}) {
-    containerRef = typeof containerRef === "string" ? useRef(containerRef) : containerRef;
-
     // TRANSITIONAL SHIM (Owl 3 migration): resolve "the current container
     // element" in a single place so all accepted input forms work:
-    //   - string  → already converted above via the compat `useRef`, read `.el`
-    //               (original pre-migration behavior);
     //   - ref-like object/callable → anything exposing an `el` accessor, read
     //               `.el` (covers Owl 2 refs, `useRef` and `useChildRef`). Note
     //               `useChildRef` returns a *callable* that is also ref-like, so
