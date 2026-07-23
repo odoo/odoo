@@ -3,15 +3,27 @@ import {
     animationFrame,
     click,
     dblclick,
+    freezeTime,
     queryAll,
     queryFirst,
     queryOne,
-    freezeTime,
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { Component, markup, onWillDestroy, t, useProps, xml } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onWillDestroy,
+    onWillStart,
+    Plugin,
+    t,
+    usePlugin,
+    useProps,
+    useScope,
+    xml,
+} from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { patch } from "@web/core/utils/patch";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
@@ -2999,5 +3011,120 @@ describe("patching", () => {
         expect(interaction.value).toBe(250);
         expect("span").toHaveAttribute("value", "7250");
         expect("span").toHaveClass(["base", "big", "bigger"]);
+    });
+});
+
+describe("scope", () => {
+    test("interactions are scoped", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+            scope = useScope();
+        }
+
+        const { core } = await startInteraction(Base, TemplateTest);
+        const interaction = core.interactions[0].interaction;
+        expect(interaction.scope.isDestroyed()).toBe(false);
+
+        core.stopInteractions();
+        expect(interaction.scope.isDestroyed()).toBe(true);
+    });
+
+    test("interactions can use lifecycle hooks", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+
+            setup() {
+                onWillStart(() => {
+                    expect.step("onWillStart");
+                });
+                onWillDestroy(() => {
+                    expect.step("onWillDestroy");
+                });
+            }
+        }
+
+        const { core } = await startInteraction(Base, TemplateTest);
+        expect.verifySteps(["onWillStart"]);
+
+        core.stopInteractions();
+        expect.verifySteps(["onWillDestroy"]);
+    });
+
+    test("interaction's willStart executes after onWillStart hook", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+
+            setup() {
+                onWillStart(() => {
+                    expect.step("hook");
+                });
+            }
+
+            willStart() {
+                expect.step("method");
+            }
+        }
+
+        await startInteraction(Base, TemplateTest);
+        expect.verifySteps(["hook", "method"]);
+    });
+
+    test("interaction's cleanups execute before onWillDestroy hook", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+
+            setup() {
+                onWillDestroy(() => {
+                    expect.step("onWillDestroy");
+                });
+                this.registerCleanup(() => {
+                    expect.step("cleanup");
+                });
+            }
+        }
+
+        const { core } = await startInteraction(Base, TemplateTest);
+        core.stopInteractions();
+        expect.verifySteps(["cleanup", "onWillDestroy"]);
+    });
+
+    test("interaction's destroy executes after onWillDestroy hook", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+
+            setup() {
+                onWillDestroy(() => {
+                    expect.step("onWillDestroy");
+                });
+            }
+
+            destroy() {
+                expect.step("destroy");
+            }
+        }
+
+        const { core } = await startInteraction(Base, TemplateTest);
+        core.stopInteractions();
+        expect.verifySteps(["onWillDestroy", "destroy"]);
+    });
+
+    test("interactions can use plugin", async () => {
+        class MyPlugin extends Plugin {
+            message = "from plugin";
+        }
+        services.add(MyPlugin);
+
+        class Base extends Interaction {
+            static selector = ".test";
+
+            p = usePlugin(MyPlugin);
+
+            setup() {
+                expect.step(this.p.message);
+            }
+        }
+
+        await startInteraction(Base, TemplateTest);
+        expect.verifySteps(["from plugin"]);
     });
 });
