@@ -1,14 +1,11 @@
-import { Product } from '@sale/js/product/product';
-import { patch } from '@web/core/utils/patch';
+import { productProps } from '@sale/js/product/product';
+import { t } from "@odoo/owl";
 
-patch(Product, {
-    props: {
-        ...Product.props,
-        strikethrough_price: { type: Number, optional: true },
-        base_unit_price: { type: Number, optional: true },
-        can_be_sold: { type: Boolean, optional: true },
-        // The following fields are needed for tracking.
-        category_name: { type: String, optional: true },
-        currency_name: { type: String, optional: true },
-    },
+Object.assign(productProps, {
+    strikethrough_price: t.number().optional(),
+    base_unit_price: t.number().optional(),
+    can_be_sold: t.boolean().optional(),
+    // The following fields are needed for tracking.
+    category_name: t.string().optional(),
+    currency_name: t.string().optional(),
 });

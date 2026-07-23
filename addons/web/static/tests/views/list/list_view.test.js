@@ -28,7 +28,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onWillStart, signal, useProps, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -88,7 +88,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { onRendered } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { floatField } from "@web/views/fields/float/float_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListController } from "@web/views/list/list_controller";
 import { WebClient } from "@web/webclient/webclient";
@@ -17477,8 +17477,8 @@ test(`Search more in a many2one`, async () => {
         list: `<list><field name="display_name"/></list>`,
     };
 
-    patchWithCleanup(Many2XAutocomplete.defaultProps, {
-        searchLimit: 1,
+    patchWithCleanup(many2XAutocompleteProps, {
+        searchLimit: t.number().optional(1),
     });
 
     onRpc("web_read", ({ args }) => expect.step(`web_read ${args[0]}`));

@@ -15,8 +15,9 @@ import {
     waitFor,
 } from "@odoo/hoot";
 import { PropertiesField } from "@web/views/fields/properties/properties_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { t } from "@odoo/owl";
 import { WebClient } from "@web/webclient/webclient";
 
 import { editTime, getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -1141,8 +1142,8 @@ test("properties: many2one 'Search more...' +  internal link save keeps data", a
         </list>`;
 
     // Patch the Many2XAutocomplete default search limit options
-    patchWithCleanup(Many2XAutocomplete.defaultProps, {
-        searchLimit: 0,
+    patchWithCleanup(many2XAutocompleteProps, {
+        searchLimit: t.number().optional(0),
     });
 
     // Patch the SelectCreateDialog component

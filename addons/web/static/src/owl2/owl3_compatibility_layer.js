@@ -40,14 +40,20 @@ const owl = globalThis.owl;
 class Component extends owl.Component {
     static template = "";
     static props = {};
-    static defaultProps = {};
 
     /**
      * @param {any} node
      */
     constructor(node) {
         super(node);
-        this.props = owl.props(null, this.constructor.defaultProps);
+        if (this.constructor.defaultProps) {
+            throw new Error(
+                `Component "${this.constructor.name}" defines a static "defaultProps", ` +
+                    `which Owl 3 ignores. Declare the defaults through the props schema instead, ` +
+                    `e.g. "props = useProps({ someProp: t.string().optional(defaultValue) })".`
+            );
+        }
+        this.props = owl.props(null);
         this.env = useChildEnv();
         this.__owl__ = node;
     }
