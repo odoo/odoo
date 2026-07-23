@@ -53,7 +53,7 @@ class ResCompany(models.Model):
         last_closing_date = self._get_last_closing_date()
         if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
-        aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
+        aml_vals_list = self.with_context(allowed_company_ids=self.ids, prefetch_fields=False)._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
             # if we come from cron there might be no move to create for this company, but some for other companies
@@ -158,14 +158,20 @@ class ResCompany(models.Model):
                 self._get_valuation_product_domain(), ['categ_id'],
             )
 
+        accounts_by_category = {}
         accounts_by_product = {}
-        for product in products:
-            accounts = product._get_product_accounts()
-            accounts_by_product[product] = {
-                'valuation': accounts['stock_valuation'],
-                'variation': accounts['stock_variation'],
-                'expense': accounts['expense'],
-            }
+        for product in products.with_context(prefetch_fields=False):
+            categ_id = product.categ_id.id
+            accounts = accounts_by_category.get(categ_id)
+            if accounts is None:
+                product_accounts = product._get_product_accounts()
+                accounts = {
+                    'valuation': product_accounts['stock_valuation'],
+                    'variation': product_accounts['stock_variation'],
+                    'expense': product_accounts['expense'],
+                }
+                accounts_by_category[categ_id] = accounts
+            accounts_by_product[product] = accounts
         return accounts_by_product
 
     @api.model
