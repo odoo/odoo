@@ -3,10 +3,10 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { expect, test, describe } from "@odoo/hoot";
-import { xml, proxy } from "@odoo/owl";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { describe, expect, test } from "@odoo/hoot";
+import { signal, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -52,15 +52,13 @@ test("hide/display base on applyTo", async () => {
 test("update default prop", async () => {
     const defaultValueA = "Default Value A";
     const defaultValueB = "Default Value B";
-    const state = proxy({ default: defaultValueA });
+    const getDefault = signal(defaultValueA);
     addBuilderOption({
         selector: ".parent-target",
         Component: class extends BaseOptionComponent {
-            static template = xml`<BuilderTextInput action="'customAction'" default="this.state.default"/>`;
+            static template = xml`<BuilderTextInput action="'customAction'" default="this.default()"/>`;
 
-            setup() {
-                this.state = proxy(state);
-            }
+            default = getDefault;
         },
     });
     addBuilderAction({
@@ -78,7 +76,7 @@ test("update default prop", async () => {
     await contains(":iframe .parent-target").click();
     await contains("[data-action-id='customAction'] input").edit("");
     expect("[data-action-id='customAction'] input").toHaveValue(defaultValueA);
-    state.default = defaultValueB;
+    getDefault.set(defaultValueB);
     await contains("[data-action-id='customAction'] input").edit("");
     expect("[data-action-id='customAction'] input").toHaveValue(defaultValueB);
 });

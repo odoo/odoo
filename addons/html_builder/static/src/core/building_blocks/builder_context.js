@@ -1,22 +1,21 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderContext extends Component {
+    static components = { BuilderComponent };
     static template = xml`
         <BuilderComponent>
             <t t-call-slot="default"/>
         </BuilderComponent>
     `;
-    static props = {
+
+    props = useProps({
         ...basicContainerBuilderComponentProps,
-        slots: { type: Object },
-    };
-    static components = {
-        BuilderComponent,
-    };
+        slots: t.object(),
+    });
 
     setup() {
-        useBuilderComponent();
+        useBuilderComponent(this.props);
     }
 }

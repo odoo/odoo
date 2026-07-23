@@ -8,7 +8,7 @@
             inputRef="this.inputRef"
             value="this.displayValue"
             classes="'o-hb-input-field-number justify-content-end'"
-            inputClasses="this.props.inputClasses ? `o-hb-input-number text-end ${this.props.inputClasses}` : 'o-hb-input-number text-end'"
+            inputClasses="this.textInputBaseProps.inputClasses ? `o-hb-input-number text-end ${this.textInputBaseProps.inputClasses}` : 'o-hb-input-number text-end'"
             commit="this.commit"
             preview="this.preview"
             clampValue.bind="this.clampValue"
@@ -20,7 +20,7 @@
             max="this.props.max"
             step="this.props.step"
             >
-            <span class="o-hb-input-field-unit" t-out="this.props.unit" t-if="!this.props.placeholder or this.state.showUnit"/>
+            <span class="o-hb-input-field-unit" t-out="this.props.unit" t-if="!this.textInputBaseProps.placeholder or this.state.showUnit"/>
         </BuilderNumberInputBase>
     </BuilderComponent>
 </t>

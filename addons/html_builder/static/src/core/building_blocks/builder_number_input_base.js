@@ -1,35 +1,16 @@
-import { useProps, t } from "@odoo/owl";
-import { BuilderInputBase } from "./builder_input_base";
+import { t, useProps } from "@odoo/owl";
+import { BuilderInputBase, textInputBaseProps } from "./builder_input_base";
 
 export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
+
     props = useProps({
-        // textInputBasePassthroughProps (converted inline)
-        action: t.string().optional(),
-        placeholder: t.string().optional(),
-        title: t.string().optional(),
-        style: t.string().optional(),
-        tooltip: t.string().optional(),
-        classes: t.string().optional(),
-        inputClasses: t.string().optional(),
-        prefix: t.string().optional(),
-        prefixIcon: t.string().optional(),
-        selectTextOnFocus: t.boolean().optional(),
-
-        commit: t.function(),
-        preview: t.function(),
-        onFocus: t.function().optional(),
-        onInput: t.function().optional(),
-        onChange: t.function().optional(),
-        onKeydown: t.function().optional(),
-        onBeforeInput: t.function().optional(),
-        value: t.or([t.string(), t.literal(null)]).optional(),
-
-        onKeydownArrow: t.function().optional(),
+        ...textInputBaseProps,
         clampValue: t.function(),
         composable: t.boolean().optional(false),
-        min: t.number().optional(),
         max: t.number().optional(),
+        min: t.number().optional(),
+        onKeydownArrow: t.function().optional(),
         step: t.number().optional(),
     });
 
@@ -47,6 +28,8 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             e.target.value = this.state.value;
             this.props.preview(e.target.value);
             this.props.onKeydownArrow?.(e);
+        } else {
+            super.onKeydown(...arguments);
         }
     }
 

@@ -4,12 +4,12 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { SavePlugin } from "@html_builder/core/save_plugin";
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
-import { xml, proxy } from "@odoo/owl";
+import { signal, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -69,22 +69,17 @@ test("custom action and shorthand action: clean actions are independent, apply i
 
 test("Prepare is triggered on props updated", async () => {
     const newPropDeferred = Promise.withResolvers();
-    let prepareDeferred = Promise.withResolvers();
-    prepareDeferred.resolve();
+    const param = signal("old param");
+    let prepareDeferred;
     class TestOption extends BaseOptionComponent {
-        static template = xml`<BuilderCheckbox action="'customAction'" actionParam="this.state.param"/>`;
-        setup() {
-            super.setup();
-            this.state = proxy({ param: "old param" });
-            newPropDeferred.promise.then(() => {
-                this.state.param = "new param";
-            });
-        }
+        static template = xml`<BuilderCheckbox action="'customAction'" actionParam="this.param()"/>`;
+
+        param = param;
     }
     class CustomAction extends BuilderAction {
         static id = "customAction";
         async prepare() {
-            await prepareDeferred.promise;
+            await prepareDeferred?.promise;
             expect.step("prepare");
         }
         apply() {}
@@ -101,6 +96,7 @@ test("Prepare is triggered on props updated", async () => {
     expect.verifySteps(["prepare"]);
     prepareDeferred = Promise.withResolvers();
     // Update prop
+    param.set("new param");
     newPropDeferred.resolve();
     await animationFrame();
     expect.verifySteps([]);
@@ -114,7 +110,6 @@ test("prepare is triggered before getValue(useInputBuilderComponent)", async () 
     class TestOption extends BaseOptionComponent {
         static template = xml`<BuilderList action="'customAction'"/>`;
         static selector = ".test-options-target";
-        static props = {};
     }
     class CustomAction extends BuilderAction {
         static id = "customAction";

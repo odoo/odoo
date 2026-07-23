@@ -14,7 +14,7 @@ export class AutoCompleteBuilderUrlPicker extends AutoComplete {
 
     setup() {
         super.setup();
-        this.info = useActionInfo();
+        this.info = useActionInfo(this.props);
     }
 
     get ulDropdownClass() {

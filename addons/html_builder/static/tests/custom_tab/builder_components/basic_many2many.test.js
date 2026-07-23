@@ -34,7 +34,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     });
     const selection = proxy([]);
     class TestComponent extends BaseOptionComponent {
-        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)"/>`;
+        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection.bind="this.setSelection"/>`;
         selection = selection;
         setSelection(newSelection) {
             selection.length = 0;
@@ -93,7 +93,7 @@ test("basic many2many: toggle dropdown without changing search term or selection
     });
     const selection = proxy([]);
     class TestComponent extends BaseOptionComponent {
-        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)" limit="1"/>`;
+        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection.bind="this.setSelection" limit="1"/>`;
         selection = selection;
         setSelection(newSelection) {
             selection.length = 0;
@@ -154,14 +154,14 @@ test("basic many2many: search with uncreated records", async () => {
     });
     class TestComponent extends BaseOptionComponent {
         static selector = ".test-options-target";
-        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" limit="1" setSelection="this.setSelection.bind(this)"/>`;
-        setup() {
-            this.selection = [
-                { id: 1, name: "First" },
-                { id: 2, name: "Second" },
-                { id: "new-3", name: "Third" },
-            ];
-        }
+        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" limit="1" setSelection.bind="this.setSelection"/>`;
+
+        selection = [
+            { id: 1, name: "First" },
+            { id: 2, name: "Second" },
+            { id: "new-3", name: "Third" },
+        ];
+
         setSelection() {
             //Not used but necessary for the component
         }

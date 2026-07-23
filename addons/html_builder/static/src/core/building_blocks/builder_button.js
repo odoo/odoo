@@ -1,43 +1,15 @@
-import { Component, xml, useProps, t } from "@odoo/owl";
-import { useActionInfo, useSelectableItemComponent } from "../utils";
+import { Component, t, useProps, xml } from "@odoo/owl";
+import { Image } from "../img";
+import {
+    clickableBuilderComponentProps,
+    useActionInfo,
+    useSelectableItemComponent,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
-import { Image } from "../img";
 
 const builderButtonProps = {
-    // clickableBuilderComponentProps (converted inline)
-    id: t.string().optional(),
-    applyTo: t.string().optional(),
-    preview: t.boolean().optional(),
-    inheritedActions: t.array(t.string()).optional(),
-
-    action: t.string().optional(),
-    actionParam: t.any().optional(),
-
-    // Shorthand actions.
-    classAction: t.any().optional(),
-    attributeAction: t.any().optional(),
-    dataAttributeAction: t.any().optional(),
-    styleAction: t.any().optional(),
-
-    inverseAction: t.boolean().optional(),
-
-    actionValue: t
-        .or([
-            t.boolean(),
-            t.string(),
-            t.number(),
-            t.literal(null),
-            t.array(t.or([t.boolean(), t.string(), t.number()])),
-        ])
-        .optional(),
-
-    // Shorthand actions values.
-    classActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    attributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    dataAttributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    styleActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-
+    ...clickableBuilderComponentProps,
     title: t.string().optional(),
     titleActive: t.string().optional(),
     label: t.string().optional(),
@@ -54,6 +26,7 @@ const builderButtonProps = {
 export class BuilderButtonInternal extends Component {
     static template = "html_builder.BuilderButtonInternal";
     static components = { BuilderComponent, Image };
+
     props = useProps({
         ...builderButtonProps,
         type: t.string().optional("secondary"),
@@ -62,8 +35,8 @@ export class BuilderButtonInternal extends Component {
     });
 
     setup() {
-        this.info = useActionInfo();
-        const { state, operation } = useSelectableItemComponent(this.props.id);
+        this.info = useActionInfo(this.props);
+        const { state, operation } = useSelectableItemComponent(this.props);
         this.state = state;
         this.onClick = operation.commit;
         this.onPointerEnter = operation.preview;
@@ -107,11 +80,8 @@ export class BuilderButton extends BuilderSelectableWrapperComponent {
         </BuilderButtonInternal>
         `;
     static components = { BuilderButtonInternal };
-    props = useProps({
-        ltrRtlMapping: t.string().optional(),
-        isLabelLinkedToContent: t.boolean().optional(),
-        ...builderButtonProps,
-    });
+
+    props = useProps(builderButtonProps);
 
     get forwardedProps() {
         return {
@@ -122,8 +92,8 @@ export class BuilderButton extends BuilderSelectableWrapperComponent {
 
     get iconImgStyle() {
         let iconImgStyle = this.props.iconImgStyle || "";
-        if (this.props.ltrRtlMapping && this.props.iconImg) {
-            const shouldMirrorIcon = this.props.isLabelLinkedToContent
+        if (this.selectableProps.ltrRtlMapping && this.props.iconImg) {
+            const shouldMirrorIcon = this.selectableProps.isLabelLinkedToContent
                 ? this.env.langDir.content !== this.env.langDir.builder
                 : this.env.langDir.builder === "rtl";
             if (shouldMirrorIcon) {

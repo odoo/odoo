@@ -1,35 +1,25 @@
-import { Component, useProps, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
+import { useCachedModel } from "../cached_model_utils";
 import {
+    basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
+    hasPreview,
     revertPreview,
     useBuilderComponent,
     useDependencyDefinition,
     useDomState,
-    useHasPreview,
     useOperationWithReload,
     useReloadAction,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { SelectMany2X } from "./select_many2x";
-import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2One extends Component {
+    static components = { BuilderComponent, SelectMany2X };
     static template = "html_builder.BuilderMany2One";
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
+        ...basicContainerBuilderComponentProps,
         model: t.string(),
         fields: t.array(t.string()).optional(),
         domain: t.array().optional(),
@@ -41,14 +31,13 @@ export class BuilderMany2One extends Component {
         createAction: t.string().optional(),
         nullText: t.string().optional(),
     });
-    static components = { BuilderComponent, SelectMany2X };
 
     setup() {
-        useBuilderComponent();
-        const { getAllActions, callOperation } = getAllActionsAndOperations(this);
+        useBuilderComponent(this.props);
+        const { getAllActions, callOperation } = getAllActionsAndOperations(this.props);
         this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
-        this.hasPreview = useHasPreview(getAllActions);
+        this.hasPreview = hasPreview(this.props, getAllActions);
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
@@ -88,7 +77,7 @@ export class BuilderMany2One extends Component {
             return { selected };
         });
         if (this.props.id) {
-            useDependencyDefinition(this.props.id, {
+            useDependencyDefinition(this.props, {
                 getValue: () => getValue(this.env.getEditingElement()),
             });
         }

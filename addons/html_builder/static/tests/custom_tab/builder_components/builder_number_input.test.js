@@ -128,9 +128,9 @@ test("input should remove invalid char", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
-            setup() {
-                this.preview = false;
-            }
+
+            preview = false;
+
             getValue({ editingElement }) {
                 return editingElement.dataset.test;
             }

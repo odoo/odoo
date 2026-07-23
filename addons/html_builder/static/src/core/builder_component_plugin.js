@@ -24,13 +24,13 @@ import { Image } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 
-/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("@odoo/owl").ComponentConstructor} ComponentConstructor */
 /**
  * @typedef { Object } BuilderComponentShared
  * @property { BuilderComponentPlugin['getComponents'] } getComponents
  */
 
-/** @typedef {Component[]} builder_components */
+/** @typedef {ComponentConstructor[]} builder_components */
 
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";

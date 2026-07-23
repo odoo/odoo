@@ -97,10 +97,9 @@ export class BuilderList extends Component {
             this.validateProps();
         }
         this.dialog = useService("dialog");
-        useBuilderComponent();
+        useBuilderComponent(this.props);
         useAutoFocusNewItem(this.tableRef);
-        const { state, commit, preview } = useInputBuilderComponent({
-            id: this.props.id,
+        const { state, commit, preview } = useInputBuilderComponent(this.props, {
             defaultValue: this.parseDisplayValue([]),
             parseDisplayValue: this.parseDisplayValue,
             formatRawValue: this.formatRawValue.bind(this),

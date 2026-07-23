@@ -1,29 +1,21 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
-import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
+import { useLayoutEffect } from "@web/owl2/utils";
+import {
+    basicContainerBuilderComponentProps,
+    useApplyVisibility,
+    useBuilderComponent,
+    useVisibilityObserver,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        id: t.string().optional(),
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
+        ...basicContainerBuilderComponentProps,
         label: t.string().optional(),
         tooltip: t.string().optional(),
         slots: t.object().optional(),
@@ -35,13 +27,14 @@ export class BuilderRow extends Component {
         disabled: t.boolean().optional(),
         fullRowToggler: t.boolean().optional(false),
     });
+
     rootRef = signal.ref();
     contentRef = signal.ref();
     collapseRef = signal.ref();
     collapseContentRef = signal.ref();
 
     setup() {
-        useBuilderComponent();
+        useBuilderComponent(this.props);
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
         this.state = proxy({

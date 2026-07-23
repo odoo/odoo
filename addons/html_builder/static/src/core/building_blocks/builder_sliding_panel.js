@@ -1,29 +1,16 @@
-import { Component, onMounted, onWillUnmount, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
-import { useBuilderComponent } from "../utils";
+import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
 
 export class BuilderSlidingPanel extends Component {
     static template = "html_builder.BuilderSlidingPanel";
     static components = { BuilderComponent, BuilderRow };
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        id: t.string().optional(),
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
+        ...basicContainerBuilderComponentProps,
         label: t.string(),
         extraClasses: t.string().optional(""),
         icon: t.string().optional(),
@@ -36,7 +23,7 @@ export class BuilderSlidingPanel extends Component {
     openButtonRef = signal.ref();
 
     setup() {
-        useBuilderComponent();
+        useBuilderComponent(this.props);
         this.state = proxy({
             optionContainerName: "",
             contentRendered: this.props.openByDefault,

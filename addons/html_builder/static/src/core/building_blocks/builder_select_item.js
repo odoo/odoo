@@ -1,55 +1,28 @@
-import { Component, markup, onMounted, useProps, signal, t, xml } from "@odoo/owl";
+import { Component, markup, onMounted, signal, t, useProps, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { useActionInfo, useSelectableItemComponent } from "../utils";
+import {
+    clickableBuilderComponentProps,
+    useActionInfo,
+    useSelectableItemComponent,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
 
 const builderSelectItemProps = {
-    // clickableBuilderComponentProps (converted inline)
-    id: t.string().optional(),
-    applyTo: t.string().optional(),
-    preview: t.boolean().optional(),
-    inheritedActions: t.array(t.string()).optional(),
-
-    action: t.string().optional(),
-    actionParam: t.any().optional(),
-
-    // Shorthand actions.
-    classAction: t.any().optional(),
-    attributeAction: t.any().optional(),
-    dataAttributeAction: t.any().optional(),
-    styleAction: t.any().optional(),
-
-    inverseAction: t.boolean().optional(),
-
-    actionValue: t
-        .or([
-            t.boolean(),
-            t.string(),
-            t.number(),
-            t.literal(null),
-            t.array(t.or([t.boolean(), t.string(), t.number()])),
-        ])
-        .optional(),
-
-    // Shorthand actions values.
-    classActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    attributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    dataAttributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    styleActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-
+    ...clickableBuilderComponentProps,
     title: t.string().optional(),
     label: t.string().optional(),
     className: t.string().optional(),
 };
 
 export class BuilderSelectItemInternal extends Component {
+    static components = { BuilderComponent };
     static template = "html_builder.BuilderSelectItemInternal";
+
     props = useProps({
         ...builderSelectItemProps,
         className: t.string().optional(""),
     });
-    static components = { BuilderComponent };
 
     itemRef = signal.ref();
 
@@ -57,7 +30,7 @@ export class BuilderSelectItemInternal extends Component {
         if (!this.env.selectableContext) {
             throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
-        this.info = useActionInfo();
+        this.info = useActionInfo(this.props);
         let label = "";
         const getLabel = () => {
             // todo: it's not clear why the item.el?.innerHTML is not set at in
@@ -70,7 +43,7 @@ export class BuilderSelectItemInternal extends Component {
 
         onMounted(getLabel);
 
-        const { state, operation } = useSelectableItemComponent(this.props.id, {
+        const { state, operation } = useSelectableItemComponent(this.props, {
             getLabel,
         });
         this.state = state;
@@ -105,15 +78,12 @@ export class BuilderSelectItemInternal extends Component {
 }
 
 export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
+    static components = { BuilderSelectItemInternal };
     static template = xml`
         <BuilderSelectItemInternal t-props="this.forwardedProps">
             <t t-call-slot="default"/>
         </BuilderSelectItemInternal>
         `;
-    static components = { BuilderSelectItemInternal };
-    props = useProps({
-        ltrRtlMapping: t.string().optional(),
-        isLabelLinkedToContent: t.boolean().optional(),
-        ...builderSelectItemProps,
-    });
+
+    props = useProps(builderSelectItemProps);
 }

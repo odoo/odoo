@@ -1,27 +1,20 @@
-import { Component, asyncComputed, onWillStart, useProps, t } from "@odoo/owl";
+import { Component, asyncComputed, onWillStart, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { getAllActionsAndOperations, useBuilderComponent, useDomState } from "../utils";
-import { BuilderComponent } from "./builder_component";
+import {
+    basicContainerBuilderComponentProps,
+    getAllActionsAndOperations,
+    useBuilderComponent,
+    useDomState,
+} from "../utils";
 import { BasicMany2Many } from "./basic_many2many";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderMany2Many extends Component {
+    static components = { BuilderComponent, BasicMany2Many };
     static template = "html_builder.BuilderMany2Many";
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        id: t.string().optional(),
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
+        ...basicContainerBuilderComponentProps,
         model: t.string(),
         m2oField: t.string().optional(),
         fields: t.array(t.string()).optional(),
@@ -29,12 +22,11 @@ export class BuilderMany2Many extends Component {
         limit: t.number().optional(),
         displayNameField: t.string().optional("display_name"),
     });
-    static components = { BuilderComponent, BasicMany2Many };
 
     setup() {
-        useBuilderComponent();
+        useBuilderComponent(this.props);
         this.fields = useService("field");
-        const { getAllActions, callOperation } = getAllActionsAndOperations(this);
+        const { getAllActions, callOperation } = getAllActionsAndOperations(this.props);
         this.callOperation = callOperation;
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)

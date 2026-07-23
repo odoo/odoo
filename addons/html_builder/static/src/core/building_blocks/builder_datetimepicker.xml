@@ -6,6 +6,7 @@
         <div t-ref="this.rootRef" class="w-100 d-flex gap-1">
             <BuilderTextInputBase
                     t-props="this.textInputBaseProps"
+                    disabled="this.textInputBaseProps.disabled || this.isToday"
                     commit="this.commit"
                     preview="this.preview"
                     onFocus.bind="this.onFocus"
@@ -16,7 +17,7 @@
                     title="Set today as a relative date"
                     aria-label="Set today as a relative date"
                     t-on-click="this.toggleToday"
-                    t-att-disabled="this.props.disabled">
+                    t-att-disabled="this.textInputBaseProps.disabled">
                 <i class="oi" data-icon="today" role="img"/>
             </button>
         </div>
