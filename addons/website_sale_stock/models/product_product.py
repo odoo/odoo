@@ -14,4 +14,4 @@ class ProductProduct(models.Model):
         :return: available quantity
         :rtype: float
         """
-        return self.with_context(warehouse_id=warehouse_id).free_qty
+        return self.with_context(warehouse_id=warehouse_id).sudo().free_qty
