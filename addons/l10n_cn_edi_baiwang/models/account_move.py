@@ -538,15 +538,10 @@ class AccountMove(models.Model):
     # ─── Lifecycle Guards ───────────────────────────────────────────────
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_pending_red_forms(self):
-        """Prevent deletion while a red form request is pending."""
+    def _unlink_except_active_red_forms(self):
         for move in self:
-            if move.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending'):
-                raise UserError(self.env._(
-                    "You cannot delete this record because a Red Form Request is "
-                    "currently pending on the Baiwang platform.\n\n"
-                    "Please revoke the Red Form first.",
-                ))
+            if any(d.state in ('red_form_pending', 'red_form_confirmed') for d in move.l10n_cn_edi_document_ids):
+                raise UserError(self.env._("Cannot delete a record with a pending or confirmed Red Form on Baiwang."))
 
     def action_approve_inbound_red_form(self):
         """Approve a Red Form initiated by the buyer."""
