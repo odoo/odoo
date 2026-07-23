@@ -7,7 +7,7 @@ class L10n_LatamDocumentType(models.Model):
 
     _description = 'Latam Document Type'
     _order = 'sequence, id'
-    _rec_names_search = ['name', 'code']
+    _rec_names_search = ('name', 'code')
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(

@@ -193,7 +193,7 @@ class ResPartner(models.Model):
     _explanation = "Foundational model for all people and companies (customers, vendors, employees, etc.). Used for identifying individuals or organizations."
     _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin', 'properties.base.definition.mixin']
     _order = "complete_name ASC, id DESC"
-    _rec_names_search = ['complete_name', 'email', 'ref', 'vat']  # TODO vat must be sanitized the same way for storing/searching
+    _rec_names_search = ('complete_name', 'email', 'ref', 'vat')  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of

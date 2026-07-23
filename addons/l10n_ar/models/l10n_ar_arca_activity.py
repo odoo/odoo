@@ -6,7 +6,7 @@ class ARCAActivity(models.Model):
     _name = "l10n_ar.arca.activity"
     _description = "ARCA Activity"
     _order = "code"
-    _rec_names_search = ["name", "code"]
+    _rec_names_search = ("name", "code")
 
     code = fields.Char(required=True, help="Activity Code")
     name = fields.Char(required=True, help="Activity Description")

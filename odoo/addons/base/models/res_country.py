@@ -54,7 +54,7 @@ class ResCountry(models.CachedModel):
     _description = 'Country'
     _explanation = "Represents a nation or territory. Used for addressing, tax rules (fiscal positions), and localization settings."
     _order = 'name, id'
-    _rec_names_search = ['name', 'code']
+    _rec_names_search = ('name', 'code')
     _cached_data_fields = ('code', 'currency_id', 'phone_code')
 
     name = fields.Char(
@@ -216,7 +216,7 @@ class ResCountryState(models.Model):
     _description = "Country state"
     _explanation = "Represents a sub-division of a country, such as a state, province, or region."
     _order = 'code, id'
-    _rec_names_search = ['name', 'code']
+    _rec_names_search = ('name', 'code')
 
     country_id = fields.Many2one('res.country', string='Country', required=True, index=True)
     name = fields.Char(string='State Name', required=True,

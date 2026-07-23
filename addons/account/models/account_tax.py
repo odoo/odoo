@@ -89,7 +89,7 @@ class AccountTax(models.Model):
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True
-    _rec_names_search = ['name', 'description', 'invoice_label']
+    _rec_names_search = ('name', 'description', 'invoice_label')
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)

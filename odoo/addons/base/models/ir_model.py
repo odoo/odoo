@@ -222,7 +222,7 @@ class IrModel(models.Model):
     _name = 'ir.model'
     _description = "Model"
     _order = 'model'
-    _rec_names_search = ['name', 'model']
+    _rec_names_search = ('name', 'model')
     _allow_sudo_commands = False
 
     def _default_field_id(self):

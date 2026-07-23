@@ -24,7 +24,7 @@ _logger = logging.getLogger(__name__)
 class ResDeviceLog(models.Model):
     _name = 'res.device.log'
     _description = 'Device Log'
-    _rec_names_search = ['ip_address', 'user_agent']
+    _rec_names_search = ('ip_address', 'user_agent')
 
     # Fields that identify a session
     session_identifier = fields.Char('Session Identifier', required=True, index='btree')

@@ -20,7 +20,7 @@ class StockPickingType(models.Model):
     _description = "Picking Type"
     _explanation = "Defines the type of stock operation (e.g., Receipts, Deliveries, Internal Transfers) and contains configuration for how these operations should behave in the warehouse."
     _order = 'is_favorite desc, sequence, id'
-    _rec_names_search = ['name', 'warehouse_id.name']
+    _rec_names_search = ('name', 'warehouse_id.name')
     _check_company_auto = True
 
     name = fields.Char('Operation Type', required=True, translate=True)

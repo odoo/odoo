@@ -160,7 +160,7 @@ XML_DECLARATION = (
 class IrModuleModule(models.Model):
     _name = 'ir.module.module'
     _rec_name = "shortdesc"
-    _rec_names_search = ['name', 'shortdesc', 'summary']
+    _rec_names_search = ('name', 'shortdesc', 'summary')
     _description = "Module"
     _order = 'application desc,sequence,name'
     _allow_sudo_commands = False

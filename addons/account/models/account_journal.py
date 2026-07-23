@@ -45,7 +45,7 @@ class AccountJournal(models.Model):
                ]
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
-    _rec_names_search = ['name', 'code']
+    _rec_names_search = ('name', 'code')
 
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')

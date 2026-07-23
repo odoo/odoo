@@ -5,7 +5,7 @@ class ClearingLabel(models.Model):
     _name = 'clearing.label'
     _description = 'Bank Account Clearing Number Label'
     _order = 'country_id NULLS FIRST'
-    _rec_names_search = ['name', 'country_id']
+    _rec_names_search = ('name', 'country_id')
 
     name = fields.Char(required=True)
     country_id = fields.Many2one('res.country')
