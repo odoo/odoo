@@ -4,9 +4,9 @@
     <t t-name="account_reports.AccountReviewStateSelectionBadgeField">
         <t t-if="this.editableOptions.includes(this.value)">
             <Dropdown>
-                <button t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
+                <button t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
                     <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIcon(this.value)"/>
-                    <div t-out="this.display || '&#8203;'"/>
+                    <t t-out="this.display || '&#8203;'"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-if="this.editableOptions.includes(false)">
