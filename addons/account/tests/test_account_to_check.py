@@ -22,7 +22,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_try_check_move_with_invoicing_user(self):
         invoice = self._create_invoice(review_state='todo')
         invoice.action_post()
-        with self.assertRaisesRegex(AccessError, "This entry has been reviewed, You need the bookkeeper role to change it."):
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
             invoice.with_user(self.simple_accountman).button_draft()
 
         invoice.button_draft()
