@@ -2,10 +2,13 @@
 
 import logging
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.sms.tools.sms_api import SmsApi
+from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
@@ -101,13 +104,12 @@ class SmsSms(models.Model):
     def action_set_outgoing(self):
         self._update_sms_state_and_trackers('outgoing', failure_type=False)
 
-    def send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
+    def send(self, unlink_sent=True, raise_exception=False):
         """ Main API method to send SMS.
 
         This contacts an external server. If the transaction fails, it may be
         retried which can result in sending multiple SMS messages!
 
-          :param unlink_failed: unlink failed SMS after IAP feedback;
           :param unlink_sent: unlink sent SMS after IAP feedback;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
@@ -117,7 +119,6 @@ class SmsSms(models.Model):
         for sms_api, sms in to_send._split_by_api():
             for batch_ids in sms._split_batch():
                 self.browse(batch_ids).with_context(sms_api=sms_api)._send(
-                    unlink_failed=unlink_failed,
                     unlink_sent=unlink_sent,
                     raise_exception=raise_exception,
                 )
@@ -162,7 +163,7 @@ class SmsSms(models.Model):
         if not records:
             return
         for sms_api, sms in records._split_by_api():
-            sms.with_context(sms_api=sms_api)._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+            sms.with_context(sms_api=sms_api)._send(unlink_sent=True, raise_exception=False)
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
     def _get_send_batch_size(self):
@@ -175,7 +176,7 @@ class SmsSms(models.Model):
         batch_size = self._get_send_batch_size()
         yield from tools.split_every(batch_size, self.ids)
 
-    def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
+    def _send(self, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
         sms_api = self.env.context.get('sms_api')
         if not sms_api:
@@ -185,12 +186,11 @@ class SmsSms(models.Model):
 
         return self._send_with_api(
             sms_api,
-            unlink_failed=unlink_failed,
             unlink_sent=unlink_sent,
             raise_exception=raise_exception,
         )
 
-    def _send_with_api(self, sms_api, unlink_failed=False, unlink_sent=True, raise_exception=False):
+    def _send_with_api(self, sms_api, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
         messages = [{
             'content': body,
@@ -212,11 +212,11 @@ class SmsSms(models.Model):
         results_uuids = [result['uuid'] for result in results]
         all_sms_sudo = self.env['sms.sms'].sudo().search([('uuid', 'in', results_uuids)]).with_context(sms_skip_msg_notification=True)
 
+        to_delete = {'to_delete': True} if unlink_sent else {}
         for (iap_state, failure_reason), results_group in tools.groupby(results, key=lambda result: (result['state'], result.get('failure_reason'))):
             sms_sudo = all_sms_sudo.filtered(lambda s: s.uuid in {result['uuid'] for result in results_group})
             if success_state := self.IAP_TO_SMS_STATE_SUCCESS.get(iap_state):
                 sms_sudo.sms_tracker_id._action_update_from_sms_state(success_state)
-                to_delete = {'to_delete': True} if unlink_sent else {}
                 sms_sudo.write({'state': success_state, 'failure_type': False, **to_delete})
             else:
                 failure_type = sms_api.PROVIDER_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
@@ -224,7 +224,6 @@ class SmsSms(models.Model):
                     sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type, failure_reason=failure_reason)
                 else:
                     sms_sudo.sms_tracker_id._action_update_from_provider_error(iap_state, failure_reason=failure_reason)
-                to_delete = {'to_delete': True} if unlink_failed else {}
                 sms_sudo.write({'state': 'error', 'failure_type': failure_type, **to_delete})
 
         all_sms_sudo._handle_call_result_hook(results)
@@ -247,6 +246,22 @@ class SmsSms(models.Model):
         pass
 
     @api.autovacuum
-    def _gc_device(self):
-        self.env.cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
-        _logger.info("GC'd %d sms marked for deletion", self.env.cr.rowcount)
+    def _gc_old_sms(self):
+        """ Garbage collect sent and to_delete SMS. Also remove SMS in other
+        state that are more than 'months_limit' month old, based on config
+        parameter. Note that setting this parameter to a value <= 0 forces to
+        keep all "not sent" history, e.g. for error tracking purpose. """
+        # the 10000 limit is arbitrary, chosen a limit big enough to cleanup and
+        # that should not take too much time
+        unlink_limit = 10000
+        months_limit = self.env['ir.config_parameter'].sudo().get_int("mass_mailing.cancelled_mails_months_limit", 6)
+        conditions = Domain('state', 'in', 'sent')  # remove sent SMS directly
+        if months_limit > 0:
+            history_deadline = datetime.utcnow() - relativedelta(months=months_limit)
+            conditions |= (Domain('state', '!=', 'outgoing') & Domain('write_date', '<=', history_deadline))
+        to_remove = self.with_context(active_test=False).search(
+            Domain('to_delete', '=', True) & conditions,
+            order="id asc", limit=unlink_limit,
+        )
+        to_remove.with_context(prefetch_fields=False).unlink()
+        _logger.info("GC'd %d sms marked for deletion", len(to_remove))

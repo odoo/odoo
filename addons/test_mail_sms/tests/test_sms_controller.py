@@ -48,7 +48,7 @@ class TestSmsController(TestSMSActionsCommon):
         self.assertTrue(self.sms_processing)
         statuses = [{'sms_status': 'sent', 'uuids': [self.sms_processing.uuid]}]
         self.assertEqual(self._make_webhook_jsonrpc_request(statuses), 'OK')
-        self.assertTrue(self.sms_processing.to_delete)
+        self.assertFalse(self.sms_processing.to_delete, 'Update does not change original to_delete status')
         self.assertEqual(self.notification_processing.notification_status, 'pending')
 
     @mute_logger('odoo.addons.base.models.ir_http')
@@ -77,7 +77,6 @@ class TestSmsController(TestSMSActionsCommon):
             {'sms_status': 'delivered', 'uuids': [self.notification_pending.sms_tracker_ids.sms_uuid]}
         ]
         self.assertEqual(self._make_webhook_jsonrpc_request(statuses), 'OK')
-        self.assertTrue(self.sms_processing.to_delete)
         self.assertEqual(self.notification_processing.notification_status, 'pending')
         self.assertEqual(self.notification_pending.notification_status, 'sent')
 

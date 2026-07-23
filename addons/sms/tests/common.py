@@ -105,10 +105,10 @@ class MockSMS(common.HttpCase):
             self._new_sms += res.sudo()
             return res
 
-        def _sms_sms_send(records, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        def _sms_sms_send(records, unlink_sent=True, raise_exception=False):
             if sms_allow_unlink:
-                return sms_send_origin(records, unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
-            return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
+                return sms_send_origin(records, unlink_sent=unlink_sent, raise_exception=raise_exception)
+            return sms_send_origin(records, unlink_sent=False, raise_exception=raise_exception)
 
         with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap) as _sms_api_contact_iap_mock, \
                 patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create) as sms_create, \
