@@ -67,6 +67,11 @@ class HrAttendanceOvertimeLine(models.Model):
     def action_refuse(self):
         self.write({'status': 'refused'})
 
+    def action_reset(self):
+        for overtime in self:
+            overtime.manual_duration = overtime.duration
+        self.write({'status': 'to_approve'})
+
     def action_open_linked_attendance(self):
         self.ensure_one()
         return {

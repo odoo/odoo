@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_attendance_overtime_line_list" model="ir.ui.view">
-        <field name="name">hr.attendance</field>
+    <record id="hr_attendance_view_form_inherit_hr_holidays_attendance" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit.hr_holidays_attendance</field>
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
             <field name="duration" position="after">
-                <field name="compensable_as_leave" optional="show"/>
-                <field name="leave_compensation_rate" optional="show"/>
+                <field name="leave_compensation_rate" widget="percentage" optional="show" string="Leave Earn Rate"/>
             </field>
         </field>
     </record>
