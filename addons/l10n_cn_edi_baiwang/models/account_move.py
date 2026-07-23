@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models
@@ -7,8 +6,6 @@ from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
-
-_logger = logging.getLogger(__name__)
 
 INVOICE_TYPE_CODES = [
     ('01', '01 Digital Special Invoice (全电专票)'),
@@ -37,7 +34,6 @@ class AccountMove(models.Model):
     # Fields declaration
     # ------------------
 
-    # Blue invoice fields
     l10n_cn_baiwang_state = fields.Selection(
         selection=BAIWANG_STATES,
         default='not_sent',
@@ -55,8 +51,6 @@ class AccountMove(models.Model):
     l10n_cn_baiwang_invoice_date = fields.Datetime(string="Fapiao Date", copy=False)
     l10n_cn_baiwang_serial_no = fields.Char(string="Serial No", copy=False, readonly=True, help="Unique request serial number for idempotency")
     l10n_cn_baiwang_qr_code = fields.Char(string="Invoice QR Code", copy=False, readonly=True)
-
-    # Red form fields (for credit notes)
     l10n_cn_baiwang_red_form_type = fields.Selection(
         selection=RED_FORM_TYPES,
         string="Red Form Reason",
@@ -64,8 +58,6 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
     )
-
-    # EDI document tracking
     l10n_cn_edi_document_ids = fields.One2many(
         'l10n_cn_edi.document',
         'move_id',
@@ -125,10 +117,8 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_cn_baiwang_red_form_required', 'l10n_cn_baiwang_red_form_status')
     def _compute_hide_post_button(self):
-        """Override native Odoo logic to hide the Post/Confirm button while Red Form is pending."""
         super()._compute_hide_post_button()
         for move in self:
-            # If a red form is required but hasn't been fully issued by Baiwang yet, hide the button
             if move.l10n_cn_baiwang_red_form_required and move.l10n_cn_baiwang_red_form_status != 'red_form_confirmed':
                 move.hide_post_button = True
 
@@ -139,7 +129,6 @@ class AccountMove(models.Model):
         return super().button_cancel()
 
     def button_draft(self):
-        # EXTENDS 'account'
         if any(move.l10n_cn_baiwang_state in ('sent', 'issued') for move in self):
             raise UserError(self.env._(
                 "You cannot reset this invoice to draft because it has already been sent to Baiwang. "
@@ -153,25 +142,19 @@ class AccountMove(models.Model):
             latest_doc = move.l10n_cn_edi_document_ids.sorted('create_date', reverse=True)[:1]
             if not latest_doc or latest_doc.state != 'red_form_pending':
                 continue
-
-            # 1. Call Baiwang to revoke (03) the Red Form
             client = BaiwangClient(move.company_id)
             try:
                 client.operate_red_confirmation(
                     red_confirm_uuid=latest_doc.baiwang_uuid,
                     red_confirm_no=latest_doc.baiwang_red_form_number,
-                    confirm_type='03',  # 03 = Revoke
+                    confirm_type='03',  # Revoke
                 )
             except UserError as e:
                 raise UserError(self.env._("Failed to revoke Red Form on Baiwang: %s", e))
-
-            # 2. Update the tracking doc so the move's compute fields update correctly
             latest_doc.write({
                 'state': 'failed',
                 'error_message': self.env._("Revoked and cancelled by user."),
             })
-
-            # 3. Unlock the UI dropdown for a retry
             move.write({'l10n_cn_baiwang_red_form_type': False})
             move.message_post(body=self.env._("Red Form request revoked on Baiwang and cancelled by user. You may request a new one."))
 
@@ -187,12 +170,7 @@ class AccountMove(models.Model):
                 and move.l10n_cn_baiwang_state not in ('issued', 'sent')
             )
 
-    @api.depends(
-        'country_code',
-        'move_type',
-        'state',
-        'reversed_entry_id.l10n_cn_baiwang_invoice_no',
-    )
+    @api.depends('country_code', 'move_type', 'state', 'reversed_entry_id.l10n_cn_baiwang_invoice_no')
     def _compute_l10n_cn_baiwang_red_form_required(self):
         for move in self:
             move.l10n_cn_baiwang_red_form_required = bool(
@@ -218,7 +196,6 @@ class AccountMove(models.Model):
                 and move.l10n_cn_baiwang_invoice_date
             ):
                 fapiao_date = False
-                # Handle both native Datetime/Date fields and old Char implementations dynamically
                 if hasattr(move.l10n_cn_baiwang_invoice_date, 'date'):
                     fapiao_date = move.l10n_cn_baiwang_invoice_date.date()
                 elif isinstance(move.l10n_cn_baiwang_invoice_date, str):
@@ -230,7 +207,6 @@ class AccountMove(models.Model):
                     move.l10n_cn_baiwang_date_consistency_warning = warning_msg
 
     def _l10n_cn_baiwang_generate_serial_no(self, prefix: str) -> str:
-        """Generate a stable, human-readable request serial to send to Baiwang."""
         self.ensure_one()
         timestamp = fields.Datetime.now().strftime('%Y%m%d%H%M%S')
         return f"{prefix}_{self.id}_{timestamp}"
@@ -525,30 +501,20 @@ class AccountMove(models.Model):
     def _l10n_cn_baiwang_prepare_red_form_data(self, original_move, serial_no: str) -> dict:
         """Build red letter confirmation form payload from credit note + normal invoice."""
         self.ensure_one()
-
-        # Calculate negative amounts for red form
         total_price = -abs(sum(
             line.price_subtotal for line in self.invoice_line_ids if line.display_type == 'product'
         ))
         total_tax = -abs(self.amount_tax)
-
         orig_date = original_move.l10n_cn_baiwang_invoice_date.strftime('%Y-%m-%d %H:%M:%S') if original_move.l10n_cn_baiwang_invoice_date else (f"{original_move.invoice_date} 00:00:00" if original_move.invoice_date else "")
-
-        # Normal invoice totals
         orig_total_price = sum(
             line.price_subtotal for line in original_move.invoice_line_ids if line.display_type == 'product'
         )
         orig_total_tax = original_move.amount_tax
-
-        # Determine invoice type code
         orig_type = original_move.l10n_cn_baiwang_invoice_type_code or '02'
         origin_invoice_type = '01' if orig_type in ('01', '004', '028') else '02'
-
-        # Use getattr for mobile to handle environments where sms fields are unavailable.
-        raw_phone = original_move.partner_id.mobile or ''
+        raw_phone = getattr(original_move.partner_id, 'mobile', None) or original_move.partner_id.phone or ''
         clean_phone = ''.join(c for c in raw_phone if c.isdigit())
         valid_phone = clean_phone if clean_phone and clean_phone[0] in ('0', '1') and 10 <= len(clean_phone) <= 12 else ''
-
         return {
             'redConfirmSerialNo': serial_no,
             'entryIdentity': '01',  # 01=seller side
@@ -590,35 +556,25 @@ class AccountMove(models.Model):
         """Build Red Form lines by netting discounts into products and preserving original indices."""
         # 1. Get the standard proportional lines (Products > 0, Discounts < 0)
         blue_lines = self._l10n_cn_baiwang_prepare_lines()
-
         collapsed_lines = []
         for line in blue_lines:
-            if line.get('invoiceLineNature') == '1':
-                # It is a discount! Merge its values into the parent product line above it.
+            if line.get('invoiceLineNature') == '1':  # discount line
                 if collapsed_lines:
                     parent = collapsed_lines[-1]
                     parent['goodsTotalPrice'] = round(parent['goodsTotalPrice'] + line['goodsTotalPrice'], 2)
                     parent['goodsTotalTax'] = round(parent['goodsTotalTax'] + line['goodsTotalTax'], 2)
-                    # The product is now a net value, so it reverts to a standard line (0)
                     parent['invoiceLineNature'] = '0'
             else:
-                # It is a product line. Preserve its original blue invoice index.
                 new_line = line.copy()
                 new_line['originalInvoiceDetailNo'] = new_line['goodsLineNo']
                 collapsed_lines.append(new_line)
 
-        # 2. Invert to negative and clean up, WITHOUT renumbering
         for line in collapsed_lines:
-            # CRITICAL FIX: Do NOT renumber goodsLineNo.
-            # It must stay as 1 and 3 so Baiwang matches them to the actual blue products, not the discounts!
-
             # ALL financial amounts must be negative on a Red Form
             line['goodsTotalPrice'] = -abs(line['goodsTotalPrice'])
             line['goodsTotalTax'] = -abs(line['goodsTotalTax'])
-
             if 'goodsQuantity' in line:
                 line['goodsQuantity'] = str(-abs(float(line['goodsQuantity'])))
-
             # Clean out keys not used by the Red Form schema
             line.pop('goodsSimpleName', None)
             line['projectName'] = line['goodsName'][:50]
@@ -644,15 +600,12 @@ class AccountMove(models.Model):
         latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
         if not latest_doc:
             return
-
-        # Skip remote approval for mock UUIDs used in local tests.
-        if not latest_doc.baiwang_uuid.startswith('mock-'):
+        if not latest_doc.baiwang_uuid.startswith('mock-'):  # TODO: remove when going to production
             client = BaiwangClient(self.company_id)
             try:
                 client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '01')
             except UserError as e:
                 raise UserError(self.env._("Failed to approve Red Form on Baiwang: %s", e))
-
         latest_doc.write({'state': 'red_form_confirmed', 'baiwang_confirm_state': '01'})
         self.message_post(body=self.env._("Inbound Red Form approved. Please draft a Credit Note."))
 
@@ -662,15 +615,12 @@ class AccountMove(models.Model):
         latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
         if not latest_doc:
             return
-
-        # Skip remote rejection for mock UUIDs used in local tests.
-        if not latest_doc.baiwang_uuid.startswith('mock-'):
+        if not latest_doc.baiwang_uuid.startswith('mock-'):  # TODO: remove when going to production
             client = BaiwangClient(self.company_id)
             try:
                 client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '02')  # 02=Deny
             except UserError as e:
                 raise UserError(self.env._("Failed to reject Red Form on Baiwang: %s", e))
-
         latest_doc.write({'state': 'failed', 'error_message': self.env._("Rejected by user.")})
         self.message_post(body=self.env._("Inbound Red Form %s rejected.", latest_doc.baiwang_red_form_number))
 
@@ -703,24 +653,20 @@ class AccountMove(models.Model):
             latest_doc = move.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
             if not latest_doc:
                 continue
-
+            # TODO: remove when going to production
             if latest_doc.baiwang_uuid.startswith('mock-'):
                 move.message_post(body=self.env._("Cannot fetch details for mock records."))
                 continue
-
             client = BaiwangClient(move.company_id)
             try:
                 res = client.query_red_form_detail(latest_doc.baiwang_uuid)
             except UserError as e:
                 move.message_post(body=self.env._("Failed to fetch details: %s", e))
                 continue
-
-            # Extract the nested detail lines from the Baiwang response
             details = res[0].get('electricInvoiceDetails', []) if isinstance(res, list) and res else []
             if not details:
                 move.message_post(body=self.env._("No extra line details found on Baiwang."))
                 continue
-
             msg = "<b>Red Form Line Details from Baiwang:</b><ul>"
             for line in details:
                 name = line.get('goodsName', 'Unknown Item')
@@ -729,22 +675,18 @@ class AccountMove(models.Model):
                 tax = line.get('goodsTotalTax', '0.00')
                 msg += f"<li>{name} — Qty: {qty} | Price: {price} | Tax: {tax}</li>"
             msg += "</ul>"
-
             move.message_post(body=msg)
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        """Override to pass the Baiwang Red Fapiao number and reason to the Credit Note."""
+        """Pass the Baiwang Red Fapiao number and reason to the Credit Note."""
         reversals = super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
-
         for move, reversal in zip(self, reversals):
             if move.move_type == 'in_invoice' and move.l10n_cn_baiwang_red_form_status in ('red_form_pending', 'red_form_confirmed'):
                 doc = move.l10n_cn_edi_document_ids.filtered(lambda d: d.baiwang_uuid == move.l10n_cn_baiwang_red_form_uuid)[:1]
-
                 if doc and doc.baiwang_red_invoice_no:
                     reversal.write({
                         'l10n_cn_baiwang_invoice_no': doc.baiwang_red_invoice_no,
                         'l10n_cn_baiwang_state': 'issued',
-                        'l10n_cn_baiwang_red_form_type': doc.baiwang_red_form_type,  # <--- Auto-fill the reason
+                        'l10n_cn_baiwang_red_form_type': doc.baiwang_red_form_type,
                     })
-
         return reversals
