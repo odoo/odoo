@@ -65,6 +65,7 @@ class ResPartner(models.Model):
                 partner.invoice_sending_method == "peppol"
                 and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
                 and partner.invoice_edi_format != "ubl_21_fr"
+                and self.env.company._get_peppol_proxy_type() == 'pdp'
             )
         ):
             ubl_21_fr_string = self.env._("France E-Invoicing (UBL 2.1)")
@@ -123,7 +124,7 @@ class ResPartner(models.Model):
     def _get_ubl_cii_formats_info(self):
         # EXTENDS 'account_edi_ubl_cii'
         formats_info = super()._get_ubl_cii_formats_info()
-        formats_info['ubl_21_fr'] = {'countries': ['FR'], 'on_peppol': False}
+        formats_info['ubl_21_fr'] = {'countries': ['FR'], 'on_peppol': self.env.company._get_peppol_proxy_type() == 'pdp', 'sequence': 300}
         return formats_info
 
     def _get_suggested_invoice_edi_format(self):
