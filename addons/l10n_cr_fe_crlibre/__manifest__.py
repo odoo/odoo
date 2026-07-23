@@ -14,6 +14,7 @@
         'views/product_template_views.xml',
         'views/res_partner_views.xml',
         'views/account_move_views.xml',
+        'views/account_move_reversal_views.xml',
         'data/mail_template.xml',
     ],
     'license': 'LGPL-3',
