@@ -19,17 +19,19 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="qty_free" string="Included" class="oe_inline"/>
-                        <field
-                            name="company_id"
-                            placeholder="Visible to all"
-                            groups="base.group_multi_company"
-                            options="{'no_create': True}"
-                            class="oe_inline"
-                        />
+                        <group name="combo_left_col">
+                            <field name="included_qty" string="Included" class="oe_inline"/>
+                            <field
+                                name="company_id"
+                                placeholder="Visible to all"
+                                groups="base.group_multi_company"
+                                options="{'no_create': True}"
+                                class="oe_inline"
+                            />
+                        </group>
                     </group>
                     <notebook>
-                        <page name="combo_items" string="Options">
+                        <page name="combo_options" string="Options">
                             <field name="combo_item_ids">
                                 <list editable="bottom">
                                     <field name="currency_id" column_invisible="True"/>

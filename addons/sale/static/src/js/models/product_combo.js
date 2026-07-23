@@ -5,13 +5,13 @@ export class ProductCombo {
      * @param {number} id
      * @param {string} name
      * @param {ProductComboItem[]|object[]} combo_items
-     * @param {number} qty_free
+     * @param {number} included_qty
      */
-    constructor({id, name, combo_items, qty_free}) {
+    constructor({id, name, combo_items, included_qty}) {
         this.id = id;
         this.name = name;
         this.combo_items = combo_items.map(item => new ProductComboItem(item));
-        this.qty_free = qty_free;
+        this.included_qty = included_qty;
     }
 
     /**
@@ -38,7 +38,6 @@ export class ProductCombo {
      * @return {Boolean} Whether this combo is configurable.
      */
     get isConfigurable() {
-        const hasPreselected = this.combo_items.some(item => item.is_preselected);
-        return !hasPreselected || this.qty_free > 1;
+        return !this.combo_items.some(item => item.is_preselected);
     }
 }

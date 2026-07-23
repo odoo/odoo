@@ -4,7 +4,7 @@ import {
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
 
 patch(ComboConfiguratorDialog.prototype, {
-    async selectComboItem(comboId, comboItem) {
+    async selectComboItem(combo, comboItem) {
         if (!comboItem.product.isQuantityAllowed(this.state.quantity)) {
             return;
         }
@@ -16,12 +16,22 @@ patch(ComboConfiguratorDialog.prototype, {
             quantity = Math.min(
                 ...this._selectedComboItems
                     .map(comboItem => comboItem.product.free_qty !== undefined
-                        ? Math.floor(comboItem.product.free_qty / comboItem.quantity)
+                        ? Math.floor(comboItem.product.free_qty / comboItem.selected_qty)
                         : undefined)
                     .filter(maxQty => maxQty !== undefined)
             );
         }
         return super.setQuantity(quantity);
+    },
+
+    async setItemQuantity(comboId, comboItem, quantity, configuredItem = null) {
+        const freeQty = comboItem.product.free_qty;
+
+        if (quantity > 0 && freeQty !== undefined) {
+            quantity = Math.min(quantity, freeQty);
+        }
+
+        return super.setItemQuantity(comboId, comboItem, quantity, configuredItem);
     },
 
     /**
@@ -32,7 +42,7 @@ patch(ComboConfiguratorDialog.prototype, {
      */
     isComboQuantityAllowed(quantity) {
         return this._selectedComboItems.every(
-            comboItem => comboItem.product.isQuantityAllowed(quantity * comboItem.quantity)
+            comboItem => comboItem.product.isQuantityAllowed(quantity * comboItem.selected_qty)
         );
     },
 });

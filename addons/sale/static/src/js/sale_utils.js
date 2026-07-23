@@ -46,7 +46,7 @@ export function serializeComboItem(comboItem) {
                 custom_value: customPtav.value,
             })
         ),
-        selected_combo_item_qty: comboItem.quantity,
+        selected_combo_item_qty: comboItem.selected_qty,
     }
 }
 
