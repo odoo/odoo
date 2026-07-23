@@ -1,10 +1,10 @@
-import { Component, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 export class CardLayout extends Component {
     static template = "hr_attendance.CardLayout";
-    props = props({
+    props = useProps({
         fromTrialMode: t.boolean().optional(),
         companyImageUrl: t.string(),
         kioskReturn: t.function(),

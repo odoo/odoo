@@ -1,11 +1,11 @@
-import { Component, onMounted, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
 import { PriceFormatter } from "../price_formatter/price_formatter";
 
 export class FeedbackPaymentSummary extends Component {
     static template = "point_of_sale.FeedbackPaymentSummary";
     static components = { PriceFormatter };
 
-    props = props({
+    props = useProps({
         formattedAmount: t.string(),
         class: t.string().optional(),
         loading: t.boolean().optional(),

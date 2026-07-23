@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import {
     DateTimeField,
     dateField,
@@ -14,7 +14,7 @@ import { _t } from "@web/core/l10n/translation";
  * @extends DateTimeField
  */
 export class DynamicMinDateTimeField extends DateTimeField {
-    props = props({
+    props = useProps({
         ...dateTimeFieldProps,
         minDateField: t.string().optional(),
     });

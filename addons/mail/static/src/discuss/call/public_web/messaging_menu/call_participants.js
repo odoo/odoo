@@ -2,7 +2,7 @@ import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/cal
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, computed, props, signal, t, useEffect } from "@odoo/owl";
+import { Component, computed, signal, t, useEffect, useProps } from "@odoo/owl";
 
 import { localeCompare } from "@web/core/l10n/utils/collation";
 import { _t } from "@web/core/l10n/translation";
@@ -25,7 +25,7 @@ export class MessagingMenuCallParticipants extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.channel = props.static("channel", t.instanceOf(this.store["discuss.channel"].Class));
+        this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"].Class));
         useEffect(() => {
             this.expanded.set(this.selfInCall());
         });

@@ -1,5 +1,5 @@
 import { domainField, DomainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -21,7 +21,7 @@ import { MailingFilterFormViewDialog } from "../../components/mailing_filter_for
  */
 export class DomainSavableField extends DomainField {
     static template = "mass_mailing.DomainSavableField";
-    props = props({
+    props = useProps({
         ...domainFieldProps,
         modelIdField: t.string(),
     });

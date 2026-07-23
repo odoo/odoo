@@ -1,4 +1,4 @@
-import { props, proxy, t } from "@odoo/owl";
+import { proxy, t, useProps } from "@odoo/owl";
 import { FormRenderer, formRendererProps } from "@web/views/form/form_renderer";
 import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_text";
 import { HighlightText } from "./highlight_text/highlight_text";
@@ -19,7 +19,7 @@ export class SettingsFormRenderer extends FormRenderer {
         HighlightText,
         FormLabel: FormLabelHighlightText,
     };
-    props = props({
+    props = useProps({
         ...formRendererProps,
         initialApp: t.string(),
         slots: t.object(),

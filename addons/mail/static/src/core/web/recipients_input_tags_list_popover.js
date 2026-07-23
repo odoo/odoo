@@ -3,7 +3,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 
-import { Component, props, signal, types, useListener } from "@odoo/owl";
+import { Component, signal, types, useListener, useProps } from "@odoo/owl";
 /**
  * This class represents the popover opened when we detect that one of our recipients is missing an email
  * address in the RecipientsInput. It allows the user to correct this error and update the partner
@@ -15,7 +15,7 @@ export class RecipientsInputTagsListPopover extends Component {
     popoverRef = signal(null);
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             close: types.function([]),
             onUpdateTag: types.function([types.string()]),
             tagToUpdate: types.object({ onDelete: types.function([]) }),

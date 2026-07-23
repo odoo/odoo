@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, props, proxy, t } from '@odoo/owl';
+import { Component, onMounted, onPatched, onWillUnmount, proxy, t, useProps } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -21,7 +21,7 @@ export const locationSelectorDialogProps = {
 export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
     static template = 'website_sale_stock.locationSelector.dialog';
-    props = props(locationSelectorDialogProps);
+    props = useProps(locationSelectorDialogProps);
 
     setup() {
         this.uiService = useService("ui");

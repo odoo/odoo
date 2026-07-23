@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -15,7 +15,7 @@ export const MAX_FONT_SIZE = 144;
 
 export class FontSizeSelector extends Component {
     static template = "html_editor.FontSizeSelector";
-    props = props({
+    props = useProps({
         getItems: t.function(),
         getDisplay: t.function(),
         onFontSizeInput: t.function(),

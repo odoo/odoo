@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { radioField, RadioField, radioFieldProps } from "@web/views/fields/radio/radio_field";
-import { onWillStart, props, proxy } from "@odoo/owl";
+import { onWillStart, proxy, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
 
@@ -19,7 +19,7 @@ const out_move_types = ['out_invoice', 'out_receipt']
 
 export class ReceiptSelector extends RadioField {
     static template = "account.ReceiptSelector";
-    props = props({
+    props = useProps({
         ...radioFieldProps,
     });
 

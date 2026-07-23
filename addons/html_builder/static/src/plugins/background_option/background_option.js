@@ -1,5 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { BackgroundImageOption } from "./background_image_option";
 import { BackgroundPositionOption } from "./background_position_option";
 import { BackgroundShapeOption } from "./background_shape_option";
@@ -24,7 +24,7 @@ export class BackgroundOption extends BaseOptionComponent {
         ImageFilterOption,
         ImageFormatOption,
     };
-    props = props(this.constructor.propShape);
+    props = useProps(this.constructor.propShape);
 
     setup() {
         super.setup();

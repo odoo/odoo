@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
@@ -166,7 +166,7 @@ class _Record extends Component {
 export class Record extends Component {
     static template = xml`<_Record fields="this.fields" slots="this.props.slots" values="this.props.values" info="this.props" />`;
     static components = { _Record };
-    props = props({
+    props = useProps({
         slots: t.any(),
         resModel: t.any().optional(),
         fieldNames: t.any().optional(),

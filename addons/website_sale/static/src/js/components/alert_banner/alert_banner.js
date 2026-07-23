@@ -1,9 +1,9 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class AlertBanner extends Component {
     static template = "website_sale.AlertBanner";
-    props = props({
+    props = useProps({
         level: t.string().optional("warning"),
         message: t.string(),
         className: t.string().optional(""),

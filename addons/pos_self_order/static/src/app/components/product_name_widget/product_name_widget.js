@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { ProductInfoPopup } from "../product_info_popup/product_info_popup";
 import { useService } from "@web/core/utils/hooks";
 import { formatProductName } from "../../utils";
@@ -7,7 +7,7 @@ import { ProductProduct } from "@point_of_sale/app/models/product_product";
 
 export class ProductNameWidget extends Component {
     static template = "pos_self_order.ProductNameWidget";
-    props = props({
+    props = useProps({
         product: t.or([t.instanceOf(ProductProduct), t.instanceOf(ProductTemplate)]),
     });
     setup() {

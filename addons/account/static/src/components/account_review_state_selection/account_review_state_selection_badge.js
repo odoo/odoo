@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { Component, onWillStart, props, t } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -8,7 +8,7 @@ import { user } from "@web/core/user";
 
 export class AccountReviewStateSelectionBadge extends Component {
     static template = "account_reports.AccountReviewStateSelectionBadgeField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         decorations: t.object().optional(),
         options: t.object().optional(),

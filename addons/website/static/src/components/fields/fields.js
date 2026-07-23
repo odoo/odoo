@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +17,7 @@ class PageUrlField extends UrlField {
     static template = "website.PageUrlField";
     // Inlined from UrlField's static props (UrlField is not yet converted to
     // an exported schema const; it has no defaultProps of its own).
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         placeholder: t.string().optional(),
         text: t.string().optional(),

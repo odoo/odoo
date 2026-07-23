@@ -4,11 +4,11 @@ import {
     markup,
     onMounted,
     onWillStart,
-    props,
     proxy,
     signal,
     t,
     useEffect,
+    useProps,
 } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
@@ -28,7 +28,7 @@ export class ProfileDialog extends Component {
         FileUploader,
         Wysiwyg,
     };
-    props = props({
+    props = useProps({
         close: t.function(),
         confirm: t.function().optional(() => () => {}),
         focusWebsiteDescription: t.boolean().optional(false),

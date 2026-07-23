@@ -1,5 +1,5 @@
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
-import { onWillStart, props, t } from "@odoo/owl";
+import { onWillStart, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -12,7 +12,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export function EmployeeFieldRelationMixin(fieldClass, parentProps) {
     return class extends fieldClass {
-        props = props({
+        props = useProps({
             ...parentProps,
             relation: t.string().optional(),
         });

@@ -7,12 +7,12 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    props,
+    proxy,
     signal,
     status,
-    proxy,
     t,
     useEffect,
+    useProps,
 } from "@odoo/owl";
 import { LazyComponent } from "@web/core/lazy_component";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -36,7 +36,7 @@ export class MassMailingIframe extends Component {
         LazyComponent,
         LocalOverlayContainer,
     };
-    props = props({
+    props = useProps({
         config: t.object(),
         iframeRef: t.function(),
         iframeWrapperRef: t.function(),

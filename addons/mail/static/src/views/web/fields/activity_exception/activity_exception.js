@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { Record } from "@web/model/relational_model/record";
@@ -9,7 +9,7 @@ class ActivityException extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = props({ name: types.string(), record: types.instanceOf(Record) });
+        this.props = useProps({ name: types.string(), record: types.instanceOf(Record) });
     }
 
     get textClass() {

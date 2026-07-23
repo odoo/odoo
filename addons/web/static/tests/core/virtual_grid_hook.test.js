@@ -1,7 +1,7 @@
 import { after, beforeEach, expect, test } from "@odoo/hoot";
 import { resize, scroll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, computed, effect, props, signal, types as t, xml } from "@odoo/owl";
+import { Component, computed, effect, signal, types as t, useProps, xml } from "@odoo/owl";
 import { defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { range } from "@web/core/utils/numbers";
@@ -52,7 +52,7 @@ class TestGridItem extends Component {
         </div>
     `;
 
-    props = props({
+    props = useProps({
         col: t.number(),
         row: t.number(),
     });
@@ -72,7 +72,7 @@ class TestGridComponent extends Component {
         </div>
     `;
 
-    props = props();
+    props = useProps();
     direction = localization.direction;
 
     virtualGrid = useVirtualGrid({

@@ -1,11 +1,11 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class MRPBooleanIconField extends Component {
     static template = "mrp.MRPBooleanIconField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         icon: t.string().optional("fa-check-square-o"),
         label: t.string().optional(),

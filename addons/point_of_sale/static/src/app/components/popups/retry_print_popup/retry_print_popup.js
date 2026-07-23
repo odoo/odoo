@@ -1,11 +1,11 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 
 export class RetryPrintPopup extends Component {
     static template = "point_of_sale.RetryPrintPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         title: t.string().optional(_t("Printing failed")),
         message: t
             .string()

@@ -1,5 +1,5 @@
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
-import { Component, onWillStart, plugin, props, proxy, types as t } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, types as t, useProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useService } from "@web/core/utils/hooks";
 import { TimeOffPlugin } from "../views/time_off_plugin";
@@ -9,7 +9,7 @@ export class TimeOffDashboard extends Component {
     static components = { TimeOffCard, DateTimeInput };
     static template = "hr_holidays.TimeOffDashboard";
 
-    props = props({
+    props = useProps({
         employeeId: t.or([t.number(), t.literal(null)]),
     });
 

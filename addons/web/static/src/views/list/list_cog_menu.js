@@ -1,9 +1,9 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { CogMenu, cogMenuProps } from "../../search/cog_menu/cog_menu";
 
 export class ListCogMenu extends CogMenu {
     static template = "web.ListCogMenu";
-    props = props({
+    props = useProps({
         ...cogMenuProps,
         hasSelectedRecords: t.number().optional(),
     });

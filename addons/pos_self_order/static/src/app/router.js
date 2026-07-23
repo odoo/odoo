@@ -1,4 +1,4 @@
-import { Component, computed, xml, props, t, useEffect } from "@odoo/owl";
+import { Component, computed, t, useEffect, useProps, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -20,7 +20,7 @@ function parseParams(matches, paramSpecs) {
 }
 
 export class Router extends Component {
-    props = props({
+    props = useProps({
         slots: t.object(),
         pos_config_id: t.number(),
     });

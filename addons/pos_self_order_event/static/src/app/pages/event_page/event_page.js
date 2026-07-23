@@ -1,4 +1,4 @@
-import { Component, proxy, props, t, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Stepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useScrollShadow } from "@pos_self_order/app/utils/scroll_shadow_hook";
@@ -11,7 +11,7 @@ import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_o
 
 export class EventPage extends Component {
     static template = "pos_self_order_event.EventPage";
-    props = props({ eventTemplate: t.object() });
+    props = useProps({ eventTemplate: t.object() });
     static components = { Stepper };
 
     eventNameRef = signal(null);

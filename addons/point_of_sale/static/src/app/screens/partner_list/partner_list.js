@@ -5,7 +5,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
@@ -14,7 +14,7 @@ import { ResPartner } from "@point_of_sale/app/models/res_partner";
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
     static template = "point_of_sale.PartnerList";
-    props = props({
+    props = useProps({
         partner: t.or([t.instanceOf(ResPartner), t.literal(null)]).optional(),
         getPayload: t.function(),
         close: t.function(),

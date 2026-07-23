@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
@@ -22,7 +22,7 @@ export const paymentScreenPaymentLinesProps = {
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
     static components = { PriceFormatter };
-    props = props(paymentScreenPaymentLinesProps);
+    props = useProps(paymentScreenPaymentLinesProps);
 
     setup() {
         this.ui = useService("ui");

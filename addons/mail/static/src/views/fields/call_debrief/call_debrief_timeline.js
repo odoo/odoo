@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, props, signal, t, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
 import { formatDuration } from "@mail/views/fields/call_debrief/call_debrief_utils";
 
 export class CallDebriefTimeline extends Component {
@@ -6,7 +6,7 @@ export class CallDebriefTimeline extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             // Total length of the call in seconds.
             totalDuration: t.number(),
             // Array of media segment objects { id, startSec, endSec, duration, ... }

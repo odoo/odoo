@@ -1,8 +1,8 @@
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class CriticalPOSError extends Component {
     static template = "point_of_sale.CriticalPOSError";
-    props = props({ error: t.object() });
+    props = useProps({ error: t.object() });
 
     setup() {
         this.state = proxy({ expanded: false });

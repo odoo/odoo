@@ -1,4 +1,4 @@
-import { onMounted, onPatched, onWillUnmount, props, proxy, t, toRaw, useScope } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, useProps, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -276,7 +276,7 @@ export function useChildRef() {
  * @returns {(() => HTMLElement | null) | Ref} the same ref, unchanged
  */
 export function useForwardRefToParent(refOrName, propName) {
-    const compProps = props();
+    const compProps = useProps();
     // Legacy: a string refName creates a (compat) ref and forwards it under the
     // same prop name.
     if (typeof refOrName === "string") {

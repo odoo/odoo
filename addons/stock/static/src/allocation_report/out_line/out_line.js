@@ -1,4 +1,4 @@
-import { computed, props, signal, types, Component } from "@odoo/owl";
+import { Component, computed, signal, types, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { formatDate, parseDate, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -6,7 +6,7 @@ const { DateTime } = luxon;
 
 export class OutLine extends Component {
     static template = "stock.AllocationReport.OutLine";
-    props = props({
+    props = useProps({
         allocateQuantity: types.signal(types.number()),
         availableQuantity: types.number(),
         isReserved: types.signal(types.boolean()),

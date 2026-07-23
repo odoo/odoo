@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, props, signal, t, xml } from "@odoo/owl";
+import { Component, onMounted, signal, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useVisibilityObserver, useApplyVisibility, useSelectableComponent } from "../utils";
@@ -21,7 +21,7 @@ export class WithIgnoreItem extends Component {
 
 export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

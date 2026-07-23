@@ -1,11 +1,11 @@
-import { onMounted, props, t } from "@odoo/owl";
+import { onMounted, t, useProps } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
-    props = props({
+    props = useProps({
         ...confirmationDialogProps,
         onInput: t.function().optional(),
     });

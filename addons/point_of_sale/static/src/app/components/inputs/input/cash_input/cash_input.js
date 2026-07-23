@@ -1,9 +1,9 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { Input, inputProps } from "../input";
 
 export class CashInput extends Input {
     static template = "point_of_sale.CashInput";
-    props = props({
+    props = useProps({
         ...inputProps,
         class: t.string().optional(""),
         currencySymbol: t.string().optional(""),

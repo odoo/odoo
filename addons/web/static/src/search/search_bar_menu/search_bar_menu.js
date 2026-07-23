@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { SearchBarDropdown } from "../search_bar_dropdown";
 import { dropdownProps } from "@web/core/dropdown/dropdown";
@@ -27,7 +27,7 @@ export class SearchBarMenu extends Component {
         AccordionItem,
         PropertiesGroupByItem,
     };
-    props = props({
+    props = useProps({
         dropdownState: dropdownProps.state,
         popoverWillCloseOnClickAway: t.function().optional(() => () => true),
     });

@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, proxy, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -8,7 +8,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 export class SelectLotPopup extends Component {
     static template = "pos_stock.SelectLotPopup";
     static components = { Dialog, AutoComplete };
-    props = props({
+    props = useProps({
         array: t.array(),
         isSingleItem: t.boolean(),
         title: t.string(),

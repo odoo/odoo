@@ -6,15 +6,15 @@ import {
     onPatched,
     onWillStart,
     onWillUnmount,
-    props,
     signal,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
-    props = props({
+    props = useProps({
         targetEl: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
         close: t.function(),
         onDrag: t.function(),

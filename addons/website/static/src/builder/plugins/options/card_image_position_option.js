@@ -1,11 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 export class CardImagePositionOption extends BaseOptionComponent {
     static template = "website.CardImagePositionOption";
-    props = props({
+    props = useProps({
         label: t.string(),
         level: t.number().optional(0),
     });

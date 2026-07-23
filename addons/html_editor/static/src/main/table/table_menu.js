@@ -1,7 +1,7 @@
 import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -11,7 +11,7 @@ import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
-    props = props({
+    props = useProps({
         type: t.string(), // column or row
         moveColumn: t.function(),
         addColumn: t.function(),

@@ -7,7 +7,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
 
 export const monetaryFieldProps = {
@@ -21,7 +21,7 @@ export const monetaryFieldProps = {
 
 export class MonetaryField extends Component {
     static template = "web.MonetaryField";
-    props = props(monetaryFieldProps);
+    props = useProps(monetaryFieldProps);
 
     numpadDecimalRef = signal(null);
 

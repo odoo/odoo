@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, signal, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { FeedbackPaymentSummary } from "@point_of_sale/app/components/feedback_payment_summary/feedback_payment_summary";
 import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
 import { SendReceiptPopup } from "@point_of_sale/app/components/popups/send_receipt_popup/send_receipt_popup";
@@ -12,7 +12,7 @@ export class FeedbackScreen extends Component {
     static template = "point_of_sale.FeedbackScreen";
     static storeOnOrder = false;
     static components = { FeedbackPaymentSummary };
-    props = props({
+    props = useProps({
         orderUuid: t.string(),
         waitFor: t.object().optional(),
     });

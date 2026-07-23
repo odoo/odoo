@@ -1,14 +1,14 @@
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
     static template = "website.WebsiteDialog";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         ...dialogProps,
         title: t.string().optional(_t("Confirmation")),
         size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("md"),

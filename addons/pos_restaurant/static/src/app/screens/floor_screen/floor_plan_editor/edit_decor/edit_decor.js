@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
 import {
     opacityToTransparency,
@@ -12,7 +12,7 @@ import { FloorElement } from "@pos_restaurant/app/services/floor_plan/elements";
 export class EditDecorProperties extends Component {
     static template = "pos_restaurant.floor_editor.edit_decor_properties";
     static components = {};
-    props = props({
+    props = useProps({
         element: t.instanceOf(FloorElement).optional(),
         updateElement: t.function(),
         moveLayer: t.function(),

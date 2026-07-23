@@ -3,11 +3,11 @@ import { registry } from "@web/core/registry";
 import { formatFloatFactor } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     static template = "web.FloatToggleField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         digits: t.array().optional(),
         range: t.array().optional([0.0, 0.5, 1.0]),

@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -46,7 +46,7 @@ export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
     static template = 'sale.ProductConfiguratorDialog';
     static props = productConfiguratorDialogProps;
-    props = props(this.constructor.props);
+    props = useProps(this.constructor.props);
 
     setup() {
         this.title = _t("Configure your product");

@@ -4,7 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Component, onMounted, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
@@ -16,7 +16,7 @@ export class BomOverviewControlPanel extends Component {
         BomOverviewDisplayFilter,
         Many2XAutocomplete,
     };
-    props = props({
+    props = useProps({
         bomQuantity: t.number(),
         showOptions: t.object(),
         showVariants: t.boolean().optional(),

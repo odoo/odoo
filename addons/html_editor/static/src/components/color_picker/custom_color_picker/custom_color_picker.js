@@ -12,7 +12,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-import { Component, onMounted, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
@@ -23,7 +23,7 @@ const DEFAULT_COLOR = "#FF0000";
 export class CustomColorPicker extends Component {
     static template = "html_editor.CustomColorPicker";
     static components = { IframeInput };
-    props = props({
+    props = useProps({
         document: t.any().optional(window.document),
         defaultColor: t.string().optional(DEFAULT_COLOR),
         selectedColor: t.string().optional(),

@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, markup, props, proxy, t } from "@odoo/owl";
+import { Component, markup, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { GoogleTranslator, ChatGPTTranslator } from "./translator";
@@ -58,7 +58,7 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer, document) => {
 export class TranslateDialog extends Component {
     static template = "html_editor.TranslateDialog";
     static components = { Dialog, Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         insert: t.function(),
         close: t.function(),
         sanitize: t.function(),

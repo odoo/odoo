@@ -1,4 +1,4 @@
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -14,7 +14,7 @@ import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 export class ManageGiftCardPopup extends Component {
     static template = "pos_loyalty.ManageGiftCardPopup";
     static components = { Dialog, DateTimeInput };
-    props = props({
+    props = useProps({
         title: t.string(),
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),

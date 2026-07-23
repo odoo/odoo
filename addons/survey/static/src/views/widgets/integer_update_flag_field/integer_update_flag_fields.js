@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { props, t, useEffect } from "@odoo/owl";
+import { t, useEffect, useProps } from "@odoo/owl";
 import { integerField, IntegerField, integerFieldProps } from "@web/views/fields/integer/integer_field";
 
 
@@ -18,7 +18,7 @@ import { integerField, IntegerField, integerFieldProps } from "@web/views/fields
  * See also `BooleanUpdateFlagField`.
  */
 export class IntegerUpdateFlagField extends IntegerField {
-    props = props({
+    props = useProps({
         ...integerFieldProps,
         flagFieldName: t.string(),
         referenceValue: t.number(),

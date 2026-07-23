@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
@@ -8,7 +8,7 @@ import { BuilderComponent } from "./builder_component";
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

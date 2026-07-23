@@ -2,7 +2,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, markup, onWillStart, props, proxy, signal, t } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
@@ -18,7 +18,7 @@ const { DateTime } = luxon;
 export class HistoryDialog extends Component {
     static template = "html_editor.HistoryDialog";
     static components = { Dialog, HtmlViewer };
-    props = props({
+    props = useProps({
         recordId: t.number(),
         recordModel: t.string(),
         close: t.function(),

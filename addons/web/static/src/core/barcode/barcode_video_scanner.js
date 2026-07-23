@@ -10,11 +10,11 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
-    props,
     proxy,
     signal,
     status,
     t,
+    useProps,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
@@ -24,7 +24,7 @@ export class BarcodeVideoScanner extends Component {
     static components = {
         CropOverlay,
     };
-    props = props({
+    props = useProps({
         cssClass: t.string().optional("w-100 h-100"),
         facingMode: t.selection(["environment", "left", "right", "user"]),
         close: t.function().optional(),

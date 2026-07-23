@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, props, proxy, t, useEffect } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
@@ -26,7 +26,7 @@ class SelectMany2XCreate extends Component {
 
 export class SelectMany2X extends Component {
     static template = "html_builder.SelectMany2X";
-    props = props({
+    props = useProps({
         model: t.string(),
         fields: t.array(t.string()).optional([]),
         domain: t.array().optional([]),

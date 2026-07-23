@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
 const ClosingMode = {
@@ -17,7 +17,7 @@ export const dropdownItemProps = {
 
 export class DropdownItem extends Component {
     static template = "web.DropdownItem";
-    props = props(dropdownItemProps);
+    props = useProps(dropdownItemProps);
 
     setup() {
         this.dropdownControl = useDropdownCloser();

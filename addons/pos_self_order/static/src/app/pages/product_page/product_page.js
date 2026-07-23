@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, proxy, props, t, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
@@ -16,7 +16,7 @@ import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
     static components = { AttributeSelection };
-    props = props({ productTemplate: t.instanceOf(ProductTemplate) });
+    props = useProps({ productTemplate: t.instanceOf(ProductTemplate) });
 
     productNameRef = signal(null);
     scrollContainerRef = signal(null);

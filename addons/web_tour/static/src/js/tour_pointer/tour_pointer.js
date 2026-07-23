@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -57,7 +57,7 @@ class TourPointerPopover extends Component {
 
 /** @extends {Component<TourPointerProps, any>} */
 export class TourPointer extends Component {
-    props = props({
+    props = useProps({
         pointerState: t.object({
             trigger: t.instanceOf(HTMLElement).optional(),
             content: t.string().optional(),

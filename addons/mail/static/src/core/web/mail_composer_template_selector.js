@@ -4,7 +4,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/relational_model/record";
 
-import { Component, onWillStart, props, proxy, types } from "@odoo/owl";
+import { Component, onWillStart, proxy, types, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -14,7 +14,7 @@ export class MailComposerTemplateSelector extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
         this.action = useService("action");
         this.orm = useService("orm");
         this.limit = 80;

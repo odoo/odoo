@@ -13,7 +13,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -68,7 +68,7 @@ export class TicketScreen extends Component {
         Dropdown,
         DropdownItem,
     };
-    props = props(ticketScreenProps);
+    props = useProps(ticketScreenProps);
 
     setup() {
         this.pos = usePos();

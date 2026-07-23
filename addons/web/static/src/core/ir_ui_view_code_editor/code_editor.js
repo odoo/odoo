@@ -1,4 +1,4 @@
-import { onMounted, props, t } from "@odoo/owl";
+import { onMounted, t, useProps } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useLayoutEffect } from "@web/owl2/utils";
@@ -11,7 +11,7 @@ const T_INVALID_LOCATORS = t.object({
 });
 
 export class IrUiViewCodeEditor extends CodeEditor {
-    irUiViewProps = props({
+    irUiViewProps = useProps({
         invalidLocators: t.array(T_INVALID_LOCATORS).optional(),
     });
     markers = [];

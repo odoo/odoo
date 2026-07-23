@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, signal, props, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -9,7 +9,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 export class CashMoveListPopup extends Component {
     static template = "point_of_sale.CashMoveListPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         cashMoves: t.array(),
         partnerId: t.number(),

@@ -1,5 +1,5 @@
 import { propSignal } from "@mail/utils/common/hooks";
-import { Component, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, signal, types, useEffect, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 export class DiscussSearch extends Component {
@@ -11,7 +11,7 @@ export class DiscussSearch extends Component {
     setup() {
         this.autofocus = propSignal("autofocus", types.number(), { optional: true });
         this.searchTerm = propSignal("searchTerm", types.string());
-        this.props = props({
+        this.props = useProps({
             class: types.or([types.string(), types.object()]).optional(),
         });
         useEffect(() => {

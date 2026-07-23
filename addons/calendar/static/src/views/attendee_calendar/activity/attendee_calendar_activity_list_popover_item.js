@@ -3,7 +3,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 
-import { props, types } from "@odoo/owl";
+import { types, useProps } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -26,7 +26,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
         super.setup(...arguments);
         // bound once so `onClickDone` is a stable (props.static) handler
         this.onClickDone = this.onClickDone.bind(this);
-        this.calendarProps = props({
+        this.calendarProps = useProps({
             onRemoveActivityItem: types.function([types.number()]),
             onViewMeeting: onViewMeetingType(this.store),
         });

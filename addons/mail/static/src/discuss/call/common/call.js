@@ -6,7 +6,7 @@ import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -63,7 +63,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
             compact: t.boolean().optional(),
             hasOverlay: t.boolean().optional(true),

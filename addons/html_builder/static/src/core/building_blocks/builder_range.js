@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import {
     useActionInfo,
@@ -15,7 +15,7 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

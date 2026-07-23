@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { floatField, FloatField, floatFieldProps } from "@web/views/fields/float/float_field";
 
@@ -6,7 +6,7 @@ const fieldRegistry = registry.category("fields");
 
 class OptionalFloatField extends FloatField {
     static template = "hr.OptionalFloatField";
-    props = props({
+    props = useProps({
         ...floatFieldProps,
         placeholder: t.string().optional(),
     });

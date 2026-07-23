@@ -34,12 +34,12 @@ import {
     onWillPatch,
     onWillStart,
     plugin,
-    props,
+    proxy,
     signal,
     status,
-    proxy,
     t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { getCurrencyRates } from "@web/core/currency";
@@ -137,7 +137,7 @@ export class ListRenderer extends Component {
         ActionHelper,
         GroupConfigMenu,
     };
-    props = props(listRendererProps);
+    props = useProps(listRendererProps);
 
     setup() {
         this.uiService = useService("ui");

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillStart, props, t } from "@odoo/owl";
+import { onWillStart, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander'
@@ -10,7 +10,7 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
         ...FormControllerWithHTMLExpander.components,
         ProjectTemplateDropdown,
     };
-    props = props({
+    props = useProps({
         ...formControllerProps,
         focusTitle: t.boolean().optional(false),
     });

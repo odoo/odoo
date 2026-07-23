@@ -1,4 +1,4 @@
-import { Component, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -17,7 +17,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         ProjectTemplateButtons,
     };
 
-    props = props({
+    props = useProps({
         archInfo: t.object().optional(),
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),

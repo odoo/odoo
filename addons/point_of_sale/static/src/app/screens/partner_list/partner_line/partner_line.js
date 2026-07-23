@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -8,7 +8,7 @@ import { ResPartner } from "@point_of_sale/app/models/res_partner";
 export class PartnerLine extends Component {
     static template = "point_of_sale.PartnerLine";
     static components = { Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         close: t.function(),
         partner: t.instanceOf(ResPartner),
         isSelected: t.boolean(),

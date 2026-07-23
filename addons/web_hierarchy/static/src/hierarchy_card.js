@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Field } from "@web/views/fields/field";
@@ -15,7 +15,7 @@ export class HierarchyCard extends Component {
         Field,
         ViewButton,
     };
-    props = props({
+    props = useProps({
         node: t.object(),
         openRecord: t.function(),
         archInfo: t.object(),

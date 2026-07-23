@@ -1284,6 +1284,33 @@ def upgrade_useservice(file_manager, name, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files), name)
 
 
+def upgrade_useprops(file_manager, name, log_info, log_error):
+    js_files = JSTooling.get_js_files(file_manager)
+    props_regex = r'(=\s*)?[^.]\bprops([.]static)?\('
+    shadowed_props_regex = r'\b(?:const|let|var)\s+props\s*=\s*(?!\bprops\s*\(|\bprops\.static\s*\()'
+    props_definition_regex = r'\b(?:get|set)\s+props\s*\(|\bprops\s*\([^()]*\)\s*\{'
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_raw_usage(file.content, props_regex):
+                continue
+            if JSTooling.has_active_raw_usage(file.content, shadowed_props_regex):
+                log_info(f"{file.path}: skipped, a local variable named 'props' shadows the owl props hook, migrate manually")
+                continue
+            if JSTooling.has_active_raw_usage(file.content, props_definition_regex):
+                log_info(f"{file.path}: skipped, 'props' is used as a method/getter name unrelated to the owl props hook, migrate manually")
+                continue
+            file.content = JSTooling.add_import(file.content, 'useProps', '@odoo/owl')
+            file.content = JSTooling.remove_import(file.content, 'props', '@odoo/owl')
+            file.content = JSTooling.replace_usage(file.content, r'=\s*\bprops\(', r'= useProps(', False)
+            file.content = JSTooling.replace_usage(file.content, r'=\s*\bprops[.]static\(', r'= useProps.static(', False)
+            file.content = JSTooling.replace_usage(file.content, r'\bprops\(', r'useProps(', False)
+            file.content = JSTooling.replace_usage(file.content, r'\bprops[.]static\(', r'useProps.static(', False)
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files), name)
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -1310,5 +1337,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-slot", upgrade_t_slot)
     collector.run_sub("Migrating parametric t-call", upgrade_parametric_tcall)
     collector.run_sub("Migrating useService", upgrade_useservice)
+    collector.run_sub("Migrating useProps", upgrade_useprops)
 
     collector.finalize()

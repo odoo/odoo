@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 
@@ -14,7 +14,7 @@ export const SHOW_OPTIONS = t.object({
 });
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
-    props = props({
+    props = useProps({
         showOptions: SHOW_OPTIONS,
         changeDisplay: t.function(),
         limited: t.boolean().optional(false),

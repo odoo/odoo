@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillPatch, proxy, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillPatch, proxy, signal, t, useProps } from "@odoo/owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { computeRotationHandlePosition } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/utils";
 import { FloorElement } from "@pos_restaurant/app/services/floor_plan/elements";
@@ -7,7 +7,7 @@ const HANDLE_OFFSET = 5;
 export class Handles extends Component {
     static template = "pos_restaurant.floor_editor.handle_overlay";
 
-    props = props({
+    props = useProps({
         onStartResize: t.function().optional(),
         onStartMove: t.function().optional(),
         onStartRotate: t.function().optional(),

@@ -3,7 +3,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
 import { useLayoutEffect } from "@web/owl2/utils";
-import { markup, props, t } from "@odoo/owl";
+import { markup, t, useProps } from "@odoo/owl";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 import { getHtmlFieldMetadata, setHtmlFieldMetadata } from "@html_editor/fields/html_field";
@@ -23,7 +23,7 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         ProjectTaskTemplateDropdown,
     };
 
-    props = props({
+    props = useProps({
         ...formControllerProps,
         focusTitle: t.boolean().optional(false),
     });

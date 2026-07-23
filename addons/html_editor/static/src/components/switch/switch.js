@@ -1,9 +1,9 @@
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class Switch extends Component {
-    props = props({
+    props = useProps({
         value: t.boolean().optional(),
         extraClasses: t.string(),
         disabled: t.boolean().optional(),

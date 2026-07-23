@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad, buttonsType } from "@point_of_sale/app/components/numpad/numpad";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -8,7 +8,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };
-    props = props({
+    props = useProps({
         title: t.string().optional(_t("Amount of guests")),
         subtitle: t.string().optional(),
         buttons: buttonsType.optional(),

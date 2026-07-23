@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onWillStart, proxy, props, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
@@ -12,7 +12,7 @@ import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 export class ComboConfiguratorPopup extends Component {
     static template = "point_of_sale.ComboConfiguratorPopup";
     static components = { ProductCard, Dialog, QuantityButtons };
-    props = props({
+    props = useProps({
         productTemplate: t.or([t.instanceOf(ProductProduct), t.instanceOf(ProductTemplate)]),
         getPayload: t.function(),
         close: t.function(),

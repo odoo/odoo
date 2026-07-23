@@ -1,6 +1,6 @@
 import { useExternalListener, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, props, proxy, signal, t, xml } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, t, useProps, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
@@ -13,7 +13,7 @@ export class EditorOverlay extends Component {
             <t t-component="this.props.Component" t-props="this.props.props"/>
         </div>`;
 
-    props = props({
+    props = useProps({
         target: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE).optional(),
         initialSelection: t.object().optional(),
         Component: t.function(),

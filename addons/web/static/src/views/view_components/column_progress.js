@@ -1,4 +1,4 @@
-import { Component, plugin, props, t } from "@odoo/owl";
+import { Component, plugin, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { AnimatedNumber } from "./animated_number";
 
@@ -14,7 +14,7 @@ export class ColumnProgress extends Component {
         AnimatedNumber,
     };
     static template = "web.ColumnProgress";
-    props = props(columnProgressProps);
+    props = useProps(columnProgressProps);
 
     setup() {
         this.offlinePlugin = plugin(OfflinePlugin);

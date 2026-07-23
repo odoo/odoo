@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, props, proxy, t } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
@@ -13,7 +13,7 @@ export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderDisplay, PriceFormatter };
 
-    props = props({
+    props = useProps({
         disallow: t.boolean().optional(),
         orderUuid: t.string(),
     });

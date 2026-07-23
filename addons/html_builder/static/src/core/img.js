@@ -3,10 +3,10 @@ import {
     onMounted,
     onPatched,
     onWillStart,
-    useEffect,
-    props,
     signal,
     t,
+    useEffect,
+    useProps,
     xml,
 } from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
@@ -32,7 +32,7 @@ const svgCache = new Cache(async (src) => {
 }, JSON.stringify);
 
 export class Image extends Component {
-    props = props({
+    props = useProps({
         src: t.string(),
         class: t.string().optional(),
         style: t.string().optional(),

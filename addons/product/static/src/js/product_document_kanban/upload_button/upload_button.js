@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export class UploadButton extends Component {
     static template = "product.UploadButton";
-    props = props({
+    props = useProps({
         formData: t.object().optional({}),
         // See https://www.iana.org/assignments/media-types/media-t.xhtml
         allowedMIMETypes: t.string().optional(),

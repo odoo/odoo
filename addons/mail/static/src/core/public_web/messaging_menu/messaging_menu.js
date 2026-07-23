@@ -4,7 +4,7 @@ import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messagi
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 
-import { Component, computed, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -52,13 +52,13 @@ export class MessagingMenu extends Component {
             deps: () => [this.filteredMessages()],
         });
         this.store = useService("mail.store");
-        this.state = props.static(
+        this.state = useProps.static(
             "state",
             types.signal(types.instanceOf(this.store.MessagingMenuUIState.Class))
         );
         this.activeTab = computed(() => this.state().activeTab);
-        this.close = props.static("close", types.function().optional());
-        this.searchInputAutofocus = props.static(
+        this.close = useProps.static("close", types.function().optional());
+        this.searchInputAutofocus = useProps.static(
             "searchInputAutofocus",
             types.signal(types.number()).optional()
         );

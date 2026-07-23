@@ -1,5 +1,5 @@
 import { render, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, signal, t, useProps } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
@@ -38,7 +38,7 @@ export const wysiwygProps = {
 export class Wysiwyg extends Component {
     static template = "html_editor.Wysiwyg";
     static components = { Toolbar, LocalOverlayContainer };
-    props = props(wysiwygProps);
+    props = useProps(wysiwygProps);
 
     contentRef = signal(null);
 

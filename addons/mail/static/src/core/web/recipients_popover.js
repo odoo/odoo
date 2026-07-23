@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, props, types } from "@odoo/owl";
+import { Component, onWillStart, types, useProps } from "@odoo/owl";
 
 /**
  * This popover is used to show a card with details for the recipients' partner with its name,
@@ -12,7 +12,7 @@ export class RecipientsPopover extends Component {
     static template = "mail.RecipientsPopover";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             close: types.function([]),
             id: types.number(),
             viewProfileBtnOverride: types.function([]),

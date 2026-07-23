@@ -1,10 +1,10 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class UnavailableProductsDialog extends Component {
     static template = "pos_self_order.UnavailableProductsDialog";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         productNames: t.array(),
         onClose: t.function().optional(),
         close: t.function().optional(),

@@ -1,10 +1,10 @@
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 export class CashierSelectionPopup extends Component {
     static template = "pos_hr.CashierSelectionPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         getPayload: t.function(),
         currentCashier: t.object().optional(),

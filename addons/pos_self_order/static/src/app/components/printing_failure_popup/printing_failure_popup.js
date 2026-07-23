@@ -1,9 +1,9 @@
-import { Component, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onWillUnmount, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class PrintingFailurePopup extends Component {
     static template = "pos_self_order.PrintingFailurePopup";
-    props = props({
+    props = useProps({
         trackingNumber: t.string(),
         title: t.string().optional(_t("Printing failed")),
         message: t.string(),

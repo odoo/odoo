@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUnmount, proxy, props, t } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +13,7 @@ export class ProductInfoBanner extends Component {
     static components = {
         AccordionItem,
     };
-    props = props({
+    props = useProps({
         productTemplate: t.instanceOf(ProductTemplate),
         product: t.or([t.instanceOf(ProductProduct), t.literal(null)]).optional(),
         info: t.object().optional(),

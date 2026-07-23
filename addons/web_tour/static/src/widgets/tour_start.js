@@ -1,11 +1,11 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { charField, CharField, charFieldProps } from "@web/views/fields/char/char_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
 export class TourStartWidget extends CharField {
     static template = "web_tour.TourStartWidget";
-    props = props({
+    props = useProps({
         ...charFieldProps,
         link: t.boolean().optional(),
     });

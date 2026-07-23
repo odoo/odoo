@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
@@ -16,7 +16,7 @@ export const orderDisplayProps = {
 export class OrderDisplay extends Component {
     static template = "point_of_sale.OrderDisplay";
     static components = { CenteredIcon, Orderline, BadgeTag };
-    props = props(orderDisplayProps);
+    props = useProps(orderDisplayProps);
 
     scrollableRef = signal(null);
 

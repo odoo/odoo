@@ -43,10 +43,10 @@ import {
     onWillDestroy,
     onWillUnmount,
     plugin,
-    props,
     proxy,
     signal,
     t,
+    useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { FetchRecordError } from "@web/model/relational_model/errors";
@@ -158,7 +158,7 @@ export class FormController extends Component {
         Widget,
     };
 
-    props = props(formControllerProps);
+    props = useProps(formControllerProps);
 
     rootRef = signal.ref();
 

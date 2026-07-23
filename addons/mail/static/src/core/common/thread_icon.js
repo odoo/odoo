@@ -1,6 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ImStatus } from "./im_status";
 import { attClassObjectToString } from "@mail/utils/common/format";
@@ -12,7 +12,7 @@ export class ThreadIcon extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             className: t.string().optional(""),
             size: t.selection(["small", "medium", "large"]).optional("medium"),
             thread: t.instanceOf(this.store["mail.thread"].Class),

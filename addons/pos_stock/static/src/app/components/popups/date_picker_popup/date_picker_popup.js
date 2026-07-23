@@ -1,7 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { _t } from "@web/core/l10n/translation";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 const { DateTime } = luxon;
@@ -9,7 +9,7 @@ const { DateTime } = luxon;
 export class DatePickerPopup extends Component {
     static template = "pos_stock.DatePickerPopup";
     static components = { Dialog, DateTimeInput };
-    props = props({
+    props = useProps({
         title: t.string().optional(_t("DatePicker")),
         defaultValue: t.instanceOf(DateTime).optional(),
         confirmLabel: t.string().optional(_t("Confirm")),

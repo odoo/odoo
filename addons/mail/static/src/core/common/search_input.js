@@ -1,6 +1,6 @@
 import { SearchState } from "@mail/utils/common/hooks";
 
-import { Component, props, signal, t, useEffect } from "@odoo/owl";
+import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
 
 import { autofocusParamsType, useAutofocus } from "@web/core/utils/hooks";
 
@@ -22,7 +22,7 @@ export class SearchInput extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             accesskey: t.string().optional(),
             /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
             autofocus: t.or([t.boolean(), autofocusParamsType]).optional(false),

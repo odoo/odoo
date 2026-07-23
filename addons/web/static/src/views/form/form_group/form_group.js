@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,7 +12,7 @@ export const groupProps = {
 class Group extends Component {
     static template = "";
     static propShape = groupProps;
-    props = props(this.constructor.propShape);
+    props = useProps(this.constructor.propShape);
 
     _getItems() {
         const items = Object.entries(this.props.slots || {}).filter(([k, v]) => v.type === "item");
@@ -35,7 +35,7 @@ export class OuterGroup extends Group {
         slots: t.any().optional([]),
         hasOuterTemplate: t.any().optional(true),
     };
-    props = props(this.constructor.propShape);
+    props = useProps(this.constructor.propShape);
 
     getItems() {
         const nbCols = this.props.maxCols;

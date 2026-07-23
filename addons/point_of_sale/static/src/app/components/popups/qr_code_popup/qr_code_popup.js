@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export const qrPopupProps = {
     amount: t.string(),
@@ -17,7 +17,7 @@ export class QRPopup extends Component {
     static template = "point_of_sale.QRPopup";
     static components = { Dialog };
 
-    props = props(qrPopupProps);
+    props = useProps(qrPopupProps);
 
     setup() {
         this.state = proxy({ qrLoaded: false });

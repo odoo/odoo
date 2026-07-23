@@ -10,7 +10,7 @@ import {
     test,
     waitFor,
 } from "@odoo/hoot";
-import { assertType, Component, htmlEscape, props, signal, xml } from "@odoo/owl";
+import { Component, assertType, htmlEscape, signal, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,
@@ -505,7 +505,7 @@ test("arrow follows target and can get sucked", async () => {
             </div>
         `;
 
-        props = props();
+        props = useProps();
 
         setup() {
             this.popover = usePopover(Content, {

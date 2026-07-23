@@ -1,4 +1,4 @@
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -57,7 +57,7 @@ export const FIELD_NAMES = [
 export class ResCompanyUpdateDialog extends Component {
     static template = "mass_mailing.CompanyUpdateDialog";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         onRecordSaved: t.function().optional(() => () => {}),
         onCancel: t.function().optional(() => () => {}),

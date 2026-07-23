@@ -1,8 +1,8 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { ViewButton, viewButtonProps } from "./view_button";
 
 export class MultiRecordViewButton extends ViewButton {
-    props = props({
+    props = useProps({
         ...viewButtonProps,
         list: t.any(),
         domain: t.any(),

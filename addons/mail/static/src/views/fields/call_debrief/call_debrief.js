@@ -1,12 +1,12 @@
 import {
     Component,
     onWillUnmount,
-    props,
     proxy,
     signal,
     t,
     useEffect,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { CallDebriefTimeline } from "@mail/views/fields/call_debrief/call_debrief_timeline";
@@ -25,7 +25,7 @@ export class CallDebrief extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             ...standardFieldProps,
             // The name of the field on the record that stores the call's start datetime.
             callStartDateField: t.string(),

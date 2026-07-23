@@ -1,4 +1,4 @@
-import { Component, computed, onPatched, props, t } from "@odoo/owl";
+import { Component, computed, onPatched, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -69,7 +69,7 @@ function getRecordsUntilSection(list, record, asc, subSection) {
 export class SectionAndNoteListRenderer extends ListRenderer {
     static template = "account.SectionAndNoteListRenderer";
     static recordRowTemplate = "account.SectionAndNoteListRenderer.RecordRow";
-    props = props({
+    props = useProps({
         ...listRendererProps,
         aggregatedFields: t.any(),
         subsections: t.any(),

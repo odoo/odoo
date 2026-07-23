@@ -1,4 +1,4 @@
-import { Component, asyncComputed, onWillStart, props, t } from "@odoo/owl";
+import { Component, asyncComputed, onWillStart, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { getAllActionsAndOperations, useBuilderComponent, useDomState } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -6,7 +6,7 @@ import { BasicMany2Many } from "./basic_many2many";
 
 export class BuilderMany2Many extends Component {
     static template = "html_builder.BuilderMany2Many";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

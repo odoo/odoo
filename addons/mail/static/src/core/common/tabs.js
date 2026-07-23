@@ -1,13 +1,13 @@
 import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
+import { Component, signal, t, useEffect, useProps, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class Tabs extends Component {
     static template = "mail.Tabs";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
             ref: t.function([t.object({ el: t.any().optional() })]).optional(),
@@ -53,7 +53,7 @@ export class InternalTabHeader extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = props({
+        this.props = useProps({
             headerRefs: t.instanceOf(Map),
             id: t.or([t.string(), t.number()]),
             title: t.string().optional(),
@@ -84,7 +84,7 @@ export class TabHeader extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = props({
+        this.props = useProps({
             id: t.any(),
             title: t.string().optional(),
         });
@@ -96,7 +96,7 @@ export class TabPanel extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             id: t.any(),
             onBecameVisible: t.function([]).optional(),
         });

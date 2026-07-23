@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +9,7 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 export class PrintPopup extends Component {
     static template = "point_of_sale.PrintPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
         close: t.function(),
     });

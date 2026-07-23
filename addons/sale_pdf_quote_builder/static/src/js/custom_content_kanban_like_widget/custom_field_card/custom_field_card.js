@@ -1,10 +1,10 @@
-import { Component, props, signal, t, useEffect } from "@odoo/owl";
+import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutoresize } from "@web/core/utils/autoresize";
 
 export class CustomFieldCard extends Component {
     static template = "sale_pdf_quote_builder.customFieldCard";
-    props = props({
+    props = useProps({
         name: t.string(),
         value: t.string(),
         onChange: t.function(),

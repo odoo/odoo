@@ -18,11 +18,11 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
-    props,
     proxy,
     signal,
     t,
     untrack,
+    useProps,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -68,7 +68,7 @@ export class Thread extends Component {
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             autofocus: t.or([t.number(), t.boolean()]).optional(),
             jumpPresent: t.number().optional(0),
             jumpToNewMessage: t.number().optional(),

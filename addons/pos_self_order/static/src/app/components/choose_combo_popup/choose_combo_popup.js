@@ -1,10 +1,10 @@
-import { Component, signal, props, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 
 export class ChooseComboPopup extends Component {
     static template = "pos_self_order.ChooseComboPopup";
-    props = props({
+    props = useProps({
         potentialCombos: t.array(t.object()),
         close: t.function(),
         getPayload: t.function(),
