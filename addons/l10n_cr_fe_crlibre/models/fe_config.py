@@ -85,9 +85,12 @@ class L10nCrFeConfig(models.Model):
                 _("No hay configuración de Factura Electrónica para la empresa %s.") % company.name)
         return config
 
-    def _l10n_cr_fe_next_consecutivo(self):
+    def _l10n_cr_fe_next_consecutivo(self, tipo_documento_codigo):
         self.ensure_one()
-        code = 'l10n_cr_fe.consecutivo.fe.%s' % self.company_id.id
+        # Hacienda exige un correlativo independiente por tipo de documento (01=FE,
+        # 03=NC, etc.), cada uno empezando en 1 - por eso el codigo de secuencia
+        # incluye el tipo de documento, no solo la empresa.
+        code = 'l10n_cr_fe.consecutivo.%s.%s' % (tipo_documento_codigo, self.company_id.id)
         # Advisory lock keyed by company id: prevents two concurrent transactions
         # from both missing the search and creating duplicate ir.sequence rows
         # for this company's first-ever consecutivo.
@@ -95,7 +98,7 @@ class L10nCrFeConfig(models.Model):
         sequence = self.env['ir.sequence'].sudo().search([('code', '=', code)], limit=1)
         if not sequence:
             sequence = self.env['ir.sequence'].sudo().create({
-                'name': 'Consecutivo FE - %s' % self.company_id.name,
+                'name': 'Consecutivo FE %s - %s' % (tipo_documento_codigo, self.company_id.name),
                 'code': code,
                 'company_id': self.company_id.id,
                 'padding': 10,
