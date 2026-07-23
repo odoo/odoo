@@ -1,7 +1,7 @@
 import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
+import { Component, useEffect, xml, proxy } from "@odoo/owl";
 import {
     assignTestEnv,
     defineModels,
@@ -1121,15 +1121,14 @@ test("callback recorders are moved from props to subenv", async () => {
 
 test("react to prop 'domain' changes", async function () {
     expect.assertions(2);
+    const values = ["carnivorous", "herbivorous"];
+    let i = 0;
     class ToyController extends Component {
         static props = ["*"];
         static template = xml`<div/>`;
         setup() {
-            onWillStart(() => {
-                expect(this.props.domain).toEqual([["type", "=", "carnivorous"]]);
-            });
-            onWillUpdateProps((nextProps) => {
-                expect(nextProps.domain).toEqual([["type", "=", "herbivorous"]]);
+            useEffect(() => {
+                expect(this.props.domain).toEqual([["type", "=", values[i++]]]);
             });
         }
     }
