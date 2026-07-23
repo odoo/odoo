@@ -3,8 +3,10 @@
 
 import hashlib
 
-from odoo import api, models, _
+from odoo import api, models, Command, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.addons.pos_hr.models.pos_config import _POS_ROLE_FIELDS
 
 
 class HrEmployee(models.Model):
@@ -93,7 +95,31 @@ class HrEmployee(models.Model):
                 raise UserError(_(
                     "You cannot delete an employee that may be used in an active PoS session. "
                     "Close the session(s) first:\n"
-                    "Employee: %(employee)s - PoS Config(s): %(config_list)s",
+                    "Employee: %(employee)s\nPoS Config(s): %(config_list)s",
                     employee=employee.name,
                     config_list=", ".join(linked_configs.mapped("name")),
                 ))
+
+    def write(self, vals):
+        if 'active' in vals or 'company_id' in vals:
+            domain = Domain.OR([Domain([(fname, 'in', self.ids)]) for fname in _POS_ROLE_FIELDS])
+            # If active is True (or unchanged in vals) and company_id is not being modified,
+            # no cross-company cleanup is necessary.
+            if vals.get('active', True):
+                if 'company_id' not in vals:
+                    return super().write(vals)
+                company_id = vals['company_id']
+                if hasattr(company_id, 'id'):
+                    company_id = company_id.id
+                domain = Domain.AND([domain, [('company_id', '!=', company_id)]])
+            # Search across all companies using sudo and remove the affected employees
+            configs_to_clean = self.env['pos.config'].sudo().search(domain)
+            for config in configs_to_clean:
+                config_vals = {
+                    fname: [Command.unlink(emp.id) for emp in config[fname] & self]
+                    for fname in _POS_ROLE_FIELDS
+                    if config[fname] & self
+                }
+                if config_vals:
+                    config.write(config_vals)
+        return super().write(vals)

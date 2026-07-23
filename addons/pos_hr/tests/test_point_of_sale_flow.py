@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.fields import Command
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -53,3 +54,25 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertFalse(cash_move.partner_id)
         self.assertFalse(cash_move.move_id.line_ids.partner_id)
         self.assertEqual(session.get_cash_in_out_list()[0]['cashier_name'], 'Test Employee')
+
+    def test_employee_pos_config_cleanup(self):
+        """ Test that archiving an employee or changing their company removes them from POS configurations. """
+        company_b = self.env['res.company'].sudo().create({'name': 'Company B'})
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Test Cleanup Employee',
+            'company_id': self.pos_config_usd.company_id.id,
+        })
+        self.pos_config_usd.sudo().write({
+            'module_pos_hr': True,
+            'manager_employee_ids': [Command.set(employee.ids)],
+        })
+        self.assertIn(employee, self.pos_config_usd.manager_employee_ids)
+        employee.sudo().write({'active': False})
+        self.assertNotIn(employee, self.pos_config_usd.manager_employee_ids)
+        employee.sudo().write({'active': True})
+        self.pos_config_usd.sudo().write({
+            'manager_employee_ids': [Command.set(employee.ids)],
+        })
+        self.assertIn(employee, self.pos_config_usd.manager_employee_ids)
+        employee.sudo().write({'company_id': company_b.id})
+        self.assertNotIn(employee, self.pos_config_usd.manager_employee_ids)
