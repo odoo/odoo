@@ -351,7 +351,7 @@ class PosConfig(models.Model):
             rescue_sessions = opened_sessions.filtered('rescue')
             session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
             # sessions ordered by id desc
-            pos_config.has_active_session = opened_sessions and True or False
+            pos_config.has_active_session = bool(opened_sessions.filtered(lambda s: s.state != 'opening_control'))
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
             pos_config.number_of_rescue_session = len(rescue_sessions)

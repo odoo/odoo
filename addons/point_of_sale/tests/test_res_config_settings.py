@@ -91,6 +91,22 @@ class TestConfigureShops(TestPoSCommon):
             'default_preset_id': preset.id,
         })
 
+    def test_opening_control_session_does_not_lock_settings(self):
+        config = self.basic_config
+
+        config.open_ui()
+        session = config.current_session_id
+        self.assertEqual(session.state, 'opening_control')
+        self.assertFalse(config.has_active_session)
+
+        session.set_opening_control(0, None)
+        self.assertTrue(config.has_active_session)
+
+        session.action_pos_session_closing_control()
+        config.open_ui()
+        self.assertEqual(config.current_session_id.state, 'opening_control')
+        self.assertFalse(config.has_active_session)
+
     def test_warehouse_synced_with_picking_type(self):
         """Changing the operation type should update the warehouse on the POS config."""
         warehouse_1 = self.env['stock.warehouse'].search(
