@@ -392,6 +392,14 @@ export class ToolbarPlugin extends Plugin {
      */
     updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
+        // A debounced/deferred update can still fire after the plugin has been
+        // destroyed (e.g. the "mouseup" handler re-arms `updateToolbar` through a
+        // raw setTimeout that isn't cancelled by `destroy`). At that point the
+        // editable's document is detached and `defaultView` is null, which would
+        // crash in `getFilteredTargetedNodes`. Bail out early in that case.
+        if (this.isDestroyed) {
+            return;
+        }
         // Prevent toolbar to open if the selection is not in the editable area,
         // or if the selection is protected or protecting.
         if (
