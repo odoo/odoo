@@ -40,7 +40,6 @@ class MvDealUiPhase9(models.Model):
     # ------------------------------------------------------------------
     @api.depends('brands', 'brands.advertiser', 'brands.advertiser.name')
     def _compute_advertiser(self):
-        print('working..................')
         for rec in self:
             if rec.brands and rec.brands.advertiser:
                 rec.advertiser = rec.brands.advertiser.name or False

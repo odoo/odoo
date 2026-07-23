@@ -17,19 +17,41 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 
 // =========================================================================
-// RELATED_TAB_COLUMNS - developer-controlled column map.
+// RELATED_TAB_CONFIG - developer-controlled Related tab map.
 //
-// Key: comodel technical name (e.g. "mv.deal", "mv.schedules").
-// Value: ordered list of field names on that comodel to render in each
-// preview row on the Related tab.
+// Explicit opt-in per parent model. A parent model that isn't a top-level
+// key here shows an empty Related tab. Within each parent, list the
+// COMODELS you want to expose and the columns to render on each preview
+// row. Comodels can be reached either by:
+//   * a direct One2many / Many2many field on the parent, OR
+//   * an inverse Many2one on the comodel pointing back to the parent
+//     (backend auto-detects and uses it as a virtual One2many).
 //
-// Any comodel NOT listed here falls back to `display_name` only.
-// Edit this map to add or remove columns; hard-refresh the browser
-// (Ctrl+Shift+R) to pick up asset-bundle changes.
+// Shape:
+//     "<parent.model>": {
+//         "<comodel.name>": ["<column>", ...],
+//         ...
+//     }
+//
+// Edit + hard-refresh browser (Ctrl+Shift+R) to pick up changes.
 // =========================================================================
-const RELATED_TAB_COLUMNS = {
-    "mv.deal":      ["length"],
-    "mv.schedules": ["rate", "week"],
+const RELATED_TAB_CONFIG = {
+    "mv.advertiser": {
+        "mv.brands": []
+    },
+    "mv.brands": {
+        "mv.deal": ['length']
+    },
+    "mv.deal": {
+        "mv.schedules": ["rate", "week"],
+        "mv.traffic":   [],
+    },
+    "mv.schedules": {
+        "mv.spot_data":          [],
+        "mv.spot_data_mirror":   [],
+        "mv.prelog_data":        [],
+        "mv.prelog_data_mirror": [],
+    },
 };
 
 export class MvRelatedTab extends Component {
@@ -72,7 +94,7 @@ export class MvRelatedTab extends Component {
             }
             this.state.specs = await this.orm.call(
                 "mv.related", "related_specs",
-                [this.modelName, id, RELATED_TAB_COLUMNS], {},
+                [this.modelName, id, RELATED_TAB_CONFIG], {},
             );
         } catch (e) {
             this.state.error = (e && e.data && e.data.message)

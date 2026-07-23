@@ -64,27 +64,34 @@ class MvRelated(models.AbstractModel):
     _description = 'Related tab data provider'
 
     @api.model
-    def related_specs(self, model, res_id, columns=None):
-        """Return a list of related-section dicts for the given record.
+    def related_specs(self, model, res_id, config=None):
+        """Return a list of Related-section dicts for the given record.
 
-        `columns` is an optional dict shaped like:
+        `config` is a nested dict of the shape:
 
-            {"mv.deal":      ["name", "length"],
-             "mv.schedules": ["name", "rate", "week", "max_per_day"]}
+            {"<parent.model>": {"<comodel.name>": ["<col>", ...],
+                                 ...},
+             ...}
 
-        Coming from the frontend's RELATED_TAB_COLUMNS map. When a
-        section's comodel is listed there, the given fields are
-        fetched + formatted as extra label/value pairs under each
-        preview record's display_name link. Comodels NOT listed
-        keep the default rendering (display_name only).
+        Only comodels explicitly listed under the parent get a section
+        (explicit opt-in). Empty list when the parent isn't in the
+        config, when the record is unsaved, or when the caller can't
+        read the parent.
 
-        Empty list for unknown models, unsaved records, or when the
-        caller lacks read on the parent record itself.
+        Each requested comodel is reached in this order:
+          1. A One2many / Many2many field on the parent whose
+             comodel_name matches - use it (records via `parent[field]`).
+          2. A Many2one field on the COMODEL pointing back to the
+             parent - treat it as a virtual One2many and fetch via
+             `Co.search([(inv, '=', parent.id)])`. This is how
+             Deal -> Traffic and Schedule -> SpotData work: there is
+             NO forward O2M, only an inverse M2O.
+          3. If neither exists, mark the section as accessible=False
+             so the UI shows an "Access denied" placeholder rather
+             than silently swallowing the config entry.
         """
         if not model or not res_id:
             return []
-        # Only expose our own models. Prevents any accidental use of
-        # this RPC against core models.
         if not model.startswith('mv.'):
             return []
         if model not in self.env:
@@ -100,73 +107,147 @@ class MvRelated(models.AbstractModel):
         except Exception:
             return []
 
-        columns = columns or {}
+        config = config or {}
+        per_model = config.get(model) or {}
+        if not per_model:
+            # Explicit opt-in: no config for this parent -> no sections.
+            return []
+
         out = []
-        # Deterministic ordering by field label so the UI is stable.
-        field_items = sorted(
-            Parent._fields.items(),
-            key=lambda kv: (kv[1].string or kv[0]).lower(),
-        )
-        for fname, field in field_items:
-            if field.type not in ('one2many', 'many2many'):
-                continue
+        for comodel, col_names_raw in per_model.items():
+            spec = self._build_related_section(
+                rec, comodel, col_names_raw or [],
+            )
+            if spec is not None:
+                out.append(spec)
+        return out
+
+    def _build_related_section(self, rec, comodel, col_names_raw):
+        """Build one section dict for the given (parent record, comodel).
+        Returns None only if the comodel doesn't exist in the registry.
+        """
+        if comodel not in self.env:
+            _logger.warning(
+                "[Related] comodel %r not in registry", comodel,
+            )
+            return None
+        Co = self.env[comodel]
+        Parent = rec
+        parent_model = Parent._name
+
+        # ------- Locate the relationship path (direct or inverse) -------
+        field_name = False
+        inverse_name = False
+        field_type = 'one2many'
+        label = Co._description or comodel
+
+        direct = self._find_direct_relation(Parent, comodel)
+        if direct:
+            fname, field = direct
+            field_name = fname
+            inverse_name = getattr(field, 'inverse_name', False) or False
+            field_type = field.type
+            label = field.string or fname
+        else:
+            inv = self._find_inverse_m2o(Co, parent_model)
+            if inv:
+                inverse_name = inv.name
+                field_type = 'one2many'   # virtual
+                label = Co._description or comodel
+
+        spec = {
+            'field_name': field_name,
+            'label': label,
+            'type': field_type,
+            'comodel': comodel,
+            'comodel_label': Co._description or comodel,
+            'inverse_name': inverse_name,
+            'count': 0,
+            'accessible': True,
+            'columns': [],
+            'preview': [],
+        }
+
+        # No relationship found at all -> flag as inaccessible with a
+        # visible label so the admin knows the config entry is broken.
+        if not field_name and not inverse_name:
+            _logger.warning(
+                "[Related] no path from %s to %s (neither direct "
+                "O2M/M2M nor inverse M2O). Check RELATED_TAB_CONFIG.",
+                parent_model, comodel,
+            )
+            spec['accessible'] = False
+            return spec
+
+        # ------- ACL on the comodel itself -------
+        if not Co.has_access('read'):
+            spec['accessible'] = False
+            return spec
+
+        # ------- Fetch related recordset -------
+        try:
+            if field_name:
+                related_recs = rec[field_name]
+            else:
+                related_recs = Co.search([(inverse_name, '=', rec.id)])
+        except Exception as e:
+            _logger.warning(
+                "[Related] fetch %s from %s#%s via %s failed: %s",
+                comodel, parent_model, rec.id,
+                (field_name or 'inverse=' + inverse_name), e,
+            )
+            spec['accessible'] = False
+            return spec
+
+        # ------- Column list: filter to actually-existing fields -------
+        col_names = []
+        for cn in col_names_raw:
+            if cn in Co._fields:
+                col_names.append(cn)
+        if not col_names:
+            col_names = ['display_name']
+        spec['columns'] = [
+            {
+                'name': n,
+                'label': (
+                    'Name' if n == 'display_name'
+                    else (Co._fields[n].string or n)
+                ),
+            }
+            for n in col_names
+        ]
+        spec['count'] = len(related_recs)
+        spec['preview'] = self._collect_preview(related_recs, col_names)
+        return spec
+
+    def _find_direct_relation(self, Parent, comodel):
+        """Return (field_name, field) for the first O2M or M2M field on
+        Parent whose comodel matches. None if none found."""
+        for fname, field in Parent._fields.items():
             if fname in _HIDDEN_FIELDS:
                 continue
+            if field.type not in ('one2many', 'many2many'):
+                continue
+            if field.comodel_name != comodel:
+                continue
             if not getattr(field, 'store', True) and field.type == 'many2many':
-                # Skip non-stored M2M (usually helpers)
                 continue
-            comodel = field.comodel_name
-            if not comodel or comodel not in self.env:
+            return fname, field
+        return None
+
+    def _find_inverse_m2o(self, Co, parent_model):
+        """Return the Many2one field on Co that points at parent_model.
+        None if the comodel has no back-reference. If multiple exist,
+        the first stored one wins (deterministic per _fields order)."""
+        for cname, cfield in Co._fields.items():
+            if cfield.type != 'many2one':
                 continue
-            if comodel in _HIDDEN_COMODELS:
+            if cfield.comodel_name != parent_model:
                 continue
-            Co = self.env[comodel]
-            spec = {
-                'field_name': fname,
-                'label': field.string or fname,
-                'type': field.type,
-                'comodel': comodel,
-                'comodel_label': Co._description or comodel,
-                'inverse_name': getattr(field, 'inverse_name', False) or False,
-                'count': 0,
-                'accessible': True,
-                'columns': [],
-                'preview': [],
-            }
-            # ACL: hide sections the user cannot read.
-            if not Co.has_access('read'):
-                spec['accessible'] = False
-                out.append(spec)
+            if not getattr(cfield, 'store', True):
                 continue
-            # Fetch the related recordset via the field itself so
-            # record rules on the parent's relation are respected.
-            try:
-                related_recs = rec[fname]
-            except Exception:
-                continue
-            # Column list from the JS map, filtered to only fields
-            # that actually exist on the comodel. Empty -> just
-            # display_name (the classic Salesforce look).
-            col_names = []
-            for cn in (columns.get(comodel) or []):
-                if cn in Co._fields:
-                    col_names.append(cn)
-            if not col_names:
-                col_names = ['display_name']
-            spec['columns'] = [
-                {
-                    'name': n,
-                    'label': (
-                        'Name' if n == 'display_name'
-                        else (Co._fields[n].string or n)
-                    ),
-                }
-                for n in col_names
-            ]
-            spec['count'] = len(related_recs)
-            spec['preview'] = self._collect_preview(related_recs, col_names)
-            out.append(spec)
-        return out
+            return cfield
+        return None
 
     def _collect_preview(self, recs, col_names):
         """Return up to _MAX_PREVIEW row dicts. Each row has 'id' and
