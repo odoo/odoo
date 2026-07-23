@@ -105,7 +105,7 @@ export class KanbanRenderer extends Component {
                 groups: () => this.props.list.isGrouped && ".o_kanban_group",
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",
-                placeholderClasses: ["visible", "opacity-50", "my-2"],
+                placeholderClasses: ["visible", "opacity-50", "my-2", "pe-none"],
                 // Hooks
                 onDragStart: (params) => {
                     const { element, group } = params;
