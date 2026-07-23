@@ -2,7 +2,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
-import { processThroughNormalize } from "./_helpers/dispatch";
 
 describe("parse/render", () => {
     test("should parse an oi icon", async () => {
@@ -156,7 +155,7 @@ describe("parse/render", () => {
         icon.dataset.icon = "pastafarianism";
         div.appendChild(icon);
         el.firstChild.appendChild(div);
-        processThroughNormalize(editor);
+        editor.shared.dom.normalize();
         expect(getContent(el)).toBe(
             `<p><div><i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i></div></p>`
         );

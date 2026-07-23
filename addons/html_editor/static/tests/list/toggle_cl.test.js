@@ -4,7 +4,6 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { insertText, toggleCheckList } from "../_helpers/user_actions";
-import { processThroughNormalize } from "../_helpers/dispatch";
 
 describe("Range collapsed", () => {
     describe("Insert", () => {
@@ -123,7 +122,7 @@ describe("Range collapsed", () => {
             );
 
             await insertText(editor, "a");
-            processThroughNormalize(editor);
+            editor.shared.dom.normalize();
             expect(getContent(el)).toBe(`<ul class="o_checklist"><li><h1>a[]</h1></li></ul>`);
         });
 

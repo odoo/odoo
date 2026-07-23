@@ -46,7 +46,14 @@ let ICE_SERVERS = null;
 
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
-    static dependencies = ["baseContainer", "history", "domObserver", "collaboration", "selection"];
+    static dependencies = [
+        "baseContainer",
+        "dom",
+        "history",
+        "domObserver",
+        "collaboration",
+        "selection",
+    ];
     static shared = ["getPeerMetadata"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -608,7 +615,7 @@ export class CollaborationOdooPlugin extends Plugin {
             this.editable.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
         }
         this.handleHistoryIds();
-        this.processThrough("normalize_processors", this.editable);
+        this.dependencies.dom.normalize(this.editable);
 
         this.dependencies.history.reset();
 

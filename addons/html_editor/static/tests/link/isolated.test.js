@@ -6,7 +6,6 @@ import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { animationFrame, pointerDown, pointerUp, queryOne, waitFor } from "@odoo/hoot-dom";
-import { processThroughNormalize } from "../_helpers/dispatch";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "../_helpers/ui_expectations";
 
@@ -238,7 +237,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 // set the selection via the parent
                 setSelection({ anchorNode: p, anchorOffset: 1 });
                 // insert the zwnbsp again
-                processThroughNormalize(editor);
+                editor.shared.dom.normalize();
             },
             contentAfterEdit: '<p>a\ufeff[]<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
         });
@@ -255,7 +254,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 setSelection({ anchorNode: a, anchorOffset: 0 });
                 await tick();
                 // insert the zwnbsp again
-                processThroughNormalize(editor);
+                editor.shared.dom.normalize();
             },
             contentAfterEdit:
                 '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]bc\ufeff</a>\ufeffd</p>',
@@ -277,7 +276,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 setSelection({ anchorNode: a, anchorOffset: 1 });
                 await tick();
                 // insert the zwnbsp again
-                processThroughNormalize(editor);
+                editor.shared.dom.normalize();
             },
             contentAfterEdit:
                 '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffb[]c\ufeff</a>\ufeffd</p>',
@@ -295,7 +294,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 setSelection({ anchorNode: a, anchorOffset: 1 });
                 await tick();
                 // insert the zwnbsp again
-                processThroughNormalize(editor);
+                editor.shared.dom.normalize();
             },
             contentAfterEdit:
                 '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffbc[]\ufeff</a>\ufeffd</p>',
@@ -312,7 +311,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 setSelection({ anchorNode: p, anchorOffset: 2 });
                 await tick();
                 // insert the zwnbsp again
-                processThroughNormalize(editor);
+                editor.shared.dom.normalize();
             },
             contentAfterEdit: '<p>a\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeff[]d</p>',
         });

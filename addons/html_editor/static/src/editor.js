@@ -61,12 +61,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  */
 
 /**
- * Clean up DOM before taking into account for next history commit remaining in
- * edit mode
- * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
- */
-
-/**
  * @param {PluginConstructor[]} plugins
  * @returns {PluginConstructor[]}
  */
@@ -280,7 +274,6 @@ export class Editor {
         for (const plugin of this.plugins) {
             plugin.setup();
         }
-        this.processThrough("normalize_processors", this.editable);
         this.trigger("on_editor_started_handlers");
     }
 
