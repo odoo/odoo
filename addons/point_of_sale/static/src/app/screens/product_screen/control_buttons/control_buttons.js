@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -19,7 +19,7 @@ export class ControlButtons extends Component {
         SelectPartnerButton,
         InternalNoteButton,
     };
-    props = props({
+    props = useProps({
         showRemainingButtons: t.boolean().optional(false),
         onClickMore: t.function().optional(),
     });

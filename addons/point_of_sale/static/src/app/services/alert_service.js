@@ -1,4 +1,4 @@
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -9,7 +9,7 @@ class Alert extends Component {
             <button t-if="this.props.closable" t-on-click="this.props.onClose" class="btn btn-lg btn-close position-absolute end-0 me-2"/>
         </div>
     `;
-    props = props({
+    props = useProps({
         message: t.string(),
         type: t.selection(["info", "warning", "danger", "success"]).optional("info"),
         onClose: t.function(),

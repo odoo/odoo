@@ -1,8 +1,8 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class QuantityButtons extends Component {
     static template = "point_of_sale.QuantityButtons";
-    props = props({
+    props = useProps({
         quantity: t.number(),
         setQuantity: t.function(),
         isPlusButtonDisabled: t.boolean().optional(),

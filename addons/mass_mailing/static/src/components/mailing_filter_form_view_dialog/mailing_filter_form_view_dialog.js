@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 
 export const massMailingFormViewDialogProps = {
@@ -7,7 +7,7 @@ export const massMailingFormViewDialogProps = {
 };
 
 export class MailingFilterFormViewDialog extends FormViewDialog {
-    props = props(massMailingFormViewDialogProps);
+    props = useProps(massMailingFormViewDialogProps);
     setup() {
         super.setup();
         Object.assign(this.viewProps, {

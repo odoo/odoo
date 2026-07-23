@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -18,7 +18,7 @@ const STATES = {
 export class OrderDetailsDialog extends Component {
     static components = { Dialog, BadgeTag };
     static template = "point_of_sale.OrderDetailsDialog";
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
         editPayment: t.function(),
         close: t.function(),

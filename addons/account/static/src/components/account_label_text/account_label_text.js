@@ -1,4 +1,4 @@
-import { onMounted, onPatched, props, signal, t } from "@odoo/owl";
+import { onMounted, onPatched, signal, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -15,7 +15,7 @@ import {
 export class AccountLabelTextField extends ListTextField {
     static template = "account.AccountLabelTextField";
     static components = { Many2XAutocomplete };
-    props = props({
+    props = useProps({
         ...textFieldProps,
         rowCount: t.number().optional(1),
         context: t.object().optional(),
@@ -192,7 +192,7 @@ export class AccountLabelTextField extends ListTextField {
 
 export class AccountLabelSectionAndNoteText extends ListSectionAndNoteText {
     static template = "account.AccountLabelSectionAndNoteText";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         context: t.object().optional(),
         options: t.object().optional({}),

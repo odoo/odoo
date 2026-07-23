@@ -1,4 +1,4 @@
-import { computed, plugin, Plugin, signal, useEffect } from "@odoo/owl";
+import { Plugin, computed, signal, useEffect, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 
@@ -53,7 +53,7 @@ services.add(TitlePlugin);
  */
 registry.category("services").add("title", {
     start() {
-        const titlePlugin = plugin(TitlePlugin);
+        const titlePlugin = usePlugin(TitlePlugin);
         const titleService = Object.create(titlePlugin);
         Object.defineProperty(titleService, "current", {
             get() {

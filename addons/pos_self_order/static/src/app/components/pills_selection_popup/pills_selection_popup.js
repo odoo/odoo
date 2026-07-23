@@ -1,4 +1,4 @@
-import { Component, proxy, props, t, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { scrollToSelected } from "@pos_self_order/app/utils/scroll_to_selected";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -28,7 +28,7 @@ import { getDisplayDateInfo } from "@point_of_sale/utils";
 export class PillsSelectionPopup extends Component {
     static template = "pos_self_order.PillsSelectionPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         options: t.object(),
         title: t.string(),
         subtitle: t.string(),

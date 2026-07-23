@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { createElement, append } from "@web/core/utils/xml";
 import { Notebook, notebookProps } from "@web/core/notebook/notebook";
@@ -40,7 +40,7 @@ export class AccountMoveFormController extends FormController {
 
 export class AccountMoveFormNotebook extends Notebook {
     static template = "account.AccountMoveFormNotebook";
-    props = props({
+    props = useProps({
         ...notebookProps,
         onBeforeTabSwitch: t.function().optional(),
     });

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { FloatField, floatField, floatFieldProps } from "@web/views/fields/float/float_field";
 import { formatFloat } from "@web/views/fields/formatters";
@@ -6,7 +6,7 @@ import { formatFloat } from "@web/views/fields/formatters";
 
 export class ExternalPlaceholderFloatField extends FloatField {
     static template = "mrp.ExternalPlaceholderFloatField";
-    props = props({
+    props = useProps({
         ...floatFieldProps,
         placeholder: t.string().optional(),
     });

@@ -10,7 +10,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, plugin, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
@@ -29,7 +29,7 @@ export class ControlPanel extends Component {
         Breadcrumbs,
         EmbeddedActionsPanel,
     };
-    props = props({
+    props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
     });
 
@@ -38,7 +38,7 @@ export class ControlPanel extends Component {
     setup() {
         this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.uiService = useService("ui");
         this.pagerProps = this.env.config.pagerProps
             ? proxy(this.env.config.pagerProps)

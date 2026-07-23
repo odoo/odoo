@@ -1,6 +1,6 @@
 // @ts-check
 
-import { EventBus, markRaw, plugin, toRaw } from "@odoo/owl";
+import { EventBus, markRaw, toRaw, usePlugin } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
@@ -125,7 +125,7 @@ export class RelationalModel extends Model {
     static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
     static withCache = true;
 
-    offlinePlugin = plugin(OfflinePlugin);
+    offlinePlugin = usePlugin(OfflinePlugin);
 
     /**
      * @param {RelationalModelParams} params

@@ -1,10 +1,10 @@
-import { Component, onPatched, props, proxy, t } from "@odoo/owl";
+import { Component, onPatched, proxy, t, useProps } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {
     static template = "web.AccordionItem";
     static components = {};
-    props = props({
+    props = useProps({
         slots: t.object({
             default: t.any(),
         }),

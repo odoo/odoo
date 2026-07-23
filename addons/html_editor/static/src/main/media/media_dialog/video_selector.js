@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -63,7 +63,7 @@ export class VideoSelector extends Component {
         VideoIframe,
         VideoOption,
     };
-    props = props({
+    props = useProps({
         selectMedia: t.function(),
         errorMessages: t.function(),
         vimeoPreviewIds: t.array().optional([]),

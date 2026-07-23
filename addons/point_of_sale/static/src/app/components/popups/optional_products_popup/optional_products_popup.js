@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -10,7 +10,7 @@ import { ProductProduct } from "@point_of_sale/app/models/product_product";
 export class OptionalProductPopup extends Component {
     static template = "point_of_sale.OptionalProductPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         productTemplate: t.or([t.instanceOf(ProductProduct), t.instanceOf(ProductTemplate)]),
     });

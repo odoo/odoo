@@ -1,4 +1,4 @@
-import { plugin, providePlugins } from "@odoo/owl";
+import { providePlugins, usePlugin } from "@odoo/owl";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { TimeOffPlugin } from "../time_off_plugin";
 
@@ -8,7 +8,7 @@ export class TimeOffKanbanController extends KanbanController {
 
         providePlugins([TimeOffPlugin]);
 
-        this.timeOffPlugin = plugin(TimeOffPlugin);
+        this.timeOffPlugin = usePlugin(TimeOffPlugin);
     }
 
     afterExecuteActionButton(clickParams) {

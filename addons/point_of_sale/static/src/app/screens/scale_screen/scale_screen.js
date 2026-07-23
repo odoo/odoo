@@ -1,5 +1,5 @@
 import { useChildSubEnv } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +9,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         getPayload: t.function(),
         close: t.function(),
     });

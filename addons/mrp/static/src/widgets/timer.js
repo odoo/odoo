@@ -6,13 +6,13 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {
     Component,
-    onWillUpdateProps,
-    onWillStart,
     onWillDestroy,
-    props,
+    onWillStart,
+    onWillUpdateProps,
     proxy,
     signal,
     t,
+    useProps,
 } from "@odoo/owl";
 
 function formatMinutes(value) {
@@ -37,7 +37,7 @@ function formatMinutes(value) {
 
 export class MrpTimer extends Component {
     static template = "mrp.MrpTimer";
-    props = props({
+    props = useProps({
         value: t.number(),
         ongoing: t.boolean().optional(false),
     });
@@ -96,7 +96,7 @@ export class MrpTimer extends Component {
 class MrpTimerField extends Component {
     static template = "mrp.MrpTimerField";
     static components = { MrpTimer };
-    props = props(standardFieldProps);
+    props = useProps(standardFieldProps);
 
     numpadDecimalRef = signal(null);
 

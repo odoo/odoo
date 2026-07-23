@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { browser } from "@web/core/browser/browser";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
@@ -17,7 +17,7 @@ export const phoneFieldProps = {
 
 export class PhoneField extends Component {
     static template = "web.PhoneField";
-    props = props(phoneFieldProps);
+    props = useProps(phoneFieldProps);
     static components = { Dropdown, DropdownItem };
 
     inputRef = signal(null);

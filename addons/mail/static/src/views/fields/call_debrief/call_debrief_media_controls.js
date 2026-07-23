@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { formatDuration } from "@mail/views/fields/call_debrief/call_debrief_utils";
 import { _t } from "@web/core/l10n/translation";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -7,7 +7,7 @@ export class CallDebriefMediaControls extends Component {
     static template = "mail.CallDebriefMediaControls";
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             isPlaying: t.boolean(),
             volume: t.number(),
             isMuted: t.boolean(),

@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 export const buttonsType = t.array(
@@ -61,7 +61,7 @@ export function enhancedButtons() {
 
 export class Numpad extends Component {
     static template = "point_of_sale.Numpad";
-    props = props({
+    props = useProps({
         class: t.string().optional("numpad"),
         onClick: t.function().optional(),
         buttons: buttonsType.optional(),

@@ -3,7 +3,7 @@ import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_det
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -17,7 +17,7 @@ const { DateTime } = luxon;
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Dialog, PaymentMethodBreakdown, CashInput };
     static template = "point_of_sale.ClosePosPopup";
-    props = props({
+    props = useProps({
         orders_details: t.object(),
         opening_notes: t.string(),
         default_cash_details: t.object(),

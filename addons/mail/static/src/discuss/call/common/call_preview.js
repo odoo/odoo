@@ -12,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, props, proxy, signal, status, types } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, status, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +25,7 @@ export class CallPreview extends Component {
     videoRef = signal(null);
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             activateCamera: types.number().optional(),
             activateMicrophone: types.number().optional(),
             hasSettingsAtBottom: types.boolean().optional(),

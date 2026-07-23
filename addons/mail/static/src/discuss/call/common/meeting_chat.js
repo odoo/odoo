@@ -4,7 +4,7 @@ import { Thread } from "@mail/core/common/thread";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Typing } from "@mail/discuss/typing/common/typing";
 
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
@@ -19,7 +19,7 @@ export class MeetingChat extends Component {
     };
 
     setup() {
-        this.props = props({ close: types.function([types.instanceOf(MouseEvent)]) });
+        this.props = useProps({ close: types.function([types.instanceOf(MouseEvent)]) });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");

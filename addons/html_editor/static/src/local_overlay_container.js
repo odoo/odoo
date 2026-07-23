@@ -1,4 +1,4 @@
-import { props, signal, t } from "@odoo/owl";
+import { signal, t, useProps } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,7 @@ import { useRegistry } from "@web/core/registry_hook";
  */
 export class LocalOverlayContainer extends MainComponentsContainer {
     static template = "html_editor.LocalOverlayContainer";
-    props = props({
+    props = useProps({
         localOverlay: t.function().optional(),
         identifier: t.string().optional("overlay_components"),
     });

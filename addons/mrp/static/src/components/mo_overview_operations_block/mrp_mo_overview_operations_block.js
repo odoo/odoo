@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
@@ -31,7 +31,7 @@ export class MoOverviewOperationsBlock extends Component {
     static components = {
         MoOverviewLine,
     };
-    props = props(moOverviewOperationsBlockProps);
+    props = useProps(moOverviewOperationsBlockProps);
 
     setup() {
         this.formatFloatTime = formatFloatTime;

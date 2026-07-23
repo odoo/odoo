@@ -7,7 +7,7 @@ import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-import { Component, plugin, t, xml } from "@odoo/owl";
+import { Component, t, usePlugin, xml } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const isSmall = utils.isSmall;
@@ -351,7 +351,7 @@ export class Field extends Component {
     };
 
     setup() {
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {

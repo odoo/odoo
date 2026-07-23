@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SnoozeDialog extends Component {
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         name: t.string(),
         onSave: t.function(),

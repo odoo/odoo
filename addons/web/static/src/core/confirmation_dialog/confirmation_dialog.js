@@ -2,7 +2,7 @@ import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export const deleteConfirmationMessage = _t(
     `Ready to make your record disappear into thin air? Are you sure? It will be gone forever!
@@ -29,7 +29,7 @@ export const confirmationDialogProps = {
 export class ConfirmationDialog extends Component {
     static template = "web.ConfirmationDialog";
     static components = { Dialog };
-    props = props(confirmationDialogProps);
+    props = useProps(confirmationDialogProps);
 
     setup() {
         this.env.dialogData.dismiss = () => this._dismiss();
@@ -89,5 +89,5 @@ export const alertDialogProps = {
 
 export class AlertDialog extends ConfirmationDialog {
     static template = "web.AlertDialog";
-    props = props(alertDialogProps);
+    props = useProps(alertDialogProps);
 }

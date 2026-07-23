@@ -1,10 +1,10 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
 export class BaseVisibilityOption extends BaseOptionComponent {
     static template = "website.BaseVisibilityOption";
     static dependencies = ["websitePageConfigOptionPlugin"];
-    props = props({
+    props = useProps({
         visibilityAction: t.string().optional(),
         bgColor: t.string().optional(),
         label: t.string(),

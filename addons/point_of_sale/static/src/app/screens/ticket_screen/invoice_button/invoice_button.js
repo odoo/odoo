@@ -2,14 +2,14 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../../partner_list/partner_list";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 export class InvoiceButton extends Component {
     static template = "point_of_sale.InvoiceButton";
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
         onInvoiceOrder: t.function(),
     });

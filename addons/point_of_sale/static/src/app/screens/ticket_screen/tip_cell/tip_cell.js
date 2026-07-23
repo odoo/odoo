@@ -1,10 +1,10 @@
 import { useAutofocus } from "@web/core/utils/hooks";
-import { Component, proxy, props, t, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 export class TipCell extends Component {
     static template = "point_of_sale.TipCell";
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
     });
 

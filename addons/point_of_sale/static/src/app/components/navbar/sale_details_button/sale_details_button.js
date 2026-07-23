@@ -1,10 +1,10 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 export class SaleDetailsButton extends Component {
     static template = "point_of_sale.SaleDetailsButton";
-    props = props({
+    props = useProps({
         isHeaderButton: t.boolean().optional(),
     });
     setup() {

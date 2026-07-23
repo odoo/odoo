@@ -1,4 +1,4 @@
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -21,7 +21,7 @@ import { useFileUploader } from "@web/core/utils/files";
  */
 export class FileInput extends Component {
     static template = "web.FileInput";
-    props = props({
+    props = useProps({
         acceptedFileExtensions: t.string().optional("*"),
         autoOpen: t.boolean().optional(),
         hidden: t.boolean().optional(false),

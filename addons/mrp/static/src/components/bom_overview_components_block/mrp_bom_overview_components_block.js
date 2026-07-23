@@ -1,7 +1,7 @@
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewExtraBlock } from "../bom_overview_extra_block/mrp_bom_overview_extra_block";
-import { Component, onWillUnmount, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUnmount, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 
 export class BomOverviewComponentsBlock extends Component {
     static template = "mrp.BomOverviewComponentsBlock";
@@ -10,7 +10,7 @@ export class BomOverviewComponentsBlock extends Component {
         BomOverviewComponentsBlock,
         BomOverviewExtraBlock,
     };
-    props = props({
+    props = useProps({
         unfoldAll: t.boolean().optional(false),
         showOptions: t.object(),
         currentWarehouseId: t.number().optional(),

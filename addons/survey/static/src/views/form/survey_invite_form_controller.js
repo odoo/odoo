@@ -2,12 +2,12 @@ import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { formControllerProps } from "@web/views/form/form_controller";
-import { EventBus, props, t } from "@odoo/owl";
+import { EventBus, t, useProps } from "@odoo/owl";
 
 const defaultFullComposerBus = new EventBus();
 
 export class SurveyInviteController extends formView.Controller {
-    props = props({
+    props = useProps({
         ...formControllerProps,
         fullComposerBus: t.instanceOf(EventBus).optional(defaultFullComposerBus),
     });

@@ -1,4 +1,4 @@
-import { onWillDestroy, onWillStart, plugin, Plugin, useListener } from "@odoo/owl";
+import { Plugin, onWillDestroy, onWillStart, useListener, usePlugin } from "@odoo/owl";
 import { session } from "@web/session";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
@@ -159,7 +159,7 @@ services.add(LocalizationPlugin);
  */
 registry.category("services").add("localization", {
     start() {
-        const localizationPlugin = plugin(LocalizationPlugin);
+        const localizationPlugin = usePlugin(LocalizationPlugin);
         return localizationPlugin.localization;
     },
 });

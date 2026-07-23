@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
@@ -17,7 +17,7 @@ class UomMany2One extends Many2One {
         ...super.components,
         Many2XAutocomplete: Many2XUomTagsAutocomplete,
     };
-    props = props({
+    props = useProps({
         ...many2OneProps,
         productModel: t.string().optional(),
         productId: t.number().optional(),
@@ -39,7 +39,7 @@ export class Many2OneUomField extends Component {
     static components = { UomMany2One };
     // Inline conversion of Many2OneField.props (still declared old-style in
     // @web/views/fields/many2one/many2one_field, without an exported schema).
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         canCreate: t.boolean().optional(),
         canCreateEdit: t.boolean().optional(),

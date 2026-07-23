@@ -1,4 +1,4 @@
-import { Component, xml, props, t } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 import { CopyButton } from "@web/core/copy_button/copy_button";
@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 export class QrCodeCustomerDisplay extends Component {
     static template = "point_of_sale.QrCodeCustomerDisplay";
     static components = { Dialog, CopyButton };
-    props = props({
+    props = useProps({
         close: t.function(),
         customerDisplayURL: t.string(),
     });
@@ -43,7 +43,7 @@ export class QrCodeCustomerDisplay extends Component {
 }
 
 class QrDialog extends Component {
-    props = props({
+    props = useProps({
         close: t.function(),
         qrData: t.string(),
         parentClose: t.function(),

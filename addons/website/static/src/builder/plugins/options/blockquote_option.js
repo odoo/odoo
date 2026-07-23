@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useGetItemValue } from "@html_builder/core/utils";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 
@@ -10,7 +10,7 @@ export class BlockquoteOption extends BaseOptionComponent {
     static components = {
         WebsiteBackgroundOption,
     };
-    props = props({
+    props = useProps({
         disableWidth: t.boolean().optional(false),
     });
     setup() {

@@ -1,4 +1,4 @@
-import { Component, markup, plugin } from "@odoo/owl";
+import { Component, markup, usePlugin } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -65,7 +65,7 @@ function separator() {
 
 export function preferencesItem() {
     const action = useService("action");
-    const orm = plugin(ORM);
+    const orm = usePlugin(ORM);
 
     return {
         type: "item",

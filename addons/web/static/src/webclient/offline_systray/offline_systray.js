@@ -1,4 +1,4 @@
-import { Component, computed, plugin } from "@odoo/owl";
+import { Component, computed, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +25,7 @@ class OfflineSystray extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.uiService = useService("ui");

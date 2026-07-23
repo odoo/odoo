@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillStart, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -125,7 +125,7 @@ export const modelFieldSelectorPopoverProps = {
 
 export class ModelFieldSelectorPopover extends Component {
     static template = "web.ModelFieldSelectorPopover";
-    props = props(modelFieldSelectorPopoverProps);
+    props = useProps(modelFieldSelectorPopoverProps);
     rootRef = signal(null);
 
     setup() {

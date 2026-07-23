@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { LANGUAGES, createRequestCode } from "@api_doc/utils/doc_code_gen";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { browser } from "@web/core/browser/browser";
@@ -23,7 +23,7 @@ export class DocRequest extends Component {
     static components = {
         CodeEditor: CopyableCodeEditor,
     };
-    props = props({
+    props = useProps({
         url: t.string(),
         request: t.any().optional(),
         httpMethod: t.string().optional("POST"),

@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
@@ -8,7 +8,7 @@ import { Many2One } from "./many2one/many2one";
 export class NewEmployeeDialog extends Component {
     static components = { Dialog, Many2One };
     static template = "hr_attendance.NewEmployeeDialog";
-    props = props({
+    props = useProps({
         title: t.string().optional(_t("Badge Set-up")),
         footer: t.boolean().optional(false),
         token: t.string(),

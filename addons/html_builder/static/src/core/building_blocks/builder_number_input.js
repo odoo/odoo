@@ -1,4 +1,4 @@
-import { Component, props, proxy, t, useEffect } from "@odoo/owl";
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
 import {
     useInputBuilderComponent,
     useBuilderComponent,
@@ -13,7 +13,7 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

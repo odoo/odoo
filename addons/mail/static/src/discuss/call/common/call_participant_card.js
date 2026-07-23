@@ -7,7 +7,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, props, signal, types, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, types, useListener, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
@@ -24,7 +24,7 @@ export class CallParticipantCard extends Component {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             cardData: types.object({
                 key: types.string(),
                 member: types.instanceOf(this.store["discuss.channel.member"].Class).optional(),

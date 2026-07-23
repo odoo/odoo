@@ -1,11 +1,11 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
 import { useService } from "@web/core/utils/hooks";
 
 export class LanguageSelector extends Component {
     static template = "pos_self_order.LanguageSelector";
-    props = props({ extraClass: t.string().optional("") });
+    props = useProps({ extraClass: t.string().optional("") });
 
     setup() {
         this.selfOrder = useSelfOrder();

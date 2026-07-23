@@ -1,4 +1,4 @@
-import { Component, markup, props, t } from "@odoo/owl";
+import { Component, markup, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 
@@ -11,7 +11,7 @@ export const notificationAlertDialogProps = {
 
 export class NotificationAlertDialog extends Component {
     static components = { PermissionPromptDialog };
-    props = props(notificationAlertDialogProps);
+    props = useProps(notificationAlertDialogProps);
     static template = "web.NotificationAlertDialog";
 
     get stepOneText() {

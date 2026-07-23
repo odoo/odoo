@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -11,7 +11,7 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 export class SendReceiptPopup extends Component {
     static template = "point_of_sale.SendReceiptPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
         close: t.function(),
     });

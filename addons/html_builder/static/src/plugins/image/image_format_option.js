@@ -3,13 +3,13 @@ import { useDomState } from "@html_builder/core/utils";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { getImageSrc } from "@html_editor/utils/image";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
     static template = "html_builder.ImageFormat";
     static dependencies = ["imageFormatOption"];
-    props = props({
+    props = useProps({
         level: t.number().optional(0),
         computeMaxDisplayWidth: t.function().optional(),
     });

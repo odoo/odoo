@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import {
     getAllActionsAndOperations,
     revertPreview,
@@ -15,7 +15,7 @@ import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2One extends Component {
     static template = "html_builder.BuilderMany2One";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         applyTo: t.string().optional(),
         preview: t.boolean().optional(),

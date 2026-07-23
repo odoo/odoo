@@ -1,4 +1,4 @@
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -12,7 +12,7 @@ export class SaleTemplateDropdown extends Component {
         DropdownItem,
     };
 
-    props = props({
+    props = useProps({
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),
         // `isDisabled` was only declared in `defaultProps`, but it is used in the template

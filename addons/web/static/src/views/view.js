@@ -15,14 +15,14 @@ import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import {
     Component,
-    markRaw,
-    onWillUpdateProps,
-    onWillStart,
-    proxy,
-    props,
-    toRaw,
-    t,
     applyDefaults,
+    markRaw,
+    onWillStart,
+    onWillUpdateProps,
+    proxy,
+    t,
+    toRaw,
+    useProps,
 } from "@odoo/owl";
 import { session } from "@web/session";
 
@@ -211,7 +211,7 @@ export class View extends Component {
     static canOrderByCount = false;
     // View accepts any prop (owl3 validation is loose); only the keys with
     // defaults are declared here.
-    props = props();
+    props = useProps();
 
     setup() {
         this.props = this.applyViewDefaults(this.props);
@@ -434,7 +434,7 @@ export class View extends Component {
         viewProps.searchMenuTypes = searchMenuTypes;
         const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
 
-        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
+        const finalProps = descr.props ? descr.useProps(viewProps, descr, this.env.config) : viewProps;
         // prepare the WithSearch component props
         this.Controller = descr.Controller;
         this.componentProps = finalProps;

@@ -1,4 +1,4 @@
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -8,7 +8,7 @@ export class CallPermissionDialog extends Component {
     static template = "discuss.CallPermissionDialog";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             close: t.function([]),
             media: t.selection(["camera", "microphone"]),
             permissionPrompt: t.string().optional(),

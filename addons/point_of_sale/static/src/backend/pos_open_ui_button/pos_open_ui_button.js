@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -6,7 +6,7 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class PosOpenUIButton extends Component {
     static template = "point_of_sale.PosOpenUIButton";
-    props = props({
+    props = useProps({
         ...standardWidgetProps,
         action: t.string(),
     });

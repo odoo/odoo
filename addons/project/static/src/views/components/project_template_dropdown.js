@@ -1,4 +1,4 @@
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -13,7 +13,7 @@ export class ProjectTemplateDropdown extends Component {
         ProjectTemplateButtons,
     };
 
-    props = props({
+    props = useProps({
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),
         onCreate: t.function(),

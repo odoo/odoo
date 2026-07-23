@@ -1,4 +1,4 @@
-import { config, onWillDestroy, plugin, Plugin, providePlugins, useScope } from "@odoo/owl";
+import { Plugin, config, onWillDestroy, providePlugins, usePlugin, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
@@ -66,7 +66,7 @@ export function useOwnDebugContext({ categories = [] } = {}) {
 }
 
 export function useEnvDebugContext() {
-    return plugin(DebugContextPlugin);
+    return usePlugin(DebugContextPlugin);
 }
 
 export function useDebugCategory(category, context = {}) {

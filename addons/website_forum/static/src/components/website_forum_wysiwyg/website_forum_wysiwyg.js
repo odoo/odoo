@@ -1,13 +1,13 @@
 import { useExternalListener } from "@web/owl2/utils";
 import { removeClass } from "@html_editor/utils/dom";
-import { markup, onMounted, props, t } from "@odoo/owl";
+import { markup, onMounted, t, useProps } from "@odoo/owl";
 import { BASIC_PLUGINS, FULL_EDIT_PLUGINS } from "../../plugins/plugin_sets";
 import { useResizer } from "./resizer_hook";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 export class WebsiteForumWysiwyg extends Wysiwyg {
     static template = "website_forum.WebsiteForumWysiwyg";
-    props = props({
+    props = useProps({
         // Inlined from Wysiwyg (html_editor), which is not yet converted to
         // the owl3 props schema.
         config: t.object().optional(),

@@ -1,4 +1,4 @@
-import { onWillStart, props, t } from "@odoo/owl";
+import { onWillStart, t, useProps } from "@odoo/owl";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 
 import { registry } from "@web/core/registry";
@@ -11,7 +11,7 @@ import { FormController, formControllerProps } from "@web/views/form/form_contro
 import { useLeaveCancelWizard } from "../hooks";
 
 export class TimeOffDialogFormController extends FormController {
-    props = props({
+    props = useProps({
         ...formControllerProps,
         onCancelLeave: t.function(),
         onRecordDeleted: t.function(),
@@ -112,7 +112,7 @@ registry.category("views").add("timeoff_dialog_form", {
 });
 
 export class TimeOffFormViewDialog extends FormViewDialog {
-    props = props({
+    props = useProps({
         ...formViewDialogProps,
         onRecordDeleted: t.function(),
         onLeaveCancelled: t.function(),

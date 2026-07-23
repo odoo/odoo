@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onMounted, onPatched, onWillStart, onWillUnmount, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         maxValueField: t.string().optional(),
         maxValue: t.number().optional(100),

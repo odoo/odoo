@@ -1,4 +1,4 @@
-import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
+import { Component, signal, t, useEffect, useProps, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 class ListContainerDialog extends Component {
     static components = { Dialog };
-    props = props({
+    props = useProps({
         items: t.array(),
         close: t.function(),
     });
@@ -25,7 +25,7 @@ class ListContainerDialog extends Component {
 }
 
 export class ListContainer extends Component {
-    props = props({
+    props = useProps({
         items: t.array(),
         onClickPlus: t.function().optional(),
         slots: t.object(),

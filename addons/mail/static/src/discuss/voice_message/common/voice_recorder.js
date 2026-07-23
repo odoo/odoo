@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, props, proxy, types, useScope } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, types, useProps, useScope } from "@odoo/owl";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -16,7 +16,7 @@ export class VoiceRecorder extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             composer: types.instanceOf(this.store["Composer"].Class),
             state: types.object({
                 cancelRecording: types.function([]),

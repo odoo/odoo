@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { upgradeFrom } from "./upgrade_helpers";
 import { getCurrentLocalStorageVersion, LocalStorageEntry } from "@mail/utils/common/local_storage";
 import { parseVersion } from "@mail/utils/common/misc";
-import { plugin, Plugin } from "@odoo/owl";
+import { Plugin, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 
 export class DiscussUpgradePlugin extends Plugin {
@@ -27,6 +27,6 @@ services.add(DiscussUpgradePlugin);
  */
 registry.category("services").add("discuss.upgrade", {
     start() {
-        return plugin(DiscussUpgradePlugin);
+        return usePlugin(DiscussUpgradePlugin);
     }
 });

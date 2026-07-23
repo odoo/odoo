@@ -4,7 +4,7 @@ import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
-import { Component, EventBus, onMounted, onWillStart, plugin, proxy, signal, useListener } from "@odoo/owl";
+import { Component, EventBus, onMounted, onWillStart, proxy, signal, useListener, usePlugin } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -77,7 +77,7 @@ export class KanbanQuickCreateController extends Component {
         super.setup();
 
         this.uiService = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.state = proxy({ disabled: false });
         this.addDialog = useOwnedDialogs();
         this.formInDialog = 0;

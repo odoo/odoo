@@ -1,11 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 
 export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
     static dependencies = ["builderActions"];
-    props = props({
+    props = useProps({
         label: t.string(),
         direction: t.string().optional(),
         withRoundCorner: t.boolean().optional(true),

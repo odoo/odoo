@@ -1,5 +1,5 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel } from "@mail/core/common/action";
@@ -35,7 +35,7 @@ class Action extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             action: t.instanceOf(ActionModel),
             isFirstInGroup: t.boolean().optional(),
             isLastInGroup: t.boolean().optional(),
@@ -108,7 +108,7 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             actions: t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))])),
             groupClass: t.string().optional(),
             ...actionListPropsSchema,

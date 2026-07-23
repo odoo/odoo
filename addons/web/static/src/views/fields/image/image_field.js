@@ -8,7 +8,7 @@ import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -24,7 +24,7 @@ export class ImageField extends Component {
     static components = {
         FileUploader,
     };
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         alt: t.string().optional(_t("Binary file")),
         enableZoom: t.boolean().optional(),

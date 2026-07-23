@@ -5,7 +5,7 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
-import { onWillStart, plugin, providePlugins } from "@odoo/owl";
+import { onWillStart, providePlugins, usePlugin } from "@odoo/owl";
 import { TimeOffNewDropdown } from "../../components/time_off_new_dropdown/time_off_new_dropdown";
 import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
 import { TimeOffPlugin } from "../time_off_plugin";
@@ -27,7 +27,7 @@ export class TimeOffCalendarController extends CalendarController {
 
         providePlugins([TimeOffPlugin]);
 
-        this.timeOffPlugin = plugin(TimeOffPlugin);
+        this.timeOffPlugin = usePlugin(TimeOffPlugin);
 
         this.leaveCancelWizard = useLeaveCancelWizard();
         this.newAllocRequest = useNewAllocationRequest();

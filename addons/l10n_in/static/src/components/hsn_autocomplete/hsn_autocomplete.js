@@ -2,7 +2,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useChildRef } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { CharField, charField, charFieldProps } from "@web/views/fields/char/char_field";
 import { useInputField } from "@web/views/fields/input_field_hook";
 
@@ -14,7 +14,7 @@ export class L10nInHsnAutoComplete extends CharField {
         ...CharField.components,
         AutoComplete,
     };
-    props = props({
+    props = useProps({
         ...charFieldProps,
         l10nInHsnDescription: t.string().optional(),
     });

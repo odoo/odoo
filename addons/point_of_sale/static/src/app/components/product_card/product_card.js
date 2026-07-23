@@ -1,10 +1,10 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
-    props = props({
+    props = useProps({
         class: t.string().optional(""),
         name: t.string(),
         available: t.boolean().optional(true),

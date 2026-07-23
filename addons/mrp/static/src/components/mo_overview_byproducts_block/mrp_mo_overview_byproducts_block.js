@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import {
     MO_OVERVIEW_SUMMARY_SHAPE,
     MoOverviewOperationsBlock,
@@ -10,7 +10,7 @@ export class MoOverviewByproductsBlock extends MoOverviewOperationsBlock {
     static components = {
         MoOverviewLine,
     };
-    props = props({
+    props = useProps({
         // Keep all props except "operations"
         ...(({ operations, ...rest }) => rest)(moOverviewOperationsBlockProps),
         byproducts: t.array(),

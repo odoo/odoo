@@ -1,7 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -13,7 +13,7 @@ export class TextFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    props = props({
+    props = useProps({
         onValueChanged: t.function(),
         value: t.array().optional([]),
         options: t.array(t.object({ value: t.string(), formattedValue: t.string() }).optional()),

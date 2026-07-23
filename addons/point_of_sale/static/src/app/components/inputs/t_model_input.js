@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 /**
  *   tModel is an array that represents the state variable that this component
@@ -10,7 +10,7 @@ import { Component, props, t } from "@odoo/owl";
  */
 export class TModelInput extends Component {
     static template = "";
-    props = props({ tModel: t.array() });
+    props = useProps({ tModel: t.array() });
     getValue(tModel = this.props.tModel) {
         const [obj, key] = tModel;
         return obj[key];

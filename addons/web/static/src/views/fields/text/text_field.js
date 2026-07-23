@@ -9,7 +9,7 @@ import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, props, signal, t, useListener } from "@odoo/owl";
+import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 
 export const textFieldProps = {
     ...standardFieldProps,
@@ -25,7 +25,7 @@ export class TextField extends Component {
     static components = {
         TranslationButton,
     };
-    props = props(textFieldProps);
+    props = useProps(textFieldProps);
     textareaRef = signal(null);
 
     setup() {
@@ -133,7 +133,7 @@ export const textField = {
 registry.category("fields").add("text", textField);
 
 export class ListTextField extends TextField {
-    props = props({
+    props = useProps({
         ...textFieldProps,
         rowCount: t.number().optional(1),
     });

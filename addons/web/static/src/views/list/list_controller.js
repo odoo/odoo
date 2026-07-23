@@ -1,4 +1,4 @@
-import { Component, onWillPatch, onWillStart, plugin, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -44,7 +44,7 @@ export class ListController extends Component {
         DropdownItem,
         SelectionBox,
     };
-    props = props({
+    props = useProps({
         ...standardViewProps,
         allowSelectors: t.boolean().optional(true),
         onSelectionChanged: t.function().optional(),
@@ -65,7 +65,7 @@ export class ListController extends Component {
         this.dialogService = useService("dialog");
         this.uiService = useService("ui");
         this.orm = useService("orm");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
 
         this.archInfo = this.props.archInfo;
         this.activeActions = this.archInfo.activeActions;

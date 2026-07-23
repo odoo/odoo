@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, props, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +9,7 @@ const { DateTime } = luxon;
 export class PresetSlotsPopup extends Component {
     static template = "point_of_sale.PresetSlotsPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function(),
         getPayload: t.function(),
     });

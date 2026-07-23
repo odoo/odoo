@@ -1,9 +1,9 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { RestaurantOrderCourse } from "@pos_restaurant/app/models/restaurant_order_course";
 
 export class OrderCourse extends Component {
     static template = "pos_restaurant.OrderCourse";
-    props = props({
+    props = useProps({
         course: t.instanceOf(RestaurantOrderCourse),
         course_index: t.number(),
         slots: t.object().optional(),

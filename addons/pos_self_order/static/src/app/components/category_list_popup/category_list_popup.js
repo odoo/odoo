@@ -1,9 +1,9 @@
-import { Component, props, signal, t, useListener } from "@odoo/owl";
+import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class CategoryListPopup extends Component {
     static template = "pos_self_order.CategoryListPopup";
-    props = props({
+    props = useProps({
         close: t.function(),
         categories: t.object(),
         onCategorySelected: t.function(),

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class SettingsConfirmationDialog extends ConfirmationDialog {
     static template = "web.SettingsConfirmationDialog";
-    props = props({
+    props = useProps({
         ...confirmationDialogProps,
         title: t
             .customValidator(

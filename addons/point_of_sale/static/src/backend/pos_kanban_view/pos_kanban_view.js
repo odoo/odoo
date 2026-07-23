@@ -2,7 +2,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { onWillStart, props, proxy, t } from "@odoo/owl";
+import { onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { KanbanRenderer, kanbanRendererProps } from "@web/views/kanban/kanban_renderer";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -34,7 +34,7 @@ export class PosKanbanController extends KanbanController {
 
 export class PosKanbanRenderer extends KanbanRenderer {
     static template = "point_of_sale.PosKanbanRenderer";
-    props = props({ ...kanbanRendererProps, initialPosState: t.object() });
+    props = useProps({ ...kanbanRendererProps, initialPosState: t.object() });
 
     setup() {
         super.setup();

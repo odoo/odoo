@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -8,7 +8,7 @@ import { useBuilderComponent } from "../utils";
 export class BuilderSlidingPanel extends Component {
     static template = "html_builder.BuilderSlidingPanel";
     static components = { BuilderComponent, BuilderRow };
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

@@ -2,11 +2,11 @@ import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { currencies } from "@web/core/currency";
 import { ORM, UPDATE_METHODS } from "@web/core/orm_plugin";
-import { plugin, Plugin, useListener } from "@odoo/owl";
+import { Plugin, useListener, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 
 export class CurrencyPlugin extends Plugin {
-    orm = plugin(ORM);
+    orm = usePlugin(ORM);
 
     setup() {
         useListener(rpcBus, "RPC:RESPONSE", (ev) => {
@@ -40,6 +40,6 @@ services.add(CurrencyPlugin);
  */
 registry.category("services").add("currency", {
     start() {
-        return plugin(CurrencyPlugin);
+        return usePlugin(CurrencyPlugin);
     }
 });

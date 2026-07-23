@@ -1,4 +1,4 @@
-import { Component, onWillStart, plugin, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -17,7 +17,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         ProjectTemplateButtons,
     };
 
-    props = props({
+    props = useProps({
         archInfo: t.object().optional(),
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),
@@ -31,7 +31,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.addDialog = useOwnedDialogs();
         this.displayTasksLimit = 10;
         this.state = proxy({ taskTemplates: [] });

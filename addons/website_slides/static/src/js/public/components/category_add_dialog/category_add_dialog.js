@@ -1,4 +1,4 @@
-import { props, signal, t } from "@odoo/owl";
+import { signal, t, useProps } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
@@ -7,7 +7,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CategoryAddDialog extends ConfirmationDialog {
     static template = "website_slides.CategoryAddDialog";
-    props = props({
+    props = useProps({
         ...confirmationDialogProps,
         channelId: t.string(),
     });

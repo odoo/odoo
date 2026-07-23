@@ -3,11 +3,11 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class BooleanFavoriteField extends Component {
     static template = "web.BooleanFavoriteField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         noLabel: t.boolean().optional(false),
     });

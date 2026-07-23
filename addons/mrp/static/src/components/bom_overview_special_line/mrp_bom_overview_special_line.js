@@ -1,9 +1,9 @@
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class BomOverviewSpecialLine extends Component {
     static template = "mrp.BomOverviewSpecialLine";
-    props = props({
+    props = useProps({
         type: t.string(),
         isFolded: t.boolean().optional(true),
         showOptions: t.object({

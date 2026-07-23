@@ -1,6 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
@@ -129,7 +129,7 @@ export class ColorPickerButton extends Component {
 
 export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

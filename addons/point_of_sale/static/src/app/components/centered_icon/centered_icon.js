@@ -1,7 +1,7 @@
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 
 export class CenteredIcon extends Component {
-    props = props({
+    props = useProps({
         icon: t.string(),
         text: t.string().optional(),
         class: t.string().optional(""),

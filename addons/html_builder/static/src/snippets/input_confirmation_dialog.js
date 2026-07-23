@@ -1,4 +1,4 @@
-import { props, proxy, t } from "@odoo/owl";
+import { proxy, t, useProps } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
@@ -7,7 +7,7 @@ import {
 export class InputConfirmationDialog extends ConfirmationDialog {
     static template = "html_builder.InputConfirmationDialog";
 
-    props = props({
+    props = useProps({
         ...confirmationDialogProps,
         inputLabel: t.string().optional(),
         defaultValue: t.string().optional(),

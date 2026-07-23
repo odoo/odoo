@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class PaymentScreenStatus extends Component {
     static template = "point_of_sale.PaymentScreenStatus";
-    props = props({
+    props = useProps({
         order: t.instanceOf(PosOrder),
     });
     static components = { PriceFormatter };

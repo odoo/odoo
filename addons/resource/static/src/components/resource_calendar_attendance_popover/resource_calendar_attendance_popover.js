@@ -1,6 +1,6 @@
 import { Record } from "@web/model/record";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { Component, props, types as t, signal } from "@odoo/owl";
+import { Component, signal, types as t, useProps } from "@odoo/owl";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -27,7 +27,7 @@ export class ResourceCalendarAttendancePopover extends Component {
         { name: "recurrency_excluded_occurences", type: "json", readonly: false },
     ];
 
-    props = props({
+    props = useProps({
         close: t.function(),
         onReload: t.function(),
         recordProps: t.object(),

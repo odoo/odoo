@@ -1,9 +1,9 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class ProgressBar extends Component {
     static template = "point_of_sale.ProgressBar";
-    props = props({
+    props = useProps({
         currentValue: t.number(),
         maxValue: t.number(),
         addressNeeded: t.boolean(),

@@ -1,5 +1,5 @@
 import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
-import { Component, onMounted, props, signal, types as t, xml } from "@odoo/owl";
+import { Component, onMounted, signal, types as t, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -11,7 +11,7 @@ test("close popover when component is unmounted", async () => {
     class CompWithPopover extends Component {
         static template = xml`<div />`;
 
-        props = props({ id: t.string() });
+        props = useProps({ id: t.string() });
 
         setup() {
             const popover = usePopover(Comp);

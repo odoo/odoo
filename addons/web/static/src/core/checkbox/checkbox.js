@@ -1,6 +1,6 @@
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 /**
  * Custom checkbox
@@ -19,7 +19,7 @@ import { Component, props, signal, t } from "@odoo/owl";
 export class CheckBox extends Component {
     static template = "web.CheckBox";
     static nextId = 1;
-    props = props({
+    props = useProps({
         id: t.any().optional(),
         disabled: t.boolean().optional(),
         value: t.boolean().optional(),

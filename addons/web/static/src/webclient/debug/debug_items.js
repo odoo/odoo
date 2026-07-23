@@ -1,4 +1,4 @@
-import { Component, onWillStart, plugin } from "@odoo/owl";
+import { Component, onWillStart, usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -24,7 +24,7 @@ function runUnitTestsItem() {
 
 export function openViewItem() {
     const action = useService("action");
-    const orm = plugin(ORM);
+    const orm = usePlugin(ORM);
     const dialog = useService("dialog");
 
     async function onSelected(records) {

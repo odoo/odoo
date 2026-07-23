@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from '@odoo/owl';
+import { Component, proxy, t, useProps } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useBus, useService } from '@web/core/utils/hooks';
@@ -9,7 +9,7 @@ import {
 
 export class ClickAndCollectAvailability extends Component {
     static template = 'website_sale_collect.ClickAndCollectAvailability';
-    props = props({
+    props = useProps({
         productId: t.number(),
         active: t.boolean().optional(true),
         zipCode: t.string().optional(),

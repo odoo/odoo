@@ -2,7 +2,7 @@ import { RecipientTag, useRecipientChecker } from "@mail/core/web/recipient_tag"
 import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
@@ -33,7 +33,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         Tag: RecipientTag,
         Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete,
     };
-    props = props({
+    props = useProps({
         ...many2ManyTagsFieldProps,
         context: t.object().optional(),
         canEditTags: t.boolean().optional(),

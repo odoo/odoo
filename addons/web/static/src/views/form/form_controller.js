@@ -42,11 +42,11 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    plugin,
-    props,
     proxy,
     signal,
     t,
+    usePlugin,
+    useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { FetchRecordError } from "@web/model/relational_model/errors";
@@ -158,7 +158,7 @@ export class FormController extends Component {
         Widget,
     };
 
-    props = props(formControllerProps);
+    props = useProps(formControllerProps);
 
     rootRef = signal.ref();
 
@@ -169,7 +169,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;

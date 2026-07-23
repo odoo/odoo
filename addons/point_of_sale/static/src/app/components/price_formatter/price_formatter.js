@@ -1,9 +1,9 @@
 import { localization } from "@web/core/l10n/localization";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class PriceFormatter extends Component {
     static template = "point_of_sale.PriceFormatter";
-    props = props({
+    props = useProps({
         price: t.string(),
     });
 

@@ -1,7 +1,7 @@
 import { useRef } from "@web/owl2/utils";
 import { useSelection } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -14,7 +14,7 @@ export class CreatePollOptionDialog extends Component {
     static template = "mail.CreatePollOptionDialog";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             deletable: t.boolean(),
             model: t.object({
                 direction: t.selection(["forward", "backward", "none"]).optional(),

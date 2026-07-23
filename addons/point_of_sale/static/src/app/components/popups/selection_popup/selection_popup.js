@@ -1,11 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectionPopup extends Component {
     static template = "point_of_sale.SelectionPopup";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         title: t.string().optional(_t("Select")),
         list: t.array().optional([]),
         getPayload: t.function(),

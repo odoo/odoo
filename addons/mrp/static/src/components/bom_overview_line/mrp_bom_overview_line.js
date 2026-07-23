@@ -1,11 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class BomOverviewLine extends Component {
     static template = "mrp.BomOverviewLine";
-    props = props({
+    props = useProps({
         isFolded: t.boolean().optional(true),
         showOptions: t.object({
             mode: t.string(),

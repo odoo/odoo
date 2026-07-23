@@ -20,12 +20,12 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    props,
+    proxy,
     signal,
     t,
     useEffect,
+    useProps,
     xml,
-    proxy,
 } from "@odoo/owl";
 
 export const formRendererProps = {
@@ -56,7 +56,7 @@ export class FormRenderer extends Component {
         InnerGroup,
         StatusBarButtons,
     };
-    props = props(formRendererProps);
+    props = useProps(formRendererProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

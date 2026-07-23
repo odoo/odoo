@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
-import { Component, proxy, onMounted, props, t } from "@odoo/owl";
+import { Component, onMounted, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -16,7 +16,7 @@ class CustomDialog extends Dialog {
 export class OpeningControlPopup extends Component {
     static template = "point_of_sale.OpeningControlPopup";
     static components = { Dialog: CustomDialog, CashInput };
-    props = props({
+    props = useProps({
         close: t.function(),
     });
 

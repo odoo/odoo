@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, plugin, proxy, signal, useListener } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, proxy, signal, useListener, usePlugin } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const systrayRegistry = registry.category("systray");
@@ -38,7 +38,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.pwa = useService("pwa");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());

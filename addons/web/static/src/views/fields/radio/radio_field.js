@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getFieldDomain } from "@web/model/relational_model/utils";
@@ -18,7 +18,7 @@ export const radioFieldProps = {
 
 export class RadioField extends Component {
     static template = "web.RadioField";
-    props = props(radioFieldProps);
+    props = useProps(radioFieldProps);
 
     setup() {
         this.id = `radio_field_${nextId++}`;

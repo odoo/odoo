@@ -7,11 +7,11 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
+    proxy,
     signal,
     status,
-    proxy,
-    props,
     t,
+    useProps,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -45,7 +45,7 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
-    props = props({
+    props = useProps({
         closeEditor: t.function().optional(),
         reloadEditor: t.function().optional(() => () => {}),
         onEditorLoad: t.function().optional(),

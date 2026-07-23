@@ -1,10 +1,10 @@
-import { Component, onMounted, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
 
 const AUTOCLOSE_DELAY = 4000;
 
 export class Notification extends Component {
     static template = "web.NotificationWowl";
-    props = props({
+    props = useProps({
         message: t.customValidator(
             t.any(),
             (m) =>

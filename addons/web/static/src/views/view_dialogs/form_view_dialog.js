@@ -3,7 +3,7 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { View } from "@web/views/view";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export const formViewDialogProps = {
     close: t.function(),
@@ -31,7 +31,7 @@ export const formViewDialogProps = {
 export class FormViewDialog extends Component {
     static template = "web.FormViewDialog";
     static components = { Dialog, View };
-    props = props(formViewDialogProps);
+    props = useProps(formViewDialogProps);
 
     setup() {
         super.setup();

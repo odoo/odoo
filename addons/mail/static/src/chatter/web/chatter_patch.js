@@ -13,7 +13,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { useHover, useOnChange } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { props, signal, status, t } from "@odoo/owl";
+import { signal, status, t, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -59,7 +59,7 @@ const chatterPatch = {
         // bind once so the references stay stable across renders
         this.onActivityChanged = this.onActivityChanged.bind(this);
         this.reloadParentView = this.reloadParentView.bind(this);
-        this.webChatterProps = props({
+        this.webChatterProps = useProps({
             close: t.function([]).optional(),
             has_activities: t.boolean().optional(true),
             hasAttachmentPreview: t.boolean().optional(false),

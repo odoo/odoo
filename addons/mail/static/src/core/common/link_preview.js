@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useOnChange } from "@mail/utils/common/hooks";
@@ -16,7 +16,7 @@ export class LinkPreview extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"].Class),
         });
         this.dialogService = useService("dialog");

@@ -1,6 +1,6 @@
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -20,7 +20,7 @@ export class MessageInReply extends Component {
         this.store = useService("mail.store");
         this.class = propComputed("class", t.string().optional(""));
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
-        this.onClick = props.static("onClick", onParentMessageClickType(this.store).optional());
+        this.onClick = useProps.static("onClick", onParentMessageClickType(this.store).optional());
     }
 
     get authorAvatarUrl() {

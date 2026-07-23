@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
@@ -14,7 +14,7 @@ export class ActionDialog extends Dialog {
         slots: t.any().optional(),
         withBodyPadding: t.boolean().optional(false),
     };
-    actionProps = props({
+    actionProps = useProps({
         ActionComponent: t.any().optional(),
         actionProps: t.any().optional(),
         actionType: t.any().optional(),

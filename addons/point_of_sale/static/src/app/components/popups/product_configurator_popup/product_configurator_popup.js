@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 import { ProductTemplateAttributeLine } from "@point_of_sale/app/models/product_template_attribute_line";
@@ -32,17 +32,17 @@ export class BaseProductAttribute extends Component {
 
 export class RadioProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.RadioProductAttribute";
-    props = props(BaseProductAttributeProps);
+    props = useProps(BaseProductAttributeProps);
 }
 
 export class PillsProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.PillsProductAttribute";
-    props = props(BaseProductAttributeProps);
+    props = useProps(BaseProductAttributeProps);
 }
 
 export class SelectProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.SelectProductAttribute";
-    props = props(BaseProductAttributeProps);
+    props = useProps(BaseProductAttributeProps);
 
     onChange(event) {
         this.props.setSelected(
@@ -53,17 +53,17 @@ export class SelectProductAttribute extends BaseProductAttribute {
 
 export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
-    props = props(BaseProductAttributeProps);
+    props = useProps(BaseProductAttributeProps);
 }
 
 export class ImageProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ImageProductAttribute";
-    props = props(BaseProductAttributeProps);
+    props = useProps(BaseProductAttributeProps);
 }
 
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
-    props = props({
+    props = useProps({
         ...BaseProductAttributeProps,
         selected: t.array(t.instanceOf(ProductTemplateAttributeValue)).optional(),
         customValue: t.string().optional(),
@@ -99,7 +99,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    props = props({
+    props = useProps({
         productTemplate: t.instanceOf(ProductTemplate),
         getPayload: t.function(),
         close: t.function(),

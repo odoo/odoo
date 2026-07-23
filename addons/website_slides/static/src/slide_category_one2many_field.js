@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { SlideCategoryListRenderer } from "./slide_category_list_renderer";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -9,7 +9,7 @@ class SlideCategoryOneToManyField extends X2ManyField {
         ...X2ManyField.components,
         ListRenderer: SlideCategoryListRenderer,
     };
-    props = props({
+    props = useProps({
         // Inlined from X2ManyField, which is not yet converted to the owl3
         // props schema.
         ...standardFieldProps,

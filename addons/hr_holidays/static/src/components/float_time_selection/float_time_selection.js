@@ -1,4 +1,4 @@
-import { onWillStart, props, proxy } from "@odoo/owl";
+import { onWillStart, proxy, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
@@ -22,7 +22,7 @@ function hoursMinutesToFloat(hours, minutes) {
 
 export class FloatTimeSelectionField extends FloatTimeField {
     static template = "hr_holidays.FloatTimeSelectionField";
-    props = props({
+    props = useProps({
         ...floatTimeFieldProps,
     });
 

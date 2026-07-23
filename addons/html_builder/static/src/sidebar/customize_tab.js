@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
 import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
@@ -6,7 +6,7 @@ import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
 export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";
     static components = { CustomizeComponent, OptionsContainer };
-    props = props({
+    props = useProps({
         currentOptionsContainers: t.array().optional([]),
     });
     contentRef = signal(null);

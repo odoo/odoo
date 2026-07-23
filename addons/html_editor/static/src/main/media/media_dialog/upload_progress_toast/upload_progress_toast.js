@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class ProgressBar extends Component {
     static template = "html_editor.ProgressBar";
-    props = props({
+    props = useProps({
         progress: t.number().optional(0),
         hasError: t.boolean().optional(false),
         uploaded: t.boolean().optional(false),

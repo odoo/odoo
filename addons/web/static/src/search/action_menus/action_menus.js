@@ -6,7 +6,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, plugin, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
@@ -49,12 +49,12 @@ export class ActionMenus extends Component {
     // i do it for now to be able to move this pr forward, and we will refactor
     // later if needed.
     static actionMenusProps = actionMenusProps;
-    props = props(this.constructor.actionMenusProps);
+    props = useProps(this.constructor.actionMenusProps);
 
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.state = proxy({ printItems: [] });
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);

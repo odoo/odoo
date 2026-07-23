@@ -2,7 +2,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { UseThreadActions } from "@mail/core/common/thread_actions";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/owl2/utils";
@@ -15,7 +15,7 @@ export class MeetingSideActions extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             threadActions: types.instanceOf(UseThreadActions),
         });
         this.ui = useService("ui");

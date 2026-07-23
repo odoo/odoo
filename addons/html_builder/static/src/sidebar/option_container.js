@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { asyncComputed, onWillStart, props, signal, t, useListener } from "@odoo/owl";
+import { asyncComputed, onWillStart, signal, t, useListener, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -12,7 +12,7 @@ import { browser } from "@web/core/browser/browser";
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
     static dependencies = ["builderOptions", "remove", "clone"];
-    props = props({
+    props = useProps({
         toggleOverlayPreview: t.function().optional(() => () => {}),
         options: t.array(),
         editingElement: t.any(), // HTMLElement from iframe

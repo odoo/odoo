@@ -1,5 +1,5 @@
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -65,7 +65,7 @@ export const notebookProps = {
 
 export class Notebook extends Component {
     static template = "web.Notebook";
-    props = props(notebookProps);
+    props = useProps(notebookProps);
 
     activePane = signal(null);
 

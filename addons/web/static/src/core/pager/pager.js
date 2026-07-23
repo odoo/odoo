@@ -1,4 +1,4 @@
-import { Component, EventBus, props, proxy, signal, t, useEffect, useListener } from "@odoo/owl";
+import { Component, EventBus, proxy, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 
@@ -20,7 +20,7 @@ export const pagerBus = new EventBus();
  */
 export class Pager extends Component {
     static template = "web.Pager";
-    props = props({
+    props = useProps({
         offset: t.number(),
         limit: t.number(),
         total: t.number(),

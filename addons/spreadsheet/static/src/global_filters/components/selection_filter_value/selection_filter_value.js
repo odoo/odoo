@@ -1,7 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -13,7 +13,7 @@ export class SelectionFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    props = props({
+    props = useProps({
         resModel: t.string(),
         field: t.string(),
         value: t.array().optional([]),

@@ -1,4 +1,4 @@
-import { plugin, providePlugins, useScope } from "@odoo/owl";
+import { providePlugins, usePlugin, useScope } from "@odoo/owl";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -16,7 +16,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
         if (!useScope().pluginManager.getPluginById(ResourceCalendarPlugin.id)) {
             providePlugins([ResourceCalendarPlugin]);
         }
-        this.resourceCalendarPlugin = plugin(ResourceCalendarPlugin);
+        this.resourceCalendarPlugin = usePlugin(ResourceCalendarPlugin);
     }
 
     _combineDate(date, floatTime) {

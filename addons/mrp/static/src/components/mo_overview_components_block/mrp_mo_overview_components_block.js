@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
@@ -12,7 +12,7 @@ export class MoOverviewComponentsBlock extends Component {
         MoOverviewByproductsBlock,
         MoOverviewComponentsBlock,
     };
-    props = props({
+    props = useProps({
         unfoldAll: t.boolean().optional(false),
         components: t.array().optional(),
         operations: t

@@ -1,8 +1,8 @@
-import { props, types as t } from "@odoo/owl";
+import { types as t, useProps } from "@odoo/owl";
 import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 
 export class SearchBarDropdown extends Dropdown {
-    props = props({
+    props = useProps({
         ...dropdownProps,
         popoverWillCloseOnClickAway: t.function(),
     });

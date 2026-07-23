@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { percentPieField } from "@web/views/fields/percent_pie/percent_pie_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -6,7 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class DeliverancePercentPieField extends Component {
     static template = "mass_mailing.DeliverancePercentPieField";
 
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         topFieldName: t.string(),
         bottomFieldName: t.string(),

@@ -1,10 +1,10 @@
-import { Component, xml, props, t } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { ActionContainer } from "@web/webclient/actions/action_container";
 
 export class ActionScreen extends Component {
     static components = { ActionContainer };
-    props = props({
+    props = useProps({
         actionName: t.string(),
         viewMode: t.string().optional(),
     });

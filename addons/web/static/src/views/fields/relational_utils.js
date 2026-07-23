@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, plugin, props, signal, status, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, signal, status, t, usePlugin } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
@@ -224,7 +224,7 @@ export class Many2XAutocomplete extends Component {
     autocompleteContainerRef = signal(null);
     setup() {
         this.orm = useService("orm");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.uiService = useService("ui");
 
         useForwardRefToParent(this.autocompleteContainerRef, "autocomplete_container");

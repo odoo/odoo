@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, props, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button";
 import { useService } from "@web/core/utils/hooks";
 import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
@@ -18,7 +18,7 @@ export const actionpadWidgetProps = {
 export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton, BackButton };
-    props = props(actionpadWidgetProps);
+    props = useProps(actionpadWidgetProps);
 
     setup() {
         this.pos = usePos();

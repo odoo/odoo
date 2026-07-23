@@ -1,11 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class UploadDropZone extends Component {
     static template = "account.UploadDropZone";
-    props = props({
+    props = useProps({
         visible: t.boolean().optional(),
         hideZone: t.function().optional(() => () => {}),
         dragIcon: t.string().optional(),
