@@ -1,16 +1,14 @@
 import {
     AccountLabelTextField,
-    listAccountLabelSectionAndNoteText,
+    listAccountLabelText,
 } from "@account/components/account_label_text/account_label_text";
-import {
-    ListSectionAndNoteText,
-    sectionAndNoteText,
-    SectionAndNoteText,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { Component, useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { CharField } from "@web/views/fields/char/char_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { TextField, ListTextField } from "@web/views/fields/text/text_field";
 import { saleProductMixin } from "../sale_product_mixin";
 
 export class SaleLabelTextField extends AccountLabelTextField {
@@ -72,18 +70,21 @@ export class SaleLabelTextField extends AccountLabelTextField {
 // for enabling configurators and combos
 patch(SaleLabelTextField.prototype, saleProductMixin());
 
-export class SaleOrderLineText extends SectionAndNoteText {
+export class SaleOrderLineLabelTextField extends Component {
+    static template = "sale.SaleOrderLineLabelTextField";
+    props = useProps(standardFieldProps);
+
     get componentToUse() {
-        return this.props.record.data.product_type === "combo" ? CharField : super.componentToUse;
+        return this.props.record.data.product_type === "combo" ? CharField : TextField;
     }
 }
 
-export class ListSaleLabelSectionAndNoteText extends ListSectionAndNoteText {
-    static template = "sale.ListSaleLabelSectionAndNoteText";
-    static props = {
-        ...ListSectionAndNoteText.props,
-        context: { type: Object, optional: true },
-    };
+export class ListSaleOrderLineLabelTextField extends Component {
+    static template = "sale.ListSaleOrderLineLabelTextField";
+    props = useProps({
+        ...standardFieldProps,
+        context: t.object().optional(),
+    });
 
     get componentToUse() {
         const record = this.props.record;
@@ -92,7 +93,7 @@ export class ListSaleLabelSectionAndNoteText extends ListSectionAndNoteText {
         } else if (record.data.product_type === "combo") {
             return CharField;
         }
-        return super.componentToUse;
+        return ListTextField;
     }
 
     get componentProps() {
@@ -104,13 +105,12 @@ export class ListSaleLabelSectionAndNoteText extends ListSectionAndNoteText {
 }
 
 export const saleOrderLineLabelText = {
-    ...sectionAndNoteText,
-    component: SaleOrderLineText,
+    component: SaleOrderLineLabelTextField,
 };
 
 export const listSaleOrderLineLabelText = {
-    ...listAccountLabelSectionAndNoteText,
-    component: ListSaleLabelSectionAndNoteText,
+    ...listAccountLabelText,
+    component: ListSaleOrderLineLabelTextField,
     fieldDependencies: [
         { name: "is_configurable_product", type: "boolean" },
         { name: "product_type", type: "selection" },

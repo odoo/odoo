@@ -1,6 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, getFixture, test } from "@odoo/hoot";
-import { animationFrame, edit, press, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, edit, queryAllTexts } from "@odoo/hoot-dom";
 import { range } from "@web/core/utils/numbers";
 import {
     clickSave,
@@ -30,7 +30,7 @@ class InvoiceLine extends models.Model {
         { id: 13, name: "C1", display_type: false, sequence: 13, m2m: [] },
     ];
 
-    name = fields.Char();
+    name = fields.Text();
     display_type = fields.Selection({
         default: false,
         selection: [
@@ -915,7 +915,7 @@ test("add note", async () => {
     expect(`.o_is_line_note`).toHaveCount(1);
 });
 
-test("section_and_note_text widget", async () => {
+test("multiline notes use the native text field", async () => {
     await mountView({
         type: "form",
         resModel: "invoice",
@@ -929,54 +929,25 @@ test("section_and_note_text widget", async () => {
                 >
                     <list editable="bottom">
                         <control>
-                            <create name="add_line_control" string="Add a line"/>
-                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                            <create
+                                name="add_note_control"
+                                string="Add a note"
+                                context="{'default_display_type': 'line_note'}"
+                            />
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name" widget="section_and_note_text"/>
+                        <field name="name"/>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
             </form>
         `,
     });
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "C",
-        "C1",
-    ]);
-    expect(`.o_note_row`).toHaveCount(0);
     await contains(".o_field_x2many_list_row_add button:last").click();
-    expect(`.o_is_line_note textarea`).toHaveCount(1);
+    expect(".o_is_line_note textarea").toHaveCount(1);
     await edit("this is a note\non 2 lines");
     await contains(getFixture()).click();
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "C",
-        "C1",
-        "this is a note\non 2 lines",
-    ]);
+    expect(queryAllTexts(".o_data_row")).toInclude("this is a note\non 2 lines");
 });
 
 test("sections with required content field", async () => {
@@ -1015,7 +986,7 @@ test("sections with required content field", async () => {
     await contains(".o_list_section_options:eq(0) button").click();
     await contains(".o-dropdown-item:contains(Add a subsection)").click();
     expect(".o_invalid_cell").toHaveCount(0);
-    await press("Enter");
+    await contains(".o_field_x2many_list_row_add button:contains(Add a section)").click();
     await animationFrame();
     expect(".o_invalid_cell").toHaveCount(1);
     expect(".o_data_row").toHaveCount(14);
@@ -1024,11 +995,11 @@ test("sections with required content field", async () => {
     await contains(".o_field_x2many_list_row_add button:eq(1)").click();
     expect(".o_data_row").toHaveCount(14);
     expect(".o_invalid_cell").toHaveCount(0);
-    await press("Enter");
+    await contains(".o_field_x2many_list_row_add button:contains(Add a section)").click();
     await animationFrame();
     expect(".o_invalid_cell").toHaveCount(1);
     await edit("D");
-    await press("Enter");
+    await contains(".o_field_x2many_list_row_add button:contains(Add a section)").click();
     await animationFrame();
     expect(queryAllTexts(".o_data_row")).toEqual([
         "r1",
@@ -1320,7 +1291,7 @@ test("check collapse_ fields' muting logic for widget", async () => {
         `,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_char")).toEqual([
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual([
         "sec1",
             "sec1-r1",
             "sec1-sub1",

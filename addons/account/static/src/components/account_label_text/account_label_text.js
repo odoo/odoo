@@ -1,21 +1,21 @@
-import { onMounted, onPatched, props, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, useProps, signal, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { ListTextField, textFieldProps } from "@web/views/fields/text/text_field";
 import {
-    ListSectionAndNoteText,
-    listSectionAndNoteText,
-    sectionAndNoteText,
-} from "../section_and_note_fields_backend/section_and_note_fields_backend";
+    ListTextField,
+    textFieldProps,
+    textField,
+    listTextField,
+} from "@web/views/fields/text/text_field";
 
 export class AccountLabelTextField extends ListTextField {
     static template = "account.AccountLabelTextField";
     static components = { Many2XAutocomplete };
-    props = props({
+    props = useProps({
         ...textFieldProps,
         rowCount: t.number().optional(1),
         context: t.object().optional(),
@@ -190,9 +190,9 @@ export class AccountLabelTextField extends ListTextField {
     }
 }
 
-export class AccountLabelSectionAndNoteText extends ListSectionAndNoteText {
-    static template = "account.AccountLabelSectionAndNoteText";
-    props = props({
+export class ListAccountLabelTextField extends Component {
+    static template = "account.ListAccountLabelTextField";
+    props = useProps({
         ...standardFieldProps,
         context: t.object().optional(),
         options: t.object().optional({}),
@@ -203,7 +203,7 @@ export class AccountLabelSectionAndNoteText extends ListSectionAndNoteText {
         if (record.data.display_type === "product" && "product_id" in record.activeFields) {
             return AccountLabelTextField;
         }
-        return super.componentToUse;
+        return ListTextField;
     }
 
     get componentProps() {
@@ -214,13 +214,13 @@ export class AccountLabelSectionAndNoteText extends ListSectionAndNoteText {
     }
 }
 
-export const listAccountLabelSectionAndNoteText = {
-    ...listSectionAndNoteText,
-    component: AccountLabelSectionAndNoteText,
+export const listAccountLabelText = {
+    ...listTextField,
+    component: ListAccountLabelTextField,
     extractProps: (_staticInfo, dynamicInfo) => ({
         context: dynamicInfo.context,
     }),
 };
 
-registry.category("fields").add("account_label_text", sectionAndNoteText);
-registry.category("fields").add("list.account_label_text", listAccountLabelSectionAndNoteText);
+registry.category("fields").add("account_label_text", textField);
+registry.category("fields").add("list.account_label_text", listAccountLabelText);

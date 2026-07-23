@@ -115,7 +115,7 @@ class AccountMoveLine(models.Model):
     account_code = fields.Char(related='account_id.code') # Used for easy configuration of consolidation in the reports
     # TODO: move the search method on the `account_id` field when it's possible to add a search on a stored field
     search_account_id = fields.Many2one('account.account', search='_search_account_id', store=False)
-    name = fields.Char(
+    name = fields.Text(
         string='Label',
         compute='_compute_name', store=True, readonly=False, precompute=True,
         tracking=True,
