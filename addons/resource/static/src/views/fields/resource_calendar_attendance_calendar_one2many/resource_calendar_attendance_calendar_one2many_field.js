@@ -23,21 +23,27 @@ export class CalendarOne2Many extends Component {
     }
 
     get viewProps() {
-        return {
-            type: "calendar",
-            resModel: this.props.record.data[this.props.name].resModel,
-            domain: [
-                ["calendar_id", "=", this.props.record.resId],
-                ["date", "!=", false],
-            ],
-            display: { controlPanel: false },
-            searchViewId: false,
-            className: "h-100 w-100 d-flex",
-            context: {
-                ...this.props.context,
-                default_calendar_id: this.props.record.resId,
-            },
-        };
+        // Only rebuild when resId changes, otherwise the calendar reloads unnecessarily.
+        const resId = this.props.record.resId;
+        if (this._resId !== resId) {
+            this._resId = resId;
+            this._viewProps = {
+                type: "calendar",
+                resModel: this.props.record.data[this.props.name].resModel,
+                domain: [
+                    ["calendar_id", "=", resId],
+                    ["date", "!=", false],
+                ],
+                display: { controlPanel: false },
+                searchViewId: false,
+                className: "h-100 w-100 d-flex",
+                context: {
+                    ...this.props.context,
+                    default_calendar_id: resId,
+                },
+            };
+        }
+        return this._viewProps;
     }
 }
 
