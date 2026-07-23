@@ -429,7 +429,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_get_message_status_error_body(self, move, error):
         self.ensure_one()
-        return self._get_peppol_error_message(error)
+        return get_peppol_error_message(self.env, error)
 
     def _peppol_get_message_status_update_body(self, move, content):
         self.ensure_one()
