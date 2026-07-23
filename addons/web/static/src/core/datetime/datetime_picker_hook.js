@@ -1,5 +1,4 @@
 import { useService } from "@web/core/utils/hooks";
-import { useRef } from "@web/owl2/utils";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
@@ -10,9 +9,9 @@ export function useDateTimePicker(params) {
         return inputRefs.map((ref) => resolveRefEl(ref));
     }
 
-    // Callers may provide Owl 3 signal refs (or legacy refs) through `inputRefs`.
-    // Fall back to the legacy `t-custom-ref` names for callers not passing them.
-    const inputRefs = params.inputRefs ?? [useRef("start-date"), useRef("end-date")];
+    // Callers provide Owl 3 signal refs (or legacy refs) through `inputRefs`.
+    // Callers driving the picker from a `target` only (no date inputs) omit it.
+    const inputRefs = params.inputRefs ?? [];
 
     return useService("datetime_picker").create(
         // Need original object since 'pickerProps' (or any other param) can be defined

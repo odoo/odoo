@@ -194,7 +194,7 @@ function camelToKebab(str) {
  * callable, or an Owl 3 native signal) into an adapter exposing a null-safe
  * `.el` getter, so all downstream `.el` reads keep working unchanged.
  *
- * todo: remove when removing t-custom-ref
+ * todo: remove when all refs are migrated to Owl 3 signals
  *
  * @param {{ el?: HTMLElement } | (() => HTMLElement) | null | undefined} ref
  * @returns {{ el: HTMLElement | null | undefined }}
@@ -1068,7 +1068,7 @@ export function makeDraggableHook(hookParams) {
             const ctx = {
                 enable: () => false,
                 preventDrag: () => false,
-                // todo: remove when removing t-custom-ref
+                // todo: remove when all refs are migrated to Owl 3 signals
                 ref: makeRefAdapter(params.ref),
                 ignoreSelector: null,
                 fullSelector: null,

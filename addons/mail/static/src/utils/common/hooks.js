@@ -6,6 +6,7 @@ import {
     onWillUnmount,
     props,
     proxy,
+    signal,
     t,
     untrack,
     useEffect,
@@ -13,7 +14,7 @@ import {
 } from "@odoo/owl";
 
 import { Reactive } from "@web/core/utils/reactive";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -58,9 +59,8 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
     });
 }
 
-export function onExternalClick(refOrName, cb) {
+export function onExternalClick(ref, cb) {
     let downTarget, upTarget;
-    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
     let targetDocument = document;
     function onClick(ev) {
         const el = resolveRefEl(ref);
@@ -105,20 +105,15 @@ export function onExternalClick(refOrName, cb) {
  *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
  */
-export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
-    refNames = Array.isArray(refNames) ? refNames : [refNames];
+export function useHover(refs, { onHover, onAway, stateObserver, onHovering } = {}) {
+    refs = Array.isArray(refs) ? refs : [refs];
     const targets = [];
     let wasHovering = false;
     let hoveringTimeout;
     let awayTimeout;
     let lastHoveredTarget;
-    for (const refName of refNames) {
-        if (typeof refName === "function") {
-            // Special case: useChildRef support
-            targets.push({ ref: refName });
-            continue;
-        }
-        targets.push({ ref: useRef(refName) });
+    for (const ref of refs) {
+        targets.push({ ref });
     }
     const state = proxy({
         set isHover(newIsHover) {
@@ -253,7 +248,9 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 }
 
 export class UseHoverOverlay extends Component {
-    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
+    static template = xml`<div t-ref="this.root"><t t-call-slot="default"/></div>`;
+
+    root = signal.ref();
 
     setup() {
         super.setup();
@@ -263,13 +260,12 @@ export class UseHoverOverlay extends Component {
                 addTarget: t.function([t.object({ ref: t.any() })], t.function([])),
             }),
         });
-        this.root = useRef("root");
         const overlayContains = this.env[OVERLAY_SYMBOL].contains;
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);
             removeTarget = this.props.hover.addTarget({
-                ref: { el: this.root.el.closest(".o-overlay-item") },
+                ref: { el: resolveRefEl(this.root).closest(".o-overlay-item") },
             });
         });
         onWillUnmount(() => {
@@ -346,8 +342,7 @@ export function useScrollState(ref) {
  * @param {function} callback function to execute when scroll hit the bottom minus the threshold
  * @param {number} threshold number of threshold pixel to trigger the callback
  */
-export function useOnBottomScrolled(refOrName, callback, threshold = 1) {
-    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+export function useOnBottomScrolled(ref, callback, threshold = 1) {
     function onScroll() {
         const el = resolveRefEl(ref);
         if (el && Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < threshold) {
@@ -366,8 +361,7 @@ export function useOnBottomScrolled(refOrName, callback, threshold = 1) {
  * @param {string} refName
  * @param {function} [cb]
  */
-export function useVisible(refOrName, cb, { ready = true } = {}) {
-    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+export function useVisible(ref, cb, { ready = true } = {}) {
     const getEl = () => resolveRefEl(ref);
     const state = proxy({
         isVisible: undefined,
@@ -588,9 +582,9 @@ export function useMicrophoneVolume() {
     return state;
 }
 
-export function useSelection({ refName, ref, model, preserveOnClickAwayPredicate = () => false }) {
+export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => false }) {
     const ui = useService("ui");
-    const elRef = ref ?? useRef(refName);
+    const elRef = ref;
     const getEl = () => resolveRefEl(elRef);
     function onSelectionChange() {
         const el = getEl();

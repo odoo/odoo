@@ -1,4 +1,5 @@
-import { render, useRef, useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -58,6 +59,9 @@ export class FormRenderer extends Component {
     };
     props = useProps(formRendererProps);
 
+    // Bound by the FormCompiler on the compiled view root.
+    rootRef = signal.ref();
+
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
@@ -72,7 +76,6 @@ export class FormRenderer extends Component {
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
         const { autofocusFieldIds } = archInfo;
-        const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
             const mounted = signal(false);
             onMounted(() => mounted.set(true));
@@ -81,7 +84,7 @@ export class FormRenderer extends Component {
                     return;
                 }
                 const record = this.props.record;
-                const rootEl = rootRef.el;
+                const rootEl = resolveRefEl(this.rootRef);
                 if (!rootEl) {
                     return;
                 }
@@ -119,13 +122,14 @@ export class FormRenderer extends Component {
             const fieldNodeIds = Object.keys(this.props.archInfo.fieldNodes);
             const elementsByNodeIds = {};
             onMounted(() => {
-                if (!rootRef.el) {
+                const rootEl = resolveRefEl(this.rootRef);
+                if (!rootEl) {
                     // t-ref is sometimes set on a <t> node, resulting in a null ref (e.g. footer case)
                     return;
                 }
                 for (const id of fieldNodeIds) {
                     const els = [...document.querySelectorAll(`[id=${id}]`)].filter(
-                        (el) => !rootRef.el.contains(el)
+                        (el) => !rootEl.contains(el)
                     );
                     if (els.length) {
                         els[0].removeAttribute("id");

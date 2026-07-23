@@ -61,6 +61,7 @@ export class DateTimeField extends Component {
 
     static template = "web.DateTimeField";
 
+    rootRef = signal.ref();
     startDateRef = signal.ref();
     endDateRef = signal.ref();
 
@@ -95,7 +96,7 @@ export class DateTimeField extends Component {
     setup() {
         const getPickerProps = () => this.getPickerProps();
         const dateTimePicker = useDateTimePicker({
-            target: "root",
+            target: this.rootRef,
             inputRefs: [this.startDateRef, this.endDateRef],
             showSeconds: this.props.showSeconds,
             get pickerProps() {

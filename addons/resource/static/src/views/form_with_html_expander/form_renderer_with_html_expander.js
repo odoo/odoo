@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { FormRenderer, formRendererProps } from "@web/views/form/form_renderer";
 import { props, t } from "@odoo/owl";
 
@@ -16,7 +17,6 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
             // Should be defined in FormRenderer
             this.uiService = useService("ui");
         }
-        const ref = useRef("compiled_view_root");
         useLayoutEffect(
             (el, size) => {
                 if (el && this._canExpandHTMLField(size)) {
@@ -42,7 +42,11 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
                 }
                 this.props.notifyHtmlExpander();
             },
-            () => [ref.el, this.uiService.size, this.props.reloadHtmlFieldHeight]
+            () => [
+                resolveRefEl(this.rootRef),
+                this.uiService.size,
+                this.props.reloadHtmlFieldHeight,
+            ]
         );
     }
 

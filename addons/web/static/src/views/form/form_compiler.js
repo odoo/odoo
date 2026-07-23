@@ -66,10 +66,7 @@ export class FormCompiler extends ViewCompiler {
     compile(key, params = {}) {
         const compiled = super.compile(...arguments);
         if (!params.isSubView) {
-            compiled.children[0].setAttribute(
-                "t-ref",
-                "__globals__.createRefSignal(__comp__, 'compiled_view_root', 1)"
-            );
+            compiled.children[0].setAttribute("t-ref", "__comp__.rootRef");
         }
         return compiled;
     }

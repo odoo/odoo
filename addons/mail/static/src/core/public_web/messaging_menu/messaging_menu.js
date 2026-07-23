@@ -30,6 +30,7 @@ export class MessagingMenu extends Component {
         return this.filteredMessages();
     });
     searchTerm = signal("");
+    tabContentRef = signal.ref();
 
     setup() {
         super.setup();
@@ -65,7 +66,7 @@ export class MessagingMenu extends Component {
         this.ui = useService("ui");
         // Bound once so `onClickMessage` is a stable (props.static) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
-        useOnBottomScrolled("tabContent", () =>
+        useOnBottomScrolled(this.tabContentRef, () =>
             this.activeTab().loadMore({ filter: this.state().selectedFilter })
         );
         // On search term change: update the search state.

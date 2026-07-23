@@ -12,7 +12,6 @@ export function render(component, deep = false) {
 
 export const onWillRender = owl.onWillRender;
 export const onRendered = owl.onRendered;
-export const useRef = owl.useRef;
 export const useComponent = owl.useComponent;
 export const useExternalListener = owl.useExternalListener;
 export const useLayoutEffect = owl.useLayoutEffect;

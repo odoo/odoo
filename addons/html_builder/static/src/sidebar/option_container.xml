@@ -15,7 +15,7 @@
                 t-on-click="this.props.toggleFold ?? (() => {})"
             >
                 <i t-if="this.props.toggleFold" class="oi oi-fw mx-1 flex-shrink-0" aria-hidden="true" t-att-data-icon="this.props.folded ? 'arrow_right' : 'arrow_drop_down'"/>
-                <span class="text-truncate" t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title" t-custom-ref="title"/>
+                <span class="text-truncate" t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title" t-ref="this.titleRef"/>
                 <t t-if="this.props.optionTitleComponents" t-foreach="this.props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                     <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
                 </t>

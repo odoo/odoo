@@ -1,5 +1,5 @@
-import { onRendered, useComponent, useRef } from "@web/owl2/utils";
-import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo/owl";
+import { onRendered, useComponent } from "@web/owl2/utils";
+import { effect, onMounted, onPatched, onWillDestroy, signal, toRaw, proxy } from "@odoo/owl";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
@@ -101,9 +101,11 @@ export function getEditableDescendants(host) {
  * component. EditableDescendants are shared in collaboration and are saved
  * between edition sessions.
  *
- * Warning: there must be a ref in the template for every editableDescendants,
- * available at all times no matter the component state to guarantee that the
- * editor can save their values at any given time, synchronously.
+ * A signal ref is created for each editableDescendant and exposed on the
+ * component as `editableDescendantRefs[name]`. The template must bind each of
+ * them with `t-ref="this.editableDescendantRefs.<name>"`, available at all
+ * times no matter the component state to guarantee that the editor can save
+ * their values at any given time, synchronously.
  *
  * @param {HostElement} host
  * @returns {EditableDescendants} (HTMLElement) by the value of their
@@ -117,11 +119,24 @@ export function useEditableDescendants(host) {
         );
     }
     const editableDescendants = Object.freeze(component.env.getEditableDescendants(host));
-    const refs = {};
+    // Map of signal refs, created on demand: reading `editableDescendantRefs[name]`
+    // (from the template through `t-ref="this.editableDescendantRefs.<name>"`, or
+    // from the loop below) creates the signal the first time that name is asked
+    // for, and returns the same one on every later read.
+    const refs = (component.editableDescendantRefs ||= new Proxy(
+        {},
+        {
+            get(target, name) {
+                if (typeof name === "string" && !(name in target)) {
+                    target[name] = signal.ref();
+                }
+                return target[name];
+            },
+        }
+    ));
     const renders = {};
     for (const name of Object.keys(editableDescendants)) {
-        refs[name] = useRef(name);
-        renders[name] = () => refs[name].el.replaceChildren(editableDescendants[name]);
+        renders[name] = () => refs[name]().replaceChildren(editableDescendants[name]);
     }
     let _restoreSelection;
     const restoreSelection = () => {

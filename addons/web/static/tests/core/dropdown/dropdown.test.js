@@ -185,7 +185,7 @@ test("close on click outside an active element", async () => {
         static components = { Dropdown, DropdownItem };
         static template = xml`
             <div class="outside">outside</div>
-            <div t-custom-ref="active">
+            <div t-ref="this.activeRef">
                 <Dropdown>
                     <button>Dropdown</button>
                     <t t-set-slot="content">
@@ -195,8 +195,10 @@ test("close on click outside an active element", async () => {
             </div>
         `;
 
+        activeRef = signal.ref();
+
         setup() {
-            useActiveElement("active");
+            useActiveElement(this.activeRef);
         }
     }
 
@@ -220,7 +222,7 @@ test("close on click outside when the opening active element was removed", async
         static components = { Dropdown, DropdownItem };
         static template = xml`
             <div class="outside">outside</div>
-            <div t-if="this.state.showActive" t-custom-ref="active">
+            <div t-if="this.state.showActive" t-ref="this.activeRef">
                 <button class="active-button">Active</button>
             </div>
             <Dropdown>
@@ -231,9 +233,11 @@ test("close on click outside when the opening active element was removed", async
             </Dropdown>
         `;
 
+        activeRef = signal.ref();
+
         setup() {
             this.state = proxy({ showActive: true });
-            useActiveElement("active");
+            useActiveElement(this.activeRef);
         }
     }
 

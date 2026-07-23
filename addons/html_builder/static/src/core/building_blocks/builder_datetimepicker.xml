@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderDateTimePicker">
     <BuilderComponent>
-        <div t-custom-ref="root" class="w-100 d-flex gap-1">
+        <div t-ref="this.rootRef" class="w-100 d-flex gap-1">
             <BuilderTextInputBase
                     t-props="this.textInputBaseProps"
                     commit="this.commit"

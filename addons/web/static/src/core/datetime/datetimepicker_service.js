@@ -8,11 +8,11 @@ import {
     proxy,
 } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
-import { ensureArray, zip, zipWith } from "../utils/arrays";
+import { ensureArray, zip } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
 import { resolveRefEl } from "../utils/ref_utils";
 import { dateTimePickerProps } from "./datetime_picker";
@@ -25,7 +25,6 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @typedef {import("../popover/popover_hook").PopoverHookReturnType} PopoverHookReturnType
  * @typedef {import("../popover/popover_service").PopoverServiceAddOptions} PopoverServiceAddOptions
  * @typedef {import("@odoo/owl").Component} Component
- * @typedef {ReturnType<typeof import("@odoo/owl").useRef>} OwlRef
  *
  * @typedef {{
  *  createPopover?: (component: Component, options: PopoverServiceAddOptions) => PopoverHookReturnType;
@@ -36,7 +35,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *  onClose?: () => any;
  *  pickerProps?: DateTimePickerProps;
  *  showSeconds?: boolean;
- *  target: HTMLElement | string;
+ *  target: HTMLElement | (() => HTMLElement | null) | { el?: HTMLElement };
  * }} DateTimePickerServiceParams
  */
 
@@ -179,9 +178,6 @@ export const datetimePickerService = {
                 }
 
                 function getTarget() {
-                    if (targetRef) {
-                        return targetRef.el;
-                    }
                     // `params.target` may be a raw HTMLElement, an Owl ref object
                     // or an Owl 3 signal ref (a callable). Resolve ref-like
                     // values to their element; pass raw elements through.
@@ -462,22 +458,23 @@ export const datetimePickerService = {
                     if (updated) {
                         return true;
                     }
-                    const values = zipWith(
-                        inputs,
-                        ensureArray(pickerProps.value),
-                        (el, currentValue) => {
-                            if (!el || el.tagName?.toLowerCase() !== "input") {
-                                return currentValue;
-                            }
-                            const [parsedValue, error] = safeConvert("parse", el.value);
-                            if (error) {
-                                updateInput(el, currentValue);
-                                return currentValue;
-                            } else {
-                                return parsedValue;
-                            }
+                    // Iterate over the current value slots rather than the inputs:
+                    // a target-only picker (e.g. gantt scale selector, builder
+                    // datetimepicker) has no input elements, in which case every
+                    // value must be preserved as-is. Indexing an absent input keeps
+                    // the current value, so the just-selected value is never wiped.
+                    const values = ensureArray(pickerProps.value).map((currentValue, i) => {
+                        const el = inputs[i];
+                        if (!el || el.tagName?.toLowerCase() !== "input") {
+                            return currentValue;
                         }
-                    );
+                        const [parsedValue, error] = safeConvert("parse", el.value);
+                        if (error) {
+                            updateInput(el, currentValue);
+                            return currentValue;
+                        }
+                        return parsedValue;
+                    });
                     updateValue(values.length === 2 ? values : values[0], "date", "input");
                 }
 
@@ -553,14 +550,8 @@ export const datetimePickerService = {
                 let shouldFocus = false;
                 /** @type {Partial<DateTimePickerProps>} */
                 let stringProps = {};
-                /** @type {OwlRef | null} */
-                let targetRef = null;
 
                 if (options?.useOwlHooks) {
-                    if (typeof params.target === "string") {
-                        targetRef = useRef(params.target);
-                    }
-
                     onWillRender(function computeBasePickerProps() {
                         const nextProps = params.pickerProps;
                         const oldStringProps = stringProps;
@@ -595,10 +586,6 @@ export const datetimePickerService = {
                             focusActiveInput();
                         }
                     });
-                } else if (typeof params.target === "string") {
-                    throw new Error(
-                        `datetime picker service error: cannot use target as ref name when not using Owl hooks`
-                    );
                 } else {
                     initInputs(...getInputs());
                     setup();

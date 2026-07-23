@@ -1,4 +1,4 @@
-import { onWillRender, useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -13,14 +13,13 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
  * @param {() => string} params.getValue a function that returns the value to write in
  *   the input, if the user isn't currently editing it
  * @param {(value: string) => any} [params.parse] a function that parses the value of the input.
- * @param {Ref<HTMLInputElement | HTMLTextAreaElement> | (() => HTMLInputElement | HTMLTextAreaElement | null)} [params.ref] a ref or signal containing the input/textarea
- * @param {string} [params.refName="input"] the ref name of the input/textarea
+ * @param {Ref<HTMLInputElement | HTMLTextAreaElement> | (() => HTMLInputElement | HTMLTextAreaElement | null)} params.ref a ref or signal containing the input/textarea
  * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
  * @param {string} [params.fieldName]
  * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
  */
 export function useInputField(params) {
-    const inputRefOrSignal = params.ref || useRef(params.refName || "input");
+    const inputRefOrSignal = params.ref;
     const getEl = () => resolveRefEl(inputRefOrSignal) ?? null;
     const component = useComponent();
     const fieldName = params.fieldName || component.props.name;
