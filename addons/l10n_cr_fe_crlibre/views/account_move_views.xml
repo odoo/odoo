@@ -14,15 +14,18 @@
                         type="object" class="btn-primary"
                         invisible="l10n_cr_fe_state != 'rechazado'"/>
                 <field name="l10n_cr_fe_state" widget="statusbar"
-                       invisible="move_type != 'out_invoice'"/>
+                       invisible="move_type not in ('out_invoice', 'out_refund')"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Factura Electrónica CR"
-                      invisible="move_type != 'out_invoice'">
+                      invisible="move_type not in ('out_invoice', 'out_refund')">
                     <group>
                         <field name="l10n_cr_fe_clave"/>
                         <field name="l10n_cr_fe_consecutivo"/>
                         <field name="l10n_cr_fe_motivo_rechazo" invisible="l10n_cr_fe_state != 'rechazado'"/>
+                        <field name="l10n_cr_fe_motivo" invisible="move_type != 'out_refund'"/>
+                        <field name="l10n_cr_fe_codigo_referencia" invisible="move_type != 'out_refund'"/>
+                        <field name="l10n_cr_fe_razon" invisible="move_type != 'out_refund'"/>
                     </group>
                     <field name="l10n_cr_fe_xml"/>
                     <field name="l10n_cr_fe_xml_firmado"/>
