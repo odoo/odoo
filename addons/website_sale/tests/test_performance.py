@@ -344,6 +344,9 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
             res["product_product"] += 1
             res["sale_order_line"] += 1
 
+        if "website_sale_collect" in self.installed_modules:
+            res["delivery_carrier"] += 1
+
         if "website_sale_mrp" in self.installed_modules:
             res["mrp_bom"] += 1
 

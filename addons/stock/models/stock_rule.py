@@ -476,7 +476,7 @@ class StockRule(models.Model):
         return True
 
     @api.model
-    def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, domain):
+    def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, company_id, domain):
         domain = Domain(domain)
         if warehouse_ids:
             domain &= Domain('warehouse_id', 'in', [False, *warehouse_ids.ids])
@@ -492,7 +492,7 @@ class StockRule(models.Model):
             valid_route_ids |= set(warehouse_ids.route_ids.filtered(filter_function).ids)
         if valid_route_ids:
             domain &= Domain('route_id', 'in', list(valid_route_ids))
-        res = self.env["stock.rule"]._read_group(
+        res = self.env["stock.rule"].sudo()._read_group(  # sudo() needed for cross company warehouse usage
             domain,
             groupby=["location_dest_id", "warehouse_id", "route_id"],
             aggregates=["id:recordset"],
@@ -500,7 +500,11 @@ class StockRule(models.Model):
         )
         rule_dict = defaultdict(OrderedDict)
         for group in res:
-            rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
+            rules = group[3]
+            if filtered_rules := rules.filtered(lambda r: company_id and r.company_id == company_id):
+                rules = filtered_rules
+
+            rule_dict[group[0].id, group[2].id][group[1].id] = rules.sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
 
     def _filter_warehouse_routes(self, product, warehouses, route):
@@ -554,6 +558,7 @@ class StockRule(models.Model):
             values.get("packaging_uom_id", False),
             product_id,
             values.get("warehouse_id", locations.warehouse_id),
+            values.get("company_id", False),
             domain,
         )
 

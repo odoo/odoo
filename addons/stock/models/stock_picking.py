@@ -751,6 +751,11 @@ class StockPicking(models.Model):
             )}
 
     def action_confirm(self):
+        if self.partner_id.company_id and self.partner_id.company_id != self.company_id:
+            raise UserError(self.env._(
+                "There is a mismatch between the company the Contact is restricted to and the company doing the transfer. "
+                "Please ensure the company is the same or that the Contact has no company restriction set."
+                ))
         self._check_company()
         if not self.env.context.get('skip_zero_demand_check') and not modules.module.current_test:
             # Check for zero demand moves before confirming
