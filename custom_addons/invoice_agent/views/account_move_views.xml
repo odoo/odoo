@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- account.move form/list extensions go here later -->
+    <!--
+        Inherit the account.move form view to add an AI Extraction notebook page.
+        Uses xpath on the notebook with position="inside" to append a new page
+        at the end of the notebook.
+    -->
+    <record id="view_move_form_ai_extraction" model="ir.ui.view">
+        <field name="name">account.move.form.ai.extraction</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[@class='o_notebook']" position="inside">
+                <!-- AI Extraction Page -->
+                <page string="AI Extraction" name="ai_extraction_page"
+                      attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'out_invoice', 'out_refund'))]}">
+                    <group name="ai_extraction_status_group">
+                        <group string="Extraction Metadata">
+                            <field name="ai_extraction_status" widget="badge" decoration-danger="ai_extraction_status == 'failed'" decoration-success="ai_extraction_status == 'validated'" decoration-warning="ai_extraction_status == 'extracted'" decoration-info="ai_extraction_status == 'pending'"/>
+                            <field name="ai_review_required" widget="boolean_toggle"/>
+                            <field name="ai_confidence" widget="progressbar"/>
+                            <field name="ai_model_used"/>
+                            <field name="ai_source_attachment_id" widget="many2many_binary" options="{'preview_image': True}"/>
+                            <field name="ai_extracted_on"/>
+                            <field name="ai_validated_on"/>
+                        </group>
+                        <group string="AI Extracted Data">
+                            <field name="ai_ocr_text" nolabel="1" colspan="2" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Per-Field Extraction Details">
+                        <field name="extraction_line_ids" nolabel="1">
+                            <tree editable="bottom" multi_edit="1">
+                                <field name="field_name"/>
+                                <field name="extracted_value"/>
+                                <field name="field_confidence" widget="progressbar" optional="show"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Raw AI Payload">
+                        <field name="ai_extracted_json" nolabel="1" colspan="2" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>

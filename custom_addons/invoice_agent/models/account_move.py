@@ -1,13 +1,40 @@
 from odoo import fields, models
 
 
-#  this file extends the account.move model to add fields and functionality for AI-based data extraction for invoices and journal entries.
 class AccountMove(models.Model):
     _inherit = 'account.move'
-    # Add AI Extraction Fields
-    # These fields are used to track the status and results of AI-based data extraction for invoices and journal entries.
 
-    # the current status of the AI extraction process for this document
+    # === AI Extraction Fields ===
+
+    # The source attachment (PDF scan) that was processed by the AI
+    ai_source_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string='AI Source Attachment',
+        ondelete='set null',
+        help="The source PDF or image attachment that was processed by the AI extraction service.",
+    )
+
+    # The raw OCR text extracted from the source document
+    ai_ocr_text = fields.Text(
+        string='AI OCR Text',
+        help="Raw OCR text extracted from the source PDF/image by the AI service.",
+    )
+
+    # The AI model identifier used for extraction (e.g. 'gpt-4o', 'llama-3.1-70b')
+    ai_model_used = fields.Char(
+        string='AI Model Used',
+        help="Identifier of the AI model used for extraction (e.g. 'gpt-4o', 'llama-3.1-70b').",
+    )
+
+    # Flag indicating the extraction needs human review before use
+    ai_review_required = fields.Boolean(
+        string='AI Review Required',
+        tracking=True,
+        default=False,
+        help="When checked, this document's AI extraction needs human review before posting.",
+    )
+
+    # The current status of the AI extraction process for this document
     ai_extraction_status = fields.Selection(
         selection=[
             ('pending', 'Pending'),
@@ -21,57 +48,42 @@ class AccountMove(models.Model):
         tracking=True,
         help="Current state of AI data extraction for this document.",
     )
-    # the overall confidence score of the AI extraction process for this document
+
+    # The overall confidence score of the AI extraction process for this document
     ai_confidence = fields.Float(
         string='AI Overall Confidence',
         digits=(3, 2),
         tracking=True,
         help="Overall extraction confidence score between 0.00 and 1.00.",
     )
-    # the raw JSON payload returned by the AI extraction service for this document
+
+    # The raw JSON payload returned by the AI extraction service for this document
     ai_extracted_json = fields.Json(
         string='AI Extracted Raw Payload',
         help="JSON blob containing full unprocessed OCR/AI response.",
     )
-    #  the timestamp when the AI extraction process completed for this document
+
+    # The timestamp when the AI extraction process completed for this document
     ai_extracted_on = fields.Datetime(
         string='AI Extracted On',
         readonly=True,
         help="Timestamp when data extraction completed.",
     )
-    # the timestamp when the AI extraction process was validated for this document
+
+    # The timestamp when the AI extraction process was validated for this document
     ai_validated_on = fields.Datetime(
         string='AI Validated On',
         readonly=True,
         help="Timestamp when data validation completed.",
     )
-    # the attachment record corresponding to the processed scan
-    ai_scan_pdf_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string='AI Scan PDF',
-        ondelete='set null',
-        help="Attachment record corresponding to the processed scan.",
-    )
-    # the attachment record corresponding to the processed OCR text
-    ai_scan_text_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string='AI Scan Text',
-        ondelete='set null',
-        help="Attachment record corresponding to the processed OCR text.",
-    )
-    # the attachment record corresponding to the processed AI JSON payload
-    ai_scan_json_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string='AI Scan JSON',
-        ondelete='set null',
-        help="Attachment record corresponding to the processed AI JSON payload.",
-    )
-    # the one-to-many relationship to the per-field extraction lines for this document
+
+    # The one-to-many relationship to the per-field extraction lines for this document
     extraction_line_ids = fields.One2many(
         comodel_name='invoice.agent.extraction.line',
         inverse_name='move_id',
         string='Per-Field Extraction Data',
     )
+
     # SQL constraint to ensure AI confidence is within valid range
     _sql_constraints = [
         (
