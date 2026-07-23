@@ -113,12 +113,12 @@ export class Composer extends Component {
     app = useApp();
 
     extraActionsRef = signal.ref(HTMLDivElement);
+    fileUploaderRef = signal.ref(HTMLButtonElement);
     moreActionsRef = signal.ref(HTMLDivElement);
     quickActionsRef = signal.ref(HTMLDivElement);
 
     setup() {
         super.setup();
-        this.dialogService = useService("dialog");
         /** @type {import("@html_editor/editor").Editor} */
         this.editor = undefined;
         this.isMobileOS = isMobileOS();
@@ -142,6 +142,10 @@ export class Composer extends Component {
             type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
         });
         this.composer = propComputed("composer", t.instanceOf(this.store["Composer"].Class));
+        this.state = proxy({
+            active: true,
+            isFullComposerOpen: false,
+        });
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
@@ -160,10 +164,6 @@ export class Composer extends Component {
         this.fakeTextarea = signal.ref(HTMLTextAreaElement);
         this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = signal.ref(HTMLDivElement);
-        this.state = proxy({
-            active: true,
-            isFullComposerOpen: false,
-        });
         this.rootRef = signal.ref(HTMLDivElement);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
@@ -406,7 +406,29 @@ export class Composer extends Component {
     }
 
     get composerActionsParams() {
-        return { composer: () => this.props.composer };
+        return {
+            _sendMessage: (value, postData, extraData) =>
+                this._sendMessage(value, postData, extraData),
+            active: () => this.state.active,
+            addEmoji: (emoji) => this.addEmoji(emoji),
+            allowUpload: () => this.allowUpload,
+            areAllActionsDisabled: () => this.areAllActionsDisabled,
+            composer: () => this.props.composer,
+            extraActionsRef: this.extraActionsRef,
+            fileUploaderRef: this.fileUploaderRef,
+            inChatter: this.env.inChatter,
+            inDiscussApp: this.env.inDiscussApp,
+            inFrontendPortalChatter: this.env.inFrontendPortalChatter,
+            isFullComposerOpen: () => this.state.isFullComposerOpen,
+            isSendButtonDisabled: () => this.isSendButtonDisabled,
+            moreActionsRef: this.moreActionsRef,
+            onClickFullComposer: () => this.onClickFullComposer(),
+            onClickInsertCannedResponse: (ev) => this.onClickInsertCannedResponse(ev),
+            quickActionsRef: this.quickActionsRef,
+            sendMessage: () => this.sendMessage(),
+            showFullComposer: () => this.props.showFullComposer,
+            type: () => this.props.type,
+        };
     }
 
     /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
@@ -417,7 +439,7 @@ export class Composer extends Component {
         }
         this.moreActions = this.composerActions.more(this.composerActionsParams, {
             actions: partitionedActions.other,
-            disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
+            disabledCondition: ({ areAllActionsDisabled }) => areAllActionsDisabled,
             dropdownPosition: "top-start",
             icon: "fa fa-plus-circle",
             name: _t("More Actions"),
