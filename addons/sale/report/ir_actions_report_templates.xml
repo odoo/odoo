@@ -234,14 +234,14 @@
                                     class="w-100"
                                     t-att-style="padding_style"
                                 >
-                                    <div class="d-flex align-items-start">
+                                    <div class="o_sale_line_product_cell">
                                         <img
                                             t-if="doc.company_id.display_product_images_on_so and line.product_id.image_128"
                                             t-att-src="image_data_uri(line.product_id.image_128)"
                                             t-att-alt="line.product_id.display_name"
-                                            class="o_sale_report_product_image me-2 rounded object-fit-cover align-top"
+                                            class="o_sale_report_product_image me-2 rounded object-fit-cover float-start"
                                         />
-                                        <div class="o_product_name_cell align-top">
+                                        <div class="o_product_name_cell">
                                             <span t-field="line.name">Bacon Burger</span>
                                         </div>
                                     </div>
