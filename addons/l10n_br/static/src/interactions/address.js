@@ -80,6 +80,9 @@ patch(CustomerAddress.prototype, {
 
     async _onChangeCountry(init=false) {
         await this.waitFor(super._onChangeCountry(...arguments));
+        if (this.countryCode !== "BR") {
+            return;
+        }
 
         if (this._getSelectedCountryCode() === 'BR') {
             this._setVisibility('.o_standard_address', false); // hide
