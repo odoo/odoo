@@ -3899,15 +3899,16 @@ class AccountMove(models.Model):
         - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
         - 'todo', 'anomaly': no restriction
         """
-        if self.env.su:
+        # Since self might be empty, we fallback on the company
+        if self.env.su or not all(self.mapped('set_to_review_documents')) or not self.env.company.set_to_review_documents:
             return
         is_user_able_to_review, is_user_able_to_supervise = self._get_review_state_access_groups()
         if review_state == 'supervised' and not is_user_able_to_supervise:
-            raise AccessError(_("This entry has already been supervised. You need the accounting manager role to change it."))
+            raise AccessError(self.env._("This entry has already been supervised. You need the accounting manager role to change it."))
         if (review_state == 'reviewed') and not is_user_able_to_review:
-            raise AccessError(_("This entry has been reviewed, You need the bookkeeper role to change it."))
+            raise AccessError(self.env._("This entry has been reviewed by accountants, only them can edit it now."))
         if (review_state == 'no_review' or not review_state) and not is_user_able_to_review:
-            raise AccessError(_("You don't have the access rights to perform this action."))
+            raise AccessError(self.env._("You don't have the access rights to perform this action."))
 
     def _check_user_access(self, vals_list):
         for vals in vals_list:
@@ -4001,7 +4002,7 @@ class AccountMove(models.Model):
                         move_ids_review_done.append(move.id)
                 elif move.set_to_review_documents:
                     move_ids_review_todo.append(move.id)
-            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields and move.set_to_review_documents:
+            if not is_user_able_to_review and modified_accounting_fields and move.set_to_review_documents:
                 move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
