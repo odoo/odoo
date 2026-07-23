@@ -137,22 +137,27 @@ export class MediaDialog extends Component {
         }
         const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
         if (addIcons) {
-            const icons = TABS.ICONS.Component.initFonts();
-            this.addTab(TABS.ICONS, {
-                icons,
-            });
+            this.addTab(TABS.ICONS);
 
             if (
                 this.props.media &&
                 TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
             ) {
-                // Material Symbols or Odoo UI icon: identified by the data-icon attribute
-                const selectedIcon = icons.find(
-                    (icon) => icon.dataIcon === this.props.media.dataset.icon
-                );
-                if (selectedIcon) {
-                    selectedIcon.filled = this.props.media.classList.contains("oi-filled");
-                    this.selectMedia(selectedIcon, TABS.ICONS.id);
+                // Material Symbols or Odoo UI icon: identified by the data-icon
+                // attribute. The icon list is fetched lazily by the IconSelector,
+                // so the pre-selection is rebuilt directly from the media element.
+                const dataIcon = this.props.media.dataset.icon;
+                if (dataIcon) {
+                    this.selectMedia(
+                        {
+                            id: dataIcon,
+                            name: dataIcon,
+                            dataIcon,
+                            source: dataIcon.startsWith("oi_") ? "oi" : "ms",
+                            filled: this.props.media.classList.contains("oi-filled"),
+                        },
+                        TABS.ICONS.id
+                    );
                 }
                 // No initialIconClasses needed: data-icon is overwritten by createElements,
                 // and "oi" is the shared base class preserved across icon changes.
