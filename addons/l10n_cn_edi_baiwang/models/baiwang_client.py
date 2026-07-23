@@ -86,21 +86,3 @@ class BaiwangClient:
             msg = self.company.env._("Baiwang red form detail query failed: %s", result.get('error', 'Unknown error'))
             raise UserError(msg)
         return result.get('response', {})
-
-    # --- Compatibility / Testing Methods ---
-
-    def _get_token(self):
-        """
-        Stub for backward compatibility and credential testing.
-
-        In the proxy architecture, token management is handled entirely on the IAP side.
-        This method can be used for configuration validation (e.g., "Test Connection" button).
-
-        Returns: 'OK' if proxy user is configured
-        """
-        self._ensure_proxy_user()
-        return 'OK'
-
-    def ensure_connection(self, timeout: float = 3.0):
-        """Stub for backward compatibility. Not needed with proxy architecture."""
-        self._ensure_proxy_user()
