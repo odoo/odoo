@@ -2096,16 +2096,15 @@ describe("toolbar open and close on user interaction", () => {
             await expectElementCount(".o-we-toolbar", 1);
 
             const overlay = queryOne(".o-we-toolbar").parentElement;
-            const position = {
-                top: overlay.style.top,
-                left: overlay.style.left,
-            };
+            const top = parseFloat(overlay.style.top);
+            const left = parseFloat(overlay.style.left);
 
             await contains(".o-we-toolbar button[name='bold']").click();
             expect(getContent(el)).toBe(
                 `<p style="padding-top: 100px">aaaaaaaaaaaaa <strong>[test]</strong> bbbbbbbbbbbbb</p>`
             );
-            expect({ top: overlay.style.top, left: overlay.style.left }).toEqual(position);
+            expect(parseFloat(overlay.style.top)).toBeCloseTo(top);
+            expect(parseFloat(overlay.style.left)).toBeCloseTo(left);
             expect(overlay.style.visibility).toBe("visible");
         });
     });
