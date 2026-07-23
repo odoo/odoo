@@ -5,12 +5,12 @@ import ast
 import datetime
 import json
 import logging
+import psycopg2
 import re
 import smtplib
-from collections import defaultdict
-from datetime import timedelta
 
-import psycopg2
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
@@ -186,6 +186,23 @@ class MailMail(models.Model):
         if mail_msg_cascade_ids:
             self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
         return res
+
+    @api.autovacuum
+    def _gc_canceled_mail_mail(self):
+        """Garbage collects old canceled mail.mail records as we consider
+        nobody is going to look at them anymore, becoming noise."""
+        # The 10000 limit is arbitrary, chosen a big limit so that the cleaning can be shorter and not too big so that we don't block the server
+        months_limit = self.env['ir.config_parameter'].sudo().get_int("mass_mailing.cancelled_mails_months_limit", 6)
+        if months_limit <= 0:
+            return
+        history_deadline = datetime.datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept
+        canceled_mails = self.with_context(active_test=False).search([('state', '=', 'cancel'), ('write_date', '<=', history_deadline)], order="id asc", limit=10000)
+        # about linked mail_message: 'is_notification' is in charge of choosing to
+        # delete the mail.message or not, see MailMail.unlink()
+        canceled_mails.with_context(prefetch_fields=False).unlink()
+
+    # USER ACTIONS
+    # ------------------------------------------------------------
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()
@@ -602,7 +619,7 @@ class MailMail(models.Model):
         server_limit_minute = (
             mail_server.owner_limit_time
             if mail_server.owner_limit_time
-            else current_minute - timedelta(minutes=1)
+            else current_minute - relativedelta(minutes=1)
         )
 
         if server_limit_minute < current_minute:
@@ -672,12 +689,12 @@ class MailMail(models.Model):
                     owner_limit_count += len(all_recipients) or 1
                 else:
                     owner_limit_count = len(all_recipients) or 1
-                    server_limit_minute += timedelta(minutes=1)
+                    server_limit_minute += relativedelta(minutes=1)
 
                 mail.scheduled_date = server_limit_minute
 
             self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger(
-                min(to_delay.mapped('scheduled_date')) + timedelta(seconds=59))
+                min(to_delay.mapped('scheduled_date')) + relativedelta(seconds=59))
 
         _logger.info(
             "Mail: personal server %s: %s emails about to be sent / %s emails delayed",
@@ -994,9 +1011,9 @@ class MailMail(models.Model):
             post_send_callback(self.ids)
         return True
 
-# ============================================================
-# Mail -> Notification Helpers
-# ============================================================
+    # ============================================================
+    # Mail -> Notification Helpers
+    # ============================================================
 
     def _get_notification_values(self):
         """Get list of base notification values to create a notification for existing emails.
