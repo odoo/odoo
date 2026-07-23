@@ -129,7 +129,7 @@ class CloudStorageAttachmentMigration(models.Model):
             AND ia.res_field IS NULL
             AND ia.store_fname IS NOT NULL
             AND (%(check_model)s)
-            AND ia.res_model NOT IN %(unsupported_models)s
+            AND ia.res_model != ALL(%(unsupported_models)s)
             AND ia.file_size BETWEEN %(min_file_size)s AND %(max_file_size)s
             AND ia.create_date < %(create_date)s
             %(check_documents)s
@@ -138,7 +138,7 @@ class CloudStorageAttachmentMigration(models.Model):
         """,
             max_attachment_id=max_attachment_id,
             check_model=check_model,
-            unsupported_models=self._get_cloud_storage_unsupported_models(),
+            unsupported_models=list(self._get_cloud_storage_unsupported_models()),
             # ignore if attachment is too small or too large
             min_file_size=min_file_size,
             max_file_size=max_file_size,
