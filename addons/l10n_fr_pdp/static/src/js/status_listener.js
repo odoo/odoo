@@ -1,15 +1,17 @@
 import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { onMounted } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { onMounted, usePlugin } from "@odoo/owl";
 
 export class KycStatusFormController extends FormController {
+    orm = usePlugin(ORM);
+
     setup() {
         super.setup();
-        this.orm = this.env.services.orm;
-        this.busService = this.env.services.bus_service;
-        this.action = this.env.services.action;
-        this.recordId = this.props.resId;
+        this.busService = useService("bus_service");
+        this.action = useService("action");
 
         onMounted(() => {
             this.busService.subscribe("auth_done", async (data) => {
@@ -24,6 +26,10 @@ export class KycStatusFormController extends FormController {
                 this.action.doAction(action);
             });
         });
+    }
+
+    get recordId() {
+        return this.props.resId;
     }
 }
 
