@@ -560,7 +560,7 @@ class SaleOrder(models.Model):
             self._verify_cart_after_update()
 
         return {
-            "added_qty": quantity,
+            "added_qty": quantity * kwargs.get('selected_combo_item_qty', 1),
             "line_id": order_line.id,
             "quantity": quantity,
             "warning": warning,

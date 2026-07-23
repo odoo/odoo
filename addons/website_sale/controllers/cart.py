@@ -208,7 +208,7 @@ class Cart(PaymentPortal):
             # If quantities were modified through `_check_combo_quantities`, the added qty per line
             # must be adapted accordingly, and the final returned warning should be the reason.
             added_qty_per_line = {
-                line.id: updated_line.product_uom_qty * updated_line.selected_combo_item_qty
+                line.id: updated_line.product_uom_qty
                 for line in (updated_line + updated_line.linked_line_ids)
             }
             warning = changed_reason

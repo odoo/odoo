@@ -643,7 +643,12 @@ class Website(models.Model):
         return Domain.AND([website._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):  # noqa: PLR6301
-        return [("sale_ok", "=", True)]
+        return [
+            ("sale_ok", "=", True),
+            "|",
+            ("type", "!=", "combo"),
+            ("has_sellable_combo", "=", True),
+        ]
 
     def _create_cart(self):
         self.ensure_one()
@@ -1174,8 +1179,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]

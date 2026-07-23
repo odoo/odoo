@@ -77,6 +77,21 @@ class ProductTemplate(models.Model):
         comodel_name='product.combo',
         check_company=True,
     )
+    sellable_combo_ids = fields.Many2many(
+        string="Sellable Combo Choices",
+        comodel_name='product.combo',
+        relation='product_template_sellable_product_combo_rel',
+        compute='_compute_sellable_combo_ids',
+        store=True,
+        help="Combo choices available in the Sales/eCommerce flow. Upsell combos are "
+             "POS-specific and excluded here.",
+    )
+    has_sellable_combo = fields.Boolean(
+        compute='_compute_has_sellable_combo',
+        store=True,
+        help="Technical field used to check whether this combo product has sellable combo"
+             " choices, without requiring read access to `product.combo`.",
+    )
     service_tracking = fields.Selection(selection=[
             ('no', 'Nothing'),
         ],
@@ -484,6 +499,16 @@ class ProductTemplate(models.Model):
         pricelist_active = self.env.user._has_group('product.group_product_pricelist')
         for template in self:
             template.show_sales_price_page = pricelist_active and template.sale_ok
+
+    @api.depends('combo_ids')
+    def _compute_sellable_combo_ids(self):
+        for template in self:
+            template.sellable_combo_ids = template.combo_ids
+
+    @api.depends('sellable_combo_ids')
+    def _compute_has_sellable_combo(self):
+        for template in self:
+            template.has_sellable_combo = bool(template.sellable_combo_ids)
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):

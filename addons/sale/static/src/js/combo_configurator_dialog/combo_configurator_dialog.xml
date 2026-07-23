@@ -6,45 +6,7 @@
             contentClass="'sale-combo-configurator-dialog'"
             bodyClass="'d-flex flex-column gap-4'"
         >
-            <div t-if="this.unconfigurableCombos.length" class="mb-4">
-                <span class="d-inline-block mb-3 h4">
-                    Included
-                </span>
-                <div class="container">
-                    <div
-                        t-foreach="this.unconfigurableCombos"
-                        t-as="combo"
-                        t-key="combo.id"
-                        class="row mb-3"
-                    >
-                        <t t-set="product" t-value="combo.combo_items[0].product"/>
-                        <div class="col-2 p-0">
-                            <img
-                                t-attf-src="/web/image/product.product/{{product.id}}/image_256"
-                                alt="Product Image"
-                                role="img"
-                                class="img-thumbnail rounded"
-                            />
-                        </div>
-                        <div
-                            name="preselected_product_name"
-                            class="col d-flex justify-content-center text-break flex-column"
-                        >
-                            <span
-                                name="preselected_product_title"
-                                t-out="product.display_name"
-                                class="h5"
-                            />
-                            <div
-                                t-if="product.description"
-                                t-out="product.description"
-                                class="text-muted small text-truncate"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div t-foreach="this.configurableCombos" t-as="combo" t-key="combo.id">
+            <div t-foreach="this.allCombos" t-as="combo" t-key="combo.id">
                 <div class="d-flex align-items-baseline mb-3">
                     <span name="sale_combo_configurator_title" class="mb-0" t-out="combo.name"/>
                     <h6 class="text-muted ms-2 mb-0 fw-normal fst-normal">
@@ -56,21 +18,21 @@
                 </div>
                 <div class="row row-cols-1 row-cols-md-3 g-3">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
-                        <div class="d-flex flex-column gap-2 align-items-center">
+                        <div t-att-class="{
+                            'd-flex flex-column gap-2': true,
+                            'align-items-center': comboItem.is_configurable,
+                        }">
                             <ProductCard
-                                product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
+                                product="this.getSelectedOrProvidedComboItem(comboItem).product"
                                 extraPrice="comboItem.extra_price"
-                                onClick="() => this.selectComboItem(
-                                    combo.id,
-                                    comboItem,
-                                )"
-                                isSelected="this.getItemQuantity(combo.id, comboItem.id) > 0"
+                                onClick="() => this.selectComboItem(combo, comboItem)"
+                                isSelected="this.getItemQuantity(comboItem.id) > 0"
                                 isConfigurable="comboItem.is_configurable"
                             >
-                            <t t-if="combo.qty_free > 1" t-set-slot="quantityButtons">
+                            <t t-if="combo.included_qty > 1" t-set-slot="quantityButtons">
                                 <div t-on-click.stop="() => {}">
                                     <SubItemQuantityButtons
-                                        quantity="this.getItemQuantity(combo.id, comboItem.id)"
+                                        quantity="this.getItemQuantity(comboItem.id)"
                                         setQuantity="(qty) => this.setItemQuantity(combo.id, comboItem, qty)"
                                     />
                                 </div>

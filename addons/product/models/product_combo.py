@@ -29,7 +29,7 @@ class ProductCombo(models.Model):
         min_display_digits='Product Price',
         compute='_compute_base_price',
     )
-    qty_free = fields.Integer(
+    included_qty = fields.Integer(
         string="Included",
         default=1,
         help="Number of free items included in the combo."
@@ -88,7 +88,7 @@ class ProductCombo(models.Model):
         templates._check_company(fnames=['combo_ids'])
         self.combo_item_ids._check_company(fnames=['product_id'])
 
-    @api.constrains('qty_free')
-    def _check_qty_free(self):
-        if any(combo.qty_free < 1 for combo in self):
+    @api.constrains('included_qty')
+    def _check_included_qty(self):
+        if any(combo.included_qty < 1 for combo in self):
             raise ValidationError(_("The free quantity of a combo must be greater or equal to 1."))

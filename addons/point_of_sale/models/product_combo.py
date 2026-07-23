@@ -18,7 +18,7 @@ class ProductCombo(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'combo_item_ids', 'base_price', 'qty_free', 'qty_max', 'is_upsell', 'sequence', 'currency_id']
+        return ['id', 'name', 'combo_item_ids', 'base_price', 'included_qty', 'qty_max', 'is_upsell', 'sequence', 'currency_id']
 
     @api.model
     def _load_pos_data_read(self, records, config):
@@ -36,24 +36,30 @@ class ProductCombo(models.Model):
 
     @api.onchange('is_upsell')
     def _onchange_is_upsell(self):
-        for record in self:
-            if record.is_upsell:
-                record.qty_free = 0
+        if self.is_upsell:
+            self.included_qty = 0
+        if not self.is_upsell and self.included_qty == 0:
+            self.included_qty = 1
+
+    @api.onchange('qty_max', 'included_qty')
+    def _onchange_included_qty_adjust_qty_max(self):
+        for combo in self:
+            if combo.included_qty > combo.qty_max:
+                combo.qty_max = combo.included_qty
 
     @api.constrains('qty_max')
     def _check_qty_max(self):
         if any(combo.qty_max < 1 for combo in self):
             raise ValidationError(_("The maximum quantity of a combo must be greater or equal to 1."))
 
-    @api.constrains('qty_free', 'is_upsell')
-    def _check_qty_free(self):
+    @api.constrains('included_qty', 'is_upsell')
+    def _check_included_qty(self):
         upsell_combos = self.filtered(lambda combo: combo.is_upsell)
-        if any(combo.qty_free != 0 for combo in upsell_combos):
+        if any(combo.included_qty != 0 for combo in upsell_combos):
             raise ValidationError(_("The free quantity of an upsell combo must be equal to 0."))
-        super(ProductCombo, self - upsell_combos)._check_qty_free()
+        super(ProductCombo, self - upsell_combos)._check_included_qty()
 
-    @api.onchange('qty_max', 'qty_free')
-    def _onchange_qty_free_adjust_qty_max(self):
-        for combo in self:
-            if combo.qty_free > combo.qty_max:
-                combo.qty_max = combo.qty_free
+    @api.constrains('qty_max', 'included_qty')
+    def _check_qty_max_greater_than_included_qty(self):
+        if any(combo.included_qty > combo.qty_max for combo in self):
+            raise ValidationError(_("The free quantity must be smaller or equal to the maximum quantity."))

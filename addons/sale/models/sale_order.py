@@ -1352,21 +1352,22 @@ class SaleOrder(models.Model):
             elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
                 if selected_combo_items:
-                    for combo in line.product_template_id.sudo().combo_ids:
+                    for combo in line.product_template_id.sudo().sellable_combo_ids:
                         combo_item_ids = combo.combo_item_ids.ids
                         selected_qty = sum(
                             item["selected_combo_item_qty"]
                             for item in selected_combo_items
                             if item["combo_item_id"] in combo_item_ids
                         )
-                        if selected_qty != combo.qty_free:
+                        if selected_qty != combo.included_qty:
                             raise ValidationError(
                                 self.env._(
-                                    "The number of selected items for combo '%(combo)s' (%(selected_qty)s) "
-                                    "must match the included quantity (%(included_qty)s).",
+                                    "The number of selected items for combo '%(combo)s' "
+                                    "(%(selected_qty)s) must match the included quantity "
+                                    "(%(included_qty)s).",
                                     combo=combo.name,
                                     selected_qty=selected_qty,
-                                    included_qty=combo.qty_free,
+                                    included_qty=combo.included_qty,
                                 )
                             )
 
