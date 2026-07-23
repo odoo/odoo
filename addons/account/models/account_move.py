@@ -3955,7 +3955,7 @@ class AccountMove(models.Model):
         move_ids_review_todo = []
         for move in self:
             modified_accounting_fields = self._field_will_change_list(move, vals, unmodifiable_fields)
-            if vals.get('state') == 'draft':
+            if vals.get('state') == 'draft' and move.set_to_review_documents:
                 move._check_review_state_access(move.review_state)
             if (vals.get('state') == 'posted' and move.auto_post == 'no') or vals.get('auto_post', 'no') != 'no':
                 if is_user_able_to_review:

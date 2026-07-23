@@ -40,6 +40,19 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
             invoice.with_user(self.simple_accountman).button_draft()
 
+    def test_reset_to_draft_own_invoice_without_review(self):
+        """User with only Invoicing rights can reset their own invoices to draft when Review Data is disabled."""
+        self.company.set_to_review_documents = False
+
+        own_invoice = self.env['account.move'].with_user(self.simple_accountman).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        own_invoice.with_user(self.simple_accountman).action_post()
+        own_invoice.with_user(self.simple_accountman).button_draft()
+        self.assertEqual(own_invoice.state, 'draft')
+
     def test_sales_modify_draft_reviewed(self):
         invoice = self._create_invoice(review_state='reviewed')
         invoice.with_user(self.simple_accountman).invoice_date = '2017-01-01'
