@@ -72,7 +72,9 @@ class SaleOrder(models.Model):
             if order.invoice_status == 'invoiced':
                 continue
             # We need to account for the downpayment paid in POS with and without invoice
-            order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.order_id.state in ['paid', 'done', 'invoiced'] and pol.sale_order_line_id.is_downpayment).mapped('price_subtotal_incl'))
+            order_lines = order.sudo().pos_order_line_ids.filtered(lambda pol: pol.sale_order_line_id.is_downpayment)
+            pos_lines = order_lines | order_lines.refund_orderline_ids
+            order_amount = sum(pos_lines.filtered(lambda pol: pol.order_id.state in ['paid', 'done', 'invoiced']).mapped('price_subtotal_incl'))
             order.amount_invoiced += order_amount
 
 
