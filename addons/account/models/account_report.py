@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.tools.translate import html_translate
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -663,6 +664,15 @@ class AccountReportExpression(models.Model):
         inverse="_inverse_model_id",
     )
     subformula = fields.Text(string="Subformula")
+    subformula_selection_options = fields.Text(translate=html_translate)
+    # This field always shows the English (original) version of the field above.
+    # It's used so users can't edit the HTML/XML in any of the translations.
+    # We use a hack to show the translation button for the field above.
+    subformula_selection_options_base = fields.Text(
+        string="Subformula Selection Options",
+        compute="_compute_subformula_selection_options_base",
+        inverse="_inverse_subformula_selection_options_base",
+    )
     date_scope = fields.Selection(
         string="Date Scope",
         selection=[
@@ -747,6 +757,17 @@ class AccountReportExpression(models.Model):
                 expression.model_id = self.env["ir.model"].search([("model", "=", expression.formula)], limit=1)
             else:
                 expression.model_id = False
+
+    @api.depends('subformula_selection_options')
+    def _compute_subformula_selection_options_base(self):
+        # Always show the English version to edit.
+        for expr, expr_wo_lang in zip(self, self.with_context(lang=None)):
+            expr.subformula_selection_options_base = expr_wo_lang.subformula_selection_options
+
+    def _inverse_subformula_selection_options_base(self):
+        # Always write on the English version, so translations stay consistent.
+        for expr, expr_wo_lang in zip(self, self.with_context(lang=None)):
+            expr_wo_lang.subformula_selection_options = expr.subformula_selection_options_base
 
     @api.onchange('model_id')
     def _inverse_model_id(self):
