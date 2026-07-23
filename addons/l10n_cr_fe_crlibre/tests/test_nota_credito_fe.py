@@ -91,3 +91,19 @@ class TestNotaCreditoFe(TransactionCase):
         credit_note.action_post()
         self.assertEqual(credit_note.state, 'posted')
         self.assertEqual(credit_note.l10n_cr_fe_state, 'error')
+
+    def test_consultar_estado_aceptado_sends_email_for_credit_note(self):
+        import base64 as base64_module
+        credit_note = self._create_credit_note()
+        credit_note.write({'l10n_cr_fe_clave': '9' * 50, 'l10n_cr_fe_state': 'enviado'})
+        self.partner.email = 'cliente@example.com'
+        xml = '<MensajeHacienda><DetalleMensaje>Comprobante aceptado</DetalleMensaje></MensajeHacienda>'
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_hacienda_token',
+                   return_value='tok'), \
+             patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.consultar_estado',
+                   return_value={'ind_estado': 'aceptado',
+                                 'respuesta_xml': base64_module.b64encode(xml.encode()).decode()}), \
+             patch('odoo.addons.l10n_cr_fe_crlibre.models.account_move.AccountMove._l10n_cr_fe_send_acceptance_email') as m_email:
+            credit_note.action_l10n_cr_fe_consultar_estado()
+        self.assertEqual(credit_note.l10n_cr_fe_state, 'aceptado')
+        m_email.assert_called_once()
