@@ -154,21 +154,36 @@ class DiscussChannelWebclientController(WebclientController):
         partner_ids=None,
         user_ids=None,
         guest_ids=None,
+        emails=None,
         invite_to_rtc_call=False,
         post_joined_message=True,
     ):
         channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             return
+        users = request.env["res.users"].search_fetch(
+            [("id", "in", user_ids or [])], field_names=["share", "email"],
+        )
+        partners = request.env["res.partner"].search_fetch(
+            [("id", "in", partner_ids or [])], field_names=["partner_share", "email"],
+        )
         if self.env.user._is_internal():
             guests = request.env["mail.guest"].search_fetch([("id", "in", guest_ids or [])])
+            if channel._allow_invite_by_email() and (
+                all_emails := [
+                    *(emails or []),
+                    *users.filtered(lambda u: u.share).mapped("email"),
+                    *partners.filtered(lambda p: p.partner_share).mapped("email"),
+                ]
+            ):
+                channel.invite_by_email(emails=all_emails)
         else:
             # Non-internal users can only add themselves as guest.
             _, guest = self.env["res.users"]._get_current_persona()
             guests = guest if guest.id in (guest_ids or []) else request.env["mail.guest"]
         channel._add_members(
-            partners=request.env["res.partner"].search_fetch([("id", "in", partner_ids or [])]),
-            users=request.env["res.users"].search_fetch([("id", "in", user_ids or [])]),
+            partners=partners,
+            users=users,
             guests=guests,
             invite_to_rtc_call=invite_to_rtc_call,
             post_joined_message=post_joined_message,
