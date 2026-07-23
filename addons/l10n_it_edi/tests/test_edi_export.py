@@ -638,3 +638,23 @@ class TestItEdiExport(TestItEdi):
 
         uom_nodes = invoice_tree.xpath("//*[local-name()='DettaglioLinee']/*[local-name()='UnitaMisura']")
         self.assertEqual(uom_nodes[0].text, 'm2')
+
+    def test_reset_to_draft_l10n_it_edi_transaction(self):
+        """
+        In l10n_it_edi, it is possible to receive a bill where l10n_it_edi_transaction is already populated.
+        It should be possible to still reset this move to draft
+        """
+        bill = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_date': '2026-03-24',
+            'l10n_it_edi_transaction': 'transaction',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        })
+        bill.action_post()
+        self.assertEqual(bill.show_reset_to_draft_button, True)
