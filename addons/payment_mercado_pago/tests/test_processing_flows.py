@@ -13,16 +13,13 @@ from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(MercadoPagoCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_mercado_pago.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         """Test that receiving a redirect notification triggers the processing of the notification
         data."""
         self._create_transaction(flow="redirect")
         url = self._build_url(const.PAYMENT_RETURN_ROUTE)
         with (
-            patch(
-                "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-                return_value=self.verification_data,
-            ),
+            self._mock_send_api_request(return_value=self.verification_data),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
             ) as record_mock,
@@ -37,10 +34,7 @@ class TestProcessingFlows(MercadoPagoCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="redirect")
         url = self._build_url(f"{const.WEBHOOK_ROUTE}/{tx.reference}")
         with (
-            patch(
-                "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-                return_value=self.verification_data,
-            ),
+            self._mock_send_api_request(return_value=self.verification_data),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
             ) as record_mock,

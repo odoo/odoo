@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -10,6 +12,12 @@ from odoo.addons.payment_aps.tests.common import APSCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(APSCommon):
+    @freeze_time("2011-11-02 12:00:21")  # Freeze time for consistent singularization behavior.
+    def test_reference_is_singularized(self):
+        """Test the singularization of reference prefixes."""
+        reference = self.env["payment.transaction"]._compute_reference("aps")
+        self.assertEqual(reference, "tx-20111102120021")
+
     def test_reference_contains_only_valid_characters(self):
         """Test that transaction references are made of only alphanumerics and/or '-' and '_'."""
         for prefix in (None, "", "S0001", "INV/20222/001", "dummy ref"):
@@ -65,9 +73,38 @@ class TestPaymentTransaction(APSCommon):
         self.assertEqual(form_info["method"], "post")
         self.assertListEqual(list(form_info["inputs"].keys()), expected_input_keys)
 
-    def test_processing_payment_data_confirms_transaction(self):
+    def test_extract_reference_finds_reference(self):
+        """Test that the transaction reference is found in the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        reference = self.env["payment.transaction"]._extract_reference("aps", self.payment_data)
+        self.assertEqual(tx.reference, reference)
+
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is updated from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.provider_reference, self.payment_data["fort_id"])
+
+    def test_apply_updates_sets_payment_method(self):
+        """Test that the payment method is updated from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.payment_method_id, self.env.ref("payment_aps.payment_method_visa"))
+
+    def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        amount_data = tx._extract_amount_data(self.payment_data)
+        expected_amount = payment_utils.to_major_currency_units(
+            float(self.payment_data["amount"]), tx.currency_id
+        )
+        self.assertDictEqual(
+            amount_data, {"amount": expected_amount, "currency_code": self.payment_data["currency"]}
+        )

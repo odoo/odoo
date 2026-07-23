@@ -31,5 +31,7 @@ class FlutterwaveCommon(PaymentCommon):
                     "token": "flw-t1nf-f9b3bf384cd30d6fca42b6df9d27bd2f-m03k",
                 },
                 "customer": {"email": "user@example.com"},
+                "amount": cls.amount,
+                "currency": cls.currency.name,
             },
         }

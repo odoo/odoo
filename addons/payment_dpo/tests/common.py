@@ -20,4 +20,6 @@ class DPOCommon(PaymentCommon):
             "CustomerCreditType": "VISA",
             "Result": "000",
             "ResultExplanation": "Success",
+            "TransactionAmount": cls.amount,
+            "TransactionCurrency": cls.currency.name,
         }
