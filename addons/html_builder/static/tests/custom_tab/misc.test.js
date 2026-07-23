@@ -701,6 +701,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
         static template = xml`<div class="test_option">test</div>`;
 
         setup() {
+            super.setup();
             useDomState(() => {
                 expect.step(`useDomState ${count}`);
                 return {

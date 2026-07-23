@@ -1,37 +1,45 @@
-import { Component, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { useActionInfo } from "../utils";
 
-// Props given to the builder input components that are then passed to the
-// BuilderInputBase.
+/**
+ * Props given to the builder input components that are then passed to {@link BuilderInputBase}
+ * components. They must be complemented when calling a `BuilderInputBase` to add
+ * the necessary required props (see {@link textInputBaseProps}).
+ */
 export const textInputBasePassthroughProps = {
-    action: { type: String, optional: true },
-    placeholder: { type: String, optional: true },
-    title: { type: String, optional: true },
-    style: { type: String, optional: true },
-    tooltip: { type: String, optional: true },
-    classes: { type: String, optional: true },
-    inputClasses: { type: String, optional: true },
-    prefix: { type: String, optional: true },
-    prefixIcon: { type: String, optional: true },
-    selectTextOnFocus: { type: Boolean, optional: true },
-    disabled: { type: Boolean, optional: true },
+    classes: t.string().optional(),
+    disabled: t.boolean().optional(),
+    inputClasses: t.string().optional(),
+    placeholder: t.string().optional(),
+    prefix: t.string().optional(),
+    prefixIcon: t.string().optional(),
+    selectTextOnFocus: t.boolean().optional(),
+    style: t.string().optional(),
+    title: t.string().optional(),
+    tooltip: t.string().optional(),
 };
 
-// Abstract Component
+/**
+ * Actual props used by {@link BuilderInputBase} components.
+ */
+export const textInputBaseProps = {
+    ...textInputBasePassthroughProps,
+    commit: t.function(),
+    preview: t.function(),
+    slots: t.object().optional(),
+    value: t.or([t.string(), t.literal(null)]).optional(),
+    // Event handlers
+    onChange: t.function().optional(),
+    onFocus: t.function().optional(),
+    onInput: t.function().optional(),
+    onKeydown: t.function().optional(),
+};
+
+/**
+ * @abstract
+ */
 export class BuilderInputBase extends Component {
-    static template = "";
-    static props = {
-        slots: { type: Object, optional: true },
-        ...textInputBasePassthroughProps,
-        commit: { type: Function },
-        preview: { type: Function },
-        onFocus: { type: Function, optional: true },
-        onInput: { type: Function, optional: true },
-        onChange: { type: Function, optional: true },
-        onKeydown: { type: Function, optional: true },
-        onBeforeInput: { type: Function, optional: true },
-        value: { type: [String, { value: null }], optional: true },
-    };
+    static template;
 
     // Ref on the input element, either owned by the parent (`inputRef` prop) or local.
     inputRef = useProps.static(
@@ -41,7 +49,7 @@ export class BuilderInputBase extends Component {
 
     setup() {
         this.isEditing = false;
-        this.info = useActionInfo();
+        this.info = useActionInfo(this.props);
         this.state = proxy({ value: this.props.value });
         useEffect(() => {
             const value = this.props.value;
@@ -73,9 +81,5 @@ export class BuilderInputBase extends Component {
 
     onKeydown(ev) {
         this.props.onKeydown?.(ev);
-    }
-
-    onBeforeInput(ev) {
-        this.props.onBeforeInput?.(ev);
     }
 }

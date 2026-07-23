@@ -1,64 +1,44 @@
+import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component, useEffect, proxy, useProps, signal, t } from "@odoo/owl";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { pick } from "@web/core/utils/objects";
-import { useBuilderComponent, useInputBuilderComponent } from "../utils";
+import {
+    basicContainerBuilderComponentProps,
+    useBuilderComponent,
+    useInputBuilderComponent,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { BuilderTextInputBase } from "./builder_text_input_base";
 import { textInputBasePassthroughProps } from "./builder_input_base";
+import { BuilderTextInputBase } from "./builder_text_input_base";
 
 const { DateTime } = luxon;
 
 export class BuilderDateTimePicker extends Component {
+    static components = {
+        BuilderComponent,
+        BuilderTextInputBase,
+    };
     static template = "html_builder.BuilderDateTimePicker";
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        id: t.string().optional(),
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-        actionParam: t.any().optional(),
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
-        // textInputBasePassthroughProps (converted inline)
-        action: t.string().optional(),
-        placeholder: t.string().optional(),
-        title: t.string().optional(),
-        style: t.string().optional(),
-        tooltip: t.string().optional(),
-        classes: t.string().optional(),
-        inputClasses: t.string().optional(),
-        prefix: t.string().optional(),
-        prefixIcon: t.string().optional(),
-        selectTextOnFocus: t.boolean().optional(),
-
+        ...basicContainerBuilderComponentProps,
         type: t.selection(["date", "datetime"]).optional("datetime"),
         format: t.string().optional(),
         acceptEmptyDate: t.boolean().optional(true),
         minDate: t.any().optional(() => DateTime.fromObject({ year: 1000 })),
         maxDate: t.any().optional(() => DateTime.now().plus({ year: 200 })),
-        disabled: t.boolean().optional(false),
         allowRelativeDate: t.boolean().optional(false),
     });
-    static components = {
-        BuilderComponent,
-        BuilderTextInputBase,
-    };
+    textInputBaseProps = useProps(textInputBasePassthroughProps);
 
     rootRef = signal.ref();
 
     setup() {
-        useBuilderComponent();
+        useBuilderComponent(this.props);
         this.defaultValue = DateTime.now().toUnixInteger().toString();
         this.previousValue = undefined;
-        const { state, commit, preview } = useInputBuilderComponent({
-            id: this.props.id,
+        const { state, commit, preview } = useInputBuilderComponent(this.props, {
             defaultValue: this.props.acceptEmptyDate ? undefined : this.defaultValue,
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
@@ -175,19 +155,12 @@ export class BuilderDateTimePicker extends Component {
         return this.state.value !== undefined ? this.formatRawValue(this.state.value) : undefined;
     }
 
-    get textInputBaseProps() {
-        return {
-            ...pick(this.props, ...Object.keys(textInputBasePassthroughProps)),
-            disabled: this.props.disabled || this.isToday,
-        };
-    }
-
     onFocus() {
         this.dateTimePicker.open();
     }
 
     toggleToday() {
-        if (this.props.disabled) {
+        if (this.textInputBaseProps.disabled) {
             return;
         }
         if (!this.isToday) {

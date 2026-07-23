@@ -1,29 +1,30 @@
-import { Component, onWillStart, useEffect, useProps, proxy, status, t } from "@odoo/owl";
+import { useCachedModel } from "@html_builder/core/cached_model_utils";
+import {
+    basicContainerBuilderComponentProps,
+    getAllActionsAndOperations,
+    useDomState,
+} from "@html_builder/core/utils";
+import { Component, onWillStart, proxy, status, t, useEffect, useProps } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useDomState, getAllActionsAndOperations } from "@html_builder/core/utils";
-import { useCachedModel } from "@html_builder/core/cached_model_utils";
-import { BuilderComponent } from "./builder_component";
 import { BasicMany2Many } from "./basic_many2many";
+import { BuilderComponent } from "./builder_component";
 
 export class ModelMany2Many extends Component {
-    static template = "html_builder.ModelMany2Many";
-    props = useProps({
-        //...basicContainerBuilderComponentProps,
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-        baseModel: t.string(),
-        recordId: t.number(),
-        m2oField: t.string(),
-        fields: t.array(t.string()).optional([]),
-        domain: t.array().optional([]),
-        limit: t.number().optional(10),
-        createAction: t.string().optional(),
-        id: t.string().optional(),
-        // currently always allowDelete
-        applyTo: t.string().optional(),
-    });
     static components = { BuilderComponent, BasicMany2Many };
+    static template = "html_builder.ModelMany2Many";
+
+    props = useProps({
+        ...basicContainerBuilderComponentProps,
+        baseModel: t.string(),
+        createAction: t.string().optional(),
+        domain: t.array().optional([]),
+        fields: t.array(t.string()).optional([]),
+        limit: t.number().optional(10),
+        m2oField: t.string(),
+        recordId: t.number(),
+        // currently always allowDelete
+    });
 
     setup() {
         this.fields = useService("field");
@@ -41,6 +42,8 @@ export class ModelMany2Many extends Component {
                 selection: this.modelEdit.get(this.props.m2oField),
             };
         });
+        const { callOperation } = getAllActionsAndOperations(this.props);
+        this.callOperation = callOperation;
         onWillStart(async () => {
             await this.handleProps(this.props);
         });
@@ -49,8 +52,6 @@ export class ModelMany2Many extends Component {
         });
     }
     async handleProps(props) {
-        const { callOperation } = getAllActionsAndOperations(this);
-        this.callOperation = callOperation;
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );

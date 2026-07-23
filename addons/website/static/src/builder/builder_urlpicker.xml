@@ -20,7 +20,7 @@
     <t t-inherit="html_builder.BuilderUrlPicker" t-inherit-mode="extension">
         <xpath expr="//BuilderTextInputBase" position="replace">
             <AutoCompleteBuilderUrlPicker
-                t-props="this.props"
+                t-props="this.textInputBaseProps"
                 sources="this.sources"
                 value="this.state.value or ''"
                 input="this.urlRef"

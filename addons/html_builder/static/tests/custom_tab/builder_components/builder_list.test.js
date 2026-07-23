@@ -157,8 +157,8 @@ test("reorder items", async () => {
 async function testBuilderListFaultyProps(template) {
     class Test extends BaseOptionComponent {
         static template = xml`${template}`;
-        static props = ["*"];
         setup() {
+            super.setup();
             onError(() => {
                 expect.step("threw");
             });
@@ -263,14 +263,14 @@ test("do not lose id when adjusting 'selected'", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="this.availableRecords" />`;
-        static props = ["*"];
-        setup() {
-            this.availableRecords = JSON.stringify([
-                { id: 1, display_name: "A" },
-                { id: 2, display_name: "B" },
-            ]);
-        }
+                records="this.availableRecords"
+            />
+        `;
+
+        availableRecords = JSON.stringify([
+            { id: 1, display_name: "A" },
+            { id: 2, display_name: "B" },
+        ]);
     }
     addBuilderOption({
         selector: ".test-options-target",
@@ -344,20 +344,20 @@ test("can add item with string and integer ids", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="this.availableRecords" />`;
-        static props = ["*"];
-        setup() {
-            this.availableRecords = JSON.stringify([
-                {
-                    id: "57cb74cc2f17a163",
-                    display_name: "v1",
-                },
-                {
-                    id: 42,
-                    display_name: "v2",
-                },
-            ]);
-        }
+                records="this.availableRecords"
+            />
+        `;
+
+        availableRecords = JSON.stringify([
+            {
+                id: "57cb74cc2f17a163",
+                display_name: "v1",
+            },
+            {
+                id: 42,
+                display_name: "v2",
+            },
+        ]);
     }
     addBuilderOption({
         selector: ".test-options-target",
@@ -405,14 +405,9 @@ test("not editable builder list option", async () => {
                     action="'customAction'"
                     addItemTitle="'Add'"
                     itemShape="{ display_name: 'text', selected: 'boolean' }"
-                    isEditable="false"/>`;
-            static props = ["*"];
-            setup() {
-                this.availableRecords = JSON.stringify([
-                    { id: 1, display_name: "A" },
-                    { id: 2, display_name: "B" },
-                ]);
-            }
+                    isEditable="false"
+                />
+            `;
         },
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);

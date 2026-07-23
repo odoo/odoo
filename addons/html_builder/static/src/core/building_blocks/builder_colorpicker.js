@@ -1,30 +1,31 @@
-import { useComponent } from "@web/owl2/utils";
-import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, useProps, signal, t } from "@odoo/owl";
+import { getAllUsedColors } from "@html_builder/utils/utils_css";
 import {
-    useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
+    useColorPicker,
 } from "@html_editor/components/color_picker/color_picker";
-import { BuilderComponent } from "./builder_component";
+import { ColorSelector } from "@html_editor/main/font/color_selector";
+import { Component, signal, t, useProps } from "@odoo/owl";
+import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { useEnv } from "@web/owl2/utils";
 import {
+    basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
+    hasPreview,
     revertPreview,
     useBuilderComponent,
     useDomState,
-    useHasPreview,
 } from "../utils";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
-import { getAllUsedColors } from "@html_builder/utils/utils_css";
+import { BuilderComponent } from "./builder_component";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
-export function useColorPickerBuilderComponent() {
-    const comp = useComponent();
-    const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
-    const getAction = comp.env.editor.shared.builderActions.getAction;
+function useColorPickerBuilderComponent(props) {
+    const env = useEnv();
+    const { getAllActions, callOperation } = getAllActionsAndOperations(props);
+    const getAction = env.editor.shared.builderActions.getAction;
     let selectedTab;
     const state = useDomState(getState);
-    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(
+    const applyOperation = env.editor.shared.history.makePreviewableAsyncOperation(
         (applySpecs, isPreviewing) => {
             const proms = [];
             for (const applySpec of applySpecs) {
@@ -35,7 +36,7 @@ export function useColorPickerBuilderComponent() {
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
                         loadResult: applySpec.loadResult,
-                        dependencyManager: comp.env.dependencyManager,
+                        dependencyManager: env.dependencyManager,
                     })
                 );
             }
@@ -55,9 +56,9 @@ export function useColorPickerBuilderComponent() {
         return {
             // defaultTab is the tab to open if the user has not done a selection yet.
             // If the user has already selected a color, the tab of the last selection is opened
-            defaultTab: comp.props.selectedTab,
-            selectedColor: actionValue || comp.props.defaultColor,
-            selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
+            defaultTab: props.selectedTab,
+            selectedColor: actionValue || props.defaultColor,
+            selectedColorCombination: env.editor.shared.color.getColorCombination(
                 editingElement,
                 actionParam
             ),
@@ -71,13 +72,42 @@ export function useColorPickerBuilderComponent() {
             : colorValue;
     }
 
+    function getCorrespondingColorPickerTab(selectedColor) {
+        if (!selectedColor) {
+            return;
+        }
+
+        selectedColor = selectedColor.replaceAll(/color-prefix-/g, "");
+        const isTabEnabled = (tab) => props.enabledTabs.includes(tab);
+
+        if (isTabEnabled("gradient") && isColorGradient(selectedColor)) {
+            return "gradient";
+        }
+
+        const solidTabColors = [
+            ...DEFAULT_COLORS.flat(),
+            ...DEFAULT_THEME_COLOR_VARS.map((color) => color.toUpperCase()),
+        ];
+        if (isTabEnabled("solid") && solidTabColors.includes(selectedColor.toUpperCase())) {
+            return "solid";
+        }
+
+        if (isTabEnabled("theme") && /^o_cc\d+$/.test(selectedColor)) {
+            return "theme";
+        }
+
+        if (isTabEnabled("custom")) {
+            return "custom";
+        }
+    }
+
     let previewValue = null;
     function onApply(colorValue) {
         previewValue = null;
-        selectedTab = comp.getCorrespondingColorPickerTab(colorValue);
+        selectedTab = getCorrespondingColorPickerTab(colorValue);
         callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
     }
-    let onPreview = (colorValue) => {
+    function onPreview(colorValue) {
         // Avoid previewing the same color twice.
         if (previewValue === colorValue) {
             return;
@@ -91,30 +121,30 @@ export function useColorPickerBuilderComponent() {
                 cancelPrevious: () => applyOperation.revert(),
             },
         });
-    };
-    const hasPreview = useHasPreview(getAllActions);
-    if (!hasPreview) {
-        onPreview = () => {};
     }
     return {
         state,
         onApply,
-        onPreview,
+        onPreview: hasPreview(props, getAllActions) ? onPreview : () => {},
         onPreviewRevert: () => {
             previewValue = null;
-            revertPreview(comp.env.editor);
+            revertPreview(env.editor);
         },
     };
 }
 
 export class ColorPickerButton extends Component {
     static template = "html_builder.ColorPickerButton";
-    static props = {
-        title: { type: String, optional: true },
-        style: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-        colorPickerConfig: { type: Object, optional: true },
-    };
+
+    props = useProps({
+        title: t.string().optional(),
+        style: t.string(),
+        tooltip: t.string().optional(),
+        colorPickerConfig: t.object({
+            props: t.object(),
+            options: t.object(),
+        }),
+    });
 
     colorButtonRef = signal.ref();
 
@@ -128,23 +158,15 @@ export class ColorPickerButton extends Component {
 }
 
 export class BuilderColorPicker extends Component {
+    static components = {
+        ColorSelector: ColorSelector,
+        BuilderComponent,
+        ColorPickerButton,
+    };
     static template = "html_builder.BuilderColorPicker";
+
     props = useProps({
-        // basicContainerBuilderComponentProps (converted inline)
-        id: t.string().optional(),
-        applyTo: t.string().optional(),
-        preview: t.boolean().optional(),
-        inheritedActions: t.array(t.string()).optional(),
-
-        action: t.string().optional(),
-        actionParam: t.any().optional(),
-
-        // Shorthand actions.
-        classAction: t.any().optional(),
-        attributeAction: t.any().optional(),
-        dataAttributeAction: t.any().optional(),
-        styleAction: t.any().optional(),
-
+        ...basicContainerBuilderComponentProps,
         noTransparency: t.boolean().optional(),
         enabledTabs: t.array().optional(["theme", "gradient", "custom"]),
         grayscales: t.object().optional(),
@@ -158,15 +180,12 @@ export class BuilderColorPicker extends Component {
         colorPickerClassName: t.string().optional("o-hb-colorpicker"),
         colorPickerPopoverClassName: t.string().optional("o-hb-colorpicker-popover"),
     });
-    static components = {
-        ColorSelector: ColorSelector,
-        BuilderComponent,
-        ColorPickerButton,
-    };
 
     setup() {
-        useBuilderComponent();
-        const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
+        useBuilderComponent(this.props);
+        const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent(
+            this.props
+        );
         this.state = state;
 
         this.colorPickerConfig = {
@@ -212,34 +231,5 @@ export class BuilderColorPicker extends Component {
 
     getUsedCustomColors() {
         return getAllUsedColors(this.env.editor.editable);
-    }
-
-    getCorrespondingColorPickerTab(selectedColor) {
-        if (!selectedColor) {
-            return;
-        }
-
-        selectedColor = selectedColor.replace(/color-prefix-/g, "");
-        const isTabEnabled = (tab) => this.props.enabledTabs.includes(tab);
-
-        if (isTabEnabled("gradient") && isColorGradient(selectedColor)) {
-            return "gradient";
-        }
-
-        const solidTabColors = [
-            ...DEFAULT_COLORS.flat(),
-            ...DEFAULT_THEME_COLOR_VARS.map((color) => color.toUpperCase()),
-        ];
-        if (isTabEnabled("solid") && solidTabColors.includes(selectedColor.toUpperCase())) {
-            return "solid";
-        }
-
-        if (isTabEnabled("theme") && /^o_cc\d+$/.test(selectedColor)) {
-            return "theme";
-        }
-
-        if (isTabEnabled("custom")) {
-            return "custom";
-        }
     }
 }
