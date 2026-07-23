@@ -206,11 +206,6 @@ class AccountMove(models.Model):
                 if fapiao_date and move.invoice_date != fapiao_date:
                     move.l10n_cn_baiwang_date_consistency_warning = warning_msg
 
-    def _l10n_cn_baiwang_generate_serial_no(self, prefix: str) -> str:
-        self.ensure_one()
-        timestamp = fields.Datetime.now().strftime('%Y%m%d%H%M%S')
-        return f"{prefix}_{self.id}_{timestamp}"
-
     @api.depends('partner_id')
     def _compute_l10n_cn_buyer_bank_id(self):
         for move in self:
@@ -222,32 +217,19 @@ class AccountMove(models.Model):
     # ─── Blue Invoice Issuance ──────────────────────────────────────────
 
     def _l10n_cn_baiwang_issue_invoice(self):
-        """
-        Issue a blue (positive) e-Fapiao via Baiwang for customer invoices.
-        Returns error message string or None on success.
-        """
+        """Issue a blue (positive) e-Fapiao via Baiwang for customer invoices."""
         self.ensure_one()
         company = self.company_id
-
         if company.l10n_cn_baiwang_subscription_status != 'authorized':
             raise UserError(self.env._("Baiwang is not authorized. Please go to Settings."))
-
         client = BaiwangClient(company)
-
-        # Fail fast if endpoint is not reachable before mutating invoice state/serial.
         try:
             client.ensure_connection()
         except UserError as e:
             return str(e)
-
-        serial_no = self.l10n_cn_baiwang_serial_no or self._l10n_cn_baiwang_generate_serial_no('BLUE')
-
-        # Generate unique serial number (idempotent per invoice)
+        serial_no = self.l10n_cn_baiwang_serial_no or f"OURBLUE_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}"
         self.l10n_cn_baiwang_serial_no = serial_no
-
-        # Build invoice payload
         invoice_data = self._l10n_cn_baiwang_prepare_invoice_data(serial_no)
-
         try:
             result = client.issue_invoice(invoice_data)
         except UserError as e:
@@ -446,7 +428,7 @@ class AccountMove(models.Model):
             'move_id': self.id,
             'state': 'draft',
         })
-        serial_no = self._l10n_cn_baiwang_generate_serial_no('RED')
+        serial_no = f"OURRED_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}"
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move, serial_no)
         try:
             result = client.add_red_confirmation(red_form_data)
