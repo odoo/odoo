@@ -101,6 +101,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
                 });
                 this._showInput('state_id');
             } else {
+                // empty existing options, only keep the placeholder.
+                selectStates.options.length = 1;
                 this._hideInput('state_id');
             }
         }
