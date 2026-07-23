@@ -946,26 +946,49 @@ const storeFetchQueues = new Map();
  * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
  * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
  *  and the specific params should be logged in expect.step. By default only the name is logged.
+ * @param {boolean} [options.ensureUnhandledRejection=false] when true and `onRpc` rejects for a
+ *  named route, re-emit the rejection as an unhandled promise rejection so tests using
+ *  `expect.errors(N)` / `verifyErrors(["RPC_ERROR"])` remain deterministic regardless of which
+ *  other routes happen to share the failing `/mail/store` batch.
  */
-export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+export function listenStoreFetch(
+    nameOrNames = [],
+    { logParams = [], onRpc: onRpcOverride, ensureUnhandledRejection = false } = {}
+) {
     storeFetchQueues.clear();
+    let onRpcOverrideRejected = false;
     patchWithCleanup(StoreService.prototype, {
         fetchStoreData(name) {
             const promise = super.fetchStoreData(...arguments);
             const queue = storeFetchQueues.get(name) ?? [];
             queue.push(promise);
             storeFetchQueues.set(name, queue);
+            if (onRpcOverride && ensureUnhandledRejection) {
+                const names = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+                if (names.length === 0 || names.includes(name)) {
+                    promise.then(null, (err) => {
+                        if (onRpcOverrideRejected) {
+                            Promise.reject(err);
+                        }
+                    });
+                }
+            }
             return promise;
         },
     });
     async function registerStep(request, name, params) {
-        const res = await onRpcOverride?.(request);
-        if (logParams.includes(name)) {
-            expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
-        } else {
-            expect.step(`store fetch: ${name}`);
+        try {
+            const res = await onRpcOverride?.(request);
+            if (logParams.includes(name)) {
+                expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
+            } else {
+                expect.step(`store fetch: ${name}`);
+            }
+            return res;
+        } catch (e) {
+            onRpcOverrideRejected = true;
+            throw e;
         }
-        return res;
     }
     async function registerSteps(request, fetchParams) {
         const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;

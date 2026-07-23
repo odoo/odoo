@@ -1936,6 +1936,7 @@ test("failure on loading messages should display error", async () => {
         onRpc() {
             return Promise.reject();
         },
+        ensureUnhandledRejection: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -1955,6 +1956,7 @@ test("failure on loading messages should prompt retry button", async () => {
         onRpc() {
             return Promise.reject();
         },
+        ensureUnhandledRejection: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -1991,6 +1993,7 @@ test("Retry on failed initial load should load messages", async () => {
                 return Promise.reject();
             }
         },
+        ensureUnhandledRejection: true,
     });
     await start();
     await openDiscuss(channelId);
