@@ -182,9 +182,9 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_lead_days(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        for orderpoint in orderpoints_to_compute.with_context(bypass_delay_description=True):
+        for orderpoint in orderpoints_to_compute:
             values = orderpoint._get_lead_days_values()
-            lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
+            lead_days, _ = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, bypass_delay_description=True, **values)
             orderpoint.lead_horizon_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'] + lead_days['horizon_time'])
             orderpoint.lead_days = lead_days['total_delay']
         (self - orderpoints_to_compute).lead_horizon_date = False
@@ -563,7 +563,7 @@ class StockWarehouseOrderpoint(models.Model):
                     # group product by lead_days and location in order to read virtual_available
                     # in batch
                     rules = product._get_rules_from_location(loc)
-                    lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+                    lead_days = rules._get_lead_days(product, bypass_delay_description=True)[0]
                     ploc_per_day[lead_days['total_delay'] + lead_days['horizon_time'], loc].add(product.id)
 
         # recompute virtual_available with lead days

@@ -177,11 +177,10 @@ class StockRule(models.Model):
     def _notify_responsible(self, procurement):
         pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
-    def _get_lead_days(self, product, **values):
+    def _get_lead_days(self, product, bypass_delay_description=False, **values):
         """Add the supplier delay to the cumulative delay and cumulative description.
         """
-        delays, delay_description = super()._get_lead_days(product, **values)
-        bypass_delay_description = self.env.context.get('bypass_delay_description')
+        delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:

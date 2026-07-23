@@ -372,7 +372,7 @@ class StockRule(models.Model):
                 serialized[key] = value
         return serialized
 
-    def _get_lead_days(self, product, **values):
+    def _get_lead_days(self, product, bypass_delay_description=False, **values):
         """Returns the cumulative delay and its description encountered by a
         procurement going through the rules in `self`.
 
@@ -385,7 +385,6 @@ class StockRule(models.Model):
         _ = self.env._
         delays = defaultdict(float)
         delay_description = []
-        bypass_delay_description = self.env.context.get('bypass_delay_description')
         # Check if the rules have lead time
         delaying_rules = self.filtered(lambda r: r.action in ['pull', 'pull_push'] and r.delay)
         if delaying_rules:
