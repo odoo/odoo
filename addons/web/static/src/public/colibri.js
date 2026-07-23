@@ -23,8 +23,11 @@ export class Colibri {
         this.listeners = new Map();
         this.dynamicNodes = new Map();
         this.core = core;
-        this.interaction = new I(el, core.env, this);
-        this.setupInteraction();
+        this.scope = core.createInteractionScope();
+        this.scope.run(() => {
+            this.interaction = new I(el, core.env, this);
+            this.setupInteraction();
+        });
     }
 
     setupInteraction() {
@@ -36,6 +39,7 @@ export class Colibri {
             cleanup();
         }
         this.cleanups = [];
+        this.scope.finalize();
         this.interaction.destroy();
     }
 
@@ -45,11 +49,17 @@ export class Colibri {
             this.updateContent();
         }
         this.interaction.start();
+        this.scope.status = 1;
         this.hasStarted = true;
     }
 
     async start() {
-        await this.interaction.willStart();
+        const proms = this.scope.willStart
+            .concat(this.interaction.willStart)
+            .map((f) => f.call(this.interaction));
+        if (proms.length) {
+            await (proms.length === 1 ? proms[0] : Promise.all(proms));
+        }
         if (this.isDestroyed) {
             return;
         }

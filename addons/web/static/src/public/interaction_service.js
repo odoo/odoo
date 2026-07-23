@@ -1,4 +1,4 @@
-import { useApp, useScope } from "@odoo/owl";
+import { Scope, useApp, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Colibri } from "./colibri";
 import { Interaction } from "./interaction";
@@ -27,6 +27,8 @@ import { PairSet } from "./utils";
  * It provides full access to Owl features, but is rendered browser side.
  *
  */
+
+class InteractionScope extends Scope {}
 
 class InteractionService {
     /**
@@ -59,6 +61,10 @@ class InteractionService {
         this.Interactions = Interactions;
         const startProm = this.scope.ready.then(() => this.startInteractions(target));
         this.proms.push(startProm);
+    }
+
+    createInteractionScope() {
+        return new InteractionScope(this.owlApp);
     }
 
     prepareRoot(el, C, props, position = "beforeend") {
