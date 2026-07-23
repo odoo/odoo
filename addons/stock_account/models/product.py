@@ -628,7 +628,7 @@ class ProductProduct(models.Model):
         current_offset = 0
         # Go to the bottom of the stack
         while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
-            move = moves_in[0]
+            move = moves_in[0].with_prefetch(moves_in.ids)
             moves_in = moves_in[1:]
             in_qty = move._get_valued_qty(lot=lot)
             fifo_stack.append(move)
