@@ -116,6 +116,14 @@ class Cart(PaymentPortal):
         quantity = (quantity and int(quantity)) or 1
 
         product = self.env["product.product"].browse(product_id).exists()
+        if product and no_variant_attribute_value_ids:
+            product = product.with_context(
+                **product._get_product_price_context(
+                    self.env["product.template.attribute.value"].browse([
+                        int(v) for v in no_variant_attribute_value_ids
+                    ])
+                )
+            )
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(
                 self.env._("The given product does not exist therefore it cannot be added to cart.")
