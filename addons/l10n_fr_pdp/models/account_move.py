@@ -279,7 +279,7 @@ class AccountMove(models.Model):
         return wizard._get_records_action(name=self.env._("Send Response Message"), target='new')
 
     def _post(self, soft=True):
-        res = super(AccountMove, self.with_context(l10n_fr_pdp_skip_ereporting_tracking=True))._post(soft)
+        res = super()._post(soft)
         pdp_moves = self.filtered(lambda move: move.state == 'posted')
         # The e-reporting chatter message must use the final values in the same transaction.
         # Recompute the chained fields in dependency order before logging it.
@@ -289,31 +289,22 @@ class AccountMove(models.Model):
         pdp_moves._compute_l10n_fr_pdp_has_error()
         pdp_moves._compute_l10n_fr_pdp_last_flow_id()
         pdp_moves._compute_l10n_fr_pdp_status()
-        for move in pdp_moves:
-            if not move.l10n_fr_pdp_flow_10_report_type:
-                continue
-            move._l10n_fr_pdp_message_log_ereporting_status()
         for company, moves in self.filtered('pdp_can_send_response').grouped('company_id').items():
             company.account_peppol_edi_user._pdp_send_response(moves, 'AP')
         return res
 
-    def _message_track(self, fields_iter, initial_values_dict):
-        tracked_fields = set(fields_iter)
-        pdp_fields = tracked_fields & PDP_TRACKED_FIELDS
-        if not pdp_fields:
-            return super()._message_track(fields_iter, initial_values_dict)
-
-        tracking = super()._message_track(tracked_fields - pdp_fields, initial_values_dict)
-        if self.env.context.get('l10n_fr_pdp_skip_ereporting_tracking'):
-            return tracking
+    def _track_execute(self, track_init_values, trackings, track_records=None):
+        filtered_trackings = {}
         for move in self:
-            initial_values = initial_values_dict.get(move.id, {})
-            if any(
-                field_name in initial_values and initial_values[field_name] != move[field_name]
-                for field_name in pdp_fields
-            ):
+            changes, tracking_values = trackings[move.id]
+            changes = set(changes)
+            if changes & PDP_TRACKED_FIELDS:
                 move._l10n_fr_pdp_message_log_ereporting_status()
-        return tracking
+            filtered_trackings[move.id] = (
+                changes - PDP_TRACKED_FIELDS,
+                [tv for tv in tracking_values if tv.get('field_name') not in PDP_TRACKED_FIELDS],
+            )
+        super()._track_execute(track_init_values, filtered_trackings, track_records=track_records)
 
     def _l10n_fr_pdp_message_log_ereporting_status(self):
         self.ensure_one()
