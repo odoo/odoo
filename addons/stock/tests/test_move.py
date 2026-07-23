@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -6864,16 +6865,17 @@ class StockMove(TransactionCase):
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 5)
         # Create two moves using the all available quantity and reserve them
-        move_1, move_2 = self.env['stock.move'].create([{
-            'name': 'New move',
-            'product_id': self.product.id,
-            'product_uom_qty': qty,
-            'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        } for qty in [2, 3]])
-        (move_1 | move_2)._action_confirm()
-        (move_1 | move_2)._action_assign()
+        with freeze_time(fields.Datetime.now()):
+            move_1, move_2 = self.env['stock.move'].create([{
+                'name': 'New move',
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'product_uom': self.product.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            } for qty in [2, 3]])
+            (move_1 | move_2)._action_confirm()
+            (move_1 | move_2)._action_assign()
 
         self.assertEqual(move_1.date, move_2.date)
         self.assertEqual(move_1.state, 'assigned')
