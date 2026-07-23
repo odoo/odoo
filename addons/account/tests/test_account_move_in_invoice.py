@@ -2355,7 +2355,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move = move_form.save()
         self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')
 
-    def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state, post_move=True):
+    def _assert_payment_move_states(self, scenarios, post_move=True):
+        AccountMove = self.env['account.move']
+        sale_purchase_types = (
+            AccountMove.get_sale_types(include_receipts=True)
+            + AccountMove.get_purchase_types(include_receipts=True)
+        )
+
+        def receivable_line(move):
+            return move.line_ids.filtered(
+                lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+
         def assert_partial(line1, line2):
             partial = self.env['account.partial.reconcile'].search(Domain.OR([
                 [('debit_move_id', '=', line1.id), ('credit_move_id', '=', line2.id)],
@@ -2363,13 +2373,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ]), limit=1)
             self.assertTrue(partial)
 
-        def create_move(move_type, amount, account=None):
-            move_vals = {
+        def move_vals(move_type, amount, account=None):
+            vals = {
                 'move_type': move_type,
                 'date': '2020-01-10',
             }
-            if move_type in self.env['account.move'].get_sale_types(include_receipts=True) + self.env['account.move'].get_purchase_types(include_receipts=True):
-                move_vals.update({
+            if move_type in sale_purchase_types:
+                vals.update({
                     'partner_id': self.partner_a.id,
                     'invoice_date': '2020-01-10',
                     'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': amount, 'tax_ids': []})],
@@ -2383,7 +2393,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                     credit_account = account or self.company_data['default_account_receivable']
                     debit_account = self.company_data['default_account_revenue']
                     debit_balance = -amount
-                move_vals['line_ids'] = [
+                vals['line_ids'] = [
                     Command.create({
                         'name': "line1",
                         'account_id': debit_account.id,
@@ -2395,18 +2405,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                         'balance': -debit_balance,
                     }),
                 ]
-            move = self.env['account.move'].create(move_vals)
-            if post_move:
-                move.action_post()
-            return move
-
-        def create_payment(move, amount):
-            self.env['account.payment.register']\
-                .with_context(active_ids=move.ids, active_model='account.move')\
-                .create({
-                    'amount': amount,
-                })\
-                ._create_payments()
+            return vals
 
         def create_reverse(move, amount):
             move_reversal = self.env['account.move.reversal']\
@@ -2424,7 +2423,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                     ],
                 })
             else:
-                line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+                line = receivable_line(move)
                 reverse_move.with_context(skip_readonly_check=True).write({
                     'line_ids': [
                         Command.update(line.id, {'balance': amount}),
@@ -2433,29 +2432,61 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             if reverse_move.state == 'draft':
                 reverse_move.action_post()
 
-        move = create_move(move_type, amount)
-        line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
-        for counterpart_move_type, counterpart_amount in counterpart_values_list:
-            if counterpart_move_type == 'payment':
-                create_payment(move, counterpart_amount)
-            elif counterpart_move_type == 'reverse':
-                create_reverse(move, counterpart_amount)
-            elif counterpart_move_type == 'statement_line':
-                reconciliation_info = self.pay_with_statement_line(move, self.company_data['default_journal_bank'].id, '2020-01-10', counterpart_amount)
-                assert_partial(reconciliation_info['statement_line_reconciled'], reconciliation_info['move_reconciled'])
-            else:
-                counterpart_move = create_move(counterpart_move_type, counterpart_amount, account=line.account_id)
-                counterpart_line = counterpart_move.line_ids.filtered(lambda x: x.account_id == line.account_id)
-                (line + counterpart_line).reconcile()
-                assert_partial(line, counterpart_line)
+        primary_moves = AccountMove.create([
+            move_vals(scenario[0], scenario[1]) for scenario in scenarios
+        ])
 
-        if payment_state == 'in_payment' and move._get_invoice_in_payment_state() == 'paid':
-            payment_state = 'paid'
+        plain_specs = []
+        for scenario_index, (move, scenario) in enumerate(zip(primary_moves, scenarios)):
+            account = receivable_line(move).account_id
+            for step_index, (counterpart_move_type, counterpart_amount) in enumerate(scenario[2]):
+                if counterpart_move_type not in ('payment', 'reverse', 'statement_line'):
+                    plain_specs.append((
+                        (scenario_index, step_index),
+                        move_vals(counterpart_move_type, counterpart_amount, account=account),
+                    ))
+        plain_counterparts = AccountMove.create([vals for _key, vals in plain_specs])
+        plain_by_step = {key: counterpart for (key, _vals), counterpart in zip(plain_specs, plain_counterparts)}
 
-        self.assertRecordValues(move, [{'payment_state': payment_state}])
+        if post_move:
+            (primary_moves + plain_counterparts).action_post()
+
+        expected = []
+        for scenario_index, (move, scenario) in enumerate(zip(primary_moves, scenarios)):
+            move_type, amount, counterpart_values_list, payment_state = scenario[0], scenario[1], scenario[2], scenario[3]
+            with self.subTest(
+                move_type=move_type,
+                amount=amount,
+                counterpart_values_list=counterpart_values_list,
+                payment_state=payment_state,
+            ):
+                line = receivable_line(move)
+                for step_index, (counterpart_move_type, counterpart_amount) in enumerate(counterpart_values_list):
+                    if counterpart_move_type == 'payment':
+                        self.env['account.payment.register']\
+                            .with_context(active_ids=move.ids, active_model='account.move')\
+                            .create({'amount': counterpart_amount})\
+                            ._create_payments()
+                    elif counterpart_move_type == 'reverse':
+                        create_reverse(move, counterpart_amount)
+                    elif counterpart_move_type == 'statement_line':
+                        reconciliation_info = self.pay_with_statement_line(
+                            move, self.company_data['default_journal_bank'].id, '2020-01-10', counterpart_amount)
+                        assert_partial(reconciliation_info['statement_line_reconciled'], reconciliation_info['move_reconciled'])
+                    else:
+                        counterpart_line = plain_by_step[scenario_index, step_index].line_ids.filtered(
+                            lambda x: x.account_id == line.account_id)
+                        (line + counterpart_line).reconcile()
+                        assert_partial(line, counterpart_line)
+
+                if payment_state == 'in_payment' and move._get_invoice_in_payment_state() == 'paid':
+                    payment_state = 'paid'
+                expected.append({'payment_state': payment_state})
+
+        self.assertRecordValues(primary_moves, expected)
 
     def test_payment_move_state(self):
-        for move_type, amount, counterpart_values_list, payment_state in (
+        scenarios = (
             ('out_invoice', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('entry', -500.0)], 'reversed'),
@@ -2516,17 +2547,11 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -500.0)], 'paid'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -400.0)], 'partial'),
             ('in_invoice', 1000.0, [('entry', 1000.0)], 'paid'),
-        ):
-            with self.subTest(
-                move_type=move_type,
-                amount=amount,
-                counterpart_values_list=counterpart_values_list,
-                payment_state=payment_state,
-            ):
-                self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state)
+        )
+        self._assert_payment_move_states(scenarios)
 
     def test_payment_move_state_draft(self):
-        for move_type, amount, counterpart_values_list, payment_state, *extra in (
+        scenarios = (
             ('out_invoice', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('entry', -500.0)], 'reversed'),
@@ -2579,14 +2604,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -400.0)], 'partial'),
             ('in_invoice', 1000.0, [('entry', 1000.0)], 'paid'),
             ('out_invoice', 0.0, [], 'not_paid'),
-        ):
-            with self.subTest(
-                move_type=move_type,
-                amount=amount,
-                counterpart_values_list=counterpart_values_list,
-                payment_state=payment_state,
-            ):
-                self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state, post_move=False)
+        )
+        self._assert_payment_move_states(scenarios, post_move=False)
 
     def test_onchange_journal_currency(self):
         """
