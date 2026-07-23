@@ -24,7 +24,8 @@ class SaleOrder(models.Model):
         'stock.warehouse', string='Warehouse',
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
         init_storage='_init_column_warehouse_id',
-        check_company=True)
+        domain=lambda self: [('company_id', 'in', self.env.companies.ids)]
+    )
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     late_availability = fields.Boolean(
@@ -195,6 +196,7 @@ class SaleOrder(models.Model):
             order.show_json_popover = bool(late_stock_picking)
 
     def _action_confirm(self):
+        self._check_delivery_partner_company()
         self.order_line._action_launch_stock_rule()
         return super(SaleOrder, self)._action_confirm()
 
@@ -249,6 +251,16 @@ class SaleOrder(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super()._action_cancel()
+
+    def _check_delivery_partner_company(self):
+        """ Ensures the delivery address has a company that matches the delivery warehouse, and if not makes the partner visible to all companies,
+            as it is used in cross-company context.
+        """
+        for order in self:
+            partner = order.partner_shipping_id | order.partner_shipping_id.parent_id
+            if partner.company_id and partner.company_id != order.sudo().warehouse_id.company_id:
+                # Partner is used in cross-company context, we remove its company
+                partner.sudo().write({'company_id': False})
 
     def _is_portal_return_allowed(self):
         """Return whether we should allow return on sale order portal or not."""
