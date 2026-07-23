@@ -1177,7 +1177,7 @@ class AccountMove(models.Model):
             files_data = self._to_files_data(attachments)
             files_data.extend(self._unwrap_attachments(files_data))
 
-            moves = self.with_company(proxy_user.company_id).create([{}] * len(files_data))
+            moves = self.with_company(proxy_user.company_id).create([{'move_type': 'in_invoice'}] * len(files_data))
 
             for move, file_data in zip(moves, files_data):
                 attachment = file_data['attachment']
