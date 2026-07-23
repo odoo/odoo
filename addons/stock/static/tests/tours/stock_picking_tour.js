@@ -488,7 +488,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             trigger:
                 ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT002)) .o_data_cell[name=quantity] input",
-            run: "edit 15 && press Tab",
+            run: "edit 15 && click body",
         },
         ...checkTableStructure(
             [
