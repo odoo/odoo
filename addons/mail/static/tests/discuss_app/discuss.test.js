@@ -1926,81 +1926,115 @@ test("Can post message with only attachment", async () => {
 });
 
 test("failure on loading messages should display error", async () => {
-    expect.errors(1);
+    let messageFetchShouldFail = false;
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
+    const partnerId = pyEnv["res.partner"].create({ name: "Target" });
+    // Chat channel_type: no member panel, so fetchChannelMembers won't race with the failing messages fetch.
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
-    listenStoreFetch("/discuss/channel/messages", {
-        onRpc() {
-            return Promise.reject();
-        },
-    });
+    listenStoreFetch(
+        ["/discuss/channel/messages", "/mail/messaging_menu/discuss.channel/load_more"],
+        {
+            onRpc() {
+                if (messageFetchShouldFail) {
+                    return Promise.reject();
+                }
+            },
+        }
+    );
     await start();
-    await openDiscuss(channelId);
+    // Let all init RPCs settle so they are not in the same batch as the failing messages fetch.
+    await openDiscuss();
+    await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
+    messageFetchShouldFail = true;
+    await openDiscuss(chatId);
     await contains(".o-mail-Thread:has(:text('An error occurred while loading messages.'))");
-    await animationFrame();
-    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("failure on loading messages should prompt retry button", async () => {
-    expect.errors(1);
+    let messageFetchShouldFail = false;
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
+    const partnerId = pyEnv["res.partner"].create({ name: "Target" });
+    // Chat channel_type: no member panel, so fetchChannelMembers won't race with the failing messages fetch.
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
-    listenStoreFetch("/discuss/channel/messages", {
-        onRpc() {
-            return Promise.reject();
-        },
-    });
+    listenStoreFetch(
+        ["/discuss/channel/messages", "/mail/messaging_menu/discuss.channel/load_more"],
+        {
+            onRpc() {
+                if (messageFetchShouldFail) {
+                    return Promise.reject();
+                }
+            },
+        }
+    );
     await start();
-    await openDiscuss(channelId);
+    // Let all init RPCs settle so they are not in the same batch as the failing messages fetch.
+    await openDiscuss();
+    await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
+    messageFetchShouldFail = true;
+    await openDiscuss(chatId);
     await contains("button:text('Try again')");
-    await animationFrame();
-    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("Retry on failed initial load should load messages", async () => {
-    expect.errors(1);
-    let messageFetchShouldFail = true;
+    let messageFetchShouldFail = false;
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
+    const partnerId = pyEnv["res.partner"].create({ name: "Target" });
+    // Chat channel_type: no member panel, so fetchChannelMembers won't race with the failing messages fetch.
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
     const messageIds = pyEnv["mail.message"].create(
         range(60).map((i) => ({
             body: `message ${i}`,
             model: "discuss.channel",
-            res_id: channelId,
+            res_id: chatId,
         }))
     );
     const [selfMember] = pyEnv["discuss.channel.member"].search_read([
         ["partner_id", "=", serverState.partnerId],
-        ["channel_id", "=", channelId],
+        ["channel_id", "=", chatId],
     ]);
     pyEnv["discuss.channel.member"].write([selfMember.id], {
         new_message_separator: messageIds[29],
     });
-    listenStoreFetch("/discuss/channel/messages", {
-        onRpc() {
-            if (messageFetchShouldFail) {
-                return Promise.reject();
-            }
-        },
-    });
+    listenStoreFetch(
+        ["/discuss/channel/messages", "/mail/messaging_menu/discuss.channel/load_more"],
+        {
+            onRpc() {
+                if (messageFetchShouldFail) {
+                    return Promise.reject();
+                }
+            },
+        }
+    );
     await start();
-    await openDiscuss(channelId);
+    // Let all init RPCs settle so they are not in the same batch as the failing messages fetch.
+    await openDiscuss();
+    await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
+    messageFetchShouldFail = true;
+    await openDiscuss(chatId);
     await contains("button:text('Try again')");
     messageFetchShouldFail = false;
     await click("button:text('Try again')");
     await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 60 });
     await contains(".o-mail-Thread-newMessage");
-    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("failure on loading more messages should display error and prompt retry button", async () => {
