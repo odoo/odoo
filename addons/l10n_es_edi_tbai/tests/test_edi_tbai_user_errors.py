@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
-from .common import TestEsEdiTbaiCommonGipuzkoa
+from .common import TestEsEdiTbaiCommonGipuzkoa, mock_tbai_agency_request
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -100,17 +100,11 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
             self.assertEqual(second_invoice.l10n_es_tbai_post_document_id.state, 'to_send')
 
         # Post first with success
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             first_invoice_send_wizard.action_send_and_print()
 
         # Can now post second with success
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             second_invoice_send_wizard.action_send_and_print()
 
         self.assertEqual(first_invoice.l10n_es_tbai_state, 'sent')
@@ -129,10 +123,7 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
         invoice_already_sent_wizard = self._get_invoice_send_wizard(invoice_already_sent)
 
         # Can now post second with success
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             invoice_already_sent_wizard.action_send_and_print()
 
         move_reversal = (
@@ -155,17 +146,11 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
             self.assertEqual(str(e), self.tbai_error_msg + "TicketBAI: Cannot post a reversal document while the source document has not been posted")
 
         # Post the source invoice
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             self.invoice_send_wizard.action_send_and_print()
 
         # It is now possible to post the credit note
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             credit_note_send_wizard.action_send_and_print()
 
         self.assertEqual(self.invoice_to_send.l10n_es_tbai_state, 'sent')
