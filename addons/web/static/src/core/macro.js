@@ -116,7 +116,6 @@ export class Macro {
             const step = this.steps[this.currentIndex];
             const timeoutDelay = step.timeout || this.timeout || 10000;
             const executeStep = async () => {
-                // To be remove ASAP because it allows non deterministic behaviors.
                 const trigger = await waitForTrigger(step.trigger);
                 const result = await performAction(trigger, step.action);
                 await this.onStep({ step, trigger, index: this.currentIndex });
