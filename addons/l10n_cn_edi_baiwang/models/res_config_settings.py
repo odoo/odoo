@@ -82,15 +82,10 @@ class ResConfigSettings(models.TransientModel):
         company = self.company_id
         if not company.vat:
             raise UserError(self.env._("Please set the company Tax ID before connecting to Baiwang."))
-
         proxy_user = self.env['account_edi_proxy_client.user'].search([
             ('company_id', '=', company.id),
             ('proxy_type', '=', 'l10n_cn_edi_baiwang'),
-        ], limit=1)
-
-        if not proxy_user:
-            proxy_user = company._l10n_cn_baiwang_create_proxy_user()
-
+        ], limit=1) or company._l10n_cn_baiwang_create_proxy_user()
         params = {'tax_no': company.vat}
         if company.l10n_cn_baiwang_last_request_id:
             params['baiwang_request_id'] = company.l10n_cn_baiwang_last_request_id
@@ -100,26 +95,13 @@ class ResConfigSettings(models.TransientModel):
         )
         if not response or not response.get('success'):
             raise UserError(self.env._("Could not sync registration status from Baiwang proxy."))
-
         values = {}
         if status := response.get('subscription_status'):
             values['l10n_cn_baiwang_subscription_status'] = status
         if org_auth_code := response.get('org_auth_code'):
             values['l10n_cn_baiwang_org_auth_code'] = org_auth_code
-
         if values:
             company.sudo().write(values)
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': self.env._("Sync complete"),
-                'message': self.env._("Registration status has been synchronized from the Baiwang proxy."),
-                'type': 'success',
-                'sticky': False,
-            },
-        }
 
     def _l10n_cn_baiwang_get_route_url(self, action, callback_path):
         proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
