@@ -1,11 +1,9 @@
 import { patch } from '@web/core/utils/patch';
-import { Product } from '@sale/js/product/product';
+import { t } from "@odoo/owl";
+import { Product, productProps } from '@sale/js/product/product';
 
-patch(Product, {
-    props: {
-        ...Product.props,
-        free_qty: { type: Number, optional: true },
-    },
+Object.assign(productProps, {
+    free_qty: t.number().optional(),
 });
 
 patch(Product.prototype, {

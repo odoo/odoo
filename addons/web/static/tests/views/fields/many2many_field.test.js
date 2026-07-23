@@ -25,8 +25,9 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { cookie } from "@web/core/browser/cookie";
+import { t } from "@odoo/owl";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 describe.current.tags("desktop");
@@ -1793,8 +1794,8 @@ test("select create with _view_ref as text", async () => {
     PartnerType._views = {
         [["list", "my.little.string"]]: `<list><field name="name"/></list>`,
     };
-    patchWithCleanup(Many2XAutocomplete.defaultProps, {
-        searchLimit: 1,
+    patchWithCleanup(many2XAutocompleteProps, {
+        searchLimit: t.number().optional(1),
     });
     let checkGetViews = false;
     onRpc("get_views", (args) => {

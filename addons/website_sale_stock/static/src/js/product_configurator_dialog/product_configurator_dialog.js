@@ -29,7 +29,9 @@ patch(ProductConfiguratorDialog.prototype, {
      * @return {Boolean} - Whether the provided product quantity can be added to the cart.
      */
     _isQuantityAllowed(product, quantity) {
-        return !('free_qty' in product) || product.free_qty >= quantity;
+        // `product` may be a props object, which always exposes every declared key (including the
+        // optional `free_qty`), so the presence of the key can't be used to detect stock tracking.
+        return product.free_qty === undefined || product.free_qty >= quantity;
     },
 
     /**

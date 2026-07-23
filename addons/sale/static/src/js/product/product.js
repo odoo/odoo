@@ -1,5 +1,5 @@
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import {
     ProductTemplateAttributeLine as PTAL
@@ -8,39 +8,33 @@ import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
 import { getSelectedCustomPtav } from "../sale_utils";
 import { _t } from "@web/core/l10n/translation";
 
+// Exported so overriding modules can extend the schema (props is now an instance
+// field, so `Product.props` no longer resolves; they must augment this instead).
+export const productProps = {
+    id: t.or([t.number(), t.literal(false)]).optional(),
+    product_tmpl_id: t.number(),
+    display_name: t.string(),
+    // backend sends 'false' when there is no description
+    description_sale: t.or([t.boolean(), t.string()]),
+    price: t.number(),
+    quantity: t.number(),
+    uom: t.object().optional(),
+    available_uoms: t.array().optional(),
+    attribute_lines: t.array(),
+    optional: t.boolean(),
+    imageURL: t.string().optional(),
+    archived_combinations: t.array(),
+    exclusions: t.object(),
+    parent_product_tmpl_id: t.number().optional(),
+    price_info: t.string().optional(),
+    selectedComboItems: t.array(t.object({ name: t.string() })).optional(),
+    show_extra_price: t.boolean().optional(true),
+};
+
 export class Product extends Component {
     static components = { PTAL, QuantityButtons };
     static template = "sale.Product";
-    static props = {
-        id: { type: [Number, {value: false}], optional: true },
-        product_tmpl_id: Number,
-        display_name: String,
-        description_sale: [Boolean, String], // backend sends 'false' when there is no description
-        price: Number,
-        quantity: Number,
-        uom: { type: Object, optional: true },
-        available_uoms: { type: Object, optional: true },
-        attribute_lines: Object,
-        optional: Boolean,
-        imageURL: { type: String, optional: true },
-        archived_combinations: Array,
-        exclusions: Object,
-        parent_product_tmpl_id: { type: Number, optional: true },
-        price_info: { type: String, optional: true },
-        selectedComboItems: {
-            type: Array,
-            element: Object,
-            shape: {
-                name: String,
-            },
-            optional: true,
-        },
-        show_extra_price: { type: Boolean, optional: true },
-    };
-
-    static defaultProps = {
-        show_extra_price: true,
-    };
+    props = useProps(productProps);
 
     //--------------------------------------------------------------------------
     // Private
