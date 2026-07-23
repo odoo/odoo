@@ -3199,8 +3199,8 @@ test(`enabling delete in list when groupby m2m field`, async () => {
 test.tags("desktop");
 test(`enabling delete in list when groupby m2m field and multi selecting the same record`, async () => {
     onRpc("has_group", () => false);
-    onRpc("unlink", ({ args }) => {
-        expect.step("unlink");
+    onRpc("web_unlink", ({ args }) => {
+        expect.step("web_unlink");
         expect(args[0]).toEqual([1], {
             message: "the unlink rpc should only contain unique ids in arguments",
         });
@@ -3235,7 +3235,7 @@ test(`enabling delete in list when groupby m2m field and multi selecting the sam
     expect(`.o_data_row`).toHaveCount(3, {
         message: "record should be deleted from both the groups",
     });
-    expect.verifySteps(["unlink"]);
+    expect.verifySteps(["web_unlink"]);
 });
 
 test(`enabling unarchive in list when groupby m2m field`, async () => {
@@ -6173,8 +6173,8 @@ test(`long words in text cells should break into smaller lines`, async () => {
 });
 
 test(`deleting one record and verify context key`, async () => {
-    onRpc("unlink", ({ kwargs }) => {
-        expect.step("unlink");
+    onRpc("web_unlink", ({ kwargs }) => {
+        expect.step("web_unlink");
         expect(kwargs.context.ctx_key).toBe("ctx_val");
     });
 
@@ -6200,7 +6200,7 @@ test(`deleting one record and verify context key`, async () => {
     });
 
     await contains(`.modal footer button.btn-danger`).click();
-    expect.verifySteps(["unlink"]);
+    expect.verifySteps(["web_unlink"]);
     expect(`tbody td.o_field_cell`).toHaveCount(3, { message: "should have 3 records" });
 });
 
@@ -6240,7 +6240,7 @@ test(`custom delete confirmation dialog`, async () => {
 });
 
 test(`deleting record which throws UserError should close confirmation dialog`, async () => {
-    onRpc("unlink", () => {
+    onRpc("web_unlink", () => {
         throw makeServerError({ message: "Odoo Server Error" });
     });
 
@@ -6265,6 +6265,57 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
     expect.verifyErrors(["Odoo Server Error"]);
 });
 
+test(`deleting a record blocked by a foreign key: the view reloads once archived`, async () => {
+    Foo._fields.active = fields.Boolean({ default: true });
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Foos",
+            res_model: "foo",
+            views: [[false, "list"]],
+        },
+    ]);
+    onRpc("web_unlink", () => {
+        expect.step("web_unlink");
+        throw makeServerError({
+            errorName: "odoo.addons.web.models.models.UnlinkBlockedError",
+            context: {
+                archivable: true,
+                model_name: "Bar",
+                res_model: "foo",
+                res_ids: [1],
+                blocked_ids: [1],
+            },
+        });
+    });
+    onRpc("action_archive", () => expect.step("action_archive"));
+    onRpc("web_search_read", () => expect.step("web_search_read"));
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`tbody td.o_field_cell`).toHaveCount(4);
+
+    await clickRecordSelector();
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    expect.errors(1);
+    await contains(`.modal footer button.btn-danger`).click();
+    await waitFor(`.modal .modal-title:contains(Oops)`);
+    expect.verifyErrors(["Odoo Server Error"]);
+
+    await contains(`.modal-footer .btn-primary`).click();
+    expect(`.modal`).toHaveCount(0);
+    expect(`tbody td.o_field_cell`).toHaveCount(3, {
+        message: "the archived record is gone from the reloaded list",
+    });
+    expect.verifySteps(["web_search_read", "web_unlink", "action_archive", "web_search_read"]);
+});
+
 test.tags("desktop");
 test(`delete all records matching the domain`, async () => {
     Foo._records.push({ id: 5, bar: true, foo: "xxx" });
@@ -6275,8 +6326,8 @@ test(`delete all records matching the domain`, async () => {
         },
     });
 
-    onRpc("unlink", ({ args }) => {
-        expect.step("unlink");
+    onRpc("web_unlink", ({ args }) => {
+        expect.step("web_unlink");
         expect(args[0]).toEqual([1, 2, 3, 5]);
     });
 
@@ -6300,7 +6351,7 @@ test(`delete all records matching the domain`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal footer button.btn-danger`).click();
-    expect.verifySteps(["unlink"]);
+    expect.verifySteps(["web_unlink"]);
 });
 
 test.tags("desktop");
@@ -6318,8 +6369,8 @@ test(`delete all records matching the domain (limit reached)`, async () => {
         active_ids_limit: 4,
     });
 
-    onRpc("unlink", ({ args }) => {
-        expect.step("unlink");
+    onRpc("web_unlink", ({ args }) => {
+        expect.step("web_unlink");
         expect(args[0]).toEqual([1, 2, 3, 5]);
     });
 
@@ -6343,7 +6394,7 @@ test(`delete all records matching the domain (limit reached)`, async () => {
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
     await contains(`.modal footer button.btn-danger`).click();
-    expect.verifySteps(["unlink", "notify"]);
+    expect.verifySteps(["web_unlink", "notify"]);
 });
 
 test(`duplicate one record`, async () => {
@@ -20343,7 +20394,7 @@ test(`[Offline] cache web_search_read: browsing with pager online/offline`, asyn
 });
 
 test(`[Offline] delete records`, async () => {
-    onRpc("unlink", () => expect.step(`unlink`));
+    onRpc("web_unlink", () => expect.step(`web_unlink`));
     Foo._views = {
         list: `<list><field name="foo"/></list>`,
         search: `<search/>`,
@@ -20387,7 +20438,7 @@ test(`[Offline] delete records`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["unlink"]);
+    await expect.waitForSteps(["web_unlink"]);
 });
 
 test(`[Offline] archiving records`, async () => {

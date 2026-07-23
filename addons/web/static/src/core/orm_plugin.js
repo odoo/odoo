@@ -68,6 +68,7 @@ export const x2ManyCommands = {
 
 export const UPDATE_METHODS = [
     "unlink",
+    "web_unlink",
     "create",
     "write",
     "web_save",
@@ -267,6 +268,25 @@ export class ORM extends Plugin {
             return Promise.resolve(true);
         }
         return this.call(model, "unlink", [ids], kwargs);
+    }
+
+    /**
+     * Like `unlink`, but goes through `web_unlink`: only ever call this for a
+     * delete initiated by the web client's own confirmation-guarded delete
+     * flow, so that the recovery logic pinpointing non-deletable records never
+     * runs for other, unrelated, delete calls.
+     *
+     * @param {string} model
+     * @param {number[]} ids
+     * @param {any} [kwargs={}]
+     * @returns {Promise<boolean>}
+     */
+    webUnlink(model, ids, kwargs = {}) {
+        assertType(ids, t.array(t.number()), "Invalid ids");
+        if (!ids.length) {
+            return Promise.resolve(true);
+        }
+        return this.call(model, "web_unlink", [ids], kwargs);
     }
 
     /**

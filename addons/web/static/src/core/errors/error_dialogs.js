@@ -214,6 +214,80 @@ export class RedirectWarningDialog extends Component {
 }
 
 // -----------------------------------------------------------------------------
+// Unlink Blocked Error Dialog
+// -----------------------------------------------------------------------------
+
+/**
+ * Shown for any `UnlinkBlockedError` (see `Base.web_unlink` server-side, in
+ * `@web/../models/models.py`), whichever flow the delete came from: everything
+ * this dialog needs travels in the error's `context`.
+ */
+export class UnlinkBlockedErrorDialog extends Component {
+    static template = "web.UnlinkBlockedErrorDialog";
+    static components = { Dialog };
+    props = useProps({
+        ...standardErrorDialogProps,
+    });
+
+    setup() {
+        this.orm = useService("orm");
+        this.actionService = useService("action");
+        const {
+            archivable,
+            model_name: modelName,
+            res_model: resModel,
+            res_ids: resIds,
+            blocked_ids: blockedIds,
+        } = this.props.data.context;
+        this.archivable = archivable;
+        this.resModel = resModel;
+        this.resIds = resIds;
+        this.blockedIds = blockedIds;
+        this.isMulti = resIds.length > 1;
+        this.message = this.isMulti
+            ? _t("Not possible to delete all the records because some are used in %(model_name)s", {
+                  model_name: modelName,
+              })
+            : _t("Not possible to delete the record because it is used in %(model_name)s", {
+                  model_name: modelName,
+              });
+    }
+
+    get archiveHint() {
+        return this.isMulti
+            ? _t("How about archiving them instead?")
+            : _t("How about archiving it instead?");
+    }
+
+    async onArchiveClick() {
+        await this.orm.call(this.resModel, "action_archive", [this.resIds]);
+        // the current view has no idea any of this happened: make it reload
+        const controller = this.actionService.currentController;
+        if (controller) {
+            await this.actionService.restore(controller.jsId);
+        }
+        this.props.close();
+    }
+
+    async onViewBlockedRecordsClick(ev) {
+        ev.preventDefault();
+        // a new action, so the user gets back through the breadcrumbs
+        await this.actionService.doAction({
+            name: _t("Non-deletable records"),
+            type: "ir.actions.act_window",
+            res_model: this.resModel,
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            domain: [["id", "in", this.blockedIds]],
+            target: "current",
+        });
+        this.props.close();
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Error 504 Dialog
 // -----------------------------------------------------------------------------
 export class Error504Dialog extends Component {
@@ -249,6 +323,7 @@ registry
     .add("odoo.exceptions.UserError", WarningDialog)
     .add("odoo.exceptions.ValidationError", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
+    .add("odoo.addons.web.models.models.UnlinkBlockedError", UnlinkBlockedErrorDialog)
     .add("odoo.http.session.SessionExpiredException", SessionExpiredDialog)
     .add("werkzeug.exceptions.Forbidden", SessionExpiredDialog)
     .add("504", Error504Dialog);

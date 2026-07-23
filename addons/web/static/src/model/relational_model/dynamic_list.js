@@ -278,14 +278,14 @@ export class DynamicList extends DataPoint {
         }
         let unlinked = false;
         try {
-            unlinked = await this.model.orm.unlink(this.resModel, resIds, {
+            unlinked = await this.model.orm.webUnlink(this.resModel, resIds, {
                 context: this.context,
             });
         } catch (e) {
             if (e instanceof ConnectionLostError) {
                 this.model.offlinePlugin.scheduleORM(
                     this.resModel,
-                    "unlink",
+                    "web_unlink",
                     [resIds],
                     { context: this.context },
                     {

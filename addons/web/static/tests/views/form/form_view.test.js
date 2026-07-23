@@ -6327,7 +6327,7 @@ test(`deleting a record`, async () => {
 });
 
 test(`[Offline] deleting a record`, async () => {
-    onRpc("unlink", () => expect.step(`unlink`));
+    onRpc("web_unlink", () => expect.step(`web_unlink`));
     Partner._views = {
         "form,false": `<form><field name="foo"/></form>`,
         "search,false": `<search/>`,
@@ -6372,7 +6372,7 @@ test(`[Offline] deleting a record`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["unlink"]);
+    await expect.waitForSteps(["web_unlink"]);
 });
 
 test.tags("desktop");
@@ -6420,7 +6420,7 @@ test(`deleting the last record`, async () => {
 
     await contains(`.modal-footer button.btn-danger`).click();
     expect(`.modal`).toHaveCount(0);
-    expect.verifySteps(["unlink", "history-back"]);
+    expect.verifySteps(["web_unlink", "history-back"]);
 });
 
 test("delete the last record (without previous action)", async () => {
@@ -9631,8 +9631,8 @@ test(`id is False in evalContext for new records`, async () => {
 
 test(`delete a duplicated record`, async () => {
     const newRecordID = 6; // ids from 1 to 5 are already taken so the new record will have id 6
-    onRpc("unlink", ({ args }) => {
-        expect.step("unlink");
+    onRpc("web_unlink", ({ args }) => {
+        expect.step("web_unlink");
         expect(args[0]).toEqual([newRecordID]);
     });
 
@@ -9655,7 +9655,7 @@ test(`delete a duplicated record`, async () => {
 
     await contains(`.modal-footer .btn-danger`).click();
     expect(`.o_field_widget`).toHaveText("first record");
-    expect.verifySteps(["unlink"]);
+    expect.verifySteps(["web_unlink"]);
 });
 
 test.tags("desktop");

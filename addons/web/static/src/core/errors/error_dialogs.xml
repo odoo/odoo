@@ -24,6 +24,23 @@
         </Dialog>
     </t>
 
+    <t t-name="web.UnlinkBlockedErrorDialog">
+        <Dialog title.translate="Oops" size="'sm'" contentClass="'o_error_dialog'">
+            <p class="text-prewrap mb-0" t-out="this.message"/>
+            <a t-if="this.isMulti" href="#" class="d-block mt-2" t-on-click="this.onViewBlockedRecordsClick">View non-deletable records</a>
+            <p t-if="this.archivable" class="text-prewrap mb-0 mt-2" t-out="this.archiveHint"/>
+            <t t-set-slot="footer">
+                <t t-if="this.archivable">
+                    <button class="btn btn-primary" t-on-click="this.onArchiveClick">Archive</button>
+                    <button class="btn btn-secondary" t-on-click="this.props.close">Discard</button>
+                </t>
+                <t t-else="">
+                    <button class="btn btn-primary" t-on-click="this.props.close">Close</button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+
     <t t-name="web.Error504Dialog">
         <Dialog title.translate="Request timeout" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">

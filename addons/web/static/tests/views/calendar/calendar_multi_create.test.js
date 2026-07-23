@@ -616,7 +616,7 @@ test("multi_create: use state to keep values of inputs", async () => {
 
 test.tags("desktop");
 test("multi_create: delete", async () => {
-    onRpc("event", "unlink", ({ args: [ids] }) => {
+    onRpc("event", "web_unlink", ({ args: [ids] }) => {
         expect.step(ids);
     });
 

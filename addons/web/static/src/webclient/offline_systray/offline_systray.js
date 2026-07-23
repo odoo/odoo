@@ -60,7 +60,7 @@ class OfflineSystray extends Component {
                     ]);
                 }
             }
-            if (value.method === "unlink") {
+            if (value.method === "unlink" || value.method === "web_unlink") {
                 item.status = STATUS.DELETED;
             }
             if (value.method === "action_archive") {
