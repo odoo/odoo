@@ -1363,6 +1363,7 @@ class AccountMove(models.Model):
         files_data.extend(self._unwrap_attachments(files_data))
 
         moves = self.with_company(company_id).create([{
+                'move_type': 'in_invoice',
                 'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw']),
                 'l10n_it_edi_attachment_name': file_data['name'],
             } for file_data in files_data
