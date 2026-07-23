@@ -1,5 +1,5 @@
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
-import { Component, onWillStart, plugin, proxy, types as t, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, types as t, usePlugin, useProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useService } from "@web/core/utils/hooks";
 import { TimeOffPlugin } from "../views/time_off_plugin";
@@ -24,7 +24,7 @@ export class TimeOffDashboard extends Component {
             allocationRequestDaysHours: "",
         });
 
-        plugin(TimeOffPlugin).onUpdateDashboard(() => this.loadDashboardData());
+        usePlugin(TimeOffPlugin).onUpdateDashboard(() => this.loadDashboardData());
 
         onWillStart(async () => this.loadDashboardData());
     }

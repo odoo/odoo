@@ -26,9 +26,9 @@ import {
     onWillUnmount,
     proxy,
     status,
-    plugin,
-    xml,
+    usePlugin,
     useScope,
+    xml,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
@@ -138,7 +138,7 @@ const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props=
 
 export function makeActionManager(env, router = _router) {
     const scope = useScope();
-    const offlinePlugin = plugin(OfflinePlugin);
+    const offlinePlugin = usePlugin(OfflinePlugin);
     const { dialog: dialogService, effect: effectService, notification, title, ui } = env.services;
 
     const breadcrumbCache = {};

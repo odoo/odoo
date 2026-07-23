@@ -1,5 +1,5 @@
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
-import { plugin, providePlugins, useScope } from "@odoo/owl";
+import { providePlugins, usePlugin, useScope } from "@odoo/owl";
 import { serializeDate } from "@web/core/l10n/dates";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { ResourceCalendarAttendancePopoverLoader } from "@resource/plugins/resource_calendar_attendance_popover_loader";
@@ -15,13 +15,13 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
             meta: this.props.model.meta,
             env: this.env,
         });
-        this.resourceCalendarAttendancePopoverLoader = plugin(
+        this.resourceCalendarAttendancePopoverLoader = usePlugin(
             ResourceCalendarAttendancePopoverLoader
         );
         if (!useScope().pluginManager.getPluginById(ResourceCalendarPlugin.id)) {
             providePlugins([ResourceCalendarPlugin]);
         }
-        this.resourceCalendarPlugin = plugin(ResourceCalendarPlugin);
+        this.resourceCalendarPlugin = usePlugin(ResourceCalendarPlugin);
         this.popover = usePopover(this.resourceCalendarAttendancePopoverLoader.component, {
             position: "right",
             onClose: () => {

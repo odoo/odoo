@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { plugin } from "@odoo/owl";
+import { usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 
 function activateTestsAssetsDebugging() {
@@ -23,7 +23,7 @@ function activateTestsAssetsDebugging() {
 }
 
 export function regenerateAssets() {
-    const orm = plugin(ORM);
+    const orm = usePlugin(ORM);
     return {
         type: "item",
         description: _t("Regenerate Assets"),

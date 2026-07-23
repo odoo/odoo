@@ -1,4 +1,4 @@
-import { EventBus, toRaw, plugin } from "@odoo/owl";
+import { EventBus, toRaw, usePlugin } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
@@ -193,7 +193,7 @@ export class SearchModel extends EventBus {
 
     setup(services) {
         // services
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         const { field: fieldService, orm, view, dialog, treeProcessor } = services;
         this.orm = orm;
         this.fieldService = fieldService;

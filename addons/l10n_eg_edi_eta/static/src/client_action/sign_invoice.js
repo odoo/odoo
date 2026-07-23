@@ -1,4 +1,4 @@
-import { plugin } from "@odoo/owl";
+import { usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -38,7 +38,7 @@ async function initLNA(notification) {
 
 async function actionGetDrive(env, actionDescr, type) {
     const { drive_id, sign_host: host } = actionDescr.params;
-    const orm = plugin(ORM);
+    const orm = usePlugin(ORM);
     const notification = useService("notification");
     const dialog = useService("dialog");
     const action = useService("action");

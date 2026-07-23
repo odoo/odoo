@@ -33,12 +33,12 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillStart,
-    plugin,
     proxy,
     signal,
     status,
     t,
     useListener,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -141,7 +141,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();

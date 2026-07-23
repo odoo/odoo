@@ -1,4 +1,4 @@
-import { effect, immediateEffect, plugin, proxy, untrack, useEffect, useScope } from "@odoo/owl";
+import { effect, immediateEffect, proxy, untrack, useEffect, usePlugin, useScope } from "@odoo/owl";
 
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -12,7 +12,7 @@ import { memoize } from "@web/core/utils/functions";
  */
 export function maybePlugin(pluginType) {
     if (useScope().pluginManager?.getPluginById(pluginType.id)) {
-        return plugin(pluginType);
+        return usePlugin(pluginType);
     }
     return undefined;
 }

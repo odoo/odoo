@@ -1,11 +1,11 @@
-import { asyncComputed, Component, computed, onWillStart, plugin } from "@odoo/owl";
+import { Component, asyncComputed, computed, onWillStart, usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 
 export class PurchaseDashBoard extends Component {
     static template = "purchase.PurchaseDashboard";
     static props = { list: { type: Object, optional: true } };
 
-    orm = plugin(ORM);
+    orm = usePlugin(ORM);
 
     purchaseData = asyncComputed(() => {
         this.props.list;

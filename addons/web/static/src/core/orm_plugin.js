@@ -1,4 +1,4 @@
-import { assertType, plugin, Plugin, types as t } from "@odoo/owl";
+import { Plugin, assertType, types as t, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -403,7 +403,7 @@ registry.category("services").add("orm", {
         "write",
     ],
     start() {
-        const orm = Object.create(plugin(ORM));
+        const orm = Object.create(usePlugin(ORM));
         // talk to JUM
         orm.toString = () => "orm";
         return orm;

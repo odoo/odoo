@@ -7,7 +7,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, plugin, proxy, signal, status, t, useProps } from "@odoo/owl";
+import { Component, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -66,7 +66,7 @@ export class SearchBar extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.fields = this.env.searchModel.searchViewFields;
         this.searchItemsFields = this.env.searchModel.getSearchItems((f) => f.type === "field");
         this.ui = useService("ui");

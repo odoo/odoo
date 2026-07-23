@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, plugin, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, usePlugin } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -16,7 +16,7 @@ export class SearchBarToggler extends Component {
 export class OfflineSearchBarToggler extends SearchBarToggler {
     static template = "web.SearchBar.Toggler.Offline";
     setup() {
-        const offlinePlugin = plugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(OfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
             const availableSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);

@@ -42,10 +42,10 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    plugin,
     proxy,
     signal,
     t,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -169,7 +169,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
