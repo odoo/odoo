@@ -49,4 +49,26 @@ describe("PoS Discount", () => {
         expect(productLine.priceIncl).toBe(30);
         expect(discountLine.priceIncl).toBe(-3);
     });
+
+    test("fixed global discount mirrors its sign when refunding", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.template"].get(5);
+
+        // Sale of 10 x 3.00 with a fixed 5.00 global discount.
+        const sale = store.addNewOrder();
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 10 }, sale);
+        await store.applyDiscount(5, "fixed", sale);
+        const saleTotal = sale.priceIncl;
+        expect(saleTotal).toBe(29.5); // 34.50 incl - 5.00 fixed discount
+
+        // Refund the same order: negated quantity + is_refund flag, same fixed discount.
+        // The refund total must be the exact mirror of the sale (the discount reduces what
+        // is given back). Before the fix the fixed discount kept the sale sign and inflated
+        // the refund to -39.50, making amount_paid != amount_total.
+        const refund = store.addNewOrder();
+        refund.is_refund = true;
+        await store.addLineToOrder({ product_tmpl_id: product, qty: -10 }, refund);
+        await store.applyDiscount(5, "fixed", refund);
+        expect(refund.priceIncl).toBe(-saleTotal); // -29.50, not -39.50
+    });
 });
