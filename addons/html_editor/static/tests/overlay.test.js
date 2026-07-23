@@ -1,3 +1,4 @@
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { beforeEach, expect, test, describe, getFixture } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
 import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
@@ -12,8 +13,7 @@ import {
 import { animationFrame } from "@odoo/hoot-mock";
 import { unformat } from "./_helpers/format";
 import { Plugin } from "@html_editor/plugin";
-import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, onMounted, onWillUnmount, usePlugin, xml } from "@odoo/owl";
 import { setupEditor } from "./_helpers/editor";
 import { parseHTML } from "@html_editor/utils/html";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -413,7 +413,7 @@ test("overlay don't close when click on child overlay", async () => {
         static props = {};
 
         setup() {
-            const overlayService = useService("overlay");
+            const overlayService = usePlugin(OverlayPlugin);
             let remove;
             onMounted(() => {
                 remove = overlayService.add(MySubOverlay, {});

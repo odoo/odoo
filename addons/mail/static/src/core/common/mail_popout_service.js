@@ -1,4 +1,5 @@
-import { Component, types, useApp, useProps, xml } from "@odoo/owl";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { Component, types, useApp, usePlugin, useProps, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
@@ -17,6 +18,7 @@ class OverlayWrapper extends Component {
         componentProps: types.object(),
     });
     setup() {
+        this.overlayService = usePlugin(OverlayPlugin);
         useOwnDebugContext();
     }
 }
