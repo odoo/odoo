@@ -307,7 +307,7 @@ class AccountMove(models.Model):
     def _get_edi_decoder(self, file_data, new=False):
         def _get_child_models(model):
             child_models = {model}
-            for child in self.env.registry[model]._inherit_children:
+            for child in self.env.registry[model]._inherit_children__:
                 child_models.update(_get_child_models(child))
             return child_models
 
