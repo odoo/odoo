@@ -25,14 +25,16 @@
                                     name="action_l10n_cn_baiwang_subscribe"
                                     string="Subscribe to Baiwang"
                                     class="btn-primary"
-                                    icon="fa-external-link"/>
+                                    icon="fa-external-link"
+                                    noSaveDialog="true"/>
                             </div>
                             <div class="mt16" invisible="l10n_cn_baiwang_subscription_status != 'subscribed'">
                                 <button name="action_l10n_cn_baiwang_authorize"
                                     type="object"
                                     string="Authorize Odoo to use Baiwang"
                                     class="btn-primary"
-                                    icon="fa-key"/>
+                                    icon="fa-key"
+                                    noSaveDialog="true"/>
                             </div>
                             <div class="mt16 text-success" invisible="l10n_cn_baiwang_subscription_status != 'authorized'">
                                 <i class="fa fa-check-circle"/> Baiwang is connected. </div>
@@ -41,7 +43,8 @@
                                     type="object"
                                     string="Sync Registration Status"
                                     class="btn-secondary"
-                                    icon="fa-refresh"/>
+                                    icon="fa-refresh"
+                                    noSaveDialog="true"/>
                             </div>
                         </div>
                     </setting>
