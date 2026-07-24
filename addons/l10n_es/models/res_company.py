@@ -9,3 +9,7 @@ class ResCompany(models.Model):
         help="Over this amount is not legally possible to create a simplified invoice",
         default=400,
     )
+
+    def _l10n_es_get_pos_edi_mode(self):
+        self.ensure_one()
+        return False
