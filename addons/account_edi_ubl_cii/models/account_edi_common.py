@@ -221,6 +221,38 @@ class AccountEdiCommon(models.AbstractModel):
     def _can_export_selfbilling(self):
         return False
 
+<<<<<<< 4aa911c56862cbbba87b090dca094c39c7667893
+||||||| d7cae63b1b458b933aa89ab23d5ee116960ca279
+    def _get_belgian_cocontractant_note(self, customer, supplier):
+        invoice = self.env.context.get('tax_exemption_reason_invoice')
+        if self._is_cocontractant_fiscal_position(invoice, customer, supplier):
+            note = html2plaintext(invoice.fiscal_position_id.note) if invoice.fiscal_position_id.note else ''
+            return note or COCONTRACTANT_DEFAULT_NOTE
+        return ''
+
+    def _is_cocontractant_fiscal_position(self, invoice, customer, supplier):
+        return (invoice and
+                customer.country_id.code == 'BE' and
+                supplier.country_id == customer.country_id and
+                (co_contractant := self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)) and
+                invoice.fiscal_position_id == co_contractant
+        )
+=======
+    def _get_belgian_cocontractant_note(self, customer, supplier):
+        invoice = self.env.context.get('tax_exemption_reason_invoice')
+        if self._is_cocontractant_fiscal_position(invoice, customer, supplier):
+            note = html2plaintext(invoice.fiscal_position_id.note) if invoice.fiscal_position_id.note else ''
+            return note or COCONTRACTANT_DEFAULT_NOTE
+        return ''
+
+    def _is_cocontractant_fiscal_position(self, invoice, customer, supplier):
+        return (invoice and
+                customer.country_id.code == 'BE' and
+                supplier.country_id == customer.country_id and
+                (co_contractant := self.env['account.chart.template'].with_company(invoice.company_id).ref('fiscal_position_template_4', raise_if_not_found=False)) and
+                invoice.fiscal_position_id == co_contractant
+        )
+>>>>>>> 2f4655d92303e3b949b8c9e127cdc4d6b3866391
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
