@@ -56,6 +56,7 @@ class TestAccountMoveReversalFe(TransactionCase):
                 'journal_id': self.invoice.journal_id.id,
                 'l10n_cr_fe_motivo': 'correccion_monto',
                 'reason': 'Ajuste de precio acordado con el cliente',
+                'l10n_cr_fe_line_ids': [(6, 0, self.invoice.invoice_line_ids.ids)],
             })
         action = wizard.refund_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
@@ -63,3 +64,24 @@ class TestAccountMoveReversalFe(TransactionCase):
         self.assertEqual(credit_note.l10n_cr_fe_codigo_referencia, '02')
         self.assertEqual(credit_note.l10n_cr_fe_razon, 'Ajuste de precio acordado con el cliente')
         self.assertEqual(credit_note.reversed_entry_id, self.invoice)
+
+    def test_refund_moves_requires_at_least_one_selected_line_for_partial_motivo(self):
+        from odoo.exceptions import UserError
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=self.invoice.ids).create({
+                'journal_id': self.invoice.journal_id.id,
+                'l10n_cr_fe_motivo': 'correccion_monto',
+            })
+        with self.assertRaises(UserError):
+            wizard.refund_moves()
+
+    def test_refund_moves_anulacion_total_does_not_require_line_selection(self):
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=self.invoice.ids).create({
+                'journal_id': self.invoice.journal_id.id,
+                'l10n_cr_fe_motivo': 'anulacion_total',
+            })
+        action = wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_lines = credit_note.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(len(credit_lines), 1)
