@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="installed_modules" model="tile.tile">
+        <field name="name">Ứng Dụng Đã Cài Đặt</field>
+        <field name="category_id" ref="category_module" />
+        <field name="model_id" ref="base.model_ir_module_module" />
+        <field name="action_id" ref="base.open_module_tree" />
+        <field name="background_color">#00A09D</field>
+        <field name="font_color">#FFFFFF</field>
+        <field name="domain">[['state', 'in', ['installed']]]</field>
+    </record>
+
+    <record id="installed_OCA_modules" model="tile.tile">
+        <field name="name">Module OCA Tùy Chỉnh</field>
+        <field name="category_id" ref="category_module" />
+        <field name="model_id" ref="base.model_ir_module_module" />
+        <field name="action_id" ref="base.open_module_tree" />
+        <field name="background_color">#875A7B</field>
+        <field name="font_color">#FFFFFF</field>
+        <field name="domain">[['state', 'in', ['installed']]]</field>
+    </record>
+
+    <record id="active_users_tile" model="tile.tile">
+        <field name="name">Người Dùng Khả Dụng</field>
+        <field name="category_id" ref="category_currency" />
+        <field name="model_id" ref="base.model_res_users" />
+        <field name="action_id" ref="base.action_res_users" />
+        <field name="background_color">#2185D0</field>
+        <field name="font_color">#FFFFFF</field>
+        <field name="domain">[['active', '=', True]]</field>
+    </record>
+
+    <record id="all_currency_with_rate" model="tile.tile">
+        <field name="name">Tỷ Giá Tiền Tệ (Max Rate)</field>
+        <field name="category_id" ref="category_currency" />
+        <field name="model_id" ref="base.model_res_currency" />
+        <field name="secondary_function">max</field>
+        <field name="secondary_field_id" ref="base.field_res_currency__rate" />
+        <field name="background_color">#E05D5D</field>
+        <field name="font_color">#FFFFFF</field>
+        <field name="domain">[]</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,46 @@
+/* custom kanban style */
+.o_kanban_view .oe_dashboard_tile {
+    height: 150px !important;
+}
+
+.o_kanban_view .oe_dashboard_tile .tile_background {
+    padding: 8px;
+    height: 100%;
+}
+
+.o_kanban_view .oe_dashboard_tile .tile_label,
+.o_kanban_view .oe_dashboard_tile .tile_primary_value,
+.o_kanban_view .oe_dashboard_tile .tile_secondary_value {
+    text-align: center;
+    font-weight: bold;
+}
+
+.o_kanban_view .oe_dashboard_tile .tile_label {
+    padding: 5px 0px;
+    font-size: 15px;
+}
+
+.o_kanban_view .oe_dashboard_tile .tile_primary_value {
+    font-size: 54px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+}
+
+.o_kanban_view .oe_dashboard_tile .tile_secondary_value {
+    display: none;
+    font-size: 18px;
+    font-style: italic;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+}
+
+.o_kanban_view .oe_dashboard_tile .with_secondary .tile_primary_value {
+    font-size: 38px;
+    bottom: 30px;
+}
+
+.o_kanban_view .oe_dashboard_tile .with_secondary .tile_secondary_value {
+    display: block;
+}
