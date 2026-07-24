@@ -2557,6 +2557,34 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaverScreenCloseOverlaysTour')
 
+    def test_single_value_multi_attribute_configurator(self):
+        # A multi-select attribute with a single value must still open the
+        # configurator when the product is added to the order.
+        product = self.env['product.product'].create({
+            'name': 'Single Multi Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+        multi_attribute = self.env['product.attribute'].create({
+            'name': 'Extras',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        })
+        multi_value = self.env['product.attribute.value'].create({
+            'name': 'Extra Cheese',
+            'attribute_id': multi_attribute.id,
+        })
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'attribute_id': multi_attribute.id,
+            'value_ids': [(6, 0, multi_value.ids)],
+        })
+        attribute_line.product_template_value_ids[0].price_extra = 5
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_single_value_multi_attribute_configurator')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
