@@ -103,6 +103,31 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_single_value_multi_attribute_configurator", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // A product whose only attribute is a multi-select with a single value
+            // must still open the configurator so the value can be (de)selected.
+            ProductScreen.clickDisplayedProduct("Single Multi Product"),
+            Dialog.is(),
+
+            // Pick the single multi value and confirm
+            ProductConfigurator.pickMulti("Extra Cheese"),
+            Dialog.confirm(),
+
+            ProductScreen.selectedOrderlineHas(
+                "Single Multi Product",
+                "1.0",
+                "15.0",
+                "Extra Cheese"
+            ),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
     steps: () =>
         [
