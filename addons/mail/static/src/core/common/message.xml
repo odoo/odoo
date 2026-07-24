@@ -198,7 +198,7 @@
 </t>
 
 <t t-name="mail.Message.bodyAsNotification">
-    <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': this.message.message_type == 'notification', 'o_track': this.message.message_type == 'tracking'}">
+    <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': this.message.isNote || this.message.message_type == 'notification', 'o_track': this.message.message_type == 'tracking'}">
         <t t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
     </div>
 </t>
