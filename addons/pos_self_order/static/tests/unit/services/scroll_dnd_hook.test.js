@@ -13,7 +13,6 @@ const setupComponent = async () => {
         static template = xml`<div style="width: 200px; overflow-x: auto;" t-ref="this.scrollRef">
             <div style="width: 1000px; height: 20px;">Scrollable Content</div>
         </div>`;
-        static props = [];
         scrollRef = signal.ref();
         setup() {
             useDraggableScroll(this.scrollRef);

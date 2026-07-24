@@ -1,4 +1,4 @@
-import { Component, props } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -23,7 +23,7 @@ const EPSON_ERRORS = {
 
 export class TestEPos extends Component {
     static template = `point_of_sale.TestEPosButton`;
-    props = props(standardWidgetProps);
+    props = useProps(standardWidgetProps);
 
     setup() {
         super.setup();

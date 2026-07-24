@@ -2,7 +2,7 @@ import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, props, t, usePlugin } from "@odoo/owl";
+import { Component, onMounted, useEffect, useProps, t, usePlugin } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
@@ -18,7 +18,7 @@ import { PosRouterPlugin } from "./plugins/pos_router_plugin";
 export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
     static components = { Transition, MainComponentsContainer, Navbar };
-    props = props({ disableLoader: t.function() });
+    props = useProps({ disableLoader: t.function() });
     router = usePlugin(PosRouterPlugin);
 
     setup() {
