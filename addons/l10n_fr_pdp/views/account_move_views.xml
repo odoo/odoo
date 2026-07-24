@@ -67,6 +67,25 @@
         <field name="priority">30</field>
         <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
         <field name="arch" type="xml">
+            <button name="action_cancel_peppol_documents" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </button>
+            <button name="action_cancel_peppol_documents" position="after">
+                <button name="action_cancel_peppol_documents"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Cancel E-Invoice Sending"
+                        invisible="peppol_move_state != 'to_send' or state == 'draft' or country_code not in ('FR', 'GP', 'MQ', 'RE')"/>
+            </button>
+            <xpath expr="//div[@name='peppol_div']/span[hasclass('text-muted')]" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </xpath>
+            <xpath expr="//div[@name='peppol_div']/span[hasclass('text-muted')]" position="after">
+                <span class="text-muted mx-3"
+                      invisible="peppol_move_state != 'to_send' or country_code not in ('FR', 'GP', 'MQ', 'RE')">
+                    The invoice will be sent automatically via the Approved Platform
+                </span>
+            </xpath>
             <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
             <button name="button_cancel" position="after">
                 <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
