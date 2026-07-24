@@ -215,7 +215,8 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
-                    (!this.store.rtc.isFullscreen || this.env.inMeetingView)
+                    (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
+                    (this.props.composer.message || !this.thread?.messageInEdition)
             );
         }
         useChildSubEnv({ inComposer: true });
