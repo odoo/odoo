@@ -1,6 +1,7 @@
 from random import randint
 
 from odoo import fields, models
+from odoo.tools.translate import mark_as_copy
 
 
 class ProjectRole(models.Model):
@@ -11,7 +12,7 @@ class ProjectRole(models.Model):
         return randint(1, 11)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True, translate=True, copy=mark_as_copy('name'))
     color = fields.Integer(default=_get_default_color)
     sequence = fields.Integer(export_string_translation=False)
     user_ids = fields.Many2many(
@@ -22,7 +23,3 @@ class ProjectRole(models.Model):
         string='Team Members',
         domain=lambda self: [('all_group_ids', '=', self.env.ref('project.group_project_user').id)],
     )
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._('%s (copy)', role.name)) for role, vals in zip(self, vals_list)]

@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools.translate import mark_as_copy
 
 
 class ProductTag(models.Model):
@@ -15,7 +16,7 @@ class ProductTag(models.Model):
     def _get_default_variant_id(self):
         return self.env['product.product'].browse(self.env.context.get('product_variant_id'))
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(string="Name", required=True, translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer(default=10)
     color = fields.Char(string="Color", default='#3C3C3C')
     product_template_ids = fields.Many2many(
@@ -51,10 +52,6 @@ class ProductTag(models.Model):
     def _compute_product_ids(self):
         for tag in self:
             tag.product_ids = tag.product_template_ids.product_variant_ids | tag.product_product_ids
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", tag.name)) for tag, vals in zip(self, vals_list)]
 
     def _search_product_ids(self, operator, operand):
         if operator in Domain.NEGATIVE_OPERATORS:

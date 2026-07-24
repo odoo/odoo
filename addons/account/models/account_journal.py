@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.tools import email_normalize, email_normalize_all, groupby, urls, clean_context
 from odoo.tools.misc import hash_sign
+from odoo.tools.translate import mark_as_copy
 from odoo.fields import Domain
 from collections import defaultdict
 import logging
@@ -81,7 +82,7 @@ class AccountJournal(models.Model):
                                          'expense_depreciation', 'expense_direct_cost', 'off_balance'))
         ]"""
 
-    name = fields.Char(string='Journal Name', required=True, translate=True)
+    name = fields.Char(string='Journal Name', required=True, translate=True, copy=mark_as_copy('name'))
     name_placeholder = fields.Char(compute='_compute_name_placeholder')
     code = fields.Char(
         string='Sequence Prefix',
@@ -769,7 +770,7 @@ class AccountJournal(models.Model):
 
             vals.update(
                 code=copy_code,
-                name=_("%s (copy)", journal.name or ''))
+            )
         return vals_list
 
     def write(self, vals):

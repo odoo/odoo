@@ -136,10 +136,13 @@ class Field[T]:
         The field's default values stored in model ir.default are used as fallbacks for
         unspecified values in the jsonb dict.
 
-    :param bool copy: whether the field value should be copied when the record
-        is duplicated (default: ``True`` for normal fields, ``False`` for
+    :param bool|callable copy: whether the field value should be copied when the
+        record is duplicated (default: ``True`` for normal fields, ``False`` for
         ``one2many`` and computed fields, including property fields and
-        related fields)
+        related fields). Can also be a ``(record) -> value`` callable used by
+        :meth:`~odoo.models.Model.copy_data` to produce the copied value
+        (e.g. ``copy=mark_as_copy('name')``).
+        Not called when the field is provided in ``default``.
 
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
@@ -286,7 +289,7 @@ class Field[T]:
     store: bool = True                  # whether the field is stored in database
     index: str | None = None            # how the field is indexed in database
     manual: bool = False                # whether the field is a custom field
-    copy: bool = True                   # whether the field is copied over by BaseModel.copy()
+    copy: bool | Callable[[BaseModel], typing.Any] = True  # copied by BaseModel.copy()
     _depends: Collection[str] | None = None  # collection of field dependencies
     _depends_context: Collection[str] | None = None  # collection of context key dependencies
     recursive: bool = False             # whether self depends on itself

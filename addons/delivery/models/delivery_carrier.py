@@ -8,6 +8,7 @@ from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import expr_eval
+from odoo.tools.translate import mark_as_copy
 
 
 class DeliveryCarrier(models.Model):
@@ -31,7 +32,7 @@ class DeliveryCarrier(models.Model):
        (they are documented hereunder)
     """
 
-    name = fields.Char(string="Delivery Method", translate=True, required=True)
+    name = fields.Char(string="Delivery Method", translate=True, required=True, copy=mark_as_copy('name'))
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type.
@@ -365,13 +366,6 @@ class DeliveryCarrier(models.Model):
         if "delivery_type" in vals:
             vals["allow_cash_on_delivery"] = False
         return super().write(vals)
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [
-            dict(vals, name=self.env._("%s (copy)", carrier.name))
-            for carrier, vals in zip(self, vals_list)
-        ]
 
     def _get_delivery_type(self):
         """Return the delivery type.

@@ -67,7 +67,9 @@ class TestMethodsOverrideTranslatedFields(RegistryLintCase):
         self.assertFalse(len(violations), "Override `write`(maybe also `create`) for translated fields \n" + '\n'.join(violations))
 
     COPY_DATA_CHECKED_FIELD_NAMES = {  # {module_name: [model_name.field_name, ...]}
-        'base': ['ir.actions.actions.name'],
+        # Prefer Field.copy callables (e.g. mark_as_copy) over copy_data overrides.
+        # List intentional exceptions that still touch translated fields in copy_data
+        # without using mark_as_copy / adapt_translated_field_value.
     }
 
     def test_copy_data_override_translated_field(self):
@@ -104,6 +106,14 @@ class TestMethodsOverrideTranslatedFields(RegistryLintCase):
                         f"{field_name}=",
                     ]
                     if matched_pattern := next(iter(p for p in patterns if p in source), None):
+                        if (
+                            f"['{field_name}'] = adapt_translated_field_value(" in source
+                            or f'["{field_name}"] = adapt_translated_field_value(' in source
+                            or f"['{field_name}'] = mark_as_copy(" in source
+                            or f'["{field_name}"] = mark_as_copy(' in source
+                        ):
+                            # simple stupid skip for adapt_translated_field_value / mark_as_copy
+                            continue
                         module_name = cls.__module__.split('.')[2]  # odoo.addons.module_name.xxx
                         if full_name in checked_field_names.get(module_name, []):
                             checked_field_names[module_name].remove(full_name)

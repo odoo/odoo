@@ -1,7 +1,8 @@
 import json
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.tools import file_open
+from odoo.tools.translate import mark_as_copy
 
 
 class SpreadsheetDashboard(models.Model):
@@ -10,7 +11,7 @@ class SpreadsheetDashboard(models.Model):
     _inherit = ["spreadsheet.mixin"]
     _order = 'sequence'
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True, translate=True, copy=mark_as_copy('name'))
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True, string="Section")
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
@@ -79,14 +80,6 @@ class SpreadsheetDashboard(models.Model):
             ('res_id', 'in', self.ids),
         ], limit=1)
         return data.module
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for dashboard, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", dashboard.name)
-        return vals_list
 
     def action_open_dashboard(self):
         self.ensure_one()

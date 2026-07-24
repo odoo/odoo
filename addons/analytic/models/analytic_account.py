@@ -6,6 +6,7 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import groupby, SQL
+from odoo.tools.translate import mark_as_copy
 
 
 class AccountAnalyticAccount(models.Model):
@@ -23,6 +24,7 @@ class AccountAnalyticAccount(models.Model):
         required=True,
         tracking=True,
         translate=True,
+        copy=mark_as_copy('name'),
     )
     code = fields.Char(
         string='Reference',
@@ -111,14 +113,6 @@ class AccountAnalyticAccount(models.Model):
             if analytic.partner_id.commercial_partner_id.name:
                 name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
             analytic.display_name = name
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for account, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", account.name)
-        return vals_list
 
     def web_read(self, specification: dict[str, dict]) -> list[dict]:
         self_context = self

@@ -8,6 +8,7 @@ from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty,
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.translate import mark_as_copy
 
 
 class ChatbotScript(models.Model):
@@ -17,7 +18,7 @@ class ChatbotScript(models.Model):
     _rec_name = 'title'
     _order = 'title, id'
 
-    title = fields.Char('Title', required=True, translate=True, default="Chatbot")
+    title = fields.Char('Title', required=True, translate=True, default="Chatbot", copy=mark_as_copy('title'))
     active = fields.Boolean(default=True)
     image_1920 = fields.Image(related='operator_partner_id.image_1920', readonly=False)
 
@@ -67,10 +68,6 @@ class ChatbotScript(models.Model):
                 script.first_step_warning = 'first_step_invalid'
             else:
                 script.first_step_warning = False
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, title=self.env._("%s (copy)", script.title)) for script, vals in zip(self, vals_list)]
 
     def copy(self, default=None):
         """ Correctly copy the 'triggering_answer_ids' field from the original script_step_ids to the clone.

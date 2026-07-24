@@ -5,7 +5,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import html_translate
+from odoo.tools.translate import html_translate, mark_as_copy
 
 from odoo.addons.website.tools import images_from_html, text_from_html
 
@@ -181,7 +181,7 @@ class BlogPost(models.Model):
         return """
             <p>%(text)s</p>
         """ % {"text": text}
-    name = fields.Char('Title', required=True, translate=True, default='')
+    name = fields.Char('Title', required=True, translate=True, default='', copy=mark_as_copy('name'))
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
@@ -246,10 +246,6 @@ class BlogPost(models.Model):
         if new_vals.get('active') is False:
             new_vals['is_published'] = False
         return super().write(new_vals)
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", blog.name)) for blog, vals in zip(self, vals_list)]
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on website

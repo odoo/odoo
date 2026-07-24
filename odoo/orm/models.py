@@ -4965,7 +4965,9 @@ class BaseModel(metaclass=MetaModel):
             vals = default.copy()
 
             for name, field in fields_to_copy.items():
-                if field.type == 'one2many':
+                if callable(field.copy):
+                    vals[name] = field.copy(record)
+                elif field.type == 'one2many':
                     # duplicate following the order of the ids for deterministic pairing
                     lines = record[name].sorted(key='id').copy_data()
                     # the lines are duplicated using the wrong (old) parent, but then are

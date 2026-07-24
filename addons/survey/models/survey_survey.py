@@ -10,6 +10,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
+from odoo.tools.translate import mark_as_copy
 from odoo.tools.urls import urljoin as url_join
 
 SURVEY_LEADERBOARD_MAX_PARTICIPANTS = 250
@@ -53,7 +54,7 @@ class SurveySurvey(models.Model):
         help="Leave the field empty to support all installed languages."
     )
     allowed_survey_types = fields.Json(string='Allowed survey types', compute="_compute_allowed_survey_types")
-    title = fields.Char('Survey Title', required=True, translate=True)
+    title = fields.Char('Survey Title', required=True, translate=True, copy=mark_as_copy('title'))
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
         "Description", translate=True, sanitize=True, sanitize_overridable=True,
@@ -525,10 +526,6 @@ class SurveySurvey(models.Model):
                 if src.triggering_answer_ids:
                     dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
         return new_surveys
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, title=self.env._("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
 
     def action_archive(self):
         super().action_archive()

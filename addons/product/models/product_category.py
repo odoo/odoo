@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.tools.translate import mark_as_copy
 
 
 class ProductCategory(models.Model):
@@ -13,8 +14,7 @@ class ProductCategory(models.Model):
     _parent_store = True
     _rec_name = 'complete_name'
     _order = 'parent_id desc, name asc'
-
-    name = fields.Char('Name', index='trigram', required=True, translate=True)
+    name = fields.Char('Name', index='trigram', required=True, translate=True, copy=mark_as_copy('name'))
     complete_name = fields.Char(
         string='Complete Name',
         compute='_compute_complete_name',
@@ -102,11 +102,3 @@ class ProductCategory(models.Model):
     def name_create(self, name):
         category = self.create({'name': name})
         return category.id, category.display_name
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for category, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", category.name)
-        return vals_list

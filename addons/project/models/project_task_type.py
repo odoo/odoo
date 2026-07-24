@@ -6,6 +6,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.translate import mark_as_copy
 
 
 class ProjectTaskType(models.Model):
@@ -21,7 +22,7 @@ class ProjectTaskType(models.Model):
         return not self.env.context.get('default_project_id', False) and self.env.uid
 
     active = fields.Boolean('Active', default=True, export_string_translation=False)
-    name = fields.Char(string='Stage Name', required=True, translate=True)
+    name = fields.Char(string='Stage Name', required=True, translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=lambda self: self._get_default_project_ids(),
@@ -119,10 +120,6 @@ class ProjectTaskType(models.Model):
                 mt_project_task_rating.default = rating_active
                 self.env.ref('project.mt_task_rating').hidden = not rating_active
         return super().write(vals)
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", task_type.name)) for task_type, vals in zip(self, vals_list)]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_remaining_personal_stages(self):

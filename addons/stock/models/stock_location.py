@@ -8,6 +8,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools.translate import mark_as_copy
 
 
 class StockLocation(models.Model):
@@ -523,7 +524,7 @@ class StockRoute(models.Model):
     _order = 'sequence'
     _check_company_auto = True
 
-    name = fields.Char('Route', required=True, translate=True)
+    name = fields.Char('Route', required=True, translate=True, copy=mark_as_copy('name'))
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
     rule_ids = fields.One2many('stock.rule', 'route_id', 'Rules', copy=True)
@@ -545,14 +546,6 @@ class StockRoute(models.Model):
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
         'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for route, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", route.name)
-        return vals_list
 
     @api.depends('company_id')
     def _compute_warehouses(self):

@@ -2,6 +2,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, format_date, formatLang, frozendict, date_utils
 from odoo.tools.float_utils import float_round
+from odoo.tools.translate import mark_as_copy
 
 from dateutil.relativedelta import relativedelta
 
@@ -18,7 +19,7 @@ class AccountPaymentTerm(models.Model):
     def _default_example_date(self):
         return self.env.context.get('example_date') or fields.Date.context_today(self)
 
-    name = fields.Char(string='Payment Terms', translate=True, required=True)
+    name = fields.Char(string='Payment Terms', translate=True, required=True, copy=mark_as_copy('name'))
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Html(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
@@ -269,11 +270,6 @@ class AccountPaymentTerm(models.Model):
         if not date_ref:
             return None
         return format_date(self.env, self._get_last_discount_date(date_ref))
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", line.name)) for line, vals in zip(self, vals_list)]
 
 
 class AccountPaymentTermLine(models.Model):

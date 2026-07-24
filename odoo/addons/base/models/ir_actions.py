@@ -21,7 +21,7 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 from odoo.tools.json import stringify_keys
-from odoo.tools.translate import adapt_translated_field_value
+from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -582,7 +582,7 @@ class IrActionsServer(models.Model):
                 return field_name
         return ''
 
-    name = fields.Char(compute='_compute_name', store=True, readonly=False)
+    name = fields.Char(compute='_compute_name', store=True, readonly=False, copy=mark_as_copy('name'))
     automated_name = fields.Char(compute='_compute_name', store=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
@@ -1362,18 +1362,6 @@ class IrActionsServer(models.Model):
                 expr = action.html_value
             result[action.id] = expr
         return result
-
-    def copy_data(self, default=None):
-        default = default or {}
-        vals_list = super().copy_data(default=default)
-        if not default.get('name'):
-            field = self._fields['name']
-            for vals in vals_list:
-                vals['name'] = adapt_translated_field_value(
-                    self.env, field, vals['name'],
-                    lambda lang, value: self.with_context(lang=lang).env._('%s (copy)', value),
-                )
-        return vals_list
 
     def action_open_parent_action(self):
         return {

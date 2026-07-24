@@ -3,6 +3,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.translate import mark_as_copy
 
 
 class AccountReconcileModelLine(models.Model):
@@ -97,7 +98,7 @@ class AccountReconcileModel(models.Model):
 
     # Base fields.
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Name', required=True, translate=True)
+    name = fields.Char(string='Name', required=True, translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer(required=True, default=10)
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -186,15 +187,3 @@ class AccountReconcileModel(models.Model):
             'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
         })
         return action
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default)
-        if default.get('name'):
-            return vals_list
-        for model, vals in zip(self, vals_list):
-            name = _("%s (copy)", model.name)
-            while self.env['account.reconcile.model'].search_count([('name', '=', name)], limit=1):
-                name = _("%s (copy)", name)
-            vals['name'] = name
-        return vals_list

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.addons.html_editor.tools import handle_history_divergence
+from odoo.tools.translate import mark_as_copy
 
 
 class HrJob(models.Model):
@@ -18,7 +19,7 @@ class HrJob(models.Model):
         ]
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
+    name = fields.Char(string='Job Position', required=True, index='trigram', translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees',
         help='Expected number of employees for this job position after new recruitment.', groups="hr.group_hr_user")
@@ -66,10 +67,6 @@ class HrJob(models.Model):
     def create(self, vals_list):
         """ We don't want the current user to be follower of all created job """
         return super(HrJob, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", job.name)) for job, vals in zip(self, vals_list)]
 
     def write(self, vals):
         if len(self) == 1:

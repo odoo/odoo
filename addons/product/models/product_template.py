@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.image import is_image_size_above
 from odoo.tools.sql import SQL
+from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
@@ -49,7 +50,7 @@ class ProductTemplate(models.Model):
     def _domain_fixed_pricelist_rule_ids(self):
         return self._domain_pricelist_rule_ids() & Domain('compute_price', '=', 'fixed')
 
-    name = fields.Char('Name', index='trigram', required=True, translate=True)
+    name = fields.Char('Name', index='trigram', required=True, translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Html(
         'Description', translate=True)
@@ -785,14 +786,6 @@ class ProductTemplate(models.Model):
                 combo_names,
             ))
         return super().action_archive()
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for template, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", template.name)
-        return vals_list
 
     def copy(self, default=None):
         copied_tmpls = super().copy(default)
