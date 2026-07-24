@@ -12,7 +12,7 @@ async function paypalOnboardingAction(env, action) {
         return;
     }
 
-    const { paypal_url: paypalUrl, csrf_state: csrfState, partner_js_url: partnerJsUrl } = response;
+    const { paypal_url: paypalUrl, partner_js_url: partnerJsUrl } = response;
 
     window.onboardedCallback = async function (authCode, sharedId) {
         let result;
@@ -20,10 +20,14 @@ async function paypalOnboardingAction(env, action) {
             result = await rpc("/payment/paypal/oauth/return", {
                 auth_code: authCode,
                 shared_id: sharedId,
-                state: csrfState,
+                provider_id: providerId
             });
         } catch {
             result = { error: _t("Something went wrong during PayPal onboarding. Please try again.") };
+        }
+        if (result.error_url) {
+            window.location.assign(result.error_url);
+            return;
         }
         if (result.error) {
             env.services.notification.add(result.error, { type: "danger" });

@@ -48,13 +48,9 @@ class PaymentProvider(models.Model):
     paypal_account_id = fields.Char(string="Paypal Seller Account ID", copy=False)
     paypal_seller_nonce = fields.Char(string="Paypal Seller Nonce", copy=False)
 
-    paypal_is_isu_onboarded = fields.Boolean(string="Onboarded via ISU button", copy=False)
-    paypal_payments_receivable = fields.Boolean(string="Payments Receivable")
-    paypal_primary_email_confirmed = fields.Boolean(string="Primary email confirmed")
-
-    paypal_enable_custom_card = fields.Boolean("Enable Advanced ACDC")
-    paypal_enable_apple_pay = fields.Boolean("Enable Apple Pay")
-    paypal_enable_google_pay = fields.Boolean("Enable Google Pay")
+    paypal_is_oauth_onboarded = fields.Boolean(string="Onboarded via OAuth button", copy=False)
+    paypal_payments_receivable = fields.Boolean(copy=False)
+    paypal_email_confirmed = fields.Boolean(copy=False)
 
     # === COMPUTE METHODS === #
 
@@ -86,14 +82,13 @@ class PaymentProvider(models.Model):
         :return: None
         :raise UserError: If the base URL is not in HTTPS.
         """
-        base_url = self.get_base_url()
-        if "localhost" in base_url:
-            raise UserError(
-                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
-            )
+        base_url = self._paypal_get_base_url()
         data = {
             "url": urls.urljoin(base_url, PaypalController._webhook_url),
-            "event_types": [{"name": "*"}],
+            "event_types": [
+                {"name": event_type}
+                for event_type in const.CHECKOUT_WEBHOOK_EVENTS + const.MERCHANT_WEBHOOK_EVENTS
+            ],
         }
         webhook_data = self._send_api_request("POST", "/v1/notifications/webhooks", json=data)
         self.paypal_webhook_id = webhook_data.get("id")
@@ -111,11 +106,6 @@ class PaymentProvider(models.Model):
 
         if self.code != "paypal":
             return super().action_start_onboarding(menu_id=menu_id)
-        base_url = self.get_base_url()
-        if "localhost" in base_url:
-            raise UserError(
-                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
-            )
 
         self.paypal_seller_nonce = secrets.token_urlsafe(32)
 
@@ -161,28 +151,23 @@ class PaymentProvider(models.Model):
             "paypal_client_secret": None,
             "paypal_webhook_id": None,
             "paypal_account_id": None,
-            "paypal_is_isu_onboarded": False,
+            "paypal_is_oauth_onboarded": False,
             "paypal_seller_nonce": None,
         }
 
     def _paypal_request_onboarding_token(self, auth_code, shared_id):
-
         self.ensure_one()
-
         data = {
             "grant_type": "authorization_code",
             "code": auth_code,
             "code_verifier": self.paypal_seller_nonce,
         }
-
         response_content = self._send_api_request(
             "POST", "/v1/oauth2/token", data=data, paypal_onboarding_shared_id=shared_id
         )
-
         paypal_onboarding_access_token = response_content["access_token"]
         if not paypal_onboarding_access_token:
             raise ValidationError(_("Failed to retrieve access token."))
-
         return paypal_onboarding_access_token
 
     def _paypal_check_onboarding_status(self):
@@ -200,7 +185,7 @@ class PaymentProvider(models.Model):
         self.paypal_email_account = response_content.get("primary_email", False)
 
         self.paypal_payments_receivable = response_content.get("payments_receivable", False)
-        self.paypal_primary_email_confirmed = response_content.get("primary_email_confirmed", False)
+        self.paypal_email_confirmed = response_content.get("primary_email_confirmed", False)
 
         return response_content
 
@@ -225,6 +210,14 @@ class PaymentProvider(models.Model):
         if self.is_live:
             return "https://api-m.paypal.com"
         return "https://api-m.sandbox.paypal.com"
+
+    def _paypal_get_base_url(self):
+        base_url = self.get_base_url()
+        if "localhost" in base_url:
+            raise UserError(
+                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
+            )
+        return base_url
 
     def _build_request_headers(
         self,
@@ -251,11 +244,9 @@ class PaymentProvider(models.Model):
             # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
             "PayPal-Partner-Attribution-Id": "ODOO_SP_DIRECT",
         }
-        if paypal_onboarding_shared_id:
+        if paypal_onboarding_shared_id or paypal_onboarding_access_token:
             headers["Content-Type"] = "application/x-www-form-urlencoded"
-
         if paypal_onboarding_access_token:
-            headers["Content-Type"] = "application/x-www-form-urlencoded"
             headers["Authorization"] = f"Bearer {paypal_onboarding_access_token}"
         if idempotency_key:
             headers["PayPal-Request-Id"] = idempotency_key

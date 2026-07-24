@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 class PaypalOnboardingController(Controller):
     _oauth_init_url = "/payment/paypal/init_onboarding"
     _oauth_return_url = "/payment/paypal/oauth/return"
+    _oauth_error_url = "/payment/paypal/onboarding/error"
 
     @route(_oauth_init_url, type="jsonrpc", auth="user")
     def init_onboarding(self, provider_id):
@@ -25,6 +26,9 @@ class PaypalOnboardingController(Controller):
 
         request.session["paypal_onboarding_provider_id"] = provider.id
 
+        base_url = provider._paypal_get_base_url()
+        action = self.env.ref("payment.action_payment_provider")
+        redirect_url = f"/odoo/action-{action.id}/{provider_id}"
         params = {
             "partnerId": const.PARTNER_CREDENTIALS["partner_id"],
             "product": "ppcp",
@@ -33,8 +37,8 @@ class PaypalOnboardingController(Controller):
             "features": "payment,refund,access_merchant_information,billing_agreement,vault",
             "integrationType": "FO",
             "partnerClientId": const.PARTNER_CREDENTIALS["partner_client_id"],
-            "partnerLogoUrl": f"{provider.get_base_url()}{'/web/static/img/odoo_logo.svg'}",
-            "returnToPartnerUrl": f"{provider.get_base_url()}/odoo/payment-providers/{provider.id}",
+            "partnerLogoUrl": f"{base_url}{'/web/static/img/odoo_logo.svg'}",
+            "returnToPartnerUrl": f"{base_url}{redirect_url}",
             "sellerNonce": provider.paypal_seller_nonce,
         }
 
@@ -50,7 +54,7 @@ class PaypalOnboardingController(Controller):
         return {"paypal_url": paypal_url, "partner_js_url": partner_js_url}
 
     @route(_oauth_return_url, type="jsonrpc", auth="user")
-    def paypal_return_from_authorization(self, auth_code=None, shared_id=None):
+    def paypal_return_from_authorization(self, auth_code=None, shared_id=None, provider_id=None):
         """Exchange the authorization code and shared id to complete the PayPal onboarding process.
 
         :param str auth_code: The authorization code received from PayPal.
@@ -66,25 +70,27 @@ class PaypalOnboardingController(Controller):
                 )
             }
 
-        provider_id = request.session.pop("paypal_onboarding_provider_id", None)
-        if not provider_id:
-            return {"error": _("Onboarding session not found. Please restart the process.")}
         provider = request.env["payment.provider"].sudo().browse(provider_id)
         if not provider.exists():
             return {"error": _("Could not find Paypal provider.")}
 
-        onboarding_token = provider._paypal_request_onboarding_token(auth_code, shared_id)
-        response_content = provider._send_api_request(
-            "GET",
-            f"/v1/customer/partners/{const.PARTNER_CREDENTIALS['partner_id']}/merchant-integrations/credentials",
-            paypal_onboarding_access_token=onboarding_token,
-        )
+        try:
+            onboarding_token = provider._paypal_request_onboarding_token(auth_code, shared_id)
+            response_content = provider._send_api_request(
+                "GET",
+                f"/v1/customer/partners/{const.PARTNER_CREDENTIALS['partner_id']}/merchant-integrations/credentials",
+                paypal_onboarding_access_token=onboarding_token,
+            )
+        except ValidationError as e:
+            request.session["paypal_onboarding_error"] = str(e)
+            return {"error_url": self._oauth_error_url}
 
         provider.write({
             "paypal_client_id": response_content["client_id"],
             "paypal_client_secret": response_content["client_secret"],
             "paypal_account_id": response_content["payer_id"],
-            "paypal_is_isu_onboarded": True,
+            "paypal_is_oauth_onboarded": True,
+            "is_published": True,
         })
         provider._paypal_check_onboarding_status()
         try:
@@ -93,3 +99,18 @@ class PaypalOnboardingController(Controller):
             _logger.warning(e)
 
         return {}
+
+    @route(_oauth_error_url, type="http", auth="user", website=True)
+    def paypal_onboarding_error(self):
+        """Render the onboarding error page after a failed credential exchange.
+
+        :return: The rendered error page.
+        """
+        error_message = request.session.pop("paypal_onboarding_error", "")
+        provider_id = request.session.get("paypal_onboarding_provider_id")
+        action = request.env.ref("payment.action_payment_provider")
+        provider_url = f"/odoo/action-{action.id}/{provider_id}"
+        return request.render(
+            "payment_paypal.authorization_error",
+            {"error_message": error_message, "provider_url": provider_url},
+        )

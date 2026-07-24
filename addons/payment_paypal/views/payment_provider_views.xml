@@ -29,12 +29,12 @@
             </header>
             <sheet position="before">
                 <div class="alert alert-danger mb-2" role="alert"
-                    invisible="code != 'paypal' or not paypal_is_isu_onboarded or paypal_primary_email_confirmed">
+                    invisible="code != 'paypal' or not paypal_is_oauth_onboarded or paypal_email_confirmed">
                     <i class="fa fa-ban me-2" title="Restricted"/>
                     <strong>Attention:</strong> Please confirm your email address on PayPal in order to receive payments.
                 </div>
                 <div class="alert alert-danger mb-2" role="alert"
-                    invisible="code != 'paypal' or not paypal_is_isu_onboarded or paypal_payments_receivable">
+                    invisible="code != 'paypal' or not paypal_is_oauth_onboarded or paypal_payments_receivable">
                     <i class="fa fa-ban me-2" title="Restricted"/>
                     <strong>Attention:</strong> You currently cannot receive payments due to a possible restriction on your PayPal account. Please reach out to PayPal Customer Support.
                     <button type="object"
@@ -52,33 +52,29 @@
                     string="Email"
                     name="paypal_email_account"
                     invisible="code != 'paypal'"
-                    required="is_live"
-                    readonly="paypal_is_isu_onboarded"
+                    readonly="paypal_is_oauth_onboarded"
                     groups="base.group_no_one"
                 />
                 <field
                     string="Account ID"
                     name="paypal_account_id"
                     invisible="code != 'paypal'"
-                    required="is_live"
-                    readonly="paypal_is_isu_onboarded"
+                    readonly="paypal_is_oauth_onboarded"
                     groups="base.group_no_one"
                 />
                 <field
                     string="Client ID"
                     name="paypal_client_id"
                     invisible="code != 'paypal'"
-                    required="is_live"
-                    readonly="paypal_is_isu_onboarded"
+                    readonly="paypal_is_oauth_onboarded"
                     groups="base.group_no_one"
                 />
                 <field
                     string="Client Secret"
                     name="paypal_client_secret"
                     invisible="code != 'paypal'"
-                    required="is_live"
                     widget="password"
-                    readonly="paypal_is_isu_onboarded"
+                    readonly="paypal_is_oauth_onboarded"
                     groups="base.group_no_one"
                 />
                 <label
@@ -90,7 +86,7 @@
                 <div invisible="code != 'paypal'" class="o_row" col="2">
                     <field
                         name="paypal_webhook_id"
-                        readonly="paypal_is_isu_onboarded"
+                        readonly="paypal_is_oauth_onboarded"
                         groups="base.group_no_one"
                     />
                     <button

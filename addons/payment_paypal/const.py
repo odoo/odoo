@@ -51,18 +51,17 @@ PAYMENT_STATUS_MAPPING = {
 
 # Events which are handled by the webhook.
 # See https://developer.paypal.com/api/rest/webhooks/event-names/
-HANDLED_WEBHOOK_EVENTS = [
+CHECKOUT_WEBHOOK_EVENTS = [
     "CHECKOUT.ORDER.COMPLETED",
     "CHECKOUT.ORDER.APPROVED",
     "CHECKOUT.PAYMENT-APPROVAL.REVERSED",
-    "CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED",
-    "MERCHANT.ONBOARDING.COMPLETED",
 ]
+
+MERCHANT_WEBHOOK_EVENTS = ["CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"]
 
 # Odoo's public credentials as a PayPal Partner.
 # Needed to offer merchant onboarding via Odoo.
 PARTNER_CREDENTIALS = {
     "partner_id": "QHZVTLZNWGSEW",
-    "partner_client_id": "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLz"
-    "-jm8ue53fhVFBojRE6RNQZiecp",
+    "partner_client_id": "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp",  # noqa: E501
 }

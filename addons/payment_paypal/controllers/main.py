@@ -61,12 +61,11 @@ class PaypalController(http.Controller):
         :rtype: str
         """
         data = request.get_json_data()
-        event_type = data.get("event_type")
-        if event_type in const.HANDLED_WEBHOOK_EVENTS:
-            _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
-            if event_type.startswith("CHECKOUT"):
+        _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
+        if event_type := data.get("event_type"):
+            if event_type in const.CHECKOUT_WEBHOOK_EVENTS:
                 self._handle_checkout_notification(data)
-            elif "MERCHANT" in event_type:
+            elif event_type in const.MERCHANT_WEBHOOK_EVENTS:
                 self._handle_merchant_notification(data)
         return request.make_json_response("")
 
@@ -101,22 +100,19 @@ class PaypalController(http.Controller):
         :return: None
         """
         merchant_id = data.get("resource", {}).get("merchant_id")
-        if not merchant_id:
-            return
-
         provider_sudo = (
             request
             .env["payment.provider"]
             .sudo()
             .search([("code", "=", "paypal"), ("paypal_account_id", "=", merchant_id)], limit=1)
         )
-        if not provider_sudo:
+        if not merchant_id or not provider_sudo:
             return
 
         self._verify_notification_origin(data, provider=provider_sudo)
-        # CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED
-        if data["resource_type"] == "customer-email-confirmed":
-            provider_sudo.paypal_primary_email_confirmed = True
+
+        if data["event_type"] == "CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED":
+            provider_sudo.paypal_email_confirmed = True
 
     def _normalize_paypal_data(self, data, from_webhook=False):
         """Normalize the payment data received from PayPal.
