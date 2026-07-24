@@ -1,7 +1,13 @@
 import { beforeEach, expect, onError, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { clearRegistry, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    addResourceWithCleanup,
+    clearRegistry,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { mainComponents } from "@web/core/main_components";
 import { registry } from "@web/core/registry";
 
 import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
@@ -130,6 +136,75 @@ test("MainComponentsContainer re-renders when the registry changes", async () =>
         props = useProps();
     }
     mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
+    await animationFrame();
+    expect(".myMainComponent").toHaveCount(1);
+});
+
+test("simple rendering from the mainComponents resource", async () => {
+    class MainComponentA extends Component {
+        static template = xml`<span>MainComponentA</span>`;
+        static props = ["*"];
+    }
+
+    class MainComponentB extends Component {
+        static template = xml`<span>MainComponentB</span>`;
+        static props = ["*"];
+    }
+
+    addResourceWithCleanup(mainComponents, { Component: MainComponentA, props: {} });
+    addResourceWithCleanup(mainComponents, { Component: MainComponentB, props: {} });
+    await mountWithCleanup(MainComponentsContainer);
+    expect(".o-main-components-container > span").toHaveCount(2);
+    expect(".o-main-components-container > span:eq(0)").toHaveText("MainComponentA");
+    expect(".o-main-components-container > span:eq(1)").toHaveText("MainComponentB");
+});
+
+test("unmounts erroring main component added through the mainComponents resource", async () => {
+    expect.assertions(5);
+    expect.errors(1);
+    onError((error) => {
+        expect.step(error.reason.message);
+    });
+    let compA;
+    class MainComponentA extends Component {
+        static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentA</span>`;
+        static props = ["*"];
+        setup() {
+            compA = this;
+            this.state = proxy({ shouldThrow: false });
+        }
+        get error() {
+            throw new Error("BOOM");
+        }
+    }
+
+    class MainComponentB extends Component {
+        static template = xml`<span>MainComponentB</span>`;
+        static props = ["*"];
+    }
+
+    addResourceWithCleanup(mainComponents, { Component: MainComponentA, props: {} });
+    addResourceWithCleanup(mainComponents, { Component: MainComponentB, props: {} });
+    await mountWithCleanup(MainComponentsContainer);
+    expect(".o-main-components-container > span").toHaveCount(2);
+
+    compA.state.shouldThrow = true;
+    await animationFrame();
+    expect.verifySteps(["BOOM"]);
+    expect.verifyErrors(["BOOM"]);
+    expect(".o-main-components-container > span").toHaveCount(1);
+    expect(".o-main-components-container > span").toHaveText("MainComponentB");
+});
+
+test("MainComponentsContainer re-renders when the mainComponents resource changes", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+
+    expect(".myMainComponent").toHaveCount(0);
+    class MyMainComponent extends Component {
+        static template = xml`<div class="myMainComponent" />`;
+        static props = ["*"];
+    }
+    addResourceWithCleanup(mainComponents, { Component: MyMainComponent });
     await animationFrame();
     expect(".myMainComponent").toHaveCount(1);
 });

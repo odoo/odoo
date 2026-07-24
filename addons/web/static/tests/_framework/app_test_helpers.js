@@ -118,6 +118,18 @@ export function assignTestEnv(env) {
 }
 
 /**
+ * Adds an item to the given resource, and removes it again after the test.
+ *
+ * @param {import("@odoo/owl").Resource} resource
+ * @param {any} item
+ * @param {{ sequence?: number }} [options]
+ */
+export function addResourceWithCleanup(resource, item, options = {}) {
+    resource.add(item, options);
+    after(() => resource.delete(item));
+}
+
+/**
  * Empties the given registry.
  *
  * @param {Registry} registry
