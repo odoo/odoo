@@ -208,3 +208,20 @@ test("CopyClipboardButtonField can be disabled", async () => {
     await fieldInput("char_field").edit("another char value");
     expect(".o_clipboard_button.o_btn_char_copy[disabled]").toHaveCount(0);
 });
+
+test("CopyClipboardField copy button has tooltip", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="char_field" readonly="1" widget="CopyClipboardChar"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+    expect(".o_clipboard_button.o_btn_char_copy").toHaveAttribute("data-tooltip", "Copy to clipboard");
+});
