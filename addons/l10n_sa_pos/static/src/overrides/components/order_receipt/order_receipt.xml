@@ -2,9 +2,17 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
+<<<<<<< 679ebe800a22cbcdb644cde0da2a4a8cf7677d6e
             <t t-if="order.isGccCountry and !order.is_settlement()">
                 <t t-set="asQrCode" t-value="order.generateQrcode()"/>
                 <img t-if="asQrCode" id="qrcode" t-att-src="asQrCode" class="pos-receipt-qrcode"/>
+||||||| cc7b8068441ca804e3e185fffa45c3d01ae694c6
+            <t t-if="props.data.is_gcc_country and !props.data.is_settlement">
+                <img t-if="props.data.qr_code" id="qrcode" t-att-src="props.data.qr_code" class="pos-receipt-qrcode"/>
+=======
+            <t t-if="props.data.useGCCReport and !props.data.is_settlement">
+                <img t-if="props.data.qr_code" id="qrcode" t-att-src="props.data.qr_code" class="pos-receipt-qrcode"/>
+>>>>>>> 66a45096d13a090e32da8b2bda1e13f8409584ac
                 <br/>
             </t>
         </xpath>
