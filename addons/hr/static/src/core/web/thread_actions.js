@@ -2,17 +2,19 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("hr-view-profile", {
-    condition: ({ channel, owner }) =>
+    condition: ({ channel, chatWindow, isDiscussSidebarChannelActions }) =>
         channel?.channel_type === "chat" &&
-        owner.props.chatWindow?.isOpen &&
+        chatWindow?.isOpen &&
         channel.correspondent?.partner_id?.employeeId &&
-        !owner.isDiscussSidebarChannelActions,
+        !isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-id-card",
     name: _t("View Profile"),
     onSelected: async ({ channel, store }) => {
-        const action = await store.env.services.orm.call("hr.employee", "get_record_default_action", [
-            channel.correspondent.partner_id?.employeeId,
-        ]);
+        const action = await store.env.services.orm.call(
+            "hr.employee",
+            "get_record_default_action",
+            [channel.correspondent.partner_id?.employeeId]
+        );
         store.env.services.action.doAction(action);
     },
     async setup({ channel }) {

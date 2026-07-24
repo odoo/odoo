@@ -56,7 +56,12 @@ export class Meeting extends Component {
                         ?.actionPanelOpen(),
             },
         });
-        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+        this.threadActions = useThreadActions({
+            discussDropdownMenuClass: () => this.store.discussDropdownMenuClass(this),
+            inMeetingView: this.env.inMeetingView,
+            pipWindow: () => this.env.pipWindow,
+            thread: () => this.channel.thread,
+        });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useChildSubEnv({

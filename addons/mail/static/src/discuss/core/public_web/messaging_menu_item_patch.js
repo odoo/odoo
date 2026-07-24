@@ -22,7 +22,12 @@ const messagingMenuItemPatch = {
             types.instanceOf(this.store["discuss.channel"].Class).optional()
         );
         this.isDiscussSidebarChannelActions = true;
-        this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
+        this.threadActions = useThreadActions({
+            discussDropdownMenuClass: () => this.store.discussDropdownMenuClass(this),
+            inDiscussApp: this.env.inDiscussApp,
+            isDiscussSidebarChannelActions: this.isDiscussSidebarChannelActions,
+            thread: () => this.channel?.thread,
+        });
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {
