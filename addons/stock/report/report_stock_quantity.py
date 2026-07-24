@@ -11,9 +11,9 @@ class ReportStockQuantity(models.Model):
 
     _depends = {
         'product.product': ['product_tmpl_id'],
-        'product.template': ['type'],
+        'product.template': ['type', 'uom_id'],
         'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state', 'product_uom'],
         'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
         'stock.warehouse': ['view_location_id'],
     }
