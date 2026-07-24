@@ -529,7 +529,9 @@ class Store:
             return tuple(Store._deep_freeze(i) for i in obj)
         if isinstance(obj, set):
             return frozenset(Store._deep_freeze(i) for i in obj)
-        return obj.__code__ if hasattr(obj, "__code__") else obj
+        if hasattr(obj, "__code__"):
+            return ("__code__", hash(obj.__code__))
+        return obj
 
     class LazyValue(Generic[T]):  # noqa: OLS01001
         def __init__(self, fn):
