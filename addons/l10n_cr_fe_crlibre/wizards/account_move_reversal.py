@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 from odoo.addons.l10n_cr_fe_crlibre.models.account_move import (
     L10N_CR_FE_CODIGO_REFERENCIA,
@@ -16,6 +17,9 @@ class AccountMoveReversal(models.TransientModel):
     l10n_cr_fe_codigo_referencia = fields.Selection(
         L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda",
         compute='_compute_l10n_cr_fe_codigo_referencia', store=True, readonly=False)
+    l10n_cr_fe_line_ids = fields.Many2many(
+        'account.move.line', string="Líneas a corregir",
+        domain="[('move_id', 'in', move_ids), ('display_type', '=', 'product')]")
 
     @api.depends('move_ids')
     def _compute_l10n_cr_fe_applicable(self):
@@ -42,3 +46,15 @@ class AccountMoveReversal(models.TransientModel):
             'l10n_cr_fe_codigo_referencia': self.l10n_cr_fe_codigo_referencia,
             'l10n_cr_fe_razon': self.reason,
         }
+
+    def _l10n_cr_fe_is_partial_correction(self):
+        self.ensure_one()
+        return bool(
+            self.l10n_cr_fe_applicable
+            and self.l10n_cr_fe_motivo
+            and self.l10n_cr_fe_motivo != 'anulacion_total')
+
+    def refund_moves(self):
+        if self._l10n_cr_fe_is_partial_correction() and not self.l10n_cr_fe_line_ids:
+            raise UserError(_("Selecciona al menos un producto a corregir."))
+        return super().refund_moves()

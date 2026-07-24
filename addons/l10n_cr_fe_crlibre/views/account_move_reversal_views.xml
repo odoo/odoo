@@ -12,6 +12,15 @@
                        required="l10n_cr_fe_applicable"/>
                 <field name="l10n_cr_fe_codigo_referencia" invisible="not l10n_cr_fe_applicable"
                        readonly="not l10n_cr_fe_is_admin"/>
+                <field name="l10n_cr_fe_line_ids"
+                       invisible="not l10n_cr_fe_applicable or l10n_cr_fe_motivo == 'anulacion_total'">
+                    <list>
+                        <field name="product_id"/>
+                        <field name="quantity"/>
+                        <field name="price_unit"/>
+                        <field name="price_subtotal" string="Importe"/>
+                    </list>
+                </field>
             </field>
         </field>
     </record>
