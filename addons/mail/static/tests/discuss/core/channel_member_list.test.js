@@ -108,6 +108,23 @@ test("chat with member should be opened after clicking on channel member", async
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
 
+test("channel member without user should not be clickable", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner only" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMember.cursor-pointer", { text: "Mitchell Admin" });
+    await contains(".o-discuss-ChannelMember:not(.cursor-pointer)", { text: "Partner only" });
+});
+
 test("should show a button to load more members if they are not all loaded", async () => {
     // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
