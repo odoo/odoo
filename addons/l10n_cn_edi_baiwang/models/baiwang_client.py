@@ -10,11 +10,7 @@ For development/testing, this can be swapped with a direct client that
 talks to Baiwang without the proxy layer (see _legacy_direct_call comments).
 """
 
-import logging
-
 from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
 
 
 class BaiwangClient:
@@ -36,53 +32,62 @@ class BaiwangClient:
             )
             raise UserError(msg)
 
-    def issue_invoice(self, invoice_data: dict):
+    def ensure_connection(self):
         self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_issue_invoice(self.company, invoice_data)
-        if not result.get('success') and 'response' not in result:
-            msg = self.company.env._("Baiwang proxy error: %s", result.get('error', 'Unknown error'))
+        return True
+
+    def _call_proxy(self, method, *args, error_prefix="", allow_failed_with_response=False):
+        self._ensure_proxy_user()
+        result = method(self.company, *args)
+        if not result.get('success') and not (allow_failed_with_response and 'response' in result):
+            err_details = result.get('error', 'Unknown error')
+            # Safely format with %s if present, otherwise append
+            msg = error_prefix % err_details if '%s' in error_prefix else f"{error_prefix}: {err_details}"
             raise UserError(msg)
         return result.get('response', {})
+
+    def issue_invoice(self, invoice_data: dict):
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_issue_invoice,
+            invoice_data,
+            error_prefix=self.company.env._("Baiwang proxy error: %s"),
+            allow_failed_with_response=True,
+        )
 
     def query_invoice(self, query_data: dict):
-        self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_query_invoice(self.company, query_data)
-        if not result.get('success'):
-            msg = self.company.env._("Baiwang invoice query failed: %s", result.get('error', 'Unknown error'))
-            raise UserError(msg)
-        return result.get('response', {})
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_query_invoice,
+            query_data,
+            error_prefix=self.company.env._("Baiwang invoice query failed: %s"),
+        )
 
     def add_red_confirmation(self, red_form_data: dict):
-        self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_submit_red_form(self.company, red_form_data)
-        if not result.get('success') and 'response' not in result:
-            msg = self.company.env._("Baiwang red form submission failed: %s", result.get('error', 'Unknown error'))
-            raise UserError(msg)
-        return result.get('response', {})
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_submit_red_form,
+            red_form_data,
+            error_prefix=self.company.env._("Baiwang red form submission failed: %s"),
+            allow_failed_with_response=True,
+        )
 
     def operate_red_confirmation(self, red_confirm_uuid: str, red_confirm_no: str, confirm_type: str):
-        self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_operate_red_form(
-            self.company, red_confirm_uuid, red_confirm_no, confirm_type,
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_operate_red_form,
+            red_confirm_uuid,
+            red_confirm_no,
+            confirm_type,
+            error_prefix=self.company.env._("Baiwang red form operation failed: %s"),
         )
-        if not result.get('success'):
-            msg = self.company.env._("Baiwang red form operation failed: %s", result.get('error', 'Unknown error'))
-            raise UserError(msg)
-        return result.get('response', {})
 
     def query_red_form_list(self, filters: dict | None = None):
-        self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_poll_red_form_list(self.company, filters)
-        if not result.get('success'):
-            err = result.get('error') or result.get('response', {}).get('errorResponse', {}).get('message', 'Unknown API error')
-            msg = self.company.env._("Baiwang red form list query failed: %s", err)
-            raise UserError(msg)
-        return result.get('response', {})
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_poll_red_form_list,
+            filters or {},
+            error_prefix=self.company.env._("Baiwang red form list query failed: %s"),
+        )
 
     def query_red_form_detail(self, red_confirm_uuid: str):
-        self._ensure_proxy_user()
-        result = self.proxy_user._l10n_cn_baiwang_query_red_form(self.company, red_confirm_uuid)
-        if not result.get('success'):
-            msg = self.company.env._("Baiwang red form detail query failed: %s", result.get('error', 'Unknown error'))
-            raise UserError(msg)
-        return result.get('response', {})
+        return self._call_proxy(
+            self.proxy_user._l10n_cn_baiwang_query_red_form,
+            red_confirm_uuid,
+            error_prefix=self.company.env._("Baiwang red form detail query failed: %s"),
+        )

@@ -53,84 +53,58 @@ class AccountEdiProxyClientUser(models.Model):
         except AccountEdiProxyError as _error:
             raise UserError(self.env._('Failed to contact the Baiwang proxy service. Please try again later.'))
 
+    def _l10n_cn_baiwang_call_proxy_endpoint(self, company, endpoint, **params):
+        self.ensure_one()
+        if self.proxy_type != 'l10n_cn_edi_baiwang':
+            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
+        return self._l10n_cn_baiwang_contact_proxy(endpoint=endpoint, params={
+            'tax_no': company.vat,
+            'environment': company.l10n_cn_edi_mode or 'test',
+            **params,
+        })
+
     # --- Baiwang Business Call Wrappers ---
 
     def _l10n_cn_baiwang_issue_invoice(self, company, invoice_data):
-        """Issue a blue or red invoice via IAP proxy."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'payload': invoice_data,
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/issue_invoice', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/issue_invoice',
+            payload=invoice_data,
+        )
 
     def _l10n_cn_baiwang_query_invoice(self, company, query_data):
-        """Query issued invoices."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'payload': query_data,
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/query_invoice', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/query_invoice',
+            payload=query_data,
+        )
 
     def _l10n_cn_baiwang_submit_red_form(self, company, red_form_data):
-        """Submit a red letter confirmation form."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'payload': red_form_data,
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/submit_red_form', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/submit_red_form',
+            payload=red_form_data,
+        )
 
     def _l10n_cn_baiwang_query_red_form(self, company, red_confirm_uuid):
-        """Get red form detail."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'red_confirm_uuid': red_confirm_uuid,
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/query_red_form', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/query_red_form',
+            red_confirm_uuid=red_confirm_uuid,
+        )
 
     def _l10n_cn_baiwang_poll_red_form_list(self, company, filters=None):
-        """Poll incoming red forms."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'filters': filters or {},
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/poll_red_form_list', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/poll_red_form_list',
+            filters=filters or {},
+        )
 
     def _l10n_cn_baiwang_operate_red_form(self, company, red_confirm_uuid, red_confirm_no, confirm_type):
-        """Confirm/reject/revoke a red form."""
-        self.ensure_one()
-        if self.proxy_type != 'l10n_cn_edi_baiwang':
-            raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
-
-        params = {
-            'tax_no': company.vat,
-            'red_confirm_uuid': red_confirm_uuid,
-            'red_confirm_no': red_confirm_no,
-            'confirm_type': confirm_type,
-            'environment': company.l10n_cn_edi_mode or 'test',
-        }
-        return self._l10n_cn_baiwang_contact_proxy('api/l10n_cn_edi_baiwang/1/operate_red_form', params)
+        return self._l10n_cn_baiwang_call_proxy_endpoint(
+            company,
+            endpoint='api/l10n_cn_edi_baiwang/1/operate_red_form',
+            red_confirm_uuid=red_confirm_uuid,
+            red_confirm_no=red_confirm_no,
+            confirm_type=confirm_type,
+        )
