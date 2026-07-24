@@ -182,9 +182,38 @@ patch(PosStore.prototype, {
         }
     },
 
-    async updateSOLines(line, convertedLine, newLine, newLineValues) {
+    async updateSOLines(line, convertedLine, newLine, newLineValues, state) {
         newLine.setUnitPrice(convertedLine.price_unit);
         newLine.setDiscount(line.discount);
+        this.splitSOLine(line, convertedLine, newLine, newLineValues, state);
+    },
+
+    splitSOLine(line, convertedLine, newLine, newLineValues, state) {
+        const productUnit = line.product_id.uom_id;
+        if (!productUnit || productUnit.is_pos_groupable) {
+            return [];
+        }
+
+        const splittedLines = [];
+        let remainingQuantity = newLine.qty;
+        const priceUnit = newLine.price_unit;
+
+        newLineValues.product_id = newLine.product_id;
+        newLine.delete();
+
+        while (!productUnit.isZero(remainingQuantity)) {
+            const splittedLine = this.models["pos.order.line"].create({
+                ...newLineValues,
+            });
+            splittedLine.setQuantity(Math.min(remainingQuantity, 1.0), true);
+            splittedLine.setUnitPrice(priceUnit);
+            splittedLine.setDiscount(line.discount);
+
+            remainingQuantity -= splittedLine.qty;
+            splittedLines.push(splittedLine);
+        }
+
+        return splittedLines;
     },
 
     prepareSoBaseLineForTaxesComputationExtraValues(so, soLine) {

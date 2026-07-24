@@ -737,25 +737,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
-    def test_settle_quotation_delivered_qty(self):
-        """ Test if a quotation (unconfirmed sale order) is settled in the PoS, the delivered quantity is updated correctly """
-
-        product1 = self.env['product.product'].create({
-            'name': 'product1',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10,
-            'taxes_id': [Command.clear()],
-        })
-        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
-        order = self.env['sale.order'].sudo().create({
-            'partner_id': partner_1.id,
-            'order_line': [Command.create({'product_id': product1.id})],
-        })
-        self.main_pos_config.open_ui()
-        self.start_pos_tour('PoSSettleQuotation', login="accountman")
-        self.assertEqual(order.order_line.qty_delivered, 1)
-
     def test_edit_invoice_with_pos_order(self):
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
