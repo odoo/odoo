@@ -129,7 +129,7 @@ class CloudStorageAttachmentMigration(models.Model):
             AND ia.res_field IS NULL
             AND ia.store_fname IS NOT NULL
             AND (%(check_model)s)
-            AND ia.res_model != ANY(%(unsupported_models)s)
+            AND ia.res_model != ALL(%(unsupported_models)s)
             AND ia.file_size BETWEEN %(min_file_size)s AND %(max_file_size)s
             AND ia.create_date < %(create_date)s
             %(check_documents)s
