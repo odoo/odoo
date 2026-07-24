@@ -117,6 +117,10 @@ export class SocialMediaLinks extends BaseOptionComponent {
                     platformAfter: nextPlatform,
                 });
             },
+            getFocusToken: ({ element }) =>
+                element.querySelector("[data-sortable-platform]").dataset.sortablePlatform,
+            getFocusHandle: (platform) =>
+                this.rootRef.el?.querySelector(`[data-sortable-platform="${platform}"]`),
         });
     }
 

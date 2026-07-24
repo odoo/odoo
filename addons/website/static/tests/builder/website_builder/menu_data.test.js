@@ -1,5 +1,5 @@
-import { describe, expect, test, beforeEach, animationFrame } from "@odoo/hoot";
-import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
+import { describe, expect, test, beforeEach, animationFrame, queryAllTexts } from "@odoo/hoot";
+import { waitFor, waitForNone, click, queryOne, press } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -202,6 +202,27 @@ describe("EditMenuDialog", () => {
         is_homepage: false,
     };
 
+    // Reuses sampleMenuData and appends a second root item, for the reorder tests.
+    const twoRootMenus = {
+        ...sampleMenuData,
+        children: [
+            ...sampleMenuData.children,
+            {
+                fields: {
+                    id: 6,
+                    name: "Second Menu Item",
+                    url: "#",
+                    new_window: false,
+                    is_mega_menu: false,
+                    sequence: 20,
+                    parent_id: 4,
+                },
+                children: [],
+                is_homepage: false,
+            },
+        ],
+    };
+
     beforeEach(() => {
         mockService("website", {
             get currentWebsite() {
@@ -291,6 +312,76 @@ describe("EditMenuDialog", () => {
         await click(".js_edit_menu");
         await waitFor(".o_website_dialog");
         expect.verifySteps(["get_tree"]);
+    });
+
+    async function openMenuEditorDialog(tree) {
+        const { el } = await setupEditor(
+            `<ul class="top_menu">
+                <li>
+                    <a class="nav-link" href="exists">
+                        <span>Top Menu Item</span>
+                    </a>
+                </li>
+            </ul>`,
+            { config: { includePlugins: [MenuDataPlugin, SavePlugin] } }
+        );
+        onRpc("website.menu", "get_tree", () => tree);
+        onRpc("/website/get_suggested_links", () => ({ matching_pages: [], others: [] }));
+        setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
+        await waitFor(".o-we-linkpopover");
+        await click(".js_edit_menu");
+        await waitFor(".oe_menu_editor");
+    }
+
+    const menuHandle = (id) =>
+        `.oe_menu_editor li[data-menu-id="${id}"] > .input-group > .oi-draggable`;
+    const rootLabels = () => queryAllTexts(".oe_menu_editor > li .js_menu_label");
+
+    describe("reorder menu items with the keyboard", () => {
+        beforeEach(async () => {
+            await openMenuEditorDialog(twoRootMenus);
+        });
+
+        test("up and down reorder within siblings", async () => {
+            expect(rootLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+
+            // Focus the first handle and move it down; the focus follows it.
+            await click(menuHandle(5));
+            await press("ArrowDown");
+            await animationFrame();
+            expect(rootLabels()).toEqual(["Second Menu Item", "Top Menu Item"]);
+            expect(menuHandle(5)).toBeFocused();
+
+            await press("ArrowUp");
+            await animationFrame();
+            expect(rootLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+        });
+
+        test("right nests into the previous sibling, left un-nests", async () => {
+            expect(".oe_menu_editor > li").toHaveCount(2);
+
+            // The first item has no previous sibling to nest into: ArrowRight no-ops.
+            await click(menuHandle(5));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(".oe_menu_editor > li").toHaveCount(2);
+
+            // The second item nests under the first with ArrowRight.
+            await click(menuHandle(6));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(
+                `.oe_menu_editor > li[data-menu-id="5"] > ul > li[data-menu-id="6"]`
+            ).toHaveCount(1);
+            expect(".oe_menu_editor > li").toHaveCount(1);
+            expect(menuHandle(6)).toBeFocused();
+
+            // ArrowLeft un-nests it back to the root.
+            await press("ArrowLeft");
+            await animationFrame();
+            expect(".oe_menu_editor > li").toHaveCount(2);
+            expect(`.oe_menu_editor > li[data-menu-id="5"] > ul`).toHaveCount(0);
+        });
     });
 
     test("clicking save in the EditMenuDialog should not clear the editor changes", async () => {

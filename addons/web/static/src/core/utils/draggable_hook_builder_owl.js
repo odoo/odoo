@@ -20,6 +20,7 @@ export function makeDraggableHook(params) {
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
             wrapState: proxy,
+            whenPatched: onPatched,
         },
     });
 }

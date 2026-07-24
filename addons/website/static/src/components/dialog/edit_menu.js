@@ -218,6 +218,13 @@ export class EditMenuDialog extends Component {
             onDrop: this._moveMenu.bind(this),
             isAllowed: this._isAllowedMove.bind(this),
             useElementSize: true,
+            // Up/down reorder within siblings; left/right un-nest/nest. A move
+            // re-creates the row's DOM, so focus is restored by menu id.
+            getFocusToken: ({ element }) => this._getMenuIdForElement(element),
+            getFocusHandle: (menuId) =>
+                this.menuEditor.el.querySelector(
+                    `li[data-menu-id="${menuId}"] > .input-group > .oi-draggable`
+                ),
             /**
              * @param {DOMElement} element - moved element
              * @param {DOMElement} parent - parent element of where the element was moved

@@ -176,6 +176,91 @@ export const useNestedSortable = makeDraggableHook({
             !this._hasReachMaxAllowedLevel(ctx) && ctx.isAllowed(ctx.current, ctx.elementSelector)
         );
     },
+    /**
+     * Gets the child list (ul/ol) inside an element, creating one if it does not
+     * exist yet.
+     * @param {DraggableHookContext} ctx
+     * @param {HTMLElement} el
+     * @returns {HTMLElement}
+     */
+    _getChildList(ctx, el) {
+        let list = el.querySelector(ctx.listTagName);
+        if (!list) {
+            list = document.createElement(ctx.listTagName);
+            el.appendChild(list);
+        }
+        return list;
+    },
+    /**
+     * Moves the placeholder one step up/down among the element's siblings, within
+     * the same list (does not change nesting).
+     * @param {DraggableHookContext} ctx
+     * @param {-1 | 1} direction
+     * @returns {boolean} whether the placeholder was moved
+     */
+    _keyboardVerticalMove(ctx, direction) {
+        const { element, placeHolder } = ctx.current;
+        const siblings = [...element.parentElement.children].filter((el) =>
+            el.matches(ctx.elementSelector)
+        );
+        const currentIndex = siblings.indexOf(element);
+        const newIndex = currentIndex + direction;
+        if (currentIndex < 0 || newIndex < 0 || newIndex >= siblings.length) {
+            return false;
+        }
+        const neighbor = siblings[newIndex];
+        if (direction === 1) {
+            neighbor.after(placeHolder);
+        } else {
+            neighbor.before(placeHolder);
+        }
+        return true;
+    },
+    /**
+     * Nests the element as the last child of its previous sibling.
+     * @param {DraggableHookContext} ctx
+     * @returns {boolean} whether the placeholder was moved
+     */
+    _keyboardNest(ctx) {
+        const { element, placeHolder } = ctx.current;
+        const previous = element.previousElementSibling;
+        if (!previous || !previous.matches(ctx.elementSelector)) {
+            return false;
+        }
+        this._getChildList(ctx, previous).appendChild(placeHolder);
+        return true;
+    },
+    /**
+     * Un-nests the element to become the next sibling of its parent.
+     * @param {DraggableHookContext} ctx
+     * @returns {boolean} whether the placeholder was moved
+     */
+    _keyboardUnnest(ctx) {
+        const { element, placeHolder } = ctx.current;
+        const parent = element.parentElement.closest(ctx.elementSelector);
+        if (!parent) {
+            return false;
+        }
+        parent.after(placeHolder);
+        return true;
+    },
+    // Keyboard reorder: arrow keys reposition the placeholder by one step, then
+    // onDrop fires as usual. Up/down reorder within the sibling list; left/right
+    // change nesting (RTL-aware). All moves are validated with the same
+    // constraints (maxLevels, isAllowed) as a pointer drag.
+    onKeyboardStep({ ctx, axis, direction }) {
+        const dir = axis === "x" && ctx.isRTL ? -direction : direction;
+        let moved;
+        if (axis === "y") {
+            moved = this._keyboardVerticalMove(ctx, dir);
+        } else if (ctx.nest) {
+            moved = dir > 0 ? this._keyboardNest(ctx) : this._keyboardUnnest(ctx);
+        }
+        if (!moved || !this._isAllowedNodeMove(ctx)) {
+            return { moved: false };
+        }
+        return { moved: true };
+    },
     // Check if the cursor moved enough to trigger a move. If it did, move the
     // placeholder accordingly.
     onDrag({ ctx, callHandler }) {
@@ -208,29 +293,14 @@ export const useNestedSortable = makeDraggableHook({
                 placeholder: ctx.current.placeHolder,
             });
         };
-        /**
-         * Get the list element inside an element, or create one if it does not
-         * exists.
-         * @param {HTMLElement} el
-         * @return {HTMLElement} list
-         */
-        const getChildList = (el) => {
-            let list = el.querySelector(ctx.listTagName);
-            if (!list) {
-                list = document.createElement(ctx.listTagName);
-                el.appendChild(list);
-            }
-            return list;
-        };
+        const getChildList = (el) => this._getChildList(ctx, el);
 
-        const getPosition = (el) => {
-            return {
-                previous: el.previousElementSibling,
-                next: el.nextElementSibling,
-                parent: el.parentElement?.closest(ctx.elementSelector) || null,
-                group: ctx.groupSelector ? el.closest(ctx.groupSelector) : false,
-            };
-        };
+        const getPosition = (el) => ({
+            previous: el.previousElementSibling,
+            next: el.nextElementSibling,
+            parent: el.parentElement?.closest(ctx.elementSelector) || null,
+            group: ctx.groupSelector ? el.closest(ctx.groupSelector) : false,
+        });
         const position = getPosition(ctx.current.placeHolder);
 
         /** If nesting elements is allowed, horizontal moves may change the

@@ -333,6 +333,31 @@ const hookParams = {
 
         return pick(current, "element", "group");
     },
+    // Keyboard reorder: move the placeholder by one step among the current
+    // element's siblings, reusing the same before/after primitive as the pointer
+    // path. Only vertical moves apply to a flat list; onDrop then fires as usual.
+    onKeyboardStep({ ctx, axis, direction }) {
+        if (axis !== "y") {
+            return { moved: false };
+        }
+        const { current, elementSelector } = ctx;
+        const { element, placeHolder } = current;
+        const siblings = [...element.parentElement.children].filter(
+            (el) => el.matches(elementSelector) && !el.classList.contains(DRAGGED_CLASS)
+        );
+        const currentIndex = siblings.indexOf(element);
+        const newIndex = currentIndex + direction;
+        if (currentIndex < 0 || newIndex < 0 || newIndex >= siblings.length) {
+            return { moved: false };
+        }
+        const neighbor = siblings[newIndex];
+        if (direction === 1) {
+            neighbor.after(placeHolder);
+        } else {
+            neighbor.before(placeHolder);
+        }
+        return { moved: true, newIndex };
+    },
 };
 
 /** @type {(params: SortableParams) => SortableState} */

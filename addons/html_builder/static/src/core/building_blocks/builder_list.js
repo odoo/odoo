@@ -136,6 +136,14 @@ export class BuilderList extends Component {
                     const { element, previous } = params;
                     this.reorderItem(element.dataset.id, previous?.dataset.id);
                 },
+                // Focus is restored by row index rather than _id because
+                // formatRawValue reassigns _ids by position, so the t-key is stable
+                // and Owl reuses the <tr> in place.
+                getFocusToken: ({ newIndex }) => newIndex,
+                getFocusHandle: (index) =>
+                    this.tableRef.el
+                        ?.querySelectorAll(".o_row_draggable")
+                        [index]?.querySelector(".o_handle_cell button"),
             });
         }
     }
