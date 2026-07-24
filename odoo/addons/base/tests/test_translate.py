@@ -3,6 +3,7 @@
 from hashlib import sha256
 from unittest.mock import patch
 import ast
+import json
 import logging
 import time
 
@@ -1999,3 +2000,44 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
         ]
         for original_pattern, escaped_pattern, message in cases:
             self.assertEqual(sql.pattern_to_translated_trigram_pattern(original_pattern), escaped_pattern, message)
+
+
+class SpreadsheetTermsExtractionTest(BaseCase):
+    def test_extract_carousel_and_list_header_terms(self):
+        from odoo.tools.translate import extract_spreadsheet_terms
+
+        data = {
+            "sheets": [{
+                "cells": {
+                    "A1": '=_t("Best Cities")',
+                    "B1": '=ODOO.LIST.HEADER(1, "city", "City")',
+                    "C1": '=ODOO.LIST.HEADER(1, "x", _t("# Leads"))',
+                },
+                "figures": [{
+                    "tag": "carousel",
+                    "data": {
+                        "title": {"text": "Top Countries"},
+                        "items": [
+                            {"type": "chart", "chartId": "c1", "title": "Leads"},
+                            {"type": "carouselDataView", "title": "Top 10"},
+                        ],
+                        "chartDefinitions": {
+                            "c1": {"title": {"text": "Revenues by source"}},
+                        },
+                    },
+                }],
+            }],
+            "globalFilters": [{"label": "Period"}],
+        }
+        terms = {t[2] for t in extract_spreadsheet_terms(io.StringIO(json.dumps(data)), [], [], {})}
+        self.assertEqual(terms, {
+            "Best Cities",
+            "City",
+            "# Leads",
+            "Top Countries",
+            "Leads",
+            "Top 10",
+            "Revenues by source",
+            "Period",
+        })
+
