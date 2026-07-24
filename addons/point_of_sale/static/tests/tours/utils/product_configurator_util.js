@@ -16,6 +16,15 @@ export function pickSelect(name) {
         },
     ];
 }
+export function pickMulti(name) {
+    return [
+        {
+            content: `picking multi attribute with name ${name}`,
+            trigger: `.modal .form-check-label:contains('${name}')`,
+            run: "click",
+        },
+    ];
+}
 export function pickColor(name) {
     return [
         {
