@@ -38,10 +38,12 @@ import {
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
+import { MessageBodyContent } from "@mail/core/common/message_body_content";
+import { openForwardDialog as openMessageForwardDialog } from "@mail/discuss/core/common/forward_dialog";
 import { Priority } from "@mail/core/common/priority";
 import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToElement, renderToFragment } from "@web/core/utils/render";
 
 export class Message extends Component {
     // This is the darken version of #71639e
@@ -55,6 +57,7 @@ export class Message extends Component {
         Dropdown,
         ImStatus,
         MessageContextMenu,
+        MessageBodyContent,
         MessageInReply,
         MessageLinkPreviewList,
         MessageReactions,
@@ -479,6 +482,11 @@ export class Message extends Component {
         editedEl?.replaceChildren(
             renderToElement("mail.Message.edited", { message: this.message })
         );
+        const forwardEl = bodyEl.querySelector(".o-mail-Message-forward");
+        if (forwardEl) {
+            forwardEl.classList.add("o-mail-ForwardedMessage-label");
+            forwardEl.replaceChildren(renderToFragment("mail.Message.forward"));
+        }
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
         for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
@@ -587,6 +595,10 @@ export class Message extends Component {
             { message: this.props.message, initialReaction: reaction },
             { rootRef: this.rootRef }
         );
+    }
+
+    openForwardDialog() {
+        openMessageForwardDialog(this.env, this.props.message);
     }
 
     get showSubject() {

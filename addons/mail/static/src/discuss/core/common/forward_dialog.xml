@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ForwardDialog">
+        <div class="o-mail-ForwardDialog px-1">
+            <DiscussSelectableList
+                items="this.selectableItems"
+                maxSelections="this.constructor.MAX_SELECTIONS"
+                onToggle="(item) => this.onToggle(item)"
+                search="this.search"
+                selected="this.state.selectedDestinations"
+            >
+                <t t-set-slot="preface">
+                    <div class="o-mail-ForwardedMessage-preview border rounded p-2 bg-100 mb-2">
+                        <div class="o-mail-ForwardedMessage-content text-break overflow-hidden" t-if="this.props.message.hasTextContent">
+                            <MessageBodyContent message="this.props.message"/>
+                        </div>
+                        <AttachmentList t-if="this.props.message.attachment_ids.length > 0"
+                            attachments="this.props.message.attachment_ids"
+                            unlinkAttachment="() => {}"
+                            imagesHeight="50"/>
+                    </div>
+                </t>
+                <t t-set-slot="listHint">
+                    <div t-if="this.selectableItems.length >= this.constructor.SEARCH_LIMIT" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.resultNarrowText"/>
+                </t>
+                <t t-set-slot="empty">
+                    <p class="mx-1 my-0 smaller text-muted opacity-50">No conversation found</p>
+                </t>
+                <t t-set-slot="footer">
+                    <textarea class="form-control my-2" rows="2" placeholder="Add an optional message…" t-att-value="this.state.optionalMessage" t-on-input="ev => this.state.optionalMessage = ev.target.value"/>
+                    <button t-if="this.state.selectedDestinations.length" class="btn btn-primary w-100 mb-1" t-att-disabled="this.state.isSending" t-on-click="this.onClickSend">
+                        Send
+                    </button>
+                </t>
+            </DiscussSelectableList>
+        </div>
+    </t>
+
+</templates>

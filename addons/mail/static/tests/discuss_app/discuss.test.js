@@ -734,13 +734,14 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await animationFrame();
     await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(true);
-    await contains(".o-dropdown-item", { count: 7 });
+    await contains(".o-dropdown-item", { count: 8 });
     await contains(".o-dropdown-item:contains('Add a Reaction')");
     await contains(".o-dropdown-item:contains('Bookmark')");
     await contains(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-dropdown-item:contains('Reply')");
     await contains(".o-dropdown-item:contains('Reply')");
     await contains(".o-dropdown-item:contains('Copy Text')");
+    await contains(".o-dropdown-item:contains('Forward')");
     await contains(".o-dropdown-item:contains('Pin')");
     await contains(".o-mail-Message:eq(0).o-selected");
     await contains(".o-mail-Message:eq(1):not(.o-selected)");
@@ -2672,10 +2673,11 @@ test("Read-only channel member cannot respond or create subthread", async () => 
     await contains(".o-mail-Message-actions button", { count: 2 });
     await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
-    await contains(".o-dropdown-item", { count: 3 });
+    await contains(".o-dropdown-item", { count: 4 });
     await contains(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o-dropdown-item:text('Bookmark')");
     await contains(".o-dropdown-item:text('Copy Text')");
+    await contains(".o-dropdown-item:text('Forward')");
 });
 
 test("Read-only channel have reactions for admin", async () => {
@@ -2705,13 +2707,14 @@ test("Read-only channel have reactions for admin", async () => {
     await contains(".o-mail-Message .o-mail-ActionList-button");
     await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
-    await contains(".o-dropdown-item", { count: 6 });
+    await contains(".o-dropdown-item", { count: 7 });
     await contains(".o-dropdown-item:text('Reply')");
     await contains(".o-dropdown-item:text('Bookmark')");
     await contains(".o-dropdown-item:text('Copy Text')");
     await contains(".o-dropdown-item:text('Create Thread')");
     await contains(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o-dropdown-item:text('Pin')");
+    await contains(".o-dropdown-item:text('Forward')");
 });
 
 test("Cannot call read-only channels", async () => {
