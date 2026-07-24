@@ -1341,9 +1341,15 @@ export const accountTaxHelpers = {
             const strategy = cash_rounding.strategy;
             const cash_rounding_pd = cash_rounding.rounding;
             const cash_rounding_method = cash_rounding.rounding_method;
-            const total_amount_currency =
-                tax_totals_summary.base_amount_currency + tax_totals_summary.tax_amount_currency;
-            const total_amount = tax_totals_summary.base_amount + tax_totals_summary.tax_amount;
+            // Round first so cash rounding doesn't inflate a sub-unit float residue.
+            const total_amount_currency = roundPrecision(
+                tax_totals_summary.base_amount_currency + tax_totals_summary.tax_amount_currency,
+                currency.rounding
+            );
+            const total_amount = roundPrecision(
+                tax_totals_summary.base_amount + tax_totals_summary.tax_amount,
+                company_pd
+            );
             const expected_total_amount_currency = roundPrecision(
                 total_amount_currency,
                 cash_rounding_pd,
