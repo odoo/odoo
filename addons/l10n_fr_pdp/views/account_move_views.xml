@@ -67,6 +67,15 @@
         <field name="priority">30</field>
         <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
         <field name="arch" type="xml">
+            <button name="action_cancel_peppol_documents" position="attributes">
+                <attribute name="string">Cancel E-Invoice Sending</attribute>
+            </button>
+            <xpath expr="//div[@name='peppol_div']/span[hasclass('text-muted')]" position="replace">
+                <span class="text-muted mx-3"
+                      invisible="peppol_move_state != 'to_send'">
+                    The invoice will be sent automatically via the Approved Platform
+                </span>
+            </xpath>
             <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
             <button name="button_cancel" position="after">
                 <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
@@ -75,8 +84,11 @@
                         />
             </button>
             <label for="peppol_move_state" position="attributes">
-                <attribute name="string">E-Invoicing Status</attribute>
+                <attribute name="string">Approved Platform Status</attribute>
             </label>
+            <group name="accounting_info_group" position="attributes">
+                <attribute name="string">Approved Platform Info</attribute>
+            </group>
             <xpath expr="//group[@name='accounting_info_group']/div" position="after">
                 <label for="pdp_ppf_move_state" groups="base.group_no_one" invisible="not pdp_ppf_move_state"/>
                 <div name="pdp_ppf_info" groups="base.group_no_one" invisible="not pdp_ppf_move_state">
@@ -92,10 +104,10 @@
         <field name="inherit_id" ref="account_peppol.account_peppol_view_account_invoice_filter"/>
         <field name="arch" type="xml">
             <filter name="peppol_ready" position="attributes">
-                <attribute name="string">E-Invoicing Ready</attribute>
+                <attribute name="string">Approved Platform Ready</attribute>
             </filter>
             <filter name="peppol_move_state" position="attributes">
-                <attribute name="string">E-Invoicing Status</attribute>
+                <attribute name="string">Approved Platform Status</attribute>
             </filter>
         </field>
     </record>

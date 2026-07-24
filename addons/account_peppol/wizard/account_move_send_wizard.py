@@ -15,8 +15,9 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
         peppol_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
+        network_name = self.company_id._get_einvoicing_network_name()
         if peppol_partner.peppol_verification_state == 'not_valid':
-            return self.env._(' (Customer not on Peppol)')
+            return self.env._(' (Customer not on %(network_name)s)', network_name=network_name)
         elif peppol_partner.peppol_verification_state == 'not_verified':
             # The recomputation of the Peppol credentials did not manage to fill these fields.
             if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
@@ -25,7 +26,7 @@ class AccountMoveSendWizard(models.TransientModel):
                     return _(' (no VAT)')
                 elif eas_label:
                     return _(' (Missing %(eas)s)', eas=eas_label)
-            return _(' (Customer not on Peppol)')
+            return _(' (Customer not on %(network_name)s)', network_name=network_name)
         else:
             return ''
 
@@ -70,8 +71,12 @@ class AccountMoveSendWizard(models.TransientModel):
         self.ensure_one()
         if self.sending_methods and 'peppol' in self.sending_methods:
             move = self.move_id.with_company(self.move_id.company_id)
-            if move.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
-                raise UserError(_("Partner doesn't have a valid Peppol configuration."))
+            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            if partner.peppol_verification_state != 'valid':
+                raise UserError(_(
+                    "Partner doesn't have a valid %(network_name)s configuration.",
+                    network_name=move.company_id._get_einvoicing_network_name(),
+                ))
             if registration_action := self._do_peppol_pre_send(move):
                 return registration_action
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)

@@ -151,6 +151,16 @@ class ResCompany(models.Model):
 
         return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
 
+    def _get_einvoicing_network_name(self):
+        """Return the user-facing name of the company's e-invoicing network."""
+        self.ensure_one()
+        return self.env._("Peppol")
+
+    def _get_einvoicing_identifier_name(self):
+        """Return the user-facing name of an identifier on the network."""
+        self.ensure_one()
+        return self.env._("Peppol EAS and/or Endpoint identifier")
+
     def _peppol_is_french_company(self):
         self.ensure_one()
         return (

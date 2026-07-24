@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_l10n_fr_pdp_pilot_phase',
         inverse='_inverse_l10n_fr_pdp_pilot_phase',
         string="Pilot Phase",
-        help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
+        help="Participate in the e-invoicing pilot phase. This way you are able to test it before it becomes mandatory.",
     )
     l10n_fr_pdp_send_to_ppf = fields.Boolean(
         related='company_id.l10n_fr_pdp_send_to_ppf', readonly=False,
@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_fr_pdp_annuaire_start_date = fields.Date(
         related='company_id.l10n_fr_pdp_annuaire_start_date',
         string="Annuaire Start Date",
-        help="The date on which the company is registered on the annuaire for the French e-invoicing.",
+        help="The date on which the company is registered on the annuaire for e-invoicing.",
     )
     l10n_fr_pdp_registered = fields.Boolean(
         related='company_id.l10n_fr_pdp_registered',

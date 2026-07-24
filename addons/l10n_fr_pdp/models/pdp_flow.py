@@ -28,7 +28,7 @@ FLOW_SENT_STATES = tuple(dict(FLOW_SENT_STATES_SELECTION))
 
 class PdpFlow(models.Model):
     _name = 'l10n.fr.pdp.reports.flow'
-    _description = 'French PDP Flow'
+    _description = 'E-Reporting Flow'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
@@ -40,8 +40,8 @@ class PdpFlow(models.Model):
         default='ready',
     )
     payload_id = fields.Many2one('ir.attachment', string="XML Payload", compute='_compute_payload_attachment')
-    transport_status = fields.Char(help="Raw status returned by the PDP transport API.")
-    transport_message = fields.Text(help="Additional message or error returned by the PDP transport API.")
+    transport_status = fields.Char(help="Raw status returned by the Approved Platform transport API.")
+    transport_message = fields.Text(help="Additional message or error returned by the Approved Platform transport API.")
     report_type = fields.Selection(
         selection=[('transaction', "Transaction"), ('payment', "Payment")],
         required=True,
@@ -335,7 +335,7 @@ class PdpFlow(models.Model):
         proxy_user = self.company_id.account_peppol_edi_user
         if not proxy_user:
             raise UserError(self.env._(
-                "No active PDP proxy user is configured for company %(company)s.",
+                "No active Approved Platform connection is configured for company %(company)s.",
                 company=self.company_id.display_name,
             ))
         return proxy_user
@@ -358,7 +358,7 @@ class PdpFlow(models.Model):
         )
         ppf_messages = result.get('ppf_messages') or []
         if not ppf_messages:
-            raise UserError(self.env._("The PDP proxy did not return a flow tracking identifier."))
+            raise UserError(self.env._("The Approved Platform did not return a flow tracking identifier."))
 
         proxy_message = ppf_messages[0]
         return {

@@ -36,7 +36,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_peppol_what_is_peppol_alert(self, moves, moves_data, relevant_moves):
         any_moves_french = bool(relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()))
         if any_moves_french:
-            name = self.env._("Why should I use French E-Invoicing ?")
+            name = self.env._("Why should I use the Approved Platform?")
             action_text = self.env._("France - E-Invoicing (Approved Platform)")
         else:
             name = self.env._("Why should I use PEPPOL ?")
@@ -65,16 +65,16 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_what_is_peppol_message(self, companies, moves, relevant_moves):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("To use the Approved Platform for French E-Invoicing, install the module")
+            return self.env._("To use the Approved Platform, install the module")
         return self.env._("You can send this invoice electronically via Peppol.")
 
     def _get_peppol_partner_want_peppol_message(self, partners, relevant_moves):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("To use the Approved Platform for French E-Invoicing, install the module")
+            return self.env._("To use the Approved Platform, install the module")
         return self.env._("%s has requested electronic invoices reception on Peppol.", partners.display_name)
 
     def _get_peppol_what_is_pdp_message(self, companies, moves, relevant_moves):
-        return self.env._("To use the Approved Platform for French E-Invoicing, install the module")
+        return self.env._("To use the Approved Platform, install the module")
 
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
@@ -165,7 +165,11 @@ class AccountMoveSend(models.AbstractModel):
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
         if len(xml_file) > 64000000:
-            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
+            invoice_data['error'] = self.env._(
+                "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %(network_name)s.",
+                invoice_name=invoice.name,
+                network_name=invoice.company_id._get_einvoicing_network_name(),
+            )
             return None, None
 
         document = {
@@ -263,9 +267,13 @@ class AccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods']:
+                network_name = invoice.company_id._get_einvoicing_network_name()
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
+                    invoice_data['error'] = _(
+                        'The partner is missing %(identifier_name)s.',
+                        identifier_name=invoice.company_id._get_einvoicing_identifier_name(),
+                    )
                     continue
 
                 if (
@@ -276,7 +284,10 @@ class AccountMoveSend(models.AbstractModel):
                  ) != 'valid':
                     invoice.peppol_move_state = 'error'
                     if peppol_verification_state == 'not_valid_format':
-                        invoice_data['error'] = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
+                        invoice_data['error'] = _(
+                            'The partner has indicated it does not accept this document type, so you cannot send this invoice via %(network_name)s.',
+                            network_name=network_name,
+                        )
                     else:
                         invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue

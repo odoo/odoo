@@ -50,29 +50,23 @@ class AccountMoveSend(models.AbstractModel):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
             alert['action'].update({
                 'tag': 'l10n_fr_pdp.what_is_pdp',
-                'name': self.env._("Why should I use E-Invoicing?"),
+                'name': self.env._("Why should I use the Approved Platform?"),
             })
             alert['action_text'] = self.env._("Why should you use it ?")
         return alert
 
     def _get_peppol_what_is_peppol_message(self, companies, moves, relevant_moves):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("You can send this invoice electronically via Approved Platform.")
+            return self.env._("You can send this invoice electronically via the Approved Platform.")
         return super()._get_peppol_what_is_peppol_message(companies, moves, relevant_moves)
 
     def _get_peppol_partner_want_peppol_message(self, partners, relevant_moves):
-        french_regulated_moves = relevant_moves.filtered(
-            lambda m: (
-                m.company_id._peppol_is_french_company()
-                and m.partner_id.commercial_partner_id.with_company(self.company_id)._get_pdp_receiver_identification_info()[0] == 'pdp'
-            )
-        )
-        if french_regulated_moves:
-            return self.env._("%s has requested electronic invoices reception via French E-Invoicing.", partners.display_name)
+        if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
+            return self.env._("%s has requested electronic invoices reception via the Approved Platform.", partners.display_name)
         return super()._get_peppol_partner_want_peppol_message(partners, relevant_moves)
 
     def _get_peppol_what_is_pdp_message(self, companies, moves, relevant_moves):
-        return self.env._("Consider registering to use the Approved Platform for French E-Invoicing")
+        return self.env._("Consider registering to use the Approved Platform")
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id

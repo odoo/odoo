@@ -1,7 +1,7 @@
 import re
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
 from odoo.tools.sql import SQL
@@ -28,16 +28,16 @@ class ResCompany(models.Model):
     )
     l10n_fr_pdp_pilot_phase = fields.Boolean(
         string="E-Invoicing Pilot Phase",
-        help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
+        help="Participate in the e-invoicing pilot phase. This way you are able to test it before it becomes mandatory.",
         groups='base.group_user',
     )
     l10n_fr_pdp_annuaire_start_date = fields.Date(
         string="Annuaire Start Date",
-        help="The date on which the company is registered on the annuaire for the French e-invoicing.",
+        help="The date on which the company is registered on the annuaire for e-invoicing.",
         groups='base.group_user',
     )
     l10n_fr_pdp_registered = fields.Boolean(
-        string="Approved Platform Registerd",
+        string="Approved Platform Registered",
         compute="_compute_l10n_fr_pdp_registered",
         groups='base.group_user',
     )
@@ -87,6 +87,18 @@ class ResCompany(models.Model):
         string="Authentication IAP UUID",
         groups='account.group_account_invoice',
     )
+
+    def _get_einvoicing_network_name(self):
+        self.ensure_one()
+        if self._peppol_is_french_company():
+            return _("Approved Platform")
+        return super()._get_einvoicing_network_name()
+
+    def _get_einvoicing_identifier_name(self):
+        self.ensure_one()
+        if self._peppol_is_french_company():
+            return _("e-invoicing identifier")
+        return super()._get_einvoicing_identifier_name()
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_pdp_identifier(self):

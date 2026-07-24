@@ -165,7 +165,7 @@ class PeppolRegistration(models.TransientModel):
                 if pdp_module and pdp_module.state != 'installed':
                     peppol_warnings['company_french_warning'] = {
                         'level': 'warning',
-                        'message': self.env._("To use the Approved Platform for French E-Invoicing install the module"),
+                        'message': self.env._("To use the Approved Platform, install the module"),
                         'action_text': self.env._("France - E-Invoicing (Approved Platform)"),
                         'action': pdp_module.sudo()._get_records_action(),
                     }
@@ -270,12 +270,12 @@ class PeppolRegistration(models.TransientModel):
             redirect_action = pdp_module._get_records_action()
             redirect_button_text = self.env._("Install module")
             message = self.env._(
-                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).",
+                "If you want to register with the Approved Platform, first install the module: France - E-Invoicing (Approved Platform).",
             )
         else:
             redirect_action = self.env.ref('base.action_view_base_module_update').id
             message = self.env._(
-                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).\n"
+                "If you want to register with the Approved Platform, first install the module: France - E-Invoicing (Approved Platform).\n"
                 "The module was not found. Please update the available apps first.",
             )
             redirect_button_text = self.env._("Update Apps List")

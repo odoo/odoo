@@ -86,6 +86,21 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner.invoice_sending_method = 'email'
         partner.invoice_edi_format = 'ubl_bis3'
 
+    def test_einvoicing_network_name(self):
+        self.assertEqual(self.env.company._get_einvoicing_network_name(), "Approved Platform")
+        self.assertEqual(
+            self.env.company._get_einvoicing_identifier_name(),
+            "e-invoicing identifier",
+        )
+
+        move = self._create_invoice(partner_id=self.partner_b.id)
+        wizard = self.env['account.move.send.wizard'].new({'move_id': move})
+        self.assertEqual(wizard._get_peppol_checkbox_label("by Peppol"), "by Approved Platform")
+        self.assertEqual(
+            self.env['account.move.send']._get_peppol_partner_want_peppol_message(self.partner_b, move),
+            f"{self.partner_b.display_name} has requested electronic invoices reception via the Approved Platform.",
+        )
+
     def test_validate_partner_be_invalid_format(self):
         partner = self.partner_b
         self.assertRecordValues(partner, [{

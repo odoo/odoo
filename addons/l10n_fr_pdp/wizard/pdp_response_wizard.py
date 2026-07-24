@@ -5,7 +5,7 @@ from odoo.tools import float_repr, float_round, format_list
 
 class PdpResponseWizard(models.TransientModel):
     _name = 'pdp.response.wizard'
-    _description = "PDP Response wizard"
+    _description = "E-Invoicing Response Wizard"
 
     move_ids = fields.Many2many(
         comodel_name='account.move',

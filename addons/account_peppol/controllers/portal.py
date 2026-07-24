@@ -15,8 +15,11 @@ class PortalAccount(CustomerPortal):
         portal_layout_values = super()._prepare_portal_layout_values()
         can_send = request.env['account_edi_proxy_client.user']._get_can_send_domain()
         if request.env.company.account_peppol_proxy_state in can_send:
-            partner = request.env.user.partner_id
-            portal_layout_values['invoice_sending_methods'].update({'peppol': _('by Peppol')})
+            partner = request.env.user.partner_id.commercial_partner_id.with_company(request.env.company)
+            network_name = request.env.company._get_einvoicing_network_name()
+            portal_layout_values['invoice_sending_methods'].update({
+                'peppol': _('by %(network_name)s', network_name=network_name),
+            })
             portal_layout_values.update({
                 'peppol_eas_list': dict(partner._fields['peppol_eas'].selection),
             })
@@ -49,14 +52,21 @@ class PortalAccount(CustomerPortal):
             peppol_eas = data.get('peppol_eas')
             peppol_endpoint = data.get('peppol_endpoint')
             edi_format = data.get('invoice_edi_format')
+            network_name = request.env.company._get_einvoicing_network_name()
             if request.env['res.country'].browse(int(data.get('country_id'))).code not in PEPPOL_LIST:
                 error['country_id'] = 'error'
-                error_message.append(_('That country is not available for Peppol.'))
+                error_message.append(_(
+                    'That country is not available for %(network_name)s.',
+                    network_name=network_name,
+                ))
             if endpoint_error_message := request.env['res.partner']._build_error_peppol_endpoint(peppol_eas, peppol_endpoint):
                 error['invalid_peppol_endpoint'] = 'error'
                 error_message.append(endpoint_error_message)
             if request.env['res.partner']._get_peppol_verification_state(peppol_endpoint, peppol_eas, edi_format) != 'valid':
                 error['invalid_peppol_config'] = 'error'
-                error_message.append(_('If you want to be invoiced by Peppol, your configuration must be valid.'))
+                error_message.append(_(
+                    'If you want to be invoiced by %(network_name)s, your configuration must be valid.',
+                    network_name=network_name,
+                ))
 
         return error, error_message

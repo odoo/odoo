@@ -25,11 +25,11 @@ class ResPartner(models.Model):
             ('pdp_not_valid', 'Partner is not in the annuaire'),
             ('pdp_not_valid_format', 'Partner cannot receive format'),
             ('pdp_valid', 'Partner is in the annuaire'),
-            ('peppol_not_valid', 'Partner is not on Peppol'),  # does not exist on Peppol at all
+            ('peppol_not_valid', 'Partner is not reachable through the Approved Platform'),
             ('peppol_not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
-            ('peppol_valid', 'Partner is on Peppol'),
+            ('peppol_valid', 'Partner is reachable through the Approved Platform'),
         ],
-        string='E-Invoicing State',
+        string='Approved Platform Status',
         compute="_compute_pdp_verification_display_state",
     )
 
@@ -38,7 +38,7 @@ class ResPartner(models.Model):
         # Extend to rename the `peppol` option in the `invoice_sending_method` selection
         fields = super().fields_get(allfields, attributes)
         company = self.env.company
-        if not self._context.get("studio") and (company.country_code == 'FR' or company.pdp_identifier) and 'invoice_sending_method' in fields:
+        if not self._context.get("studio") and company._peppol_is_french_company() and 'invoice_sending_method' in fields:
             field = fields['invoice_sending_method']
             if 'selection' in field:
                 field['selection'] = [('peppol', self.env._('by Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
@@ -113,7 +113,7 @@ class ResPartner(models.Model):
         if eas != '0225':
             return super()._build_error_peppol_endpoint(eas, endpoint)
         if not self.env["res.company"]._check_pdp_identifier(endpoint):
-            return self.env._("The Peppol endpoint is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
+            return self.env._("The e-invoicing identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
 
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
