@@ -117,7 +117,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertIn('/l10n_cn_edi_baiwang/callback/order_complete', query['callbackUrl'][0])
         self.assertIn('requestId=', query['callbackUrl'][0])
 
-    def test_07_red_form_required_only_for_draft_refund_of_issued_invoice(self):
+    def test_05_red_form_required_only_for_draft_refund_of_issued_invoice(self):
         invoice = self._create_posted_invoice()
         invoice.l10n_cn_baiwang_invoice_no = '24442000000071309399'
 
@@ -135,7 +135,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.state, 'draft')
         self.assertTrue(credit_note.l10n_cn_baiwang_red_form_required)
 
-    def test_09_send_print_registers_and_uses_baiwang_extra_edi(self):
+    def test_06_send_print_registers_and_uses_baiwang_extra_edi(self):
         invoice = self._create_posted_invoice()
         send_model = self.env['account.move.send']
 
@@ -154,11 +154,11 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertIn('error', invoices_data[invoice])
         self.assertIn('Proxy error', invoices_data[invoice]['error']['errors'])
 
-    def test_10_red_form_status_cron_handles_empty_queue(self):
+    def test_07_red_form_status_cron_handles_empty_queue(self):
         # Cron runs as superuser in production; use sudo here to mirror it.
         self.env['l10n_cn_edi.document'].sudo()._cron_check_red_form_status()
 
-    def test_11_red_form_pending_to_confirmed_lifecycle(self):
+    def test_08_red_form_pending_to_confirmed_lifecycle(self):
         """Mock the B2B workflow where a red form goes to Pending, then is approved by the buyer."""
         invoice = self._create_posted_invoice()
         invoice.l10n_cn_baiwang_invoice_no = '24442000000071309399'
@@ -224,7 +224,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.l10n_cn_baiwang_state, 'issued')
         self.assertEqual(credit_note.l10n_cn_baiwang_invoice_no, 'mock-red-fapiao-789')
 
-    def test_13_proportional_global_discount(self):
+    def test_09_proportional_global_discount(self):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
