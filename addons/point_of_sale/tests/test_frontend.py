@@ -2521,6 +2521,68 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_scan_preselect_always_variant', login="pos_user")
 
+    def test_barcode_scan_no_variant_extra_price(self):
+        """ Scanning a product with a no_variant attribute must add the picked
+        value's extra price, and scanning an "always" variant must add its extra
+        only once (dbc23b106c8b regression). """
+        toppings = self.env['product.attribute'].create({
+            'name': 'Toppings',
+            'create_variant': 'no_variant',
+            'display_type': 'multi',
+            'value_ids': [
+                (0, 0, {'name': 'Cheese', 'sequence': 1}),
+                (0, 0, {'name': 'Bacon', 'sequence': 2}),
+            ],
+        })
+        multi_product = self.env['product.template'].create({
+            'name': 'Multi Attr Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': toppings.id,
+                    'value_ids': [(6, 0, toppings.value_ids.ids)],
+                }),
+            ],
+        })
+        multi_product.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.name == 'Bacon'
+        ).price_extra = 3
+        multi_product.product_variant_ids.barcode = 'MULTI_001'
+
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'always',
+            'display_type': 'radio',
+            'value_ids': [
+                (0, 0, {'name': 'White', 'sequence': 1}),
+                (0, 0, {'name': 'Black', 'sequence': 2}),
+            ],
+        })
+        always_product = self.env['product.template'].create({
+            'name': 'Always Variant Product',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': color_attribute.id,
+                    'value_ids': [(6, 0, color_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        always_product.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.name == 'Black'
+        ).price_extra = 10
+        black_variant = always_product.product_variant_ids.filtered(
+            lambda v: 'Black' in v.product_template_variant_value_ids.mapped('name')
+        )
+        black_variant.barcode = 'ALWAYS_BLACK_001'
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_scan_no_variant_extra_price', login="pos_user")
+
     def test_refund_backend_duplicate(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         current_session = self.main_pos_config.current_session_id
