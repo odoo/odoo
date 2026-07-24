@@ -207,6 +207,47 @@ CHARGE_REASON_CODES = [
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
+    ubl_cii_type_display = fields.Selection(
+        string="Tax Type",
+        selection=[
+            ('tax', "Tax"),
+            ('charge', "Charge"),
+            ('allowance', "Allowance"),
+        ],
+        default='tax',
+        compute='_compute_ubl_cii_type_display',
+        inverse='_inverse_ubl_cii_type_display',
+    )
+
+    @api.depends('ubl_cii_type', 'ubl_cii_is_charge')
+    def _compute_ubl_cii_type_display(self):
+        for tax in self:
+            if tax.ubl_cii_type == 'tax':
+                tax.ubl_cii_type_display = 'tax'
+            elif tax.ubl_cii_is_charge:
+                tax.ubl_cii_type_display = 'charge'
+            else:
+                tax.ubl_cii_type_display = 'allowance'
+
+    def _inverse_ubl_cii_type_display(self):
+        for tax in self:
+            if tax.ubl_cii_type_display == 'tax':
+                tax.ubl_cii_type = 'tax'
+                tax.ubl_cii_is_charge = False
+                tax.ubl_cii_allowance_reason_code = False
+                tax.ubl_cii_charge_reason_code = False
+                tax.ubl_cii_allowance_charge_reason = False
+            else:
+                tax.ubl_cii_type = 'allowance_charge'
+                tax.ubl_cii_tax_category_code = False
+                tax.ubl_cii_tax_exemption_reason = False
+                if tax.ubl_cii_type_display == 'charge':
+                    tax.ubl_cii_allowance_reason_code = False
+                    tax.ubl_cii_is_charge = True
+                else:
+                    tax.ubl_cii_charge_reason_code = False
+                    tax.ubl_cii_is_charge = False
+
     ubl_cii_type = fields.Selection(
         selection=[
             ('tax', "Tax"),

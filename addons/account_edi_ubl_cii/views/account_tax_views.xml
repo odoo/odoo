@@ -7,23 +7,35 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='advanced_options']" position="after">
                 <page string="Electronic Invoicing" name="electronic_invoicing">
-                    <group>
-                        <field name="ubl_cii_type" widget="radio" string="Type" options="{'horizontal': True}"/>
-                        <field name="ubl_cii_is_charge" invisible="ubl_cii_type == 'tax'"/>
-                        <field name="ubl_cii_tax_category_code" invisible="ubl_cii_type == 'allowance_charge'"/>
+                    <group name="ubl_cii_allowance_charge" col="1">
+                        <field name="ubl_cii_type_display"
+                            widget="radio"
+                            string="Type"
+                            options="{'horizontal': True}"/>
+                        <field name="ubl_cii_tax_category_code"
+                            invisible="ubl_cii_type_display != 'tax'"/>
                         <field name="ubl_cii_tax_exemption_reason_code"
-                               invisible="ubl_cii_type == 'allowance_charge' or not ubl_cii_requires_exemption_reason"/>
+                            invisible="ubl_cii_type_display != 'tax'
+                                       or not ubl_cii_requires_exemption_reason"/>
                         <field name="ubl_cii_tax_exemption_reason"
-                               invisible="ubl_cii_type == 'allowance_charge' or not ubl_cii_requires_exemption_reason"/>
-                        <field name="ubl_cii_allowance_reason_code" invisible="ubl_cii_type == 'tax' or ubl_cii_is_charge"
-                               required="ubl_cii_type == 'allowance_charge' and not ubl_cii_is_charge"/>
-                        <field name="ubl_cii_charge_reason_code" invisible="ubl_cii_type == 'tax' or not ubl_cii_is_charge"
-                               required="ubl_cii_type == 'allowance_charge' and ubl_cii_is_charge"/>
-                        <label name="allowance_reason_label" for="ubl_cii_allowance_charge_reason" string="Allowance Reason"
-                               invisible="ubl_cii_type == 'tax' or ubl_cii_is_charge"/>
-                        <label name="charge_reason_label" for="ubl_cii_allowance_charge_reason" string="Charge Reason"
-                               invisible="ubl_cii_type == 'tax' or not ubl_cii_is_charge"/>
-                        <field name="ubl_cii_allowance_charge_reason" nolabel="1" invisible="ubl_cii_type == 'tax'"/>
+                            invisible="ubl_cii_type_display != 'tax'
+                                       or not ubl_cii_requires_exemption_reason"/>
+                        <field name="ubl_cii_allowance_reason_code"
+                            invisible="ubl_cii_type_display != 'allowance'"
+                            string="Allowance Code"
+                            required="ubl_cii_type_display == 'allowance'"/>
+                        <field name="ubl_cii_charge_reason_code"
+                            invisible="ubl_cii_type_display != 'charge'"
+                            string="Charge Code"
+                            required="ubl_cii_type_display == 'charge'"/>
+                        <field name="ubl_cii_allowance_charge_reason"
+                            invisible="ubl_cii_type_display != 'allowance'"
+                            string="Allowance Reason"
+                            id="ubl_cii_allowance_reason"/>
+                        <field name="ubl_cii_allowance_charge_reason"
+                            invisible="ubl_cii_type_display != 'charge'"
+                            string="Charge Reason"
+                            id="ubl_cii_charge_reason"/>
                     </group>
                 </page>
             </xpath>
