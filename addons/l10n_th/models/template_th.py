@@ -40,3 +40,24 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_exigibility': 'True'
             },
         }
+
+    @template('th', 'ir.sequence')
+    def _get_th_ir_sequence(self):
+        return {
+            'seq_l10n_th_tax_invoice_number': {
+                'name': 'Tax Invoice Number',
+                'code': 'l10n_th.tax.invoice.tax_invoice_number',
+                'prefix': 'TINV/%(year)s/',
+                'padding': 5,
+                'use_date_range': True,
+                'implementation': 'no_gap',
+            },
+            'seq_l10n_th_receipt_tax_invoice_number': {
+                'name': 'Receipt / Tax Invoice Number',
+                'code': 'l10n_th.tax.invoice.receipt_tax_invoice_number',
+                'prefix': 'RCT/%(year)s/',
+                'padding': 5,
+                'use_date_range': True,
+                'implementation': 'no_gap',
+            },
+        }
