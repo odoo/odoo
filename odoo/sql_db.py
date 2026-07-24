@@ -8,6 +8,7 @@ the ORM does, in fact.
 from __future__ import annotations
 
 import functools
+import json
 import logging
 import os
 import re
@@ -182,6 +183,91 @@ class _FlushingSavepoint(Savepoint):
             super()._close(rollback)
             if cr.transaction is not None:
                 cr.transaction.merge_state()
+
+
+# TODO: proper opt in / out
+#       table always small, seq scan ok
+#       table sometimes small, seq scan not ok
+#       doing fucky stuff, sometimes OK
+IGNORE_TABLES = {
+    # seems real bad as potentially every model with a mail.thread could be using this?
+    "mail_alias",
+    # can you have millions of companies in a DB?
+    "res_company",
+    # every transient should be ignored...
+    "portal_wizard_user",
+    # other
+    "ir_model",
+    "ir_module_module",
+
+    "res_country",
+    "res_currency",
+    "res_lang",
+    "res_groups",
+    "res_groups_privileges",
+    "res_users",  # maybe not, massive groups could have a ton of them...
+
+    "ir_ui_menu",
+    "ir_ui_view",
+    "ir_actions_todo",
+    "ir_act_server",
+
+    "ir_asset",
+    "website",
+    "website_menu",
+    "website_snippet_filter",
+    "website_page",
+    # I've no idea what this even is
+    "website_controller_page",
+
+    "ir_mail_server",
+    "mail_notification",
+    "mail_compose_message",
+    "mail_scheduled_message",
+    "mail_message_schedule",
+    "mail_message_subtype",
+    "mail_activity_type",
+    "mail_canned_response",  # v. dubious
+    "mail_template",
+    "mail_alias_domain",
+    "mail_activity_plan_template",
+
+    "portal_entry",
+
+    "web_tour_tour",
+}
+def check_plan(notices: list[str]):
+    for notice in notices:
+        if m := re.match(
+            # not sure duration is always present / configurable...
+            r"LOG:\s+(duration:\s+\d+\.\d+\s+m?s\s+)?plan:",
+            notice,
+        ):
+            # explain: {Query Text, ResultPlan}
+            # Plan: https://github.com/SKalt/postgres_explain_analyze_json_schema/blob/main/schema.yaml#L41
+            explain = json.loads(notice[m.end():])
+            if scans := [p for p in get_subplans(explain['Plan']) if p['Node Type'] == 'Seq Scan']:
+                tables = {scan['Relation Name'] for scan in scans}
+                if tables <= IGNORE_TABLES:
+                    continue
+
+                warnings.warn(
+                    f"Query plan for {explain['Query Text']!r} contains sequential scan on {', '.join(tables)}",
+                    # execute + check_plan + warn
+                    # FIXME: dynamic stacklevel to skip over execute_query or
+                    #        ORM query-resolution? Or change showwarning_with_traceback
+                    #        to skip query building on seqscan warning
+                    stacklevel=3,
+                    category=SeqScanWarning,
+                )
+
+class SeqScanWarning(Warning):
+    pass
+
+def get_subplans(plan: dict) -> typing.Generator[dict, None, None]:
+    yield plan
+    for subplan in plan.get('Plans', ()):
+        yield from get_subplans(subplan)
 
 
 # _CursorProtocol declares the available methods and type information,
@@ -413,6 +499,7 @@ class Cursor(_CursorProtocol):
             if func and callable(func):
                 update_query_endtime_functions.append(func)
 
+        self._cnx.notices.clear()
         try:
             self._obj.execute(query, params)
         except Exception as e:
@@ -421,6 +508,7 @@ class Cursor(_CursorProtocol):
             raise
         finally:
             delay = real_time() - start
+            check_plan(self._cnx.notices)
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
             # optional hooks for performance and tracing analysis
@@ -788,6 +876,29 @@ class Connection:
             readonly=self.__pool.readonly,
             autocommit=False,
         )
+        # since we reset the connection on every return this has to be done every time
+        with cnx.cursor() as cr:
+            # use `SET` in case the cn is committed and reused without returning it
+            cr.execute("""\
+SET enable_seqscan = false;
+
+LOAD 'auto_explain';
+-- auto_explain every query
+SET auto_explain.log_min_duration = 0;
+-- make plans parseable
+SET auto_explain.log_format = json;
+-- auto_explain logs at LOG, which is not sent to the client by default
+SET client_min_messages = log;
+-- alternatively INFO is always sent to the client
+-- SET auto_explain.log_level = info;
+
+-- default is EXPLAIN, enables EXPLAIN ANALYZE
+-- SET auto_explain.log_analyze = true;
+-- precise execution timing, can be expensive, enabled by default (if log_analyze)
+-- SET auto_explain.log_timing = false;
+-- SET auto_explain.log_wal = true;
+""")
+        cnx.commit()
         return Cursor(cnx, self.__dbname)
 
     def __bool__(self):

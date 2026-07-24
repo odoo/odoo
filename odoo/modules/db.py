@@ -333,6 +333,7 @@ def _create_empty_database(db_name: str) -> None:
         _logger.info("Defaulting to 'postgres' system database for database creation")
         sys_cr = odoo.sql_db.db_connect('postgres').cursor()
     with closing(sys_cr) as cr:
+        cr.execute("LOAD 'auto_explain'")
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (db_name,), log_exceptions=False)
         if cr.fetchall():
