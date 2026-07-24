@@ -428,3 +428,26 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
         self.assertAlmostEqual(data['standard_price'], 100.0)
         self.assertAlmostEqual(data['lst_price'], 50.0)
+
+    def test_combo_prices_converted_to_pos_currency(self):
+        # A combo's `base_price` and its items' `extra_price` are stored in the
+        # company currency. When loaded in a PoS running another currency they
+        # must be converted, just like standalone product prices (rate 0.5).
+        combo = self.env['product.combo'].create({
+            'name': 'Combo choice',
+            'company_id': self.company.id,
+            'combo_item_ids': [
+                (0, 0, {'product_id': self.product1.product_variant_id.id, 'extra_price': 20.0}),
+                (0, 0, {'product_id': self.product3.product_variant_id.id, 'extra_price': 0.0}),
+            ],
+        })
+        # base_price is the min lst_price among the items, in company currency (product1 = 10.0).
+        self.assertAlmostEqual(combo.base_price, 10.0)
+
+        combo_read = self.env['product.combo']._load_pos_data_read(combo, self.config)[0]
+        self.assertAlmostEqual(combo_read['base_price'], 5.0)
+
+        combo_item_read = self.env['product.combo.item']._load_pos_data_read(combo.combo_item_ids, self.config)
+        extra_prices = {rec['product_id']: rec['extra_price'] for rec in combo_item_read}
+        self.assertAlmostEqual(extra_prices[self.product1.product_variant_id.id], 10.0)
+        self.assertAlmostEqual(extra_prices[self.product3.product_variant_id.id], 0.0)
