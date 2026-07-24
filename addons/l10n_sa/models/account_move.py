@@ -31,7 +31,7 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         # EXTENDS account
         self.ensure_one()
-        if self.company_id.country_code == 'SA':
+        if self.company_id.country_code == 'SA' and self.company_id.vat:
             return 'l10n_sa.l10n_sa_report_invoice_document'
         return super()._get_name_invoice_report()
 
