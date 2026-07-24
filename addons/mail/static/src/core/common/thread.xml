@@ -108,10 +108,7 @@
             'mt-2 mb-1': !this.channel?.parent_channel_id,
             'mt-1': this.channel?.parent_channel_id,
         }">
-            <div class="o-mail-Thread-avatar" t-att-class="{
-                'o-mail-Thread-avatarChatWindow mt-1': this.env.inChatWindow,
-                'mt-2': !this.env.inChatWindow,
-            }">
+            <div class="o-mail-Thread-avatar" t-att-class="this.startMessageAvatarAttClass" t-ref="this.startMessageAvatarRef">
                 <img t-if="!this.channel?.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="this.channel.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="oi text-muted" data-icon="forum" role="presentation"/>
             </div>

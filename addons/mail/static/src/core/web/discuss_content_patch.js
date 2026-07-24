@@ -1,20 +1,23 @@
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
-import { usePartnerAvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { usePartnerAvatarCardOnClick } from "@mail/core/web/avatar_card/avatar_card";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussContent.prototype, {
     setup() {
         super.setup(...arguments);
-        this.correspondentAvatarCard = usePartnerAvatarCard();
+        usePartnerAvatarCardOnClick(this.threadAvatarRef, () =>
+            this.thread?.channel?.hasCorrespondentAvatar
+                ? this.thread.channel.correspondentPartner
+                : undefined
+        );
     },
-    get correspondentPartner() {
-        if (this.thread?.channel?.channel_type !== "chat") {
-            return undefined;
-        }
-        return this.thread.channel.correspondent?.partner_id;
-    },
-    onClickThreadAvatar(ev) {
-        this.correspondentAvatarCard.open(ev, this.correspondentPartner);
+    get threadAvatarAttClass() {
+        return {
+            ...super.threadAvatarAttClass,
+            "cursor-pointer":
+                this.thread?.channel?.hasCorrespondentAvatar &&
+                this.thread.channel.correspondentPartner,
+        };
     },
 });

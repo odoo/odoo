@@ -126,11 +126,15 @@ export class DiscussChannel extends Record {
     avatar_128_access_token;
     /** @type {string} */
     avatar_cache_key;
+    get hasCorrespondentAvatar() {
+        return (
+            !["channel", "group"].includes(this.channel_type) &&
+            (!this.avatar_cache_key || this.avatar_cache_key === "no-avatar") &&
+            Boolean(this.correspondent)
+        );
+    }
     get avatarUrl() {
-        const hasOwnAvatar =
-            ["channel", "group"].includes(this.channel_type) ||
-            (this.avatar_cache_key && this.avatar_cache_key !== "no-avatar");
-        if (hasOwnAvatar) {
+        if (!this.hasCorrespondentAvatar) {
             const accessTokenParam = {};
             if (this.store.self_user?.share !== false) {
                 accessTokenParam.access_token = this.avatar_128_access_token;
@@ -514,6 +518,9 @@ export class DiscussChannel extends Record {
     }
     get showImStatus() {
         return this.channel_type === "chat" && this.correspondent;
+    }
+    get correspondentPartner() {
+        return this.correspondent?.partner_id;
     }
     /**
      * @param {Object} [param0={}]

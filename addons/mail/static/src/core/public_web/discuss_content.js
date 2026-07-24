@@ -36,6 +36,7 @@ export class DiscussContent extends Component {
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);
+        this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
         this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
@@ -86,7 +87,10 @@ export class DiscussContent extends Component {
     }
 
     get showThreadAvatar() {
-        return ["channel", "group", "chat"].includes(this.thread.channel?.channel_type);
+        return (
+            ["channel", "group"].includes(this.thread.channel?.channel_type) ||
+            this.thread.channel?.hasCorrespondentAvatar
+        );
     }
 
     get isThreadAvatarEditable() {
@@ -101,6 +105,10 @@ export class DiscussContent extends Component {
         return {
             "o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1": true,
         };
+    }
+
+    get threadAvatarAttClass() {
+        return {};
     }
 
     async onFileUploaded(file) {

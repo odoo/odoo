@@ -88,11 +88,7 @@
     </t>
 </t>
 <t t-name="mail.ChatWindow.headerContent">
-    <div class="o-mail-ChatWindow-threadAvatar position-relative bg-inherit my-0 me-1 ms-1" t-att-class="{
-        'py-1': !this.threadActions.actions.length gt 3,
-        'py-2': this.threadActions.actions.length lte 3,
-        'ps-2': !this.hasActionsMenu,
-    }" name="threadAvatar">
+    <div class="o-mail-ChatWindow-threadAvatar position-relative bg-inherit my-0 me-1 ms-1" t-att-class="this.threadAvatarAttClass" name="threadAvatar">
         <DiscussAvatar record="this.channel" size="24" typing="false"/>
     </div>
     <t t-if="this.channel.parent_channel_id">
