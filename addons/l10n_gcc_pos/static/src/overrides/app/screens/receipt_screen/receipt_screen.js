@@ -3,13 +3,18 @@
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
+const EXCLUDE_IF_NOT_REGISTERED = ["AE", "SA"];
+const GCC_COUNTRIES = ["SA", "AE", "BH", "OM", "QA", "KW"];
+
 patch(Order.prototype, {
     export_for_printing() {
+        const country = this.pos.company.country?.code;
+        const useGCCReport =
+            GCC_COUNTRIES.includes(country) &&
+            (this.pos.company.vat || !EXCLUDE_IF_NOT_REGISTERED.includes(country));
         return {
             ...super.export_for_printing(),
-            is_gcc_country: ["SA", "AE", "BH", "OM", "QA", "KW"].includes(
-                this.pos.company.country?.code
-            ),
+            useGCCReport,
         };
     },
 });
