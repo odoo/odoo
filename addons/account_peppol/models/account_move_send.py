@@ -175,7 +175,11 @@ class AccountMoveSend(models.AbstractModel):
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
         if xml_file.size > 64000000:
-            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
+            invoice_data['error'] = self.env._(
+                "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %(network_name)s.",
+                invoice_name=invoice.name,
+                network_name=invoice.company_id._get_einvoicing_network_name(),
+            )
             return None, None
 
         receiver_identification = partner.routing_identifier

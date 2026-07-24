@@ -1,5 +1,6 @@
 from unittest import mock
 
+from odoo import api
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import MailCase
@@ -61,8 +62,79 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         partner.invoice_sending_method = 'email'
         partner.invoice_edi_format = 'ubl_bis3'
 
+    def test_einvoicing_terminology_by_company(self):
+        self.assertEqual(self.env.company._get_einvoicing_network_name(), "the Approved Platform")
+        self.assertEqual(
+            self.env.company._get_einvoicing_identifier_name(),
+            "French e-invoicing identifier",
+        )
+        partner_fields = self.env['res.partner'].fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
+
+        move = self._create_invoice(partner_id=self.belgian_partner.id)
+        wizard = self.env['account.move.send.wizard'].new({'move_id': move})
+        self.assertEqual(wizard._get_peppol_checkbox_label("by Peppol"), "by the Approved Platform")
+        self.assertEqual(
+            wizard._get_peppol_checkbox_addendum_disable_reason(),
+            " (Customer not available for French E-Invoicing)",
+        )
+        move.peppol_move_state = 'done'
+        self.assertEqual(
+            wizard._get_peppol_checkbox_addendum_disable_reason(),
+            " (Previously sent)",
+        )
+        with self.assertRaisesRegex(UserError, "sent via the Approved Platform"):
+            move.action_cancel_peppol_documents()
+        self.assertEqual(
+            self.env['account.move.send']._get_peppol_partner_want_peppol_message(self.belgian_partner, move),
+            f"{self.belgian_partner.display_name} has requested electronic invoices reception via French E-Invoicing.",
+        )
+        french_move = self._create_invoice(partner_id=self.partner_a.id)
+        self.assertEqual(
+            self.env['account.move.send']._get_peppol_partner_want_peppol_message(self.partner_a, french_move),
+            f"{self.partner_a.display_name} has requested electronic invoices reception via French E-Invoicing.",
+        )
+
+        company_lu = self.env['res.company'].create({
+            'name': 'Luxembourg company',
+            'country_id': self.env.ref('base.lu').id,
+        })
+        company_lu.partner_id.write({
+            'routing_identifier': '0009:96851575905899',
+        })
+        self.assertTrue(company_lu._peppol_is_french_company())
+        self.assertEqual(company_lu._get_einvoicing_network_name(), "Peppol")
+        self.assertEqual(
+            company_lu._get_einvoicing_identifier_name(),
+            "Peppol EAS and/or Endpoint identifier",
+        )
+        partner_fields = self.env['res.partner'].with_company(company_lu).fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by Peppol")
+
+        company_fr_peppol = self.env['res.company'].create({
+            'name': 'French company registered on Peppol',
+            'country_id': self.env.ref('base.fr').id,
+            'account_peppol_proxy_state': 'receiver',
+        })
+        self.assertEqual(company_fr_peppol._get_peppol_proxy_type(), 'peppol')
+        self.assertEqual(company_fr_peppol._get_einvoicing_network_name(), "the Approved Platform")
+        partner_fields = self.env['res.partner'].with_company(company_fr_peppol).fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
+
+    def test_einvoicing_terminology_without_company(self):
+        # Mail tracking can request fields_get without a current company.
+        with mock.patch.object(api.Environment, 'company', property(lambda env: env['res.company'])):
+            partner_model = self.env['res.partner']
+            partner_model.fields_get(attributes=())
+            partner_fields = partner_model.fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by Peppol")
+
     def test_validate_partner_be_invalid_format(self):
-        partner = self.partner_b
+        partner = self.belgian_partner
         with mock_pdp_peppol_lookup_not_found(['0208:0239843188']):  # not on Peppol
             partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -86,7 +158,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         }])
 
     def test_validate_partner_be(self):
-        partner = self.partner_b
+        partner = self.belgian_partner
         self.assertFalse(partner.l10n_fr_is_pdp)
         with mock_pdp_peppol_lookup_not_found(['0208:0239843188']):  # not on Peppol
             partner.button_account_peppol_check_partner_endpoint()

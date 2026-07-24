@@ -45,7 +45,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             partner = vals[partner_type]
             commercial_partner = partner.commercial_partner_id
             if commercial_partner.routing_scheme != '0225' or not commercial_partner.routing_endpoint:
-                constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
+                constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's French e-invoicing identifier is missing: %s", commercial_partner.display_name)
             identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
             if not identifier_vals.get('scheme') or not identifier_vals.get('value'):
                 constraints[f"ubl_21_fr_{partner_type}_siret_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)

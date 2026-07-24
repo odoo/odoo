@@ -14,7 +14,7 @@
                         invisible="peppol_move_state != 'to_send' or state == 'draft'"/>
             </header>
             <sheet position="before">
-                <div class="alert alert-danger" role="alert" invisible="peppol_move_state != 'error'">
+                <div name="peppol_error_alert" class="alert alert-danger" role="alert" invisible="peppol_move_state != 'error'">
                     There was an error while sending this invoice via Peppol.
                 </div>
             </sheet>
