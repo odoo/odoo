@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -124,7 +124,7 @@ export class Message extends Component {
             });
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
-        this.messageBody = useRef("body");
+        this.messageBody = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -212,7 +212,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : (this.prepareMessageBody(this.messageBody.el) ?? []);
+                    : (this.prepareMessageBody(this.messageBody()) ?? []);
                 return () => {
                     for (const root of roots) {
                         root.destroy();
