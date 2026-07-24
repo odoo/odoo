@@ -445,33 +445,47 @@ export class Store extends BaseStore {
     }
 
     /**
-     * Search and fetch for a partner with a given user or partner id.
+     * Fetch the partner and user needed to open a chat.
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
+     * @returns {Promise<{partner?: import("models").ResPartner,user?: import("models").ResUsers}>}
+     */
+    async fetchPartnerAndUserForChat({ userId, partnerId }) {
+        let partner;
+        let user;
+        if (userId) {
+            user = await this["res.users"].getOrFetch(userId, ["partner_id"]);
+            partner = user?.partner_id;
+        } else if (partnerId) {
+            partner = await this["res.partner"].getOrFetch(partnerId, ["main_user_id"]);
+            user = partner?.main_user_id;
+        }
+        return { partner, user };
+    }
+
+    /**
+     * @param {Object} param0
+     * @param {number} param0.userId
+     * @param {number} param0.partnerId
+     * @returns {Promise<import("models").Thread | undefined>}
      */
     async getChat({ userId, partnerId }) {
-        let partner;
-        if (userId) {
-            const user = await this["res.users"].getOrFetch(userId, ["partner_id"]);
-            if (!user?.partner_id) {
+        const { partner, user } = await this.fetchPartnerAndUserForChat({
+            userId,
+            partnerId,
+        });
+        if (!partner || !user) {
+            if (userId) {
                 this.env.services.notification.add(_t("You can only chat with existing users."), {
                     type: "warning",
                 });
-                return;
-            }
-            partner = user.partner_id;
-        } else if (partnerId) {
-            partner = await this["res.partner"].getOrFetch(partnerId, ["main_user_id"]);
-            if (!partner?.main_user_id) {
+            } else if (partnerId) {
                 this.env.services.notification.add(
                     _t("You can only chat with partners that have a dedicated user."),
                     { type: "info" }
                 );
-                return;
             }
-        }
-        if (!partner) {
             return;
         }
         let chat = partner.searchChat();
