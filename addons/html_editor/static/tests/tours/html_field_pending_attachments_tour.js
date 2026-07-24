@@ -126,6 +126,14 @@ registry.category("web_tour.tours").add("html_field_pending_attachments_discard_
         {
             content: "Wait for the base64 image",
             trigger: `.odoo-editor-editable img.o_b64_image_to_save`,
+            run: ({ anchor: img }) => {
+                // Make sure the image is loaded before requesting to remove it.
+                img.addEventListener("load", () => {
+                    if (!img.getAttribute("src").startsWith("data:")) {
+                        img.classList.add("is_loaded");
+                    }
+                });
+            },
         },
         {
             content: "Blur the editor by clicking the char input",
@@ -133,8 +141,8 @@ registry.category("web_tour.tours").add("html_field_pending_attachments_discard_
             run: "click",
         },
         {
-            content: "Wait until the pasted image has been converted to an attachment",
-            trigger: `.odoo-editor-editable img:not([src^="data:"])`,
+            content: "Wait until the pasted image has been converted to an attachment and loaded",
+            trigger: `.odoo-editor-editable img.is_loaded:not([src^="data:"])`,
         },
         { content: "Discard the record", trigger: ".o_form_button_cancel", run: "click" },
         {
