@@ -14,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, useEffect, xml } from "@odoo/owl";
 import {
     SELECTORS,
     addNewRule,
@@ -416,7 +416,8 @@ test("select an autocomplete field with `context` key", async () => {
         static components = { SearchBar };
         static props = ["*"];
         setup() {
-            onWillUpdateProps(() => {
+            useEffect(() => {
+                this.props.domain;
                 updateCount++;
             });
         }
@@ -427,6 +428,9 @@ test("select an autocomplete field with `context` key", async () => {
         searchMenuTypes: [],
         searchViewId: false,
     });
+
+    // 'useEffect' increments 'updateCount' on the initial render
+    expect(updateCount).toBe(1);
 
     // 'r' key to filter on bar "First Record"
     await editSearch("record");
@@ -440,7 +444,7 @@ test("select an autocomplete field with `context` key", async () => {
     await keyDown("Enter");
     await animationFrame();
     expect(getFacetTexts().map((str) => str.replace(/\s+/g, " "))).toEqual(["Bar First record"]);
-    expect(updateCount).toBe(1);
+    expect(updateCount).toBe(2); // 'useEffect' increments 'updateCount' on the re-render
     expect(searchBar.env.searchModel.domain).toEqual([["bar", "=", 1]]);
     expect(searchBar.env.searchModel.context.bar).toEqual([1]);
 
@@ -460,7 +464,7 @@ test("select an autocomplete field with `context` key", async () => {
     expect(getFacetTexts().map((str) => str.replace(/\s+/g, " "))).toEqual([
         "Bar First record or Second record",
     ]);
-    expect(updateCount).toBe(2);
+    expect(updateCount).toBe(3); // 'useEffect' increments 'updateCount' on the re-render
     expect(searchBar.env.searchModel.domain).toEqual(["|", ["bar", "=", 1], ["bar", "=", 2]]);
     expect(searchBar.env.searchModel.context.bar).toEqual([1, 2]);
 });
@@ -473,7 +477,8 @@ test("no search text triggers a reload", async () => {
         static components = { SearchBar };
         static props = ["*"];
         setup() {
-            onWillUpdateProps(() => {
+            useEffect(() => {
+                this.props.domain;
                 updateCount++;
             });
         }
@@ -484,10 +489,12 @@ test("no search text triggers a reload", async () => {
         searchMenuTypes: [],
         searchViewId: false,
     });
+    // 'useEffect' increments 'updateCount' on the initial render
+    expect(updateCount).toBe(1);
     await keyDown("Enter");
     await animationFrame();
     expect(`.o_searchview_facet_label`).toHaveCount(0);
-    expect(updateCount).toBe(1);
+    expect(updateCount).toBe(2); // 'useEffect' increments 'updateCount' on the reload
 });
 
 test("selecting (no result) triggers a search bar rendering", async () => {
