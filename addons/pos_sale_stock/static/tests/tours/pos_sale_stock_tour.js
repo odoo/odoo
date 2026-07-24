@@ -24,6 +24,19 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PoSSettleSaleQuotation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosSettleOrder3", {
     steps: () =>
         [
