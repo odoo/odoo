@@ -123,6 +123,13 @@ export class DynamicFieldPlugin extends Plugin {
     }
 
     async editField() {
+        if (!this.resModel) {
+            return this.services.notification.add(
+                _t("Oops! Select a model for this template before editing fields."),
+                { type: "danger" }
+            );
+        }
+
         const target = this.getPopoverTarget(true);
         if (!target) {
             return;
@@ -187,6 +194,13 @@ export class DynamicFieldPlugin extends Plugin {
     }
 
     async insertField() {
+        if (!this.resModel) {
+            return this.services.notification.add(
+                _t("Oops! Select a model for this template before inserting fields."),
+                { type: "danger" }
+            );
+        }
+
         await this.config.dynamicFieldPreprocess?.({
             resModel: this.resModel,
             element: null,
