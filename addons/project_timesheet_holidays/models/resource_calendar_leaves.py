@@ -101,12 +101,27 @@ class ResourceCalendarLeaves(models.Model):
         #              and values: number of days
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
+<<<<<<< 5216389b8c7ea6d85a7b27121f390e3beb8ffa7e
             calendar = calendars_dict[calendar_id] if calendar_id else self.env['resource.calendar']
             resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz()
+||||||| 589fb92d55af6abfc233a2336a798f0ddfa4abf4
+            calendar = calendars_dict[calendar_id]
+=======
+            calendar = calendars_dict[calendar_id]
+            calendar_timezone = ZoneInfo(calendar.tz)
+>>>>>>> 9257529b266d2dff56035c12e2ae9b467a818e09
             work_hours_intervals = calendar._attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
+<<<<<<< 5216389b8c7ea6d85a7b27121f390e3beb8ffa7e
                 resources_per_tz,
+||||||| 589fb92d55af6abfc233a2336a798f0ddfa4abf4
+                cal_attendance_intervals_params_entry['resources'],
+                tz=UTC
+=======
+                cal_attendance_intervals_params_entry['resources'],
+                tz=calendar_timezone
+>>>>>>> 9257529b266d2dff56035c12e2ae9b467a818e09
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
                 leave_date_from = leave.date_from.replace(tzinfo=UTC)
@@ -114,12 +129,28 @@ class ResourceCalendarLeaves(models.Model):
                 for resource_id in cal_attendance_intervals_params_entry['resources'].ids or [False]:
                     work_hours_data = work_hours_intervals[resource_id]
 
+<<<<<<< 5216389b8c7ea6d85a7b27121f390e3beb8ffa7e
                     for date_from, date_to, _dummy in work_hours_data:
                         if date_to > leave_date_from and date_from < leave_date_to:
                             tmp_start = max(date_from, leave_date_from)
                             tmp_end = min(date_to, leave_date_to)
                             results[calendar_id][leave.id][resource_id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
                     results[calendar_id][leave.id][resource_id] = sorted(results[calendar_id][leave.id][resource_id].items())
+||||||| 589fb92d55af6abfc233a2336a798f0ddfa4abf4
+                for date_from, date_to, _dummy in work_hours_data:
+                    if date_to > leave_date_from and date_from < leave_date_to:
+                        tmp_start = max(date_from, leave_date_from)
+                        tmp_end = min(date_to, leave_date_to)
+                        results[calendar_id][leave.id][tmp_start.astimezone(ZoneInfo(calendar.tz)).date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
+=======
+                for date_from, date_to, _dummy in work_hours_data:
+                    if date_to > leave_date_from and date_from < leave_date_to:
+                        tmp_start = max(date_from, leave_date_from)
+                        tmp_end = min(date_to, leave_date_to)
+                        results[calendar_id][leave.id][tmp_start.astimezone(calendar_timezone).date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
+>>>>>>> 9257529b266d2dff56035c12e2ae9b467a818e09
         return results
 
     def _timesheet_create_lines(self):
