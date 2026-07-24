@@ -18,6 +18,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
     @classmethod
     def _create_product(cls, **create_vals):
+        create_vals.setdefault('invoice_policy', 'order')
         if create_vals.get('is_storable'):
             create_vals['categ_id'] = cls.stock_account_product_categ.id
         return super()._create_product(**create_vals)
