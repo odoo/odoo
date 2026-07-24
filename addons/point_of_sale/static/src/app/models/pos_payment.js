@@ -109,10 +109,6 @@ export class PosPayment extends Base {
         this.cashier_receipt = value;
     }
 
-    setReceiptInfo(value) {
-        this.ticket += value;
-    }
-
     isElectronic() {
         return Boolean(this.getPaymentStatus());
     }

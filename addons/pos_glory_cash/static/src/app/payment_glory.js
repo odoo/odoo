@@ -217,37 +217,9 @@ export class PaymentGlory extends PaymentInterface {
      * @param {{ status: string, cashGiven?: number, cashReturned?: number, transactionId?: string }} paymentResponse
      */
     setPaymentInfo(paymentResponse) {
-        const isSuccessful = paymentResponse.status === "SUCCESS";
-        const { transactionId, cashGiven, cashReturned } = paymentResponse;
+        const { transactionId, cashGiven } = paymentResponse;
         this.paymentLine.transaction_id = transactionId;
         this.paymentLine.setAmount(this.gloryAmountToPosAmount(cashGiven));
-        this.paymentLine.setReceiptInfo(
-            this.makeReceiptMessage(transactionId, cashGiven, cashReturned, isSuccessful)
-        );
-    }
-
-    /**
-     * @param {string} transactionId
-     * @param {number} amountDeposited
-     * @param {number} amountReturned
-     * @param {boolean} isSuccessful
-     * @returns {string}
-     */
-    makeReceiptMessage(transactionId, amountDeposited, amountReturned, isSuccessful) {
-        const header = isSuccessful
-            ? _t("GLORY TRANSACTION SUCCESSFUL")
-            : _t("GLORY TRANSACTION CANCELLED");
-        const transactionIdLine = _t("Transaction ID: %s", transactionId);
-        const depositedLine = _t(
-            "Cash deposited: %s",
-            this.env.utils.formatCurrency(this.gloryAmountToPosAmount(amountDeposited))
-        );
-        const changeGivenLine = _t(
-            "Change given: %s",
-            this.env.utils.formatCurrency(this.gloryAmountToPosAmount(amountReturned))
-        );
-
-        return `${header}\n${transactionIdLine}\n${depositedLine}\n${changeGivenLine}\n\n`;
     }
 
     gloryAmountToPosAmount(amountInCents) {

@@ -57,8 +57,6 @@ class SixDriver(CtypesTerminalDriver):
 
         # Transaction buffers
         transaction_id = create_ctypes_string_buffer()
-        merchant_receipt = create_ctypes_string_buffer()
-        customer_receipt = create_ctypes_string_buffer()
         card_number = create_ctypes_string_buffer()
         card_brand = create_ctypes_string_buffer()
         error_code = ctypes.c_int(0)
@@ -75,8 +73,8 @@ class SixDriver(CtypesTerminalDriver):
                 ctypes.c_int(transaction['amount']),  # int amount
                 transaction['currency'].encode(),  # char *currency_str
                 transaction_id,  # char *transaction_id
-                merchant_receipt,  # char *merchant_receipt
-                customer_receipt,  # char *customer_receipt
+                create_ctypes_string_buffer(),  # char *merchant_receipt
+                create_ctypes_string_buffer(),  # char *customer_receipt
                 card_number,  # char *card_number
                 card_brand,  # char *card_brand
                 ctypes.byref(error_code),  # int *error_code
@@ -87,8 +85,6 @@ class SixDriver(CtypesTerminalDriver):
                 _logger.info('Successfully finished transaction #%s', transaction)
                 self.send_status(
                     response='Approved',
-                    ticket=customer_receipt.value.decode(),
-                    ticket_merchant=merchant_receipt.value.decode(),
                     card=card_brand.value.decode(),
                     card_no=card_number.value.decode(),
                     transaction_id=transaction_id.value.decode(),
