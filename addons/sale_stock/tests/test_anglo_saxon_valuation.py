@@ -19,6 +19,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'name': 'product',
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
+            'invoice_policy': 'order',
         })
 
     def _inv_adj_two_units(self):
