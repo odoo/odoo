@@ -1,4 +1,5 @@
 import { Plugin } from "../plugin";
+import { isAndroid } from "@web/core/browser/feature_detection";
 
 export class InputPlugin extends Plugin {
     static id = "input";
@@ -7,6 +8,9 @@ export class InputPlugin extends Plugin {
         this.addDomListener(this.editable, "beforeinput", this.onBeforeInput);
         this.addDomListener(this.editable, "keydown", this.onKeyDown);
         this.addDomListener(this.editable, "input", this.onInput);
+        this.addDomListener(this.editable, "compositionend", this.onCompositionEnd);
+        this.addDomListener(this.editable, "input", this.onInputCapture, true);
+        this.addDomListener(this.editable, "beforeinput", this.onBeforeInputCapture, true);
     }
 
     onKeyDown(ev) {
@@ -42,12 +46,48 @@ export class InputPlugin extends Plugin {
             return;
         }
         this.dependencies.history.stageSelection();
+        // To avoid Gboard doing extra deleting when selecting a word suggestion,
+        // we create a history save point to revert the changes.
+        if (isAndroid() && ev.inputType === "deleteContentBackward") {
+            this.restoreDOM = this.dependencies.history.makeSavePoint();
+        }
+        // testing event beforeinput
+        if (
+            isAndroid() &&
+            ev.inputType === "insertText" &&
+            ev?.data.length > 1 &&
+            this?.restoreDOM
+        ) {
+            this?.restoreDOM();
+            this.restoreDOM = undefined;
+        }
         this.dispatchTo("beforeinput_handlers", ev);
         this.dependencies.selection.setCachedSelection(null);
     }
 
     onInput(ev) {
+        // testing event input
+        if (
+            isAndroid() &&
+            ev.inputType === "insertText" &&
+            ev?.data.length > 1 &&
+            this?.restoreDOM
+        ) {
+            this?.restoreDOM();
+            this.restoreDOM = undefined;
+        }
         this.dependencies.history.addStep();
         this.dispatchTo("input_handlers", ev);
+    }
+
+    // testing event
+    onCompositionEnd(ev) {
+        this.composition = false;
+    }
+    onBeforeInputCapture(ev) {
+        this.captureBeforeInput = true;
+    }
+    onInputCapture(ev) {
+        this.captureInput = true;
     }
 }
