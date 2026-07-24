@@ -28,6 +28,7 @@ Note:
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_report_jct_accumulation_form.xml',
         'data/account_report_jct_accumulation_schedule_1_3.xml',
         'data/account_report_jct_accumulation_schedule_2_3.xml',
