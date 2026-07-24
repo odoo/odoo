@@ -580,3 +580,36 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         for leave, expected_entries, expected_hours in validation_data:
             self.assertEqual(len(leave.timesheet_ids), expected_entries, f"{leave.name}: incorrect number of timesheet entries.")
             self.assertEqual(sum(leave.timesheet_ids.mapped('unit_amount')), expected_hours, f"{leave.name}: incorrect total timesheet hours.")
+
+    def test_holiday_with_calendar_timezone(self):
+        """
+        Tests that the timesheets for public holidays use the calendar's timezone
+        """
+        dubai_calendar = self.env['resource.calendar'].create({
+            'name': 'Dubai tz calendar',
+            'tz': 'Asia/Dubai',
+            'hours_per_day': 8.0,
+            'attendance_ids': [
+                (0, 0, {
+                    'name': str(day),
+                    'dayofweek': str(day),
+                    'hour_from': 8.0,
+                    'hour_to': 16.0,
+                    'day_period': 'morning',
+                }) for day in range(5)
+            ]
+        })
+
+        self.empl_employee.resource_calendar_id = dubai_calendar.id
+        self.env.user.tz = dubai_calendar.tz
+        christmas = self.env['resource.calendar.leaves'].create({
+            'name': 'Christmas',
+            'calendar_id': dubai_calendar.id,
+            'date_from': datetime(2026, 12, 24, 4, 0, 0),
+            'date_to': datetime(2026, 12, 24, 8, 0, 0),
+        })
+        timesheet = self.env['account.analytic.line'].search([
+            ('global_leave_id', '=', christmas.id),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+        self.assertEqual(timesheet.unit_amount, 4.0, "The amount of leaves should use the calendar's timezone and not blindly take UTC")
