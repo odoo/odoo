@@ -211,7 +211,8 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'invoice_edi_format': 'ubl_21_fr',
             'routing_identifier': '0225:968515759_96851575905808',
         })
-        cls.partner_b.write({
+        cls.belgian_partner = cls.partner_b
+        cls.belgian_partner.write({
             'name': 'SUPER BELGIAN PARTNER',
             'street': 'Rue du Paradis, 10',
             'zip': '6870',
