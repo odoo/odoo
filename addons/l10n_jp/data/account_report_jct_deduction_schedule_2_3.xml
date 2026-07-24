@@ -350,13 +350,13 @@
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_balance_a" model="account.report.expression">
                         <field name="label">balance_a</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">DED_S2_3_11.sub_balance_a_base_80 + DED_S2_3_11.sub_balance_a_tax_80 + DED_S2_3_11.sub_balance_a_base_50 + DED_S2_3_11.sub_balance_a_tax_50</field>
+                        <field name="formula">DED_S2_3_11.sub_balance_a_base_80 + DED_S2_3_11.sub_balance_a_tax_80 + DED_S2_3_11.sub_balance_a_base_70 + DED_S2_3_11.sub_balance_a_tax_70 + DED_S2_3_11.sub_balance_a_base_50 + DED_S2_3_11.sub_balance_a_tax_50 + DED_S2_3_11.sub_balance_a_base_30 + DED_S2_3_11.sub_balance_a_tax_30</field>
                         <field name="subformula">round(0, DOWN)</field>
                     </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_balance_b" model="account.report.expression">
                         <field name="label">balance_b</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">DED_S2_3_11.sub_balance_b_base_80 + DED_S2_3_11.sub_balance_b_tax_80 + DED_S2_3_11.sub_balance_b_base_50 + DED_S2_3_11.sub_balance_b_tax_50</field>
+                        <field name="formula">DED_S2_3_11.sub_balance_b_base_80 + DED_S2_3_11.sub_balance_b_tax_80 + DED_S2_3_11.sub_balance_b_base_70 + DED_S2_3_11.sub_balance_b_tax_70 + DED_S2_3_11.sub_balance_b_base_50 + DED_S2_3_11.sub_balance_b_tax_50 + DED_S2_3_11.sub_balance_b_base_30 + DED_S2_3_11.sub_balance_b_tax_30</field>
                         <field name="subformula">round(0, DOWN)</field>
                     </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_base_80" model="account.report.expression">
@@ -379,6 +379,26 @@
                         <field name="engine">tax_tags</field>
                         <field name="formula">S2_3_12B_80</field>
                     </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_base_70" model="account.report.expression">
+                        <field name="label">sub_balance_a_base_70</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11A_70</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_tax_70" model="account.report.expression">
+                        <field name="label">sub_balance_a_tax_70</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12A_70</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_b_base_70" model="account.report.expression">
+                        <field name="label">sub_balance_b_base_70</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11B_70</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_b_tax_70" model="account.report.expression">
+                        <field name="label">sub_balance_b_tax_70</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12B_70</field>
+                    </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_base_50" model="account.report.expression">
                         <field name="label">sub_balance_a_base_50</field>
                         <field name="engine">tax_tags</field>
@@ -399,6 +419,26 @@
                         <field name="engine">tax_tags</field>
                         <field name="formula">S2_3_12B_50</field>
                     </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_base_30" model="account.report.expression">
+                        <field name="label">sub_balance_a_base_30</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11A_30</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_a_tax_30" model="account.report.expression">
+                        <field name="label">sub_balance_a_tax_30</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12A_30</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_b_base_30" model="account.report.expression">
+                        <field name="label">sub_balance_b_base_30</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_11B_30</field>
+                    </record>
+                    <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_sub_balance_b_tax_30" model="account.report.expression">
+                        <field name="label">sub_balance_b_tax_30</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">S2_3_12B_30</field>
+                    </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_11_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">aggregation</field>
@@ -416,13 +456,13 @@
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_12_balance_a" model="account.report.expression">
                         <field name="label">balance_a</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">(DED_S2_3_11.sub_balance_a_base_80 + DED_S2_3_11.sub_balance_a_tax_80) * 6.24 / 108 * 0.8 + (DED_S2_3_11.sub_balance_a_base_50 + DED_S2_3_11.sub_balance_a_tax_50) * 6.24 / 108 * 0.5</field>
+                        <field name="formula">(DED_S2_3_11.sub_balance_a_base_80 + DED_S2_3_11.sub_balance_a_tax_80) * 6.24 / 108 * 0.8 + (DED_S2_3_11.sub_balance_a_base_70 + DED_S2_3_11.sub_balance_a_tax_70) * 6.24 / 108 * 0.7 + (DED_S2_3_11.sub_balance_a_base_50 + DED_S2_3_11.sub_balance_a_tax_50) * 6.24 / 108 * 0.5 + (DED_S2_3_11.sub_balance_a_base_30 + DED_S2_3_11.sub_balance_a_tax_30) * 6.24 / 108 * 0.3</field>
                         <field name="subformula">round(0, DOWN)</field>
                     </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_12_balance_b" model="account.report.expression">
                         <field name="label">balance_b</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">(DED_S2_3_11.sub_balance_b_base_80 + DED_S2_3_11.sub_balance_b_tax_80) * 7.8 / 110 * 0.8 + (DED_S2_3_11.sub_balance_b_base_50 + DED_S2_3_11.sub_balance_b_tax_50) * 7.8 / 110 * 0.5</field>
+                        <field name="formula">(DED_S2_3_11.sub_balance_b_base_80 + DED_S2_3_11.sub_balance_b_tax_80) * 7.8 / 110 * 0.8 + (DED_S2_3_11.sub_balance_b_base_70 + DED_S2_3_11.sub_balance_b_tax_70) * 7.8 / 110 * 0.7 + (DED_S2_3_11.sub_balance_b_base_50 + DED_S2_3_11.sub_balance_b_tax_50) * 7.8 / 110 * 0.5 + (DED_S2_3_11.sub_balance_b_base_30 + DED_S2_3_11.sub_balance_b_tax_30) * 7.8 / 110 * 0.3</field>
                         <field name="subformula">round(0, DOWN)</field>
                     </record>
                     <record id="l10n_jp_schedule_2_3_deduction_ded_s2_3_12_balance_c" model="account.report.expression">
