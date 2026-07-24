@@ -11,9 +11,9 @@ class ReportStockQuantity(models.Model):
 
     _depends = {
         'product.product': ['product_tmpl_id'],
-        'product.template': ['type'],
+        'product.template': ['type', 'uom_id'],
         'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state', 'product_uom'],
         'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
         'stock.warehouse': ['view_location_id'],
     }
@@ -53,7 +53,7 @@ WITH
         LEFT JOIN stock_warehouse w ON sl.parent_path::text like concat('%%/', w.view_location_id, '/%%')
     ),
     existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
+        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity * (pu.factor / mu.factor), m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
@@ -62,6 +62,8 @@ WITH
         END
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+        LEFT JOIN uom_uom mu ON mu.id = m.product_uom
+        LEFT JOIN uom_uom pu ON pu.id = pt.uom_id
         WHERE pt.is_storable = true AND
             (source.w_id IS NOT NULL OR dest.w_id IS NOT NULL) AND
             (source.w_id IS NULL OR dest.w_id IS NULL OR source.w_id <> dest.w_id) AND
