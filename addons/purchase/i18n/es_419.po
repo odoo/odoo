@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-07-17 20:46+0000\n"
+"PO-Revision-Date: 2026-07-22 02:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-4/purchase/es_419/>\n"
@@ -173,8 +173,8 @@ msgstr ""
 "        </t>\n"
 "        que está programada para el \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">sin definir</span>.\n"
@@ -249,12 +249,11 @@ msgstr ""
 "        Adjuntamos la orden de compra <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con la referencia: <t t-out=\"object.partner_ref or "
-"''\">REF_XXX</t>\n"
+"            con la referencia: <t t-out=\"object.partner_ref or ''\">"
+"REF_XXX</t>\n"
 "        </t>\n"
-"        por <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$10.00</"
-"span>\n"
+"        por <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$10.00</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -316,11 +315,11 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Adjuntamos la solicitud de cotización <span style=\"font-weight:bold;"
-"\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Adjuntamos la solicitud de cotización <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
 "        </t>\n"
 "        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>.\n"
 "        <br/><br/>\n"
@@ -421,8 +420,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Solicitud de cotización</span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Solicitud de cotización</span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Orden de compra</span>"
 
@@ -474,8 +473,7 @@ msgstr "<span>Impuestos</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
-"<span>Advertencia: Es posible que esta orden sea un duplicado de</span>"
+msgstr "<span>Advertencia: Es posible que esta orden sea un duplicado de</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1094,8 +1092,8 @@ msgstr "Orden de compra cancelada #"
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
 msgstr ""
-"No es posible eliminar una línea de una orden de compra que está en "
-"estado“%s”."
+"No es posible eliminar una línea de una orden de compra que está en estado“%s"
+"”."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1404,7 +1402,7 @@ msgstr "Mostrar campo de autocompletado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
 msgid "Display Matching Tag"
-msgstr ""
+msgstr "Mostrar etiqueta correspondiente"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
@@ -1936,19 +1934,19 @@ msgstr "Conciliar"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Matched"
-msgstr ""
+msgstr "Conciliada"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
 msgid "Matched Invoices Count"
-msgstr ""
+msgstr "Número de facturas conciliadas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Matching"
-msgstr ""
+msgstr "Conciliando"
 
 #. module: purchase
 #. odoo-python
@@ -2003,8 +2001,7 @@ msgstr "Importe mínimo que necesita doble validación"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
-"Faltan campos obligatorios en una línea de la orden de compra contable."
+msgstr "Faltan campos obligatorios en una línea de la orden de compra contable."
 
 #. module: purchase
 #. odoo-javascript
@@ -2430,8 +2427,7 @@ msgstr "URL de acceso al portal"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr ""
-"Envíese el correo electrónico con el recordatorio para previsualizarlo."
+msgstr "Envíese el correo electrónico con el recordatorio para previsualizarlo."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
@@ -3754,12 +3750,12 @@ msgstr "Desbloquear"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_unmatch_lines
 msgid "Unmatch"
-msgstr ""
+msgstr "Desvincular"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Unmatched"
-msgstr ""
+msgstr "Sin coincidencia"
 
 #. module: purchase
 #. odoo-python
@@ -4057,9 +4053,8 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
-"Tu solicitud de cotización incluye productos de la empresa %"
-"(product_company)s, pero la solicitud cotización pertenece a la empresa %"
-"(quote_company)s. \n"
+"Tu solicitud de cotización incluye productos de la empresa %(product_company)"
+"s, pero la solicitud cotización pertenece a la empresa %(quote_company)s. \n"
 "Cambia la empresa de tu solicitud de cotización o elimina los productos que "
 "pertenecen a otras empresas (%(bad_products)s)."
 

@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-07-07 03:13+0000\n"
+"PO-Revision-Date: 2026-07-21 15:29+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/mail/"
 "ja/>\n"
@@ -74,8 +74,8 @@ msgstr ""
 "                スパムや返信のループからお客様を守るため、Odooは自動的に\n"
 "                ゲートウェイに来るしきい値 <b>%(threshold)i</b>Eメールを超え"
 "るEメール(<b>%(minutes)i</b>分毎)をブロック\n"
-"                します。非常に頻繁に更新を受取る必要があるアドレスについて"
-"は、\n"
+"                します。非常に頻繁に更新を受取る必要があるアドレスについては"
+"、\n"
 "                以下に追加することで、Odooはそれらを通過させます。\n"
 "            </p>"
 
@@ -365,8 +365,7 @@ msgstr "%(user)s さんが初めて接続しました。応援のメッセージ
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
-"%(user)s がスレッドを開始しました: %(goto)s%(thread_name)s%(goto_end)s."
+msgstr "%(user)s がスレッドを開始しました: %(goto)s%(thread_name)s%(goto_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -387,8 +386,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
-"%(user_name)sがあなたを%(strong_start)s%(channel_name)s%(strong_end)sチャンネ"
-"ルに招待しています。"
+"%(user_name)sがあなたを%(strong_start)s%(channel_name)s%(strong_end)s"
+"チャンネルに招待しています。"
 
 #. module: mail
 #. odoo-python
@@ -755,9 +754,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p>直接メッセージを使用してリアルタイムで<b>同僚とチャット</b>します。</"
-"p><p><i>最初に設定アプリからユーザーを招待する必要があるかもしれません。</"
-"i></p>"
+"<p>直接メッセージを使用してリアルタイムで<b>同僚とチャット</b>します。</p><p>"
+"<i>最初に設定アプリからユーザーを招待する必要があるかもしれません。</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -777,8 +775,8 @@ msgid ""
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>チャネルは、異なるトピックやグループにわたる情報の整理を容易にします。</"
-"p> <p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、マーケ"
-"ティング、プロダクトXYZ、ワーキングパーティーなど)</p>"
+"p> <p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、"
+"マーケティング、プロダクトXYZ、ワーキングパーティーなど)</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -901,10 +899,10 @@ msgstr ""
 "                                    </span>\n"
 "                                    <span invisible=\"mail_post_method != "
 "'comment'\">\n"
-"                                        このメッセージはレコード上のメッセー"
-"ジとして投稿され、\n"
-"                                        全フォロワーに通知されます。メッセー"
-"ジ履歴に表示されます。\n"
+"                                        このメッセージはレコード上の"
+"メッセージとして投稿され、\n"
+"                                        全フォロワーに通知されます。"
+"メッセージ履歴に表示されます。\n"
 "                                    </span>"
 
 #. module: mail
@@ -1018,8 +1016,8 @@ msgid ""
 "A chat should not be created with more than 2 persons. Create a group "
 "instead."
 msgstr ""
-"チャットは2人以上で作成することはできません。代わりにグループを作成して下さ"
-"い。"
+"チャットは2人以上で作成することはできません。代わりにグループを作成して下さい"
+"。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_presence_partner_or_guest_exists
@@ -1037,14 +1035,12 @@ msgstr "メッセージは、単一コメントモードのみでスケジュー
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
-msgstr ""
-"メールスレッドを持たないモデルでは、メッセージをスケジュールできません。"
+msgstr "メールスレッドを持たないモデルでは、メッセージをスケジュールできません。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr ""
-"メッセージリアクションはパートナーまたはゲストからである必要があります。"
+msgstr "メッセージリアクションはパートナーまたはゲストからである必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -1217,8 +1213,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、ドキュ"
-"メントのアップロード時に完了として自動的にマークを付けたりする場合があります"
+"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、"
+"ドキュメントのアップロード時に完了として自動的にマークを付けたりする場合があ"
+"ります"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -1423,8 +1420,8 @@ msgid ""
 msgstr ""
 "活動プランは、数回クリックするだけで、活動のリストを割当てるために使用されま"
 "す。\n"
-" (例 \"オンボーディング\"、 \"見込客フォローアップ\"、\"プロジェクトマイルス"
-"トンミーティング\" ...)"
+" (例 \"オンボーディング\"、 \"見込客"
+"フォローアップ\"、\"プロジェクトマイルストンミーティング\" ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1604,8 +1601,7 @@ msgstr ""
 msgid ""
 "Adding more members to this chat isn't possible; it's designed for just two "
 "people."
-msgstr ""
-"このチャットにメンバを追加することはできません。2人用に設計されています。"
+msgstr "このチャットにメンバを追加することはできません。2人用に設計されています。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_cc_ids
@@ -1876,8 +1872,7 @@ msgstr "複数のオプションを許可"
 msgid ""
 "An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
 " %s"
-msgstr ""
-"SSL例外が発生しました。サーバポートでSSL/TLS設定を確認してください。 %s"
+msgstr "SSL例外が発生しました。サーバポートでSSL/TLS設定を確認してください。 %s"
 
 #. module: mail
 #. odoo-python
@@ -2897,8 +2892,8 @@ msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
 msgstr ""
-"%(channels)s を作成できません : 初期メッセージは親チャンネルまたはそのサブ"
-"チャンネルのいずれかに属している必要があります。"
+"%(channels)s を作成できません : 初期メッセージは親チャンネルまたはその"
+"サブチャンネルのいずれかに属している必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -2952,8 +2947,7 @@ msgstr "投票が終了した投票には投票できません: \"%s\""
 #. odoo-python
 #: code:addons/mail/models/mail_poll_vote.py:0
 msgid "Cannot vote on poll \"%(polls)s\": only one vote is allowed per user."
-msgstr ""
-"投票 \"%(polls)s\" には投票できません：ユーザごとに1票のみ投票可能です。"
+msgstr "投票 \"%(polls)s\" には投票できません：ユーザごとに1票のみ投票可能です。"
 
 #. module: mail
 #. odoo-python
@@ -3000,8 +2994,8 @@ msgid ""
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
 "キャッチオールエイリアス %(catchall)sは同じ名前で別のドメインに既に使用されて"
-"います。他のキャッチオールを使用するか他のエイリアスドメインを使用して下さ"
-"い。"
+"います。他のキャッチオールを使用するか他のエイリアスドメインを使用して下さい"
+"。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -3228,8 +3222,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"チャットは2人だけのプライベートなものです。グループは招待された人だけのプライ"
-"ベートなものです。チャネルは (設定により)自由に参加できます。"
+"チャットは2人だけのプライベートなものです。グループは招待された人だけの"
+"プライベートなものです。チャネルは (設定により)自由に参加できます。"
 
 #. module: mail
 #. odoo-javascript
@@ -3392,8 +3386,8 @@ msgstr "特定のメールアドレスで回答を集める"
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Come here often? Install the app for quick and easy access!"
 msgstr ""
-"こちらを頻繁に利用される場合は、アプリをインストールして、素早く簡単にアクセ"
-"スしましょう!"
+"こちらを頻繁に利用される場合は、アプリをインストールして、素早く簡単に"
+"アクセスしましょう!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3644,8 +3638,8 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
-"このチャンネルで最後に起こった興味のあるイベントの日時を含みます。新しいメッ"
-"セージが投稿されると更新されます。"
+"このチャンネルで最後に起こった興味のあるイベントの日時を含みます。新しい"
+"メッセージが投稿されると更新されます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
@@ -4230,9 +4224,9 @@ msgid ""
 "local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
-"送信サーバフィルタに一致しない場合のデフォルト。'notifications' のようなロー"
-"カルパートか、'notifications@example.com'のような完全なメールアドレスを指定"
-"し、すべての送信メールを上書きすることができます。"
+"送信サーバフィルタに一致しない場合のデフォルト。'notifications' のような"
+"ローカルパートか、'notifications@example.com'のような完全なメールアドレスを指"
+"定し、すべての送信メールを上書きすることができます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -4359,8 +4353,8 @@ msgstr "配送失敗"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
 msgstr ""
-"'default_res_id'の使用はお勧めしません。'default_res_ids'を使う必要がありま"
-"す。"
+"'default_res_id'の使用はお勧めしません。'default_res_ids'を使う必要があります"
+"。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4602,8 +4596,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
-"関連するドキュメントにオプションを表示し、このテンプレートを使用してコンポジ"
-"ションウィザードを開きます。"
+"関連するドキュメントにオプションを表示し、このテンプレートを使用して"
+"コンポジションウィザードを開きます。"
 
 #. module: mail
 #. odoo-javascript
@@ -4663,8 +4657,8 @@ msgid ""
 "\n"
 "This action cannot be reverted."
 msgstr ""
-"\"%(member_name)s\" をオーナーに設定しますか？これにより、そのメンバーはチャ"
-"ネルとその設定を完全に管理できるようになります。\n"
+"\"%(member_name)s\" をオーナーに設定しますか？これにより、そのメンバーは"
+"チャネルとその設定を完全に管理できるようになります。\n"
 "\n"
 "この操作は元に戻せません。"
 
@@ -5041,8 +5035,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr ""
-"ブラックリストに登録されたメールアドレスには、今後メールが届かなくなります。"
+msgstr "ブラックリストに登録されたメールアドレスには、今後メールが届かなくなります。"
 
 #. module: mail
 #. odoo-python
@@ -5311,8 +5304,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
-"エラー、パートナーは同じオブジェクトを二回フォローすることはできません。"
+msgstr "エラー、パートナーは同じオブジェクトを二回フォローすることはできません。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -5451,8 +5443,8 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
-"失敗理由。 これは通常、メールの問題のデバッグを容易にするために格納されたメー"
-"ルサーバーによってスローされる例外です。"
+"失敗理由。 これは通常、メールの問題のデバッグを容易にするために格納された"
+"メールサーバーによってスローされる例外です。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
@@ -5503,8 +5495,7 @@ msgstr "フィールド\"メール活動\"を\"False\"に変更することは�
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr ""
-"フィールド\"メールブラックリスト\"を\"False\"に変更することはできません。"
+msgstr "フィールド\"メールブラックリスト\"を\"False\"に変更することはできません。"
 
 #. module: mail
 #. odoo-python
@@ -5691,8 +5682,9 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
 msgstr ""
-"%(channels)s用には、 グループを元にした認証または、グループ自動サブスクリプ"
-"ションを持つために、channel_type は'チャネル'である必要があります。"
+"%(channels)s用には、 グループを元にした認証または、グループ自動"
+"サブスクリプションを持つために、channel_type は'チャネル'である必要があります"
+"。"
 
 #. module: mail
 #. odoo-javascript
@@ -5741,16 +5733,16 @@ msgstr ""
 "ユーザ名を値として設定し、`record.id`はアクションが実行されるレコードのIDを設"
 "定します。\n"
 "\n"
-"静的な値の場合、値は評価されずに直接使用されます。例えば、`42`や`自分のカスタ"
-"ム名`、選択されたレコードの値などです。"
+"静的な値の場合、値は評価されずに直接使用されます。例えば、`42`や`自分の"
+"カスタム名`、選択されたレコードの値などです。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "For performance reasons, use \"=\" operators on rotting fields."
 msgstr ""
-"パフォーマンス上の理由から、関連フィールドには \"=\" 演算子を使用してくださ"
-"い。"
+"パフォーマンス上の理由から、関連フィールドには \"=\" 演算子を使用してください"
+"。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_layout_force_footer
@@ -6204,8 +6196,7 @@ msgstr "フォロワーオプションのサブタイプを非表示にする"
 #: model:ir.model.fields,help:mail.field_mail_message__is_internal
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
-msgstr ""
-"サブタイプの構成とは関係なく、パブリック/ポータルユーザーに非表示にします。"
+msgstr "サブタイプの構成とは関係なく、パブリック/ポータルユーザーに非表示にします。"
 
 #. module: mail
 #. odoo-javascript
@@ -6547,16 +6538,15 @@ msgid ""
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
 "TRUEの場合、回答は元の文書のディスカッションスレッドには送られません。代わり"
-"に、追跡メッセージIDのreply_toをチェックし、それに従ってリダイレクトされま"
-"す。これは生成されるmessage-idに影響を与えます。"
+"に、追跡メッセージIDのreply_toをチェックし、それに従ってリダイレクトされます"
+"。これは生成されるmessage-idに影響を与えます。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr ""
-"見覚えがない場合は、以下のリンクからすぐにパスワードを変更してください:<br/>"
+msgstr "見覚えがない場合は、以下のリンクからすぐにパスワードを変更してください:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -6564,8 +6554,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Odooサーバーにリダイレクトされるキャッチオール電子メールドメインをセットアッ"
-"プした場合は、ここにドメイン名を入力します。"
+"Odooサーバーにリダイレクトされるキャッチオール電子メールドメインを"
+"セットアップした場合は、ここにドメイン名を入力します。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
@@ -6607,8 +6597,8 @@ msgid ""
 "Illustration showing a lady pushing a giant toggle button representing "
 "microphone and camera permissions"
 msgstr ""
-"女性がマイクとカメラの権限を表す巨大なトグルボタンを押している様子を描いたイ"
-"ラスト"
+"女性がマイクとカメラの権限を表す巨大なトグルボタンを押している様子を描いた"
+"イラスト"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -6898,8 +6888,8 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
-"テンプレートまたはビューのソース %(svalue)s (タイプ %(stype)s)が無効です。レ"
-"コードまたはXML IDである必要があります。"
+"テンプレートまたはビューのソース %(svalue)s (タイプ %(stype)s)が無効です。"
+"レコードまたはXML IDである必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -6914,24 +6904,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
-msgstr ""
-"無効なテンプレートまたはビューのソース  %(svalue)s は %(model)s 代わりに"
+msgstr "無効なテンプレートまたはビューのソース  %(svalue)s は %(model)s 代わりに"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
-msgstr ""
-"無効なテンプレートまたはビューのソース %(svalue)s、は%(model)s 代わりに"
+msgstr "無効なテンプレートまたはビューのソース %(svalue)s、は%(model)s 代わりに"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
-msgstr ""
-"会員のいるチャネルを作成するのに無効な値です。4または6のみ許可されています。"
+msgstr "会員のいるチャネルを作成するのに無効な値です。4または6のみ許可されています。"
 
 #. module: mail
 #. odoo-python
@@ -6939,8 +6926,8 @@ msgstr ""
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
 msgstr ""
-"メンバーシップのあるチャネルを作成するのに無効な値です。0のみ許可されていま"
-"す。"
+"メンバーシップのあるチャネルを作成するのに無効な値です。0のみ許可されています"
+"。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invitation_url
@@ -7172,8 +7159,8 @@ msgid ""
 msgstr ""
 "これは、通知で使用されるブラウザーのキーを参照しています: \n"
 "- p256dh: ブラウザが生成したサブスクリプション公開キー。ブラウザは\n"
-"          プライベートキーシークレットを保持し、ペイロードの解読に使用しま"
-"す。\n"
+"          プライベートキーシークレットを保持し、ペイロードの解読に使用します"
+"。\n"
 "- auth: 認証値はシークレットとして扱われ、Odooの外部で共有してはいけません。"
 
 #. module: mail
@@ -7632,8 +7619,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
-"返信先に使用され、回答を受取るためのメールのローカルパート"
-"例：'catchall@example.com'の'catchall'"
+"返信先に使用され、回答を受取るためのメールのローカルパート例"
+"：'catchall@example.com'の'catchall'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -7860,8 +7847,7 @@ msgstr "既存のmail.messageを知らせるメールが作成されました"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Mail template model of $(action_name)s does not match action model."
-msgstr ""
-"$(action_name)s のメールテンプレートモデルがアクションモデルと一致しません。"
+msgstr "$(action_name)s のメールテンプレートモデルがアクションモデルと一致しません。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
@@ -7936,8 +7922,7 @@ msgstr ""
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
-msgstr ""
-"同じスレッドに返信するのではなく、新しい受信メールとして回答を管理します。"
+msgstr "同じスレッドに返信するのではなく、新しい受信メールとして回答を管理します。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -8026,8 +8011,8 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Media devices unobtainable. SSL might not be set up properly."
 msgstr ""
-"メディアデバイスが入手できません。SSLが正しく設定されていない可能性がありま"
-"す。"
+"メディアデバイスが入手できません。SSLが正しく設定されていない可能性があります"
+"。"
 
 #. module: mail
 #. odoo-javascript
@@ -8075,8 +8060,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"グループのメンバーはフォロワーとして自動で追加されます。必要があればマニュア"
-"ルで購読を管理できます。"
+"グループのメンバーはフォロワーとして自動で追加されます。必要があれば"
+"マニュアルで購読を管理できます。"
 
 #. module: mail
 #. odoo-javascript
@@ -8460,8 +8445,8 @@ msgstr "サーバアクションが実行されるモデル"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
-"サブタイプが適用されるモデルです。そうでない場合、このサブタイプはすべてのモ"
-"デルに適用されます。"
+"サブタイプが適用されるモデルです。そうでない場合、このサブタイプはすべての"
+"モデルに適用されます。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -9065,8 +9050,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"通知は、添付ファイルをIDのリストとして受け取る必要があります(受信した%"
-"(aids)s)"
+"通知は、添付ファイルをIDのリストとして受け取る必要があります(受信した%(aids)"
+"s)"
 
 #. module: mail
 #. odoo-python
@@ -9574,8 +9559,8 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"送信メールの優先サーバ。これを設定しないと、最も優先度が高いものが使われま"
-"す。"
+"送信メールの優先サーバ。これを設定しないと、最も優先度が高いものが使われます"
+"。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__lang
@@ -9615,8 +9600,8 @@ msgid ""
 msgstr ""
 "オリジナルの議論： 回答は元のドキュメントのディスカッションスレッドに送られま"
 "す。 \n"
-"他のメールアドレス:回答は、元のドキュメントのディスカッションスレッドではな"
-"く、トラッキングメッセージIDに記載されているメールアドレスに送信されます。\n"
+"他のメールアドレス:回答は、元のドキュメントのディスカッションスレッドではなく"
+"、トラッキングメッセージIDに記載されているメールアドレスに送信されます。\n"
 "これは生成されるmessage-idに影響を与えます。"
 
 #. module: mail
@@ -10237,8 +10222,8 @@ msgstr ""
 "メールゲートウェイを使用したメッセージドキュメント投稿のポリシー\n"
 "- 全員: 誰でも投稿可能\n"
 "- 取引先: 認証済みの取引先のみ\n"
-"- フォロワー: 関連ドキュメントのフォロワーか、フォローしているチャネルのメン"
-"バーのみ\n"
+"- フォロワー: 関連ドキュメントのフォロワーか、フォローしているチャネルの"
+"メンバーのみ\n"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_poll
@@ -10312,8 +10297,8 @@ msgstr "ポータルアクセス失効"
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Portal users can only filter threads by themselves as followers."
 msgstr ""
-"ポータルユーザは、フォロワーとしてスレッドをフィルタリングするしかできませ"
-"ん。"
+"ポータルユーザは、フォロワーとしてスレッドをフィルタリングするしかできません"
+"。"
 
 #. module: mail
 #. odoo-javascript
@@ -10939,16 +10924,14 @@ msgstr "レンダリングモデル"
 #: code:addons/mail/models/mail_composer_mixin.py:0
 msgid ""
 "Rendering of %(field_name)s is not possible as no counterpart on template."
-msgstr ""
-"テンプレートに相手がないため %(field_name)sのレンダリングは不可能です。"
+msgstr "テンプレートに相手がないため %(field_name)sのレンダリングは不可能です。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Rendering of %(field_name)s is not possible as not defined on template."
-msgstr ""
-"テンプレートで定義されていないため %(field_name)sのレンダリングは不可能です。"
+msgstr "テンプレートで定義されていないため %(field_name)sのレンダリングは不可能です。"
 
 #. module: mail
 #. odoo-javascript
@@ -10997,8 +10980,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"返信メールアドレス。 reply_toを設定すると、自動スレッド作成がバイパスされま"
-"す。"
+"返信メールアドレス。 reply_toを設定すると、自動スレッド作成がバイパスされます"
+"。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__reply_all
@@ -11828,8 +11811,8 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
-"送信者アドレス(プレースホルダはここで使用します)。設定されない場合、デフォル"
-"ト値は作成者の電子メールエイリアスまたはメールアドレスになります。"
+"送信者アドレス(プレースホルダはここで使用します)。設定されない場合、"
+"デフォルト値は作成者の電子メールエイリアスまたはメールアドレスになります。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -12197,8 +12180,8 @@ msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
-"活動がモデルに固有であり、他のモデルの活動を管理するときに使用できない場合"
-"は、モデルを指定します。"
+"活動がモデルに固有であり、他のモデルの活動を管理するときに使用できない場合は"
+"、モデルを指定します。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__crud_model_id
@@ -12566,8 +12549,7 @@ msgstr ""
 msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
-msgstr ""
-"UX関連の動作をサポートするために編集の開始時にモデルを追跡するための技術分野"
+msgstr "UX関連の動作をサポートするために編集の開始時にモデルを追跡するための技術分野"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__technical_usage
@@ -12844,8 +12826,8 @@ msgid ""
 "contact us at %(default_email)s instead."
 msgstr ""
 "以下のメッセージはアドレス%(alias_display_name)s受信されませんでした.\n"
-"                  %(contact_description)sのみがそれに連絡できます。<br /"
-"><br />\n"
+"                  %(contact_description)sのみがそれに連絡できます。<br />"
+"<br />\n"
 "                 正しいアドレスを使用しているか再度確認するか、代わりに当社%"
 "(default_email)s 宛にご連絡下さい。"
 
@@ -12867,8 +12849,8 @@ msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
 msgstr ""
-"%(model)s(%(id)s) に送信予定だった、以下の内容のメールを送信できませんでした:"
-"%(original_message)s"
+"%(model)s(%(id)s) に送信予定だった、以下の内容のメールを送信できませんでし"
+"た:%(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -12883,8 +12865,8 @@ msgid ""
 "new record of this model (e.g. a Project Task)"
 msgstr ""
 "このエイリアスに対応した(Odooドキュメント種別)モデル。既存のレコードに返信し"
-"ない任意の受信メールは、このモデルの新しいレコード(例えば、プロジェクトタス"
-"ク)の作成を引き起こします"
+"ない任意の受信メールは、このモデルの新しいレコード(例えば、"
+"プロジェクトタスク)の作成を引き起こします"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -13232,8 +13214,7 @@ msgstr ""
 msgid ""
 "This setting will only be applied to channels. Mentions only if not "
 "specified."
-msgstr ""
-"この設定はチャネルにのみ適用されます。指定がない場合は、メンションのみ。"
+msgstr "この設定はチャネルにのみ適用されます。指定がない場合は、メンションのみ。"
 
 #. module: mail
 #. odoo-javascript
@@ -13672,8 +13653,9 @@ msgstr ""
 "- レコードの更新: レコードの値を更新します。\n"
 "- 活動の作成: 活動を作成します(ディスカス)\n"
 "- メール送信: メッセージやメモを投稿したり、メールを送信したりします。\n"
-"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - 'フォロ"
-"ワーの追加/削除': レコードにフォロワーを追加または削除します(ディスカス)\n"
+"- 'SMSの送信': SMSを送信し、ドキュメント(SMS)にそれらを記録します - "
+"'フォロワーの追加/削除': レコードにフォロワーを追加または削除します"
+"(ディスカス)\n"
 "- レコードの作成': 新しい値で新しいレコードを作成します\n"
 "- コードの実行': 実行されるPythonコードのブロックします\n"
 "- 'Webhook通知の送信': Webhookとしても知られるPOSTリクエストを外部システムに"
@@ -14010,8 +13992,9 @@ msgid ""
 "Use 'Specific User' to always assign the same user on the next activity. Use "
 "'Dynamic User' to specify the field name of the user to choose on the record."
 msgstr ""
-"'特定のユーザ'を使用して、次の活動で常に同じユーザを割当てます。 'ダイナミッ"
-"クユーザ'を使用して、レコードで選択するユーザのフィールド名を指定します。"
+"'特定のユーザ'を使用して、次の活動で常に同じユーザを割当てます。 "
+"'ダイナミックユーザ'を使用して、レコードで選択するユーザのフィールド名を指定"
+"します。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_call_server
@@ -14075,8 +14058,7 @@ msgstr "Gmailサーバを使用"
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 msgid "Use a local script to fetch your emails and create new records."
-msgstr ""
-"ローカルスクリプトを使用してメールを取得し、新しいレコードを作成します。"
+msgstr "ローカルスクリプトを使用してメールを取得し、新しいレコードを作成します。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -14176,8 +14158,8 @@ msgstr ""
 "す\n"
 "email_outgoing': メーリングによって生成されたもの\n"
 "notification」: トラッキングメッセージなど、システムによって生成されます。\n"
-"auto_comment': 自動通知メカニズム（acknowledgementなど）によって生成されま"
-"す。\n"
+"auto_comment': 自動通知メカニズム（acknowledgementなど）によって生成されます"
+"。\n"
 "user_notification': 特定の受信者のために生成されます。"
 
 #. module: mail
@@ -14367,8 +14349,8 @@ msgid ""
 "email server (@mycompany.odoo.com)."
 msgstr ""
 "コミュニティ版と企業版で電子メールを送受信するには、独自の電子メールサーバー"
-"を使用する必要があります。オンラインユーザーは、すぐに使用できる電子メール"
-"サーバー(@ mycompany.odoo.com)の恩恵を受けています。"
+"を使用する必要があります。オンラインユーザーは、すぐに使用できる電子"
+"メールサーバー(@ mycompany.odoo.com)の恩恵を受けています。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
@@ -14640,8 +14622,8 @@ msgid ""
 "target document belongs to company %(company_name)s."
 msgstr ""
 "エイリアス %(alias_name)s を作成できませんでした。なぜなら、ドメイン %"
-"(alias_domain_name)sは会社 %(alias_company_names)sに属し、ターゲットドキュメ"
-"ントは会社 %(company_name)sに属しているからです。"
+"(alias_domain_name)sは会社 %(alias_company_names)sに属し、"
+"ターゲットドキュメントは会社 %(company_name)sに属しているからです。"
 
 #. module: mail
 #. odoo-python
@@ -14889,8 +14871,7 @@ msgstr "もう\"%(thread_name)s\"をフォローしていません。"
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "You are not allowed to change the target record of a scheduled message."
-msgstr ""
-"スケジュールされたメッセージの送信先レコードを変更することはできません。"
+msgstr "スケジュールされたメッセージの送信先レコードを変更することはできません。"
 
 #. module: mail
 #. odoo-python
@@ -14981,8 +14962,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_type.py:0
 msgid "You cannot delete %(activity_names)s as it is required in various apps."
-msgstr ""
-"%(activity_names)s は複数のアプリで必要とされているため、削除できません。"
+msgstr "%(activity_names)s は複数のアプリで必要とされているため、削除できません。"
 
 #. module: mail
 #. odoo-python
@@ -15007,8 +14987,7 @@ msgstr ""
 msgid ""
 "You cannot modify %(activities_names)s target model as they are are required "
 "in various apps."
-msgstr ""
-"%(activities_names)s は複数のアプリで必要とされているため、削除できません。"
+msgstr "%(activities_names)s は複数のアプリで必要とされているため、削除できません。"
 
 #. module: mail
 #. odoo-python
@@ -15431,8 +15410,7 @@ msgstr "例: ウェルカムメール"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
-msgstr ""
-"例:  \"MyCompanyへようこそ\" または \"こんにちは、 {{ object.name }}様\""
+msgstr "例:  \"MyCompanyへようこそ\" または \"こんにちは、 {{ object.name }}様\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -15790,8 +15768,8 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
-"ドキュメントの更新を受け入れないモデル%sに返信し、ドキュメントの作成にフォー"
-"ルバックします"
+"ドキュメントの更新を受け入れないモデル%sに返信し、ドキュメントの作成に"
+"フォールバックします"
 
 #. module: mail
 #. odoo-python

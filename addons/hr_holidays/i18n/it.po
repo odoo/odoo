@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-12 16:44+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-21 06:29+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_holidays/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -329,8 +329,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Ciao <b><t t-out=\"object.env.context.get('manager')\"/"
-"></b> ,\n"
+"                    Ciao <b><t t-out=\"object.env.context.get('manager')\"/>"
+"</b> ,\n"
 "                   <br/><br/> \n"
 "                   <p> vorrei richiedere un permesso per assentarmi da "
 "lavoro e di approvarlo il prima possibile!</p>\n"
@@ -390,8 +390,8 @@ msgid ""
 "= 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"unit_of_measure == 'hour'\">Giorni</span>\n"
-"                            <span class=\"ml8\" invisible=\"unit_of_measure !"
-"= 'hour'\">Ore</span>"
+"                            <span class=\"ml8\" invisible=\"unit_of_measure "
+"!= 'hour'\">Ore</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -658,9 +658,9 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(work_entry_type_name)s can only be taken by days."
 msgstr ""
-"In base al tuo programma di lavoro, in questo periodo dovrai lavorare %"
-"(days)s giorni, ma ne verranno utilizzati %(nb_days)s, poiché questo congedo "
-"%(work_entry_type_name)s può essere preso solo per giorni interi."
+"In base al tuo programma di lavoro, in questo periodo dovrai lavorare %(days)"
+"s giorni, ma ne verranno utilizzati %(nb_days)s, poiché questo congedo %"
+"(work_entry_type_name)s può essere preso solo per giorni interi."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -975,15 +975,13 @@ msgstr "Seconda approvazione assegnazione"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr ""
-"L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
+msgstr "L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(work_entry_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr ""
-"Assegnazione di %(work_entry_type)s: %(amount).2f %(unit)s a %(target)s"
+msgstr "Assegnazione di %(work_entry_type)s: %(amount).2f %(unit)s a %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
@@ -1759,8 +1757,7 @@ msgstr "Definire un limite annuale?"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__unit_of_measure
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__unit_of_measure
 msgid "Define if the time type will be allocated/accrued in hours or days"
-msgstr ""
-"Definisci se il tipo di tempo sarà assegnato/accumulato in ore o giorni"
+msgstr "Definisci se il tipo di tempo sarà assegnato/accumulato in ore o giorni"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__max_allowed_negative
@@ -2326,9 +2323,9 @@ msgid ""
 "{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"Richiedo {{ object.duration_display }} di "
-"{{ object.work_entry_type_id.name }} dal {{ object.request_date_from }} al "
-"{{ object.request_date_to }}"
+"Richiedo {{ object.duration_display }} di {{ "
+"object.work_entry_type_id.name }} dal {{ object.request_date_from }} al {{ "
+"object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -3192,8 +3189,7 @@ msgstr "Solo un responsabile/manager delle ferie può approvare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può approvare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può approvare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3205,8 +3201,7 @@ msgstr "Solo un responsabile/manager delle ferie può rifiutare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4054,8 +4049,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
-"Sezione compilata automaticamente dall'utente che valida l'assegnazione"
+msgstr "Sezione compilata automaticamente dall'utente che valida l'assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -4070,8 +4064,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
-"Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
+msgstr "Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -5026,8 +5019,8 @@ msgstr "Non è possibile convalidare il giorno di ferie."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
 msgstr ""
-"Non è possibile consentire richieste in aggiunta alle ferie di tipo "
-"“Assenza”."
+"Non è possibile consentire richieste in aggiunta alle ferie di tipo “Assenza"
+"”."
 
 #. module: hr_holidays
 #. odoo-python

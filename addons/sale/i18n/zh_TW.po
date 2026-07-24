@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:39+0000\n"
-"PO-Revision-Date: 2026-06-13 12:30+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-21 14:39+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-3/sale/zh_Hant/>\n"
+"projects/odoo-s19-4/sale/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -628,14 +628,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        ，金額為\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        ，你的相關訂單為\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>）\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>）\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            正等待處理。\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -645,9 +644,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                確認後，仍有\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                款項待付。\n"
 "            </t>\n"
 "        </t>\n"
@@ -797,8 +796,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 等待付款"
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"報價單\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"報價單\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -1229,8 +1227,8 @@ msgstr ""
 "「確認訂單時」：文件將傳送給客戶，供客戶存取查閱。\n"
 "例如：若想傳送使用手冊，或交付在電子商務平台購買的數碼/電子內容，此選項便很有"
 "用。\n"
-"「報價單內夾附」：文件會加入報價單及銷售訂單的 pdf 中，放在標題頁與報價表之"
-"間。 "
+"「報價單內夾附」：文件會加入報價單及銷售訂單的 pdf 中，放在標題頁與報價表之間"
+"。 "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1272,8 +1270,7 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
-msgstr ""
-"當交付數量高於最初訂購數量時，訂單將追加銷售，並且應收憑單策略基於訂購數量."
+msgstr "當交付數量高於最初訂購數量時，訂單將追加銷售，並且應收憑單策略基於訂購數量."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -1322,8 +1319,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
-"對銷售訂單明細應用手動折扣或顯示從價格表計算的折扣 (在價格表組態中啟動的選"
-"項)."
+"對銷售訂單明細應用手動折扣或顯示從價格表計算的折扣 (在價格表組態中啟動的選項)"
+"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1566,8 +1563,8 @@ msgstr ""
 "   - 產品的發票策略配置正確。\n"
 "\n"
 "如果您想根據訂購數量開具發票，請執行以下操作：\n"
-"   - 對於易耗品或可儲存產品，打開產品，轉到 \"常規資料\"選項卡，將 \"開票策略"
-"\"從 \"已交付數量\"更改為 \"已訂購數量\"。\n"
+"   - 對於易耗品或可儲存產品，打開產品，轉到 \"常規資料\"選項卡，將 \"開票策"
+"略\"從 \"已交付數量\"更改為 \"已訂購數量\"。\n"
 "   - 對於服務(和其他產品）,將 \"開票策略 \"改為 \"預付/固定價格\"。\n"
 
 #. module: sale
@@ -2141,8 +2138,7 @@ msgstr ""
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
-msgstr ""
-"送貨提前期， 依日計算.此為承諾給客戶的交期， 即從下單到送貨所需要的天數."
+msgstr "送貨提前期， 依日計算.此為承諾給客戶的交期， 即從下單到送貨所需要的天數."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2424,8 +2420,7 @@ msgstr "發票草稿"
 msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
-msgstr ""
-"將報價請求的 PDF 檔案，拖放至 Odoo 系統的報價單清單內，然後享受自動化的好處！"
+msgstr "將報價請求的 PDF 檔案，拖放至 Odoo 系統的報價單清單內，然後享受自動化的好處！"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2534,8 +2529,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr ""
-"財務狀況用於調整特定客戶的稅金和科目或銷售訂單/應收憑單. 預設值來自客戶."
+msgstr "財務狀況用於調整特定客戶的稅金和科目或銷售訂單/應收憑單. 預設值來自客戶."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2545,7 +2539,7 @@ msgstr "固定金額"
 #. module: sale
 #: model:portal.entry,description:sale.portal_your_orders
 msgid "Follow, view or pay your orders"
-msgstr "關注、查看或支付您的訂單"
+msgstr "關注、查看或支付你的訂單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2779,8 +2773,7 @@ msgstr ""
 msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
-msgstr ""
-"如果設置, 則 銷售訂單將在此日記賬中開票；否則將使用順序最低的銷售日記賬。"
+msgstr "如果設置, 則 銷售訂單將在此日記賬中開票；否則將使用順序最低的銷售日記賬。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3561,16 +3554,14 @@ msgstr ""
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
-msgstr ""
-"一旦客戶確認報價，報價單即變為銷售訂單.<br>您可以建立一張應收憑單來進行收款."
+msgstr "一旦客戶確認報價，報價單即變為銷售訂單.<br>您可以建立一張應收憑單來進行收款."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
-msgstr ""
-"一旦報價確認，報價單即變為銷售訂單.<br>您可以建立一張應收憑單來進行收款."
+msgstr "一旦報價確認，報價單即變為銷售訂單.<br>您可以建立一張應收憑單來進行收款."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -5170,8 +5161,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
-msgstr ""
-"要重新開立發票的銷售訂單 %(order)s 已取消。你不可為已取消的銷售訂單登記開支。"
+msgstr "要重新開立發票的銷售訂單 %(order)s 已取消。你不可為已取消的銷售訂單登記開支。"
 
 #. module: sale
 #. odoo-python
@@ -5399,16 +5389,14 @@ msgstr "這個預設值是適用於建立任何新產品.這可以在產品細�
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts, "
 "e.g. Fall_Drive, Christmas_Special"
-msgstr ""
-"這是一個幫助您追蹤不同行銷活動的名稱，例如，Fall_Drive、Christmas_Special"
+msgstr "這是一個幫助您追蹤不同行銷活動的名稱，例如，Fall_Drive、Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
 msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
-msgstr ""
-"這是承諾給客戶的交貨日期.一經設定後，訂單將根據此日期而非產品提前期安排交貨."
+msgstr "這是承諾給客戶的交貨日期.一經設定後，訂單將根據此日期而非產品提前期安排交貨."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5510,8 +5498,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"若要在 B2B 模式中傳送邀請，請開啟一個聯絡人，或在列表檢視畫面中選擇多個聯絡"
-"人，然後在 *動作* 下拉式選單中，按一下「門戶網站存取管理」選項。"
+"若要在 B2B 模式中傳送邀請，請開啟一個聯絡人，或在列表檢視畫面中選擇多個聯絡人"
+"，然後在 *動作* 下拉式選單中，按一下「門戶網站存取管理」選項。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
@@ -5757,8 +5745,8 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"已驗證的開支、供應商賬單或庫存提取（若已設置為追蹤成本），可按成本或銷售價"
-"格，向客戶開立發票。"
+"已驗證的開支、供應商賬單或庫存提取（若已設置為追蹤成本），可按成本或銷售價格"
+"，向客戶開立發票。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5908,8 +5896,7 @@ msgstr "您不能更改產品的類型，因為它已在銷售訂單中使用."
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr ""
-"您不能更改銷售訂單明細的類型. 相反，您應該刪除目前明細並建立正確類型的新明細."
+msgstr "您不能更改銷售訂單明細的類型. 相反，您應該刪除目前明細並建立正確類型的新明細."
 
 #. module: sale
 #. odoo-python

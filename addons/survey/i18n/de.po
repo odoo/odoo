@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-07-08 05:53+0000\n"
+"PO-Revision-Date: 2026-07-21 00:45+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/survey/"
 "de/>\n"
@@ -140,8 +140,8 @@ msgid ""
 "span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-"
-"muted\">Abgeschlossen</span>"
+"                                    <span class=\"text-muted\">"
+"Abgeschlossen</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -280,8 +280,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Lieber <t t-out=\"object.partner_id.name or "
-"'participant'\">Teilnehmer</t><br/><br/>\n"
+"        Lieber <t t-out=\"object.partner_id.name or 'participant'\">"
+"Teilnehmer</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Sie sind zu einer neuen Zertifizierung eingeladen worden.\n"
 "        </t>\n"
@@ -292,8 +292,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Zertifizierung beginnen\n"
@@ -304,8 +304,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Bitte beantworten Sie die Umfrage vor dem <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Bitte beantworten Sie die Umfrage vor dem <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Viel Erfolg!\n"
@@ -423,8 +423,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">or "
 "press CTRL+Enter</small>"
 msgstr ""
-"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-"
-"tooltip\">oder Strg+Enter drücken</small>"
+"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">"
+"oder Strg+Enter drücken</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -432,8 +432,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">or "
 "press Enter</small>"
 msgstr ""
-"<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-"
-"tooltip\">oder Enter drücken</small>"
+"<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">"
+"oder Enter drücken</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -495,8 +495,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Zertifizierungen</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Zertifizierungen</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Zertifizierung</span>"
 
@@ -1275,8 +1275,7 @@ msgstr "Auswahlmöglichkeiten"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
-msgstr ""
-"Wählen Sie Ihr Lieblingsthema und zeigen Sie, wie gut Sie sind. Bereit?"
+msgstr "Wählen Sie Ihr Lieblingsthema und zeigen Sie, wie gut Sie sind. Bereit?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
@@ -1697,8 +1696,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr ""
-"Legen Sie fest, in welchen Menüs die Herausforderung sichtbar sein soll"
+msgstr "Legen Sie fest, in welchen Menüs die Herausforderung sichtbar sein soll"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -2454,8 +2452,7 @@ msgstr "Es hat keine bestimmte Bedeutung."
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "It helps attendees focus on what you are saying"
-msgstr ""
-"Es hilft den Teilnehmern, sich auf das zu konzentrieren, was Sie sagen."
+msgstr "Es hilft den Teilnehmern, sich auf das zu konzentrieren, was Sie sagen."
 
 #. module: survey
 #. odoo-python
@@ -3295,8 +3292,8 @@ msgstr ""
 "Optionale Übersetzungssprache (ISO-Code), die beim Versenden einer E-Mail "
 "ausgewählt werden kann. Wenn keine Einstellung vorgenommen wird, wird die "
 "Hauptsprache des Partners verwendet. In der Regel sollte dies ein "
-"Platzhalterausdruck sein, der die entsprechende Sprache angibt, z. B. "
-"{{ object.partner_id.lang }}."
+"Platzhalterausdruck sein, der die entsprechende Sprache angibt, z. B. {{ "
+"object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5569,5 +5566,5 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
-"⚠️ Diese Frage steht vor einigen oder allen Auslösern und könnte übersprungen "
-"werden."
+"⚠️ Diese Frage steht vor einigen oder allen Auslösern und könnte "
+"übersprungen werden."

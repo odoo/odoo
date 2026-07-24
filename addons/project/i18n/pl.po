@@ -41,9 +41,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-04-30 07:33+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-21 14:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
 "project/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -298,8 +298,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
@@ -315,9 +315,8 @@ msgstr ""
 "            Poświęć chwilę, aby ocenić nasze usługi związane z zadaniem "
 "<strong t-out=\"object.name or ''\">Planowanie i budżet</strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                przypisanym do <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                przypisanym do <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -386,19 +385,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -1664,8 +1663,7 @@ msgstr "Okładka"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
-msgstr ""
-"Utwórz <b>działania</b> do wykonania dla siebie lub zaplanuj spotkania."
+msgstr "Utwórz <b>działania</b> do wykonania dla siebie lub zaplanuj spotkania."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -3581,8 +3579,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned projects' company"
-msgstr ""
-"Firma partnerska nie może być różna od firmy jej przypisanych projektów"
+msgstr "Firma partnerska nie może być różna od firmy jej przypisanych projektów"
 
 #. module: project
 #. odoo-python
@@ -4634,8 +4631,7 @@ msgstr "Udostępnij Zadanie"
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_task.py:0
 msgid "Sharing is not available with this project visibility setting."
-msgstr ""
-"Udostępnianie nie jest dostępne z tym ustawieniem widoczności projektu."
+msgstr "Udostępnianie nie jest dostępne z tym ustawieniem widoczności projektu."
 
 #. module: project
 #. odoo-javascript
@@ -5301,8 +5297,7 @@ msgstr "Opis zadania był wówczas pusty."
 #. odoo-python
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 msgid "The view must be grouped by date and by Stage - Burndown chart"
-msgstr ""
-"Widok musi być pogrupowany według daty i według etapu - Wykres spalania"
+msgstr "Widok musi być pogrupowany według daty i według etapu - Wykres spalania"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects

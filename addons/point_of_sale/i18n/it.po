@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-17 14:34+0000\n"
+"PO-Revision-Date: 2026-07-20 12:15+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/it/>\n"
@@ -341,8 +341,8 @@ msgstr ""
 "del <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">data</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">ora</t>.</"
-"span>\n"
+"time_format='short',                          lang_code=lg)\">ora</t>.</span>"
+"\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Saluti,</div>\n"
@@ -354,8 +354,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
-msgstr ""
-"<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Azienda\"/>"
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Azienda\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -398,9 +397,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Gentile %(client_name)s,<br/>di seguito lo scontrino %"
-"(is_invoiced)sper             %(pos_name)s dell'importo di %(amount)s da %"
-"(company_name)s. </p>"
+"<p>Gentile %(client_name)s,<br/>di seguito lo scontrino %(is_invoiced)sper"
+"             %(pos_name)s dell'importo di %(amount)s da %(company_name)s. </"
+"p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -1687,8 +1686,8 @@ msgstr "Codice a barre"
 #: code:addons/point_of_sale/models/product_product.py:0
 msgid "Barcode \"%(barcode)s\" already assigned to \"%(product_list)s\""
 msgstr ""
-"Il codice a barre \"%(barcode)s\" è già stato assegnato a \"%"
-"(product_list)s\""
+"Il codice a barre \"%(barcode)s\" è già stato assegnato a \"%(product_list)"
+"s\""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2252,8 +2251,7 @@ msgstr "Verifica se"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template__available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale."
-msgstr ""
-"Selezionare per mostrare questo prodotto all'interno del punto vendita."
+msgstr "Selezionare per mostrare questo prodotto all'interno del punto vendita."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
@@ -3382,8 +3380,7 @@ msgstr "Imposta di vendita predefinita per i prodotti"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
-"Unità di misura predefinita usata per tutte le operazioni di magazzino."
+msgstr "Unità di misura predefinita usata per tutte le operazioni di magazzino."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__defer_invoice_pdf
@@ -4119,8 +4116,7 @@ msgstr "Prezzo fisso"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_butter_croissant_product_template
 msgid "Flaky all butter pastry, layered for a light and golden croissant."
-msgstr ""
-"Pasta sfoglia al burro, stratificata per un croissant leggero e dorato."
+msgstr "Pasta sfoglia al burro, stratificata per un croissant leggero e dorato."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
@@ -11275,8 +11271,7 @@ msgstr "Usa mappatura automatica imposte con AvaTax nel POS"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr ""
-"Utilizzo di codici a barre per lettura prodotti, tessere clienti ecc..."
+msgstr "Utilizzo di codici a barre per lettura prodotti, tessere clienti ecc..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

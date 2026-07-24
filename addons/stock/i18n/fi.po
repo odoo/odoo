@@ -44,9 +44,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 13:31+0000\n"
+"PO-Revision-Date: 2026-07-24 17:31+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/stock/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -632,8 +632,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
 "== 'in_store'\">\n"
 "            Tilauksesi on kerätty.\n"
@@ -649,8 +649,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -666,8 +666,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Löydät toimitustilauksesi liitteenä, mikäli haluat lisätietoja.<br/"
-"><br/>\n"
+"        Löydät toimitustilauksesi liitteenä, mikäli haluat lisätietoja.<br/>"
+"<br/>\n"
 "        Kiitos,\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
@@ -1903,8 +1903,7 @@ msgstr "Sarjanumeroittain"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #, fuzzy
 msgid "By default, next physical inventory will be scheduled at this date"
-msgstr ""
-"Seuraava fyysinen inventaario ajoitetaan oletuksena tälle päivämäärälle"
+msgstr "Seuraava fyysinen inventaario ajoitetaan oletuksena tälle päivämäärälle"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procure_method
@@ -2075,8 +2074,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr ""
-"Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
+msgstr "Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
 
 #. module: stock
 #. odoo-python
@@ -4034,8 +4032,7 @@ msgstr "Tavaran vastaanottoilmoitus"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
+msgstr "HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4277,8 +4274,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
-"Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
+msgstr "Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4560,8 +4556,7 @@ msgstr "Vastaanotot"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
-"Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
+msgstr "Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -7984,7 +7979,7 @@ msgstr "Poisto"
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location__removal_strategy_id
 msgid "Removal Strategy"
-msgstr "Poistamisstrategia"
+msgstr "Poistostrategia"
 
 #. module: stock
 #. odoo-python
@@ -8106,8 +8101,7 @@ msgstr "Täydennystiedot"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
-"Täydennystiedot %(product)s kohdasta %(warehouse)s kohdassa %(product)s"
+msgstr "Täydennystiedot %(product)s kohdasta %(warehouse)s kohdassa %(product)s"
 
 #. module: stock
 #. odoo-python
@@ -8852,8 +8846,8 @@ msgstr ""
 "Lähin sijainti: kohdepaikkaa lähimpänä olevat tuotteet/erät siirretään ulos "
 "ensin.\n"
 "FEFO: tuotteet/erät, joiden poistopäivämäärä on lähimpänä, siirretään ulos "
-"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" "
-"-asetuksesta).\n"
+"ensin (tämän menetelmän saatavuus riippuu \"Expiration Dates\" -asetuksesta)"
+".\n"
 "Vähiten paketteja: FIFO, mutta mahdollisimman vähillä paketeilla, kun samaa "
 "tuotetta sisältäviä paketteja on useita."
 
@@ -9895,9 +9889,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
-"Tuotteelle \"%(product)s\" tehty määrä ei noudata mittayksikölle \"%"
-"(unit)s\" määriteltyä pyöristystarkkuutta. Muuta tehtyä määrää tai "
-"mittayksikkösi pyöristystarkkuutta."
+"Tuotteelle \"%(product)s\" tehty määrä ei noudata mittayksikölle \"%(unit)"
+"s\" määriteltyä pyöristystarkkuutta. Muuta tehtyä määrää tai mittayksikkösi "
+"pyöristystarkkuutta."
 
 #. module: stock
 #. odoo-python
@@ -11685,8 +11679,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Varastossa %(warehouse)s on edelleen käynnissä toimintatyyppien %"
-"(operations)s toimintoja"
+"Varastossa %(warehouse)s on edelleen käynnissä toimintatyyppien %(operations)"
+"s toimintoja"
 
 #. module: stock
 #. odoo-javascript

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-07-13 13:49+0000\n"
+"PO-Revision-Date: 2026-07-23 12:06+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/fi/>\n"
@@ -31,7 +31,7 @@ msgstr "%(invoice_name)s - Odoon luoma"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s:lla tulisi olla KVK- tai OIN-numero määritettynä."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -39,6 +39,8 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s:lla pitäisi olla voimassa oleva KBO/BCE-numero määritettynä "
+"lisätunnisteeksi (BE_EN)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -149,7 +151,7 @@ msgstr "Itävallan VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "Saatavilla olevat reitityssuunnitelmat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -228,7 +230,7 @@ msgstr "EDI-asiakirjojen yleistoiminnot: tietojen luominen, rajoitukset, jne"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Yritys"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -413,7 +415,7 @@ msgstr "EAN-sijaintikoodi"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "EDI-reititysosoite"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -581,7 +583,7 @@ msgstr "GS1-tunnistusavaimet"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
-msgstr ""
+msgstr "GS1-tunnisteavaimet toimitusketjun hallintaan."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -640,7 +642,7 @@ msgstr "Unkarin ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
@@ -688,7 +690,7 @@ msgstr "Asenna Chorus Pro"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "Kansainvälinen pankkitilinumero, käytetään EDI-tunnisteena."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -726,7 +728,7 @@ msgstr "On UBL-muodossa"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__is_unece_code_supported
 msgid "Is Unece Code Supported"
-msgstr ""
+msgstr "Unece-koodi on tuettu"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -904,8 +906,7 @@ msgstr "Täytä kumppanin ALV-tunnus tai Peppol-osoite."
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"Täytä yrityksesi ALV tai Peppol-osoite täyden XML-tiedoston luomiseksi."
+msgstr "Täytä yrityksesi ALV tai Peppol-osoite täyden XML-tiedoston luomiseksi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -929,7 +930,7 @@ msgstr "Portugalin ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Tuotteen mittayksikkö"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -953,7 +954,7 @@ msgstr "Pyöristys"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Reitityspäätepiste"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__routing_scheme
@@ -961,13 +962,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_scheme
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Routing ID"
-msgstr ""
+msgstr "Reititystunnus"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "Routing identifier should be in the format 'SCHEME:ENDPOINT'."
-msgstr ""
+msgstr "Reititystunnisteen pitäisi olla muodossa 'SCHEME:ENDPOINT'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
@@ -1124,7 +1125,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
 msgid "The UN/ECE code already exists!"
-msgstr ""
+msgstr "UN/ECE-koodi on jo olemassa!"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1134,8 +1135,8 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
-"Mittayksikkö '%(uom)s' (koodista '%(code)s') ohitettiin tuotteen '%"
-"(product)s' rivillä, koska se ei ole yhteensopiva tuotteen mittayksikön '%"
+"Mittayksikkö '%(uom)s' (koodista '%(code)s') ohitettiin tuotteen '%(product)"
+"s' rivillä, koska se ei ole yhteensopiva tuotteen mittayksikön '%"
 "(product_uom)s' kanssa. Mittayksikkö jätettiin tyhjäksi."
 
 #. module: account_edi_ubl_cii
@@ -1168,7 +1169,7 @@ msgstr "Pankkitilin hakeminen ei onnistunut: %s"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "The code element for units of measurement (UoM) as specified by UN/ECE"
-msgstr ""
+msgstr "YK/ECE:n määrittelemä koodielementti mittayksiköille"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1297,7 +1298,7 @@ msgstr "UBL/CII-tiedostonimi"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "UN/ECE Code"
-msgstr ""
+msgstr "UN/ECE-koodi"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
@@ -1330,7 +1331,7 @@ msgstr "Tuntematon kumppani"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Tiedostotyyppi ei ole tuettu %s kautta"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2152,6 +2153,8 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Sähköinen osoite (EAS) on määritettävä asiakkaalle "
+"'%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2160,6 +2163,8 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Sähköinen osoite (EAS) on määritettävä yritykselle "
+"'%s'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

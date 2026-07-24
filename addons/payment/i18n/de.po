@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-08 07:15+0000\n"
+"PO-Revision-Date: 2026-07-24 12:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment/de/>\n"
@@ -68,10 +68,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
-"transactions you intend to capture can only be captured in full. Handle the "
-"transactions individually to capture a partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Some of the transactions you intend to capture can "
+"only be captured in full. Handle the transactions individually to capture a "
+"partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -185,6 +185,9 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>Warnung:</strong> Zahlungsanbieter können nicht von Grund\n"
+"                       neu erstellt werden. Bitte verwenden Sie stattdessen "
+"die Aktion <em>Duplizieren</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1167,7 +1170,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
@@ -1351,6 +1354,11 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"Zahlungstransaktionen dürfen nicht direkt aktualisiert werden. Verwenden Sie "
+"stattdessen _record(), um die Zahlungsdaten zur späteren Verarbeitung in die "
+"Warteschlange einzureihen, oder setzen Sie payment_safe_write=True im "
+"Kontext, nachdem Sie sichergestellt haben, dass die Aktualisierung im Falle "
+"eines Rollbacks unkritisch ist."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1360,7 +1368,7 @@ msgstr "Zahlung: Nachbearbeitung von Transaktionen"
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "Zahlung: Zahlungsabwicklung"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1390,12 +1398,12 @@ msgstr "Mitteilung, wenn ausstehend"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Pending Updates"
-msgstr ""
+msgstr "Ausstehende Aktualisierungen"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
 msgid "Pending payment data payload to process"
-msgstr ""
+msgstr "Zu verarbeitende Datenpakete für ausstehenden Zahlungen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1406,7 +1414,7 @@ msgstr "Telefon"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "Bitte wählen Sie eine andere Zahlungsmethode aus."
 
 #. module: payment
 #. odoo-python
@@ -1449,12 +1457,12 @@ msgstr "Primäre Zahlungsmethode"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "Primäre Zahlungsmethoden"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
 msgid "Processed Amount"
-msgstr ""
+msgstr "Verarbeiteter Betrag"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1566,7 +1574,7 @@ msgstr "Zugehöriges Dokumentmodell"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Restrictions"
-msgstr ""
+msgstr "Einschränkungen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1657,7 +1665,7 @@ msgstr "Unterstützt von"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1950,13 +1958,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "Der Anbieter verfügt bereits über eine Zahlungsmethode mit diesem Code."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
-msgstr ""
+msgstr "Der Anbieter darf nicht archiviert sein, um eine Anfrage zu stellen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1971,7 +1979,7 @@ msgstr "Die Anbieterreferenz der Transaktion"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "Der Anbieter, der diese Zahlungsmethode unterstützt."
 
 #. module: payment
 #. odoo-python
@@ -1987,8 +1995,7 @@ msgstr "Das auf dem Zahlungsformular angezeigte Bild in veränderter Größe."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
-msgstr ""
-"Die Seite, zu der der Benutzer nach der Transaktion weitergeleitet wird"
+msgstr "Die Seite, zu der der Benutzer nach der Transaktion weitergeleitet wird"
 
 #. module: payment
 #. odoo-python
@@ -2143,7 +2150,7 @@ msgstr "Wechseln Sie im Wahlfeld für Unternehmen das Hauptunternehmen aus."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
-msgstr ""
+msgstr "Anzahl Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2170,18 +2177,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "Tokenisierung nicht unterstützt"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "Tokenisierung ohne Zahlung nicht unterstützt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "Token"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
@@ -2197,7 +2204,7 @@ msgstr "Transaktion"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Anzahl Transaktionen"
 
 #. module: payment
 #. odoo-python
@@ -2212,7 +2219,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transaktionen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2323,6 +2330,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"Token, die mit inaktiven Zahlungsmethoden oder archivierten Anbietern "
+"verknüpft sind, können nicht aus dem Archiv wiederhergestellt werden."
 
 #. module: payment
 #. odoo-python
@@ -2346,6 +2355,8 @@ msgstr "Sie können die Standardzahlungsmethode nicht löschen."
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"Sie können den Zahlungsanbieter %s nicht löschen. Archivieren oder "
+"deinstallieren Sie ihn stattdessen."
 
 #. module: payment
 #. odoo-python
@@ -2365,12 +2376,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your order is being processed."
-msgstr ""
+msgstr "Ihr Auftrag wird bearbeitet."
 
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "Ihr Auftrag wurde bestätigt. Sie erhalten in Kürze Ihre Rechnung."
 
 #. module: payment
 #. odoo-python
@@ -2503,7 +2514,7 @@ msgstr "Diese Zahlung wurde noch nicht verarbeitet."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "Ihre Zahlung wird gerade bearbeitet."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2520,7 +2531,7 @@ msgstr "Ihre Zahlungsmethode wurde gespeichert."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "Ihre Zahlungsmethode wurde noch nicht gespeichert."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2582,9 +2593,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "Websocket-Nachrichtbearbeitung"

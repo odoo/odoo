@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2026-07-13 06:31+0000\n"
+"PO-Revision-Date: 2026-07-24 12:32+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "resource/de/>\n"
@@ -82,7 +82,7 @@ msgstr "<span class=\"text-muted ms-2\">(</span>"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"text-muted\">/d</span><span class=\"text-muted\">)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">/T</span><span class=\"text-muted\">)</span>"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_recurrency_until
@@ -520,13 +520,13 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__times
 msgid "Occurrences"
-msgstr ""
+msgstr "Vorkommen"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Overlap of attendances"
-msgstr ""
+msgstr "Überschneidung der Anwesenheiten"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -547,8 +547,7 @@ msgstr "Telefon"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
-msgstr ""
-"Die angegebenen Datums- und Zeitangaben müssen in einer Zeitzone liegen"
+msgstr "Die angegebenen Datums- und Zeitangaben müssen in einer Zeitzone liegen"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -560,27 +559,27 @@ msgstr "Begründung"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_end_type
 msgid "Recurrence End Condition"
-msgstr ""
+msgstr "Bedingung für das Ende der Wiederholung"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_until
 msgid "Recurrence End Date"
-msgstr ""
+msgstr "Enddatum der Wiederholung"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency
 msgid "Recurrency"
-msgstr ""
+msgstr "Wiederholung"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_excluded_occurences
 msgid "Recurrency Excluded Occurences"
-msgstr ""
+msgstr "Aus Wiederholung ausgeschlossene Vorkommen"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
-msgstr ""
+msgstr "Wiederholungstyp"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
@@ -591,7 +590,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Repeat every"
-msgstr ""
+msgstr "Wiederholen alle"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -634,7 +633,7 @@ msgstr "Kalender der Ressource"
 #. module: resource
 #: model:ir.actions.server,name:resource.ir_cron_calendar_clean_up_ir_actions_server
 msgid "Resource: Clean up calendar attendances"
-msgstr ""
+msgstr "Ressource: Kalender-Anwesenheiten bereinigen"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -671,7 +670,7 @@ msgstr "Samstag"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -696,7 +695,7 @@ msgstr "Arbeitszeit suchen"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Select a company for this working scheduled"
-msgstr ""
+msgstr "Wählen Sie ein Unternehmen für diesen Arbeitsplan aus"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
@@ -744,7 +743,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_duration_hours
 msgid "The attendance should have a duration between 0 and 24 hours"
-msgstr ""
+msgstr "Die Anwesenheiten sollten zwischen 0 und 24 Stunden dauern"
 
 #. module: resource
 #. odoo-python
@@ -768,12 +767,12 @@ msgstr ""
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_count
 msgid "The recurrency count should be greater than 0"
-msgstr ""
+msgstr "Die Anzahl der Wiederholungen sollte größer als 0 sein"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_interval
 msgid "The recurrency interval should be greater than 0"
-msgstr ""
+msgstr "Das Wiederholungsintervall sollte größer als 0 sein"
 
 #. module: resource
 #. odoo-python
@@ -785,7 +784,7 @@ msgstr "Das Startdatum der Abwesenheit muss vor dem Enddatum liegen."
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "This and following events"
-msgstr ""
+msgstr "Dieses und darauffolgende Ereignisse"
 
 #. module: resource
 #. odoo-python
@@ -1001,6 +1000,8 @@ msgstr "Arbeitszeit"
 msgid ""
 "You can't have duration based and time based attendances on the same day"
 msgstr ""
+"An einem Tag können keine zeitdauer- und zeitbasierten Anwesenheiten "
+"gleichzeitig erfasst werden."
 
 #. module: resource
 #. odoo-python

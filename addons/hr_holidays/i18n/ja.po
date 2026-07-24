@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-06 15:50+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-22 00:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_holidays/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -389,8 +389,8 @@ msgid ""
 "= 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"unit_of_measure == 'hour'\">日数</span>\n"
-"                            <span class=\"ml8\" invisible=\"unit_of_measure !"
-"= 'hour'\">時間</span>"
+"                            <span class=\"ml8\" invisible=\"unit_of_measure "
+"!= 'hour'\">時間</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -648,9 +648,9 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(work_entry_type_name)s can only be taken by days."
 msgstr ""
-"勤務スケジュールに基づき、この期間は %(days)s 日の勤務が予定されています"
-"が、、%(nb_days)s 日分として処理されます(この休暇（%(work_entry_type_name)s）"
-"は日単位でしか取得できないため)。"
+"勤務スケジュールに基づき、この期間は %(days)s 日の勤務が予定されていますが、"
+"、%(nb_days)s 日分として処理されます(この休暇（%(work_entry_type_name)s）は日"
+"単位でしか取得できないため)。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2018,8 +2018,7 @@ msgstr "終了日"
 msgid ""
 "End date has been updated because the employee will leave the company on %"
 "(departure_date)s."
-msgstr ""
-"従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
+msgstr "従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2049,8 +2048,7 @@ msgstr "2月"
 msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
-msgstr ""
-"type_request_unitに応じて、割り当て期間を日数または時間で表示できるフィールド"
+msgstr "type_request_unitに応じて、割り当て期間を日数または時間で表示できるフィールド"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -2285,9 +2283,9 @@ msgid ""
 "{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"以下を申請しています：{{ object.duration_display }}： "
-"{{ object.work_entry_type_id.name }}、期間： {{ object.request_date_from }} "
-"から {{ object.request_date_to }}"
+"以下を申請しています：{{ object.duration_display }}： {{ "
+"object.work_entry_type_id.name }}、期間： {{ object.request_date_from }} か"
+"ら {{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -3608,9 +3606,9 @@ msgid ""
 "during batch generation. Conflicting time off:\n"
 "%s"
 msgstr ""
-"一部の従業員には、選択した期間と重複する時間単位の休暇申請がすでに存在しま"
-"す。Odooは一括作成時に時間単位の休暇を自動調整または分割することはできませ"
-"ん。競合している休暇申請:\n"
+"一部の従業員には、選択した期間と重複する時間単位の休暇申請がすでに存在します"
+"。Odooは一括作成時に時間単位の休暇を自動調整または分割することはできません。"
+"競合している休暇申請:\n"
 "%s"
 
 #. module: hr_holidays
@@ -3936,8 +3934,8 @@ msgid ""
 "configuration of the allocation, delete and create a new one."
 msgstr ""
 "この割当は一度実行されているため、どのような変更を加えても、その従業員に割当"
-"てられた日数には反映されません。割当の設定を変更する必要がある場合は、キャン"
-"セルして新しい割当を作成して下さい。"
+"てられた日数には反映されません。割当の設定を変更する必要がある場合は、"
+"キャンセルして新しい割当を作成して下さい。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -4009,16 +4007,14 @@ msgstr "この休暇はキャンセルできません。"
 msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
-msgstr ""
-"この値は、負の値を持つすべてのタイムオフ要求の合計によって与えられます。"
+msgstr "この値は、負の値を持つすべてのタイムオフ要求の合計によって与えられます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__max_leaves
 msgid ""
 "This value is given by the sum of all time off requests with a positive "
 "value."
-msgstr ""
-"この値は、正の値を持つすべてのタイムオフ要求の合計によって与えられます。"
+msgstr "この値は、正の値を持つすべてのタイムオフ要求の合計によって与えられます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__3
@@ -4652,8 +4648,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
-"このフィールドを選択すると、年間累計休暇数合計が指定された制限に制限されま"
-"す。"
+"このフィールドを選択すると、年間累計休暇数合計が指定された制限に制限されます"
+"。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4772,8 +4768,8 @@ msgid ""
 "You can create a new allocation or follow the approval status of the current "
 "ones."
 msgstr ""
-"新しい休暇割当を作成したり、現在の休暇割当の承認状況を確認することができま"
-"す。"
+"新しい休暇割当を作成したり、現在の休暇割当の承認状況を確認することができます"
+"。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4805,8 +4801,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can only validate a leave with validation by Time Off Manager."
-msgstr ""
-"休暇申請を最終確定できるのは、休暇管理者による承認がある場合に限ります。"
+msgstr "休暇申請を最終確定できるのは、休暇管理者による承認がある場合に限ります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5008,8 +5003,7 @@ msgstr "累積プランのレベルでは、0より大きい率を与えて下�
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You must have manager rights to modify/validate a time off that already begun"
-msgstr ""
-"すでに開始されている休暇を変更/検証するには、マネージャーの権限が必要です"
+msgstr "すでに開始されている休暇を変更/検証するには、マネージャーの権限が必要です"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5226,8 +5220,7 @@ msgstr "ID"
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "leaves of type 'Worked Time' should be always eligible for accrual rate."
-msgstr ""
-"「勤務時間」タイプの休暇は、常に休暇累積(付与)率の対象である必要があります。"
+msgstr "「勤務時間」タイプの休暇は、常に休暇累積(付与)率の対象である必要があります。"
 
 #. module: hr_holidays
 #. odoo-javascript

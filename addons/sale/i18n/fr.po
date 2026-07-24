@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:39+0000\n"
-"PO-Revision-Date: 2026-06-10 10:13+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/sale/"
+"PO-Revision-Date: 2026-07-21 08:55+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/sale/"
 "fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -639,14 +639,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        d’un montant de\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or "
-"''\">10,00 €</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
 "        relatif à votre commande\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            est en attente.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -657,9 +656,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Une fois le paiement confirmé, il restera\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">10,00 €</span>\n"
 "                à régler.\n"
 "            </t>\n"
 "        </t>\n"
@@ -809,8 +808,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> En attente de paiement"
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Devis\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Devis\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -916,8 +914,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>Félicitations</b>, vous venez d'envoyer votre premier devis !"
-"<br>Vérifiez votre e-mail pour valider le devis.\n"
+"<span><b>Félicitations</b>, vous venez d'envoyer votre premier devis !<br>"
+"Vérifiez votre e-mail pour valider le devis.\n"
 "        </span>"
 
 #. module: sale
@@ -3213,8 +3211,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
-"Il est interdit de modifier les champs suivants dans une commande "
-"verrouillée :\n"
+"Il est interdit de modifier les champs suivants dans une commande verrouillée"
+" :\n"
 "%s"
 
 #. module: sale
@@ -3527,8 +3525,7 @@ msgstr "Pas d'autres exigences pour ce paiement"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
-"Ne plus pouvoir modifier les bons de commande dès qu'ils sont confirmés"
+msgstr "Ne plus pouvoir modifier les bons de commande dès qu'ils sont confirmés"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -3979,8 +3976,7 @@ msgstr "Pourcentage"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
-"Passer des commandes via le service d'impression à la demande de Gelato"
+msgstr "Passer des commandes via le service d'impression à la demande de Gelato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -5460,8 +5456,7 @@ msgstr "Le pourcentage du montant à facturer à l'avance."
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
-"Le pourcentage du montant qui doit être payer pour confirmer les devis."
+msgstr "Le pourcentage du montant qui doit être payer pour confirmer les devis."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent

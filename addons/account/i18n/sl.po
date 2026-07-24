@@ -26,9 +26,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-12 04:04+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-20 23:35+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -948,8 +948,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1882,8 +1882,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Bančni račun s številko računa %(number)s že obstaja za partnerja %"
-"(partner)s, vendar je arhivirano. Prosimo, da ga raje razarhivirate."
+"Bančni račun s številko računa %(number)s že obstaja za partnerja %(partner)"
+"s, vendar je arhivirano. Prosimo, da ga raje razarhivirate."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1983,8 +1983,7 @@ msgstr ""
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
-msgstr ""
-"Plačila z neporavnanim računom ni mogoče potrditi brez vpisa v dnevnik."
+msgstr "Plačila z neporavnanim računom ni mogoče potrditi brez vpisa v dnevnik."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -12948,8 +12947,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"Ko je nameščen, v nastavitvah bančnega računa nastavite »Bančne vire« na "
-"»Uvoz datotek«. S tem se doda gumb za uvoz iz nadzorne plošče za "
+"Ko je nameščen, v nastavitvah bančnega računa nastavite »Bančne vire« na »"
+"Uvoz datotek«. S tem se doda gumb za uvoz iz nadzorne plošče za "
 "računovodstvo."
 
 #. module: account
@@ -13135,8 +13134,7 @@ msgstr "Neobvezno"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
-"Izbirne oznake, ki jih boste morda želeli dodeliti za poročanje po meri"
+msgstr "Izbirne oznake, ki jih boste morda želeli dodeliti za poročanje po meri"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_send_wizard__lang
@@ -15031,8 +15029,8 @@ msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. "
 "This action is irreversible."
 msgstr ""
-"Če opazite neskladja, ponovno naložite računovodske podatke (davke, "
-"račune ...). Tega dejanja ni mogoče preklicati."
+"Če opazite neskladja, ponovno naložite računovodske podatke (davke, račune "
+"...). Tega dejanja ni mogoče preklicati."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -16223,15 +16221,15 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Če želite skriti dnevnik, ne da bi ga odstranili, nastavite »active« na "
-"»false«."
+"Če želite skriti dnevnik, ne da bi ga odstranili, nastavite »active« na »"
+"false«."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Če želite skriti dnevnik, ne da bi ga odstranili, nastavite »aktiven« na "
-"»lažno«."
+"Če želite skriti dnevnik, ne da bi ga odstranili, nastavite »aktiven« na »"
+"lažno«."
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_sales_tax
@@ -17412,8 +17410,8 @@ msgid ""
 "related fields)."
 msgstr ""
 "Tehnično polje, ki vsebuje države, za katere to podjetje uporablja davčne "
-"funkcije (torej tiste, za katere morajo moduli l10n prikazovati davčna "
-"polja)."
+"funkcije (torej tiste, za katere morajo moduli l10n prikazovati davčna polja)"
+"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__company_lock_date
@@ -17466,8 +17464,8 @@ msgstr ""
 "predpona1, leto, predpona2, mesec, predpona3, zaporedje, pripona.\n"
 "Skupine predpon* so ločila med letom, mesecem in dejansko naraščajočo "
 "zaporedno številko (zaporedje).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_technology
@@ -20708,8 +20706,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You can't create payments for entries belonging to different companies."
-msgstr ""
-"Za vnose, ki pripadajo različnim podjetjem, ni mogoče ustvariti plačil."
+msgstr "Za vnose, ki pripadajo različnim podjetjem, ni mogoče ustvariti plačil."
 
 #. module: account
 #. odoo-python
@@ -21059,8 +21056,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr ""
-"Tega dejanja ni mogoče izvesti na računu, ki vsebuje postavke dnevnika."
+msgstr "Tega dejanja ni mogoče izvesti na računu, ki vsebuje postavke dnevnika."
 
 #. module: account
 #. odoo-python
@@ -21159,8 +21155,8 @@ msgstr ""
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
-"Izjem datuma zaklepanja ni mogoče preklicati. Vprašajte nekoga z vlogo "
-"»Svetovalec«."
+"Izjem datuma zaklepanja ni mogoče preklicati. Vprašajte nekoga z vlogo »"
+"Svetovalec«."
 
 #. module: account
 #. odoo-python

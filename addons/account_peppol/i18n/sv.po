@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-06-06 13:02+0000\n"
+"PO-Revision-Date: 2026-07-24 12:34+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-3/"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (Saknade %(eas)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,7 +69,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
-msgstr ""
+msgstr "%(processed)s Peppol-dokument behandlade, %(deleted)s dokument raderade"
 
 #. module: account_peppol
 #. odoo-python
@@ -80,7 +80,7 @@ msgstr "%s har begärt mottagning av digitala fakturor genom Peppol."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>Autentisera</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -90,8 +90,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                I Belgien är digital fakturering "
-"<u>obligatoriskt från och med januari 2026</u> - registrera dig så snart som "
+"                                I Belgien är digital fakturering <u>"
+"obligatoriskt från och med januari 2026</u> - registrera dig så snart som "
 "möjligt."
 
 #. module: account_peppol
@@ -230,26 +230,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Skicka fakturor\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -265,8 +265,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>Hej <t t-out=\"object.name or "
-"''\">YourCompany</t>,</p>\n"
+"                                    <p>Hej <t t-out=\"object.name or ''\">"
+"YourCompany</t>,</p>\n"
 "\n"
 "                                    <p>Vi har lagt till ert företag i "
 "<strong>Peppol-nätverket</strong>.</p>\n"
@@ -327,7 +327,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "En anslutning till '%s' finns redan."
 
 #. module: account_peppol
 #. odoo-python
@@ -643,7 +643,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Autentisering avbröts"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -703,7 +703,7 @@ msgstr "Kan skicka, inväntar registrering för att kunna ta emot"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -895,19 +895,19 @@ msgstr "Visa val för att använda överordnad anslutning"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Vill du gå vidare?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Dokumentet avbröts"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Dokumentet återställdes till utkast"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -917,6 +917,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Dokument som skickats/mottagits via Peppol kan inte raderas.\n"
+"\n"
+"Vill du istället avbryta dokumentet?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -926,6 +929,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Dokument som skickats/mottagits via Peppol kan inte raderas.\n"
+"\n"
+"Vill du istället återställa dokumentet till utkast?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -963,7 +969,7 @@ msgstr "EDI-användare"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDI-användare bör vara en av följande typer: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1013,7 +1019,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_move_send.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "Frankrike - Digital fakturering (Godkänd plattform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1091,6 +1097,8 @@ msgstr "Bokföringsjournal för inkommande transaktioner"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"Faktura %s överskrider storleksgränsen på 64 MB för att kunna skickas genom "
+"Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1106,7 +1114,7 @@ msgstr "Bokföringskonto"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
 msgid "Journal Entry"
-msgstr "Verifikat"
+msgstr "Verifikation"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__write_uid
@@ -1200,7 +1208,7 @@ msgstr "Ingen giltig slutpunkt för AS4-deltagare hittades."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Nej, behåll det"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
@@ -1351,13 +1359,13 @@ msgstr "E-post för Peppol-kontakt"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol-dokument kan inte raderas"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol-dokument: kan inte radera faktura"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1746,7 +1754,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Återställ till utkast"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
@@ -1879,8 +1887,8 @@ msgid ""
 "                            By clicking the button below I accept that Odoo "
 "may process my e-invoices."
 msgstr ""
-"Testläget låter dig skicka digitala fakturor genom test-nätverket med Peppol."
-"<br/>\n"
+"Testläget låter dig skicka digitala fakturor genom test-nätverket med "
+"Peppol.<br/>\n"
 "                            Genom att klicka på knappen nedan godkänner jag "
 "att Odoo får behandla mina digitala fakturor."
 
@@ -2018,8 +2026,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "The database you are trying to connect to is not suitable for Peppol."
-msgstr ""
-"Databasen som du försöker ansluta till går inte att använda med Peppol."
+msgstr "Databasen som du försöker ansluta till går inte att använda med Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -2105,6 +2112,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Följande %s Peppol-dokument kommer att återställas till utkast:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2114,6 +2124,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Följande %s utkast till Peppol-dokument kommer att avbrytas:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2171,7 +2184,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "Återstående %s dokument kommer att raderas."
 
 #. module: account_peppol
 #. odoo-python
@@ -2326,12 +2339,16 @@ msgstr ""
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"För att använda den Godkända plattformen för digital fakturering i Frankrike "
+"installera modulen"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"För att använda den Godkända plattformen för digital fakturering i "
+"Frankrike, installera modulen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2380,7 +2397,7 @@ msgstr "Val av att använda anslutning till överordnat företag"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Pågående verifiering"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2428,7 +2445,7 @@ msgstr "Vad är Peppol och varför är det användbart?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "Varför borde jag använda digital fakturering i Frankrike?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2446,13 +2463,13 @@ msgstr "Varför borde du använda det?"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Ja, avbryt det"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Ja, gå vidare"
 
 #. module: account_peppol
 #. odoo-python
@@ -2594,6 +2611,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"Din information håller på att verifieras. Du behöver inte göra något mer för "
+"tillfället: din registrering hos Peppol slutförs automatiskt."
 
 #. module: account_peppol
 #. odoo-python

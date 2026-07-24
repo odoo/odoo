@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-17 14:09+0000\n"
+"PO-Revision-Date: 2026-07-23 12:06+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "da/>\n"
@@ -567,8 +567,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Produkterne flyttes til <b>%(destination)s</b>, <br/> som angivet fra "
-"<b>%(operation)s</b> destination."
+"<br>Produkterne flyttes til <b>%(destination)s</b>, <br/> som angivet fra <b>"
+"%(operation)s</b> destination."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -848,7 +848,7 @@ msgid ""
 "            </strong>"
 msgstr ""
 "<strong>\n"
-"              Den udførte bevægelses linje er blevet rettet.\n"
+"              Den udførte posteringslinje er blevet rettet.\n"
 "          </strong>"
 
 #. module: stock
@@ -2046,12 +2046,11 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
-#, fuzzy
 msgid ""
 "Changing the Lot/Serial number for move lines with different products is not "
 "allowed."
 msgstr ""
-"Det er ikke tilladt at ændre parti-/serienummeret for bevægelseslinjer med "
+"Det er ikke tilladt at ændre parti-/serienummeret for posteringslinjer med "
 "forskellige produkter."
 
 #. module: stock
@@ -2609,12 +2608,11 @@ msgstr "Oprettelses dato"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__date
-#, fuzzy
 msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
 msgstr ""
-"Oprettelsesdatoen for denne bogføringslinje opdateres af følgende årsager: "
+"Oprettelsesdatoen for denne posteringslinje opdateres af følgende årsager: "
 "mængden er blevet øget, status er opdateret til 'klar til udlevering', eller "
 "bogføringslinjen er afsluttet."
 
@@ -3628,8 +3626,8 @@ msgid ""
 msgstr ""
 "Alle lager operationer i Odoo flytter produkterne fra en\n"
 "            lokation til en anden. For eksempel hvis du modtager produkter\n"
-"            fra en forhandler, vil Odoo flytte produkterne fra "
-"forhandlerens \n"
+"            fra en forhandler, vil Odoo flytte produkterne fra forhandlerens "
+"\n"
 "            lokation til en lager lokation. Hver rapport kan udføres på "
 "fysiske, \n"
 "            partner, eller virtuelle lokationer."
@@ -4564,9 +4562,8 @@ msgstr "Indgående Kladde Overførsel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
-#, fuzzy
 msgid "Incoming Move Line"
-msgstr "Indgående bevægelseslinje"
+msgstr "Indgående posteringslinje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
@@ -5817,7 +5814,7 @@ msgstr "Bevægelse hele pakker"
 #: model:ir.model.fields,field_description:stock.field_stock_package__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 msgid "Move Line"
-msgstr "Handling"
+msgstr "Posteringslinje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__move_line_ids
@@ -5825,13 +5822,12 @@ msgstr "Handling"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
 msgid "Move Lines"
-msgstr "Bevægelses linjer"
+msgstr "Posteringslinjer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_lines_count
-#, fuzzy
 msgid "Move Lines Count"
-msgstr "Antal bogføringslinjer"
+msgstr "Antal posteringslinjer"
 
 #. module: stock
 #. odoo-javascript
@@ -5842,7 +5838,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
 msgid "Move lines"
-msgstr ""
+msgstr "Posteringslinjer"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -6635,9 +6631,8 @@ msgstr "Udgående Kladde Overførsel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
-#, fuzzy
 msgid "Outgoing Move Line"
-msgstr "Udgående bogføringslinje"
+msgstr "Udgående posteringslinje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -7394,7 +7389,7 @@ msgstr "Produkt lot filer"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produkt bevægelser (Lagerbevægelse linje)"
+msgstr "Produktbevægelser (Lagerposteringslinje)"
 
 #. module: stock
 #. odoo-python
@@ -8113,7 +8108,7 @@ msgstr "Fjern"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Remove lines"
-msgstr ""
+msgstr "Fjern linjer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -10048,8 +10043,8 @@ msgid ""
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
 "Den angivne mængde for produktet \"%(product)s\" er ikke i overensstemmelse "
-"med den afrundingsnøjagtighed, der er defineret for måleenheden \"%"
-"(unit)s\". Ret enten den angivne mængde eller afrundingsnøjagtigheden for "
+"med den afrundingsnøjagtighed, der er defineret for måleenheden \"%(unit)"
+"s\". Ret enten den angivne mængde eller afrundingsnøjagtigheden for "
 "måleenheden."
 
 #. module: stock
@@ -11582,8 +11577,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, fuzzy
 msgid "You can not delete moves linked to another operation"
-msgstr ""
-"Du kan ikke slette posteringer, der er knyttet til en anden transaktion"
+msgstr "Du kan ikke slette posteringer, der er knyttet til en anden transaktion"
 
 #. module: stock
 #. odoo-python

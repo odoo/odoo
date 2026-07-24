@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-17 14:07+0000\n"
+"PO-Revision-Date: 2026-07-24 17:31+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/da/>\n"
@@ -381,9 +381,9 @@ msgid ""
 msgstr ""
 "Det anbefales at afrunde pr. skat, hvis dine priser er ekskl. moms. Dette "
 "minimerer kumulative afrundingsfejl, da alle uafrundede skattebeløb først "
-"summeres, og det samlede skattebeløb derefter afrundes én gang."
-"\\n                                                                                                                                                                                "
-"- Det anbefales at afrunde pr. linje, hvis dine priser er inkl. moms. På den "
+"summeres, og det samlede skattebeløb derefter afrundes én gang.\\n"
+"                                                                                                                                                                                - "
+"Det anbefales at afrunde pr. linje, hvis dine priser er inkl. moms. På den "
 "måde svarer summen af linjernes subtotaler til det samlede beløb inkl. moms."
 
 #. module: account
@@ -605,8 +605,8 @@ msgstr ""
 "                    selvfaktureringskreditnota\n"
 "               </t>\n"
 "                <t t-if=\"object.invoice_origin\"> \n"
-"                    (med reference: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"                    (med reference: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "               </t> \n"
 "                på et beløb på <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
@@ -726,8 +726,8 @@ msgstr ""
 "t>)\n"
 "       </t> \n"
 "        på et beløb på <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 $</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
 "            Denne faktura er allerede betalt.\n"
@@ -849,8 +849,8 @@ msgstr ""
 "t>)\n"
 "       </t> \n"
 "        på et beløb på <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 $</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
 "            Denne selvfaktura er allerede blevet betalt.\n"
@@ -936,9 +936,8 @@ msgstr ""
 "            (med reference: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "       </t> \n"
-"        på i alt <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 $</span>\n"
+"        på i alt <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "       <br/><br/> \n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
@@ -979,15 +978,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hej <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
-"><br/> \n"
+"        Hej <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/>"
+"<br/> \n"
 "        Tak for din betaling.\n"
 "        Her er din betalingskvittering <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "på\n"
-"       <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\"> 10,00 $</"
-"span> fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
+"       <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\"> 10,00 $</span> fra <t t-"
+"out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "       <br/><br/> \n"
 "        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
 "       <br/><br/> \n"
@@ -1053,8 +1052,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
 "title=\"Processing Payment\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-"
-"inline\">Behandler betaling </span>"
+"                                    <span class=\"d-none d-md-inline\">"
+"Behandler betaling </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1190,8 +1189,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1272,7 +1271,7 @@ msgstr "<span class=\"o_stat_text\">1 betaling</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Cash Basis Entries</span>"
-msgstr "<span class=\"o_stat_text\">Kasseposteringer</span>"
+msgstr "<span class=\"o_stat_text\">Kontantposteringer</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1370,8 +1369,8 @@ msgid ""
 "<span invisible=\"name or name_placeholder or "
 "document_sequence_editable\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or "
-"document_sequence_editable\">Kladde</span>"
+"<span invisible=\"name or name_placeholder or document_sequence_editable\">"
+"Kladde</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1590,8 +1589,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
-"<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
+msgstr "<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1861,8 +1859,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "       <tr>\n"
 "            <td align=\"center\"> \n"
 "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1883,8 +1881,8 @@ msgstr ""
 "                                   <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
-"\" class=\"align-baseline w-auto\"/> \n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/> \n"
 "                                   </td>\n"
 "                                </tr> \n"
 "                           </table>\n"
@@ -1934,11 +1932,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\"> Leverandør:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t> \n"
-"                                               <t t-"
-"if=\"inv.amount_total\">\n"
+"                                               <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Beløb:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\"> Beløb:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t> \n"
 "                                               <t t-"
@@ -1953,11 +1951,11 @@ msgstr ""
 "padding-top: 24px;\"> \n"
 "                                           <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\"> \n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\"> \n"
 "                                               Se fakturaer\n"
 "                                           </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2223,8 +2221,8 @@ msgid ""
 "            "
 msgstr ""
 "<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
-"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
-">\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
+"\n"
 "\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
@@ -2236,18 +2234,18 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr> \n"
-"                       <td colspan=\"2\" style=\"background:linear-"
-"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
-"padding:38px;\">\n"
+"                       <td colspan=\"2\" style=\"background:linear-gradient"
+"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
+"\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\"> \n"
 "                               <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\"> \n"
-"                                       <t t-"
-"if=\"object.is_sale_document(include_receipts=True)\"> Udgående faktura</t>\n"
-"                                        <t t-else=\"\">Indgående faktura</"
-"t>\n"
+"                                       <t t-if=\"object.is_sale_document"
+"(include_receipts=True)\"> Udgående faktura</t>\n"
+"                                        <t t-else=\"\">Indgående faktura</t>"
+"\n"
 "                                    </td>\n"
 "                                   <td align=\"right\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
@@ -2257,8 +2255,8 @@ msgstr ""
 "                                </tr> \n"
 "                               <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
-"\"> \n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
+"color:#ffffff;\"> \n"
 "                                        Ny faktura i <t t-"
 "out=\"object.journal_id.display_name\"/>\n"
 "                                    </td>\n"
@@ -2280,17 +2278,17 @@ msgstr ""
 "border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
 "16px;\"> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" "
-"style=\"padding:0;\"> \n"
+"                                    <td colspan=\"2\" style=\"padding:0;\"> "
+"\n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
 "border-radius:16px;\">\n"
 "                                            <tr> \n"
-"                                               <td style=\"padding:24px 26px;"
-"\">\n"
+"                                               <td style=\"padding:24px "
+"26px;\">\n"
 "                                                    <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
-"\"> Dokument</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Dokument</div>\n"
 "                                                    <div style=\"margin-"
 "top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
 "word;\">\n"
@@ -2307,8 +2305,8 @@ msgstr ""
 "                                                    <td style=\"padding:24px "
 "26px; border-left:1px solid #efe6f3;\" align=\"right\"> \n"
 "                                                       <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
-"\"> I alt</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> I alt</div>\n"
 "                                                        <div style=\"margin-"
 "top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
 "                                                           <t t-"
@@ -2321,15 +2319,15 @@ msgstr ""
 "                                   </td>\n"
 "                                </tr> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" "
-"style=\"padding:0;\"> \n"
+"                                    <td colspan=\"2\" style=\"padding:0;\"> "
+"\n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
 "                                            <tr> \n"
 "                                               <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
-"\"> \n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
+"start;\"> \n"
 "                                                       <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2420,14 +2418,13 @@ msgstr ""
 "bekvemmelighed.\n"
 "                           </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-align:center;"
-"\" t-if=\"object.move_type != 'in_invoice'\"> \n"
-"                               <a t-if=\"portal_url\" t-attf-"
-"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-"
-"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
-"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
-"target=\"_blank\"> \n"
+"                            <div style=\"margin-top:32px; text-"
+"align:center;\" t-if=\"object.move_type != 'in_invoice'\"> \n"
+"                               <a t-if=\"portal_url\" t-attf-href=\"{{ "
+"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-gradient"
+"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
+"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\"> \n"
 "                                    Se på portalen\n"
 "                               </a>\n"
 "                            </div> \n"
@@ -2652,7 +2649,7 @@ msgstr "Et midlertidigt nummer kan ikke bruges i en reel matchning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr "Unormal beløb partner"
+msgstr "Usædvanligt beløb fra partneren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
@@ -3081,8 +3078,7 @@ msgstr "Konto brugt til at flytte udgiftsperiode"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
-"Konto brugt til at registrere den private del af blandede omkostninger."
+msgstr "Konto brugt til at registrere den private del af blandede omkostninger."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -3136,7 +3132,7 @@ msgstr "Bogføringsdato"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr "Regnskab virksomhed modus"
+msgstr "Regnskabsfirmatilstand"
 
 #. module: account
 #. odoo-python
@@ -3243,8 +3239,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Afgrænsningsbogføring oprettet den %(date)s: %"
-"(accrual_entry)s,                samt dens modbogføring: 3%(reverse_entry)s."
+"Afgrænsningsbogføring oprettet den %(date)s: %(accrual_entry)"
+"s,                samt dens modbogføring: 3%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3598,8 +3594,7 @@ msgstr "Antal oprindelige posteringer for korrektionsposteringen"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr ""
-"Justerende postering {link} {percent}%% på {amount} genkendt fra {date}"
+msgstr "Justerende postering {link} {percent}%% på {amount} genkendt fra {date}"
 
 #. module: account
 #. odoo-python
@@ -3653,7 +3648,7 @@ msgstr "Saml andre formler"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__aggregation_formula
 msgid "Aggregation Formula Shortcut"
-msgstr "Saml formular genvej"
+msgstr "Genvejstast til sammenlægning af formler"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_airfare
@@ -3759,8 +3754,7 @@ msgstr "Alle partnere"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
-"Alle valgte bevægelser til tilbageføring skal tilhøre samme virksomhed."
+msgstr "Alle valgte bevægelser til tilbageføring skal tilhøre samme virksomhed."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -4020,8 +4014,8 @@ msgstr ""
 "En konto er en del af finansregnskabet og gør det muligt for din virksomhed\n"
 "                at registrere alle typer debet- og kredittransaktioner.\n"
 "                Virksomheder præsenterer deres årsregnskab i to hoveddele:\n"
-"                statusopgørelse og resultatopgørelse (tab- og "
-"vindingskonto).\n"
+"                statusopgørelse og resultatopgørelse (tab- og vindingskonto)"
+".\n"
 "                Det er lovpligtigt for et selskab\n"
 "                at videregive visse oplysninger."
 
@@ -5416,7 +5410,8 @@ msgstr ""
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
 msgstr ""
-"Kan ikke samle detaljer fra en linjer der ikke gør brug af 'samlings' motoren"
+"Det er ikke muligt at hente sammenlægningsdetaljer fra en linje, der ikke "
+"benytter 'sammenlægningsmotoren'"
 
 #. module: account
 #. odoo-python
@@ -5482,7 +5477,7 @@ msgstr "Kontantgrundlag"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_created_move_ids
 msgid "Cash Basis Entries"
-msgstr "Kontantbasis Posteringer"
+msgstr "Kontantposteringer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
@@ -5866,10 +5861,10 @@ msgid ""
 "Item).             When set, the report lines will generate sublines grouped "
 "by those keys except when specified on the report line."
 msgstr ""
-"Kommasepareret liste over felter fra account.move.line "
-"(journalpost).             Når denne indstilling er valgt, genereres der "
-"underlinjer i rapportlinjerne, der er grupperet efter disse nøgler, "
-"medmindre andet er angivet i den enkelte rapportlinje."
+"Kommasepareret liste over felter fra account.move.line (journalpost)"
+".             Når denne indstilling er valgt, genereres der underlinjer i "
+"rapportlinjerne, der er grupperet efter disse nøgler, medmindre andet er "
+"angivet i den enkelte rapportlinje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__groupby
@@ -5878,10 +5873,10 @@ msgid ""
 "Item).             When set, this report will have report lines generating "
 "sublines grouped by those keys except when specified on the report line."
 msgstr ""
-"Kommasepareret liste over felter fra account.move.line "
-"(journalpost).             Når dette er angivet, vil denne rapport have "
-"rapportlinjer, der genererer underlinjer grupperet efter disse nøgler, "
-"medmindre andet er angivet på rapportlinjen."
+"Kommasepareret liste over felter fra account.move.line (journalpost)"
+".             Når dette er angivet, vil denne rapport have rapportlinjer, "
+"der genererer underlinjer grupperet efter disse nøgler, medmindre andet er "
+"angivet på rapportlinjen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__groupby
@@ -6265,7 +6260,7 @@ msgstr "Pris for produktion"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "Variable omkostninger"
+msgstr "Omsætningsomkostning"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_equipment
@@ -6275,7 +6270,7 @@ msgstr "Omkostninger til kontormøbler, inventar og forretningsudstyr"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr "Kostpris"
+msgstr "Omsætningsomkostning"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -8532,7 +8527,7 @@ msgstr "Elektronisk Data Udveksling"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Elektronisk fakturering"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8993,8 +8988,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.22_account_account_us_vehicles_expense
 msgid "Expenses made for the repair and maintenance of company cars and trucks"
-msgstr ""
-"Udgifter til reparationer og vedligeholdelse af firmabiler og lastbiler"
+msgstr "Udgifter til reparationer og vedligeholdelse af firmabiler og lastbiler"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_computers
@@ -10475,8 +10469,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"Hvis du sælger varer og tjenesteydelser til kunder i "
-"et                                 EU-land, skal momsen beregnes ud fra "
+"Hvis du sælger varer og tjenesteydelser til kunder i et"
+"                                 EU-land, skal momsen beregnes ud fra "
 "leveringsadressen.                                 Denne regel gælder "
 "uanset, hvor du er bosat."
 
@@ -10907,8 +10901,8 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
 msgstr ""
-"Intern felt til at forkorte expression_ids oprettelse for aggregerings "
-"motoren"
+"Internt felt til at forkorte oprettelsen af expression_ids for "
+"sammenlægningsmotoren"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
@@ -12924,7 +12918,7 @@ msgstr "Flyt ned"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
 msgid "Move Line"
-msgstr "Handling"
+msgstr "Posteringslinje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -13766,8 +13760,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr ""
-"Kun posterede/annullerede journalposteringer kan nulstilles til kladde."
+msgstr "Kun posterede/annullerede journalposteringer kan nulstilles til kladde."
 
 #. module: account
 #. odoo-python
@@ -14788,8 +14781,7 @@ msgstr "Periodiske udgifter til afskrivning af bygningsaktiver."
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_technology
 msgid "Periodic depreciation expense for capitalized technology assets."
-msgstr ""
-"Periodiske udgifter til afskrivning af aktiverede teknologiske aktiver."
+msgstr "Periodiske udgifter til afskrivning af aktiverede teknologiske aktiver."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_furniture
@@ -17856,7 +17848,7 @@ msgstr "Metode til afrunding af moms"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "Moms kontantbasis postering fra"
+msgstr "Kontantbaseret momspostering af"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
@@ -18089,7 +18081,7 @@ msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
 msgstr ""
 "Skattedistributionslinje, der forårsagede oprettelsen af denne "
-"bogføringspostlinje, hvis nogen"
+"posteringslinje, hvis nogen"
 
 #. module: account
 #. odoo-python
@@ -18244,8 +18236,8 @@ msgstr ""
 "prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "prefix* grupperne er separatorerne mellem året, måneden, og den aktuellte "
 "forøgelse af sekvens nummeret (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_technology
@@ -18661,8 +18653,8 @@ msgid ""
 "Please verify if this date is accurate."
 msgstr ""
 "Faktureringshyppigheden for %(partner_name)s er usædvanlig. Baseret på dine "
-"historiske data, er den forventede faktureringsdato ikke før %"
-"(expected_date)s (hver %(mean)s (± %(wiggle)s) dage).\n"
+"historiske data, er den forventede faktureringsdato ikke før %(expected_date)"
+"s (hver %(mean)s (± %(wiggle)s) dage).\n"
 "Kontrollér venligst, om datoen er korrekt."
 
 #. module: account
@@ -18672,8 +18664,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"Kontant basis posteringer operttet fra moms på denne postering, under "
-"afstemning af dens linjer."
+"Kontantposteringer oprettet fra moms på denne postering under afstemning af "
+"dens linjer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -18892,8 +18884,7 @@ msgstr "Posteringen er ikke balanceret."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr ""
-"Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
+msgstr "Posteringen er sikker med en hash, der ikke kan redigeres eller ændres."
 
 #. module: account
 #. odoo-python
@@ -19937,8 +19928,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr ""
-"Denne bevægelse er konfigureret til at blive auto-posteret den %(date)s"
+msgstr "Denne bevægelse er konfigureret til at blive auto-posteret den %(date)s"
 
 #. module: account
 #. odoo-python
@@ -21454,8 +21444,7 @@ msgstr ""
 #: code:addons/account/models/account_move_send.py:0
 msgid ""
 "You can only generate sales documents or purchase documents for self-billing."
-msgstr ""
-"Du kan kun generere salgs- eller indkøbsdokumenter til selvfakturering."
+msgstr "Du kan kun generere salgs- eller indkøbsdokumenter til selvfakturering."
 
 #. module: account
 #. odoo-python
@@ -21803,8 +21792,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr ""
-"Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
+msgstr "Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
 
 #. module: account
 #. odoo-python
@@ -22831,8 +22819,8 @@ msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
-"{{ object.company_id.name }} - Ny faktura i "
-"{{ object.journal_id.display_name or 'Invoices' }} journal"
+"{{ object.company_id.name }} - Ny faktura i {{ "
+"object.journal_id.display_name or 'Invoices' }} journal"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

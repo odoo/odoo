@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-07-09 06:42+0000\n"
+"PO-Revision-Date: 2026-07-21 14:36+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/de/>\n"
@@ -75,13 +75,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
-msgstr ""
-"%s hat den Empfang von elektronischen Rechnungen über Peppol angefragt."
+msgstr "%s hat den Empfang von elektronischen Rechnungen über Peppol angefragt."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>Authentifizieren</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -221,8 +220,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;"
-"\">Benachrichtigung</span>\n"
+"                                    <span style=\"font-size: 10px;\">"
+"Benachrichtigung</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -231,26 +230,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Rechnungen senden\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -658,7 +657,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Authentifizierung abgebrochen"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1389,7 +1388,7 @@ msgstr "Peppol-Dokumente: Rechnung kann nicht gelöscht werden"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol-EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1428,7 +1427,7 @@ msgstr "Die Peppol-ID sollte sich vom Hauptunternehmen unterscheiden."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_identifier
 msgid "Peppol Identifier"
-msgstr ""
+msgstr "Peppol-Kennung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
@@ -1640,7 +1639,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Please fill in the company's routing identification."
-msgstr ""
+msgstr "Bitte geben Sie die Routing-Identifikation des Unternehmens ein."
 
 #. module: account_peppol
 #. odoo-python
@@ -1787,18 +1786,18 @@ msgstr "Antwortcode"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Routing-Endpunkt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__routing_scheme
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__routing_scheme
 msgid "Routing ID"
-msgstr ""
+msgstr "Routing-ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_scheme
 msgid "Routing Scheme"
-msgstr ""
+msgstr "Routing-Schema"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
@@ -2359,8 +2358,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
-"Dieser Benutzer ist kein Peppol-Benutzer. Der zugehörige proxy_type muss "
-"„peppol“ lauten. Das ist zur Erstellung eines Peppol-Teilnehmer zwingend "
+"Dieser Benutzer ist kein Peppol-Benutzer. Der zugehörige proxy_type muss „"
+"peppol“ lauten. Das ist zur Erstellung eines Peppol-Teilnehmer zwingend "
 "erforderlich."
 
 #. module: account_peppol
@@ -2377,12 +2376,16 @@ msgstr ""
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"Um die zugelassene Plattform für die elektronische Rechnungsstellung in "
+"Frankreich zu nutzen, installieren Sie das Modul"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"Um die zugelassene Plattform für die elektronische Rechnungsstellung in "
+"Frankreich zu nutzen, installieren Sie das Modul"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2432,7 +2435,7 @@ msgstr "Auswahl der übergeordneten Verbindung verwenden"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Überprüfung ausstehend"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2480,7 +2483,7 @@ msgstr "Was ist Peppol und warum ist es so toll?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "Warum sollte ich die französische E-Rechnungsstellung nutzen?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2649,6 +2652,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"Ihre Angaben werden derzeit überprüft. Sie müssen nichts weiter tun: Ihre "
+"Peppol-Registrierung wird automatisch abgeschlossen."
 
 #. module: account_peppol
 #. odoo-python

@@ -36,9 +36,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-12 04:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-3/"
+"PO-Revision-Date: 2026-07-21 05:33+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -179,8 +179,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%"
-"(attachment_extension)s"
+"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%(attachment_extension)"
+"s"
 
 #. module: account
 #. odoo-python
@@ -820,8 +820,8 @@ msgstr "<em>Nacrt računa</em>"
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" title=\"Datum\"/"
-">"
+"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" "
+"title=\"Datum\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -912,11 +912,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
 "\n"
-"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length == "
-"1\">Izbriši sve duplikate</span>\n"
+"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length == 1\">"
+"Izbriši sve duplikate</span>\n"
 "\n"
-"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length &gt; "
-"1\">Izbriši duplikat</span>"
+"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length &gt; 1\">"
+"Izbriši duplikat</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1012,8 +1012,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1683,8 +1683,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1704,8 +1704,8 @@ msgstr ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
-"\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -1732,8 +1732,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            Primili ste <t t-"
-"if=\"invoice_count &gt; 1\">nove e-račune</t><t t-else=\"\">novi e-račun</"
-"t>!\n"
+"if=\"invoice_count &gt; 1\">nove e-račune</t><t t-else=\"\">novi e-račun</t>"
+"!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -1755,11 +1755,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\">Dobavljač:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-"
-"if=\"inv.amount_total\">\n"
+"                                                <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Iznos:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Iznos:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1774,11 +1774,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\">\n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\">\n"
 "                                               Pregledaj račune\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2091,9 +2091,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Bankovni račun s brojem računa %(number)s već postoji za partnera %"
-"(partner)s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz "
-"arhive."
+"Bankovni račun s brojem računa %(number)s već postoji za partnera %(partner)"
+"s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz arhive."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2168,8 +2167,7 @@ msgstr "Redak ne može imati i podretke i groupby vrijednost (redak '%s')."
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr ""
-"Redak ovog kretanja koristi arhivirani konto, ne možete ga proknjižiti."
+msgstr "Redak ovog kretanja koristi arhivirani konto, ne možete ga proknjižiti."
 
 #. module: account
 #. odoo-python
@@ -2189,8 +2187,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
-"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
+msgstr "Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: account
 #. odoo-python
@@ -3235,8 +3232,7 @@ msgstr "Broj kretanja izvora korektivnog knjiženja"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, fuzzy
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr ""
-"Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
+msgstr "Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
 
 #. module: account
 #. odoo-python
@@ -5631,8 +5627,7 @@ msgstr "Pohrana kodova"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
-msgstr ""
-"Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
+msgstr "Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14137,8 +14132,8 @@ msgid ""
 msgstr ""
 "Opcionalni jezik prijevoda (ISO kod) koji se odabire pri slanju e-pošte. Ako "
 "nije postavljeno, koristit će se glavni jezik partnera. Ovo obično treba "
-"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. "
-"{{ object.partner_id.lang }}."
+"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. {{ "
+"object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -14625,8 +14620,7 @@ msgstr "Partneri bez bankovnog računa"
 #: code:addons/account/models/partner.py:0
 #, fuzzy
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
-"Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
+msgstr "Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -21440,8 +21434,7 @@ msgstr "Validiraj bankovni račun"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr ""
-"Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
+msgstr "Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
 
 #. module: account
 #. odoo-javascript
@@ -21760,8 +21753,7 @@ msgstr "Treba li ovaj dnevnik prikazati na nadzornoj ploči ili ne."
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 #, fuzzy
 msgid "Will be used to name the Journal related to this bank account"
-msgstr ""
-"Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
+msgstr "Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -22199,8 +22191,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, fuzzy
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr ""
-"Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
+msgstr "Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
 
 #. module: account
 #. odoo-python
@@ -23348,8 +23339,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} knjižno odobrenje samofakturiranja (Ref "
-"{{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} knjižno odobrenje samofakturiranja (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice

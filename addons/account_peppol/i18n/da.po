@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-07-17 14:32+0000\n"
+"PO-Revision-Date: 2026-07-21 19:04+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/da/>\n"
@@ -80,7 +80,7 @@ msgstr "%s har anmodet om at modtage elektroniske fakturaer via Peppol."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>Godkend</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -90,8 +90,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                I Belgien bliver elektronisk fakturering "
-"<u>obligatorisk fra januar 2026</u> – vent ikke med at tilmelde dig."
+"                                I Belgien bliver elektronisk fakturering <u>"
+"obligatorisk fra januar 2026</u> – vent ikke med at tilmelde dig."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -219,8 +219,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;"
-"\">Meddelelse</span>\n"
+"                                    <span style=\"font-size: 10px;\">"
+"Meddelelse</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -229,26 +229,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Send fakturaer\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -264,8 +264,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>Hej <t t-out=\"object.name or "
-"''\">DinVirksomhed</t></p>\n"
+"                                    <p>Hej <t t-out=\"object.name or ''\">"
+"DinVirksomhed</t></p>\n"
 "\n"
 "                                    <p>Vi har føjet din virksomhed til "
 "<strong>Peppol-netværket</strong>.</p>\n"
@@ -391,8 +391,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "A purchase journal must be used to receive Peppol documents."
-msgstr ""
-"En indkøbsjournal skal anvendes for at kunne modtage Peppol-dokumenter."
+msgstr "En indkøbsjournal skal anvendes for at kunne modtage Peppol-dokumenter."
 
 #. module: account_peppol
 #. odoo-python
@@ -644,7 +643,7 @@ msgstr "Der skal angives mindst én årsag, når en Peppol-faktura afvises."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Godkendelse annulleret"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1890,8 +1889,8 @@ msgid ""
 "                            By clicking the button below I accept that Odoo "
 "may process my e-invoices."
 msgstr ""
-"Testtilstanden gør det muligt at sende e-fakturaer via Peppol-testnetværket."
-"<br/>\n"
+"Testtilstanden gør det muligt at sende e-fakturaer via Peppol-"
+"testnetværket.<br/>\n"
 "                            Ved at klikke på knappen nedenfor accepterer "
 "jeg, at Odoo behandler mine elektroniske fakturaer."
 
@@ -2400,7 +2399,7 @@ msgstr "Brug valg af overordnet forbindelse"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Verifikation afventes"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2612,6 +2611,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"Dine oplysninger bliver i øjeblikket verificeret. Du behøver ikke foretage "
+"dig yderligere: Din Peppol-registrering bliver afsluttet automatisk."
 
 #. module: account_peppol
 #. odoo-python

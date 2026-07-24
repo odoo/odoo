@@ -16,16 +16,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-05-30 12:16+0000\n"
+"PO-Revision-Date: 2026-07-23 08:09+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-3/delivery/zh_Hans/>\n"
+"projects/odoo-s19-4/delivery/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: delivery
 #: model:ir.actions.report,print_report_name:delivery.action_report_delivery_note
@@ -1124,8 +1124,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
-"此选项可在门户网站中为客户添加一个链接，方便客户追踪包裹。在 URL 中使用"
-"<shipmenttrackingnumber>作为占位符。"
+"此选项可在门户网站中为客户添加一个链接，方便客户追踪包裹。在 URL 中使"
+"用<shipmenttrackingnumber>作为占位符。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1150,12 +1150,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "追踪 URL"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "单位"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1188,7 +1188,7 @@ msgstr "可变系数"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_unit
 msgid "Variable Unit"
-msgstr ""
+msgstr "变量单位"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1240,6 +1240,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"已结算的订单，不支持修改运费！\n"
+"\n"
+"已经处理以下交货明细（产品、开票数量和价格）：\n"
+"\n"
 
 #. module: delivery
 #. odoo-python
@@ -1247,7 +1251,7 @@ msgstr ""
 msgid ""
 "You cannot delete this product category as it is used on the products linked "
 "to delivery methods."
-msgstr ""
+msgstr "您无法删除此产品类别，因为它被用于与配送方式关联的产品中。"
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod
@@ -1262,7 +1266,7 @@ msgstr "您的支付已被取消。"
 #. module: delivery
 #: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "您的付款已经处理，但正在等待批准。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1290,3 +1294,5 @@ msgid ""
 "{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
 "{{ object.so_id.name or 'n/a' }})"
 msgstr ""
+"{{ object.so_id.company_id.name }} 发货确认（参考编号{{ object.so_id.name or "
+"'n/a' }} ）"

@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-04-23 11:51+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
+"PO-Revision-Date: 2026-07-21 13:31+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "mass_mailing_sms/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -84,8 +84,8 @@ msgid ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages are being processed.</span>"
 msgstr ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMSテキス"
-"トメッセージの処理中です。</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS"
+"テキストメッセージの処理中です。</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -93,8 +93,8 @@ msgid ""
 "<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
 "Text Messages are in queue and will be sent soon.</span>"
 msgstr ""
-"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMSメッ"
-"セージは送信予約済みで、まもなく送信されます。</span>"
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS"
+"メッセージは送信予約済みで、まもなく送信されます。</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
@@ -110,8 +110,8 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            IAPクレジットが不足しているようです。ここをクリッ"
-"クしてクレジットを購入して下さい。\n"
+"                            IAPクレジットが不足しているようです。ここを"
+"クリックしてクレジットを購入して下さい。\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -123,8 +123,8 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            SMSアカウントが登録されていないようです。ここをク"
-"リックしてアカウントを設定して下さい。\n"
+"                            SMSアカウントが登録されていないようです。ここを"
+"クリックしてアカウントを設定して下さい。\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -279,8 +279,8 @@ msgstr "コード"
 msgid ""
 "Come back once some SMS Mailings are sent to check out aggregated results."
 msgstr ""
-"いくつかのSMSメールが送信されたら、集計結果を確認するために戻っててきて下さ"
-"い。"
+"いくつかのSMSメールが送信されたら、集計結果を確認するために戻っててきて下さい"
+"。"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
@@ -388,8 +388,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"サニタイズされた電話番号を保存するためのフィールド。検索や比較のスピードアッ"
-"プに役立ちます。"
+"サニタイズされた電話番号を保存するためのフィールド。検索や比較の"
+"スピードアップに役立ちます。"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -496,9 +496,9 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを"
-"示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合"
-"に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ち"
-"ます。"
+"示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、"
+"　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます"
+"。"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -997,8 +997,7 @@ msgstr "テストSMSは以下に送信されませんでした: %(destination)s:
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 msgid "Test SMS skipped those numbers as they appear invalid: %(numbers)s"
-msgstr ""
-"テスト SMS は、無効と思われるこれらの番号をスキップしました: %(numbers)s"
+msgstr "テスト SMS は、無効と思われるこれらの番号をスキップしました: %(numbers)s"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -1016,8 +1015,8 @@ msgstr "登録解除中の試行中にエラーが発生しました。"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"この電話番号はSMSマーケティングのブラックリストに登録されています。ブラックリ"
-"ストを解除するにはクリックして下さい。"
+"この電話番号はSMSマーケティングのブラックリストに登録されています。"
+"ブラックリストを解除するにはクリックして下さい。"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_subject
