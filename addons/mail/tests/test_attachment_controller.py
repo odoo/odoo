@@ -86,6 +86,7 @@ class TestAttachmentController(TestAttachmentControllerCommon):
 
     def test_upload_multi_company(self):
         record = self.user_demo.partner_id
+        record.company_id = self.user_demo.company_id
         self.authenticate(self.user_admin.login, self.user_admin.login)
         self.assertTrue(record.company_id)  # Ensure the thread has a company
         test_cases = [
