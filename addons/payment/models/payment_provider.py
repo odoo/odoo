@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.tools.translate import mark_as_copy
 
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
@@ -552,9 +553,9 @@ class PaymentProvider(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        for provider, vals in zip(self, vals_list):
-            if "name" not in default and "company_id" not in default:
-                vals["name"] = provider.env._("%s (copy)", provider.name)
+        if "name" not in default and "company_id" not in default:
+            for provider, vals in zip(self, vals_list):
+                vals["name"] = mark_as_copy('name')(provider)
         return vals_list
 
     @api.ondelete(at_uninstall=False)

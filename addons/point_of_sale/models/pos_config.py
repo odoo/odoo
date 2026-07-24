@@ -14,6 +14,7 @@ from odoo.http import request
 from odoo.tools import SQL, convert
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang
+from odoo.tools.translate import mark_as_copy
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -67,7 +68,7 @@ class PosConfig(models.Model):
     def _default_partner(self):
         return self.sudo()._get_or_create_default_partner()
 
-    name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.")
+    name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.", copy=mark_as_copy('name'))
     preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", domain="[('use_type', '=', 'preparation')]")
     receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", domain="[('use_type', '=', 'receipt')]")
     use_order_printer = fields.Boolean('Order Printer')
@@ -787,14 +788,6 @@ class PosConfig(models.Model):
         if 'use_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for config, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", config.name)
-        return vals_list
 
     def link_category_form_pos(self, category):
         self.ensure_one()

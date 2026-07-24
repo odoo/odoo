@@ -4,7 +4,7 @@ from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools.translate import html_translate, adapt_translated_field_value
+from odoo.tools.translate import html_translate, adapt_translated_field_value, mark_as_copy
 
 from collections import defaultdict
 from collections.abc import Iterable
@@ -92,7 +92,7 @@ class AccountTax(models.Model):
     _rec_names_search = ('name', 'description', 'invoice_label')
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
+    name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True, copy=mark_as_copy('name'))
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope")
@@ -677,14 +677,6 @@ class AccountTax(models.Model):
     def write(self, vals):
         self.env.cr.cache.pop('retrieved_tax_map', None)
         return super().write(self._sanitize_vals(vals))
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for tax, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", tax.name)
-        return vals_list
 
     @api.depends('type_tax_use', 'tax_scope')
     @api.depends_context('append_fields', 'formatted_display_name')

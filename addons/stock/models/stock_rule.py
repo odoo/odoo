@@ -12,6 +12,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools.misc import split_every
+from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +57,9 @@ class StockRule(models.Model):
     Procurement = Procurement
     name = fields.Char(
         'Name', required=True, translate=True,
-        help="This field will fill the packing origin and the name of its moves")
+        help="This field will fill the packing origin and the name of its moves",
+        copy=mark_as_copy('name'),
+    )
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the rule without removing it.")
@@ -109,14 +112,6 @@ class StockRule(models.Model):
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
     push_domain = fields.Char('Push Applicability')
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for rule, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", rule.name)
-        return vals_list
 
     @api.constrains('company_id')
     def _check_company_consistency(self):

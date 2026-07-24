@@ -6,6 +6,7 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.translate import mark_as_copy
 
 
 class PosCategory(models.Model):
@@ -26,7 +27,7 @@ class PosCategory(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    name = fields.Char(string='Category Name', required=True, translate=True)
+    name = fields.Char(string='Category Name', required=True, translate=True, copy=mark_as_copy('name'))
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
@@ -123,14 +124,6 @@ class PosCategory(models.Model):
                 raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
             if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
                 raise ValidationError(_('The Availability Until must be greater than Availability After.'))
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for pos_category, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", pos_category.name)
-        return vals_list
 
     def _compute_product_count(self):
         all_categories = self.search_fetch(

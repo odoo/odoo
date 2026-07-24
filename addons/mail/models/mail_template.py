@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, SQL, email_normalize, unique
 from odoo.tools.safe_eval import safe_eval, time
+from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ class MailTemplate(models.Model):
         return [('model', 'not in', abstract_models)]
 
     # description
-    name = fields.Char('Name', translate=True)
+    name = fields.Char('Name', translate=True, copy=mark_as_copy('name'))
     description = fields.Text(
         'Template Description', translate=True,
         help="This field is used for internal description of the template's usage.")
@@ -274,13 +275,6 @@ class MailTemplate(models.Model):
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        for vals, template in zip(vals_list, self):
-            if 'name' not in (default or {}):
-                vals['name'] = self.env._("%s (copy)", template.name)
-        return vals_list
 
     def copy(self, default=None):
         default = default or {}

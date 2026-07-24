@@ -45,15 +45,17 @@ if typing.TYPE_CHECKING:
     import types
 
     from collections.abc import Callable
-    from typing import Literal
+    from typing import Any, Literal
     from odoo.api import Environment
     from odoo.orm.fields_textual import BaseString
+    from odoo.orm.models import BaseModel
 
 __all__ = [
     "LazyTranslate",
     "_",
     "get_iso_codes",
     "html_translate",
+    "mark_as_copy",
     "xml_translate",
 ]
 
@@ -946,6 +948,33 @@ def adapt_translated_field_value(
             if (cache_v := field.convert_to_cache(v, model)) is not None
         })
     return adapted
+
+
+def mark_as_copy(field_name: str) -> Callable[[BaseModel], Any]:
+    """Factory for a :attr:`~odoo.fields.Field.copy` callable that appends `` (copy)``.
+
+    Usage::
+
+        name = fields.Char(..., copy=mark_as_copy('name'))
+    """
+    def _mark_as_copy(record):
+        field = record._fields[field_name]
+        assert field.type == 'char'
+        env = record.env
+        assert not callable(field.translate)
+        if field.translate:
+            translations = record._get_stored_translations(field_name)
+            if not translations:
+                return False
+            return adapt_translated_field_value(
+                env, field, translations,
+                lambda lang, v: record.with_context(lang=lang).env._('%s (copy)', v),
+            )
+        if record[field_name] is False:
+            return record[field_name]
+        return env._('%s (copy)', record[field_name])
+
+    return _mark_as_copy
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:

@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.translate import mark_as_copy
 
 
 class PosPreset(models.Model):
@@ -10,7 +11,7 @@ class PosPreset(models.Model):
     _inherit = ['pos.load.mixin']
     _description = 'Easily load a set of configuration options'
 
-    name = fields.Char(string='Label', required=True, translate=True)
+    name = fields.Char(string='Label', required=True, translate=True, copy=mark_as_copy('name'))
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position')
     identification = fields.Selection([('none', 'Not required'), ('address', 'Address'), ('name', 'Name')], default="none", string='Identification', required=True)
@@ -110,14 +111,6 @@ class PosPreset(models.Model):
             usage[sql_datetime_str].append(order.id)
 
         return usage
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for preset, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", preset.name)
-        return vals_list
 
     def action_open_linked_orders(self):
         self.ensure_one()

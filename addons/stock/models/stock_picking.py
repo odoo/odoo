@@ -13,6 +13,7 @@ from odoo.fields import Domain, Command
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 from odoo.tools.misc import clean_context
+from odoo.tools.translate import mark_as_copy
 
 
 class StockPickingType(models.Model):
@@ -23,7 +24,7 @@ class StockPickingType(models.Model):
     _rec_names_search = ('name', 'warehouse_id.name')
     _check_company_auto = True
 
-    name = fields.Char('Operation Type', required=True, translate=True)
+    name = fields.Char('Operation Type', required=True, translate=True, copy=mark_as_copy('name'))
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one(
@@ -183,8 +184,6 @@ class StockPickingType(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for picking, vals in zip(self, vals_list):
-            if 'name' not in default:
-                vals['name'] = _("%s (copy)", picking.name)
             if 'sequence_code' not in default and 'sequence_id' not in default:
                 vals['sequence_code'] = _("%s (copy)", picking.sequence_code)
         return vals_list

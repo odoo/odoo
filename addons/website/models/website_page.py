@@ -44,7 +44,7 @@ class WebsitePage(models.Model):
         compute='_compute_name', inverse='_inverse_name', store=True,
         translate=True,
     )
-    url = fields.Char('Page URL', required=True, translate=True)
+    url = fields.Char('Page URL', required=True, translate=True, copy=lambda self: self.env['website'].get_unique_path(self.url))
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
 
     view_write_uid = fields.Many2one('res.users', "Last Content Update by",
@@ -150,7 +150,6 @@ class WebsitePage(models.Model):
                 new_view = page.view_id.copy({'website_id': default.get('website_id')})
                 vals['view_id'] = new_view.id
                 vals['key'] = new_view.key
-            vals['url'] = default.get('url', self.env['website'].get_unique_path(page.url))
         return vals_list
 
     @api.model

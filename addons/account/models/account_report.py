@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.tools.translate import mark_as_copy
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -49,7 +50,7 @@ class AccountReport(models.Model):
 
     #  CORE ==========================================================================================================================================
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(string="Name", required=True, translate=True, copy=mark_as_copy('name'))
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
@@ -315,10 +316,6 @@ class AccountReport(models.Model):
 
         return super().write(vals)
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=report._get_copied_name()) for report, vals in zip(self, vals_list)]
-
     def copy(self, default=None):
         '''Copy the whole financial report hierarchy by duplicating each line recursively.
 
@@ -352,18 +349,6 @@ class AccountReport(models.Model):
     def _unlink_if_no_variant(self):
         if self.variant_report_ids:
             raise UserError(_("You can't delete a report that has variants."))
-
-    def _get_copied_name(self):
-        '''Return a copied name of the account.report record by adding the suffix (copy) at the end
-        until the name is unique.
-
-        :return: an unique name for the copied account.report
-        '''
-        self.ensure_one()
-        name = self.name + ' ' + _('(copy)')
-        while self.search_count([('name', '=', name)]) > 0:
-            name += ' ' + _('(copy)')
-        return name
 
     @api.depends('name', 'country_id')
     def _compute_display_name(self):
