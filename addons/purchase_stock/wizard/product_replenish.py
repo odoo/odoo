@@ -97,7 +97,7 @@ class ProductReplenish(models.TransientModel):
             ('company_id', '=', company.id),
             ('picking_type_id.code', '=', 'incoming'),
         ]).route_id
-        if buy_route and product_tmpl_id.seller_ids:
+        if buy_route and (product_tmpl_id.seller_ids or product_tmpl_id._has_confirmed_purchase(company)):
             domain = Domain.OR([domain, Domain('id', 'in', buy_route.ids)])
         return domain
 

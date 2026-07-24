@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections.abc import Iterable
+
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
@@ -54,12 +56,26 @@ class ProductTemplate(models.Model):
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
+    def _has_confirmed_purchase(self, company_id=False):
+        return bool(self.env['purchase.order.line'].sudo().search_count([
+            ('product_id.product_tmpl_id', 'in', self.ids),
+            ('order_id.state', '=', 'purchase'),
+            ('order_id.date_approve', '!=', False),
+            ('order_id.company_id', '=', company_id.id) if company_id
+                else ('order_id.company_id', 'in', self.env.companies.ids),
+        ], limit=1))
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit')
+
+    sold_by_vendor_id = fields.Many2one(
+        'res.partner', string='Vendor', store=False,
+        search='_search_sold_by_vendor',
+    )
 
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
@@ -97,6 +113,30 @@ class ProductProduct(models.Model):
             res[product.id]['virtual_available'] += to_receive
         return res
 
+    def _search_sold_by_vendor(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        if isinstance(value, str):
+            partners = self.env['res.partner'].search([('name', operator, value)])
+        else:
+            ids = value if isinstance(value, Iterable) else [value]
+            partners = self.env['res.partner'].browse([id_ for id_ in ids if id_]).exists()
+        partners |= partners.parent_id
+        if not partners:
+            return Domain.FALSE
+
+        pricelist_ids = set(self.search([
+            ('seller_ids.partner_id', 'in', partners.ids),
+        ]).ids)
+
+        po_product_ids = set(self.env['purchase.order.line'].sudo().search([
+            ('order_id.partner_id', 'child_of', partners.ids),
+            ('order_id.state', '=', 'purchase'),
+            ('order_id.company_id', 'in', self.env.companies.ids),
+        ]).mapped('product_id.id'))
+
+        return [('id', 'in', list(pricelist_ids | po_product_ids))]
+
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
         action['domain'] = ['&', ('state', '=', 'purchase'), ('product_id', 'in', self.ids)]
@@ -131,6 +171,75 @@ class ProductProduct(models.Model):
             [('product_id', 'in', self.ids)], limit=1
         )
         return bool(po_lines)
+
+    def _has_confirmed_purchase(self, company_id=False):
+        return bool(self.env['purchase.order.line'].sudo().search_count([
+            ('product_id', 'in', self.ids),
+            ('order_id.state', '=', 'purchase'),
+            ('order_id.date_approve', '!=', False),
+            ('order_id.company_id', '=', company_id.id) if company_id
+                else ('order_id.company_id', 'in', self.env.companies.ids),
+        ], limit=1))
+
+    def _has_vendor_pricelist(self, partner_id=False, company_id=False):
+        self.ensure_one()
+        partners = partner_id | partner_id.parent_id if partner_id else self.env['res.partner']
+        return any(
+            (not s.product_id or s.product_id == self)
+            and (not s.company_id or not company_id or s.company_id == company_id)
+            and (not partners or s.partner_id in partners)
+            for s in self.seller_ids
+        )
+
+    def _get_last_po_line(self, partner_id=False, company_id=False):
+        if not self.id:
+            return self.env['purchase.order.line'].sudo()
+        domain = [
+            ('state', '=', 'purchase'),
+            ('date_approve', '!=', False),
+            ('order_line.product_id', '=', self.id),
+        ]
+        if partner_id:
+            vendor = partner_id if not partner_id.parent_id else partner_id.parent_id
+            domain.append(('partner_id', 'child_of', vendor.id))
+        if company_id:
+            domain.append(('company_id', '=', company_id.id))
+        else:
+            domain.append(('company_id', 'in', self.env.companies.ids))
+        last_order = self.env['purchase.order'].sudo().search(domain, order='date_approve desc, id desc', limit=1)
+        return self.env['purchase.order.line'].sudo().search([
+            ('order_id', '=', last_order.id),
+            ('product_id', '=', self.id),
+        ], order='id desc', limit=1)
+
+    def _get_last_po_supplierinfo(self, partner_id=False, company_id=False):
+        last_line = self._get_last_po_line(partner_id=partner_id, company_id=company_id)
+        if not last_line:
+            return self.env['product.supplierinfo']
+        last_order = last_line.order_id
+        vendor = last_order.partner_id if not last_order.partner_id.parent_id else last_order.partner_id.parent_id
+        delay = 0
+        if last_line.date_planned and last_order.date_approve:
+            delay = max(0, (last_line.date_planned.date() - last_order.date_approve.date()).days)
+
+        return self.env['product.supplierinfo'].new({
+            'partner_id': vendor.id,
+            'product_tmpl_id': self.product_tmpl_id.id,
+            'product_id': self.id if self.product_variant_count > 1 else False,
+            'price': last_line.price_unit,
+            'currency_id': last_line.currency_id.id,
+            'discount': last_line.discount,
+            'uom_id': last_line.uom_id.id,
+            'min_qty': 0.0,
+            'delay': delay,
+        })
+
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
+        seller = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
+        if not seller and not self._has_vendor_pricelist(partner_id, self.env.company):
+            # No pricelist defined for this vendor: the last confirmed po line acts as one
+            seller = self._get_last_po_supplierinfo(partner_id, self.env.company)
+        return seller
 
 
 class ProductSupplierinfo(models.Model):

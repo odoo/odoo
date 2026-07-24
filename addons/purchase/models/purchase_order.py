@@ -713,7 +713,6 @@ class PurchaseOrder(models.Model):
             if error_msg:
                 raise UserError(error_msg)
             order.order_line._validate_analytic_distribution()
-            order._add_supplier_to_product()
             # Deal with double validation process
             if order._approval_allowed():
                 order.button_approve()
@@ -761,73 +760,6 @@ class PurchaseOrder(models.Model):
             return _("Some order lines are missing a product, you need to correct them before going further.")
 
         return False
-
-    def _prepare_supplier_info(self, partner, line, price, currency):
-        # Prepare supplierinfo data when adding a product
-        product = line.product_id
-        return {
-            'partner_id': partner.id,
-            'sequence': max(product.seller_ids.mapped('sequence')) + 1 if product.seller_ids else 1,
-            'min_qty': 1.0,
-            'price': price,
-            'currency_id': currency.id,
-            'discount': line.discount,
-            'delay': max(0, (line.date_planned.date() - fields.Datetime.now().date()).days),
-            'product_tmpl_id': product.product_tmpl_id.id,
-            'product_id': product.id if product.product_variant_count > 1 else False,
-        }
-
-    def _add_supplier_to_product(self):
-        # Add the partner in the supplier list of the product if the supplier is not registered for
-        # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
-        # could be caused for some generic products ("Miscellaneous").
-        supplierinfo_by_template = {}
-        # Do not add a contact as a supplier
-        partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-        allowed_partners = partner | self.partner_id
-        for line in self.order_line:
-            product = line.product_id
-            is_variant = product.product_variant_count > 1
-            already_seller = any(s.partner_id in allowed_partners and (not is_variant or s.product_id == product) for s in product.seller_ids)
-            if product and not already_seller and len(product.seller_ids) <= 10:
-                price = line.price_unit
-                # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
-                if product.product_tmpl_id.uom_id != line.uom_id:
-                    default_uom = product.product_tmpl_id.uom_id
-                    price = line.uom_id._compute_price(price, default_uom)
-
-                supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
-                # In case the order partner is a contact address, a new supplierinfo is created on
-                # the parent company. In this case, we keep the product name and code.
-                if line.selected_seller_id:
-                    supplierinfo['product_name'] = line.selected_seller_id.product_name
-                    supplierinfo['product_code'] = line.selected_seller_id.product_code
-
-                # Group supplier values per template to batch-create supplierinfo records
-                supplierinfo_list = supplierinfo_by_template.setdefault(product.product_tmpl_id, [])
-
-                product_ids = {s.get('product_id') for s in supplierinfo_list}
-                if not supplierinfo_list or supplierinfo.get('product_id') not in product_ids:
-                    supplierinfo_list.append(supplierinfo)
-
-        all_supplierinfo_vals = []
-        for template, supplierinfo_list in supplierinfo_by_template.items():
-            # If all variant suppliers have the same price and delay,
-            # create a single template-level supplier instead of multiple variant records.
-            reference_supplier = supplierinfo_list[0]
-            if len(supplierinfo_list) > 1 and all(
-                s.get('price') == reference_supplier.get('price') and s.get('delay') == reference_supplier.get('delay') for s in supplierinfo_list
-            ):
-                supplierinfo_list = [{**reference_supplier, 'product_id': False}]
-            # Skip creation if a template-level supplier already exists for this partner.
-            already_seller = any(s.partner_id in allowed_partners and not s.product_id for s in template.seller_ids)
-            if already_seller and not supplierinfo_list[0].get('product_id'):
-                continue
-            all_supplierinfo_vals.extend(supplierinfo_list)
-
-        if all_supplierinfo_vals:
-            # supplier info should be added regardless of the user access rights
-            self.env['product.supplierinfo'].sudo().create(all_supplierinfo_vals)
 
     def action_bill_matching(self):
         self.ensure_one()
@@ -1283,7 +1215,7 @@ class PurchaseOrder(models.Model):
             'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
             'is_purchase_document': True,
-            'search_default_seller_ids': self.partner_id.name,
+            'search_default_sold_by_vendor_id': self.partner_id.id,
             'partner_id': self.partner_id.id,
         }
 
@@ -1310,12 +1242,12 @@ class PurchaseOrder(models.Model):
             **self._get_product_catalog_seller_data(product, **kwargs),
         }
 
-    def _get_product_catalog_uom_data(self, product, *args, **kwargs) -> dict:
-        res = super()._get_product_catalog_uom_data(product, *args, **kwargs)
+    def _get_product_catalog_uom_data(self, product, uom, **kwargs) -> dict:
+        res = super()._get_product_catalog_uom_data(product, uom, **kwargs)
         if 'availableUoms' not in res:  # UoM not enabled
             return res
 
-        available_uoms = product._get_available_uoms() | product.seller_ids.uom_id
+        available_uoms = product._get_available_uoms() | product.seller_ids.uom_id | uom
         res['availableUoms'] = available_uoms.read(["name", "factor"])
         return res
 
