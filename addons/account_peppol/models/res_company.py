@@ -132,6 +132,16 @@ class ResCompany(models.Model):
         if not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
+    def _get_einvoicing_network_name(self):
+        """Return the user-facing name of the company's e-invoicing network or platform."""
+        self.ensure_one()
+        return self.env._("Peppol")
+
+    def _get_einvoicing_identifier_name(self):
+        """Return the user-facing name of an identifier on the network."""
+        self.ensure_one()
+        return self.env._("Peppol EAS and/or Endpoint identifier")
+
     def _peppol_is_french_company(self):
         self.ensure_one()
         return (
