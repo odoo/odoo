@@ -9,6 +9,30 @@ import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { unformat } from "./_helpers/format";
 
+test("should detect circular dependencies", async () => {
+    class PluginA extends Plugin {
+        static id = "a";
+        static dependencies = ["b"];
+    }
+    class PluginB extends Plugin {
+        static id = "b";
+        static dependencies = ["c"];
+    }
+    class PluginC extends Plugin {
+        static id = "c";
+        static dependencies = ["a"];
+    }
+    let errorMessage;
+    try {
+        await setupEditor("<p><br></p>", {
+            config: { includePlugins: [PluginA, PluginB, PluginC] },
+        });
+    } catch (error) {
+        errorMessage = error.message;
+    }
+    expect(errorMessage).toBe("Circular dependencies: a -> b -> c -> a");
+});
+
 beforeEach(() => {
     patchWithCleanup(Editor.prototype, {
         preparePlugins() {
