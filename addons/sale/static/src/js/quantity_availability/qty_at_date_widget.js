@@ -4,7 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
 
@@ -35,7 +35,7 @@ export class QtyAtDateWidget extends Component {
     setup() {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.orm = useService("orm");
-        this.calcData = {};
+        this.calcData = proxy({});
         onWillRender(() => {
             this.initCalcData();
         });
@@ -44,8 +44,36 @@ export class QtyAtDateWidget extends Component {
     async initCalcData() {
         // Computes the color of the chart icon representing the widget
         const { data } = this.props.record;
-        this.calcData.leftToDeliver = data.product_uom_qty - data.qty_delivered;
-        this.calcData.forecasted_issue = data.virtual_available_at_date < this.calcData.leftToDeliver ? "text-danger" : "";
+
+        const [product] = await this.orm.searchRead(
+            "product.product",
+            [["id", "=", data.product_id.id]],
+            ["uom_id"]
+        );
+        const productUomId = product?.uom_id?.[0];
+        if (!productUomId) {
+            return;
+        }
+
+        const [productUom] = await this.orm.searchRead(
+            "uom.uom",
+            [["id", "=", productUomId]],
+            ["factor", "name"]
+        );
+        const [lineUom] = await this.orm.read(
+            "uom.uom",
+            [data.product_uom_id.id],
+            ["factor"]
+        );
+        if (!productUom || !lineUom) {
+            return;
+        }
+
+        this.calcData.leftToDeliver =
+            ((data.product_uom_qty - data.qty_delivered) * lineUom.factor) / productUom.factor;
+        this.calcData.product_uom_name = productUom.name;
+        this.calcData.forecasted_issue =
+            data.virtual_available_at_date < this.calcData.leftToDeliver ? "text-danger" : "";
     }
 
     updateCalcData() {
