@@ -408,6 +408,33 @@ test("basic flow in editable list view - monetary field", async () => {
 });
 
 test.tags("desktop");
+test("Monetary field should update the o_monetary_ghost_value when its value is edit.", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            float_field: 4.2,
+            monetary_field: 4.2,
+            currency_id: 2,
+        },
+    ];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="float_field" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+            </form>`,
+    });
+
+    await contains(".o_field_widget[name=float_field] input").edit("22", { confirm: "blur" });
+    await animationFrame();
+    expect(".o_monetary_ghost_value").toHaveText("22.00");
+});
+
+test.tags("desktop");
 test("changing currency updates the field - float field", async () => {
     Partner._records = [
         {
