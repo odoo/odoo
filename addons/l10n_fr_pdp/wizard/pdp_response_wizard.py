@@ -7,7 +7,7 @@ REASON_REQUIRING_STATUSES = frozenset({'refused', 'suspended'})
 
 class PdpResponseWizard(models.TransientModel):
     _name = 'pdp.response.wizard'
-    _description = "PDP Response wizard"
+    _description = "French E-Invoicing Response Wizard"
 
     move_ids = fields.Many2many(
         comodel_name='account.move',
