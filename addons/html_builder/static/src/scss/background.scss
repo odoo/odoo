@@ -42,6 +42,14 @@ section, .oe_img_bg, [data-oe-shape-data] {
 }
 .o_we_bg_filter {
     @extend %o-we-background-layer;
+
+    // Fallback for when a color is not specifically set by the user (yet).
+    // Inherit the default snippet background ensuring that text is readable.
+    // By default the opacity is set to 0.25; can be tweaked with inline-style cleaned by the editor upon edition.
+    &:where(.o_we_bg_filter_cc) {
+        background-color: inherit;
+        opacity: var(--bg-opacity, 0.25);
+    }
 }
 
 // Background shapes

@@ -178,6 +178,12 @@ export class SelectFilterColorAction extends StyleAction {
         // Find the filter element.
         let filterEl = editingElement.querySelector(":scope > .o_we_bg_filter");
 
+        // Remove defaults
+        if (filterEl) {
+            filterEl.classList.remove('o_we_bg_filter_cc');
+            filterEl.style.removeProperty('--bg-opacity');
+        }
+
         // If no value is provided, use the current one if any.
         if (filterEl && value === undefined) {
             value = filterEl.style.backgroundImage || filterEl.style.backgroundColor;
