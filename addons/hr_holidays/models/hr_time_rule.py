@@ -13,6 +13,9 @@ from odoo.tools.intervals import Intervals
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
+    condition_work_entry_type_ids = fields.Many2many(
+        domain="[('id', 'in', country_work_entry_type_ids), ('request_unit', '=', 'hour')]",
+    )
     work_entry_type_id = fields.Many2one(
         domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
     )

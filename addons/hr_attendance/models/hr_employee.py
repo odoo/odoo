@@ -57,7 +57,8 @@ class HrEmployee(models.Model):
         compute='_compute_hours_today',
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month_display = fields.Char(
-        compute='_compute_hours_last_month', groups="hr.group_hr_user")
+        compute='_compute_hours_last_month',
+        groups="hr.group_hr_user,hr_attendance.group_hr_attendance_officer")
     total_overtime = fields.Float(compute='_compute_total_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
@@ -326,7 +327,7 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[False, "list"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
             "context": {"group_by": ["check_in:week"]},
         }
