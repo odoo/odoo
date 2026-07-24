@@ -18,7 +18,13 @@ class ProductCombo(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'combo_item_ids', 'base_price', 'qty_free', 'qty_max', 'is_upsell', 'sequence']
+        return ['id', 'name', 'combo_item_ids', 'base_price', 'qty_free', 'qty_max', 'is_upsell', 'sequence', 'currency_id']
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        self._convert_pos_data_currency(read_records, config, 'base_price', 'currency_id')
+        return read_records
 
     @api.onchange('is_upsell')
     def _onchange_is_upsell(self):
