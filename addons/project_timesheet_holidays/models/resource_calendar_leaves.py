@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from datetime import UTC
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _
 
@@ -102,7 +103,8 @@ class ResourceCalendarLeaves(models.Model):
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
             calendar = calendars_dict[calendar_id] if calendar_id else self.env['resource.calendar']
-            resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz()
+            calendar_timezone = ZoneInfo(calendar.company_id.tz) if calendar and calendar.company_id.tz else UTC
+            resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz() or {calendar_timezone: self.env['resource.resource']}
             work_hours_intervals = calendar._attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
@@ -118,7 +120,7 @@ class ResourceCalendarLeaves(models.Model):
                         if date_to > leave_date_from and date_from < leave_date_to:
                             tmp_start = max(date_from, leave_date_from)
                             tmp_end = min(date_to, leave_date_to)
-                            results[calendar_id][leave.id][resource_id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                            results[calendar_id][leave.id][resource_id][tmp_start.astimezone(date_from.tzinfo).date()] += (tmp_end - tmp_start).total_seconds() / 3600
                     results[calendar_id][leave.id][resource_id] = sorted(results[calendar_id][leave.id][resource_id].items())
         return results
 
