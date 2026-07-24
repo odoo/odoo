@@ -2,31 +2,31 @@
 <odoo>
 
 <template id="s_share" name="Share">
-    <div t-attf-class="s_share text-start o_no_link_popover #{_classes} o_not_editable" data-vcss="001" t-ignore="#{_ignore}">   
+    <div t-attf-class="s_share text-start o_no_link_popover #{_classes} o_not_editable" data-vcss="001" t-ignore="#{_ignore}">
         <h4 t-if="not _no_title" class="s_share_title d-none">Share</h4>
         <a t-if="not _exclude_share_links or not 'facebook' in _exclude_share_links" href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank" aria-label="Facebook">
             <i t-attf-class="fa fa-facebook #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-facebook me-2"/>Facebook</span>
+            <span class="text-capitalize">Facebook</span>
         </a>
         <a t-if="not _exclude_share_links or not 'twitter' in _exclude_share_links" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank" aria-label="X">
             <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-twitter me-2"/>Twitter</span>
+            <span class="text-capitalize">Twitter</span>
         </a>
         <a t-if="not _exclude_share_links or not 'linkedin' in _exclude_share_links" href="https://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank" aria-label="LinkedIn">
             <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-linkedin me-2"/>LinkedIn</span>
+            <span class="text-capitalize">LinkedIn</span>
         </a>
         <a t-if="not _exclude_share_links or not 'whatsapp' in _exclude_share_links" href="https://wa.me/?text={title}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank" aria-label="WhatsApp">
             <i t-attf-class="fa fa-whatsapp #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-whatsapp me-2"/>WhatsApp</span>
+            <span class="text-capitalize">WhatsApp</span>
         </a>
         <a t-if="not _exclude_share_links or not 'pinterest' in _exclude_share_links" href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank" aria-label="Pinterest">
             <i t-attf-class="fa fa-pinterest #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-pinterest me-2"/>Pinterest</span>
+            <span class="text-capitalize">Pinterest</span>
         </a>
         <a t-if="not _exclude_share_links or not 'email' in _exclude_share_links" href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}" aria-label="Email">
             <i t-attf-class="fa fa-envelope #{not _link_classes and 'rounded bg-o-color-3'}"/>
-            <span class="text-capitalize"><i class="fa fa-fw fa-envelope me-2"/>Email</span>
+            <span class="text-capitalize">Email</span>
         </a>
     </div>
 </template>

@@ -3639,20 +3639,28 @@ input[value*="data-oe-translation-source-sha"] {
             line-height: var(--social-icon-size);
         }
 
-        > span {
-            display: none;
-            padding: 0 calc(var(--social-text-size) * 0.5) calc(var(--social-text-size) * 0.25) 0;
-            // Responsive font-size
-            font-size: clamp(calc(var(--social-text-size) * 0.4), calc(var(--social-text-size) * 0.4 + 2vw), var(--social-text-size));
-
-            // Inline icon for "Icon & Text" layout, hidden by default
-            > i {
-                display: none;
-            }
+        i.o_sm_with_text {
+            display: inline-flex !important;
+            width: auto;
+            height: auto;
+            margin: 0 map-get($spacers, 1) calc(var(--social-text-size) * 0.25) 0;
+            border-radius: 0;
+            font-size: var(--social-text-size);
+            line-height: inherit;
+            background-color: transparent !important;
         }
 
-        i.d-none ~ span, i.o_sm_with_text ~ span > i {
+        // Label, hidden by default and revealed in the "Text" and "Icon & Text"
+        // layouts (both hide the standalone icon disk with `d-none`).
+        > span {
+            display: none;
+            // Responsive font-size
+            font-size: clamp(calc(var(--social-text-size) * 0.4), calc(var(--social-text-size) * 0.4 + 2vw), var(--social-text-size));
+        }
+
+        i.d-none ~ span {
             display: inline-block;
+            padding: 0 calc(var(--social-text-size) * 0.5) calc(var(--social-text-size) * 0.25) 0;
         }
     }
 

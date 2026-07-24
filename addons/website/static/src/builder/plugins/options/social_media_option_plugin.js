@@ -130,6 +130,7 @@ export class SocialMediaOptionPlugin extends Plugin {
         history_commit_data_properties: ["areSocialMediaLinksPrefilled"],
         so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
+            AdaptSocialMediaTitlePositionAction,
             ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,
             EditSocialMediaLinkAction,
@@ -141,8 +142,10 @@ export class SocialMediaOptionPlugin extends Plugin {
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
             ".s_share a > i",
+            ".s_share a > span",
             ".s_share .s_share_title",
             ".s_social_media a > i",
+            ".s_social_media a > span",
             ".s_social_media .s_social_media_title",
         ],
         auto_unfold_container_providers: [
@@ -243,17 +246,6 @@ export class SocialMediaOptionPlugin extends Plugin {
             }
         }
         return root;
-
-        // In vertical direction, "left" (or "right") title position is not meaningful so we reset
-        // it to "top".
-        for (const snippetEl of selectElements(root, ".s_share, .s_social_media")) {
-            if (snippetEl.classList.contains("flex-column")) {
-                const titleEl = snippetEl.querySelector(".s_share_title, .s_social_media_title");
-                if (titleEl && !titleEl.classList.contains("d-block") && !titleEl.classList.contains("d-none")) {
-                    titleEl.classList.add("d-block");
-                }
-            }
-        }
     }
 
     applyMediaDialogParams(params) {
@@ -386,6 +378,22 @@ export class SocialMediaOptionPlugin extends Plugin {
             return `https://${link}`;
         } else {
             return link;
+        }
+    }
+}
+
+export class AdaptSocialMediaTitlePositionAction extends BuilderAction {
+    static id = "adaptSocialMediaTitlePosition";
+    apply({ editingElement }) {
+        // In vertical direction, a "left" (or "right") title position is not
+        // meaningful, so fall back to "top" when it was previously set.
+        const titleEl = editingElement.querySelector(".s_share_title, .s_social_media_title");
+        if (
+            titleEl &&
+            !titleEl.classList.contains("d-block") &&
+            !titleEl.classList.contains("d-none")
+        ) {
+            titleEl.classList.add("d-block");
         }
     }
 }
