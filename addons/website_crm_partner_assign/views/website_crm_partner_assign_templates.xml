@@ -15,9 +15,6 @@
             <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']"> in <t t-out="country['country_id'][1]"/></span></t>
         </h1>
     </xpath>
-    <xpath expr="//a[@id='filter_category_link']" position="attributes">
-        <attribute name="t-att-href">keep_partners_url(grade=grade['grade_id'][0])</attribute>
-    </xpath>
     <xpath expr="//div[hasclass('accordion')]" position="inside">
         <div class="accordion-item">
             <h2 class="accordion-header">
@@ -35,13 +32,17 @@
                     <ul class="list-group list-group-flush">
                         <t t-foreach="countries" t-as="country">
                             <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
-                                class="text-reset" aria-label="See countries filters">
-                                    <div class="form-check">
-                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
-                                        <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
-                                    </div>
-                                </a>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="country"
+                                        t-attf-id="o_wcrm_offcanvas_country_#{country['country_id'][0]}"
+                                        t-att-value="country['country_id'][0] and country['country_id'][0] or 'country_all=True'"
+                                        t-att-checked="bool(country['active'])"/>
+                                    <label class="form-check-label"
+                                        t-attf-for="o_wcrm_offcanvas_country_#{country['country_id'][0]}"
+                                        t-out="country['country_id'][1]"/>
+                                </div>
                             </li>
                         </t>
                     </ul>
@@ -124,13 +125,17 @@
                     <ul class="list-group list-group-flush">
                         <t t-foreach="industries" t-as="industry">
                             <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', **dict(industry=slug(industry)))}"
-                                class="text-reset" aria-label="See industries filters">
-                                    <div class="form-check">
-                                        <input class="form-check-input pe-none" type="radio" t-attf-name="industry.id" t-att-checked="industry == current_industry"/>
-                                        <label class="form-check-label" t-attf-for="#{grade['grade_id'][1]}" t-out="industry.name"/>
-                                    </div>
-                                </a>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="industry"
+                                        t-attf-id="o_wcrm_offcanvas_industry_#{industry.id}"
+                                        t-att-value="slug(industry)"
+                                        t-att-checked="industry == current_industry"/>
+                                    <label class="form-check-label"
+                                        t-attf-for="o_wcrm_offcanvas_industry_#{industry.id}"
+                                        t-out="industry.name"/>
+                                </div>
                             </li>
                         </t>
                     </ul>
@@ -166,6 +171,9 @@
                 </button>
             </div>
         </t>
+    </xpath>
+    <xpath expr="//button[@data-bs-target='#o_wcrm_offcanvas']/span" position="attributes">
+        <attribute name="t-if" add="current_country or current_industry" separator=" or "/>
     </xpath>
 </template>
 
