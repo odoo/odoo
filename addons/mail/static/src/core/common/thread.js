@@ -637,6 +637,9 @@ export class Thread extends Component {
         if (!msg.thread?.eq(prevMsg.thread)) {
             return false;
         }
+        if (msg.message_type !== prevMsg.message_type) {
+            return false;
+        }
         if (msg.isNote) {
             return false;
         }

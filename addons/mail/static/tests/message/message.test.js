@@ -1103,10 +1103,17 @@ test("message comment of same author within 5min. should be squashed", async () 
             model: "discuss.channel",
             res_id: channelId,
         },
+        {
+            author_id: partnerId,
+            body: "<p>body3</p>",
+            date: "2019-04-20 10:04:00",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-Message", { count: 3 });
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content:text('body1')"],
@@ -1128,6 +1135,8 @@ test("message comment of same author within 5min. should be squashed", async () 
             [".o-mail-Message-sidebar .o-mail-Message-date:text('10:02 AM')"],
         ],
     });
+    // body3 has a different message_type than body2, so it is not squashed.
+    await contains(".o-mail-Message:has(:text('body3')) .o-mail-Message-header");
 });
 
 test("open author avatar card", async () => {
