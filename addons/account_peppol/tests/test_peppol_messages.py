@@ -499,6 +499,17 @@ class TestPeppolMessage(TestPeppolMessageCommon):
         self.assertTrue('peppol' in self.valid_partner.with_company(self.env.company).available_peppol_sending_methods)
         self.assertFalse('peppol' in self.valid_partner.with_company(company_us).available_peppol_sending_methods)
 
+    def test_einvoicing_network_name(self):
+        self.assertEqual(self.valid_partner._get_einvoicing_network_name(), "Peppol")
+        self.assertEqual(
+            self.valid_partner._get_einvoicing_identifier_name(),
+            "Peppol EAS and/or Endpoint identifier",
+        )
+        self.assertEqual(
+            self.valid_partner._get_einvoicing_network_name(identifier_scheme='0225'),
+            "Peppol",
+        )
+
     def test_available_peppol_edi_formats(self):
         self.valid_partner.invoice_sending_method = 'peppol'
         self.assertFalse('facturx' in self.valid_partner.available_peppol_edi_formats)

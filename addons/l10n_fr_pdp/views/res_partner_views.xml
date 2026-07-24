@@ -16,8 +16,15 @@
                 <xpath expr="//div[@invisible='peppol_response_support']/field[@name='peppol_verification_state' and @readonly='1']" position="attributes">
                     <attribute name="name">pdp_verification_display_state</attribute>
                 </xpath>
+                <button name="button_account_peppol_check_partner_endpoint" position="attributes">
+                    <attribute name="help">Verify the French e-invoicing identifier</attribute>
+                </button>
             </data>
         </field>
+    </record>
+
+    <record id="account_peppol.partner_action_verify_peppol" model="ir.actions.server">
+        <field name="name">Verify French E-Invoicing Identifier</field>
     </record>
 
 </odoo>

@@ -31,8 +31,14 @@ class AccountMove(models.Model):
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done/has been replied to
         # then it means it has been already sent to peppol proxy and we can't cancel
-        if any(move.peppol_is_sent for move in self):
-            raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
+        if sent_move := self.filtered('peppol_is_sent')[:1]:
+            network_name = sent_move.commercial_partner_id.with_company(
+                sent_move.company_id
+            )._get_einvoicing_network_name()
+            raise UserError(_(
+                "Cannot cancel an entry that has already been sent via %(network_name)s",
+                network_name=network_name,
+            ))
         self.peppol_move_state = False
         self.sending_data = False
 
@@ -74,10 +80,12 @@ class AccountMove(models.Model):
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         company_on_peppol = invoice.company_id.account_peppol_proxy_state in can_send
         if company_on_peppol and company_country in PEPPOL_MAILING_COUNTRIES and invoice_country in PEPPOL_MAILING_COUNTRIES:
+            partner = invoice.commercial_partner_id.with_company(invoice.company_id)
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
                 'is_peppol_sent': invoice.peppol_is_sent,
                 'is_partner_b2c': len(invoice.commercial_partner_id.vat or '') <= 1,
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
+                'network_name': partner._get_einvoicing_network_name(),
             }
         return render_context

@@ -37,7 +37,7 @@ class ResCompany(models.Model):
         groups='base.group_user',
     )
     l10n_fr_pdp_registered = fields.Boolean(
-        string="Approved Platform Registerd",
+        string="Approved Platform Registered",
         compute="_compute_l10n_fr_pdp_registered",
         groups='base.group_user',
     )

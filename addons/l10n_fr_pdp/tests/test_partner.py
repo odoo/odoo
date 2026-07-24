@@ -86,6 +86,43 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner.invoice_sending_method = 'email'
         partner.invoice_edi_format = 'ubl_bis3'
 
+    def test_einvoicing_network_name(self):
+        self.assertEqual(
+            self.partner_a._get_einvoicing_network_name(),
+            "Approved Platform",
+        )
+        self.assertEqual(
+            self.partner_a._get_einvoicing_identifier_name(),
+            "French e-invoicing identifier",
+        )
+        self.assertEqual(
+            self.partner_a._get_einvoicing_network_name(identifier_scheme='0208'),
+            "Peppol",
+        )
+        self.assertEqual(self.partner_b._get_einvoicing_network_name(), "Peppol")
+        self.assertEqual(
+            self.partner_b._get_einvoicing_identifier_name(),
+            "Peppol EAS and/or Endpoint identifier",
+        )
+        self.assertEqual(
+            self.partner_b._get_einvoicing_network_name(identifier_scheme='0225'),
+            "Approved Platform",
+        )
+        partner_without_identifier = self.env['res.partner'].new({
+            'country_id': self.env.ref('base.fr').id,
+        })
+        self.assertEqual(partner_without_identifier._get_einvoicing_network_name(), "Approved Platform")
+        self.assertEqual(
+            partner_without_identifier._get_einvoicing_identifier_name(),
+            "French e-invoicing identifier",
+        )
+        partner_without_identifier.country_id = self.env.ref('base.be')
+        self.assertEqual(partner_without_identifier._get_einvoicing_network_name(), "Peppol")
+        self.assertEqual(
+            partner_without_identifier._get_einvoicing_identifier_name(),
+            "Peppol EAS and/or Endpoint identifier",
+        )
+
     def test_validate_partner_be_invalid_format(self):
         partner = self.partner_b
         self.assertRecordValues(partner, [{

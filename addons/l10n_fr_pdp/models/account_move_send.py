@@ -57,7 +57,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_what_is_peppol_message(self, companies, moves, relevant_moves):
         if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("You can send this invoice electronically via Approved Platform.")
+            return self.env._("You can send this invoice electronically via the Approved Platform.")
         return super()._get_peppol_what_is_peppol_message(companies, moves, relevant_moves)
 
     def _get_peppol_partner_want_peppol_message(self, partners, relevant_moves):

@@ -3,7 +3,7 @@ from odoo import fields, models
 
 class PdpSendWizard(models.TransientModel):
     _name = 'l10n.fr.pdp.reports.send.wizard'
-    _description = 'Send PDP Flow Wizard'
+    _description = 'Send E-Reporting Flow Wizard'
 
     flow_id = fields.Many2one(
         comodel_name='l10n.fr.pdp.reports.flow',
