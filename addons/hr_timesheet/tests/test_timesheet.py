@@ -895,3 +895,12 @@ class TestTimesheet(TestCommonTimesheet):
             'user_id': self.user_manager.id,
         })
         self.assertEqual(timesheet.company_id, self.env.company)
+
+    def test_task_reset_on_project_change(self):
+        """ Changing the project_id of a timesheet should reset its task_id
+            if the task doesn't belong to the new project"""
+
+        self.assertTrue(self.timesheet.task_id)
+        self.timesheet.write({'project_id': self.project_customer.id})
+        self.assertFalse(self.timesheet.task_id)
+        self.assertEqual(self.timesheet.project_id, self.project_customer)
