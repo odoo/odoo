@@ -177,6 +177,9 @@ class StockMove(models.Model):
             "lot_name": ", ".join(self.lot_ids.mapped("name")),
         }
 
+    def _should_update_quantity_on_merge(self):
+        return self.sale_line_id.state != 'cancel' if self.sale_line_id else super()._should_update_quantity_on_merge()
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
