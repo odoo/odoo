@@ -4,12 +4,25 @@ import {
     mountView,
     onRpc,
     contains,
-    toggleKanbanColumnActions
+    toggleKanbanColumnActions,
+    createKanbanRecord,
+    defineActions,
 } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels } from "./project_models";
 
 defineProjectModels();
+defineActions([
+    {
+        id: 2,
+        xml_id: "some.action",
+        res_model: "project.project",
+        type: "ir.actions.act_window",
+        target: "new",
+        views: [[false, "form"]],
+    },
+]);
+
 describe.current.tags("desktop");
 
 const listViewParams = {
@@ -21,6 +34,23 @@ const listViewParams = {
             <field name="name"/>
         </list>
     `,
+}
+
+const kanbanViewParams = {
+    resModel: "project.project",
+    type: "kanban",
+    arch: `
+            <kanban create="1" js_class="project_project_kanban" on_create="some.action">
+                <field name="stage_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <field name="name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        `,
 }
 
 test("project.project (list) show archive/unarchive action for project manager", async () => {
@@ -43,26 +73,16 @@ test("project.project (list) hide archive/unarchive action for project user", as
 
 test("project.project (kanban) hide archive/unarchive action for project user", async () => {
     onRpc("has_group", ({ args }) => args[1] === "project.group_project_user");
-    await mountView({
-        resModel: "project.project",
-        type: "kanban",
-        actionMenus: {},
-        arch: `
-            <kanban js_class="project_project_kanban">
-                <field name="stage_id"/>
-                <templates>
-                    <t t-name="card">
-                        <div>
-                            <field name="name"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        `,
-        groupBy: ['stage_id']
-    });
+    await mountView({ ...kanbanViewParams, groupBy: ['stage_id'] });
     toggleKanbanColumnActions();
     await animationFrame();
     await expect('.o_column_archive_records').toHaveCount(0, { message: "Archive action should not be visible" });
     await expect('.o_column_unarchive_records').toHaveCount(0, { message: "Unarchive action should not be visible" });
+});
+
+test("project.project (kanban) show fa-expand icon when creating new project", async () => {
+    await mountView(kanbanViewParams);
+    createKanbanRecord();
+    await animationFrame();
+    expect(".o_dialog [data-icon='expand_content']").toHaveCount(1, { message: "The project wizard dialog should contain the expand icon" });
 });
