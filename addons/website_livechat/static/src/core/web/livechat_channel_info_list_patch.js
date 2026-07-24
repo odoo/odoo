@@ -18,6 +18,9 @@ const livechatChannelInfoListPatch = {
     CLOSED_ON_TEXT(channel) {
         return toLocaleDateTimeString(channel.livechat_end_dt);
     },
+    RECENT_PAGE_VIEW_TIME(track) {
+        return track.visit_datetime.toLocaleString(luxon.DateTime.TIME_24_SIMPLE);
+    },
 };
 
 patch(LivechatChannelInfoList.prototype, livechatChannelInfoListPatch);

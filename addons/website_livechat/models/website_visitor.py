@@ -168,7 +168,7 @@ class WebsiteVisitor(models.Model):
         res.many(
             "last_track_ids",
             lambda res: (
-                res.one("page_id", ["name"]),
+                res.one("page_id", ["name", "url"]),
                 res.attr("visit_datetime"),
             ),
             value=lambda v: tracks_by_visitor[v].sudo(),

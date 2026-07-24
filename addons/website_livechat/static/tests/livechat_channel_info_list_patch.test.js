@@ -13,9 +13,11 @@ test("shows recent page views", async () => {
     const website_id = pyEnv["website"].create({ name: "General website" });
     const page1 = pyEnv["website.page"].create({
         name: "Home",
+        url: "/",
     });
     const page2 = pyEnv["website.page"].create({
         name: "Contact",
+        url: "/contactus",
     });
     const visitorId = pyEnv["website.visitor"].create({ website_id });
     pyEnv["website.track"].create([
@@ -36,7 +38,12 @@ test("shows recent page views", async () => {
     await openDiscuss(channelId);
     await contains("h6", { text: "Recent page views" });
     await contains("div > span", { text: "General website" });
-    await contains("span", { text: "Contact (21:20) → Home (21:00)" });
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentPageView:eq(0)[href='/contactus']:text(Contact 21:20)"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentPageView:eq(1)[href='/']:text(Home 21:00)"
+    );
 });
 
 test("Show recent conversations in channel info list", async () => {
