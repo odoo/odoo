@@ -1287,7 +1287,8 @@ class SaleOrderLine(models.Model):
         super()._add_precomputed_values(vals_list)
         for vals in vals_list:
             if 'price_unit' in vals and 'technical_price_unit' not in vals:
-                vals['technical_price_unit'] = vals['price_unit']
+                # Absurd value to not match any of the possible creation values
+                vals['technical_price_unit'] = -9999999999
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
