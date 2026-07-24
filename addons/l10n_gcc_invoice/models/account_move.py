@@ -14,6 +14,9 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
+EXCLUDE_IF_NOT_REGISTERED = {'AE', 'SA'}
+
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -21,7 +24,8 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
-        if self.company_id.country_id in self.env.ref('base.gulf_cooperation_council').country_ids:
+        if (self.company_id.vat or self.company_id.country_id.code not in EXCLUDE_IF_NOT_REGISTERED) \
+         and self.company_id.country_id in self.env.ref('base.gulf_cooperation_council').country_ids:
             return 'l10n_gcc_invoice.arabic_english_invoice'
         return super()._get_name_invoice_report()
 
