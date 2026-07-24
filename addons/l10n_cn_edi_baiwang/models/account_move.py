@@ -136,6 +136,12 @@ class AccountMove(models.Model):
             ))
         return super().button_draft()
 
+    def _l10n_cn_baiwang_parse_red_invoice_datetime(self, raw_date):
+        self.ensure_one()
+        if raw_date and len(raw_date) >= 14:
+            return f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
+        return fields.Datetime.now()
+
     def action_cancel_baiwang_red_form(self):
         """Cancel a pending Red Form request."""
         for move in self:
@@ -231,6 +237,7 @@ class AccountMove(models.Model):
         invoice_data = self._l10n_cn_baiwang_prepare_invoice_data()
         try:
             result = client.issue_invoice(invoice_data)
+            self.l10n_cn_baiwang_state = 'sent'
         except UserError as e:
             # Avoid marking as failed for connectivity/precondition errors; user can retry.
             return str(e)
@@ -448,14 +455,9 @@ class AccountMove(models.Model):
                     vals = {'l10n_cn_baiwang_state': 'issued'}
                     if resp.get('redInvoiceNo'):
                         vals['l10n_cn_baiwang_invoice_no'] = resp['redInvoiceNo']
-
-                    raw_date = resp.get('redInvoiceDate')
-                    if raw_date and len(raw_date) >= 14:
-                        vals['l10n_cn_baiwang_invoice_date'] = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
-                    else:
-                        # If Baiwang omits redInvoiceDate, fall back to current time.
-                        vals['l10n_cn_baiwang_invoice_date'] = fields.Datetime.now()
-
+                    vals['l10n_cn_baiwang_invoice_date'] = self._l10n_cn_baiwang_parse_red_invoice_datetime(
+                        resp.get('redInvoiceDate'),
+                    )
                     self.write(vals)
                     self.message_post(body=self.env._("Red Form confirmed (auto-approved). No: %s", resp.get('redConfirmNo')))
                     self.activity_schedule(
@@ -549,12 +551,11 @@ class AccountMove(models.Model):
         latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
         if not latest_doc:
             return
-        if not latest_doc.baiwang_uuid.startswith('mock-'):  # TODO: remove when going to production
-            client = BaiwangClient(self.company_id)
-            try:
-                client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '01')
-            except UserError as e:
-                raise UserError(self.env._("Failed to approve Red Form on Baiwang: %s", e))
+        client = BaiwangClient(self.company_id)
+        try:
+            client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '01')
+        except UserError as e:
+            raise UserError(self.env._("Failed to approve Red Form on Baiwang: %s", e))
         latest_doc.write({'state': 'red_form_confirmed', 'baiwang_confirm_state': '01'})
         self.message_post(body=self.env._("Inbound Red Form approved. Please draft a Credit Note."))
 
@@ -564,12 +565,11 @@ class AccountMove(models.Model):
         latest_doc = self.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
         if not latest_doc:
             return
-        if not latest_doc.baiwang_uuid.startswith('mock-'):  # TODO: remove when going to production
-            client = BaiwangClient(self.company_id)
-            try:
-                client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '02')  # 02=Deny
-            except UserError as e:
-                raise UserError(self.env._("Failed to reject Red Form on Baiwang: %s", e))
+        client = BaiwangClient(self.company_id)
+        try:
+            client.operate_red_confirmation(latest_doc.baiwang_uuid, latest_doc.baiwang_red_form_number, '02')  # 02=Deny
+        except UserError as e:
+            raise UserError(self.env._("Failed to reject Red Form on Baiwang: %s", e))
         latest_doc.write({'state': 'failed', 'error_message': self.env._("Rejected by user.")})
         self.message_post(body=self.env._("Inbound Red Form %s rejected.", latest_doc.baiwang_red_form_number))
 
@@ -595,36 +595,6 @@ class AccountMove(models.Model):
             move.l10n_cn_baiwang_red_form_status = latest.state or False
             move.l10n_cn_baiwang_red_form_amount_total = latest.baiwang_red_form_amount_total or 0.0
             move.l10n_cn_baiwang_red_form_amount_tax = latest.baiwang_red_form_amount_tax or 0.0
-
-    def action_fetch_inbound_red_form_details(self):
-        """Manually fetch and dump the red form line details into the chatter."""
-        for move in self:
-            latest_doc = move.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending')[:1]
-            if not latest_doc:
-                continue
-            # TODO: remove when going to production
-            if latest_doc.baiwang_uuid.startswith('mock-'):
-                move.message_post(body=self.env._("Cannot fetch details for mock records."))
-                continue
-            client = BaiwangClient(move.company_id)
-            try:
-                res = client.query_red_form_detail(latest_doc.baiwang_uuid)
-            except UserError as e:
-                move.message_post(body=self.env._("Failed to fetch details: %s", e))
-                continue
-            details = res[0].get('electricInvoiceDetails', []) if isinstance(res, list) and res else []
-            if not details:
-                move.message_post(body=self.env._("No extra line details found on Baiwang."))
-                continue
-            msg = "<b>Red Form Line Details from Baiwang:</b><ul>"
-            for line in details:
-                name = line.get('goodsName', 'Unknown Item')
-                qty = line.get('goodsQuantity', 'N/A')
-                price = line.get('goodsTotalPrice', '0.00')
-                tax = line.get('goodsTotalTax', '0.00')
-                msg += f"<li>{name} — Qty: {qty} | Price: {price} | Tax: {tax}</li>"
-            msg += "</ul>"
-            move.message_post(body=msg)
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         """Pass the Baiwang Red Fapiao number and reason to the Credit Note."""
