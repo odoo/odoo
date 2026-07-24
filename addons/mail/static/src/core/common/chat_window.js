@@ -102,6 +102,14 @@ export class ChatWindow extends Component {
         };
     }
 
+    get threadAvatarAttClass() {
+        return {
+            "py-1": !(this.threadActions.actions.length > 3),
+            "py-2": this.threadActions.actions.length <= 3,
+            "ps-2": !this.hasActionsMenu,
+        };
+    }
+
     get style() {
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";

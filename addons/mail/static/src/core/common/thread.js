@@ -62,6 +62,7 @@ export class Thread extends Component {
         this.onWheel = this.onWheel.bind(this);
         // bound once so `onParentMessageClick` is a stable (props.static) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
+        this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();
         useOnChange(
             () => [this.messageRefs.size],
@@ -262,6 +263,13 @@ export class Thread extends Component {
 
     get channel() {
         return this.props.thread.channel;
+    }
+
+    get startMessageAvatarAttClass() {
+        return {
+            "o-mail-Thread-avatarChatWindow mt-1": this.env.inChatWindow,
+            "mt-2": !this.env.inChatWindow,
+        };
     }
 
     computeJumpPresentPosition() {

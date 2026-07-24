@@ -135,7 +135,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('Leave Channel')");
 });
 
-test("chat window: clicking chat correspondent avatars opens avatar card", async () => {
+test("chat window: clicking chat correspondent avatars in start message opens avatar card", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "mario@example.com",
@@ -150,11 +150,9 @@ test("chat window: clicking chat correspondent avatars opens avatar card", async
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await click(".o-mail-ChatWindow-threadAvatar.cursor-pointer");
-    await contains(".o_avatar_card");
-    await contains(".o-mail-avatar-card-name:text('Mario')");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await click(".o-mail-Thread-avatar.cursor-pointer");
+    await contains(".o-mail-Thread:has(:text('This is the start of your direct chat with Mario'))");
+    await click(".o-mail-Thread-avatarChatWindow");
     await contains(".o_avatar_card");
     await contains(".o-mail-avatar-card-name:text('Mario')");
 });

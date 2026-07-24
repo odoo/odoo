@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, props, signal, t, useListener } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -123,24 +123,19 @@ export class AvatarCard extends Component {
 }
 
 /**
- * @param {Object} param
- * @param {boolean | undefined} param.stopPropagation
- * @returns {{ open: (event: Event, partner: import("models").ResPartner) => void }}
+ * @param {import("@odoo/owl").Signal<HTMLElement>} ref
+ * @param {() => import("models").ResPartner | undefined} getPartner
  */
-export function usePartnerAvatarCard({ stopPropagation = false } = {}) {
+export function usePartnerAvatarCardOnClick(ref, getPartner) {
     const avatarCard = usePopover(AvatarCard);
-    return {
-        open(event, partner) {
-            if (!partner || avatarCard.isOpen) {
-                return;
-            }
-            if (stopPropagation) {
-                event.stopPropagation();
-            }
-            avatarCard.open(event.currentTarget, {
-                id: partner.id,
-                model: "res.partner",
-            });
-        },
-    };
+    useListener(ref, "click", () => {
+        const partner = getPartner();
+        if (!partner || avatarCard.isOpen) {
+            return;
+        }
+        avatarCard.open(ref(), {
+            id: partner.id,
+            model: "res.partner",
+        });
+    });
 }
