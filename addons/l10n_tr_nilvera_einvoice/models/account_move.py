@@ -42,7 +42,7 @@ UNSYNCED_COMMERCIAL_MOVE_DOMAIN = [
     ("l10n_tr_gib_invoice_scenario", "=", "TICARIFATURA"),
     ("l10n_tr_nilvera_send_status", "=", "succeed"),
     ("partner_id", "!=", False),  # Partner's status is needed to determine endpoint when fetching response
-    ("company_id.country_code", "=", "TR"),
+    ("company_id.partner_id.country_id.code", "=", "TR"),
     ("company_id.l10n_tr_nilvera_api_key", "!=", False),
 ]
 
