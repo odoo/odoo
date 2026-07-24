@@ -24,6 +24,7 @@ Thai accounting chart and localization.
         'data/res_country_data.xml',
         'data/account_tax_tags_data.xml',
         'data/report_paperformat_data.xml',
+        'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/report_invoice.xml',
@@ -32,6 +33,7 @@ Thai accounting chart and localization.
         'views/res_config_settings_views.xml',
         'wizards/account_payment_register_views.xml',
         'report/report_tawi.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
