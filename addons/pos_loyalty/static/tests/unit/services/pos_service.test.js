@@ -21,10 +21,9 @@ describe("PosStore - loyalty essentials", () => {
         order.setPartner(partner);
         order._programIsApplicable = () => true;
         order._code_activated_coupon_ids = [];
-        order.uiState.couponPointChanges = {};
         order.pricelist_id = { id: 1 };
 
-        const line = await addProductLineToOrder(store, order, {
+        await addProductLineToOrder(store, order, {
             _gift_code: "XYZ123",
         });
 
@@ -34,14 +33,11 @@ describe("PosStore - loyalty essentials", () => {
 
         await store.updatePrograms();
 
-        const changes = order.uiState.couponPointChanges;
-        const changeList = Object.values(changes);
+        const linkedGiftCard = order.loyalty_card_ids.find((lc) => lc.program_id.id === program.id);
 
-        expect(changeList).toHaveLength(1);
-        expect(changeList[0].program_id).toBe(program.id);
-        expect(changeList[0].points).toBe(10);
-        expect(changeList[0].code).toBe("XYZ123");
-        expect(changeList[0].product_id).toBe(line.product_id.id);
+        expect(linkedGiftCard.program_id.id).toBe(program.id);
+        expect(linkedGiftCard.points).toBe(10);
+        expect(linkedGiftCard.code).toBe("XYZ123");
     });
 
     test("activateCode", async () => {

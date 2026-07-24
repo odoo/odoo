@@ -22,7 +22,6 @@ test("TicketScreen.setOrder keeps reward line and triggers pos.updateRewards", a
         reward_identifier_code: "LOAD-ORDER-REWARD",
         points_cost: 10,
     });
-    order.uiState.couponPointChanges = {};
     store.selectedOrderUuid = null;
 
     let updateRewardsCalled = false;

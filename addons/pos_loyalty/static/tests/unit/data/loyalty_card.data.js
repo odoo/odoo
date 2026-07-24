@@ -18,6 +18,7 @@ export class LoyaltyCard extends models.ServerModel {
             "write_date",
             "uuid",
             "source_pos_order_id",
+            "program_type",
             "_temp_points",
         ];
     }
