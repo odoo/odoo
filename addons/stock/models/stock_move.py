@@ -1836,10 +1836,23 @@ Please change the quantity done or the rounding precision of your unit of measur
                         'procure_method': 'make_to_stock',
                         'move_orig_ids': [Command.unlink(move.id)]
                     })
-        moves_to_cancel.write({
-            'move_orig_ids': [(5, 0, 0)],
-            'procure_method': 'make_to_stock',
-        })
+        # When cancelling from an MO, keep origins that are not cancelled (open
+        # or done) so upstream docs (e.g. PO via move_orig_ids.purchase_line_id)
+        # remain discoverable — same spirit as PO cancel keeping non-cancelled
+        # move_dest_ids. Otherwise clear all origins (historical behaviour).
+        if self.env.context.get('cancel_from_mo'):
+            for move in moves_to_cancel:
+                cancelled_origins = move.move_orig_ids.filtered(lambda m: m.state == 'cancel')
+                if cancelled_origins:
+                    move.move_orig_ids = [Command.unlink(o.id) for o in cancelled_origins]
+            moves_to_cancel.write({
+                'procure_method': 'make_to_stock',
+            })
+        else:
+            moves_to_cancel.write({
+                'move_orig_ids': [(5, 0, 0)],
+                'procure_method': 'make_to_stock',
+            })
         return True
 
     def _prepare_extra_move_vals(self, qty):

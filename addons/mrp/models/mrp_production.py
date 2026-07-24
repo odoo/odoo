@@ -1660,9 +1660,11 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        (finish_moves | raw_moves)._action_cancel()
+        # cancel_from_mo: keep non-cancelled move_orig_ids on cancelled moves so
+        # upstream docs (e.g. PO) stay linked / discoverable after MO cancel.
+        (finish_moves | raw_moves).with_context(cancel_from_mo=True)._action_cancel()
         picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        picking_ids.action_cancel()
+        picking_ids.with_context(cancel_from_mo=True).action_cancel()
 
         for production, documents in documents_by_production.items():
             filtered_documents = {}

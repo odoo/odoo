@@ -6951,3 +6951,65 @@ class StockMove(TransactionCase):
             {'quantity': 149.97, 'quantity_product_uom': 5.29},
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
+
+    def test_cancel_keeps_non_cancelled_move_orig(self):
+        """With cancel_from_mo, keep non-cancelled origins; without it, clear them."""
+        move_orig_open = self.env['stock.move'].create({
+            'name': 'origin open',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'propagate_cancel': False,
+        })
+        move_orig_cancel = self.env['stock.move'].create({
+            'name': 'origin cancel',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'propagate_cancel': False,
+        })
+        move_dest = self.env['stock.move'].create({
+            'name': 'destination',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'procure_method': 'make_to_order',
+            'move_orig_ids': [
+                Command.link(move_orig_open.id),
+                Command.link(move_orig_cancel.id),
+            ],
+        })
+        (move_orig_open | move_orig_cancel | move_dest)._action_confirm()
+
+        move_orig_cancel._action_cancel()
+        self.assertEqual(move_orig_cancel.state, 'cancel')
+        # Open sibling origin → cancelled origin stays linked until dest cancel cleans it.
+        self.assertEqual(move_dest.move_orig_ids, move_orig_open | move_orig_cancel)
+
+        move_dest.with_context(cancel_from_mo=True)._action_cancel()
+        self.assertEqual(move_dest.state, 'cancel')
+        self.assertEqual(move_dest.procure_method, 'make_to_stock')
+        # Non-cancelled origin must remain for upstream discovery.
+        self.assertEqual(move_dest.move_orig_ids, move_orig_open)
+        self.assertNotEqual(move_orig_open.state, 'cancel')
+
+        # Without cancel_from_mo, origins are cleared (default stock behaviour).
+        move_dest2 = self.env['stock.move'].create({
+            'name': 'destination 2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+            'procure_method': 'make_to_order',
+            'move_orig_ids': [Command.link(move_orig_open.id)],
+        })
+        move_dest2._action_confirm()
+        move_dest2._action_cancel()
+        self.assertFalse(move_dest2.move_orig_ids)
