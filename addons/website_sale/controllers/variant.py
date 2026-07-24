@@ -15,6 +15,16 @@ class WebsiteSaleVariantController(Controller):
     def get_combination_info_website(
         self, product_template_id, product_id, combination, add_qty, uom_id=None, **_kwargs
     ):
+        """Return website-specific info about a variant, in addition to the info returned by
+        `_get_combination_info`, based on a given combination.
+
+        :param int product_template_id: The product.template with variants.
+        :param int product_id: The currently selected product.product variant, or 0 if none
+            selected.
+        :param list[int] combination: The chosen option for each attribute, as
+            `product.template.attribute.value` ids.
+        :param float add_qty: The quantity intended to be added, for display purposes (e.g. 1).
+        """
         request.update_context(website_sale_product_page=True)
         product_template_id = product_template_id and int(product_template_id)
         product_id = product_id and int(product_id)
@@ -97,6 +107,13 @@ class WebsiteSaleVariantController(Controller):
         readonly=True,
     )
     def get_dynamic_attribute_images(self, product_template_id, combination, **_kwargs):
+        """Return the 'closest variant' image for every value based on the current selection.
+        Used if the `is_thumbnail_visible` option is active on the attribute.
+
+        :param int product_template_id: the `product.template` being displayed.
+        :param list combination: the `product.template.attribute.value` ids selected on the product template
+        :return: A dictionary mapping attribute value IDs to their corresponding image URLs.
+        """
         product_template = self.env["product.template"].browse(int(product_template_id))
         return product_template._get_dynamic_attribute_images(
             self.env["product.template.attribute.value"].browse(combination).exists().ids,

@@ -937,6 +937,17 @@ class Website(Home):
 
     @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, readonly=True)
     def get_dynamic_filter(self, filter_id, **kwargs):
+        """Render records from an existing website.snippet.filter as HTML cards.
+
+        :param int filter_id: id of the `website.snippet.filter` to use as data source.
+        :param str template_key: MANDATORY.
+        :param int limit: MANDATORY. max records to render (capped at 16).
+        :param list search_domain: extra domain ANDed with the filter's base domain.
+        :param str res_model: with res_id and limit=1, render that one record instead.
+        :param int res_id: id of the single record to render, see res_model.
+        :return: one HTML string per rendered record.
+        :rtype: list[str]
+        """
         dynamic_filter_sudo = request.env['website.snippet.filter'].sudo()
         if filter_id:
             dynamic_filter_sudo = dynamic_filter_sudo.search(
@@ -967,6 +978,14 @@ class Website(Home):
 
     @http.route('/website/snippet/filter_templates', type='jsonrpc', auth='public', website=True, readonly=True)
     def get_dynamic_snippet_templates(self, filter_name=False):
+        """List the QWeb card templates usable with /website/snippet/filters' template_key.
+
+        :param str filter_name: only return templates whose key contains this - leave
+            empty to list all of them.
+        :return: one dict per template with at least its `key` (the template_key to pass to
+            /website/snippet/filters) and `name`.
+        :rtype: list[dict]
+        """
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
             domain.append(['key', 'ilike', escape_like_value('_%s_' % filter_name)])
@@ -988,6 +1007,12 @@ class Website(Home):
 
     @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
     def get_current_currency(self, **kwargs):
+        """Return the currency the prices of the current website are expressed in.
+
+        :return: the currency's `id`, its `symbol` and the `position` of that symbol
+            relative to the amount ('before' or 'after').
+        :rtype: dict
+        """
         currency_id = self.env.website.company_id.currency_id
         return {
             'id': currency_id.id,
@@ -1098,8 +1123,10 @@ class Website(Home):
         Returns list of results according to the term and options
 
         :param str search_type: indicates what to search within, 'all' matches all available types
-        :param str term: search term written by the user
-        :param str order:
+        :param str term: search term written by the user, empty to match everything
+        :param str order: order of the results, as an ORM order string over the searched
+            model's own fields, e.g. 'create_date desc'. Defaults to 'name ASC'. Published
+            records always come first, whatever this is set to.
         :param int offset: number of results to skip, defaults to 0
         :param int limit: number of results to consider, defaults to 6
         :param int max_nb_chars: max number of characters for text fields
@@ -1114,9 +1141,22 @@ class Website(Home):
                             - 'groupName' (str): the name of the group of results
                             - 'searchCount' (int): the number of results in this group
                             - 'data' (list of dict): the actual results (only their needed field values)
+                                    Which keys are present depends on what is being
+                                    searched: they are the ones that model declares in
+                                    its `_search_get_detail` mapping, so they vary per
+                                    search_type and any module may extend them. No record
+                                    id is among them - a result carries what it takes to
+                                    display the record and a URL to reach it, not a
+                                    handle to pass to a route that expects an id.
                     - str: rendered HTML template (if `renderTemplate=True`)
                     note: the monetary fields will be strings properly formatted and
                     already containing the currency
+                    note: a field the term was found in does NOT come back as plain
+                    text. The matching segments are wrapped in
+                    `<span class="o_search_matching_text">` so the caller can highlight
+                    them, which turns that field into HTML - the same field is plain
+                    text on a record where the term did not match, so the two arrive
+                    mixed in a single response.
             - 'results_count' (int): the number of results in the database
                     that matched the search query
             - 'parts' (dict): presence of fields across all results

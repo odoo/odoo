@@ -70,6 +70,10 @@ class Website(main.Website):
         max_nb_chars=999,
         options=None,
     ):
+        """Override `website` to add `display_currency` set as the website's currency to the options params.
+
+        Read by `product.template._search_fetch` to format prices.
+        """
         options = options or {}
         if "display_currency" not in options:
             options["display_currency"] = self.env.website.currency_id
@@ -77,6 +81,14 @@ class Website(main.Website):
 
     @route()
     def get_current_currency(self, **_kwargs):
+        """Return the currency the shop prices are expressed in.
+
+        Override `website` to return the website's currency instead of the company one.
+
+        :return: the currency's `id`, its `symbol` and the `position` of that symbol
+            relative to the amount ('before' or 'after').
+        :rtype: dict
+        """
         return {
             "id": self.env.website.currency_id.id,
             "symbol": self.env.website.currency_id.symbol,

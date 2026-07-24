@@ -13,6 +13,14 @@ class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/is_subscriber', type='jsonrpc', website=True, auth='public')
     def is_subscriber(self, list_id, subscription_type, **post):
+        """Tell whether the visitor is already subscribed to a mailing list.
+
+        :param int list_id: the `mailing.list` to check.
+        :param str subscription_type: contact field the subscription is based on, e.g. 'email'.
+        :return: dict with `is_subscriber`, the `value` identifying the visitor (their email
+            address for instance) and `warn_missing_list`, set when the list is gone.
+        :rtype: dict
+        """
         mailing_list_su = request.env['mailing.list'].browse(int(list_id)).sudo()
         if request.env.user._is_internal() and not mailing_list_su.exists().active:
             return {'is_subscriber': False, 'value': '', 'warn_missing_list': True}
@@ -40,6 +48,14 @@ class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/subscribe', type='jsonrpc', website=True, auth='public')
     def subscribe(self, list_id, value, subscription_type, **post):
+        """Subscribe an email or phone number to a mailing list (newsletter signup).
+
+        :param int list_id: id of the `mailing.list` to subscribe to.
+        :param str value: the email address or phone number to subscribe.
+        :param str subscription_type: 'email' or 'mobile', matching the type of `value`.
+        :return: {'toast_type': 'success'|'danger', 'toast_content': message to show}
+        :rtype: dict
+        """
         try:
             request.env['ir.http']._verify_request_recaptcha_token('website_mass_mailing_subscribe')
         except UserError as e:
