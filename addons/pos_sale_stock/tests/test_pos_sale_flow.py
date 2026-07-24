@@ -206,6 +206,25 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(pos_order.picking_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
         self.assertEqual(sale_order.order_line.move_ids.move_lines_count, 0)
 
+    def test_settle_quotation_delivered_qty(self):
+        """ Test if a quotation (unconfirmed sale order) is settled in the PoS, the delivered quantity is updated correctly """
+
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10,
+            'taxes_id': [Command.clear()],
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        order = self.env['sale.order'].sudo().create({
+            'partner_id': partner_1.id,
+            'order_line': [Command.create({'product_id': product1.id})],
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleSaleQuotation', login="accountman")
+        self.assertEqual(order.order_line.qty_delivered, 1)
+
     def test_settle_order_with_multistep_delivery(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
