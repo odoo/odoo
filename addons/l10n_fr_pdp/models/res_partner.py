@@ -40,10 +40,10 @@ class ResPartner(models.Model):
         # Extend to rename the `peppol` option in the `invoice_sending_method` selection
         fields = super().fields_get(allfields, attributes)
         company = self.env.company
-        if not self.env.context.get("studio") and (company.country_code == 'FR' or company.sudo().pdp_identifier) and 'invoice_sending_method' in fields:
+        if not self.env.context.get("studio") and company and company._l10n_fr_pdp_uses_french_terminology() and 'invoice_sending_method' in fields:
             field = fields['invoice_sending_method']
             if 'selection' in field:
-                field['selection'] = [('peppol', self.env._('by Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
+                field['selection'] = [('peppol', self.env._('by the Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
         return fields
 
     # -------------------------------------------------------------------------

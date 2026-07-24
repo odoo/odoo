@@ -102,7 +102,7 @@ class AccountEdiProxyClientUser(models.Model):
             )
             WHERE (active IS TRUE AND proxy_type IN ('peppol', 'pdp'))
         """,
-        "You can not have both a Peppol and a PDP proxy user"
+        "You cannot have both an Approved Platform connection and another e-invoicing connection."
     )
 
     # -------------------------------------------------------------------------
@@ -132,7 +132,7 @@ class AccountEdiProxyClientUser(models.Model):
         if proxy_type != 'pdp':
             return super()._get_proxy_identification(company, proxy_type)
         if not company.pdp_identifier:
-            raise UserError(self.env._("Please fill the company routing endpoint with the PDP scheme (0225:<identifier>)."))
+            raise UserError(self.env._("Please fill the company routing endpoint with the French e-invoicing scheme (0225:<identifier>)."))
         return f'0225:{company.pdp_identifier}'
 
     @handle_demo
@@ -396,7 +396,6 @@ class AccountEdiProxyClientUser(models.Model):
             for move, message in response_info.items()
             if message.get('message_uuid')
         ])
-
         sent_moves = responses.move_id
         unsent_moves = reference_moves - sent_moves
 

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.http import request
 from odoo.tools.partner_identifiers import validation_error_message
 
@@ -18,7 +17,10 @@ class PortalAccount(CustomerPortal):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         if request.env.company.peppol_can_send:
             partner = request.env.user.partner_id
-            rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
+            sending_methods = dict(partner.fields_get(['invoice_sending_method'])['invoice_sending_method']['selection'])
+            rendering_values['invoice_sending_methods'].update({
+                'peppol': sending_methods['peppol'],
+            })
             routing_scheme_list = {
                 code: label for code, label in partner._fields['routing_scheme']._description_selection(request.env)
                 if code in (partner.available_routing_schemes or [])
@@ -38,11 +40,18 @@ class PortalAccount(CustomerPortal):
             routing_scheme = address_values.get('routing_scheme')
             routing_endpoint = address_values.get('routing_endpoint')
             edi_format = address_values.get('invoice_edi_format')
+            network_name = request.env.company._get_einvoicing_network_name()
             if request.env['res.country'].browse(int(address_values.get('country_id'))).code not in PEPPOL_LIST:
                 invalid_fields.add('country_id')
-                error_messages.append(_("That country is not available for Peppol."))
+                error_messages.append(request.env._(
+                    'That country is not available with %(network_name)s.',
+                    network_name=network_name,
+                ))
                 return invalid_fields, missing_fields, error_messages
-            error_message = self.env._("If you want to be invoiced by Peppol, your configuration must be valid.")
+            error_message = request.env._(
+                'If you want to be invoiced via %(network_name)s, your configuration must be valid.',
+                network_name=network_name,
+            )
             if not routing_scheme or not routing_endpoint or not edi_format:
                 if not routing_scheme:
                     missing_fields.add('routing_scheme')
