@@ -1,16 +1,34 @@
 import logging
 import uuid
 from base64 import b64decode
+<<<<<<< 6c9f1e6e7053293983911cbd49e1b3cccb51f219
 from datetime import timedelta
 from json import JSONDecodeError
 from urllib.parse import quote, urlencode, urlparse
+||||||| 4b91c768be019347b93145a767222c71d0ee5a7b
+from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
+from urllib.parse import quote, urlencode, urlparse
+=======
+from urllib.parse import quote, urlencode, urlparse
+
+from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
+>>>>>>> 1ef36e9a7a51c0617507e792482094d90833b6bb
 
 from markupsafe import Markup
 
 from odoo import _, Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
+<<<<<<< 6c9f1e6e7053293983911cbd49e1b3cccb51f219
 
+||||||| 4b91c768be019347b93145a767222c71d0ee5a7b
+from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
+=======
+
+from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
+>>>>>>> 1ef36e9a7a51c0617507e792482094d90833b6bb
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 _logger = logging.getLogger(__name__)
@@ -318,13 +336,33 @@ class AccountMove(models.Model):
             return self.env['account.edi.xml.ubl.tr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
+<<<<<<< 6c9f1e6e7053293983911cbd49e1b3cccb51f219
     def button_draft(self):
         # EXTENDS account
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {'out_invoice', 'in_invoice'}):
+||||||| 4b91c768be019347b93145a767222c71d0ee5a7b
+    def button_draft(self):
+        # EXTENDS account
+        for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type == 'out_invoice'):
+=======
+    def _l10n_tr_nilvera_check_reset_to_draft(self):
+        for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type == 'out_invoice'):
+>>>>>>> 1ef36e9a7a51c0617507e792482094d90833b6bb
             if move.l10n_tr_nilvera_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
+<<<<<<< 6c9f1e6e7053293983911cbd49e1b3cccb51f219
             elif move.l10n_tr_nilvera_send_status not in {"not_sent", "commercial_rejected"}:
                 raise UserError(_("You cannot reset to draft an entry that has been sent/received from Nilvera."))
+||||||| 4b91c768be019347b93145a767222c71d0ee5a7b
+            elif move.l10n_tr_nilvera_send_status != 'not_sent':
+                raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
+=======
+            elif move.l10n_tr_nilvera_send_status != 'not_sent':
+                raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
+
+    def button_draft(self):
+        self._l10n_tr_nilvera_check_reset_to_draft()
+>>>>>>> 1ef36e9a7a51c0617507e792482094d90833b6bb
         return super().button_draft()
 
     def _l10n_tr_nilvera_einvoice_check_invalid_invoice_reference(self):
