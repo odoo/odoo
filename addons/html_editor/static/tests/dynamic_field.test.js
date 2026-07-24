@@ -222,3 +222,31 @@ test("inserted value from dynamic field should contain the data-oe-t-inline attr
 
     expect("t[data-oe-t-inline]").toHaveCount(1);
 });
+
+test("cannot insert or edit a dynamic field without a model", async () => {
+    const options = getEditorOptions();
+    options.config.dynamicResModel = "";
+    // Verify insert
+    const { editor } = await setupEditor("<p>[]</p>", options);
+    await insertText(editor, "/");
+    await contains(".o-we-powerbox .o-we-command-name:contains(/^Field$/)").click();
+
+    expect(".o_notification").toHaveText(
+        "Oops! Select a model for this template before inserting fields."
+    );
+    expect(".o-dynamic-field-popover").toHaveCount(0);
+    await contains(".o_notification .btn-close").click();
+
+    // Verify edit
+    await setupEditor(
+        `<div><t t-out="object.field" data-oe-expression-readable="My little field" data-oe-demo="My little field"></t></div>`,
+        options
+    );
+    await contains(":iframe t[t-out]").click();
+    await contains(".o-we-toolbar button[name='editDynamicField']").click();
+
+    expect(".o_notification").toHaveText(
+        "Oops! Select a model for this template before editing fields."
+    );
+    expect(".o-dynamic-field-popover").toHaveCount(0);
+});
