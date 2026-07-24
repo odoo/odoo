@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <!-- Read: user sees own tiles + global tiles matching their groups -->
+    <record id="model_tile_rule_read" model="ir.rule">
+        <field name="name">tile.tile: read own or global</field>
+        <field name="model_id" ref="model_tile_tile" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+        <field name="domain_force">[
+            '|', ('user_id', '=', user.id), ('user_id', '=', False),
+            '|', ('group_ids', '=', False), ('group_ids', 'in', user.group_ids.ids),
+        ]</field>
+    </record>
+
+    <!-- Write/Delete: users can only modify their own tiles -->
+    <record id="model_tile_rule_write" model="ir.rule">
+        <field name="name">tile.tile: write/delete own only</field>
+        <field name="model_id" ref="model_tile_tile" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="perm_read" eval="False" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="True" />
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <!-- Admin: full access to all tiles -->
+    <record id="model_tile_rule_admin" model="ir.rule">
+        <field name="name">tile.tile: admin full access</field>
+        <field name="model_id" ref="model_tile_tile" />
+        <field name="groups" eval="[(4, ref('base.group_system'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+</odoo>
