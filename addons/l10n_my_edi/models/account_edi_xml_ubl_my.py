@@ -147,7 +147,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'company_currency_id': myinvois_document.company_id.currency_id,
 
             'use_company_currency': False,
-            'fixed_taxes_as_allowance_charges': True,
             'custom_form_reference': myinvois_document.myinvois_custom_form_reference,
             'document_ref': document_ref,
             'incoterm_id': myinvois_document.invoice_ids.invoice_incoterm_id,
