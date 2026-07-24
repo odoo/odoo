@@ -91,8 +91,9 @@ export class SlotDetails extends Interaction {
     _onSlotSelected(ev) {
         const dataset = ev.currentTarget.dataset;
         this.selectedSlotDatetime =
-            deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY) +
-            " - " + deserializeDateTime(dataset.slotEnd, {tz: dataset.eventTz}).toLocaleString(DateTime.TIME_SIMPLE);
+            deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY) +
+            ", " + ev.currentTarget.querySelector("time[name='slot_start']").textContent +
+            " - " + ev.currentTarget.querySelector("time[name='slot_end']").textContent;
         this.form.setAttribute("data-selected-slot-id", parseInt(ev.currentTarget.dataset.slotId));
     }
 
