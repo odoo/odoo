@@ -360,7 +360,7 @@ class AccountEdiCommon(models.AbstractModel):
         return (invoice and
                 customer.country_id.code == 'BE' and
                 supplier.country_id == customer.country_id and
-                (co_contractant := self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)) and
+                (co_contractant := self.env['account.chart.template'].with_company(invoice.company_id).ref('fiscal_position_template_4', raise_if_not_found=False)) and
                 invoice.fiscal_position_id == co_contractant
         )
     # -------------------------------------------------------------------------
