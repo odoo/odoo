@@ -5,7 +5,7 @@ import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { animationFrame, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, pointerDown, pointerUp, queryOne, waitFor } from "@odoo/hoot-dom";
 import { processThroughNormalize } from "../_helpers/dispatch";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "../_helpers/ui_expectations";
@@ -195,6 +195,7 @@ describe("should position the cursor outside the link", () => {
         );
         await animationFrame(); // selection change
         await pointerUp(el);
+        await waitFor("p a:not(.o_link_in_selection)");
         expect(getContent(el)).toBe(
             '<p>\ufeff<a href="http://test.test/">\ufefftest\ufeff</a>\ufeff[]</p>'
         );
