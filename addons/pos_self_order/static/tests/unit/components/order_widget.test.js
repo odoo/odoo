@@ -17,7 +17,6 @@ test("OrderWidget renders slot content in the left/right containers", async () =
                 <t t-set-slot="right"><button class="my-right-btn">Pay</button></t>
             </OrderWidget>`;
         static components = { OrderWidget };
-        static props = ["*"];
     }
 
     await mountWithCleanup(Parent);
@@ -34,7 +33,6 @@ test("OrderWidget renders without a slot that is not provided", async () => {
                 <t t-set-slot="right"><button class="my-right-btn">Pay</button></t>
             </OrderWidget>`;
         static components = { OrderWidget };
-        static props = ["*"];
     }
 
     await mountWithCleanup(Parent);
@@ -49,7 +47,6 @@ test("removeTopClasses controls the border-top class", async () => {
     class Parent extends Component {
         static template = xml`<OrderWidget removeTopClasses="this.props.removeTopClasses"/>`;
         static components = { OrderWidget };
-        static props = ["*"];
     }
 
     await mountWithCleanup(Parent, { props: { removeTopClasses: false } });

@@ -1,10 +1,10 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
 
 export class AccordionItem extends Component {
     static template = "pos_hr.AccordionItem";
 
-    props = props({
+    props = useProps({
         disabled: t.boolean().optional(false),
         slots: t.object(),
     });

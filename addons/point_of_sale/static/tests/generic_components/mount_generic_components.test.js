@@ -10,7 +10,6 @@ import { waitFor } from "@odoo/hoot-dom";
 
 test("test that generic components can be mounted; the goal is to ensure that they don't have any unmet dependencies", async () => {
     class TestComponent extends Component {
-        static props = [];
         static components = {
             OdooLogo,
             CenteredIcon,
