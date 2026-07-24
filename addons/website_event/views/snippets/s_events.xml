@@ -110,7 +110,7 @@
                     _resize_height="512"
                     _resize_width="512">
 
-                    <div class="s_events_event_date position-absolute bg-white shadow-sm text-dark">
+                    <div class="s_events_event_date position-absolute bg-white shadow-sm text-black">
                         <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
                             class="s_events_event_month fw-bold text-uppercase"/>
                         <span t-field="record.date_begin" t-options="{'format': 'dd', 'tz_name': record.date_tz}"
@@ -146,7 +146,7 @@
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
         <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
             <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
-            <div class="position-relative p-4 p-lg-5">
+            <div class="position-relative p-4 p-lg-5 text-white">
                 <div class="py-lg-5">
                     <h2 t-field="record.name"/>
                     <p class="lead" t-field="record.subtitle"/>
@@ -189,10 +189,10 @@
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
         <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
             <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
-            <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5">
+            <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5 text-white">
                 <div class="d-flex flex-column flex-lg-row gap-lg-5">
                     <div class="flex-grow-1 order-1 order-lg-0">
-                        <h2 t-field="record.name"/>
+                        <h2 t-field="record.name" class="text-white"/>
                         <p class="lead" t-field="record.subtitle"/>
                     </div>
                     <p class="h3-fs text-end">
@@ -224,7 +224,7 @@
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
         <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
             <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
-            <div class="position-relative d-flex align-items-center justify-content-between gap-4 flex-wrap flex-md-nowrap w-100 h-100 p-4 p-lg-5">
+            <div class="position-relative d-flex align-items-center justify-content-between gap-4 flex-wrap flex-md-nowrap w-100 h-100 p-4 p-lg-5 text-white">
                 <div>
                     <h2 t-field="record.name"/>
                     <p class="lead" t-field="record.subtitle"/>
@@ -263,7 +263,7 @@
                 <span class="s_cta_badge o_cc o_cc1 d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 px-3 text-break" style="border-radius: 32px !important;" data-snippet="s_cta_badge">
                     <t t-if="events_event_location_active">
                         <img t-if="record.country_id" t-att-src="record.country_id.image_url"/>
-                        <i t-else="" class="oi oi-filled text-primary" data-icon="calendar_today"/>
+                        <i t-else="" class="oi oi-filled" data-icon="calendar_today"/>
                     </t>
                     <strong class="text-nowrap" t-field="record.name"/>
                     <span class="text-muted text-nowrap">
@@ -272,7 +272,7 @@
                             - <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
                         </span>
                     </span>
-                    <span class="text-primary text-nowrap">Register Now <i class="oi" data-icon="east"/></span>
+                    <span class="text-nowrap">Register Now <i class="oi" data-icon="east"/></span>
                 </span>
             </a>
         </div>
