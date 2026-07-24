@@ -57,4 +57,18 @@ class AccountMoveReversal(models.TransientModel):
     def refund_moves(self):
         if self._l10n_cr_fe_is_partial_correction() and not self.l10n_cr_fe_line_ids:
             raise UserError(_("Selecciona al menos un producto a corregir."))
-        return super().refund_moves()
+        action = super().refund_moves()
+        if self._l10n_cr_fe_is_partial_correction():
+            self._l10n_cr_fe_remove_unselected_lines()
+        return action
+
+    def _l10n_cr_fe_remove_unselected_lines(self):
+        self.ensure_one()
+        original_lines = self.move_ids.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        new_lines = self.new_move_ids.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        selected_ids = set(self.l10n_cr_fe_line_ids.ids)
+        lines_to_remove = self.env['account.move.line']
+        for original_line, new_line in zip(original_lines, new_lines):
+            if original_line.id not in selected_ids:
+                lines_to_remove |= new_line
+        lines_to_remove.unlink()

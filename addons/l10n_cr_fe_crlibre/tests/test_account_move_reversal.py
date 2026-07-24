@@ -85,3 +85,72 @@ class TestAccountMoveReversalFe(TransactionCase):
         credit_note = self.env['account.move'].browse(action['res_id'])
         credit_lines = credit_note.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
         self.assertEqual(len(credit_lines), 1)
+
+    def _create_multi_line_invoice(self):
+        product_b = self.env['product.product'].create({
+            'name': 'Producto B', 'l10n_cr_fe_cabys': '0111101000001'})
+        product_c = self.env['product.product'].create({
+            'name': 'Producto C', 'l10n_cr_fe_cabys': '0111101000002'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_clave': '6' * 50,
+            'l10n_cr_fe_state': 'aceptado',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product.id, 'quantity': 5, 'price_unit': 1200.0,
+                        'name': 'Producto demo', 'tax_ids': [(6, 0, [])]}),
+                (0, 0, {'product_id': product_b.id, 'quantity': 1, 'price_unit': 600.0,
+                        'name': 'Producto B', 'tax_ids': [(6, 0, [])]}),
+                (0, 0, {'product_id': product_c.id, 'quantity': 5, 'price_unit': 1500.0,
+                        'name': 'Producto C', 'tax_ids': [(6, 0, [])]}),
+            ],
+        })
+        invoice.action_post()
+        return invoice
+
+    def test_refund_moves_keeps_only_selected_lines(self):
+        invoice = self._create_multi_line_invoice()
+        lines = invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=invoice.ids).create({
+                'journal_id': invoice.journal_id.id,
+                'l10n_cr_fe_motivo': 'correccion_monto',
+                'l10n_cr_fe_line_ids': [(6, 0, lines[0].ids)],
+            })
+        action = wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_lines = credit_note.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(len(credit_lines), 1)
+        self.assertEqual(credit_lines.product_id, lines[0].product_id)
+        self.assertEqual(credit_lines.quantity, 5)
+
+    def test_refund_moves_keeps_multiple_selected_lines(self):
+        invoice = self._create_multi_line_invoice()
+        lines = invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        selected = lines[0] | lines[2]
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=invoice.ids).create({
+                'journal_id': invoice.journal_id.id,
+                'l10n_cr_fe_motivo': 'devolucion_mercancia',
+                'l10n_cr_fe_line_ids': [(6, 0, selected.ids)],
+            })
+        action = wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_lines = credit_note.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(len(credit_lines), 2)
+        self.assertEqual(
+            set(credit_lines.mapped('product_id.id')),
+            {lines[0].product_id.id, lines[2].product_id.id})
+
+    def test_refund_moves_anulacion_total_keeps_all_lines_regardless_of_selection(self):
+        invoice = self._create_multi_line_invoice()
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=invoice.ids).create({
+                'journal_id': invoice.journal_id.id,
+                'l10n_cr_fe_motivo': 'anulacion_total',
+            })
+        action = wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_lines = credit_note.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(len(credit_lines), 3)
