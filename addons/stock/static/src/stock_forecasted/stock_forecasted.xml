@@ -5,25 +5,24 @@
             <t t-set-slot="control-panel-buttons">
                 <ForecastedButtons action="this.props.action" reloadReport.bind="this.reloadReport" resModel="this.resModel"/>
             </t>
-            <t t-set-slot="control-panel-actions">
-                <div class="btn-group o_search_options position-static" role="search">
-                    <ForecastedWarehouseFilter action="this.props.action" warehouses="this.warehouses" setWarehouseInContext.bind="this.updateWarehouse"/>
-                </div>
+            <t t-set-slot="control-panel-navigation-additional">
+                <ForecastedProductVariantFilter t-if="this.context.has_variants" action="this.props.action"
+                    variants="this.variants" setVariantInContext.bind="this.updateVariant"/>
+                <ForecastedWarehouseFilter t-if="this.warehouses.length > 1" action="this.props.action"
+                    warehouses="this.warehouses" setWarehouseInContext.bind="this.updateWarehouse"/>
             </t>
         </ControlPanel>
         <div class="o-content pt-3 container-fluid overflow-auto o_stock_forecasted_page">
-            <ForecastedHeader docs="this.docs" openView.bind="this.openView"/>
-            <t t-if="this.context.warehouse_id">
-                <View type="'graph'"
+            <ForecastedHeader docs="this.docs" openView.bind="this.openView"
+                selectedWarehouseIds="this.selectedWarehouseIds"/>
+            <View type="'graph'"
                 viewId="this.stock_report_view_graph"
                 resModel="'report.stock.quantity'"
                 domain="this.graphDomain"
                 display="{controlPanel: false}"
                 context="{fill_temporal: false}"
                 info="this.graphInfo"
-                useSampleModel="true"
-                />
-            </t>
+                useSampleModel="true"/>
             <ForecastedDetails docs="this.docs" openView.bind="this.openView" reloadReport.bind="this.reloadReport"/>
         </div>
     </div>

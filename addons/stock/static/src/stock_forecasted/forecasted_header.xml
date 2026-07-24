@@ -32,14 +32,16 @@
                 <div class="h3 col-md-auto text-center">+</div>
                 <div t-attf-class="col-md-auto text-center #{this.props.docs.incoming_qty}">
                     <div class="h3">
-                        <t t-out="this._formatFloat(this.incomingQty)"/>
+                        <a href="#" t-on-click.prevent="() => this._onClickTransfers('incoming')"
+                            t-out="this._formatFloat(this.incomingQty)"/>
                     </div>
                     <div>Incoming</div>
                 </div>
                 <div class="h3 col-md-auto text-center">-</div>
                 <div t-attf-class="col-md-auto text-center #{this.props.docs.outgoing_qty}">
                     <div class="h3">
-                        <t t-out="this._formatFloat(this.outgoingQty)"/>
+                        <a href="#" t-on-click.prevent="() => this._onClickTransfers('outgoing')"
+                            t-out="this._formatFloat(this.outgoingQty)"/>
                     </div>
                     <div>Outgoing</div>
                 </div>

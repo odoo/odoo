@@ -4,7 +4,7 @@ import { Component, markup } from "@odoo/owl";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
-    static props = { docs: Object, openView: Function };
+    static props = { docs: Object, openView: Function, selectedWarehouseIds: Array };
 
     setup(){
         this.orm = useService("orm");
@@ -16,6 +16,26 @@ export class ForecastedHeader extends Component {
     async _onClickInventory(){
         const productIds = this.props.docs.product_variants_ids;
         const action = await this.orm.call('product.product', 'action_open_quants', [productIds]);
+        action.domain = [
+            ...(action.domain || []),
+            ["warehouse_id", "in", this.props.selectedWarehouseIds],
+        ];
+        if (action.help) {
+            action.help = markup(action.help);
+        }
+        return this.action.doAction(action);
+    }
+
+    async _onClickTransfers(type) {
+        const action = await this.orm.call(
+            "stock.picking",
+            `get_action_picking_tree_${type === "incoming" ? "incoming" : "outgoing"}`
+        );
+        action.domain = [
+            ["product_id", "in", this.props.docs.product_variants_ids],
+            ["state", "not in", ["draft", "done", "cancel"]],
+            ["picking_type_id.warehouse_id", "in", this.props.selectedWarehouseIds],
+        ];
         if (action.help) {
             action.help = markup(action.help);
         }
