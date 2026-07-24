@@ -162,11 +162,26 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_menu">
         <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">list,kanban,form,graph,pivot</field>
         <field name="context">{'search_default_filter_not_email_bl': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a mailing contact
+            </p><p>
+                Mailing contacts allow you to separate your marketing audience from your business contact directory.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
+        <field name="name">Mailing List Recipients</field>
+        <field name="res_model">mailing.contact</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
+        <field name="domain">[('list_ids', 'in', [active_id])]</field>
+        <field name="context">{'default_list_ids': [active_id]}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a mailing contact
