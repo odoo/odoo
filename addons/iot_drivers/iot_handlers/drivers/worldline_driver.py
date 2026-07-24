@@ -41,11 +41,11 @@ class WorldlineDriver(CtypesTerminalDriver):
             return None
 
         # Transaction
-        merchant_receipt = create_ctypes_string_buffer()
-        customer_receipt = create_ctypes_string_buffer()
         card = create_ctypes_string_buffer()
         error_code = create_ctypes_string_buffer()
         transaction_id = transaction['TransactionID']
+        merchant_receipt = create_ctypes_string_buffer()
+        customer_receipt = create_ctypes_string_buffer()
         transaction_amount = transaction['amount'] / 100
         transaction_action_identifier = transaction['actionIdentifier']
         _logger.info('start transaction #%d amount: %f action_identifier: %d', transaction_id, transaction_amount, transaction_action_identifier)
@@ -68,8 +68,6 @@ class WorldlineDriver(CtypesTerminalDriver):
                 _logger.info('succesfully finished transaction #%d', transaction_id)
                 return self.send_status(
                     response='Approved',
-                    ticket=customer_receipt.value.decode(),
-                    ticket_merchant=merchant_receipt.value.decode(),
                     card=card.value.decode(),
                     transaction_id=transaction['actionIdentifier'],
                     request_data=transaction,

@@ -185,14 +185,13 @@ class CtypesTerminalDriver(Driver, ABC):
                 self.six_terminal_balance(action)  # Only for Worldline "Six" (TIM)
             self.terminal_busy = False
 
-    def send_status(self, value='', response=False, stage=False, ticket=False, ticket_merchant=False, card=False, card_no=False, transaction_id=False, error=False, disconnected=False, request_data=False):
+    def send_status(self, value='', response=False, stage=False, ticket=False, card=False, card_no=False, transaction_id=False, error=False, disconnected=False, request_data=False):
         self.data['status'] = 'success'  # always success: let service handle errors
         self.data['result'] = {
             'value': value,
             'Stage': stage,
             'Response': response,
             'Ticket': ticket,
-            'TicketMerchant': ticket_merchant,
             'Card': card,
             'CardNo': card_no,
             'PaymentTransactionID': transaction_id,
