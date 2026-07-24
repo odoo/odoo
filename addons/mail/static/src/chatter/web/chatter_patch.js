@@ -135,8 +135,15 @@ const chatterPatch = {
             },
             () =>
                 (!this.store.meetingViewOpened || this.env.inMeetingView) &&
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
                 (this.thread()?.isTransient || this.thread()?.canPostMessage) &&
                 !this.thread()?.messageInEdition?.composer?.isEditComposerVisible
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+                (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
+=======
+                (this.state.thread?.isTransient || this.state.thread?.canPostMessage) &&
+                !this.state.thread?.messageInEdition
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
         );
         useOnChange(
             () => [this.thread(), this.thread()?.isLoadingAttachments],

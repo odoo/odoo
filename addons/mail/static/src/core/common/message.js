@@ -1,3 +1,11 @@
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+=======
+import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 
@@ -125,8 +133,14 @@ export class Message extends Component {
             });
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
         this.messageBody = signal.ref(HTMLDivElement);
         this.messageContentRef = signal.ref(HTMLDivElement);
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+        this.messageBody = useRef("body");
+=======
+        this.messageBody = signal.ref(HTMLDivElement);
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -227,7 +241,13 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
                     : this.prepareMessageBody(this.messageBody()) ?? [];
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+                    : (this.prepareMessageBody(this.messageBody.el) ?? []);
+=======
+                    : (this.prepareMessageBody(this.messageBody()) ?? []);
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
                 return () => {
                     for (const root of roots) {
                         root.destroy();

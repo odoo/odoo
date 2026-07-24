@@ -231,10 +231,17 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
                     (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
                     (this.composer().message
                         ? this.composer().isEditComposerVisible
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+                    (!this.store.rtc.isFullscreen || this.env.inMeetingView)
+=======
+                    (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
+                    (this.props.composer.message || !this.thread?.messageInEdition)
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
             );
         }
         useSubEnv({ inComposer: true });

@@ -9,7 +9,13 @@
                             <t t-out="this.props.messageSearch?.highlight(this.message.subtype_id.description) ?? this.message.subtype_id.description"/>
                         </p>
                     </t>
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
                     <div t-if="!this.message.isEmpty and this.message.richBody">
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+                    <div t-if="!this.message.isEmpty and this.message.richBody" t-custom-ref="body">
+=======
+                    <div t-if="!this.message.isEmpty and this.message.richBody" t-ref="this.messageBody">
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
                         <t t-call="mail.Message.bodyAsNotification"/>
                     </div>
                 </div>

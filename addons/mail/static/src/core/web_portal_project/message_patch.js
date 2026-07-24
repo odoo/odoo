@@ -6,6 +6,16 @@ patch(Message.prototype, {
         super.setup(...arguments);
         this.state.lastReadMoreIndex = 0;
         this.state.isReadMoreByIndex = new Map();
+<<<<<<< f61ec7a5a2b7f77a0ae83f8c0ca7e97db8b41bab
+||||||| 44134dc7f5890c15d5f624fd9d1d95186dc1bfcb
+        onWillUnmount(() => {
+            this.messageBody.el?.querySelector(".o-mail-ellipsis")?.remove();
+        });
+=======
+        onWillUnmount(() => {
+            this.messageBody()?.querySelector(".o-mail-ellipsis")?.remove();
+        });
+>>>>>>> 65118d9f8331217146f3a6c20b1470986175dc2e
     },
 
     /**
