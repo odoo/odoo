@@ -562,3 +562,36 @@ test("Option list input editing is enabled for custom forms", async () => {
         .querySelectorAll('.o-hb-input-base');
     expect([...inputs].every(input => input.disabled)).toBe(false);
 });
+
+test("Changing field type removes data-fill-with attribute", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+
+    await setupWebsiteBuilder(`
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                    <div class="row">
+                        <label class="s_website_form_label" for="field">
+                            <span class="s_website_form_label_content">Company</span>
+                        </label>
+                        <div class="col-sm">
+                            <input id="field" class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    `);
+
+    await contains(":iframe .s_website_form_field").click();
+    expect(":iframe input").toHaveAttribute(
+        "data-fill-with",
+        "commercial_company_name"
+    );
+
+    // Change the field type.
+    await contains(".hb-row[data-label='Type'] button").click();
+    await contains(".o-dropdown-item[data-action-value='email']").click();
+
+    expect(":iframe input").not.toHaveAttribute("data-fill-with");
+});
