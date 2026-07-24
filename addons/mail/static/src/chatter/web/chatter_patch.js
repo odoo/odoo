@@ -134,7 +134,8 @@ patch(Chatter.prototype, {
             },
             () =>
                 (!this.store.meetingViewOpened || this.env.inMeetingView) &&
-                (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
+                (this.state.thread?.isTransient || this.state.thread?.canPostMessage) &&
+                !this.state.thread?.messageInEdition
         );
         useEffect(
             () => {
