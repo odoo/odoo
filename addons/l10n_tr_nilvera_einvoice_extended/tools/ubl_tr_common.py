@@ -37,7 +37,7 @@ Contact = {
     'cbc:Telefax': {},
 }
 
-DocumentReference = {
+MeasurementDimension = {
     'cbc:AttributeID': {},
     'cbc:Measure': {},
     'cbc:Description': {},
@@ -85,10 +85,6 @@ Address = {
     'cac:Country': Country,
 }
 
-BillingReference = {
-    'cac:InvoiceDocumentReference': DocumentReference,
-}
-
 IssuerParty = {
     'cbc:EndpointID': {},
     'cac:PartyIdentification': {
@@ -108,6 +104,10 @@ DocumentReference = {
     'cbc:DocumentDescription': {},
     'cac:Attachment': Attachment,
     'cac:IssuerParty': IssuerParty,
+}
+
+BillingReference = {
+    'cac:InvoiceDocumentReference': DocumentReference,
 }
 
 Signature = {
