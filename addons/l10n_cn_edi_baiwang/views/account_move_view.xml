@@ -27,8 +27,6 @@
             </xpath>
 
             <xpath expr="//widget[@name='web_ribbon']" position="before">
-                <widget name="web_ribbon" title="Red Form Requested" bg_color="text-bg-info"
-                    invisible="move_type != 'out_refund' or l10n_cn_baiwang_state != 'sent'"/>
                 <widget name="web_ribbon" title="Red Form Rejected" bg_color="text-bg-warning"
                     invisible="move_type != 'out_refund' or l10n_cn_baiwang_state != 'failed'"/>
             </xpath>

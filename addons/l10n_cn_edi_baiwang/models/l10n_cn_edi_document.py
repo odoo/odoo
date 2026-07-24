@@ -79,10 +79,7 @@ class L10nCnEdiDocument(models.Model):
                                     vals = {'l10n_cn_baiwang_state': 'issued'}
                                     if red_inv_no:
                                         vals['l10n_cn_baiwang_invoice_no'] = red_inv_no
-                                    if raw_date and len(raw_date) >= 14:
-                                        vals['l10n_cn_baiwang_invoice_date'] = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
-                                    else:
-                                        vals['l10n_cn_baiwang_invoice_date'] = fields.Datetime.now()
+                                    vals['l10n_cn_baiwang_invoice_date'] = doc.move_id._l10n_cn_baiwang_parse_red_invoice_datetime(raw_date)
                                     doc.move_id.write(vals)
                                     doc.move_id.activity_schedule(
                                         'mail.mail_activity_data_todo',
