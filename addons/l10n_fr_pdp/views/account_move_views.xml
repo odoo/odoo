@@ -67,6 +67,25 @@
         <field name="priority">30</field>
         <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
         <field name="arch" type="xml">
+            <button name="action_cancel_peppol_documents" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </button>
+            <button name="action_cancel_peppol_documents" position="after">
+                <button name="action_cancel_peppol_documents"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Cancel E-Invoice Sending"
+                        invisible="peppol_move_state != 'to_send' or state == 'draft' or country_code not in ('FR', 'GP', 'MQ', 'RE')"/>
+            </button>
+            <xpath expr="//div[@name='peppol_div']/span[hasclass('text-muted')]" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </xpath>
+            <xpath expr="//div[@name='peppol_div']/span[hasclass('text-muted')]" position="after">
+                <span class="text-muted mx-3"
+                      invisible="peppol_move_state != 'to_send' or country_code not in ('FR', 'GP', 'MQ', 'RE')">
+                    The invoice will be sent automatically via the Approved Platform
+                </span>
+            </xpath>
             <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
             <button name="button_cancel" position="after">
                 <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
@@ -203,29 +222,29 @@
             <xpath expr="//filter[@name='posted']" position="after">
                 <separator/>
                 <filter name="l10n_fr_pdp_status_pending"
-                        string="PDP Pending"
+                        string="E-Invoicing Pending"
                         domain="[('l10n_fr_pdp_status', '=', 'pending')]"/>
                 <filter name="l10n_fr_pdp_status_ready"
-                        string="PDP Ready"
+                        string="E-Invoicing Ready"
                         domain="[('l10n_fr_pdp_status', '=', 'ready')]"/>
                 <filter name="l10n_fr_pdp_status_error"
-                        string="PDP Error"
+                        string="E-Invoicing Error"
                         domain="[('l10n_fr_pdp_status', '=', 'error')]"/>
                 <filter name="l10n_fr_pdp_status_sent"
-                        string="PDP Sent"
+                        string="E-Invoicing Sent"
                         domain="[('l10n_fr_pdp_status', '=', 'sent')]"/>
                 <filter name="l10n_fr_pdp_status_out_of_scope"
-                        string="PDP Out Of Scope"
+                        string="E-Invoicing Out Of Scope"
                         domain="[('l10n_fr_pdp_status', '=', 'out_of_scope')]"/>
                 <separator/>
                 <filter name="l10n_fr_pdp_group_by_status"
-                        string="Group By PDP Status"
+                        string="Group By E-Invoicing Status"
                         context="{'group_by': 'l10n_fr_pdp_status'}"/>
                 <filter name="l10n_fr_pdp_group_by_period"
                         string="Group By Invoice Month"
                         context="{'group_by': 'invoice_date:month'}"/>
                 <filter name="l10n_fr_pdp_group_by_flow"
-                        string="Group By Last PDP Flow"
+                        string="Group By Last French E-Reporting Flow"
                         context="{'group_by': 'l10n_fr_pdp_last_flow_id'}"/>
             </xpath>
         </field>
