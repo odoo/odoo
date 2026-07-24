@@ -37,10 +37,10 @@
         <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
-        <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('total_price_reduce')"/>
-        <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.mapped('total_price_reduce_taxinc')"/>
-        <t t-set="lowest_price" t-value="min(all_prices)"/>
-        <t t-set="highest_price" t-value="max(all_prices)"/>
+        <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.filtered(lambda ticket: ticket.sale_available).mapped('total_price_reduce')"/>
+        <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.filtered(lambda ticket: ticket.sale_available).mapped('total_price_reduce_taxinc')"/>
+        <t t-set="lowest_price" t-value="min(all_prices, default=0)"/>
+        <t t-set="highest_price" t-value="max(all_prices, default=0)"/>
         <t t-if="highest_price > 0">
             <small class="text-muted">
                 From
