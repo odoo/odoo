@@ -1265,6 +1265,10 @@ class TestReorderingRule(TransactionCase):
             'name': 'Storable Product',
             'is_storable': True,
         })
+        self.env['product.supplierinfo'].create({
+            'partner_id': res_partner.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+        })
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'product_min_qty': 0,
@@ -1508,3 +1512,39 @@ class TestReorderingRule(TransactionCase):
             'product_qty': 6.0,
             'price_unit': 100.0,
         }])
+
+    def test_replenish_from_last_po_line(self):
+        """ A product without any vendor pricelist can still be replenished if it
+            was already purchased: the last confirmed po line acts as the pricelist.
+        """
+        partner = self.env['res.partner'].create({'name': 'History Vendor'})
+        product = self.env['product.product'].create({
+            'name': 'History Product',
+            'is_storable': True,
+        })
+        self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 4,
+                'price_unit': 42,
+            })],
+        }).button_confirm()
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_min_qty': 1.0,
+            'product_max_qty': 5.0,
+        })
+        orderpoint.action_replenish()
+
+        line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product.id),
+            ('state', '=', 'draft'),
+        ], limit=1)
+        self.assertTrue(line, "An RFQ should have been created from the purchase history")
+        self.assertEqual(line.order_id.partner_id, partner)
+        self.assertEqual(line.price_unit, 42)

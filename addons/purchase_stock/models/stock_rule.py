@@ -164,7 +164,7 @@ class StockRule(models.Model):
 
     def _filter_warehouse_routes(self, product, warehouses, route):
         if any(rule.action == 'buy' for rule in route.rule_ids):
-            if product.seller_ids:
+            if product.seller_ids or product._has_confirmed_purchase():
                 return super()._filter_warehouse_routes(product, warehouses, route)
             return False
         return super()._filter_warehouse_routes(product, warehouses, route)
@@ -415,7 +415,7 @@ class StockRoute(models.Model):
 
     def _is_valid_resupply_route_for_product(self, product):
         if any(rule.action == 'buy' for rule in self.rule_ids):
-            return bool(product.seller_ids)
+            return bool(product.seller_ids) or product._has_confirmed_purchase()
         return super()._is_valid_resupply_route_for_product(product)
 
     def _get_non_push_pull_rule_actions(self):

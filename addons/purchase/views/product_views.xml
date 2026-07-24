@@ -207,8 +207,19 @@
             </field>
         </record>
 
-        <record id="product_view_search_catalog" model="ir.ui.view">
+        <record id="product_view_search_catalog_inherit" model="ir.ui.view">
             <field name="name">product.view.search.catalog.inherit.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_search_catalog"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='seller_ids']" position="replace">
+                    <field name="sold_by_vendor_id" string="Vendor" invisible="not context.get('is_purchase_document', False)"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_view_search_catalog" model="ir.ui.view">
+            <field name="name">product.view.search.catalog.purchase</field>
             <field name="model">product.product</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_view_search_catalog"/>

@@ -945,6 +945,7 @@
                 <field name="company_id" optional="show" groups="base.group_multi_company"/>
                 <field name="product_uom_qty" string="Quantity"/>
                 <field name="price_unit_product_uom" widget="monetary" string="Unit Price"/>
+                <field name="discount" string="Disc.%" optional="hide"/>
                 <field name="price_subtotal" widget="monetary" string="Total Untaxed"/>
                 <field name="state" optional="hide"/>
             </list>
@@ -980,6 +981,7 @@
         <field name="context">{
                 'search_default_order_date_last_year': 1,
                 'search_default_groupby_product': 1,
+                'search_default_groupby_supplier': 2,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

@@ -227,9 +227,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _search_effective_vendor_id(self, operator, value):
         target_partners = self.env['res.partner'].search([('id', operator, value)])
-
+        po_product_ids = self._get_po_history_product_ids(target_partners)
         orderpoints = self.env['stock.warehouse.orderpoint'].search([
-            ('vendor_ids.partner_id', 'in', target_partners.ids)
+            '|',
+            ('vendor_ids.partner_id', 'in', target_partners.ids),
+            ('product_id', 'in', list(po_product_ids)),
         ]).filtered(
             lambda op: op.effective_vendor_id in target_partners
         )
@@ -240,13 +242,23 @@ class StockWarehouseOrderpoint(models.Model):
         vendors = self.env['res.partner'].search([('id', operator, value)])
         orderpoints = self.env['stock.warehouse.orderpoint'].search([]).filtered(
             lambda orderpoint: orderpoint.product_id._prepare_sellers().mapped('partner_id') & vendors
+                or orderpoint.effective_vendor_id in vendors
         )
         return [('id', 'in', orderpoints.ids)]
+
+    def _get_po_history_product_ids(self, partners):
+        return set(self.env['purchase.order.line'].sudo().search([
+            ('order_id.partner_id', 'child_of', partners.ids),
+            ('order_id.state', '=', 'purchase'),
+            ('order_id.date_approve', '!=', False),
+            ('order_id.company_id', 'in', self.env.companies.ids),
+        ]).product_id.ids)
 
     def _compute_show_supply_warning(self):
         for orderpoint in self:
             if 'buy' in orderpoint.rule_ids.mapped('action') and not orderpoint.show_supply_warning:
-                orderpoint.show_supply_warning = not orderpoint.vendor_ids
+                orderpoint.show_supply_warning = not orderpoint.vendor_ids \
+                    and not orderpoint.product_id._has_confirmed_purchase(orderpoint.company_id)
                 continue
             super(StockWarehouseOrderpoint, orderpoint)._compute_show_supply_warning()
 
@@ -268,7 +280,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_default_route(self, force_action=False):
         self.ensure_one()
         if not force_action or force_action == 'buy':
-            if self.product_id.seller_ids:
+            if self.product_id.seller_ids or self.product_id._has_confirmed_purchase(self.company_id):
                 route_id = self.rule_ids.filtered(lambda r: r.action == 'buy').route_id
                 if route_id:
                     return route_id[0]
