@@ -94,11 +94,12 @@ class ResourceCalendarLeaves(models.Model):
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
             calendar = calendars_dict[calendar_id]
+            calendar_timezone = timezone(calendar.tz)
             work_hours_intervals = calendar._attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
                 cal_attendance_intervals_params_entry['resources'],
-                tz=utc
+                tz=calendar_timezone
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
                 leave_date_from = utc.localize(leave.date_from)
@@ -109,7 +110,7 @@ class ResourceCalendarLeaves(models.Model):
                     if date_to > leave_date_from and date_from < leave_date_to:
                         tmp_start = max(date_from, leave_date_from)
                         tmp_end = min(date_to, leave_date_to)
-                        results[calendar_id][leave.id][tmp_start.astimezone(timezone(calendar.tz)).date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                        results[calendar_id][leave.id][tmp_start.astimezone(calendar_timezone).date()] += (tmp_end - tmp_start).total_seconds() / 3600
                 results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
         return results
 
