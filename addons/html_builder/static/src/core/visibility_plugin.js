@@ -60,6 +60,7 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         });
+        this.ignoredSiblingSelectors = this.getResource("ignored_sibling_selectors").join(", ");
     }
 
     getVisibleSibling(target, direction) {
@@ -67,7 +68,7 @@ export class VisibilityPlugin extends Plugin {
         const siblingEls = [...target.parentNode.children];
         const visibleSiblingEls = siblingEls.filter(
             (el) =>
-                !el.classList.contains("o_we_no_overlay") &&
+                !el.matches(this.ignoredSiblingSelectors) &&
                 window.getComputedStyle(el).display !== "none" &&
                 !el.closest(systemNodeSelectors)
         );
