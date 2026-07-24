@@ -5062,6 +5062,51 @@ class AccountTax(models.Model):
 
         return {'criteria': criteria}
 
+    def _find_tax_using_search_plan(self, cache, search_plan, tax_values, orders, tax_domain, static_domain):
+        for plan in search_plan:
+            tax = None
+            plan_values = plan(tax_values)
+            if not plan_values:
+                continue
+
+            for criteria in plan_values['criteria']:
+                domain = criteria.get('domain')
+                search_method = criteria.get('search_method')
+                if domain:
+                    domain = tax_domain & Domain(domain)
+                    cache_key = repr(domain.optimize(self.env['account.tax']))
+                else:
+                    # tax_domain is inserted to cache_key because we can have multiple of them simultaneously
+                    cache_key = criteria.get('cache_key')
+                    if cache_key:
+                        cache_key = (cache_key, str(tax_domain))
+
+                # Look at the cache if the value has already been tested with this key.
+                if cache_key and cache_key in cache:
+                    if tax := cache[cache_key]:
+                        tax_values['tax'] = tax
+                        return
+                    else:
+                        continue
+
+                if domain:
+                    full_domain = static_domain & Domain(domain)
+                    tax = self.search(full_domain, order=','.join(orders), limit=1)
+                elif search_method:
+                    tax = search_method({
+                        **criteria,
+                        'static_domain': tax_domain & static_domain,
+                    })
+
+                if cache_key:
+                    cache[cache_key] = tax
+                if tax:
+                    tax_values['tax'] = tax
+                    return
+
+            if tax:
+                return
+
     @api.model
     def _import_retrieve_tax(self, search_plan, company, tax_values_list):
         cache = self.env.cr.cache.setdefault('retrieved_tax_map', {}).setdefault(company.id, {})
@@ -5080,55 +5125,42 @@ class AccountTax(models.Model):
                 tax_domain &= Domain('name', '=', name)
             if tax_exigibility := tax_values.get('tax_exigibility'):
                 tax_domain &= Domain('tax_exigibility', '=', tax_exigibility)
-            if (
-                (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
-                and 'ubl_cii_tax_category_code' in self._fields
-            ):
-                tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
-                orders.insert(0, 'ubl_cii_tax_category_code')
 
-            for plan in search_plan:
-                tax = None
-                plan_values = plan(tax_values)
-                if not plan_values:
-                    continue
+            if self.env['ir.module.module']._get('account_edi_ubl_cii').state == 'installed':
+                if ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'):
+                    tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
+                    orders.insert(0, 'ubl_cii_tax_category_code')
 
-                for criteria in plan_values['criteria']:
-                    domain = criteria.get('domain')
-                    search_method = criteria.get('search_method')
-                    if domain:
-                        domain = tax_domain & Domain(domain)
-                        cache_key = repr(domain.optimize(self.env['account.tax']))
+                if ubl_cii_type := tax_values.get('ubl_cii_type'):
+                    tax_domain &= Domain('ubl_cii_type', '=', ubl_cii_type)
+
+                if ubl_cii_type == 'allowance_charge':
+                    ubl_cii_is_charge = tax_values.get('ubl_cii_is_charge')
+                    tax_domain &= Domain('ubl_cii_is_charge', '=', ubl_cii_is_charge)
+                    # Allowance/Charge taxes would always have include_base_amount to True
+                    tax_domain &= Domain('include_base_amount', '=', True)
+                    domains = []
+                    reason_code = tax_values.get('reason_code')
+                    reason_code_field = f'ubl_cii_{"charge" if ubl_cii_is_charge else "allowance"}_reason_code'
+                    reason_code_domain = Domain(reason_code_field, '=', reason_code)
+                    reason = tax_values.get('reason')
+                    reason_domain = Domain('ubl_cii_allowance_charge_reason', '=', reason)
+                    if reason_code:
+                        if reason:
+                            domains.append(tax_domain & reason_code_domain & reason_domain)
+                        domains.append(tax_domain & reason_code_domain)
                     else:
-                        cache_key = criteria.get('cache_key')
-                        if cache_key:
-                            cache_key = (cache_key, str(tax_domain))
-
-                    # Look at the cache if the value has already been tested with this key.
-                    if cache_key and cache_key in cache:
-                        if tax := cache[cache_key]:
-                            tax_values['tax'] = tax
+                        # At least one of `reason` or `reason_code` is always set
+                        # see validation func in `_import_ubl_invoice_line_add_allowance_charges_values`.
+                        domains.append(tax_domain & reason_domain)
+                    for domain in domains:
+                        self._find_tax_using_search_plan(cache, search_plan, tax_values, orders, domain, static_domain)
+                        if tax_values.get('tax'):
                             break
-                        else:
-                            continue
-
-                    if domain:
-                        full_domain = static_domain & Domain(domain)
-                        tax = self.search(full_domain, order=','.join(orders), limit=1)
-                    elif search_method:
-                        tax = search_method({
-                            **criteria,
-                            'static_domain': tax_domain & static_domain,
-                        })
-
-                    if cache_key:
-                        cache[cache_key] = tax
-                    if tax:
-                        tax_values['tax'] = tax
-                        break
-
-                if tax:
-                    break
+                else:
+                    self._find_tax_using_search_plan(cache, search_plan, tax_values, orders, tax_domain, static_domain)
+            else:
+                self._find_tax_using_search_plan(cache, search_plan, tax_values, orders, tax_domain, static_domain)
 
 
 class AccountTaxRepartitionLine(models.Model):
