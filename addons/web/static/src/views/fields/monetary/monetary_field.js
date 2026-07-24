@@ -7,7 +7,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, onMounted, onPatched, useProps } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
 
 export const monetaryFieldProps = {
@@ -30,12 +30,14 @@ export class MonetaryField extends Component {
         this.state = proxy({ value: undefined });
         this.nbsp = nbsp;
         useNumpadDecimal(this.numpadDecimalRef);
-        useEffect(() => {
+        const updateState = () => {
             const el = this.inputRef();
             if (el) {
                 this.state.value = el.value;
             }
-        });
+        };
+        onPatched(updateState);
+        onMounted(updateState);
     }
 
     get inputOptions() {
