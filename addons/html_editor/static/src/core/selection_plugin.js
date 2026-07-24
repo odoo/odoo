@@ -203,7 +203,7 @@ function scrollToSelection(selection) {
 
 export class SelectionPlugin extends Plugin {
     static id = "selection";
-    static dependencies = ["domReferenceMap", "domObserver"];
+    static dependencies = ["domReferenceMap"];
     static shared = [
         "getSelectionData",
         "getEditableSelection",
@@ -1422,20 +1422,9 @@ export class SelectionPlugin extends Plugin {
      * This method is used to save a serialized selection in the currentData.
      * It will be necessary if the commit is reverted at some point because we
      * need to set the selection to where it was before any mutation was made.
-     *
-     * It means that we should not call this method in the middle of mutations
-     * because if a selection is set onto a node that is edited/added/removed
-     * within the same commit, it might become impossible to set the selection
-     * when reverting the commit.
      */
     stageSelection() {
         this.stageFocus();
-        if (this.dependencies.domObserver.hasStagedMutations()) {
-            console.warn(
-                `should not have any "characterData", "remove" or "add" mutations in current changes when you update the selection`
-            );
-            return;
-        }
         this.currentData.selection = this.serializeEditableSelection();
     }
 
