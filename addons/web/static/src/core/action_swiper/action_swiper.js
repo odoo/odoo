@@ -36,8 +36,11 @@ export class ActionSwiper extends Component {
         slots: t.object(),
         animationType: t.string().optional("bounce"),
     });
-    static swipeDistanceRatio = 2;
+    static swipeDistanceRatio = 3;
     static swipeEffectiveThreshold = 20;
+    // A quick flick commits the swipe regardless of distance (px/ms).
+    static swipeVelocityThreshold = 0.2;
+    static swipeStartMaxDelay = 300;
     static animationLength = 400;
 
     root = signal(null);
@@ -86,19 +89,31 @@ export class ActionSwiper extends Component {
     _onTouchEndSwipe(ev) {
         this.isSwipeEnabled = false;
         this.targetContainer().classList.add("o_actionswiper_transition_enabled");
-        if (this.isSwipeStarted) {
+        // A quick flick counts as a swipe even when the drag never passed the
+        // "started" distance threshold; otherwise a short fast swipe slips
+        // through as a click on the underlying content. A tap is excluded by
+        // requiring both a real velocity and some minimal movement.
+        const elapsed = Date.now() - this.startClock;
+        const velocity = elapsed > 0 ? this.swipedDistance / elapsed : 0;
+        const isFlick =
+            Math.abs(velocity) > this.constructor.swipeVelocityThreshold &&
+            Math.abs(this.swipedDistance) > this.constructor.swipeEffectiveThreshold / 2;
+        if (this.isSwipeStarted || isFlick) {
             ev.stopPropagation();
             ev.preventDefault();
+            const threshold = this.containerWidth / this.constructor.swipeDistanceRatio;
             if (
                 this.localizedProps.onRightSwipe &&
-                this.swipedDistance > this.containerWidth / this.constructor.swipeDistanceRatio
+                this.swipedDistance > 0 &&
+                (this.swipedDistance > threshold || isFlick)
             ) {
                 this.swipedDistance = this.containerWidth;
                 this.handleSwipe(this.localizedProps.onRightSwipe.action);
                 return;
             } else if (
                 this.localizedProps.onLeftSwipe &&
-                this.swipedDistance < -this.containerWidth / this.constructor.swipeDistanceRatio
+                this.swipedDistance < 0 &&
+                (-this.swipedDistance > threshold || isFlick)
             ) {
                 this.swipedDistance = -this.containerWidth;
                 this.handleSwipe(this.localizedProps.onLeftSwipe.action);
@@ -140,6 +155,12 @@ export class ActionSwiper extends Component {
                     return this._reset();
                 }
                 if (Math.abs(this.swipedDistance) > this.constructor.swipeEffectiveThreshold) {
+                    if (
+                        ev.timeStamp - this.startTime > this.constructor.swipeStartMaxDelay ||
+                        !ev.cancelable
+                    ) {
+                        return this._reset();
+                    }
                     this.isSwipeStarted = true;
                 }
             }
@@ -169,6 +190,11 @@ export class ActionSwiper extends Component {
         this.isSwipeEnabled = true;
         this.targetContainer().classList.remove("o_actionswiper_transition_enabled");
         this.startX = ev.touches[0].clientX;
+        this.startTime = ev.timeStamp;
+        // Wall-clock start for the flick velocity: unlike the event's real
+        // timeStamp (used by swipeStartMaxDelay), Date.now() is mockable in
+        // tests (driven by advanceTime), so a synthetic drag isn't a "flick".
+        this.startClock = Date.now();
         if (this.props.enabledDuration) {
             this.enabledTimeoutId = browser.setTimeout(
                 () => this._reset(),

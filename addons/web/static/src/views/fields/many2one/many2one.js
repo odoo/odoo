@@ -1,4 +1,4 @@
-import { Component, props, toRaw, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillStart, props, toRaw, proxy, signal, t } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -8,7 +8,11 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
-import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import {
+    Many2XAutocomplete,
+    many2XAutocompleteProps,
+    useOpenMany2XRecord,
+} from "@web/views/fields/relational_utils";
 
 ///////////////////////////////////////////////////////////////////////////////
 // UTILS
@@ -36,6 +40,7 @@ export function computeM2OProps(fieldProps) {
     };
 
     return {
+        bottomSheet: fieldProps.bottomSheet,
         canCreate: fieldProps.canCreate,
         canCreateEdit: fieldProps.canCreateEdit,
         canOpen: fieldProps.canOpen,
@@ -73,6 +78,7 @@ export function computeM2OProps(fieldProps) {
 ///////////////////////////////////////////////////////////////////////////////
 
 export const many2OneProps = {
+    bottomSheet: t.boolean().optional(false),
     canCreate: t.boolean().optional(true),
     canCreateEdit: t.boolean().optional(true),
     canOpen: t.boolean().optional(true),
@@ -131,6 +137,12 @@ export class Many2One extends Component {
                 resModel: this.props.relation,
             }),
         };
+
+        if (this.props.bottomSheet) {
+            this.bottomSheetPopover = usePopover(Many2OneBottomSheet, {
+                useBottomSheet: true,
+            });
+        }
     }
 
     get activeActions() {
@@ -139,6 +151,18 @@ export class Many2One extends Component {
             createEdit: this.props.canCreateEdit,
             write: this.props.canWrite,
         };
+    }
+
+    get isBottomSheet() {
+        return this.uiService.isSmall && this.props.bottomSheet;
+    }
+
+    openBottomSheet(target) {
+        this.bottomSheetPopover.open(target, {
+            ...this.props,
+            bottomSheet: false,
+            canOpen: false,
+        });
     }
 
     get many2XAutocompleteProps() {
@@ -303,6 +327,59 @@ export class Many2One extends Component {
     update(idNamePair) {
         this.state.isFloating = false;
         return this.props.update(idNamePair);
+    }
+}
+
+class Many2XBottomSheetOptions extends Many2XAutocomplete {
+    static template = "web.Many2XBottomSheetOptions";
+    props = props({
+        ...many2XAutocompleteProps,
+        selectedId: t.or([t.number(), t.literal(false)]).optional(false),
+    });
+
+    setup() {
+        super.setup();
+        // Preload the options before mount so the sheet, which measures its
+        // height once on mount, is sized against the full list.
+        onWillStart(async () => {
+            const records = await this.search("", this.props.getDomain(), this.props.context);
+            this.preloadedOptions = records.length
+                ? records.map((record) => this.buildRecordSuggestion("", record))
+                : [this.buildNoRecordsSuggestion()];
+        });
+    }
+
+    buildRecordSuggestion(request, record) {
+        const suggestion = super.buildRecordSuggestion(request, record);
+        if (record.id === this.props.selectedId) {
+            suggestion.cssClass = `${suggestion.cssClass ?? ""} fw-bolder selected`.trim();
+        }
+        return suggestion;
+    }
+}
+
+class Many2OneBottomSheet extends Many2One {
+    static components = {
+        ...Many2One.components,
+        Many2XAutocomplete: Many2XBottomSheetOptions,
+    };
+    props = props({
+        ...many2OneProps,
+        close: t.function(),
+    });
+
+    get many2XAutocompleteProps() {
+        return {
+            ...super.many2XAutocompleteProps,
+            dropdown: false,
+            searchLimit: 1000,
+            selectedId: this.props.value ? this.props.value.id : false,
+        };
+    }
+
+    async update(idNamePair) {
+        await super.update(idNamePair);
+        this.props.close();
     }
 }
 

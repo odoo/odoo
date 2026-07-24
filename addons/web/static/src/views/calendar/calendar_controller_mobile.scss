@@ -30,7 +30,19 @@
         }
 
         .o_calendar_sidepanel_container {
+            @keyframes slideInFromRight {
+                from {
+                    right: -300px;
+                    opacity: 0;
+                }
+                to {
+                    right: 0;
+                    opacity: 1;
+                }
+            }
+
             height: 100%;
+            animation: slideInFromRight 0.2s ease-out forwards;
 
             > .o_calendar_sidepanel {
                 width: auto;

@@ -97,6 +97,7 @@ export class Many2OneField extends Component {
     static components = { Many2One };
     static props = {
         ...standardFieldProps,
+        bottomSheet: { type: Boolean, optional: true },
         canCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
         canOpen: { type: Boolean, optional: true },
@@ -121,4 +122,21 @@ export class Many2OneField extends Component {
 
 registry.category("fields").add("many2one", {
     ...buildM2OFieldDescription(Many2OneField),
+    extractProps(staticInfo, dynamicInfo) {
+        return {
+            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            bottomSheet: !!staticInfo.options.bottom_sheet,
+        };
+    },
+    supportedOptions: [
+        ...m2oSupportedOptions,
+        {
+            label: _t("Pick in a bottom sheet"),
+            name: "bottom_sheet",
+            type: "boolean",
+            help: _t(
+                "If checked, options are picked in a bottom sheet instead of the fullscreen dialog on mobile."
+            ),
+        },
+    ],
 });

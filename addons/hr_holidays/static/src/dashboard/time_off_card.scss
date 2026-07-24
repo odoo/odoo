@@ -7,7 +7,15 @@
     text-align: left;
     padding-left: 16px;
     border-right: 1px solid $border-color;
-    min-height: 80px;
+    min-width: 17rem;
+
+    @include media-breakpoint-up(md) {
+        min-height: 80px;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding: map-get($spacers, 2);
+    }
 
     span {
         line-height: 1;
@@ -16,8 +24,16 @@
     .o_timeoff_name {
         color: $body-color;
         font-size: 15px;
-        margin-bottom: 3px;
         font-weight: bolder;
+
+        @include media-breakpoint-up(md) {
+            margin-bottom: 3px;
+        }
+
+        @include media-breakpoint-down(md) {
+            font-size: 1rem;
+            font-weight: 500;
+        }
     }
 
     .o_timeoff_name.btn-link:hover {
@@ -30,6 +46,10 @@
         width: auto;
         padding: auto 5px;
         line-height: 1;
+
+        @include media-breakpoint-down(md) {
+            font-size: 1rem;
+        }
 
         img {
             height: 30px;

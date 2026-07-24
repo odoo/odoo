@@ -160,10 +160,10 @@ test("can perform actions by swiping to the right", async () => {
         message: "target has translateX",
     });
 
-    // Touch ends before the half of the distance has been reached
+    // Touch ends before a third of the distance has been reached
     await dragHelper.moveTo(swiper, {
         position: {
-            clientX: swiper.clientWidth / 2 - 1,
+            clientX: swiper.clientWidth / 3 - 1,
             clientY: 0,
         },
     });
@@ -229,10 +229,10 @@ test("can perform actions by swiping in both directions", async () => {
     expect(targetContainer.style.transform).toInclude("translateX", {
         message: "target has translateX",
     });
-    // Touch ends before the half of the distance has been reached to the left
+    // Touch ends before a third of the distance has been reached to the left
     await dragHelper.moveTo(swiper, {
         position: {
-            clientX: -swiper.clientWidth / 2 + 1,
+            clientX: -swiper.clientWidth / 3 + 1,
             clientY: 0,
         },
     });

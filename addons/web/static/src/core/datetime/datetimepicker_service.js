@@ -504,7 +504,16 @@ export const datetimePickerService = {
                     onSelect: (value, unit) => {
                         value &&= markRaw(value);
                         updateValue(value, unit, "picker");
-                        if (!pickerProps.range && pickerProps.type === "date") {
+                        if (pickerProps.type !== "date") {
+                            return;
+                        }
+
+                        if (
+                            !pickerProps.range ||
+                            (pickerProps.focusedDateIndex === 0 &&
+                                pickerProps.value[0] &&
+                                pickerProps.value[1])
+                        ) {
                             saveAndClose();
                         }
                     },
