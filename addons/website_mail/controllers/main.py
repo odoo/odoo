@@ -9,6 +9,14 @@ class WebsiteMail(http.Controller):
 
     @http.route(['/website_mail/follow'], type='jsonrpc', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
+        """Subscribe the visitor to a record's followers, or unsubscribe them from it.
+
+        :param int id: id of the record to follow.
+        :param str object: model name of that record.
+        :param str message_is_follower: 'on' to subscribe, any other value to unsubscribe.
+        :param str email: address to subscribe, for visitors who are not logged in.
+        :return: False if the record does not exist, the resulting follower state otherwise.
+        """
         # TDE FIXME: check this method with new followers
         res_id = int(id)
         is_follower = message_is_follower == 'on'

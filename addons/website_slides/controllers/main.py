@@ -875,6 +875,13 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/join'], type='jsonrpc', auth='public', website=True)
     def slide_channel_join(self, channel_id):
+        """Enroll the current user in a course.
+
+        :param int channel_id: the `slide.channel` to join.
+        :return: True once enrolled, or a dict holding an `error` key - 'public_user' when
+            nobody is logged in, 'join_done' when the enrollment did not go through.
+        :rtype: bool|dict
+        """
         if self.env.website.is_public_user():
             return {
                 'error': 'public_user',
@@ -1125,6 +1132,14 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/slide/like', type='jsonrpc', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
+        """Vote on a course content.
+
+        :param int slide_id: the `slide.slide` to vote on.
+        :param bool upvote: True to like it, False to dislike it.
+        :return: the updated vote counts, or a dict holding an `error` key when voting is
+            not allowed (nobody logged in, not a member of the course, votes disabled).
+        :rtype: dict
+        """
         if self.env.website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
         # check slide access

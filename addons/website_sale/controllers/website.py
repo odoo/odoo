@@ -70,6 +70,12 @@ class Website(main.Website):
         max_nb_chars=999,
         options=None,
     ):
+        """Search the website, products included, with prices already formatted.
+
+        Extends the search with the 'products' type, so pass `search_type='products'`
+        to look within eCommerce products, and defaults `display_currency` to the
+        website's own currency.
+        """
         options = options or {}
         if "display_currency" not in options:
             options["display_currency"] = self.env.website.currency_id
@@ -77,6 +83,14 @@ class Website(main.Website):
 
     @route()
     def get_current_currency(self, **_kwargs):
+        """Return the currency the shop prices are expressed in.
+
+        Uses the website's currency rather than the company's one.
+
+        :return: the currency's `id`, its `symbol` and the `position` of that symbol
+            relative to the amount ('before' or 'after').
+        :rtype: dict
+        """
         return {
             "id": self.env.website.currency_id.id,
             "symbol": self.env.website.currency_id.symbol,

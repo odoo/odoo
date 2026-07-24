@@ -70,6 +70,13 @@ class ProductWishlist(Controller):
 
     @route("/shop/add/stock_notification", type="jsonrpc", auth="public", website=True)
     def add_stock_email_notification(self, email, product_id):
+        """Register an email address to be warned when a product is back in stock.
+
+        :param str email: the address to notify.
+        :param int product_id: the `product.product` to watch.
+        :raise ValidationError: if the address is malformed, or the product does not
+            accept stock notifications.
+        """
         # TDE FIXME: seems a bit open
         if not email_re.match(email):
             raise ValidationError(self.env._("Invalid Email"))
