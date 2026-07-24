@@ -2906,8 +2906,9 @@ class AccountTax(models.Model):
             strategy = cash_rounding.strategy
             cash_rounding_pd = cash_rounding.rounding
             cash_rounding_method = cash_rounding.rounding_method
-            total_amount_currency = tax_totals_summary['base_amount_currency'] + tax_totals_summary['tax_amount_currency']
-            total_amount = tax_totals_summary['base_amount'] + tax_totals_summary['tax_amount']
+            # Round first so cash rounding doesn't inflate a sub-unit float residue.
+            total_amount_currency = currency.round(tax_totals_summary['base_amount_currency'] + tax_totals_summary['tax_amount_currency'])
+            total_amount = company.currency_id.round(tax_totals_summary['base_amount'] + tax_totals_summary['tax_amount'])
             expected_total_amount_currency = float_round(
                 total_amount_currency,
                 precision_rounding=cash_rounding_pd,
