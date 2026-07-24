@@ -97,6 +97,17 @@ class L10nCrFeConfig(models.Model):
         self.env.cr.execute('SELECT pg_advisory_xact_lock(%s)', (self.company_id.id,))
         sequence = self.env['ir.sequence'].sudo().search([('code', '=', code)], limit=1)
         if not sequence:
+            # El tipo 01 (FE) tenia antes una unica secuencia compartida entre
+            # tipos de documento. Si esta empresa ya la usaba, la secuencia nueva
+            # debe continuar desde ahi y no reiniciar en 1, o Hacienda la rechaza
+            # por numero de consecutivo duplicado (ya registrado a su nombre).
+            number_next = 1
+            if tipo_documento_codigo == '01':
+                legacy_code = 'l10n_cr_fe.consecutivo.fe.%s' % self.company_id.id
+                legacy_sequence = self.env['ir.sequence'].sudo().search(
+                    [('code', '=', legacy_code)], limit=1)
+                if legacy_sequence:
+                    number_next = legacy_sequence.number_next
             sequence = self.env['ir.sequence'].sudo().create({
                 'name': 'Consecutivo FE %s - %s' % (tipo_documento_codigo, self.company_id.name),
                 'code': code,
@@ -104,6 +115,7 @@ class L10nCrFeConfig(models.Model):
                 'padding': 10,
                 'number_increment': 1,
                 'implementation': 'no_gap',
+                'number_next': number_next,
             })
         return sequence.next_by_id()
 
