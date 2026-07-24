@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import json
 import random
+from hashlib import sha256
 
 from odoo import models, api, _, fields, tools
 from odoo.exceptions import AccessError, UserError
@@ -640,22 +641,12 @@ class AccountJournal(models.Model):
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
         self.env['account.payment'].flush_model()
-        company = self.env.company
-        coa_template = self.env['account.chart.template']._get_chart_template_data(company.chart_template)
-        clean_coa_template = {model: dict(vals) for model, vals in coa_template.items()}
-        current_coa = str(clean_coa_template) if clean_coa_template else ''
-        if current_coa != company.coa:
-            show_banner = True
-        else:
-            show_banner = False
         dashboard_data = {}  # container that will be filled by functions below
         for journal in self:
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
                 'show_company': len(self.env.companies) > 1 or journal.company_id.id != self.env.company.id,
                 'company_name': journal.company_id.sudo().name,
-                'show_coa_update_banner': show_banner,
-                'coa_package_name': coa_template.get('template_data', {}).get('name', '') if coa_template else '',
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
@@ -1170,6 +1161,44 @@ class AccountJournal(models.Model):
                 company_name=company_name,
                 journal_types=', '.join(journal_types),
             )
+
+    @api.model
+    def is_sample_action_available(self):
+        """Used to hide 'try our sample' when demo data is not installed."""
+        return bool(self.env.ref('base.res_partner_2', raise_if_not_found=False))
+
+    @api.model
+    def get_coa_update_dict(self):
+        company = self.env.company
+        coa = self.env['account.chart.template']._get_chart_template_data(company.chart_template)
+        clean_current_coa = {model: dict(vals) for model, vals in coa.items()}
+        current_coa = str(clean_current_coa) if clean_current_coa else ''
+        return {
+            'show_banner': current_coa != company.coa,
+            'coa_name': coa.get('template_data', {}).get('name', '') if coa else '',
+        }
+
+    @api.model
+    def get_coa_update_hash(self):
+        company = self.env.company
+        coa = self.env['account.chart.template']._get_chart_template_data(company.chart_template)
+        clean_current_coa = {model: dict(vals) for model, vals in coa.items()}
+        current_coa = str(clean_current_coa) if clean_current_coa else ''
+        current_hash = sha256(current_coa.encode('utf-8')).hexdigest() if current_coa else ''
+        return {
+            'show_banner': current_hash != company.coa_hash,
+            'coa_name': coa.get('template_data', {}).get('name', '') if coa else '',
+        }
+
+    @api.model
+    def get_coa_update_record_number(self):
+        company = self.env.company
+        coa = self.env['account.chart.template']._get_chart_template_data(company.chart_template)
+        current_records = sum(len(records) for model, records in coa.items() if model != 'template_data') if coa else 0
+        return {
+            'show_banner': current_records != company.coa_record_number,
+            'coa_name': coa.get('template_data', {}).get('name', '') if coa else '',
+        }
 
     def action_create_vendor_bill(self):
         """ This function is called by the "try our sample" button of Vendor Bills,

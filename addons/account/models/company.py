@@ -329,6 +329,9 @@ class ResCompany(models.Model):
     )
 
     coa = fields.Char()
+    coa_hash = fields.Char()
+    coa_record_number = fields.Integer()
+    coa_ascii_int = fields.Integer()
 
     def get_next_batch_payment_communication(self):
         '''
