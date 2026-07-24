@@ -42,7 +42,7 @@ export class ChannelMemberList extends Component {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (member.persona.type === "guest") {
+        if (!member.persona.userId) {
             return false;
         }
         return true;
