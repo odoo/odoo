@@ -6,11 +6,11 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests import new_test_user
-from odoo.tests.common import tagged, TransactionCase, freeze_time
+from odoo.tests.common import HttpCase, tagged, TransactionCase, freeze_time
 
 
 @tagged('attendance_process')
-class TestHrAttendance(TransactionCase):
+class TestHrAttendance(HttpCase, TransactionCase):
     """Test for presence validity"""
 
     @classmethod
@@ -164,3 +164,33 @@ class TestHrAttendance(TransactionCase):
             self.test_employee.with_user(self.hr_user).action_archive()
             self.assertTrue(not self.test_employee.active, "Employee should be archived successfully with sudo()")
             self.assertEqual(test_attendance.check_out, fields.Datetime.now(), "Attendance should be checked out at the time of archiving")
+
+    def test_attendance_multicompany(self):
+        """Test that the attendance is for the currently selected company, not default company of user"""
+
+        first_company = self.user.employee_id.company_id
+        self.assertTrue(first_company)
+
+        other_company = self.env["res.company"].create({
+            "name": "Test"
+        })
+        other_employee = self.env["hr.employee"].create({
+            "name": self.user.name,
+            "company_id": other_company.id,
+            "user_id": self.user.id
+        })
+
+        self.user.password = 'password'
+        self.authenticate(self.user.login, 'password')
+
+        # first case check when no cids sent, second case check when cids included
+        test_cases = [
+            ("", self.user.employee_id.id),
+            (f"{other_company.id}-{first_company.id}", other_employee.id),
+        ]
+
+        for cids, expected_employee_id in test_cases:
+            with self.subTest(expected_employee_id=expected_employee_id):
+                self.opener.cookies.set('cids', cids)
+                employee = self.make_jsonrpc_request("/hr_attendance/systray_check_in_out", {})
+                self.assertEqual(employee["id"], expected_employee_id)
