@@ -24,6 +24,11 @@ class WhatsappOptionPlugin extends Plugin {
             ReplaceAgentAvatarAction,
             WhatsappNumberAction,
         },
+        dropzone_selectors: {
+            selector: ".s_whatsapp",
+            excludeAncestor:
+                ".o_newsletter_popup, .s_faq_horizontal, .s_popup, .s_table_of_content, .s_tabs, .s_tabs_images",
+        },
         system_attributes: ["data-should-show-chatbox"],
         should_remove_overlay_options_predicates: (el) => {
             if (el.matches(".s_whatsapp")) {
