@@ -756,7 +756,14 @@ export class PosStore extends WithLazyGetterTrap {
                       )
             );
         }
-        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+        if (
+            attributeLinesValues.some(
+                (values) =>
+                    values.length > 1 ||
+                    values[0].is_custom ||
+                    values[0].attribute_id.display_type === "multi"
+            )
+        ) {
             const forceVariantValue =
                 (opts.forceVariantValue
                     ? Object.fromEntries(opts.forceVariantValue.map((value) => [value.id, value]))
