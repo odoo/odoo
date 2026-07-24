@@ -28,9 +28,9 @@ class HrApplicant(models.Model):
         string="Missing Factors",
         compute="_compute_matching_skill_ids",
     )
-    matching_score = fields.Integer(string="Matching Score", compute="_compute_matching_skill_ids")
-    degree_score = fields.Integer(string="Degree Score", compute="_compute_matching_skill_ids")
-    skills_score = fields.Integer(string="Skills Score", compute="_compute_matching_skill_ids")
+    matching_score = fields.Integer(string="Matching Score", compute="_compute_matching_score", store=True)
+    degree_score = fields.Integer(string="Degree Score", compute="_compute_matching_score", store=True)
+    skills_score = fields.Integer(string="Skills Score", compute="_compute_matching_score", store=True)
     is_degree_score_matching = fields.Boolean(string="Degree Score Matching",
         compute="_compute_matching_skill_ids")
     job_expected_degree = fields.Many2one('hr.recruitment.degree', related='job_id.expected_degree',
@@ -57,35 +57,45 @@ class HrApplicant(models.Model):
             if not job or not (job.job_skill_ids or job.expected_degree):
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
-                applicant.matching_score = False
-                applicant.degree_score = False
-                applicant.skills_score = False
                 applicant.is_degree_score_matching = False
                 continue
             job_skills = job.job_skill_ids
+            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
+            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
+                lambda a: a.skill_id in job_skill_map,
+            )
+            applicant.matching_skill_ids = matching_applicant_skills.mapped("skill_id")
+            applicant.missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
+            applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
+
+    @api.depends_context("matching_job_id")
+    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
+    def _compute_matching_score(self):
+        matching_job_id = self.env.context.get("matching_job_id")
+        matching_job = self.env["hr.job"].browse(matching_job_id)
+        for applicant in self:
+            job = matching_job or applicant.job_id
+            if not job or not (job.job_skill_ids or job.expected_degree):
+                applicant.matching_score = False
+                applicant.degree_score = False
+                applicant.skills_score = False
+                continue
+            job_skills = job.job_skill_ids
             job_degree = job.expected_degree.sudo().score * 100
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
             job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
 
             matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
                 lambda a: a.skill_id in job_skill_map,
             )
             applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
-            skills_total = sum(min(skill.level_progress, job_skill_map[skill.skill_id] * 2) for skill in matching_applicant_skills)
-
-            matching_skill_ids = matching_applicant_skills.mapped("skill_id")
-            missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
-            degree_score = round(applicant_degree / job_total * 100) if job_total else 0
-            skills_score = round(skills_total / job_total * 100) if job_total else 0
-            matching_score = degree_score + skills_score
-            is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
-
-            applicant.matching_skill_ids = matching_skill_ids
-            applicant.missing_skill_ids = missing_skill_ids
-            applicant.matching_score = matching_score
-            applicant.degree_score = degree_score
-            applicant.skills_score = skills_score
-            applicant.is_degree_score_matching = is_degree_score_matching
+            skills_total = sum(
+                min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
+                for skill in matching_applicant_skills
+            )
+            job_total = sum(job_skills.mapped("level_progress")) + job_degree
+            applicant.degree_score = round((100 * applicant_degree) / job_total) if job_total else 0
+            applicant.skills_score = round((100 * skills_total) / job_total) if job_total else 0
+            applicant.matching_score = applicant.degree_score + applicant.skills_score
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()

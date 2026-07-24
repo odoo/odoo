@@ -73,6 +73,19 @@
             <xpath expr="//filter[@name='talent_pool']" position="after">
                 <filter string="Skills" name="skill_ids" context="{'group_by': 'skill_ids'}"/>
             </xpath>
+            <xpath expr="//filter[@name='blocked']" position="after">
+                <separator/>
+                <filter string="Matching Score" name="matching_score">
+                    <filter string="≥ 80%" name="filter_score_80"
+                        domain="[('matching_score', '&gt;=', 80)]"/>
+                    <filter string="≥ 70%" name="filter_score_70"
+                        domain="[('matching_score', '&gt;=', 70)]"/>
+                    <filter string="≥ 60%" name="filter_score_60"
+                        domain="[('matching_score', '&gt;=', 60)]"/>
+                    <filter string="≥ 50%" name="filter_score_50"
+                        domain="[('matching_score', '&gt;=', 50)]"/>
+                </filter>
+            </xpath>
         </field>
     </record>
 
@@ -118,7 +131,7 @@
                 <attribute name="optional">show</attribute>
             </field>
             <field name="kanban_state" position="after">
-                <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score" column_invisible="context.get('default_talent_pool_ids', False)"/>
+                <field name="matching_score" string="Matching Score" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score" column_invisible="context.get('default_talent_pool_ids', False)"/>
             </field>
             <xpath expr="//list" position="inside">
                 <field name="current_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" string="Skills"/>
