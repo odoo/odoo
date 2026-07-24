@@ -2028,6 +2028,15 @@ class SpreadsheetTermsExtractionTest(BaseCase):
                 }],
             }],
             "globalFilters": [{"label": "Period"}],
+            "pivots": {
+                "1": {
+                    "name": "Product",
+                    "measures": [
+                        {"id": "order_reference", "fieldName": "order_reference", "userDefinedName": "Orders"},
+                        {"id": "price_subtotal", "fieldName": "price_subtotal", "userDefinedName": "Revenue"},
+                    ],
+                },
+            },
         }
         terms = {t[2] for t in extract_spreadsheet_terms(io.StringIO(json.dumps(data)), [], [], {})}
         self.assertEqual(terms, {
@@ -2039,5 +2048,8 @@ class SpreadsheetTermsExtractionTest(BaseCase):
             "Top 10",
             "Revenues by source",
             "Period",
+            "Product",
+            "Orders",
+            "Revenue",
         })
 

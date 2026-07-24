@@ -1183,6 +1183,14 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
             elif figure['tag'] == 'carousel':
                 terms.update(_extract_spreadsheet_carousel_terms(figure['data']))
     terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
+    # Pivot names appear as the top-left column header of =PIVOT(...) tables in dashboards.
+    # Measure userDefinedName values appear as measure column headers.
+    for pivot in data.get('pivots', {}).values():
+        if name := pivot.get('name'):
+            terms.add(name)
+        for measure in pivot.get('measures', []):
+            if user_defined_name := measure.get('userDefinedName'):
+                terms.add(user_defined_name)
     return (
         (0, None, term, [])
         for term in terms
