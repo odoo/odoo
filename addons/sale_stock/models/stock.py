@@ -180,6 +180,24 @@ class StockMove(models.Model):
     def _should_update_quantity_on_merge(self):
         return self.sale_line_id.state != 'cancel' if self.sale_line_id else super()._should_update_quantity_on_merge()
 
+    def _process_negative_moves(self):
+        res = super()._process_negative_moves()
+
+        neg_moves_ids = set(self.ids)
+        origin_moves_by_key = defaultdict(lambda: self.env['stock.move'])
+
+        for move in self.reference_ids.picking_ids.move_ids:
+            if not move.sale_line_id or move.state != 'done' or move.id in neg_moves_ids:
+                continue
+            origin_moves_by_key[move.picking_type_id.id, move.sale_line_id.id] |= move
+
+        # Link each reverse move to the original move from which it originated, similar to return moves.
+        if origin_moves_by_key:
+            for move in self:
+                if move_orig_to_link := origin_moves_by_key[move.picking_type_id.id, move.sale_line_id.id]:
+                    move.move_orig_ids = [Command.link(m.id) for m in move_orig_to_link]
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
