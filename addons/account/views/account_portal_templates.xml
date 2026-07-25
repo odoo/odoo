@@ -190,9 +190,7 @@
                             <t t-call="portal.portal_my_contact"
                                 _contactAvatar="image_data_uri(invoice.invoice_user_id.avatar_128)"
                                 _contactName="invoice.invoice_user_id.name"
-                                _contactLink="True">
-                                <div t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["city", "phone"]}'/>
-                            </t>
+                                _contactLink="True"/>
                         </div>
                     </div>
                 </t>
