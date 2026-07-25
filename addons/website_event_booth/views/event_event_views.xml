@@ -7,14 +7,11 @@
         <field name="inherit_id" ref="website_event.event_event_view_form"/>
         <field name="arch" type="xml">
             <field name="badge_format" position="before">
-                <field name="exhibition_map"/>
+                <field name="exhibition_map" invisible="not booth_menu"/>
             </field>
-            <xpath expr="//*[label[@for='website_menu']]" position="after">
-                <span>
-                    <field name="booth_menu" class="w-auto"/>
-                    <label for="booth_menu"/>
-                </span>
-            </xpath>
+            <field name="website_menu" position="after">
+                <field name="booth_menu"/>
+            </field>
         </field>
     </record>
 
