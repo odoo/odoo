@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-06-20 23:01+0000\n"
+"PO-Revision-Date: 2026-07-20 11:19+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_sale/da/>\n"
@@ -58,12 +58,12 @@ msgstr "'. Viser resultater for '"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax excluded)"
-msgstr "(eksklusiv moms)"
+msgstr "(eksklusiv skat)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "(Tax included)"
-msgstr "(moms inkluderet)"
+msgstr "(skat inkluderet)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -304,8 +304,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-"
-"muted\"><u>Vilkår og betingelser</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
+"Vilkår og betingelser</u></a><br/>\n"
 "            30 dages fuld returret<br/>\n"
 "            Forsendelse: 2-3 hverdage\n"
 "        </small>"
@@ -428,8 +428,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
-"1\">Baseret på varianter</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
+"Baseret på varianter</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
@@ -483,8 +483,8 @@ msgid ""
 msgstr ""
 "<span>Din ordre kan desværre ikke bekræftes, da beløbet på din betaling ikke "
 "stemmer overens med beløbet i din indkøbskurv.\n"
-"                        Kontakt venligst butikken for yderligere oplysninger."
-"</span>"
+"                        Kontakt venligst butikken for yderligere "
+"oplysninger.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -596,8 +596,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -621,10 +621,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            Genoptag ordre\n"
 "                        </a>\n"
@@ -632,8 +632,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Tak, fordi du "
-"handler med <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</"
-"strong></div>\n"
+"handler med <t t-out=\"company.name or ''\">Min Virksomhed (San Francisco)</"
+"t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -669,8 +669,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"En detaljeret, formateret beskrivelse til at præsentere dit produkt "
-"på                                      denne side. Brug '/' for at få vist "
+"En detaljeret, formateret beskrivelse til at præsentere dit produkt på"
+"                                      denne side. Brug '/' for at få vist "
 "flere funktioner."
 
 #. module: website_sale
@@ -1561,8 +1561,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med DHL<br/>\n"
-"                            <strong>(gå til Start for at "
-"installere&gt;apps)</strong>"
+"                            <strong>(gå til Start for at installere&gt;apps)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1594,8 +1594,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Beregn forsendelsesomkostninger, og send med USPS<br/>\n"
-"                            <strong>(gå til Start for at "
-"installere&gt;apps)</strong>"
+"                            <strong>(gå til Start for at installere&gt;apps)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2032,7 +2032,7 @@ msgstr "Rabatkode ..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Rabatter, loyalitetsprogrammer & gavekort"
+msgstr "Rabatter, loyalitetsprogrammer og gavekort"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
@@ -2844,7 +2844,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entry"
-msgstr "Journalpost"
+msgstr "Journalpostering"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_kitchen
@@ -3459,7 +3459,7 @@ msgstr "Analyse af online salg"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online catalog"
-msgstr "Online katalog"
+msgstr "Onlinekatalog"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3486,7 +3486,7 @@ msgstr "Åbne salgsordrer"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "Open Source eCommerce"
-msgstr "open source-webshop"
+msgstr "Open source-webshop"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3719,7 +3719,7 @@ msgstr "Pris – høj til lav"
 #: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
 msgid "Price - Low to High"
-msgstr "Pris - lav til høj"
+msgstr "Pris – lav til høj"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -4094,7 +4094,7 @@ msgstr "Skub op"
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Quantity"
-msgstr "Antal"
+msgstr "Mængde"
 
 #. module: website_sale
 #. odoo-python
@@ -4294,7 +4294,7 @@ msgstr "Begræns til en bestemt hjemmeside."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Resume Order"
-msgstr "Gennemse ordre"
+msgstr "Genoptag ordre"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4484,7 +4484,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Select Quantity"
-msgstr "Vælg antal"
+msgstr "Vælg mængde"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
@@ -4852,12 +4852,12 @@ msgstr "Tags"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax Excluded"
-msgstr "Moms ekskluderet"
+msgstr "Skat ekskluderet"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
-msgstr "Moms Inkluderet"
+msgstr "Skat inkluderet"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4870,12 +4870,12 @@ msgstr "Skatteangivelse"
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
 msgstr ""
-"Moms inkluderet eller ekskluderet afhængigt af konfiguration på hjemmesiden."
+"Skat inkluderet eller ekskluderet afhængigt af konfiguration på hjemmesiden."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
-msgstr "Moms"
+msgstr "Skatter"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4916,8 +4916,7 @@ msgstr "Adgangstokenet er ugyldigt."
 #: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
 msgid ""
 "The building block will remain empty until the user visits a product page."
-msgstr ""
-"Designmodulerne forbliver tomme, indtil en bruger åbner en produktside."
+msgstr "Designmodulerne forbliver tomme, indtil en bruger åbner en produktside."
 
 #. module: website_sale
 #. odoo-python
@@ -4938,9 +4937,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"Virksomheden bag den hjemmeside, du forsøger at sælge fra (%"
-"(website_company)s), er forskellig fra den, du ønsker at anvende (%"
-"(company)s)"
+"Virksomheden bag den hjemmeside, du forsøger at sælge fra (%(website_company)"
+"s), er forskellig fra den, du ønsker at anvende (%(company)s)"
 
 #. module: website_sale
 #. odoo-python
@@ -5296,7 +5294,7 @@ msgstr "Lodret (2/3)"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
-msgstr "Videolink"
+msgstr "Video-URL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
