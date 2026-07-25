@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
-"PO-Revision-Date: 2026-06-29 22:52+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-07-22 21:07+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/pos_self_order/es_419/>\n"
 "Language: es_419\n"
@@ -241,7 +241,7 @@ msgstr "Agregar al carrito"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Address"
-msgstr ""
+msgstr "Dirección"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -935,6 +935,14 @@ msgid "Kiosk"
 msgstr "Quiosco"
 
 #. module: pos_self_order
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Kiosk Order"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
 msgstr "Etiqueta"
@@ -1542,8 +1550,11 @@ msgid "Selection"
 msgstr "Selección"
 
 #. module: pos_self_order
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Self Order"
 msgstr "Autopedido"
 
@@ -1713,7 +1724,14 @@ msgid "Table Stand Number"
 msgstr "Número de mesa"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_change_receipt
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Table Tracker %s"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
 msgid "Table Tracker:"
 msgstr "Rastreador de mesas:"
@@ -1763,10 +1781,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_preset.py:0
 msgid ""
-"The delivery address could not be geolocated. Please enter a valid address."
+"The delivery address could not be geolocated. Please check the address. If "
+"the address is valid, your geolocation service may be unavailable or unable "
+"to resolve it"
 msgstr ""
-"No pudimos geolocalizar la dirección de entrega. Ingresa una dirección "
-"válida."
 
 #. module: pos_self_order
 #. odoo-python
@@ -2003,7 +2021,7 @@ msgstr "en el mostrador"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "by cash"
-msgstr ""
+msgstr "en efectivo"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2084,6 +2102,13 @@ msgstr "por unidad adicional"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid ""
+#~ "The delivery address could not be geolocated. Please enter a valid "
+#~ "address."
+#~ msgstr ""
+#~ "No pudimos geolocalizar la dirección de entrega. Ingresa una dirección "
+#~ "válida."
 
 #~ msgid "You cannot add cash payment methods in kiosk mode."
 #~ msgstr "No puede agregar métodos de pago en efectivo al modo de quiosco."

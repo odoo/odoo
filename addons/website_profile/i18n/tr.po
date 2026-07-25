@@ -21,13 +21,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 05:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-21 07:54+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_profile/tr/>\n"
 "Language: tr\n"
@@ -177,6 +178,25 @@ msgid ""
 "                            Thanks for your participation!\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                            Merhaba <t t-out=\"object.name or ''\">Marc "
+"Demo</t>,<br/><br/>\n"
+"                            \"<t t-out=\"object.company_id.name or ''\">"
+"YourCompany</t>\" Websitesi'ne erişim sağlamak için e-postanızı doğrulamanız "
+"istenmiştir.\n"
+"                            E-postanızı doğrulamak için lütfen aşağıdaki "
+"düğmeye tıklayın:\n"
+"                           <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\"> \n"
+"                                    Hesabımı doğrula\n"
+"                               </a>\n"
+"                            </div> \n"
+"                            Katılımınız için teşekkür ederiz!\n"
+"           </t>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner

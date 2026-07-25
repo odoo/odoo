@@ -7,13 +7,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
-"PO-Revision-Date: 2026-06-30 01:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-07-24 08:36+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/"
 "pos_self_order/tr/>\n"
 "Language: tr\n"
@@ -88,6 +89,46 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                   <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/> \n"
+"                   <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/"
+">\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/> \n"
+"                   <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/> \n"
+"                   <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> Merhaba <t t-"
+"out=\"client_name\">Müşteri adı</t>,</t>\n"
+"                        <t t-else=\"\">Merhaba,</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> Siparişiniz <t t-out=\"object.tracking_number\">..."
+"</t> tutarı <t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> olarak onaylanmıştır. <span t-if=\"object.preset_time or "
+"client.street\">Siparişiniz</span> <span t-if=\"object.preset_time\">saat <t "
+"t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\"> adresinde "
+"<t t-out=\"street\">cadde</t>, <t t-out=\"state\">eyalet</t>, <t t-"
+"out=\"client.zip or ''\">posta kodu</t>, <t t-out=\"city\">şehir</t>, <t t-"
+"out=\"country\">ülke</t></span></div>\n"
+"                    <br/> \n"
+"                   <div> Teşekkür ederiz,</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> Ekte, faturanızı bulabilirsiniz</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> Mağaza adı</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -122,6 +163,35 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                   <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> Merhaba <t t-"
+"out=\"client_name\">Müşteri adı</t>,</t>\n"
+"                        <t t-else=\"\">Merhaba,</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> Siparişiniz <t t-out=\"object.tracking_number\">..."
+"</t> tutarı <t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> olarak onaylanmıştır. <span t-"
+"if=\"object.preset_time\">Siparişiniz <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">saat 12:00'de</t></span></div>\n"
+"                    <br/> hazır olacaktır. \n"
+"                   <div> Teşekkür ederiz,</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> Ekte, faturanızı bulabilirsiniz</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> Mağaza adı</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -863,6 +933,14 @@ msgid "Kiosk"
 msgstr "Dijital sipariş ekranı"
 
 #. module: pos_self_order
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Kiosk Order"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
 msgstr "Açıklama"
@@ -1473,8 +1551,11 @@ msgid "Selection"
 msgstr "Seçim"
 
 #. module: pos_self_order
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Self Order"
 msgstr "Self Servis Sipariş"
 
@@ -1641,7 +1722,14 @@ msgid "Table Stand Number"
 msgstr "Masa Standı Numarası"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_change_receipt
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Table Tracker %s"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
 msgid "Table Tracker:"
 msgstr "Masa Takipçisi:"
@@ -1689,7 +1777,9 @@ msgstr "Self-Order varsayılan kullanıcısı bir POS kullanıcısı olmalıdır
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_preset.py:0
 msgid ""
-"The delivery address could not be geolocated. Please enter a valid address."
+"The delivery address could not be geolocated. Please check the address. If "
+"the address is valid, your geolocation service may be unavailable or unable "
+"to resolve it"
 msgstr ""
 
 #. module: pos_self_order
