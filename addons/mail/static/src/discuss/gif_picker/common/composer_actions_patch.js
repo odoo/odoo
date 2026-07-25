@@ -7,13 +7,13 @@ import { GifPicker } from "./gif_picker";
 
 registerComposerAction("add-gif", {
     actionPanelComponent: GifPicker,
-    actionPanelComponentProps: ({ action, owner }) => ({
+    actionPanelComponentProps: ({ _sendMessage, action, composer }) => ({
         onSelect: async (gif) => {
             const gifUrl = gif.media_formats.tinygif.url;
             const href = encodeURI(gifUrl);
-            await owner._sendMessage(
+            await _sendMessage(
                 markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
-                { parentId: owner.props.composer.replyToMessage?.id }
+                { parentId: composer.replyToMessage?.id }
             );
         },
         onClose: () => action.actionPanelClose(),
@@ -23,10 +23,8 @@ registerComposerAction("add-gif", {
         const anchorEl = pickerGetAnchor(...args);
         this.popover?.open(anchorEl, this.actionPanelComponentProps);
     },
-    condition: ({ composer, owner, store }) =>
-        (store.hasGifPickerFeature || store.self_user?.is_admin) &&
-        !owner.env.inChatter &&
-        !composer.message,
+    condition: ({ composer, inChatter, store }) =>
+        (store.hasGifPickerFeature || store.self_user?.is_admin) && !inChatter && !composer.message,
     icon: "oi oi-gif-picker",
     name: _t("Send GIF"),
     onSelected(params, ev) {
@@ -41,6 +39,6 @@ registerComposerAction("add-gif", {
             onClose: () => this.actionPanelClose(),
         });
     },
-    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ inDiscussApp }) => (!inDiscussApp ? 40 : undefined),
+    sequenceQuick: ({ inDiscussApp }) => (inDiscussApp ? 15 : undefined),
 });

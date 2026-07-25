@@ -14,6 +14,9 @@ patch(Composer.prototype, {
             { rootRef: this.rootRef }
         );
     },
+    get composerActionsParams() {
+        return { ...super.composerActionsParams, voiceRecorder: () => this.voiceRecorder };
+    },
     get isSendButtonDisabled() {
         return this.voiceRecorder?.recording || super.isSendButtonDisabled;
     },

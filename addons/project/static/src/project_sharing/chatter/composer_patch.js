@@ -17,6 +17,13 @@ patch(Composer.prototype, {
         });
     },
 
+    get composerActionsParams() {
+        return {
+            ...super.composerActionsParams,
+            projectSharingId: () => this.projectSharingPlugin?.projectSharingId(),
+        };
+    },
+
     get placeholder() {
         if (this.projectSharingPlugin?.projectSharingId()) {
             return _t("Write a message…");
