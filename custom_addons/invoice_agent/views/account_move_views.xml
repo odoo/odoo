@@ -10,10 +10,10 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook[@class='o_notebook']" position="inside">
+            <xpath expr="//notebook" position="inside">
                 <!-- AI Extraction Page -->
                 <page string="AI Extraction" name="ai_extraction_page"
-                      attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'out_invoice', 'out_refund'))]}">
+                      invisible="move_type not in ('in_invoice', 'in_refund', 'out_invoice', 'out_refund')">
                     <group name="ai_extraction_status_group">
                         <group string="Extraction Metadata">
                             <field name="ai_extraction_status" widget="badge" decoration-danger="ai_extraction_status == 'failed'" decoration-success="ai_extraction_status == 'validated'" decoration-warning="ai_extraction_status == 'extracted'" decoration-info="ai_extraction_status == 'pending'"/>
@@ -29,19 +29,26 @@
                         </group>
                     </group>
                     <group string="Per-Field Extraction Details">
-                        <field name="extraction_line_ids" nolabel="1">
-                            <tree editable="bottom" multi_edit="1">
-                                <field name="field_name"/>
-                                <field name="extracted_value"/>
-                                <field name="field_confidence" widget="progressbar" optional="show"/>
-                            </tree>
-                        </field>
+                        <field name="extraction_line_ids" nolabel="1"/>
                     </group>
                     <group string="Raw AI Payload">
                         <field name="ai_extracted_json" nolabel="1" colspan="2" readonly="1"/>
                     </group>
                 </page>
             </xpath>
+        </field>
+    </record>
+
+    <!-- Separate list view for extraction lines -->
+    <record id="view_invoice_agent_extraction_line_tree" model="ir.ui.view">
+        <field name="name">invoice.agent.extraction.line.list</field>
+        <field name="model">invoice.agent.extraction.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1">
+                <field name="field_name"/>
+                <field name="extracted_value"/>
+                <field name="field_confidence" widget="progressbar" optional="show"/>
+            </list>
         </field>
     </record>
 </odoo>
