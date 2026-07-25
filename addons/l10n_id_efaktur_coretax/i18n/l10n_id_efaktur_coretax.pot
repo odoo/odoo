@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:10+0000\n"
-"PO-Revision-Date: 2026-07-03 18:10+0000\n"
+"POT-Creation-Date: 2026-07-24 18:37+0000\n"
+"PO-Revision-Date: 2026-07-24 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -545,6 +545,20 @@ msgid "Coretax Information"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Coretax e-Faktur does not support XML uploads for transactions involving "
+"down payments. Please enter these transactions manually into the Coretax "
+"system"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#: model:ir.model,website_form_label:l10n_id_efaktur_coretax.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__create_uid
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_product_code__create_uid
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_uom_code__create_uid
@@ -779,6 +793,16 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %s contains a negative line that could not be distributed over the "
+"other lines, because no other line carries the same taxes or because it "
+"exceeds their total. Please align the taxes or enter this transaction "
+"manually into the Coretax system"
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
 msgid "Invoice %s does not contain any taxes"
 msgstr ""
 
@@ -1001,12 +1025,6 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_buyer_document_type__passport
 msgid "Passport"
-msgstr ""
-
-#. module: l10n_id_efaktur_coretax
-#. odoo-python
-#: code:addons/l10n_id_efaktur_coretax/models/account_move_line.py:0
-msgid "Price for line '%s' cannot be a negative amount. Please check again."
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
