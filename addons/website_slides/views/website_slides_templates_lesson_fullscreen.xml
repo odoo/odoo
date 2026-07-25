@@ -56,7 +56,7 @@
             <div class="o_wslides_fs_container d-flex position-relative overflow-hidden flex-grow-1">
                 <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex flex-grow-1 order-2"></div>
 
-                <div class="o_wslides_fs_sidebar o_wslides_fs_sidebar_hidden text-white flex-shrink-0 order-1">
+                <div class="o_wslides_fs_sidebar o_wslides_fs_sidebar_hidden position-relative text-white flex-shrink-0 order-1">
                     <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
                         <div class="o_wslides_fs_sidebar_header mb-3">
                             <a class="d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
@@ -98,13 +98,13 @@
     <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section py-2 px-3">
-        <a t-if="category" class="text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
+        <a t-if="category" class="o_wslides_lesson_aside_list_resources_btn text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
             data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
             t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
             <b t-field="category.name"/>
             <div class="flex-grow-1"/>
-            <i class="fa fa-fw fa-caret-left" role="img"/>
-            <i class="fa fa-fw fa-caret-down" role="img"/>
+            <i class="oi oi-chevron-down" role="img"/>
+            <i class="oi oi-chevron-up" role="img"/>
         </a>
         <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
             t-attf-id="collapse-#{category.id if category else 0}">

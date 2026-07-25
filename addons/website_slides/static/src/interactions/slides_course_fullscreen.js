@@ -434,19 +434,6 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
             // fill empty property to allow searching on it with list.filter(matcher)
             slideData.isQuiz = !!slideData.isQuiz;
             slideData.hasQuestion = !!slideData.hasQuestion;
-            // technical settings for the Fullscreen to work
-            let autoSetDone = false;
-            if (!slideData.hasQuestion) {
-                // images, documents (local + external) and articles are marked as completed when opened
-                // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
-                if (
-                    ["infographic", "document", "article"].includes(slideData.category) ||
-                    (slideData.category === "video" && slideData.videoSourceType === "google_drive")
-                ) {
-                    autoSetDone = true;
-                }
-            }
-            slideData.autoSetDone = autoSetDone;
         }
         return slidesDataList;
     }
@@ -529,20 +516,6 @@ export class WebsiteSlidesFullscreen extends WebsiteSlidesCommon {
             this.toggleSidebar(); // hide sidebar when small device screen
         }
         this.renderSlide();
-        if (this.slide.autoSetDone && !session.is_public) {
-            // no useless RPC call
-            if (this.slide.category === "document") {
-                // only set the slide as completed after iFrame is loaded to avoid concurrent execution with 'embedUrl' controller
-                this.addListener(
-                    this.el.querySelector("iframe.o_wslides_iframe_viewer"),
-                    "load",
-                    () => this.slidesService.toggleCompletion(this.slide),
-                    { once: true }
-                );
-            } else {
-                this.slidesService.toggleCompletion(this.slide);
-            }
-        }
     }
 
     onSlideSetCompleted() {

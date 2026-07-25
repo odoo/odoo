@@ -17,14 +17,13 @@ export class WebsiteSlidesProgressBar extends Interaction {
         "button.o_wslides_button_complete": {
             "t-on-click.prevent.stop": this.onCompleteClick,
         },
-        ".o_wslides_channel_completion_progressbar": {
-            "t-att-class": () => ({
-                "d-none": this.progressbarCompletion >= 100,
-                "d-flex": this.progressbarCompletion < 100,
-            }),
-        },
         ".o_wslides_channel_completion_completed": {
             "t-att-class": () => ({ "d-none": this.progressbarCompletion < 100 }),
+        },
+        ".o_wslides_progress_percentage_label": {
+            "t-att-class": () => ({
+                "d-none": this.progressbarCompletion >= 100,
+            }),
         },
         _progressBar: {
             "t-att-style": () => ({ width: `${this.progressbarCompletion}%` }),
@@ -71,6 +70,7 @@ export class WebsiteSlidesProgressBar extends Interaction {
                 canSelfMarkUncompleted: slide.canSelfMarkUncompleted ? "True" : "",
                 canSelfMarkCompleted: slide.canSelfMarkCompleted ? "True" : "",
                 isMember: this.channel.isMember ? "True" : "",
+                noMargin: buttonEl.hasAttribute("data-no-margin"),
             },
             buttonEl,
             "afterend"

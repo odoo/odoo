@@ -50,7 +50,7 @@ registerWebsitePreviewTour("course_member_youtube", {}, () => [
     },
     {
         // check progression
-        trigger: ":iframe .o_wslides_channel_completion_completed:contains(Completed)",
+        trigger: ":iframe .o_wslides_channel_completion_completed:contains(Course completed)",
     },
     {
         trigger: ':iframe a:contains("Back to course")',

@@ -6,53 +6,27 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <t t-call="website.record_cover"
-                _record="slide.channel_id"
-                use_filters="True"
-                use_size="True"
-                use_text_align="True">
-
-                <div class="o_wslides_lesson_header position-relative pb-0 pt-2 pt-md-5">
-                    <t t-call="website_slides.course_nav" channel="slide.channel_id"/>
-                    <div class="container o_wslides_lesson_header_container mt-5 mt-md-3 mt-xl-4">
-                        <div class="row align-items-md-stretch">
-                            <div t-attf-class="col-12 col-sm-9 d-flex flex-column #{'col-lg-6 offset-lg-3' if slide.channel_id.channel_type == 'training' else ''}">
-                                <h1 class="fw-medium w-100 text-truncate overflow-hidden h2">
-                                    <a t-att-href="'/slides/%s' % (slug(slide.channel_id))" class="text-white text-decoration-none" t-field="slide.channel_id.name"/>
-                                </h1>
-                                <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
-                                    <span class="fw-normal">Last update:</span>
-                                    <t t-out="slide.published_date" t-options="{'widget': 'date'}"/>
-                                </div>
-                                <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
-                                    <div class="progress w-50 bg-black-25" style="height: 10px;">
-                                        <div class="progress-bar rounded-start bg-info" role="progressbar" aria-label="Progress bar"
-                                            t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
-                                            t-attf-style="width: #{slide.channel_id.completion}%;">
-                                        </div>
-                                    </div>
-                                    <i class="fa fa-trophy m-0 ms-2 p-0 text-black-50"></i>
-                                    <small class="ms-2 text-white-50"><span class="o_wslides_progress_percentage" t-out="slide.channel_id.completion"/> %</small>
-                                </div>
-                            </div>
-                            <div t-attf-class="o_wslides_channel_completion_completed col-12 col-sm-3 #{'d-none' if not slide.channel_id.completed else ''}">
-                                <h2>
-                                    <small><span class="badge text-bg-success fw-normal"><i class="fa fa-check"/> Completed</span></small>
-                                </h2>
-                            </div>
-                        </div>
+            <div class="container o_wslides_lesson_main">
+                <t t-call="website_slides.course_nav"
+                    channel="slide.channel_id"
+                    _navClasses.f="mt-4 mb-3"/>
+                <div class="d-flex align-items-baseline justify-content-between mb-lg-3">
+                    <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
+                    <h1 class="h4 mb-0" t-field="slide.name"/>
+                    <div class="order-1 order-md-2 text-nowrap flex-grow-0 d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-md-end align-items-center">
+                        <a class="btn btn-light" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))" aria-label="Fullscreen">
+                            <i class="fa fa-expand"/>
+                        </a>
                     </div>
                 </div>
-            </t>
-            <div class="container o_wslides_lesson_main">
-                <div class="row">
+                <div class="row mt-3">
                     <t t-set="can_access_channel" t-value="slide.channel_id.is_member or slide.channel_id.can_publish"/>
-                    <div t-attf-class="o_wslides_lesson_aside col-lg-3 #{'order-2' if slide.channel_id.channel_type == 'documentation' else ''}">
+                    <div t-attf-class="o_wslides_lesson_content col-lg-8">
+                        <t t-call="website_slides.slide_content_detailed"/>
+                    </div>
+                    <div t-attf-class="o_wslides_lesson_aside col-lg-4 ps-lg-5 mb-5 mb-lg-0">
                         <t t-if="slide.channel_id.channel_type == 'training'" t-call="website_slides.slide_aside_training"/>
                         <t t-if="slide.channel_id.channel_type == 'documentation'" t-call="website_slides.slide_aside_documentation"/>
-                    </div>
-                    <div t-attf-class="o_wslides_lesson_content col-lg-9 #{'order-1' if slide.channel_id.channel_type == 'documentation' else ''}">
-                        <t t-call="website_slides.slide_content_detailed"/>
                     </div>
                 </div>
             </div>
@@ -109,184 +83,88 @@
 
 <!-- Slide: sidebar training mode -->
 <template id="slide_aside_training" name="Slide: Sidebar in Training">
-    <div class="o_wslides_lesson_aside_list position-relative bg-white border-bottom mt-4">
-        <div class="bg-100 text-1000 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
-            <span class="p-2">Course content</span>
-            <a href="#collapse_slide_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wslides_lesson_aside_collapse">
-                <i class="oi oi-chevron-down d-lg-none"/>
-            </a>
-        </div>
-        <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
+    <div class="o_wslides_lesson_aside_list">
+        <ul class="list-group list-group-flush border rounded overflow-hidden mb-0">
+            <li t-if="slide.channel_id.is_member and not is_public_user" class="o_wslides_lesson_aside_progress list-group-item p-3 bg-white">
+                <div class="o_wslides_channel_completion_progressbar d-flex flex-column align-items-center">
+                    <div class="d-flex justify-content-between align-items-center w-100 small">
+                        <small class="text-muted">Your progress</small>
+                        <h6 t-attf-class="o_wslides_progress_percentage_label mb-0 small #{'d-none' if slide.channel_id.completed else ''}">
+                            <span class="o_wslides_progress_percentage" t-out="slide.channel_id.completion"/>%
+                        </h6>
+                        <small t-attf-class="o_wslides_channel_completion_completed bg-success-light text-success-emphasis p-1 rounded #{'d-none' if not slide.channel_id.completed else ''}">Completed</small>
+                    </div>
+                    <div class="progress flex-grow-1 w-100 mt-2" style="--progress-height: .25rem;">
+                        <div class="progress-bar bg-success" role="progressbar" t-attf-style="width: #{slide.channel_id.completion}%" t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"/>
+                    </div>
+                </div>
+            </li>
             <t t-set="i" t-value="0"/>
             <t t-if="category.get('slides')" t-foreach="category_data" t-as="category">
+                <t t-set="i" t-value="i + 1"/>
                 <t t-call="website_slides.slide_aside_training_category"
-                    category_slide_ids="category['slides']"/>
+                    category_slide_ids="category['slides']"
+                    category_index="i"/>
             </t>
         </ul>
     </div>
 </template>
 
 <template id="slide_aside_training_category" name="Category item for the slide detailed view list">
-    <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
-    <li class="o_wslides_fs_sidebar_section mt-2">
-        <a t-attf-href="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
-            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
-            class="o_wslides_lesson_aside_list_link ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
-            t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
+    <li class="list-group-item bg-light py-2">
+        <span class="small fw-semibold">
+            <t t-if="category_index"><span t-out="category_index"/>.</t>
             <t t-if="category">
-                <b t-field="category.name"/>
+                <span t-field="category.name"/>
             </t>
             <t t-else="">
-                <b>Uncategorized</b>
+                Uncategorized
             </t>
-            <div class="flex-grow-1"/>
-            <i class="fa fa-fw fa-caret-left" role="img"/>
-            <i class="fa fa-fw fa-caret-down" role="img"/>
-        </a>
-        <ul t-attf-class="collapse #{'show' if category_collapsed else ''} p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
-            <t t-set="is_member" t-value="slide.channel_id.is_member"/>
-            <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
-            <t t-foreach="category_slide_ids" t-as="aside_slide">
-                <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
-                <t t-set="can_access" t-value="aside_slide.is_preview or can_access_channel"/>
-                <li class="p-0 pb-1">
-                    <div t-att-class="'o_wslides_lesson_aside_list_link d-flex p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
-                        t-att-data-id="slide.id"
-                        t-att-data-completed="slide_completed">
-                        <t t-call="website_slides.slide_sidebar_done_button"
-                            slide="aside_slide"
-                            slide_completed="channel_progress[aside_slide.id].get('completed')"
-                            use_slide_icon="True"/>
-                        <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                            t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden #{'text-muted' if not can_access else ''}">
-                            <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
-                                <span t-out="aside_slide.name"/>
-                                <span class="align-items-end" t-if="aside_slide.question_ids">
-                                    <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-info')">
-                                        <t t-out="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
-                                    </span>
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                    <ul t-if="aside_slide.sudo().slide_resource_ids or aside_slide.question_ids" class="o_wslides_lesson_aside_list_links list-group mb-1 list-unstyled fw-light">
-                        <t t-if="can_access_channel" t-foreach="aside_slide.slide_resource_ids" t-as="resource">
-                           <li class="ps-3">
-                                <a t-if="resource.resource_type == 'url'" t-att-href="resource.link" target="new" class="text-decoration-none small">
-                                    <i class="fa fa-link"/><span t-field="resource.name"/>
-                                </a>
-                                <a t-else="" t-att-href="resource.download_url" class="text-decoration-none small">
-                                    <i class="fa fa-download"/><span t-field="resource.name"/>
-                                </a>
-                            </li>
-                        </t>
-                        <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-3">
-                            <li t-if="aside_slide.channel_id.enroll == 'public' or (aside_slide.channel_id.enroll == 'invite' and aside_slide.channel_id.is_member_invited)"
-                                class="text-decoration-none small">
-                                <i class="fa fa-download"/>
-                                <t t-call="website_slides.join_course_link" for_resources="1"/>
-                            </li>
-                        </div>
-                        <li t-if="aside_slide.question_ids and aside_slide.slide_category != 'quiz'" class="ps-3">
-                            <a t-if="can_access" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))"
-                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
-                                <i class="fa fa-flag text-warning"/> Quiz
-                            </a>
-                            <span t-else="" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
-                                <i class="fa fa-flag text-warning"/> Quiz
-                            </span>
-                        </li>
-                    </ul>
-                </li>
-            </t>
-        </ul>
+        </span>
     </li>
+    <t t-set="is_member" t-value="slide.channel_id.is_member"/>
+    <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
+    <t t-foreach="category_slide_ids" t-as="aside_slide">
+        <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
+        <t t-set="can_access" t-value="aside_slide.is_preview or can_access_channel"/>
+        <li t-attf-class="o_wslides_lesson_aside_list_link list-group-item d-flex align-items-start py-2 #{'list-group-item-action' if can_access else ''} #{'active' if aside_slide == slide else ''}">
+            <t t-if="can_access">
+                <a t-att-href="'/slides/slide/%s' % (slug(aside_slide))"
+                    t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden me-auto #{'text-reset' if aside_slide == slide else ''}">
+                    <div class="o_wslides_lesson_link_name small" t-att-title="aside_slide.name">
+                        <i t-attf-class="fa #{aside_slide.slide_icon_class} me-1"/>
+                        <span t-out="aside_slide.name"/>
+                    </div>
+                </a>
+                <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"
+                    slide="aside_slide"
+                    slide_completed="channel_progress[aside_slide.id].get('completed')"
+                    no_margin="True"/>
+                <i t-elif="aside_slide.is_preview" class="fa fa-fw fa-eye text-primary flex-shrink-0" aria-hidden="true"/>
+            </t>
+            <t t-else="">
+                <div class="o_wslides_lesson_link_name text-muted mw-100 me-auto small">
+                    <i t-attf-class="fa #{aside_slide.slide_icon_class} me-1"/>
+                    <span t-out="aside_slide.name"/>
+                </div>
+                <i class="fa fa-fw fa-lock text-muted flex-shrink-0" aria-hidden="true"/>
+            </t>
+        </li>
+    </t>
 </template>
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
-    <div class="d-flex flex-wrap align-items-start my-3 w-100">
-        <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
-        <div class="col-12 col-md order-2 order-md-1 d-flex">
-            <div class="d-flex align-items-start overflow-hidden">
-                <h1 class="h4 my-0 d-flex flex_row overflow-hidden">
-                    <i t-attf-class="fa #{slide.slide_icon_class} me-2"/>
-                    <span class="text-truncate" t-field="slide.name"/>
-                </h1>
-            </div>
-        </div>
-        <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-md-end align-items-center mb-3 mb-md-0">
-            <t t-set="quiz_karma_won" t-value="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
-            <t t-set="quiz_karma_gain" t-value="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
-            <span t-if="slide.question_ids and (slide_completed or quiz_karma_gain)" style="flex-basis: 100%"
-                t-attf-class="mx-2 my-1 badge #{'text-bg-success' if slide_completed else 'text-bg-info'}">
-                <span t-if="slide_completed">
-                    <i class="fa fa-check-circle"/>
-                    <t t-if="quiz_karma_won">
-                        <t t-out="quiz_karma_won" />
-                        <span>XP</span>
-                    </t>
-                </span>
-                <t t-else="">
-                    <span t-out="quiz_karma_gain"/>
-                    <span>XP</span>
-                </t>
-            </span>
-            <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
-                <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not previous_slide else ''} me-2"
-                    role="button" t-att-aria-disabled="'true' if not previous_slide else None" aria-label="Previous"
-                    t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
-                    <i class="oi oi-chevron-left me-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
-                </a>
-                <t t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.is_member">
-                    <t t-set="is_quiz" t-value="slide.slide_category == 'quiz' or slide.question_ids"/>
-                    <a t-if="slide_completed and slide.can_self_mark_uncompleted" role="button"
-                        class="o_wslides_undone_button btn btn-light border me-2"
-                        t-attf-href="/slides/slide/#{slide.id}/set_uncompleted">
-                        Mark To Do
-                    </a>
-                    <a t-elif="not slide_completed and is_quiz" role="button"
-                        class="o_wslides_done_button btn btn-primary border text-white me-2"
-                        href="#quiz_container">
-                        Take Quiz
-                    </a>
-                    <a t-else="not slide_completed and slide.can_self_mark_completed" role="button"
-                        class="o_wslides_done_button btn btn-primary border text-white me-2"
-                        t-attf-href="/slides/slide/#{slide.id}/set_completed?next_slide_id=#{next_slide.id if next_slide else ''}">
-                        Mark Done
-                    </a>
-                </t>
-                <div t-if="slide.channel_id.channel_type == 'documentation' and not slide.channel_id.is_member" class="me-2">
-                    <t t-call="website_slides.course_join" channel="slide.channel_id"/>
-                </div>
-                <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not next_slide else ''}"
-                    role="button" t-att-aria-disabled="'true' if not next_slide else None" aria-label="Next"
-                    t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
-                    <span class="d-none d-sm-inline-block">Next</span> <i class="oi oi-chevron-right ms-2"></i>
-                </a>
-            </div>
-            <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))" aria-label="Fullscreen">
-                <i class="fa fa-desktop me-xl-2 my-1"/>
-                <span class="d-none d-xl-inline-block">Fullscreen</span>
-            </a>
-            <a class="o_wslides_share btn btn-light border ms-2 my-1" role="button" t-att-data-name="slide.name"
-               t-att-data-id="slide.id" t-att-data-url="slide.website_share_url" t-att-data-category="slide.slide_category"
-               t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)"
-               t-att-data-embed-code="slide.embed_code_external if slide.slide_category in ['video', 'document'] else False"
-               aria-label="Share">
-                <i class="fa fa-share-alt me-xl-2 my-1"/>
-                <span class="d-none d-xl-inline-block">Share</span>
-            </a>
-        </div>
-    </div>
-    <div t-if="slide.tag_ids" class="pb-2">
-        <t t-foreach="slide.tag_ids" t-as="tag">
-            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-out="tag.name"/>
-        </t>
-    </div>
     <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1" data-editor-message.translate="Drag blocks here to add them on all lessons"/>
     <div t-if="slide.slide_category == 'infographic'" class="o_wslides_lesson_content_type" t-field='slide.image_1920' t-options="{'widget': 'image', 'style': 'width: 100%;'}"/>
+    <div t-elif="slide.slide_category == 'quiz'" class="o_wslides_lesson_content_type">
+        <div class="o_wslides_js_quiz_container mb-5" t-att-data-slide-id="slide.id" id="quiz_container">
+            <div class="row" t-if="slide.question_ids">
+                <t t-call="website_slides.lesson_content_quiz"/>
+            </div>
+        </div>
+    </div>
     <div t-else="" class="o_wslides_lesson_content_type">
         <div t-if="slide.slide_category == 'document'" class="ratio ratio-4x3 embed-responsive-item mb8" style="height: 600px;">
             <t t-out="slide.embed_code"/>
@@ -294,37 +172,45 @@
         <div t-if="slide.slide_category == 'video'" class="ratio ratio-16x9 embed-responsive-item mb8">
             <t t-out="slide.embed_code"/>
         </div>
-        <div t-if="slide.slide_category == 'article'">
+        <div t-if="slide.slide_category == 'article'" class="bg-white">
             <div t-if="is_html_empty(slide.html_content)" class="alert alert-info o_not_editable">
                 Click on the "Edit" button in the top corner of the screen to edit your slide content.
             </div>
-            <div class="bg-white p-3">
+            <div class="p-3">
                 <div t-field="slide.html_content" placeholder="Add your content here..."/>
             </div>
         </div>
     </div>
 
+    <div t-if="slide.question_ids and slide.slide_category not in ['quiz', 'certification']"
+        class="o_wslides_js_quiz_container mb-5" t-att-data-slide-id="slide.id" id="quiz_container">
+        <div class="row">
+            <t t-call="website_slides.lesson_content_quiz"/>
+        </div>
+    </div>
+
     <div class="mb-5 position-relative">
-        <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
+        <ul class="nav nav-underline border-bottom" role="tablist">
             <li class="nav-item" role="presentation">
                 <a href="#about" aria-controls="about" t-att-class="'nav-link active' if not comments else 'nav-link'" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-home"></i> About
+                    About
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#discuss" aria-controls="discuss" t-att-class="'nav-link active' if comments else 'nav-link'" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-comments"></i> Comments <t t-if="slide.channel_id.allow_comment">(<span t-out="slide.comments_count"/>)</t>
-                </a>
-            </li>
-            <li class="nav-item" role="presentation" groups="base.group_user">
-                <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-bar-chart"></i> Statistics
+                    Comments <t t-if="slide.channel_id.allow_comment">(<span t-out="slide.comments_count"/>)</t>
                 </a>
             </li>
         </ul>
         <div class="tab-content mt-3">
             <div role="tabpanel" t-att-class="not comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="about">
                 <div t-field="slide.description"/>
+                <t t-if="slide.tag_ids">
+                    <h6 class="d-inline-block">Tags:</h6>
+                    <t t-foreach="slide.tag_ids" t-as="tag">
+                        <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-out="tag.name"/>
+                    </t>
+                </t>
                 <div t-if="slide.channel_id.allow_comment" class="d-flex">
                     <span class="text-muted fw-bold me-3">Rating</span>
                     <div class="text-muted border-start ps-3">
@@ -370,41 +256,6 @@
                     hide_header="True"
                     disable_composer="not (slide.channel_id.can_comment and slide.channel_id.allow_comment)"
                     display_rating="False"/>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" groups="base.group_user" id="statistic" t-att-slide-url="slide.website_absolute_url">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <th colspan="2" class="border-top-0">Views</th>
-                                </tr>
-                                <tr class="border-top-0">
-                                    <th class="border-top-0"><span t-out="slide.total_views"/></th>
-                                    <td class="border-top-0 w-100">Total Views</td>
-                                </tr>
-                                <tr>
-                                    <th><span t-out="slide.slide_views"/></th>
-                                    <td>Members Views</td>
-                                </tr>
-                                <tr>
-                                    <th><span t-out="slide.public_views"/></th>
-                                    <td>Public Views</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="o_wslides_js_quiz_container" t-att-data-slide-id="slide.id" id="quiz_container">
-        <div class="row" t-if="slide.slide_category != 'certification'">
-            <t t-if="slide.question_ids">
-                <t t-call="website_slides.lesson_content_quiz"/>
-            </t>
-            <div t-else="" class="o_wslides_js_lesson_quiz col" t-att-data-id="slide.id">
-                <t t-if="slide.channel_id.can_upload" t-call="website_slides.lesson_content_quiz_add_buttons"/>
             </div>
         </div>
     </div>
@@ -477,67 +328,43 @@
         <t t-foreach="slide_questions" t-as="question">
             <t t-call="website_slides.lesson_content_quiz_question"/>
         </t>
-        <t t-if="slide.channel_id.can_upload" t-call="website_slides.lesson_content_quiz_add_buttons"/>
         <div class="o_wslides_js_lesson_quiz_validation pt-3"/>
     </div>
 </template>
 
 <template id="lesson_content_quiz_question" name="Lesson: Quiz question template">
-    <div t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not (slide.channel_id.is_member or slide.is_preview) else ''))"
+    <div t-att-class="'o_wslides_js_lesson_quiz_question %s %s' % ('mt-3' if question_first else 'mt-5', 'completed-disabled' if slide_completed else ('disabled' if not (slide.channel_id.is_member or slide.is_preview) else ''))"
          t-att-data-question-id="question['id']" t-att-data-title="question['question']" >
-        <div class="row d-flex mb-2 mx-0">
-            <div class="h4">
-                <small class="text-muted">
-                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_sequence_handler fa fa-bars me-1 text-muted" t-if="slide.channel_id.can_upload and not slide_completed" />
-                    <t t-if="question_index != NoneType"><span class="o_wslides_quiz_question_sequence" t-out="question_index+1"/>.</t>
-                    <t t-else=""><span class="o_wslides_quiz_question_sequence" t-out="question['sequence']"/>.</t>
-                </small>
-                <span t-out="question['question']"/>
-            </div>
-            <div class="ms-auto o_wslides_js_quiz_edit_del" t-if="slide.channel_id.can_upload and not slide_completed" >
-                <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_edit_question fa fa-pencil-square-o p-1 text-muted"></i>
-                <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_delete_question fa fa-trash p-1 text-muted"></i>
-            </div>
-        </div>
-        <div class="list-group">
+        <h5 t-out="question['question']"/>
+        <div class="row g-2">
             <t t-foreach="question['answer_ids']" t-as="answer">
-                <a t-att-data-answer-id="answer['id']" href="#"
+                <div t-att-data-answer-id="answer['id']"
                     t-att-data-text="answer['text_value']" t-att-data-is-correct="answer['is_correct']" t-att-data-comment="answer['comment']"
-                    t-att-class="'o_wslides_quiz_answer list-group-item list-group-item-action d-flex align-items-center %s' % ('list-group-item-success' if slide_completed and answer['is_correct'] else '')">
-                    <label class="my-0 d-flex align-items-center justify-content-center me-2">
-                        <input type="radio"
-                            t-att-name="question['id']"
-                            t-att-value="answer['id']"
-                            class="d-none"
-                            t-att-disabled="True if not slide.channel_id.is_member or slide_completed else ''"/>
-                        <i t-att-class="'fa fa-circle text-400 %s' % ('d-none' if slide_completed and answer['is_correct'] else '')"/>
-                        <i class="fa fa-times-circle text-danger d-none"></i>
-                        <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (slide_completed and answer['is_correct']) else '')"></i>
+                    class="o_wslides_quiz_answer">
+                    <label t-att-class="'w-100 h-100 py-2 px-3 border-0 rounded cursor-pointer %s' % ('bg-success-subtle' if slide_completed and answer['is_correct'] else '')">
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="radio"
+                                t-att-name="question['id']"
+                                t-att-value="answer['id']"
+                                t-att-disabled="not slide.channel_id.is_member or None"
+                                t-att-class="'form-check-input m-0 %s' % ('bg-success border-success' if slide_completed and answer['is_correct'] else '')"/>
+                            <span t-out="answer['text_value']"/>
+                            <i t-att-class="'fa fa-times text-danger d-none ms-auto'"/>
+                            <i t-att-class="'fa fa-check text-success ms-auto %s' % ('' if slide_completed and answer['is_correct'] else 'd-none')"/>
+                        </div>
                     </label>
-                    <span t-out="answer['text_value']"/>
-                </a>
+                </div>
                 <t t-if="slide_completed and answer['is_correct']" t-set="correct_answer_comment" t-value="answer['comment']"/>
             </t>
-            <div t-attf-class="o_wslides_quiz_answer_info list-group-item list-group-item-info #{'' if correct_answer_comment else 'd-none'}">
-                <i class="fa fa-info-circle"/>
-                <span class="o_wslides_quiz_answer_comment ms-1">
-                    <t t-if="correct_answer_comment" t-out="correct_answer_comment"/>
-                </span>
+            <div>
+                <div t-attf-class="o_wslides_quiz_answer_info alert alert-info mb-0 #{'' if correct_answer_comment else 'd-none'}">
+                    <i class="fa fa-info-circle"/>
+                    <span class="o_wslides_quiz_answer_comment ms-1">
+                        <t t-if="correct_answer_comment" t-out="correct_answer_comment"/>
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-</template>
-
-<template id="lesson_content_quiz_add_buttons" name="Lesson: Quiz Add Buttons template">
-    <div class="o_wslides_js_lesson_quiz_new_question mt-3">
-        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border #{'d-none ' if slide.question_ids else ''}" role="button">
-            <i class="fa fa-plus me-2"/>
-            <span>Add Quiz</span>
-        </a>
-        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_question btn btn-light border ms-3 #{'' if slide.question_ids else 'd-none '}" role="button">
-            <i class="fa fa-plus me-2"/>
-            <span>Add Question</span>
-        </a>
     </div>
 </template>
 
