@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
+"PO-Revision-Date: 2026-07-24 17:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
-msgid "Add product mode"
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Configurator"
 msgstr ""
 
 #. module: sale_product_matrix
@@ -28,7 +26,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
 msgid ""
 "Configurator: choose attribute values to add the matching product variant to the order.\n"
-"Grid: add several variants at once from the grid of attribute values"
+"Matrix: add several variants at once from the grid of attribute values"
 msgstr ""
 
 #. module: sale_product_matrix
@@ -56,13 +54,13 @@ msgid "ID"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
-msgid "Matrix local storage"
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Matrix"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
-msgid "Order Grid Entry"
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
 msgstr ""
 
 #. module: sale_product_matrix
@@ -76,11 +74,6 @@ msgid "Product"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
-msgid "Product Configurator"
-msgstr ""
-
-#. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
 msgid "Sales Order"
 msgstr ""
@@ -91,16 +84,18 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
-msgid "Sales Variant Selection"
-msgstr ""
-
-#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
 msgid ""
 "Technical local storage of grid. \n"
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
+msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Variant Selection"
 msgstr ""
 
 #. module: sale_product_matrix

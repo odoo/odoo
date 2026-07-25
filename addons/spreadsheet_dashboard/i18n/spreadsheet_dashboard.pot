@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1\n"
+"Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"PO-Revision-Date: 2026-07-24 17:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgid "A name for your favorite filter is required."
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
 msgid "Access Groups"
 msgstr ""
 
@@ -71,6 +71,11 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
 msgid "All users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__allowed_user_ids
+msgid "Allowed Users"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -280,11 +285,6 @@ msgid "Global Filters"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
-msgid "Group"
-msgstr ""
-
-#. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_group
 msgid "Group of dashboards"
 msgstr ""
@@ -315,11 +315,6 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
 msgid "Is Favorite"
-msgstr ""
-
-#. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
-msgid "Is Published"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -422,6 +417,7 @@ msgid "Open sidebar"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Published"
 msgstr ""
@@ -564,6 +560,11 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__user_ids
 msgid "Users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__allowed_user_ids
+msgid "Users allowed to access this dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
