@@ -1345,24 +1345,44 @@ class ProductTemplate(models.Model):
 
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
+            image_url = f"/web/image/product.template/{product.id}/image_128"
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.read(["name"])
+
+            if search_words:
+                # Attribute values available on this product
+                attribute_words = {(value.name or "").lower() for value in values}
+
+                # Keep only the search words that are actually attribute values
+                matched_attribute_words = [word for word in search_words if word in attribute_words]
+
+                if matched_attribute_words:
+                    matched_variant = product.product_variant_ids.filtered(
+                        lambda variant: all(
+                            any(
+                                word == (ptav.product_attribute_value_id.name or "").lower()
+                                for ptav in variant.product_template_attribute_value_ids
+                            )
+                            for word in matched_attribute_words
+                        )
+                    )[:1]
+
+                    if matched_variant:
+                        combination_info = product._get_combination_info(
+                            product_id=matched_variant.id
+                        )
+                        image_url = f"/web/image/product.product/{matched_variant.id}/image_128"
+                        data["website_url"] = product._get_product_url(
+                            grouped_attributes_values=matched_variant.product_template_attribute_value_ids.mapped(
+                                "product_attribute_value_id"
+                            ).grouped("attribute_id")
+                        )
+
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
-            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
-
-            if search_words and values:
-                matched_values = values.filtered(
-                    lambda attribute_value: any(
-                        word in (attribute_value.name or "").lower() for word in search_words
-                    )
-                )
-                if matched_values:
-                    data["website_url"] = product._get_product_url(
-                        grouped_attributes_values=matched_values.grouped("attribute_id")
-                    )
+            data["image_url"] = image_url
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
