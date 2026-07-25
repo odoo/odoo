@@ -231,12 +231,22 @@
                     </div>
                     <div t-if="portal_cards or (editable and portal_hidden_cards)"
                         class="o_portal_cards d-grid mt-3" id="portal_cards">
+                        <t t-set="visible_portal_cards" t-value="portal_cards._filter_visible_portal_cards()"/>
                         <t t-foreach="portal_cards" t-as="entry">
-                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
+                            <t
+                                t-call="portal.portal_docs_entry"
+                                placeholder_count="entry.placeholder_count"
+                                is_card_visible="entry in visible_portal_cards"
+                            />
                         </t>
                         <t t-if="editable">
+                            <t t-set="visible_portal_hidden_cards" t-value="portal_hidden_cards._filter_visible_portal_cards()"/>
                             <t t-foreach="portal_hidden_cards" t-as="entry">
-                                <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
+                                <t
+                                    t-call="portal.portal_docs_entry"
+                                    placeholder_count="entry.placeholder_count"
+                                    is_card_visible="entry in visible_portal_hidden_cards"
+                                />
                             </t>
                         </t>
                     </div>
@@ -249,7 +259,7 @@
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
-        <t t-set="show_portal_card" t-value="force_show or entry.should_show_portal_card()"/>
+        <t t-set="show_portal_card" t-value="force_show or is_card_visible"/>
         <t t-set="show_counter_as_badge" t-value="False"/>
         <div t-att-data-id="entry.id"
             t-att-data-show-in-portal="'true' if entry.show_in_portal else 'false'"

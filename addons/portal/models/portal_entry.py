@@ -17,5 +17,5 @@ class PortalEntry(models.Model):
     is_config_card = fields.Boolean("Config Card", default=False)
 
     # Override me to add custom logic
-    def should_show_portal_card(self):
-        return self.is_config_card
+    def _filter_visible_portal_cards(self):
+        return self.filtered('is_config_card')
