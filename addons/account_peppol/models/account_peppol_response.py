@@ -26,5 +26,5 @@ class AccountPeppolResponse(models.Model):
         ],
         string='Peppol status',
     )
-    move_id = fields.Many2one('account.move', ondelete='cascade', index='btree_not_null')
-    company_id = fields.Many2one(related='move_id.company_id')
+    handler_id = fields.Many2one('account.peppol.response.handler', ondelete='cascade', index='btree_not_null')
+    company_id = fields.Many2one(related='handler_id.company_id')

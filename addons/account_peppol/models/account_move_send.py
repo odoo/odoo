@@ -103,7 +103,7 @@ class AccountMoveSend(models.AbstractModel):
             }
         not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
         info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE', 'FR'}
-        moves_not_sent_peppol = moves.filtered(lambda m: not m.peppol_is_sent)
+        moves_not_sent_peppol = moves.filtered(lambda m: not m.peppol_message_id)
         any_moves_not_sent_peppol = bool(moves_not_sent_peppol)
         what_is_peppol_alert = self._get_peppol_what_is_peppol_alert(moves, moves_data, moves_not_sent_peppol)
         always_on_companies = moves.company_id.filtered(
@@ -153,7 +153,7 @@ class AccountMoveSend(models.AbstractModel):
         if invoice_data.get('ubl_cii_xml_attachment_values'):
             xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-        elif invoice.ubl_cii_xml_id and not invoice.peppol_is_sent:
+        elif invoice.ubl_cii_xml_id and not invoice.peppol_message_id:
             xml_file = invoice.ubl_cii_xml_id.raw
             filename = invoice.ubl_cii_xml_id.name
         else:
@@ -222,7 +222,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
-                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
+                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_message_id,
             ])
         else:
             return super()._is_applicable_to_move(method, move, **move_data)
@@ -300,8 +300,10 @@ class AccountMoveSend(models.AbstractModel):
                 attachments_linked_message = self._get_peppol_attachments_linked_message(edi_user)
                 attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
                 for message, (invoice, invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
-                    invoice.peppol_message_uuid = message['message_uuid']
-                    invoice.peppol_move_state = 'processing'
+                    invoice.peppol_message_id = self.env['account.peppol.message'].create({
+                        'uuid': message['message_uuid'],
+                        'state': 'processing',
+                    })
                     attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
                         invoice_data.get('mail_attachments_widget', []),
                         invoice_data['invoice_edi_format']

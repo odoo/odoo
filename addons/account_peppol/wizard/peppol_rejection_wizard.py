@@ -6,8 +6,8 @@ class PeppolRejectionWizard(models.TransientModel):
     _name = 'account.peppol.rejection.wizard'
     _description = "Peppol Rejection wizard"
 
-    move_ids = fields.Many2many(
-        comodel_name='account.move',
+    message_ids = fields.Many2many(
+        comodel_name='account.peppol.message',
         required=True,
     )
     reason_ids = fields.Many2many(
@@ -31,13 +31,13 @@ class PeppolRejectionWizard(models.TransientModel):
 
     def button_send(self):
         if not self.reason_ids:
-            raise ValidationError(self.env._('At least one reason must be given when rejecting a Peppol invoice.'))
+            raise ValidationError(self.env._('At least one reason must be given when rejecting a Peppol document.'))
         clarifications = [{
             'list_identifier': clarification.list_identifier,
             'code': clarification.code,
             'name': clarification.name,
         } for clarification in self.reason_ids + self.action_ids]
-        moves_by_company = self.move_ids.grouped('company_id')
-        for company in moves_by_company:
-            company.account_peppol_edi_user._peppol_send_response(moves_by_company[company], 'RE', clarifications)
+        messages_by_company = self.message_ids.grouped('company_id')
+        for company in messages_by_company:
+            company.account_peppol_edi_user._peppol_send_response(messages_by_company[company], 'RE', clarifications)
         return self.env.context.get('cancel_res', True)

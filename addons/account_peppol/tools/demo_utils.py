@@ -34,7 +34,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
 
     def _mock_get_all_documents(user):
         if not user.env['account.move'].search_count([
-            ('peppol_message_uuid', '=', f'{user.company_id.id}_demo_vendor_bill')
+            ('peppol_message_id.uuid', '=', f'{user.company_id.id}_demo_vendor_bill')
         ]):
             return {'messages': [get_demo_vendor_bill(user)]}
         return {'messages': []}

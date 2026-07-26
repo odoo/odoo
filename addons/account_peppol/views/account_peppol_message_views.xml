@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_peppol_message_view_form" model="ir.ui.view">
+        <field name="name">account.peppol.message.view.form</field>
+        <field name="model">account.peppol.message</field>
+        <field name="arch" type="xml">
+            <form string="Peppol Message">
+                <field name="uuid"/>
+                <field name="message_type"/>
+                <field name="response_code"/>
+                <field name="state"/>
+                <field name="origin_message_id" invisible="response_ids"/>
+                <field name="response_ids" invisible="origin_message_id"/>
+                <field name="move_id"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_peppol_message_view_list" model="ir.ui.view">
+        <field name="name">account.peppol.message.view.list</field>
+        <field name="model">account.peppol.message</field>
+        <field name="arch" type="xml">
+            <list string="Peppol Messages">
+                <field name="uuid"/>
+                <field name="message_type"/>
+                <field name="response_code"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+</odoo>
