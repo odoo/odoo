@@ -108,6 +108,52 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             tx._validate_amount(data)
             self.assertNotEqual(tx.state, 'error')
 
+    def test_get_or_create_customer_reuses_existing_partner_mapping(self):
+        tx = self._create_transaction('direct')
+        partner = tx.partner_id.commercial_partner_id
+        partner.stripe_customer_id = 'cus_existing'
+
+        with patch.object(type(tx), '_send_api_request', return_value={'id': 'cus_existing'}) as mock:
+            customer = tx._stripe_get_or_create_customer()
+
+        self.assertEqual(customer['id'], 'cus_existing')
+        self.assertEqual(partner.stripe_customer_id, 'cus_existing')
+        mock.assert_called_once_with('GET', 'customers/cus_existing')
+
+    def test_get_or_create_customer_clears_partner_mapping_for_missing_customer(self):
+        tx = self._create_transaction('direct')
+        partner = tx.partner_id.commercial_partner_id
+        partner.stripe_customer_id = 'cus_existing'
+
+        with patch.object(
+            type(tx),
+            '_send_api_request',
+            side_effect=[ValidationError('The payment provider rejected the request.\n{"error": {"code": "resource_missing", "message": "No such customer: cus_existing"}}'), {'id': 'cus_new'}],
+        ) as mock:
+            customer = tx._stripe_get_or_create_customer()
+
+        self.assertEqual(customer['id'], 'cus_new')
+        self.assertFalse(partner.stripe_customer_id)
+        self.assertEqual(mock.call_count, 2)
+        self.assertEqual(mock.call_args_list[0].args, ('GET', 'customers/cus_existing'))
+        self.assertEqual(mock.call_args_list[1].args, ('POST', 'customers'))
+
+    def test_get_or_create_customer_reraises_other_validation_errors(self):
+        tx = self._create_transaction('direct')
+        partner = tx.partner_id.commercial_partner_id
+        partner.stripe_customer_id = 'cus_existing'
+
+        with patch.object(
+            type(tx),
+            '_send_api_request',
+            side_effect=ValidationError('The payment provider rejected the request.\n{"error": {"code": "rate_limit", "message": "Too many requests"}}'),
+        ) as mock:
+            with self.assertRaises(ValidationError):
+                tx._stripe_get_or_create_customer()
+
+        self.assertEqual(partner.stripe_customer_id, 'cus_existing')
+        mock.assert_called_once_with('GET', 'customers/cus_existing')
+
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction('direct')
         payment_data = {

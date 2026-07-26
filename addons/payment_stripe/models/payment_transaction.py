@@ -145,7 +145,7 @@ class PaymentTransaction(models.Model):
                 'mandate': self.token_id.stripe_mandate or None,
             })
         else:
-            customer = self._stripe_create_customer()
+            customer = self._stripe_get_or_create_customer()
             payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
                 payment_intent_payload['setup_future_usage'] = 'off_session'
@@ -153,26 +153,63 @@ class PaymentTransaction(models.Model):
                     payment_intent_payload.update(**self._stripe_prepare_mandate_options())
         return payment_intent_payload
 
-    def _stripe_create_customer(self):
+    def _stripe_create_customer(self, metadata=None):
         """ Create and return a Customer.
+
+        :param dict metadata: Optional metadata to include on the Stripe customer
+        :return: The Customer
+        :rtype: dict
+        """
+        data = {
+            'address[city]': self.partner_city or None,
+            'address[country]': self.partner_country_id.code or None,
+            'address[line1]': self.partner_address or None,
+            'address[postal_code]': self.partner_zip or None,
+            'address[state]': self.partner_state_id.name or None,
+            'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
+            'email': self.partner_email or None,
+            'name': self.partner_name,
+            'phone': self.partner_phone and self.partner_phone[:20] or None,
+        }
+        if metadata:
+            for key, value in metadata.items():
+                data[f'metadata[{key}]'] = value
+        customer = self._send_api_request('POST', 'customers', data=data)
+        return customer
+
+    def _stripe_get_or_create_customer(self):
+        """ Get or create a Stripe customer for the commercial partner.
 
         :return: The Customer
         :rtype: dict
         """
-        customer = self._send_api_request(
-            'POST', 'customers', data={
-                'address[city]': self.partner_city or None,
-                'address[country]': self.partner_country_id.code or None,
-                'address[line1]': self.partner_address or None,
-                'address[postal_code]': self.partner_zip or None,
-                'address[state]': self.partner_state_id.name or None,
-                'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
-                'email': self.partner_email or None,
-                'name': self.partner_name,
-                'phone': self.partner_phone and self.partner_phone[:20] or None,
-            }
-        )
+        partner = self.partner_id.commercial_partner_id
+        customer_id = partner.sudo().stripe_customer_id
+        if customer_id:
+            try:
+                customer = self._send_api_request('GET', f'customers/{customer_id}')
+            except ValidationError as error:
+                if not self._stripe_is_missing_customer_error(error):
+                    raise
+                partner.sudo().stripe_customer_id = False
+            else:
+                return customer
+
+        customer = self._stripe_create_customer(metadata={'odoo_partner_id': str(partner.id)})
+        partner.sudo().stripe_customer_id = customer['id']
         return customer
+
+    def _stripe_is_missing_customer_error(self, error):
+        """Return whether the given error corresponds to a missing Stripe customer."""
+        if not isinstance(error, ValidationError):
+            return False
+
+        message = str(error).lower()
+        if 'resource_missing' in message and 'customer' in message:
+            return True
+        if 'no such customer' in message:
+            return True
+        return False
 
     def _stripe_prepare_mandate_options(self):
         """ Prepare the configuration options for setting up an eMandate along with an intent.
