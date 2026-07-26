@@ -706,6 +706,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # one delivery, one receipt
         self.assertEqual(len(po.picking_ids), 1)
         self.assertEqual(po.picking_ids.picking_type_id.code, 'outgoing')
+        self.assertEqual(po.picking_ids.partner_id, po.partner_id)
         po.picking_ids.move_ids.quantity_done = 5
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
