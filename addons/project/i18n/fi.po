@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-17 11:26+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-07-24 16:42+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/project/"
 "fi/>\n"
@@ -53,11 +53,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Kaikki sisäiset käyttäjät ja kutsutut portaalikäyttäjät"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -111,7 +106,7 @@ msgstr "%(name)s:n Burndown-kaavio"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Milestones"
-msgstr "%(name)s:n virstanpylväät"
+msgstr "%(name)s:n välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -675,7 +670,7 @@ msgstr "<strong>Määräaika:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr "<strong>Virstanpylväs:</strong>"
+msgstr "<strong>Välitavoite:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -690,7 +685,7 @@ msgstr "<strong>Projekti:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr "<u>Virstanpylväät</u>"
+msgstr "<u>Välitavoitteet</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -923,6 +918,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Järjestelmänvalvoja: Voi hallinnoida projekteja ja vaiheita sekä käyttää "
+"raportointi- ja asetustoimintoja."
 
 #. module: project
 #. odoo-javascript
@@ -993,6 +990,11 @@ msgstr "Kaikki tehtävät"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Kaikki sisäiset käyttäjät"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -2897,7 +2899,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr "Myöhässä olevat virstanpylväät"
+msgstr "Myöhässä olevat välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -3102,7 +3104,7 @@ msgstr "Viestit"
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Milestone"
-msgstr "Virstanpylväs"
+msgstr "Välitavoite"
 
 #. module: project
 #. odoo-javascript
@@ -3304,7 +3306,7 @@ msgstr "Ei asiakasta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr "Ei virstanpylvästä"
+msgstr "Ei välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3779,7 +3781,7 @@ msgstr "Projektipäällikkö"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Projektin virstanpylväs"
+msgstr "Projektin välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
@@ -4658,10 +4660,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Lajittele tehtävät sprinteittäin käyttämällä virstanpylväitä, tunnisteita "
-"tai omaa ominaisuutta. Kunkin sprintin lopussa voit vain poimia luettelosta "
+"Järjestä tehtäväsi sprinteittäin käyttämällä välitavoitteita, tunnisteita "
+"tai tiettyä ominaisuutta. Kunkin sprintin lopuksi voit poimia luettelosta "
 "jäljellä olevat tehtävät ja siirtää ne kaikki kerralla seuraavaan sprinttiin "
-"muokkaamalla virstanpylvästä, tagia tai ominaisuutta."
+"muokkaamalla välitavoitetta, tunnistetta tai ominaisuutta."
 
 #. module: project
 #. odoo-javascript
@@ -4952,7 +4954,7 @@ msgstr "Tehtävän vaiheet"
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 #: model_terms:ir.ui.view,arch_db:project.view_task_template_search_form
 msgid "Task Templates"
-msgstr "Tehtävämallipohjat"
+msgstr "Tehtäväpohjat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -5153,12 +5155,12 @@ msgstr "Loppupäivämäärän on oltava tulevaisuudessa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr "Seuraava virstanpylväs on lisätty:"
+msgstr "Seuraava välitavoite on lisätty:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr "Seuraavat virstanpylväät on lisätty:"
+msgstr "Seuraavat välitavoitteet on lisätty:"
 
 #. module: project
 #. odoo-python
@@ -5803,6 +5805,8 @@ msgstr "Käyttäjäasetukset"
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
+"Käyttäjä: Voi hallinnoida tehtäviä projekteissa, jotka on jaettu hänen "
+"kanssaan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6346,6 +6350,9 @@ msgstr "👤 Ei määritetty"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Yksityinen"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Kaikki sisäiset käyttäjät ja kutsutut portaalikäyttäjät"
 
 #~ msgid "Administrator can manage the employees' schedule"
 #~ msgstr "Ylläpitäjä voi hallinnoida työntekijöiden työaikoja"

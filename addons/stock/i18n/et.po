@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
 "PO-Revision-Date: 2026-06-29 10:24+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/stock/"
@@ -442,8 +442,8 @@ msgstr ""
 "* Klient: Virtuaalne asukoht, mis tähistab teie klientidele saadetud toodete "
 "sihtkoha asukohta\n"
 "* Inventuuri kadu: inventuuride taseme korrigeerimiseks kasutatavate "
-"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised varud)"
-"\n"
+"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised "
+"varud)\n"
 "* Tootmine: tootmistoimingute virtuaalne asukoht: see asukoht kasutab "
 "komponente ja toodab valmistooteid\n"
 "* Transiit: vastaspoole asukoht, mida tuleks kasutada ettevõttevahelistes "
@@ -621,8 +621,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-",<br/><br/>\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "        Meil on hea meel teavitada teid, et teie tellimus on teele pandud.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -632,8 +632,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -654,8 +654,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -815,8 +815,7 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_value text-muted\">\n"
-"                                                                                      "
-"Prognoositud\n"
+"                                                                                      Prognoositud\n"
 "                                                                          </"
 "span>"
 
@@ -2286,8 +2285,8 @@ msgstr ""
 "                                                                     annab "
 "varude täiendamisel edumaa ja aitab vältida viivitusi. Või määra "
 "ajahorisondiks \n"
-"                                                                     „0 päeva"
-"“, et käivitada täiendamine täpselt õigel ajal ja vältida ülelaoseisu."
+"                                                                     „0 "
+"päeva“, et käivitada täiendamine täpselt õigel ajal ja vältida ülelaoseisu."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4058,6 +4057,7 @@ msgid "Full Package Name"
 msgstr "Täielik pakendi nimi"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Tulevased tegevused"
@@ -4239,7 +4239,8 @@ msgstr "Ajahorisont"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr "Kuidas peaks reserveerima tooteid sellise operatsioonitüübiga siiretel."
+msgstr ""
+"Kuidas peaks reserveerima tooteid sellise operatsioonitüübiga siiretel."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -5288,6 +5289,7 @@ msgid "Late"
 msgstr "Üle tähtaja"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Hilinenud tegevused"
@@ -5929,6 +5931,7 @@ msgid "Multiple destinations"
 msgstr "Mitu sihtkohta"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Minu tegevused"
@@ -7989,7 +7992,8 @@ msgstr "Võta kaup vastu ja talleta (2 sammu)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr "Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
+msgstr ""
+"Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
 
 #. module: stock
 #. odoo-python
@@ -8022,8 +8026,8 @@ msgid ""
 "                        locations management traceability, quality control, "
 "etc."
 msgstr ""
-"Vähenda kaubapuudust teavituste, triipkoodirakenduse, täiendamissoovituste, "
-"\n"
+"Vähenda kaubapuudust teavituste, triipkoodirakenduse, "
+"täiendamissoovituste, \n"
 "                                                    asukohtade halduse, "
 "jälgitavuse ja kvaliteedikontrolli abil jne."
 
@@ -10403,6 +10407,7 @@ msgid "Today"
 msgstr "Täna"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Tänased tegevused"

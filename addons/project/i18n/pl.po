@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
 "PO-Revision-Date: 2026-06-30 09:49+0000\n"
 "Last-Translator: Mateusz Lorczak <mateusz@lorczak.pl>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/project/"
@@ -54,11 +54,6 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Wszyscy użytkownicy wewnętrzni oraz zaproszeni użytkownicy portalu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -992,6 +987,11 @@ msgstr "Zadania"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Wszyscy użytkownicy wewnętrzni"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -6336,6 +6336,9 @@ msgstr "👤 Nieprzypisany"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Prywatne"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Wszyscy użytkownicy wewnętrzni oraz zaproszeni użytkownicy portalu"
 
 #~ msgid "Administrator can manage the employees' schedule"
 #~ msgstr "Administrator może zarządzać harmonogramem pracowników"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
 "PO-Revision-Date: 2026-06-30 01:03+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/base_vat/"
@@ -51,6 +51,12 @@ msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 "12345678 ou UA12345678 (EDRPOU), 1234567890 (RNOPP) ou 123456789012 (IPN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -290,12 +296,6 @@ msgstr "Vérifier les numéros de TVA en utilisant le service européen VIES"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr "XXXXXXXXX [9 chiffres]"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 chiffres] et doit respecter la somme de contrôle de "
@@ -318,6 +318,9 @@ msgstr "11 chiffres pour le CPF ou 14 chiffres pour le CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partenaire [%s]"
+
+#~ msgid "XXXXXXXXX [9 digits]"
+#~ msgstr "XXXXXXXXX [9 chiffres]"
 
 #~ msgid ""
 #~ "The Tax Identification Number. Values here will be validated based on the "

@@ -7,7 +7,7 @@
 # aleksandar ivanov, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 22:49+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-25 13:07+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/bg/>\n"
 "Language: bg\n"
@@ -30,13 +30,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Поредност на номерата на чекове"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s в дневник %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -199,7 +199,7 @@ msgstr "Отидете в конфигурационния панел"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
 msgid "Has Check Layout"
-msgstr ""
+msgstr "Има оформление на чек"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -260,12 +260,27 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Ръководство: Платете или получете плащане по произволен метод извън Odoo.\n"
+"Доставчици на плащания: Всеки доставчик на плащания има свой собствен метод "
+"на плащане. Заявете транзакция на/към карта благодарение на токен за "
+"плащане, запазен от партньора при покупка или абониране онлайн.\n"
+"Чек: Плащайте сметки с чек и го отпечатвайте от Odoo.\n"
+"Партиден депозит: Съберете няколко клиентски чека наведнъж, като генерирате "
+"и изпратите партиден депозит във вашата банка. Необходим е модул "
+"account_batch_payment.\n"
+"Кредитен превод SEPA: Платете в зоната SEPA, като изпратите файл за кредитен "
+"превод SEPA във вашата банка. Необходим е модул account_iso20022.\n"
+"Директен дебит SEPA: Получавайте плащания в зоната SEPA благодарение на "
+"мандат, който вашият партньор ще ви е предоставил. Необходим е модул "
+"account_iso20022.\n"
+"U.S. ISO20022: Платете в САЩ, като изпратите файл ISO20022 във вашата банка. "
+"Необходим е модул account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Талон на чека на няколко страници"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -403,6 +418,8 @@ msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"Номерът на чека, който въведохте (%(num)s), надвишава максимално допустимата "
+"стойност %(max)d. Моля, въведете по-малък номер."
 
 #. module: account_check_printing
 #. odoo-python
@@ -443,6 +460,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"Тази опция позволява да отпечатате детайлите на чека (талон) на няколко "
+"страници, ако не се побират на една страница."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -451,6 +470,10 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Тази опция позволява да отпечатате етикета с датата върху чека съгласно "
+"CPA.\n"
+"Изключете я, ако предварително отпечатаният ви чек вече включва етикета с "
+"датата."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -475,24 +498,26 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Трябва да изберете оформление на чека. За целта отидете в Настройки на "
+"Фактуриране/Счетоводство, потърсете „Оформление на чекове“ и задайте едно."
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "check_number"
-msgstr ""
+msgstr "check_number"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "out_refund"
-msgstr ""
+msgstr "out_refund"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #~ msgid "Contact"
 #~ msgstr "Контакт"

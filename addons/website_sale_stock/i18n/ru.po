@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-01 01:32+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-07-24 16:42+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/ru/>\n"
 "Language: ru\n"
@@ -29,11 +29,12 @@ msgstr ""
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
 msgstr ""
+"Товар %(product_name)s не был добавлен в корзину, так как его нет в наличии."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">шт.</span>"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -49,7 +50,7 @@ msgstr "Все склады"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
 msgid "Assign"
-msgstr ""
+msgstr "Назначить"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -59,7 +60,7 @@ msgstr "Уведомления о наличии на складе"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Below"
-msgstr ""
+msgstr "Ниже"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -137,7 +138,7 @@ msgstr "Получайте уведомления о возвращении на
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -189,7 +190,7 @@ msgstr "Сообщение об отсутствии товара на скла�
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 msgid "Please sign in to proceed."
-msgstr ""
+msgstr "Пожалуйста, войдите в систему, чтобы продолжить."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -206,7 +207,7 @@ msgstr "Комплект товаров"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_feed
 msgid "Product Feed"
-msgstr ""
+msgstr "Товарный фид"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -216,7 +217,7 @@ msgstr "Вариант продукта"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "Лента товара"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -242,7 +243,7 @@ msgstr "Позиция заказа на продажу"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "Продавать при отсутствии на складе"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -252,7 +253,7 @@ msgstr "Показать доступное количество"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "Отображать доступное количество"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -293,7 +294,7 @@ msgstr "Товар '%(product_name)s' теперь доступен"
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 msgid "This product is not eligible for stock notifications."
-msgstr ""
+msgstr "Для этого товара недоступны уведомления о поступлении."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -311,7 +312,7 @@ msgstr "Склад"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock"
-msgstr ""
+msgstr "Мы уведомим вас, как только товар снова появится в наличии"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -330,7 +331,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added all the available product in your cart"
-msgstr ""
+msgstr "Вы уже добавили в корзину все имеющиеся в наличии товары"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -347,23 +348,25 @@ msgstr ""
 msgid ""
 "You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
+"Вы запросили %(desired_qty)s шт., но в наличии есть только %(available_qty)s "
+"шт."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "например: «Скоро снова в продаже»"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "в наличии"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "in your cart)"
-msgstr ""
+msgstr "в вашей корзине)"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -373,7 +376,7 @@ msgstr "только если ниже"
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
 msgid "when out of stock"
-msgstr ""
+msgstr "при отсутствии на складе"
 
 #. module: website_sale_stock
 #. odoo-javascript

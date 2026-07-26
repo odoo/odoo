@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-13 20:33+0000\n"
+"PO-Revision-Date: 2026-07-23 19:52+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/mail/es_419/>\n"
@@ -1236,6 +1236,10 @@ msgid ""
 "GIF API key (service shutdown on June 30, 2026), please replace it here with "
 "a Klipy GIF API key"
 msgstr ""
+"Agrega una clave API de GIF de Klipy para activar la compatibilidad con los "
+"archivos GIF. Si usabas una clave API de GIF de Tenor (el servicio dejó de "
+"funcionar el 30 de junio de 2026), reemplázala aquí por una clave API para "
+"GIF de Klipy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -1245,6 +1249,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Agrega una clave API de GIF de Klipy para activar la compatibilidad con los "
+"archivos GIF. https://docs.klipy.com/getting-started\n"
+"Si usabas una clave API de GIF de Tenor (el servicio dejó de funcionar el 30 "
+"de junio de 2026), reemplázala aquí por una clave API de GIF de Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -5727,6 +5735,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Si usabas una clave API de Tenor, reemplázala por una clave API de Klipy en "
+"Ajustes generales."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -6407,12 +6417,12 @@ msgstr "Saludos cordiales,"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Clave API de Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Klipy GIF API key"
-msgstr ""
+msgstr "Clave API de GIF de Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -10205,7 +10215,7 @@ msgstr "Buscar en los servidores de correo entrantes"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search Klipy"
-msgstr ""
+msgstr "Buscar en Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -13453,12 +13463,14 @@ msgstr "Todavía puedes desactivar tu %s en cualquier momento."
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"Puedes usar \"/\" para indicar que el cliente no tiene un número de "
+"identificación fiscal."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "No puedes asignar un nombre de dominio vacío."
 
 #. module: mail
 #. odoo-python

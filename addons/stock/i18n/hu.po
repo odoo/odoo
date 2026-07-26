@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-07-17 17:09+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-07-24 12:09+0000\n"
 "Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/stock/"
 "hu/>\n"
@@ -276,7 +276,8 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr "'Szállítólevél - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr ""
+"'Szállítólevél - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -336,7 +337,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
+msgstr "), készletfeltöltés szükséges a maximális készletszint eléréséhez ("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -957,6 +958,7 @@ msgstr ""
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
 msgstr ""
+"Már létezik egy készletfeltölési szabály ehhez a termékhez ezen a tárhelyen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__is_storable
@@ -1142,7 +1144,7 @@ msgstr "Cím, ahova a termékek kiszállításra kerülnek. Opcionális."
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
 msgid "Adjustments"
-msgstr ""
+msgstr "Kiigazítások"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -1157,7 +1159,7 @@ msgstr "Haladó ütemezés"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Haladó: Beszerzési szabály használata"
+msgstr "Haladó: Ellátási szabály használata"
 
 #. module: stock
 #. odoo-python
@@ -1240,7 +1242,7 @@ msgstr "Engedélyezett helyszínek"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "Engedélyezett készletfeltöltés mértékegység"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1355,6 +1357,8 @@ msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Készletfeltöltés során egyedi útvonal használata a termék alapértelmezett "
+"útvonalai helyett."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -2119,6 +2123,11 @@ msgid ""
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Konfigurálja az újrarendelések indításának horizontját, hogy\n"
+"                                hamarabb induljon a készletföltés a késések "
+"elkerüléséhez, vagy használjon just-in-time \n"
+"                                ('0 nap') indítást a túlkészeletezés "
+"elkerüléséhez."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3377,6 +3386,8 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"Jövőbeli beszálllítások miatt túlkészletezés várható. Ellenőrizze az "
+"előrejezlést az újrarendelés előtt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procurement_values
@@ -3806,6 +3817,7 @@ msgid "Full Package Name"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Jövőbeni tevékenységek"
@@ -4727,7 +4739,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr "Ez pontosítja, hogy a termékek részletekben vagy egyszerre szállíthatók"
+msgstr ""
+"Ez pontosítja, hogy a termékek részletekben vagy egyszerre szállíthatók"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__move_type
@@ -4998,6 +5011,7 @@ msgid "Late"
 msgstr "Késő"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Késő tevékenységek"
@@ -5059,7 +5073,8 @@ msgstr "Hagyja üresen az új létrehozásához"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr "Hagyja üresen a mezőt, ha az útvonal az összes vállalat közt megosztott"
+msgstr ""
+"Hagyja üresen a mezőt, ha az útvonal az összes vállalat közt megosztott"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -5632,6 +5647,7 @@ msgid "Multiple destinations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Tevékenységeim"
@@ -5871,7 +5887,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No receipt yet! Create a new one."
-msgstr ""
+msgstr "Nincs beszállítás! Hozzon létre egyet."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -6931,12 +6947,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Procurement"
-msgstr "Beszerzés"
+msgstr "Ellátás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__procurement_values
 msgid "Procurement Values"
-msgstr ""
+msgstr "Ellátás értékek"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
@@ -7872,7 +7888,7 @@ msgstr "Feltöltés info"
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Replenishment Information"
-msgstr "Feltöltés információ"
+msgstr "Készletfeltöltés információ"
 
 #. module: stock
 #. odoo-python
@@ -8387,7 +8403,7 @@ msgstr "Selejtek"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Search Procurement"
-msgstr "Beszerzés keresése"
+msgstr "Ellátás keresése"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_search_view
@@ -9938,6 +9954,7 @@ msgid "Today"
 msgstr "Ma"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Mai tevékenységek"

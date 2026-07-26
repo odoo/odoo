@@ -5,15 +5,15 @@
 # Translators:
 # Nikola Iliev, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-29 11:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-25 21:25+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "account_tax_python/bg/>\n"
 "Language: bg\n"
@@ -37,6 +37,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Група на данъците: Данъкът е набор от подданъци.\n"
+"    - Фиксиран: Сумата на данъка остава една и съща независимо от цената.\n"
+"    - Процент: Сумата на данъка е % от цената:\n"
+"        напр. 100 * (1 + 10%) = 110 (без включен данък в цената)\n"
+"        напр. 110 / (1 + 10%) = 100 (с включен данък в цената)\n"
+"    - Процент с включен данък: Сумата на данъка е деление на цената:\n"
+"        напр. 180 / (1 - 10%) = 200 (без включен данък в цената)\n"
+"        напр. 200 * (1 - 10%) = 180 (с включен данък в цената)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -48,11 +58,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Изчислява сумата на данъка.\n"
+"\n"
+":param base: float, действителната сума, върху която се прилага данъкът\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Обект, представляващ продукта\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Персонализирана формула"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -63,7 +79,7 @@ msgstr "Име за показване"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Field '%s' is not accessible"
-msgstr ""
+msgstr "Полето '%s' не е достъпно"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -73,7 +89,7 @@ msgstr "Формула"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Декодирана информация за формулата"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -84,43 +100,45 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid AST node: %s"
-msgstr ""
+msgstr "Невалиден AST възел: %s"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr ""
+msgstr "Невалидна формула"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr ""
+msgstr "Не са разрешени kwargs"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr ""
+msgstr "Като константни стойности са разрешени само int, float или None"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
 msgstr ""
+"В контекста на формула за данък на Python са разрешени само примитивни "
+"типове."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only product['string'] or uom['string'] read-access is allowed"
-msgstr ""
+msgstr "Разрешен е само достъп за четене до product['string'] или uom['string']"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "Разрешен е само достъп за четене до идентификатори"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -136,13 +154,13 @@ msgstr "Данъчна изчислителна система"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "Неизвестно извикване на функция"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "Неизвестен идентификатор: %s"
 
 #~ msgid "Applicable Code"
 #~ msgstr "Приложим код"

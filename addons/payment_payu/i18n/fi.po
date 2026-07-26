@@ -1,109 +1,113 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_payu
+# * payment_payu
 #
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-10 17:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-07-24 16:44+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"payment_payu/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_payu
 #. odoo-python
 #: code:addons/payment_payu/models/payment_transaction.py:0
 msgid "%(code)s: %(explanation)s"
-msgstr ""
+msgstr "%(code)s: %(explanation)s"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.authorization_error
 msgid "An error occurred"
-msgstr ""
+msgstr "Tapahtui virhe"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.authorization_error
 msgid "An error occurred while linking your PayU account with Odoo."
-msgstr ""
+msgstr "PayU-tilisi linkittämisessä Odooon tapahtui virhe."
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.payment_provider_form
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "Haluatko varmasti katkaista yhteyden?"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.authorization_error
 msgid "Back to the PayU provider"
-msgstr ""
+msgstr "Takaisin PayU-palveluntarjoajaan"
 
 #. module: payment_payu
 #: model:ir.model.fields,field_description:payment_payu.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Koodi"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.payment_provider_form
 msgid "Connect"
-msgstr ""
+msgstr "Yhdistä"
 
 #. module: payment_payu
 #. odoo-python
 #: code:addons/payment_payu/controllers/onboarding.py:0
 msgid "Could not find PayU provider with id %s"
-msgstr ""
+msgstr "PayU-palveluntarjoajaa ei löytynyt tunnuksella %s"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.payment_provider_form
 msgid "Disconnect"
-msgstr ""
+msgstr "Katkaise yhteys"
 
 #. module: payment_payu
 #: model:ir.model.fields,field_description:payment_payu.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_payu.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: payment_payu
 #: model:ir.model.fields,field_description:payment_payu.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_payu.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "Tunnus"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.payment_provider_form
 msgid "Key ID"
-msgstr ""
+msgstr "Avaintunnus"
 
 #. module: payment_payu
 #: model_terms:ir.ui.view,arch_db:payment_payu.payment_provider_form
 msgid "Merchant Salt"
-msgstr ""
+msgstr "Merchant Salt"
 
 #. module: payment_payu
 #. odoo-python
 #: code:addons/payment_payu/models/payment_provider.py:0
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Muut maksupalveluntarjoajat"
 
 #. module: payment_payu
 #: model:ir.model.fields.selection,name:payment_payu.selection__payment_provider__code__payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment_payu
 #: model:ir.model.fields,field_description:payment_payu.field_payment_provider__payu_key_id
 msgid "PayU Key Id"
-msgstr ""
+msgstr "PayU-avaimen tunnus"
 
 #. module: payment_payu
 #: model:ir.model.fields,field_description:payment_payu.field_payment_provider__payu_merchant_salt
 msgid "PayU Merchant Salt"
-msgstr ""
+msgstr "PayU Merchant Salt"
 
 #. module: payment_payu
 #. odoo-python
@@ -112,31 +116,33 @@ msgid ""
 "PayU credentials are missing. Click the \"Connect\" button to set up your "
 "account."
 msgstr ""
+"PayU-kirjautumistiedot puuttuvat. Klikkaa ”Yhdistä”-painiketta "
+"määrittääksesi tilisi."
 
 #. module: payment_payu
 #. odoo-python
 #: code:addons/payment_payu/models/payment_provider.py:0
 msgid ""
 "PayU is not available in your country; please use another payment provider."
-msgstr ""
+msgstr "PayU ei ole saatavilla maassasi; käytä toista maksupalveluntarjoajaa."
 
 #. module: payment_payu
 #: model:ir.model,name:payment_payu.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Maksupalveluntarjoaja"
 
 #. module: payment_payu
 #: model:ir.model,name:payment_payu.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Maksutapahtuma"
 
 #. module: payment_payu
 #: model:ir.model.fields,help:payment_payu.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
 
 #. module: payment_payu
 #. odoo-python
 #: code:addons/payment_payu/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
-msgstr ""
+msgstr "Tuntematon tilakoodi: %s"

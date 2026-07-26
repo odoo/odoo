@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
 "PO-Revision-Date: 2026-07-01 00:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/stock/"
@@ -615,8 +615,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Olá, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-"<br/><br/>\n"
+"        Olá, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t><br/><br/>\n"
 "        Temos o prazer de informar que seu pedido foi enviado.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -626,8 +626,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -643,14 +643,14 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Veja seu pedido de entrega em anexo para obter mais detalhes.<br/>"
-"<br/>\n"
+"        Veja seu pedido de entrega em anexo para obter mais detalhes.<br/"
+"><br/>\n"
 "        Agradeço,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1864,7 +1864,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "Ao desmarcar o campo ativo, pode ocultar uma localização sem a excluir."
+msgstr ""
+"Ao desmarcar o campo ativo, pode ocultar uma localização sem a excluir."
 
 #. module: stock
 #. odoo-python
@@ -3908,8 +3909,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Quantidade prevista (calculado como quantidade em mãos - saída + "
-"recebimento - quantidade a remover)\n"
+"Quantidade prevista (calculado como quantidade em mãos - saída + recebimento "
+"- quantidade a remover)\n"
 "Em um contexto com um único local de estoque, isso inclui mercadorias "
 "armazenadas neste local, ou qualquer um de seus secundários.\n"
 "Em um contexto com um único armazém, isso inclui mercadorias armazenadas no "
@@ -4048,6 +4049,7 @@ msgid "Full Package Name"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Atividades Futuras"
@@ -5297,6 +5299,7 @@ msgid "Late"
 msgstr "Atrasado"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Atividades em Atraso"
@@ -5940,6 +5943,7 @@ msgid "Multiple destinations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Minhas atividades"
@@ -6204,8 +6208,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Nenhuma regra foi encontrada para repor \"%(product)s\" em \"%(location)"
-"s\".\n"
+"Nenhuma regra foi encontrada para repor \"%(product)s\" em \"%"
+"(location)s\".\n"
 "Verifique a configuração das rotas no produto."
 
 #. module: stock
@@ -8913,8 +8917,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"O número de série (%(serial_number)s) já existe nos locais: %(location_list)"
-"s. Corrija o número de série codificado."
+"O número de série (%(serial_number)s) já existe nos locais: %"
+"(location_list)s. Corrija o número de série codificado."
 
 #. module: stock
 #. odoo-python
@@ -8926,8 +8930,8 @@ msgid ""
 "Please correct this to prevent inconsistent data."
 msgstr ""
 "O número de série (%(serial_number)s) não está localizado em %"
-"(source_location)s, mas está localizado no(s) local(is): %(other_locations)"
-"s.\n"
+"(source_location)s, mas está localizado no(s) local(is): %"
+"(other_locations)s.\n"
 "\n"
 "Corrija isso para evitar dados inconsistentes."
 
@@ -8941,8 +8945,8 @@ msgid ""
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
 "O número de série (%(serial_number)s) não está localizado em %"
-"(source_location)s, mas está localizado no(s) local(is): %(other_locations)"
-"s.\n"
+"(source_location)s, mas está localizado no(s) local(is): %"
+"(other_locations)s.\n"
 "\n"
 "O local de origem dessa movimentação será alterado para %"
 "(recommended_location)s"
@@ -10196,7 +10200,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
-msgstr "Este lote %(lot_name)s é incompatível com este produto %(product_name)s"
+msgstr ""
+"Este lote %(lot_name)s é incompatível com este produto %(product_name)s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -10466,6 +10471,7 @@ msgid "Today"
 msgstr "Hoje"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Atividades do Dia"
@@ -11324,8 +11330,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Quando os produtos chegam em <b>%(source_location)s</b>, <br> <b>%(operation)"
-"s</b> são criadas para enviá-los para <b>%(destination)s</b>."
+"Quando os produtos chegam em <b>%(source_location)s</b>, <br> <b>%"
+"(operation)s</b> são criadas para enviá-los para <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule

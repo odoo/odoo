@@ -1,21 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_org_chart
+# * hr_org_chart
 #
 # Translators:
 # aleksandar ivanov, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-29 10:41+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-25 22:14+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "hr_org_chart/bg/>\n"
 "Language: bg\n"
@@ -32,6 +31,9 @@ msgid ""
 "label=\"Full Chart\"/>\n"
 "                        Full Chart"
 msgstr ""
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Пълна диаграма\"/>\n"
+"                        Пълна диаграма"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -39,6 +41,8 @@ msgid ""
 "<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
 "                                <span class=\"fw-bolder\">Zoom</span>"
 msgstr ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">Мащабиране</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -46,39 +50,41 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">Графика "
+"на организацията</span>"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Child All Count"
-msgstr ""
+msgstr "Брой всички дъщерни"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Child Count"
-msgstr ""
+msgstr "Брой дъщерни"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Create an employee."
-msgstr ""
+msgstr "Създаване на служител."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
 msgid "Department Color"
-msgstr ""
+msgstr "Цвят на отдел"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "Брой преки подчинени"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Преки и косвени подчинени"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -90,7 +96,7 @@ msgstr "Директно подчинени"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
@@ -100,24 +106,24 @@ msgstr "Служител"
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
 msgid "Employees"
-msgstr ""
+msgstr "Служители"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Find all the information on employees."
-msgstr ""
+msgstr "Намерете цялата информация за служителите."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__id
 msgid "ID"
-msgstr ""
+msgstr "Номер (ID)"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "Брой непреки подчинени"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -129,19 +135,19 @@ msgstr "Непреки подчинени"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "Подчинен ли е"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
-msgstr ""
+msgstr "Още мениджъри"
 
 #. module: hr_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Org Chart"
-msgstr ""
+msgstr "Органиграма"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
@@ -157,13 +163,14 @@ msgstr "Публичен служител"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "See All"
-msgstr ""
+msgstr "Вижте всички"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Set a manager or reports to show in org chart."
 msgstr ""
+"Задайте мениджър или подчинен, който да се показва в организационната схема."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -187,13 +194,13 @@ msgstr "Общ"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
-msgstr ""
+msgstr "Преглед на служител"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 msgid "people"
-msgstr ""
+msgstr "хора"
 
 #~ msgid "Basic Employee"
 #~ msgstr "Основен служител"

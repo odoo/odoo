@@ -3,13 +3,14 @@
 # * google_gmail
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 06:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-07-25 13:42+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "google_gmail/bg/>\n"
 "Language: bg\n"
@@ -73,7 +74,7 @@ msgstr "Токен за достъп"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Времево клеймо за изтичане на токена за достъп"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__active
@@ -86,13 +87,13 @@ msgstr "Активно"
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 msgid "An error occurred during the authentication process."
-msgstr ""
+msgstr "Възникна грешка по време на процеса на удостоверяване."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "Възникна грешка при извличане на токена за достъп."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -112,6 +113,9 @@ msgid ""
 "You will be redirected to the Gmail login page where you will need to accept "
 "the permission."
 msgstr ""
+"Свържете акаунта си в Gmail чрез процеса на OAuth удостоверяване. \n"
+"Ще бъдете пренасочени към страницата за вход в Gmail, където ще трябва да "
+"приемете разрешението."
 
 #. module: google_gmail
 #. odoo-python
@@ -122,6 +126,10 @@ msgid ""
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"Свържете акаунта си в Gmail чрез процеса на OAuth удостоверяване.  \n"
+"По подразбиране само потребител със съвпадащ имейл адрес ще може да използва "
+"този сървър. За да разширите използването му, трябва да зададете системен "
+"параметър \"mail.default.from\"."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__display_name
@@ -135,7 +143,7 @@ msgstr "Име за показване"
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -145,7 +153,7 @@ msgstr "Gmail клиентски номер"
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Клиентска тайна за Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
@@ -161,7 +169,7 @@ msgstr "Върнете се назад"
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail Mixin"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__id
@@ -190,23 +198,25 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Неправилна сигурност на връзката за пощенския сървър на Gmail “%s”. Моля, "
+"задайте я на \"TLS (STARTTLS)\"."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Пощенски сървър"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "Само администраторът може да свърже пощенски сървър на Gmail."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Oops, we could not authenticate you. Please try again later."
-msgstr ""
+msgstr "Опаа, не можахме да ви удостоверим. Моля, опитайте отново по-късно."
 
 #. module: google_gmail
 #. odoo-python
@@ -215,11 +225,13 @@ msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
+"Опаа, създавате упълномощаване за изпращане от %(email_login)s, но вашият "
+"адрес е %(email_server)s. Уверете се, че адресите ви съвпадат!"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Тип на изходящия пощенски сървър"
 
 #. module: google_gmail
 #. odoo-python
@@ -231,7 +243,7 @@ msgstr "Моля, конфигурирайте идентификационни�
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Моля, въведете валиден имейл адрес."
 
 #. module: google_gmail
 #. odoo-python
@@ -241,6 +253,9 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"Моля, попълнете полето \"Потребителско име\" с вашето потребителско име в "
+"Gmail (вашия имейл адрес). Това трябва да е същият акаунт като използвания "
+"за токена за OAuth удостоверяване на Gmail."
 
 #. module: google_gmail
 #. odoo-python
@@ -249,6 +264,8 @@ msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
 msgstr ""
+"Моля, оставете полето за парола празно за Gmail пощенски сървър „%s“. OAuth "
+"процесът не го изисква"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -266,7 +283,7 @@ msgstr "Рестартиране на токена"
 #. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid "SSL is required for server “%s”."
-msgstr ""
+msgstr "SSL е задължителен за сървър „%s“."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -276,7 +293,7 @@ msgstr "Тайна"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Тайна на приложението ви в Google"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
@@ -287,7 +304,7 @@ msgstr "Вид сървър"
 #. odoo-python
 #: code:addons/google_gmail/tools.py:0
 msgid "Something went wrong. Try again later"
-msgstr ""
+msgstr "Нещо се обърка. Опитайте отново по-късно"
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -312,4 +329,4 @@ msgstr "Потребител"
 #. odoo-python
 #: code:addons/google_gmail/tools.py:0
 msgid "You don't have an active subscription"
-msgstr ""
+msgstr "Нямате активен абонамент"
