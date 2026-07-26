@@ -355,9 +355,15 @@ class ProjectCustomerPortal(CustomerPortal):
 
         return values
 
+    def _task_get_name_search_domain(self, search):
+        domain = Domain('name', 'ilike', search)
+        if search.isdigit():
+            domain |= Domain('id', '=', int(search))
+        return domain
+
     def _task_get_search_domain(self, search_in, search, milestones_allowed, project):
         if not search_in or search_in == 'name':
-            return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
+            return self._task_get_name_search_domain(search)
         elif search_in == 'user_ids':
             user_ids = request.env['res.users'].sudo().search([('name', 'ilike', search)])
             return [('user_ids', 'in', user_ids.ids)]
@@ -382,7 +388,7 @@ class ProjectCustomerPortal(CustomerPortal):
         elif search_in in self._task_get_searchbar_inputs(milestones_allowed, project):
             return [(search_in, 'ilike', search)]
         else:
-            return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
+            return self._task_get_name_search_domain(search)
 
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
