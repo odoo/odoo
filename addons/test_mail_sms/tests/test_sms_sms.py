@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
@@ -12,25 +14,27 @@ from odoo.tests import tagged
 
 
 @tagged('link_tracker')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSPost(SMSCommon, MockLinkTracker):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls._test_body = 'VOID CONTENT'
+        cls.now = datetime(2025, 12, 1, 10, 0, 0)
+        cls.env['ir.config_parameter'].sudo().set_int("mass_mailing.cancelled_mails_months_limit", 6)
 
         cls.sms_all = cls.env['sms.sms']
-        for x in range(10):
-            cls.sms_all |= cls.env['sms.sms'].create({
-                'number': '+324560000%s%s' % (x, x),
-                'body': cls._test_body,
-            })
+        with cls.mock_datetime_and_now(cls, cls.now):
+            for x in range(10):
+                cls.sms_all |= cls.env['sms.sms'].create({
+                    'number': '+324560000%s%s' % (x, x),
+                    'body': cls._test_body,
+                })
 
     def test_sms_send_batch_size(self):
         self.count = 0
 
-        def _send(sms_self, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        def _send(sms_self, unlink_sent=True, raise_exception=False):
             self.count += 1
             return DEFAULT
 
@@ -45,12 +49,34 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
             self.env['sms.sms'].with_user(self.user_employee).browse(self.sms_all.ids).send()
 
     def test_sms_send_delete_all(self):
-        with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
-            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=True, raise_exception=False)
-        self.assertFalse(len(self.sms_all.exists().filtered(lambda s: not s.to_delete)))
+        """ With unlink option activated, all SMS are marked as to_delete, even
+        those in error. Cron will garbage collect them after 6 months. """
+        with self.mock_datetime_and_now(self.now + relativedelta(months=1)), \
+             self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_sent=True, raise_exception=False)
+        remaining = self.sms_all.exists()
+        self.assertEqual(remaining, self.sms_all)
+        self.assertFalse(remaining.filtered(lambda s: not s.to_delete), 'Should mark as to_delete, as asked')
+        self.assertEqual(set(remaining.mapped('to_delete')), {True},
+            'Should all be marked as "to_delete", even if all failed'
+        )
+        self.assertEqual(self.sms_all.mapped('state'), ['error'] * len(self.sms_all))
+
+        # inside "keep timeframe"
+        with self.mock_datetime_and_now(self.now + relativedelta(months=6)):
+            self.env['sms.sms']._gc_old_sms()
+        self.assertEqual(
+            self.sms_all.exists(), self.sms_all,
+            'Should not be GC, not 6 months after last update'
+        )
+
+        # out of "keep timeframe"
+        with self.mock_datetime_and_now(self.now + relativedelta(months=7)):
+            self.env['sms.sms']._gc_old_sms()
+        self.assertFalse(self.sms_all.exists(), 'Should be GC, 6 months after last update')
 
     def test_sms_send_delete_default(self):
-        """ Test default send behavior: keep failed SMS, remove sent. """
+        """ Test default send behavior: mark all as to_delete """
         with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
                 '+32456000011': 'wrong_number_format',
                 '+32456000022': 'credit',
@@ -58,41 +84,26 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
                 '+32456000044': 'unregistered',
         }):
             self.env['sms.sms'].browse(self.sms_all.ids).send(raise_exception=False)
-        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
-        self.assertEqual(len(remaining), 4)
-        self.assertEqual(set(remaining.mapped('state')), {'error'})
-
-    def test_sms_send_delete_failed(self):
-        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
-                '+32456000011': 'wrong_number_format',
-                '+32456000022': 'wrong_number_format',
-        }):
-            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=False, raise_exception=False)
-        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
-        self.assertEqual(len(remaining), 8)
-        self.assertEqual(set(remaining.mapped('state')), {'pending'})
+        remaining = self.sms_all.exists()
+        self.assertEqual(remaining, self.sms_all)
+        self.assertFalse(remaining.filtered(lambda s: not s.to_delete), 'Should mark as to_delete by default')
+        self.assertEqual(set(remaining.mapped('to_delete')), {True},
+            'Should all be marked as "to_delete", even if all failed'
+        )
 
     def test_sms_send_delete_none(self):
         with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
                 '+32456000011': 'wrong_number_format',
                 '+32456000022': 'wrong_number_format',
         }):
-            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=False, unlink_sent=False, raise_exception=False)
-        self.assertEqual(len(self.sms_all.exists()), 10)
+            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_sent=False, raise_exception=False)
+        remaining = self.sms_all.exists()
+        self.assertEqual(remaining, self.sms_all)
         success_sms = self.sms_all[:1] + self.sms_all[3:]
         error_sms = self.sms_all[1:3]
         self.assertEqual(set(success_sms.mapped('state')), {'pending'})
         self.assertEqual(set(error_sms.mapped('state')), {'error'})
-
-    def test_sms_send_delete_sent(self):
-        with self.mockSMSGateway(sms_allow_unlink=True, nbr_t_error={
-                '+32456000011': 'wrong_number_format',
-                '+32456000022': 'wrong_number_format',
-        }):
-            self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=False, unlink_sent=True, raise_exception=False)
-        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
-        self.assertEqual(len(remaining), 2)
-        self.assertEqual(set(remaining.mapped('state')), {'error'})
+        self.assertEqual(set(remaining.mapped('to_delete')), {False}, 'All should be set as to keep')
 
     def test_sms_send_raise(self):
         with self.assertRaises(exceptions.AccessError):

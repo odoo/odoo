@@ -28,7 +28,7 @@ class TestMailingRetrySMS(MassSMSCommon, CronMixinCase):
         mailing.action_send_sms()
 
         # force the SMS sending to fail to test our retry mechanism
-        def patched_sms_sms_send(sms_records, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        def patched_sms_sms_send(sms_records, unlink_sent=True, raise_exception=False):
             sms_records.write({'state': 'error', 'failure_type':'sms_credit'})
 
         with patch('odoo.addons.sms.models.sms_sms.SmsSms._send', patched_sms_sms_send):
