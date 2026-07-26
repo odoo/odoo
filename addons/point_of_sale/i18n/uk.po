@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 17:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -78,9 +78,9 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "%(payment_method)s Оплата POS %(partner)s в %(session)s"
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "%(payment_method)s POS session %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -98,12 +98,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%(title)s %(product_name)s with %(taxes)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -180,12 +174,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%s untaxed"
-msgstr "%s неоподатковується"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -411,16 +399,6 @@ msgid ""
 "                                    <i class=\"fa fa-info-circle me-1\" "
 "title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr "<span class=\"o_stat_text\">Касовий апарат</span>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr "<span class=\"o_stat_text\">Записи у журналі</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -761,13 +739,6 @@ msgid "Account Move"
 msgstr "Бухгалтерське проведення"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
-msgid "Account payments representing aggregated and bank split payments."
-msgstr ""
-"Платежі за рахунками, що представляють зведені та банківські роздільні "
-"платежі."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid ""
 "Account used as outstanding account when creating accounting payment records "
@@ -776,26 +747,15 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Accounting"
 msgstr "Бухоблік"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-msgid "Accounting journal used to create invoices."
-msgstr "Журнал бухобліку використовується для створення рахунків."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid ""
-"Accounting journal used to post POS session journal entries and POS invoice "
-"payments."
+msgid "Accounting journal used to post POS session receipts and invoices."
 msgstr ""
-"Бухгалтерський журнал, який використовується для оприбуткування записів у "
-"журналі сесій POS та платежів за рахунками-фактурами."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
@@ -1210,11 +1170,6 @@ msgid "Amount of guests"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
-msgid "Amount to balance"
-msgstr "Сума для балансу"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "Amount total"
 msgstr "Сума всього"
@@ -1225,16 +1180,6 @@ msgstr "Сума всього"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Amount:"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-msgid ""
-"An error has occurred when trying to close the session.\n"
-"You will be redirected to the back-end to manually close the session."
-msgstr ""
-"Під час спроби закрити сесію сталася помилка.\n"
-"Ви будете перенаправлені на бекенд, щоб вручну закрити сесію."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1617,14 +1562,26 @@ msgid "Bank App (QR Code)"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
-msgid "Bank Payments"
-msgstr "Банківські платежі"
+#: model:ir.model,name:point_of_sale.model_account_bank_statement
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_id
+msgid "Bank Statement"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Рядок банківської виписки"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
+msgid "Bank Statement Lines"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Bank difference for %(pm)s in %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1694,11 +1651,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
-msgid "Before Closing Difference"
-msgstr "Перед закриттям різниці"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1823,9 +1775,9 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -1924,7 +1876,6 @@ msgstr "Кошик"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__is_cash_count
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__cash
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -1954,6 +1905,12 @@ msgstr "Готівка пекарні"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Clothes Shop"
 msgstr "Готівка магазину речей"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Control - %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1987,12 +1944,7 @@ msgid "Cash In/Out"
 msgstr "Покласти/забрати готівку"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
-msgid "Cash Journal"
-msgstr "Журнал каси"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__account_bank_statement_id
 msgid "Cash Lines"
 msgstr "Рядки готівки"
 
@@ -2026,8 +1978,19 @@ msgid "Cash Receipt"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_cash_register_balance
+msgid "Cash Register"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Cash Statement for %(method_name)s in %(session)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -2045,13 +2008,7 @@ msgstr "Контроль готівки - відкриття"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash difference observed during the counting (Profit) - closing"
+msgid "Cash correction from %(session)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -2089,12 +2046,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.xml:0
 msgid "Cash move details"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash register"
-msgstr "Касова скринька"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -2381,19 +2332,9 @@ msgid "Close Register"
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-msgid "Close Session"
-msgstr "Закрити сесію"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
 msgstr "Закрити сесію та опублікувати проведення"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
-msgid "Close Session Wizard"
-msgstr "Помічник закриття сесії"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2418,6 +2359,11 @@ msgid "Closing"
 msgstr "Закриття"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_balance
+msgid "Closing Balance"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Closing Control"
@@ -2428,6 +2374,11 @@ msgstr "Контроль закриття"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Closing Date"
 msgstr "Дата закриття"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_difference
+msgid "Closing Difference"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_closing_entry_by_product
@@ -2454,40 +2405,10 @@ msgid "Closing Session"
 msgstr "Закриття сесії"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr "Різниця закриття в %(payment_method)s (%(session)s)"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing expected: %s \n"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing note"
 msgstr "Примітка закриття"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-msgid "Closing session error"
-msgstr "Помилка закриття сесії"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2540,12 +2461,6 @@ msgstr "Колір"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__color
 msgid "Color Index"
 msgstr "Індекс кольору"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr "Комбінуйте %(payment_method)s платежі точки продажу з %(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -2832,6 +2747,17 @@ msgid "Conversion rate from company currency to order currency."
 msgstr "Курс конвертації з валюти компанії у валюту замовлення."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Convert POS Order to Invoice"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
+msgid "Correction Entries"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Cost:"
@@ -2859,6 +2785,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Counted"
 msgstr "Підраховано"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Counterpart for invoice payment %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -2973,7 +2905,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_uid
@@ -2990,15 +2921,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_date
@@ -3015,8 +2945,8 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_date
 msgid "Created on"
 msgstr "Створено"
 
@@ -3154,6 +3084,12 @@ msgid "Customer address is required"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Customer invoice from %(pos_reference)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
@@ -3248,9 +3184,10 @@ msgid "Default"
 msgstr "За замовчуванням"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
-msgid "Default Account Receivable (PoS)"
-msgstr "Дебіторська заборгованість за замовчуванням (PoS)"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "Default Customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -3265,7 +3202,7 @@ msgstr "Типові журнали"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Default POS Receivable Account"
+msgid "Default PoS Partner for closing"
 msgstr ""
 
 #. module: point_of_sale
@@ -3424,16 +3361,6 @@ msgid "Desks"
 msgstr "Столи"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
-msgid "Destination account"
-msgstr "Рахунок призначення"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_readonly
-msgid "Destination account is readonly"
-msgstr "Рахунок призначення лише для читання"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -3470,19 +3397,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Difference"
 msgstr "Різниця"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Difference at closing PoS session"
-msgstr "Різниця під час закриття сесії точки продажу"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
-msgid ""
-"Difference between the theoretical closing balance and the real closing "
-"balance."
-msgstr "Різниця між теоретичним та реальним балансом закриття."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
@@ -3569,11 +3483,13 @@ msgstr "Знижки"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__display_name
@@ -3586,7 +3502,6 @@ msgstr "Знижки"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__display_name
@@ -3605,8 +3520,8 @@ msgstr "Знижки"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__display_name
@@ -3677,10 +3592,16 @@ msgstr "Ви хочете відкрити список клієнтів, щоб
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"Do you want to stop the snooze early and make the product available again "
+"Do you want to stop the snooze early and make the %s available again "
 "immediately?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
+msgid "Done"
 msgstr ""
 
 #. module: point_of_sale
@@ -3864,14 +3785,9 @@ msgid "End Date"
 msgstr "Кінцева дата"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__end_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__end_time
 msgid "End Time"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
-msgid "Ending Balance"
-msgstr "Кінцевий баланс"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4131,13 +4047,6 @@ msgid "Force Cancel"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-msgid "Force Close Session"
-msgstr "Примусове закриття сеансу"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Force done"
@@ -4147,16 +4056,6 @@ msgstr "Запуск виконано"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
 msgstr "Примусовий непогашений рахунок"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
-msgid ""
-"Forces to set a customer when using this payment method and splits the "
-"journal entries for each customer. It could slow down the closing process."
-msgstr ""
-"Примусово встановлювати клієнта під час використання цього способу оплати та "
-"розділяє записи журналу для кожного клієнта. Це може уповільнити процес "
-"закриття."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4174,12 +4073,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_free
 msgid "Free quantity"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "From invoice payments"
-msgstr "З платежів рахунку"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4263,6 +4156,11 @@ msgid "Global Discounts"
 msgstr "Загальні знижки"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
+msgid "Global Invoice"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/back_button/back_button.xml:0
@@ -4314,11 +4212,6 @@ msgstr "Маршрутизація HTTP"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
 msgstr "Має відкриті сесії"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
-msgid "Has Cash Control"
-msgstr "Має контроль готівки"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
@@ -4431,11 +4324,13 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__id
@@ -4448,7 +4343,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__id
@@ -4467,8 +4361,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__id
@@ -4512,11 +4406,6 @@ msgstr "Іконка для визначення виключення дії."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__identification
 msgid "Identification"
 msgstr "Ідентифікація"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
-msgid "Identify Customer"
-msgstr "Ідентифікувати клієнта"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction
@@ -4666,11 +4555,6 @@ msgid "Information about your product."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
-msgid "Information message"
-msgstr "Інформативне повідомлення"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Install App"
@@ -4702,12 +4586,6 @@ msgstr "Інтеграція"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
 msgstr "Проміжний рахунок"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Intermediary account used for unidentified customers."
-msgstr ""
-"Посередницький рахунок, який використовується для неідентифікованих клієнтів."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -4757,12 +4635,6 @@ msgid "Invoice Emails"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-msgid "Invoice Journal"
-msgstr "Журнал рахунків"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Invoice Name"
 msgstr "Назва рахунку-фактури"
@@ -4784,15 +4656,6 @@ msgid "Invoice Status"
 msgstr "Статус рахунка-фактури"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_payment.py:0
-msgid ""
-"Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr ""
-"Оплата рахунка для %(order)s (%(account_move)s) використовуючи %"
-"(payment_method)s"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4800,8 +4663,10 @@ msgid "Invoiced"
 msgstr "Виставлено рахунок"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Invoices"
 msgstr "Рахунки"
 
@@ -4817,9 +4682,9 @@ msgid "Is Follower"
 msgstr "Стежить"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
-msgid "Is Invoiced"
-msgstr "Виставлений рахунок"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_globally_invoiced
+msgid "Is Globally Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__use_kiosk_mode
@@ -4830,6 +4695,11 @@ msgstr "Режим Kiosk"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refund
 msgid "Is Refund"
 msgstr "Повернено"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_singly_invoiced
+msgid "Is Singly Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
@@ -4935,15 +4805,13 @@ msgstr "Журнал"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
 msgstr "Запис у журналі"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Journal Items"
-msgstr "Елементи журналу"
+#: model:ir.model,name:point_of_sale.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
@@ -5036,11 +4904,6 @@ msgid "Large Scrollbars"
 msgstr "Великі смуги прокрутки"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
-msgid "Last Session Closing Cash"
-msgstr "Остання сесія закриття готівки"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr "Остання дата закриття сесії"
@@ -5048,7 +4911,6 @@ msgstr "Остання дата закриття сесії"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_uid
@@ -5065,15 +4927,14 @@ msgstr "Остання дата закриття сесії"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_date
@@ -5090,8 +4951,8 @@ msgstr "Востаннє оновив"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
@@ -5675,24 +5536,6 @@ msgid "Need customer to invoice"
 msgstr "Потрібен клієнт для виставлення рахунку"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Need loss account for the following journals to post the lost amount: %s\n"
-msgstr ""
-"Для оприбуткування втраченої суми потрібен рахунок збитків для наступних "
-"журналів: %s\n"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Need profit account for the following journals to post the gained amount: %s"
-msgstr ""
-"Для оприбуткування отриманої суми потрібен рахунок прибутку для наступних "
-"журналів: %s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
@@ -5707,6 +5550,7 @@ msgstr "Помилка мережі"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
@@ -5770,7 +5614,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Next session"
 msgstr ""
 
@@ -5965,12 +5809,6 @@ msgstr "Немає в рахунку"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-msgid "Not available"
-msgstr "Недоступний"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
 msgstr ""
@@ -6069,6 +5907,11 @@ msgid "Number of orders where items from this order were refunded"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__account_move_count
+msgid "Number of related journal entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Number of transactions:"
 msgstr "Кількість транзакцій:"
@@ -6108,7 +5951,6 @@ msgstr "Замовлення не в мережі"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -6127,6 +5969,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
 msgstr "У процесі"
@@ -6174,11 +6017,23 @@ msgstr "Застосовуйте округлення лише готівкою"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Only cash payment methods can use cash payment lines."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
 "Тільки журнали типу \"Готівка\" або \"Банк\" можуть використовуватись із "
 "способами оплати."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Only one cash payment method can be used in a session."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -6276,6 +6131,11 @@ msgid "Opening"
 msgstr "Відкриття"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_balance
+msgid "Opening Balance"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -6295,33 +6155,10 @@ msgid "Opening Notes"
 msgstr "Примітки відкриття"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
-msgid "Opening balance summed to all cash transactions."
-msgstr "Початковий баланс, підсумований для всіх касових операцій."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "Готівка відкриття"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash expected: %s \n"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -6594,7 +6431,7 @@ msgid "POS Category"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__pos_config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__pos_config_id
 msgid "POS Config"
 msgstr ""
 
@@ -6614,6 +6451,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_count
 msgid "POS Order Count"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS Order Line"
 msgstr ""
 
 #. module: point_of_sale
@@ -6669,9 +6511,22 @@ msgid "POS Session"
 msgstr "Сесія точки продажу"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_ids
 msgid "POS Sessions"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_refunds_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_refunds_ids
+msgid "POS Sessions from Refunds"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_sales_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_sales_ids
+msgid "POS Sessions from Sales"
 msgstr ""
 
 #. module: point_of_sale
@@ -6696,6 +6551,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS order line that generated this invoice line."
 msgstr ""
 
 #. module: point_of_sale
@@ -6906,6 +6766,12 @@ msgstr "Запит на оплату в очікуванні"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Payment reversal %s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment
@@ -7067,26 +6933,6 @@ msgid "Please fill all the required fields."
 msgstr "Заповніть усі необхідні поля."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Please go on the %s journal and define a Loss Account. This account will be "
-"used to record cash difference."
-msgstr ""
-"Перейдіть у %s журнал та визначіть рахунок витрат. Цей рахунок буде "
-"використовуватися для грошових різниць."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Please go on the %s journal and define a Profit Account. This account will "
-"be used to record cash difference."
-msgstr ""
-"Перейдіть у %s журнал та визначіть рахунок доходу. Цей рахунок буде "
-"використаний для грошової різниці."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
@@ -7113,6 +6959,11 @@ msgstr "Відскануйте знову!"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "PoS Config"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "PoS Config default partner receivable"
 msgstr ""
 
 #. module: point_of_sale
@@ -7318,11 +7169,6 @@ msgstr "Принтер точки продажу"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_category_search
 msgid "Point of Sale Product Categories"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
-msgid "Point of Sale Product Snooze"
 msgstr ""
 
 #. module: point_of_sale
@@ -7584,7 +7430,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Price discount from %(original_price)s to %(discounted_price)s"
+msgid "Price discount from %(list_price)s to %(price_unit)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -7840,8 +7686,9 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__product_template_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__product_template_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_snooze__type__product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
@@ -8236,20 +8083,6 @@ msgstr "Референс"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh customer display"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refund"
@@ -8319,15 +8152,19 @@ msgid "Refunds"
 msgstr "Відшкодування"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__refunds_move_id
+msgid "Refunds Entry"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Register"
 msgstr "Реєстр"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Related Session: %(link)s"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_ids
+msgid "Related Journal Entries"
 msgstr ""
 
 #. module: point_of_sale
@@ -8486,12 +8323,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-"(session)s"
+msgid "Reversal for %s"
 msgstr ""
-"Переоцінка запису закриття точки продажу %(entry)s для замовлення %(order)s "
-"із сесії %(session)s"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Reversal of %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -8534,6 +8373,12 @@ msgstr "Метод округлення"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Rounding error in payment lines"
 msgstr "Помилка округлення у рядках оплати"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Rounding reversal: %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -8598,8 +8443,6 @@ msgid "Sale line"
 msgstr "Рядок продажу"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "Продажі"
@@ -8613,6 +8456,11 @@ msgstr "Продажі"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sales Details"
 msgstr "Деталі продажу"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sales_move_id
+msgid "Sales Entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
@@ -8940,6 +8788,12 @@ msgid "Session"
 msgstr "Сесія"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
+msgid "Session Already Closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Session Control"
 msgstr "Контроль сесії"
@@ -8955,11 +8809,6 @@ msgid "Session ID:"
 msgstr "ID сесії:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
-msgid "Session Journal Entry"
-msgstr "Запис журналу сесії"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 msgid "Session Report"
@@ -8969,12 +8818,6 @@ msgstr "Звіт сесії"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
 msgstr "Статистика сесії"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Session already closed"
-msgstr ""
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -9207,7 +9050,17 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
-msgid "Snoozed Products"
+msgid "Snoozed Records"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__type
+msgid "Snoozed for?"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_snooze
+msgid "Snoozed records for Point of Sale"
 msgstr ""
 
 #. module: point_of_sale
@@ -9247,6 +9100,14 @@ msgstr ""
 "Деякі замовлення не вдалося надіслати на сервер через проблеми з "
 "підключенням до Інтернету. Ви можете вийти з Точки продажу, але не "
 "закривайте сесію до того, як проблема не буде вирішена."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9295,14 +9156,9 @@ msgid "Start Date"
 msgstr "Початкова дата"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__start_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__start_time
 msgid "Start Time"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
-msgid "Starting Balance"
-msgstr "Початковий баланс"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9345,7 +9201,7 @@ msgstr "Зупинити"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Stop Snooze"
 msgstr ""
 
@@ -9737,6 +9593,14 @@ msgstr "Бренд платіжної картки (наприклад, Visa, AM
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash payment method must have a linked bank statement to open the cash "
+"control."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
 msgstr ""
 
@@ -9752,6 +9616,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The cutter has a foreign matter, please check the cutter mechanism"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "The default customer used in PoS session closing"
 msgstr ""
 
 #. module: point_of_sale
@@ -9844,16 +9714,6 @@ msgid "The free quantity of an upsell combo must be equal to 0."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the "
-"company currency if that is not set."
-msgstr ""
-"Журнал рахунку має бути в тій же валюті, що й журнал продажів або валюта "
-"компанії, якщо вона не встановлена."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The invoice will be downloaded on your device whenever you invoice an order"
@@ -9918,6 +9778,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The partner account will be used to generate out receipts."
 msgstr ""
 
 #. module: point_of_sale
@@ -10061,18 +9926,6 @@ msgstr ""
 "точки продажу."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"The session has been already closed by another User. All sales completed in "
-"the meantime have been saved in a Rescue Session, which can be reviewed "
-"anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr ""
-"Сесію уже закрито іншим користувачем. Усі продажі, здійснені тим часом, було "
-"збережено в сесії відновлення, яку можна будь-коли переглянути та "
-"опублікувати в Бухобліку з інформаційної панелі точки продажу."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
@@ -10194,14 +10047,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_bill.py:0
-msgid "The value of a coin/bill must be greater than 0."
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The type of the payment method must be the same as the type of the journal."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
-msgid "Theoretical Closing Balance"
-msgstr "Теоретичний баланс закриття"
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+msgid "The value of a coin/bill must be greater than 0."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10241,20 +10096,18 @@ msgstr ""
 "%s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"There is a difference between the amounts to post and the amounts of the "
-"orders, it is probably caused by taxes or accounting configurations changes."
-msgstr ""
-"Існує різниця між сумами для оприбуткування та сумами замовлень, ймовірно, "
-"це викликано податками або змінами налаштування бухобліку."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "Електронна оплата вже триває."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"There is more than one cash payment method for this PoS Config. Please "
+"correct your configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10282,12 +10135,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash payment method for this PoS Session"
 msgstr "Для цієї сесії Точки продажу немає готівкового способу оплати"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "There is no cash register in this session."
-msgstr "У цій сесії немає касового апарату."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10611,13 +10458,6 @@ msgid "To Weigh"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid ""
-"To enable invoice creation, please add a journal for it in the settings."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
 msgstr "До включення у рахунок"
@@ -10768,11 +10608,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
-msgid "Transaction"
-msgstr "Операція"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Transaction cancelled"
@@ -10833,20 +10668,6 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "USB Scale"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the "
-"following taxes: \n"
-"%s"
-msgstr ""
-"Неможливо закрити та підтвердити сесію.\n"
-"Встановіть кореспондуючий рахунок податку у кожному розділеному рядку "
-"наступних податків: \n"
-"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11047,6 +10868,14 @@ msgstr "Підтвердити"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
+"Validation Error: You cannot assign multiple Cash payment methods to the "
+"same POS Shop. Please create a single Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
 "Validation Error: You cannot assign the same Cash payment method to multiple "
 "POS Shops. Please create a separate Cash payment method for each shop."
 msgstr ""
@@ -11234,7 +11063,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Yes"
 msgstr "Так"
 
@@ -11248,10 +11077,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
 msgid ""
 "You are not allowed to change the rounding configuration while a pos session "
-"using it is already opened."
+"using it is already opened. Make sure to close all open pos session before "
+"proceeding."
 msgstr ""
 
 #. module: point_of_sale
@@ -11387,10 +11217,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS when invoices are not posted.\n"
-"Invoices: %s"
+"Invoices: %(invoices)s"
 msgstr ""
-"Ви не можете закрити Точку продажу, якщо рахунки ще не опубліковані.\n"
-"Рахунки: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11403,6 +11231,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You cannot create an invoice for orders with different currencies."
 msgstr ""
 
 #. module: point_of_sale
@@ -11443,6 +11277,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"You cannot have more than one cash payment method on a point of sale "
+"configuration."
 msgstr ""
 
 #. module: point_of_sale
@@ -11506,16 +11348,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "You have"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"You have enabled the \"Identify Customer\" option for %(payment_method)s "
-"payment method,but the order %(order)s does not contain a customer."
-msgstr ""
-"Ви ввімкнули опцію «Ідентифікувати клієнта» для %(payment_method)s способу "
-"оплати, але замовлення %(order)s не містить клієнта."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11979,6 +11811,240 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
+#~ msgstr "%(payment_method)s Оплата POS %(partner)s в %(session)s"
+
+#~ msgid "%s untaxed"
+#~ msgstr "%s неоподатковується"
+
+#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
+#~ msgstr "<span class=\"o_stat_text\">Касовий апарат</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
+#~ msgstr "<span class=\"o_stat_text\">Записи у журналі</span>"
+
+#~ msgid "Account payments representing aggregated and bank split payments."
+#~ msgstr ""
+#~ "Платежі за рахунками, що представляють зведені та банківські роздільні "
+#~ "платежі."
+
+#~ msgid "Accounting journal used to create invoices."
+#~ msgstr "Журнал бухобліку використовується для створення рахунків."
+
+#~ msgid ""
+#~ "Accounting journal used to post POS session journal entries and POS "
+#~ "invoice payments."
+#~ msgstr ""
+#~ "Бухгалтерський журнал, який використовується для оприбуткування записів у "
+#~ "журналі сесій POS та платежів за рахунками-фактурами."
+
+#~ msgid "Amount to balance"
+#~ msgstr "Сума для балансу"
+
+#~ msgid ""
+#~ "An error has occurred when trying to close the session.\n"
+#~ "You will be redirected to the back-end to manually close the session."
+#~ msgstr ""
+#~ "Під час спроби закрити сесію сталася помилка.\n"
+#~ "Ви будете перенаправлені на бекенд, щоб вручну закрити сесію."
+
+#~ msgid "Bank Payments"
+#~ msgstr "Банківські платежі"
+
+#~ msgid "Before Closing Difference"
+#~ msgstr "Перед закриттям різниці"
+
+#~ msgid "Cash Journal"
+#~ msgstr "Журнал каси"
+
+#~ msgid "Cash register"
+#~ msgstr "Касова скринька"
+
+#~ msgid "Close Session"
+#~ msgstr "Закрити сесію"
+
+#~ msgid "Close Session Wizard"
+#~ msgstr "Помічник закриття сесії"
+
+#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
+#~ msgstr "Різниця закриття в %(payment_method)s (%(session)s)"
+
+#~ msgid "Closing session error"
+#~ msgstr "Помилка закриття сесії"
+
+#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
+#~ msgstr "Комбінуйте %(payment_method)s платежі точки продажу з %(session)s"
+
+#~ msgid "Default Account Receivable (PoS)"
+#~ msgstr "Дебіторська заборгованість за замовчуванням (PoS)"
+
+#~ msgid "Destination account"
+#~ msgstr "Рахунок призначення"
+
+#~ msgid "Destination account is readonly"
+#~ msgstr "Рахунок призначення лише для читання"
+
+#~ msgid "Difference at closing PoS session"
+#~ msgstr "Різниця під час закриття сесії точки продажу"
+
+#~ msgid ""
+#~ "Difference between the theoretical closing balance and the real closing "
+#~ "balance."
+#~ msgstr "Різниця між теоретичним та реальним балансом закриття."
+
+#~ msgid "Ending Balance"
+#~ msgstr "Кінцевий баланс"
+
+#~ msgid "Force Close Session"
+#~ msgstr "Примусове закриття сеансу"
+
+#~ msgid ""
+#~ "Forces to set a customer when using this payment method and splits the "
+#~ "journal entries for each customer. It could slow down the closing process."
+#~ msgstr ""
+#~ "Примусово встановлювати клієнта під час використання цього способу оплати "
+#~ "та розділяє записи журналу для кожного клієнта. Це може уповільнити "
+#~ "процес закриття."
+
+#~ msgid "From invoice payments"
+#~ msgstr "З платежів рахунку"
+
+#~ msgid "Has Cash Control"
+#~ msgstr "Має контроль готівки"
+
+#~ msgid "Identify Customer"
+#~ msgstr "Ідентифікувати клієнта"
+
+#~ msgid "Information message"
+#~ msgstr "Інформативне повідомлення"
+
+#~ msgid "Intermediary account used for unidentified customers."
+#~ msgstr ""
+#~ "Посередницький рахунок, який використовується для неідентифікованих "
+#~ "клієнтів."
+
+#~ msgid "Invoice Journal"
+#~ msgstr "Журнал рахунків"
+
+#~ msgid ""
+#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
+#~ msgstr ""
+#~ "Оплата рахунка для %(order)s (%(account_move)s) використовуючи %"
+#~ "(payment_method)s"
+
+#~ msgid "Is Invoiced"
+#~ msgstr "Виставлений рахунок"
+
+#~ msgid "Journal Items"
+#~ msgstr "Елементи журналу"
+
+#~ msgid "Last Session Closing Cash"
+#~ msgstr "Остання сесія закриття готівки"
+
+#~ msgid ""
+#~ "Need loss account for the following journals to post the lost amount: %s\n"
+#~ msgstr ""
+#~ "Для оприбуткування втраченої суми потрібен рахунок збитків для наступних "
+#~ "журналів: %s\n"
+
+#~ msgid ""
+#~ "Need profit account for the following journals to post the gained amount: "
+#~ "%s"
+#~ msgstr ""
+#~ "Для оприбуткування отриманої суми потрібен рахунок прибутку для наступних "
+#~ "журналів: %s"
+
+#~ msgid "Not available"
+#~ msgstr "Недоступний"
+
+#~ msgid "Opening balance summed to all cash transactions."
+#~ msgstr "Початковий баланс, підсумований для всіх касових операцій."
+
+#~ msgid ""
+#~ "Please go on the %s journal and define a Loss Account. This account will "
+#~ "be used to record cash difference."
+#~ msgstr ""
+#~ "Перейдіть у %s журнал та визначіть рахунок витрат. Цей рахунок буде "
+#~ "використовуватися для грошових різниць."
+
+#~ msgid ""
+#~ "Please go on the %s journal and define a Profit Account. This account "
+#~ "will be used to record cash difference."
+#~ msgstr ""
+#~ "Перейдіть у %s журнал та визначіть рахунок доходу. Цей рахунок буде "
+#~ "використаний для грошової різниці."
+
+#~ msgid ""
+#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+#~ "(session)s"
+#~ msgstr ""
+#~ "Переоцінка запису закриття точки продажу %(entry)s для замовлення %"
+#~ "(order)s із сесії %(session)s"
+
+#~ msgid "Session Journal Entry"
+#~ msgstr "Запис журналу сесії"
+
+#~ msgid "Starting Balance"
+#~ msgstr "Початковий баланс"
+
+#~ msgid ""
+#~ "The invoice journal must be in the same currency as the Sales Journal or "
+#~ "the company currency if that is not set."
+#~ msgstr ""
+#~ "Журнал рахунку має бути в тій же валюті, що й журнал продажів або валюта "
+#~ "компанії, якщо вона не встановлена."
+
+#~ msgid ""
+#~ "The session has been already closed by another User. All sales completed "
+#~ "in the meantime have been saved in a Rescue Session, which can be "
+#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
+#~ msgstr ""
+#~ "Сесію уже закрито іншим користувачем. Усі продажі, здійснені тим часом, "
+#~ "було збережено в сесії відновлення, яку можна будь-коли переглянути та "
+#~ "опублікувати в Бухобліку з інформаційної панелі точки продажу."
+
+#~ msgid "Theoretical Closing Balance"
+#~ msgstr "Теоретичний баланс закриття"
+
+#~ msgid ""
+#~ "There is a difference between the amounts to post and the amounts of the "
+#~ "orders, it is probably caused by taxes or accounting configurations "
+#~ "changes."
+#~ msgstr ""
+#~ "Існує різниця між сумами для оприбуткування та сумами замовлень, "
+#~ "ймовірно, це викликано податками або змінами налаштування бухобліку."
+
+#~ msgid "There is no cash register in this session."
+#~ msgstr "У цій сесії немає касового апарату."
+
+#~ msgid "Transaction"
+#~ msgstr "Операція"
+
+#~ msgid ""
+#~ "Unable to close and validate the session.\n"
+#~ "Please set corresponding tax account in each repartition line of the "
+#~ "following taxes: \n"
+#~ "%s"
+#~ msgstr ""
+#~ "Неможливо закрити та підтвердити сесію.\n"
+#~ "Встановіть кореспондуючий рахунок податку у кожному розділеному рядку "
+#~ "наступних податків: \n"
+#~ "%s"
+
+#~ msgid ""
+#~ "You cannot close the POS when invoices are not posted.\n"
+#~ "Invoices: %s"
+#~ msgstr ""
+#~ "Ви не можете закрити Точку продажу, якщо рахунки ще не опубліковані.\n"
+#~ "Рахунки: %s"
+
+#~ msgid ""
+#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
+#~ "payment method,but the order %(order)s does not contain a customer."
+#~ msgstr ""
+#~ "Ви ввімкнули опцію «Ідентифікувати клієнта» для %(payment_method)s "
+#~ "способу оплати, але замовлення %(order)s не містить клієнта."
 
 #~ msgid ""
 #~ "Check the internet connection then try to sync again by clicking on the "

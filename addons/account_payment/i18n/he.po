@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-19 17:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-master/"
@@ -155,6 +155,11 @@ msgstr "תשלום עם מספר אסמכתא %s כבר קיים."
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "נדרש אסימון ליצירת עסקת תשלום חדשה."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -328,13 +333,6 @@ msgstr "מזהה"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
 msgstr ""
 
 #. module: account_payment
@@ -622,11 +620,6 @@ msgid "Source Payment"
 msgstr "תשלום מקור"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "סטטוס"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -757,12 +750,9 @@ msgstr "עסקה מבוטלת"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"לא ניתן למחוק אמצעי תשלום שמקושר לספק שנמצא במצב פעיל או מצב בדיקה.\n"
-"ספקים מקושרים:%s"
 
 #. module: account_payment
 #. odoo-python
@@ -778,11 +768,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"עליך קודם להשבית ספק תשלום לפני מחיקת יומן שלו.\n"
-"ספקים מקושרים: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -816,3 +804,22 @@ msgstr "באיחור"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid "State"
+#~ msgstr "סטטוס"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "לא ניתן למחוק אמצעי תשלום שמקושר לספק שנמצא במצב פעיל או מצב בדיקה.\n"
+#~ "ספקים מקושרים:%s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "עליך קודם להשבית ספק תשלום לפני מחיקת יומן שלו.\n"
+#~ "ספקים מקושרים: %s"

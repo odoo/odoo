@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 05:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -403,11 +403,6 @@ msgid "<i class=\"fa fa-cart-arrow-down me-2\"/>Order"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
-msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr "<i class=\"fa fa-cart-plus me-2\"/>添加到购物车"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid ""
 "<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
@@ -417,14 +412,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-download me-2\"/>Download"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small "
-"ms-1\">Contact Us</span>"
 msgstr ""
 
 #. module: website_sale
@@ -484,13 +471,6 @@ msgstr ""
 "               重下订单"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Add to Cart</span>"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
 msgstr ""
@@ -503,6 +483,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    加入购物车"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
+msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -526,6 +511,21 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                            <span class=\"o_label small "
+"ms-1\">Contact Us</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+"><span class=\"o_label small ms-1\">Add to Cart</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -1413,7 +1413,14 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
+msgid "Add Image"
 msgstr ""
 
 #. module: website_sale
@@ -1421,12 +1428,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
 msgstr "添加媒体"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Add More"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2301,6 +2302,7 @@ msgstr "折叠盒"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 msgid "Color"
 msgstr "颜色"
 
@@ -2638,11 +2640,6 @@ msgstr "客户关怀"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
 msgstr "客户国家"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
-msgid "Customer Reviews"
-msgstr "顾客评价"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -3280,12 +3277,6 @@ msgid "Extra Info"
 msgstr "额外信息"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Extra Media"
-msgstr "额外媒体"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 msgid "Extra Product Media"
@@ -3814,6 +3805,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 msgid "Image"
@@ -3955,7 +3947,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr ""
 
@@ -4289,12 +4281,6 @@ msgid "Main Button Label"
 msgstr "主要按钮标签"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Main Image"
-msgstr "主图"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
 msgstr ""
@@ -4329,6 +4315,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Media"
 msgstr "媒体"
@@ -5064,6 +5052,12 @@ msgid "Please select or enter an amount"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__4_5
@@ -5737,6 +5731,7 @@ msgstr "搬迁和搬运"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove"
 msgstr "移除"
@@ -5744,7 +5739,6 @@ msgstr "移除"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Remove All"
 msgstr ""
 
@@ -5776,6 +5770,12 @@ msgid "Remove from wishlist"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+msgid "Remove image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
@@ -5803,13 +5803,14 @@ msgstr "维修和保养"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace"
 msgstr "替换"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace image"
 msgstr "替换图片"
 
@@ -5873,6 +5874,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Reviews"
 msgstr "评论"
 
@@ -6641,8 +6643,15 @@ msgstr "页卡"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Tag"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_template_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Tags"
@@ -6970,6 +6979,12 @@ msgstr "此产品已停产。"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale
@@ -7990,6 +8005,18 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Customer Reviews"
+#~ msgstr "顾客评价"
+
+#~ msgid "Extra Media"
+#~ msgstr "额外媒体"
+
+#~ msgid "Main Image"
+#~ msgstr "主图"
+
+#~ msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
+#~ msgstr "<i class=\"fa fa-cart-plus me-2\"/>添加到购物车"
 
 #~ msgid "<span>Publish on website</span>"
 #~ msgstr "<span>在网站发布</span>"

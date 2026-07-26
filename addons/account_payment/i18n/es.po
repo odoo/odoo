@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-20 21:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
@@ -152,6 +152,11 @@ msgstr "Ya existe una transacción de pago con referencia %s."
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "Se requiere un token para crear una nueva transacción de pago."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -331,16 +336,6 @@ msgid ""
 msgstr ""
 "No es posible pagar todas las facturas vencidas si no comparten la misma "
 "moneda."
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"En el modo de prueba, se procesa un pago falso a través de una interfaz de "
-"pago de prueba.\n"
-"Este modo se recomienda al configurar el método de pago."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -630,11 +625,6 @@ msgid "Source Payment"
 msgstr "Origen del pago"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "Estado"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -772,13 +762,9 @@ msgstr "Anular transacción"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"No puede eliminar un método de pago vinculado a un proveedor en el estado "
-"habilitado o de prueba.\n"
-"Proveedores vinculados: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -793,11 +779,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Primero debe desactivar un proveedor de pago antes de eliminar su diario.\n"
-"Proveedores vinculados: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -831,3 +815,33 @@ msgstr "vencidas"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "En el modo de prueba, se procesa un pago falso a través de una interfaz "
+#~ "de pago de prueba.\n"
+#~ "Este modo se recomienda al configurar el método de pago."
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "No puede eliminar un método de pago vinculado a un proveedor en el estado "
+#~ "habilitado o de prueba.\n"
+#~ "Proveedores vinculados: %s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "Primero debe desactivar un proveedor de pago antes de eliminar su "
+#~ "diario.\n"
+#~ "Proveedores vinculados: %s"

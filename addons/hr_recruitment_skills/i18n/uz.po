@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:39+0000\n"
 "PO-Revision-Date: 2026-06-21 12:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -80,6 +80,16 @@ msgid "Current Applicant Skill"
 msgstr "Nomzodning joriy ko‘nikmalari"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__degree_score
+msgid "Degree Score"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__is_degree_score_matching
+msgid "Degree Score Matching"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__display_name
@@ -102,6 +112,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__job_expected_degree
+msgid "Job Degree"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_job
 #, fuzzy
 msgid "Job Position"
@@ -109,7 +124,8 @@ msgstr "Lavozim"
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
-#: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.xml:0
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_form
 msgid "Job Position Matching"
 msgstr ""
 
@@ -146,6 +162,11 @@ msgid "Matching Applicants"
 msgstr "Mos keluvchi nomzodlar"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+msgid "Matching Factors"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
 #, fuzzy
 msgid "Matching Score"
@@ -158,7 +179,6 @@ msgid "Matching Score(%)"
 msgstr "Moslik bali (%)"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__matching_applicant_skill_ids
 #, fuzzy
 msgid "Matching Skills"
@@ -173,7 +193,23 @@ msgid "Matching Talents"
 msgstr ""
 
 #. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+msgid "Max Value"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+msgid "Max Value Field"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+msgid "Missing Factors"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__missing_applicant_skill_ids
 #, fuzzy
 msgid "Missing Skills"
@@ -209,6 +245,18 @@ msgstr "Jarayon"
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr ""
 "Bilimning noldan (0%) to‘liq o‘zlashtirilgungacha (100%) bo‘lgan jarayoni."
+
+#. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+msgid "Remaining"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#. odoo-javascript
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+msgid "Score Fields"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
@@ -253,6 +301,11 @@ msgid "Skills"
 msgstr "Ko‘nikmalar"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skills_score
+msgid "Skills Score"
+msgstr ""
+
+#. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
 #, fuzzy
 msgid "The end date must be after the start date."
@@ -260,10 +313,9 @@ msgstr "Tugash sanasi boshlanish sanasidan keyin bo‘lishi shart."
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
-#: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.js:0
-#, fuzzy
-msgid "This score reflects skills and degree match"
-msgstr "Ushbu bal ko‘nikmalar va daraja mosligini aks ettiradi"
+#: code:addons/hr_recruitment_skills/static/src/components/match_scores_gauge/match_scores_gauge.js:0
+msgid "Title"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
@@ -308,3 +360,7 @@ msgstr "belgilansa, ko‘nikma turi sertifikat turiga aylanadi"
 #, fuzzy
 msgid "indefinite"
 msgstr "muddatsiz"
+
+#, fuzzy
+#~ msgid "This score reflects skills and degree match"
+#~ msgstr "Ushbu bal ko‘nikmalar va daraja mosligini aks ettiradi"

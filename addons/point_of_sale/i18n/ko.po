@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 15:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -77,9 +77,9 @@ msgstr "%(old_pm)s의 금액이 %(new_pm)s에서 %(old_amount)s으로 변경되�
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "%(payment_method)s의 %(partner)s에 대한 %(session)s 결제"
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "%(payment_method)s POS session %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -98,12 +98,6 @@ msgstr "%(product_name)s: 주문 수량: %(old_qty)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s환불"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr "%(title)s %(product_name)s %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -178,12 +172,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
 msgstr "%s 필요"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "%s untaxed"
-msgstr "%s 비과세"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -414,16 +402,6 @@ msgstr ""
 "<span class=\"o_form_label\">바코드</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
 "title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr "<span class=\"o_stat_text\">금전 등록</span>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr "<span class=\"o_stat_text\">전표 항목</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -762,11 +740,6 @@ msgid "Account Move"
 msgstr "회계 이동"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
-msgid "Account payments representing aggregated and bank split payments."
-msgstr "전체 계정 결제 및 은행 분할 납부"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid ""
 "Account used as outstanding account when creating accounting payment records "
@@ -777,24 +750,15 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Accounting"
 msgstr "회계"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-msgid "Accounting journal used to create invoices."
-msgstr "청구서 생성에 사용되는 회계 전표"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-msgid ""
-"Accounting journal used to post POS session journal entries and POS invoice "
-"payments."
-msgstr "POS 세션 전표 입력 및 POS 청구서 결제를 진행하기 위한 회계 전표입니다."
+msgid "Accounting journal used to post POS session receipts and invoices."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
@@ -1207,11 +1171,6 @@ msgid "Amount of guests"
 msgstr "게스트 수"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
-msgid "Amount to balance"
-msgstr "잔액"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "Amount total"
 msgstr "총액"
@@ -1222,16 +1181,6 @@ msgstr "총액"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Amount:"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-msgid ""
-"An error has occurred when trying to close the session.\n"
-"You will be redirected to the back-end to manually close the session."
-msgstr ""
-"세션을 종료하는 중에 오류가 발생했습니다.\n"
-"수기로 세션을 종료하기 위해 백엔드로 이동합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1614,14 +1563,26 @@ msgid "Bank App (QR Code)"
 msgstr "은행 앱 (QR 코드)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
-msgid "Bank Payments"
-msgstr "은행 결제"
+#: model:ir.model,name:point_of_sale.model_account_bank_statement
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_id
+msgid "Bank Statement"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "은행거래명세서 내역"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
+msgid "Bank Statement Lines"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Bank difference for %(pm)s in %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1691,11 +1652,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
-msgid "Before Closing Difference"
-msgstr "차액 마감 전"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1819,9 +1775,9 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Cancel"
 msgstr "취소"
 
@@ -1920,7 +1876,6 @@ msgstr "장바구니"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__is_cash_count
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__cash
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -1950,6 +1905,12 @@ msgstr "현금 베이커리"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Clothes Shop"
 msgstr "현금 의류 매장"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Control - %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1983,12 +1944,7 @@ msgid "Cash In/Out"
 msgstr "현금 입출금"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
-msgid "Cash Journal"
-msgstr "현금 전표"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__account_bank_statement_id
 msgid "Cash Lines"
 msgstr "시재 내역"
 
@@ -2022,8 +1978,19 @@ msgid "Cash Receipt"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_cash_register_balance
+msgid "Cash Register"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Cash Statement for %(method_name)s in %(session)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -2041,14 +2008,8 @@ msgstr "현금 관리 - 오픈"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr "계산 중 발견된 현금 차이 (손실) - 마감"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash difference observed during the counting (Profit) - closing"
-msgstr "계산 중 발견된 현금 차이 (이익) - 마감"
+msgid "Cash correction from %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2085,12 +2046,6 @@ msgstr "현금 이동 삭제: %s"
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.xml:0
 msgid "Cash move details"
 msgstr "현금 이동 세부 내역"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash register"
-msgstr "금전등록기"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -2380,19 +2335,9 @@ msgid "Close Register"
 msgstr "금전 등록기 마감"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-msgid "Close Session"
-msgstr "세션 종료"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
 msgstr "세션 종료 및 입력 내용 발행"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
-msgid "Close Session Wizard"
-msgstr "세션 마법사 종료"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2417,6 +2362,11 @@ msgid "Closing"
 msgstr "종료"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_balance
+msgid "Closing Balance"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Closing Control"
@@ -2427,6 +2377,11 @@ msgstr "마감 관리"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Closing Date"
 msgstr "마감 날짜"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_difference
+msgid "Closing Difference"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_closing_entry_by_product
@@ -2453,40 +2408,10 @@ msgid "Closing Session"
 msgstr "세션 마감"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr "%(payment_method)s의 마감 차액 (%(session)s)"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing expected: %s \n"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing note"
 msgstr "종료 메모"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-msgid "Closing session error"
-msgstr "세션 마감 오류"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2539,12 +2464,6 @@ msgstr "색상"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__color
 msgid "Color Index"
 msgstr "색상표"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr "%(payment_method)s의 POS 결제 결합 %(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -2831,6 +2750,17 @@ msgid "Conversion rate from company currency to order currency."
 msgstr "회사 통화에서 주문 통화로의 전환 비율입니다."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Convert POS Order to Invoice"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
+msgid "Correction Entries"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Cost:"
@@ -2858,6 +2788,12 @@ msgstr "연결된 주문 수"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Counted"
 msgstr "계산됨"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Counterpart for invoice payment %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -2970,7 +2906,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_uid
@@ -2987,15 +2922,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_date
@@ -3012,8 +2946,8 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_date
 msgid "Created on"
 msgstr "작성일자"
 
@@ -3151,6 +3085,12 @@ msgid "Customer address is required"
 msgstr "고객 주소가 필요합니다"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Customer invoice from %(pos_reference)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
@@ -3245,9 +3185,10 @@ msgid "Default"
 msgstr "기본"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
-msgid "Default Account Receivable (PoS)"
-msgstr "기본 미수금 (POS)"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "Default Customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -3262,8 +3203,8 @@ msgstr "기본 전표"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Default POS Receivable Account"
-msgstr "기본 POS 미수금 계정"
+msgid "Default PoS Partner for closing"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_preset_id
@@ -3417,16 +3358,6 @@ msgid "Desks"
 msgstr "책상"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
-msgid "Destination account"
-msgstr "대상 계정"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_readonly
-msgid "Destination account is readonly"
-msgstr "대상 계정은 읽기 전용입니다."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -3463,19 +3394,6 @@ msgstr "장치 순서"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Difference"
 msgstr "차액"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Difference at closing PoS session"
-msgstr "POS 세션 종료 시의 차액"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
-msgid ""
-"Difference between the theoretical closing balance and the real closing "
-"balance."
-msgstr "이론적 결산 잔액과 실질 결산 잔액의 차이."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
@@ -3562,11 +3480,13 @@ msgstr "할인"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__display_name
@@ -3579,7 +3499,6 @@ msgstr "할인"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__display_name
@@ -3598,8 +3517,8 @@ msgstr "할인"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__display_name
@@ -3670,10 +3589,16 @@ msgstr "고객 목록을 열어서 고객을 선택하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"Do you want to stop the snooze early and make the product available again "
+"Do you want to stop the snooze early and make the %s available again "
 "immediately?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
+msgid "Done"
 msgstr ""
 
 #. module: point_of_sale
@@ -3856,14 +3781,9 @@ msgid "End Date"
 msgstr "종료일"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__end_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__end_time
 msgid "End Time"
 msgstr "종료 시간"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
-msgid "Ending Balance"
-msgstr "기말 잔액"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4128,13 +4048,6 @@ msgid "Force Cancel"
 msgstr "강제 취소"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-msgid "Force Close Session"
-msgstr "세션 강제 종료"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Force done"
@@ -4144,15 +4057,6 @@ msgstr "강제 완료"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
 msgstr "강제 미결제 계정"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
-msgid ""
-"Forces to set a customer when using this payment method and splits the "
-"journal entries for each customer. It could slow down the closing process."
-msgstr ""
-"이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니다. "
-"종료 단계의 과정이 느려질 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4170,12 +4074,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_free
 msgid "Free quantity"
 msgstr "이용 가능 수량"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "From invoice payments"
-msgstr "청구서 결제에서"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4259,6 +4157,11 @@ msgid "Global Discounts"
 msgstr "전체 할인"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
+msgid "Global Invoice"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/back_button/back_button.xml:0
@@ -4310,11 +4213,6 @@ msgstr "HTTP 라우팅"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
 msgstr "활성화된 세션 있음"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
-msgid "Has Cash Control"
-msgstr "현금 제어됨"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
@@ -4426,11 +4324,13 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__id
@@ -4443,7 +4343,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__id
@@ -4462,8 +4361,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__id
@@ -4507,11 +4406,6 @@ msgstr "예외 활동을 표시하기 위한 아이콘"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__identification
 msgid "Identification"
 msgstr "신분증"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
-msgid "Identify Customer"
-msgstr "고객 확인"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction
@@ -4660,11 +4554,6 @@ msgid "Information about your product."
 msgstr "품목 관련 정보입니다."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
-msgid "Information message"
-msgstr "정보 메시지"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Install App"
@@ -4695,11 +4584,6 @@ msgstr "연동"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
 msgstr "중개 계정"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Intermediary account used for unidentified customers."
-msgstr "확인되지 않은 고객용으로 사용하는 임시 계정"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -4749,12 +4633,6 @@ msgid "Invoice Emails"
 msgstr "청구서 이메일"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-msgid "Invoice Journal"
-msgstr "청구서 전표"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Invoice Name"
 msgstr "청구서 이름"
@@ -4776,15 +4654,6 @@ msgid "Invoice Status"
 msgstr "청구서 상태"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_payment.py:0
-msgid ""
-"Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr ""
-"%(order)s에 대한 (%(account_move)s)은 %(payment_method)s을 사용하여 결제합니"
-"다."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4792,8 +4661,10 @@ msgid "Invoiced"
 msgstr "발행 완료된 청구서"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Invoices"
 msgstr "청구서"
 
@@ -4809,9 +4680,9 @@ msgid "Is Follower"
 msgstr "팔로워임"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
-msgid "Is Invoiced"
-msgstr "청구서 발행 완료되었습니다"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_globally_invoiced
+msgid "Is Globally Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__use_kiosk_mode
@@ -4822,6 +4693,11 @@ msgstr "키오스크 모드입니다."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refund
 msgid "Is Refund"
 msgstr "환불되었습니다."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_singly_invoiced
+msgid "Is Singly Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
@@ -4929,15 +4805,13 @@ msgstr "전표"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
 msgstr "전표 입력"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Journal Items"
-msgstr "전표 항목"
+#: model:ir.model,name:point_of_sale.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
@@ -5030,11 +4904,6 @@ msgid "Large Scrollbars"
 msgstr "대형 스크롤바"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
-msgid "Last Session Closing Cash"
-msgstr "최근 세션 마감 시재"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr "최종 세션 마감일"
@@ -5042,7 +4911,6 @@ msgstr "최종 세션 마감일"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_uid
@@ -5059,15 +4927,14 @@ msgstr "최종 세션 마감일"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_date
@@ -5084,8 +4951,8 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
@@ -5667,20 +5534,6 @@ msgid "Need customer to invoice"
 msgstr "청구서를 발행할 고객"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Need loss account for the following journals to post the lost amount: %s\n"
-msgstr "손실 금액에 대한 전표 발행용 손실 계정이 있어야 합니다: %s\n"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Need profit account for the following journals to post the gained amount: %s"
-msgstr "수익 금액에 대한 전표 발행용 수익 계정이 있어야 합니다: %s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
@@ -5695,6 +5548,7 @@ msgstr "네트워크 에러"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
@@ -5758,7 +5612,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Next session"
 msgstr ""
 
@@ -5955,12 +5809,6 @@ msgstr "청구서 미발행"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-msgid "Not available"
-msgstr "사용할 수 없습니다"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
 msgstr ""
@@ -6059,6 +5907,11 @@ msgid "Number of orders where items from this order were refunded"
 msgstr "이 주문의 품목이 환불된 주문 건수"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__account_move_count
+msgid "Number of related journal entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Number of transactions:"
 msgstr "거래 수:"
@@ -6098,7 +5951,6 @@ msgstr "오프라인 주문"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -6117,6 +5969,7 @@ msgstr "원클릭 결제"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
 msgstr "진행중"
@@ -6164,10 +6017,22 @@ msgstr "현금에만 반올림 적용"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Only cash payment methods can use cash payment lines."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
 "'현금' 또는 '은행 계좌' 유형의 전표만 결제 수단으로 사용할 수 있습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Only one cash payment method can be used in a session."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -6265,6 +6130,11 @@ msgid "Opening"
 msgstr "시작"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_balance
+msgid "Opening Balance"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -6284,33 +6154,10 @@ msgid "Opening Notes"
 msgstr "시작 메모"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
-msgid "Opening balance summed to all cash transactions."
-msgstr "전체 현금 거래에 대한 기초 잔액 합계액입니다."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "시작 금액"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash expected: %s \n"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -6583,7 +6430,7 @@ msgid "POS Category"
 msgstr "POS 카테고리"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__pos_config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__pos_config_id
 msgid "POS Config"
 msgstr "POS 환경설정"
 
@@ -6604,6 +6451,11 @@ msgstr "POS 별도 선택 품목"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_count
 msgid "POS Order Count"
 msgstr "POS 주문 수"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS Order Line"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -6658,10 +6510,23 @@ msgid "POS Session"
 msgstr "POS 세션"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_ids
 msgid "POS Sessions"
 msgstr "POS 세션"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_refunds_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_refunds_ids
+msgid "POS Sessions from Refunds"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_sales_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_sales_ids
+msgid "POS Sessions from Sales"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -6685,6 +6550,11 @@ msgstr "환경설정 #%s에 대한 POS 주문"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS order line that generated this invoice line."
 msgstr ""
 
 #. module: point_of_sale
@@ -6895,6 +6765,12 @@ msgstr "결제 요청 보류"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Payment reversal %s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment
@@ -7050,26 +6926,6 @@ msgid "Please fill all the required fields."
 msgstr "필수 필드 전체를 작성해주시기 바랍니다."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Please go on the %s journal and define a Loss Account. This account will be "
-"used to record cash difference."
-msgstr ""
-"%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는"
-"데 사용합니다."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Please go on the %s journal and define a Profit Account. This account will "
-"be used to record cash difference."
-msgstr ""
-"%s 전표로 이동하여 수익 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는"
-"데 사용합니다."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
@@ -7097,6 +6953,11 @@ msgstr "다시 스캔하세요!"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "PoS Config"
 msgstr "POS 설정"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "PoS Config default partner receivable"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7301,11 +7162,6 @@ msgstr "POS 프린터"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_category_search
 msgid "Point of Sale Product Categories"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
-msgid "Point of Sale Product Snooze"
 msgstr ""
 
 #. module: point_of_sale
@@ -7567,8 +7423,8 @@ msgstr "가격 유형"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Price discount from %(original_price)s to %(discounted_price)s"
-msgstr "%(original_price)s에서 %(discounted_price)s으로 가격 할인"
+msgid "Price discount from %(list_price)s to %(price_unit)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7825,8 +7681,9 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__product_template_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__product_template_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_snooze__type__product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
@@ -8221,20 +8078,6 @@ msgstr "참조"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh customer display"
-msgstr "고객 디스플레이 새로 고침"
-
-#. module: point_of_sale
-#. odoo-javascript
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refund"
@@ -8304,16 +8147,20 @@ msgid "Refunds"
 msgstr "환불"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__refunds_move_id
+msgid "Refunds Entry"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Register"
 msgstr "등록"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Related Session: %(link)s"
-msgstr "관련 세션: %(link)s"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_ids
+msgid "Related Journal Entries"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8471,11 +8318,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-"(session)s"
+msgid "Reversal for %s"
 msgstr ""
-"POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Reversal of %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -8518,6 +8368,12 @@ msgstr "반올림 방법"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Rounding error in payment lines"
 msgstr "결제 내역의 반올림 오류"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Rounding reversal: %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -8582,8 +8438,6 @@ msgid "Sale line"
 msgstr "판매 명세"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "판매"
@@ -8597,6 +8451,11 @@ msgstr "판매"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sales Details"
 msgstr "판매 세부 사항"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sales_move_id
+msgid "Sales Entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
@@ -8924,6 +8783,12 @@ msgid "Session"
 msgstr "세션"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
+msgid "Session Already Closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Session Control"
 msgstr "세션 제어"
@@ -8939,11 +8804,6 @@ msgid "Session ID:"
 msgstr "세션 ID:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
-msgid "Session Journal Entry"
-msgstr "세션 전표입력"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 msgid "Session Report"
@@ -8953,12 +8813,6 @@ msgstr "세션 보고서"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
 msgstr "세션 통계"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Session already closed"
-msgstr ""
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -9187,8 +9041,18 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
-msgid "Snoozed Products"
-msgstr "품목 잠그기"
+msgid "Snoozed Records"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__type
+msgid "Snoozed for?"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_snooze
+msgid "Snoozed records for Point of Sale"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cinnamon_roll_product_template
@@ -9224,6 +9088,14 @@ msgid ""
 msgstr ""
 "인터넷 연결 문제로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of "
 "Sale)를 종료 할 수 있지만 문제가 해결되기 전에 세션을 닫지 마십시오."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9271,14 +9143,9 @@ msgid "Start Date"
 msgstr "시작일"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__start_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__start_time
 msgid "Start Time"
 msgstr "시작 시간"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
-msgid "Starting Balance"
-msgstr "개시 잔액"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9321,7 +9188,7 @@ msgstr "중지"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Stop Snooze"
 msgstr ""
 
@@ -9714,6 +9581,14 @@ msgstr "결제 카드 상표 (예: Visa, AMEX, ...)"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash payment method must have a linked bank statement to open the cash "
+"control."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
 msgstr ""
 
@@ -9729,6 +9604,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The cutter has a foreign matter, please check the cutter mechanism"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "The default customer used in PoS session closing"
 msgstr ""
 
 #. module: point_of_sale
@@ -9821,14 +9702,6 @@ msgid "The free quantity of an upsell combo must be equal to 0."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the "
-"company currency if that is not set."
-msgstr "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화로 설정해야 합니다."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The invoice will be downloaded on your device whenever you invoice an order"
@@ -9894,6 +9767,11 @@ msgstr "결제 금액이 주문 총액과 다릅니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The partner account will be used to generate out receipts."
 msgstr ""
 
 #. module: point_of_sale
@@ -10033,18 +9911,6 @@ msgid ""
 msgstr "선택한 가격표는 회사 또는 POS의 회사에 속하지 않아야 합니다."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"The session has been already closed by another User. All sales completed in "
-"the meantime have been saved in a Rescue Session, which can be reviewed "
-"anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr ""
-"다른 사용자가 이미 세션을 종료하였습니다. 그동안 완료된 전체 매출 내역은 헬"
-"프 세션에 저장되어 언제든 확인하실 수 있으며 POS 현황판에서 회계로 발행할 수 "
-"있습니다."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
@@ -10174,14 +10040,16 @@ msgstr "결제 카드 유형 (예: 신용 카드 또는 직불 카드)"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_bill.py:0
-msgid "The value of a coin/bill must be greater than 0."
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The type of the payment method must be the same as the type of the journal."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
-msgid "Theoretical Closing Balance"
-msgstr "이론적인 결산 잔액"
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+msgid "The value of a coin/bill must be greater than 0."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10221,20 +10089,18 @@ msgstr ""
 "%s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"There is a difference between the amounts to post and the amounts of the "
-"orders, it is probably caused by taxes or accounting configurations changes."
-msgstr ""
-"발행 금액과 주문 금액 사이에 차이가 있으며, 세금이나 회계 구성 변경으로 발생"
-"한 것일 수 있습니다."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "이미 전자 결제가 진행 중입니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"There is more than one cash payment method for this PoS Config. Please "
+"correct your configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10262,12 +10128,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash payment method for this PoS Session"
 msgstr "이 POS 세션에는 현금 결제 방법이 없습니다."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "There is no cash register in this session."
-msgstr "이 세션에는 금전등록기가 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10588,13 +10448,6 @@ msgid "To Weigh"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid ""
-"To enable invoice creation, please add a journal for it in the settings."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
 msgstr "청구서 발행"
@@ -10747,11 +10600,6 @@ msgstr ""
 "다."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
-msgid "Transaction"
-msgstr "거래"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Transaction cancelled"
@@ -10812,19 +10660,6 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "USB Scale"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the "
-"following taxes: \n"
-"%s"
-msgstr ""
-"세션을 닫고 유효성을 검사할 수 없습니다.\n"
-"다음 세금의 각 분할 명세에 해당 세금 계정을 설정하십시오 :\n"
-"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11023,6 +10858,14 @@ msgstr "승인"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
+"Validation Error: You cannot assign multiple Cash payment methods to the "
+"same POS Shop. Please create a single Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
 "Validation Error: You cannot assign the same Cash payment method to multiple "
 "POS Shops. Please create a separate Cash payment method for each shop."
 msgstr ""
@@ -11210,7 +11053,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Yes"
 msgstr "예"
 
@@ -11226,10 +11069,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
 msgid ""
 "You are not allowed to change the rounding configuration while a pos session "
-"using it is already opened."
+"using it is already opened. Make sure to close all open pos session before "
+"proceeding."
 msgstr ""
 
 #. module: point_of_sale
@@ -11364,10 +11208,8 @@ msgstr "인쇄가 완료된 주문서의 결제는 변경할 수 없습니다."
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS when invoices are not posted.\n"
-"Invoices: %s"
+"Invoices: %(invoices)s"
 msgstr ""
-"청구서를 발행하지 않으면 POS를 종료할 수 없습니다.\n"
-"청구서: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11381,6 +11223,12 @@ msgstr "당일 미결 상태인 주문서가 있는 경우에는 POS를 닫을 �
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr "다음 이전부터 시작하는 세션을 만들 수 없습니다: %(lock_date_info)s"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You cannot create an invoice for orders with different currencies."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -11423,6 +11271,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "게시가 완료된 주문서는 결제를 수정할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"You cannot have more than one cash payment method on a point of sale "
+"configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -11479,16 +11335,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "You have"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid ""
-"You have enabled the \"Identify Customer\" option for %(payment_method)s "
-"payment method,but the order %(order)s does not contain a customer."
-msgstr ""
-"%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했지"
-"만 %(order)s 주문 내용에 고객 정보가 포함되어 있지 않습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11951,6 +11797,251 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
+#~ msgstr "%(payment_method)s의 %(partner)s에 대한 %(session)s 결제"
+
+#~ msgid "%(title)s %(product_name)s with %(taxes)s"
+#~ msgstr "%(title)s %(product_name)s %(taxes)s"
+
+#~ msgid "%s untaxed"
+#~ msgstr "%s 비과세"
+
+#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
+#~ msgstr "<span class=\"o_stat_text\">금전 등록</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
+#~ msgstr "<span class=\"o_stat_text\">전표 항목</span>"
+
+#~ msgid "Account payments representing aggregated and bank split payments."
+#~ msgstr "전체 계정 결제 및 은행 분할 납부"
+
+#~ msgid "Accounting journal used to create invoices."
+#~ msgstr "청구서 생성에 사용되는 회계 전표"
+
+#~ msgid ""
+#~ "Accounting journal used to post POS session journal entries and POS "
+#~ "invoice payments."
+#~ msgstr ""
+#~ "POS 세션 전표 입력 및 POS 청구서 결제를 진행하기 위한 회계 전표입니다."
+
+#~ msgid "Amount to balance"
+#~ msgstr "잔액"
+
+#~ msgid ""
+#~ "An error has occurred when trying to close the session.\n"
+#~ "You will be redirected to the back-end to manually close the session."
+#~ msgstr ""
+#~ "세션을 종료하는 중에 오류가 발생했습니다.\n"
+#~ "수기로 세션을 종료하기 위해 백엔드로 이동합니다."
+
+#~ msgid "Bank Payments"
+#~ msgstr "은행 결제"
+
+#~ msgid "Before Closing Difference"
+#~ msgstr "차액 마감 전"
+
+#~ msgid "Cash Journal"
+#~ msgstr "현금 전표"
+
+#~ msgid "Cash difference observed during the counting (Loss) - closing"
+#~ msgstr "계산 중 발견된 현금 차이 (손실) - 마감"
+
+#~ msgid "Cash difference observed during the counting (Profit) - closing"
+#~ msgstr "계산 중 발견된 현금 차이 (이익) - 마감"
+
+#~ msgid "Cash register"
+#~ msgstr "금전등록기"
+
+#~ msgid "Close Session"
+#~ msgstr "세션 종료"
+
+#~ msgid "Close Session Wizard"
+#~ msgstr "세션 마법사 종료"
+
+#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
+#~ msgstr "%(payment_method)s의 마감 차액 (%(session)s)"
+
+#~ msgid "Closing session error"
+#~ msgstr "세션 마감 오류"
+
+#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
+#~ msgstr "%(payment_method)s의 POS 결제 결합 %(session)s"
+
+#~ msgid "Default Account Receivable (PoS)"
+#~ msgstr "기본 미수금 (POS)"
+
+#~ msgid "Default POS Receivable Account"
+#~ msgstr "기본 POS 미수금 계정"
+
+#~ msgid "Destination account"
+#~ msgstr "대상 계정"
+
+#~ msgid "Destination account is readonly"
+#~ msgstr "대상 계정은 읽기 전용입니다."
+
+#~ msgid "Difference at closing PoS session"
+#~ msgstr "POS 세션 종료 시의 차액"
+
+#~ msgid ""
+#~ "Difference between the theoretical closing balance and the real closing "
+#~ "balance."
+#~ msgstr "이론적 결산 잔액과 실질 결산 잔액의 차이."
+
+#~ msgid "Ending Balance"
+#~ msgstr "기말 잔액"
+
+#~ msgid "Force Close Session"
+#~ msgstr "세션 강제 종료"
+
+#~ msgid ""
+#~ "Forces to set a customer when using this payment method and splits the "
+#~ "journal entries for each customer. It could slow down the closing process."
+#~ msgstr ""
+#~ "이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니"
+#~ "다. 종료 단계의 과정이 느려질 수 있습니다."
+
+#~ msgid "From invoice payments"
+#~ msgstr "청구서 결제에서"
+
+#~ msgid "Has Cash Control"
+#~ msgstr "현금 제어됨"
+
+#~ msgid "Identify Customer"
+#~ msgstr "고객 확인"
+
+#~ msgid "Information message"
+#~ msgstr "정보 메시지"
+
+#~ msgid "Intermediary account used for unidentified customers."
+#~ msgstr "확인되지 않은 고객용으로 사용하는 임시 계정"
+
+#~ msgid "Invoice Journal"
+#~ msgstr "청구서 전표"
+
+#~ msgid ""
+#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
+#~ msgstr ""
+#~ "%(order)s에 대한 (%(account_move)s)은 %(payment_method)s을 사용하여 결제합"
+#~ "니다."
+
+#~ msgid "Is Invoiced"
+#~ msgstr "청구서 발행 완료되었습니다"
+
+#~ msgid "Journal Items"
+#~ msgstr "전표 항목"
+
+#~ msgid "Last Session Closing Cash"
+#~ msgstr "최근 세션 마감 시재"
+
+#~ msgid ""
+#~ "Need loss account for the following journals to post the lost amount: %s\n"
+#~ msgstr "손실 금액에 대한 전표 발행용 손실 계정이 있어야 합니다: %s\n"
+
+#~ msgid ""
+#~ "Need profit account for the following journals to post the gained amount: "
+#~ "%s"
+#~ msgstr "수익 금액에 대한 전표 발행용 수익 계정이 있어야 합니다: %s"
+
+#~ msgid "Not available"
+#~ msgstr "사용할 수 없습니다"
+
+#~ msgid "Opening balance summed to all cash transactions."
+#~ msgstr "전체 현금 거래에 대한 기초 잔액 합계액입니다."
+
+#~ msgid ""
+#~ "Please go on the %s journal and define a Loss Account. This account will "
+#~ "be used to record cash difference."
+#~ msgstr ""
+#~ "%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계정은 현금 차액을 기록하"
+#~ "는데 사용합니다."
+
+#~ msgid ""
+#~ "Please go on the %s journal and define a Profit Account. This account "
+#~ "will be used to record cash difference."
+#~ msgstr ""
+#~ "%s 전표로 이동하여 수익 계정을 설정하십시오. 이 계정은 현금 차액을 기록하"
+#~ "는데 사용합니다."
+
+#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
+#~ msgstr "%(original_price)s에서 %(discounted_price)s으로 가격 할인"
+
+#~ msgid "Refresh customer display"
+#~ msgstr "고객 디스플레이 새로 고침"
+
+#~ msgid "Related Session: %(link)s"
+#~ msgstr "관련 세션: %(link)s"
+
+#~ msgid ""
+#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+#~ "(session)s"
+#~ msgstr ""
+#~ "POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
+
+#~ msgid "Session Journal Entry"
+#~ msgstr "세션 전표입력"
+
+#~ msgid "Snoozed Products"
+#~ msgstr "품목 잠그기"
+
+#~ msgid "Starting Balance"
+#~ msgstr "개시 잔액"
+
+#~ msgid ""
+#~ "The invoice journal must be in the same currency as the Sales Journal or "
+#~ "the company currency if that is not set."
+#~ msgstr ""
+#~ "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화로 설정해야 합니다."
+
+#~ msgid ""
+#~ "The session has been already closed by another User. All sales completed "
+#~ "in the meantime have been saved in a Rescue Session, which can be "
+#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
+#~ msgstr ""
+#~ "다른 사용자가 이미 세션을 종료하였습니다. 그동안 완료된 전체 매출 내역은 "
+#~ "헬프 세션에 저장되어 언제든 확인하실 수 있으며 POS 현황판에서 회계로 발행"
+#~ "할 수 있습니다."
+
+#~ msgid "Theoretical Closing Balance"
+#~ msgstr "이론적인 결산 잔액"
+
+#~ msgid ""
+#~ "There is a difference between the amounts to post and the amounts of the "
+#~ "orders, it is probably caused by taxes or accounting configurations "
+#~ "changes."
+#~ msgstr ""
+#~ "발행 금액과 주문 금액 사이에 차이가 있으며, 세금이나 회계 구성 변경으로 발"
+#~ "생한 것일 수 있습니다."
+
+#~ msgid "There is no cash register in this session."
+#~ msgstr "이 세션에는 금전등록기가 없습니다."
+
+#~ msgid "Transaction"
+#~ msgstr "거래"
+
+#~ msgid ""
+#~ "Unable to close and validate the session.\n"
+#~ "Please set corresponding tax account in each repartition line of the "
+#~ "following taxes: \n"
+#~ "%s"
+#~ msgstr ""
+#~ "세션을 닫고 유효성을 검사할 수 없습니다.\n"
+#~ "다음 세금의 각 분할 명세에 해당 세금 계정을 설정하십시오 :\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "You cannot close the POS when invoices are not posted.\n"
+#~ "Invoices: %s"
+#~ msgstr ""
+#~ "청구서를 발행하지 않으면 POS를 종료할 수 없습니다.\n"
+#~ "청구서: %s"
+
+#~ msgid ""
+#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
+#~ "payment method,but the order %(order)s does not contain a customer."
+#~ msgstr ""
+#~ "%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했"
+#~ "지만 %(order)s 주문 내용에 고객 정보가 포함되어 있지 않습니다."
 
 #~ msgid "Chose a combo to apply"
 #~ msgstr "적용할 콤보를 선택하세요"

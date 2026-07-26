@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 19:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -2902,7 +2902,6 @@ msgstr "年龄"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
-#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "All Events"
 msgstr "所有活动"
 
@@ -3382,6 +3381,12 @@ msgstr "配置"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Confirm the selected dates."
 msgstr ""
 
 #. module: event
@@ -5045,6 +5050,12 @@ msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr "打开日期范围选择器。<br/>为您的事件选择开始和结束日期。"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Open the Tickets tab."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the "
@@ -5091,6 +5102,18 @@ msgstr "电话"
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
 msgstr "电话号码"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick a start date."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick an end date."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -5370,6 +5393,12 @@ msgstr "运行中"
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "短信发送错误"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Save the ticket."
+msgstr ""
 
 #. module: event
 #. odoo-javascript
@@ -6024,6 +6053,13 @@ msgstr "票证类型使您可以区分参会者。 让我们<b>创建</b>一个�
 
 #. module: event
 #. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid ""
+"Ticket types allow you to distinguish your attendees. Let's create a new one."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
 msgstr ""
@@ -6232,8 +6268,8 @@ msgstr "使用活动标签类别来分类和组织您的活动标签。"
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr "使用<b>面包屑</b>返回到看板概述。"
+msgid "Use the breadcrumbs to go back to your kanban overview."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -6513,6 +6549,9 @@ msgstr "明天"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
+
+#~ msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
+#~ msgstr "使用<b>面包屑</b>返回到看板概述。"
 
 #~ msgid "Continue"
 #~ msgstr "继续"

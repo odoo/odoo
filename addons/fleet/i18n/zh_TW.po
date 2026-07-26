@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-21 23:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -64,8 +64,8 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
 msgstr ""
-"拖車掛鈎是一種安裝在車輛底盤上、用於牽引的裝置，             例如用作牽引拖車"
-"、船隻或其他車輛。"
+"拖車掛鈎是一種安裝在車輛底盤上、用於牽引的裝置，             例如用作牽引拖"
+"車、船隻或其他車輛。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -869,6 +869,7 @@ msgstr "折舊及利息"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Description"
 msgstr "說明"
 
@@ -1812,11 +1813,6 @@ msgid "None"
 msgstr "無"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Note"
-msgstr "備註"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Notes"
@@ -1953,8 +1949,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ "
-"object.partner_id.lang }}。"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
+"{{ object.partner_id.lang }}。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2821,8 +2817,10 @@ msgstr "與該服務完成相關聯的任何資訊寫於此處。"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Write here any other information related to this vehicle"
-msgstr "在此處填寫與此車輛相關的任何其他資訊"
+msgid ""
+"Write here any other information related to this vehicle to show in salary "
+"configurator"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -2933,6 +2931,12 @@ msgstr "顯示該車輛的服務日誌"
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "user_id"
 msgstr ""
+
+#~ msgid "Note"
+#~ msgstr "備註"
+
+#~ msgid "Write here any other information related to this vehicle"
+#~ msgstr "在此處填寫與此車輛相關的任何其他資訊"
 
 #~ msgid ""
 #~ "A trailer hitch is a device attached to a vehicle's chassis for towing "

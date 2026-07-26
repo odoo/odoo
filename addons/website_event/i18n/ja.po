@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 03:47+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -94,11 +94,6 @@ msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
 msgstr "<i class=\"fa fa-ban me-2\"/>完売"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
-msgid "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, 2025"
-msgstr "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025年8月23日"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
 msgstr "<i class=\"fa fa-caret-left me-2\"/><small>前へ</small>"
@@ -112,11 +107,6 @@ msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>登録済"
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr "<i class=\"fa fa-check me-2\"/>登録済"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
-msgid "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM"
-msgstr "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
@@ -138,9 +128,14 @@ msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
 msgstr "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"場所\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
+msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/> オンラインイベント"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 msgid ""
-"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"location_on\" role=\"presentation\"/>\n"
 "                                    <span> Los Angeles, CA, United States</"
 "span>"
 msgstr ""
@@ -148,16 +143,15 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
-"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
-"CA, United States"
+"<i class=\"oi me-2\" data-icon=\"location_on\" role=\"presentation\"/>Los "
+"Los Angeles, CA, United States"
 msgstr ""
-"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
-"CA, United States"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
-msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/> オンラインイベント"
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" role=\"presentation\"/>8:15 PM"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -167,6 +161,13 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-chevron-left\"/>\n"
 "                <span>イベント一覧</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
+msgid ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"calendar_today\" "
+"role=\"presentation\"/>August 23, 2025"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -196,11 +197,9 @@ msgstr "<span class=\"fa fa-plus me-1\"/> イベントを作成"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_entry_preview_data
 msgid ""
-"<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
+"<span class=\"fs-5\"><i class=\"oi me-2\" data-icon=\"location_on\" "
 "role=\"presentation\"/>Los Angeles, CA, United States</span>"
 msgstr ""
-"<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
-"role=\"presentation\"/>Los Angeles, CA, United States</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -216,12 +215,13 @@ msgstr ""
 msgid ""
 "<span class=\"o_cc o_cc1 d-inline-flex justify-content-center flex-wrap "
 "gap-3 my-3 border py-2 px-3 rounded-pill\">\n"
-"                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
+"                    <i class=\"oi oi-filled\" data-icon=\"calendar_today\" "
+"role=\"presentation\"/>\n"
 "                    <strong>Harmony Under the Stars</strong>\n"
 "                    <span class=\"text-muted\">August 23, 2025 - 8:15 PM</"
 "span>\n"
-"                    <span class=\"text-primary\">Register <i class=\"fa fa-"
-"long-arrow-right\" role=\"presentation\"/></span>\n"
+"                    <span class=\"text-primary\">Register <i class=\"oi\" "
+"data-icon=\"east\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
 
@@ -273,36 +273,30 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_badge
 msgid ""
-"<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-long-"
-"arrow-right\"/></span>"
+"<span class=\"text-primary text-nowrap\">Register Now <i class=\"oi\" data-"
+"icon=\"east\"/></span>"
 msgstr ""
-"<span class=\"text-primary text-nowrap\">今すぐ登録<i class=\"fa fa-long-"
-"arrow-right\"/></span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
+msgid ""
+"<span><i class=\"oi me-2\" data-icon=\"location_on\" role=\"presentation\"/"
+">Los Angeles, CA, United States</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
+msgid ""
+"<span><i class=\"oi me-2\" data-icon=\"schedule\" role=\"presentation\"/"
+">8:15 PM</span>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 msgid ""
-"<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, "
-"2025 at 8:15 PM</span>"
+"<span><i class=\"oi oi-filled me-2\" data-icon=\"calendar_today\" "
+"role=\"presentation\"/>August 23, 2025 at 8:15 PM</span>"
 msgstr ""
-"<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025年8月23日 "
-"8:15 PM</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
-msgid ""
-"<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</span>"
-msgstr ""
-"<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</span>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
-msgid ""
-"<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
-"CA, United States</span>"
-msgstr ""
-"<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
-"CA, United States</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -1421,24 +1415,22 @@ msgstr "今すぐ登録"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_aside
-msgid ""
-"Register Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
-msgstr "今すぐ登録<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+msgid "Register Now <i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
-msgid "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-msgstr "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
+msgid "Register<i class=\"oi ms-2\" data-icon=\"east\" role=\"img\"/>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
-msgid ""
-"Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-msgstr "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
+msgid "Register<i class=\"oi ms-2\" data-icon=\"east\" role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
-msgid "Register<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+msgid "Register<i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
 msgstr ""
 
 #. module: website_event
@@ -1813,6 +1805,12 @@ msgid "Use this paragraph to write a short text about your events or company."
 msgstr "この段落を使い、イベントや会社についての短い文章を書いて下さい。"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/tours/event_tour.js:0
+msgid "Use this shortcut to easily access your event web page."
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
 msgid "Used when not being an url based menu"
 msgstr "URLベースのメニューでない場合に使用されます。"
@@ -2036,6 +2034,69 @@ msgstr "w-100"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "w-100 py-sm-3 mt-sm-2"
 msgstr "w-100 py-sm-3 mt-sm-2"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, 2025"
+#~ msgstr ""
+#~ "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025年8月23日"
+
+#~ msgid "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM"
+#~ msgstr "<i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los "
+#~ "Angeles, CA, United States"
+#~ msgstr ""
+#~ "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los "
+#~ "Angeles, CA, United States"
+
+#~ msgid ""
+#~ "<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
+#~ "role=\"presentation\"/>Los Angeles, CA, United States</span>"
+#~ msgstr ""
+#~ "<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
+#~ "role=\"presentation\"/>Los Angeles, CA, United States</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-"
+#~ "long-arrow-right\"/></span>"
+#~ msgstr ""
+#~ "<span class=\"text-primary text-nowrap\">今すぐ登録<i class=\"fa fa-long-"
+#~ "arrow-right\"/></span>"
+
+#~ msgid ""
+#~ "<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, "
+#~ "2025 at 8:15 PM</span>"
+#~ msgstr ""
+#~ "<span><i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025年8月23"
+#~ "日 8:15 PM</span>"
+
+#~ msgid ""
+#~ "<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los "
+#~ "Angeles, CA, United States</span>"
+#~ msgstr ""
+#~ "<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los "
+#~ "Angeles, CA, United States</span>"
+
+#~ msgid ""
+#~ "Register Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+#~ msgstr ""
+#~ "今すぐ登録<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+
+#~ msgid "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
+#~ msgstr "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
+
+#~ msgid ""
+#~ "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
+#~ msgstr ""
+#~ "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 
 #~ msgid ""
 #~ "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "

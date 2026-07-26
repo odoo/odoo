@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 12:03+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -126,7 +126,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
 
@@ -142,7 +141,6 @@ msgstr "Bir Çevrim İçi Ödeme Sağlayıcısı Var"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
 msgid "ID"
 msgstr "ID"
 
@@ -177,7 +175,6 @@ msgstr "Çevrimiçi"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
 msgstr "Online Ödeme"
 
@@ -185,6 +182,12 @@ msgstr "Online Ödeme"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
 msgstr "Çevrim İçi Ödeme Yöntemi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Online Payment Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -236,6 +239,12 @@ msgid "POS Order"
 msgstr "POS Siparişi"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "POS Receivable Transfer"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Payment"
@@ -282,11 +291,6 @@ msgstr ""
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
 msgstr ""
-
-#. module: pos_online_payment
-#: model:ir.model,name:pos_online_payment.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Satış Noktası Oturumu"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -377,12 +381,6 @@ msgstr "Sipariş iptal edildi."
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr "Sipariş sunucuda düzgün şekilde kaydedilemedi."
-
-#. module: pos_online_payment
-#. odoo-python
-#: code:addons/pos_online_payment/models/pos_session.py:0
-msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr "POS çevrim içi ödemesine ait partner (id=%d) bulunamadı."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -511,6 +509,12 @@ msgid "Transaction Reference"
 msgstr "İşlem Referansı"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
+msgstr ""
+
+#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Try again"
 msgstr "Tekrar deneyin"
@@ -525,15 +529,6 @@ msgstr "Tip"
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "Güncellenmiş çevrim içi ödemeler"
-
-#. module: pos_online_payment
-#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-msgid ""
-"Use this payment method for online payments (payments made on a web page "
-"with online payment providers)"
-msgstr ""
-"Bu ödeme yöntemini çevrim içi ödemeler için kullanın (çevrim içi ödeme "
-"sağlayıcıları ile bir web sayfasında yapılan ödemeler)"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -574,3 +569,16 @@ msgstr "ödeme sağlayıcısı"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "çevrim içi ödemelere izin vermek için."
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "Satış Noktası Oturumu"
+
+#~ msgid "The partner of the POS online payment (id=%d) could not be found"
+#~ msgstr "POS çevrim içi ödemesine ait partner (id=%d) bulunamadı."
+
+#~ msgid ""
+#~ "Use this payment method for online payments (payments made on a web page "
+#~ "with online payment providers)"
+#~ msgstr ""
+#~ "Bu ödeme yöntemini çevrim içi ödemeler için kullanın (çevrim içi ödeme "
+#~ "sağlayıcıları ile bir web sayfasında yapılan ödemeler)"

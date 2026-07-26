@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 01:54+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -191,6 +191,14 @@ msgstr "%(name)s (잔여 시간 %(time)g, 총 %(maximum)g시간 )"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -280,26 +288,6 @@ msgstr "요약 ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "이 기간에 대한 요약"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -460,8 +448,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 msgid ""
 "<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                            <span "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
+"                                    <span invisible=\"unit_of_measure != "
+"'hour'\">hours</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -1056,6 +1044,14 @@ msgid "Approved Requests"
 msgstr "승인된 요청"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"Approved time off cannot be modified (%(employee)s: %(date_from)s to %"
+"(date_to)s)."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Approved:"
@@ -1544,6 +1540,11 @@ msgid "Created on"
 msgstr "작성일자"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Current Company"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
 msgid "Current Time Off Status"
 msgstr "현재 휴가 상태"
@@ -1893,6 +1894,8 @@ msgid "Eligible for Accrual Rate"
 msgstr "적립률 적용 대상"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
@@ -1977,6 +1980,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Exclude Refused"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "External ID (update only)"
 msgstr ""
 
 #. module: hr_holidays
@@ -3158,6 +3167,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
 msgstr "기간"
@@ -3325,11 +3335,15 @@ msgid "Reporting"
 msgstr "보고"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
 msgstr "요청 종료일"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
 msgstr "요청 시작일"
@@ -3349,11 +3363,6 @@ msgstr "요청함"
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 msgid "Requests"
 msgstr "요청"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid "Require Supporting Document"
-msgstr "증빙 서류 필요"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_requires_allocation
@@ -3855,12 +3864,6 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "해당 요청을 처리할 수 있는 유효한 할당이 없습니다."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "There is no valid allocation to cover this request for the following "
 "employees: %s"
@@ -3938,12 +3941,6 @@ msgstr "이는 이 유형의 휴가가 여전히 가능한지 여부를 나타�
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "This milestone will be reached :"
 msgstr "다음에 도달할 마일스톤:"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "This modification is not allowed in the current state."
-msgstr "현재 상태에서는 이 수정이 허용되지 않습니다."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4169,6 +4166,12 @@ msgid "Time Type Approval"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "Time Type/External ID"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_work_entry_type
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
@@ -4271,6 +4274,14 @@ msgstr "마감일"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "To Validate"
 msgstr "승인하기"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"To import it as a new time off request instead, leave the External ID column "
+"empty."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4906,8 +4917,8 @@ msgstr "누적 유효 기간은 0으로 설정할 수 없습니다."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already                 been taken for this time off type. Changing it "
-"now would affect existing employee balances."
+"have already been taken for this time off type. Changing it now would affect "
+"existing employee balances."
 msgstr ""
 
 #. module: hr_holidays
@@ -4915,9 +4926,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Public Holiday Included' setting since one or more "
-"leaves for that                         time type are overlapping with "
-"public holidays, meaning that the balance of those employees would be "
-"affected by this change."
+"leaves for that time type are overlapping with public holidays, meaning that "
+"the balance of those employees would be affected by this change."
 msgstr ""
 
 #. module: hr_holidays
@@ -5020,6 +5030,12 @@ msgstr "지정일"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "및"
@@ -5050,6 +5066,12 @@ msgstr "여기를 클릭하세요"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "날짜"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5139,6 +5161,12 @@ msgstr "배정이 시작될 때부터"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5157,6 +5185,12 @@ msgstr "id"
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "leaves of type 'Worked Time' should be always eligible for accrual rate."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -5266,6 +5300,21 @@ msgstr "미지정"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "승인"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr ""
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "해당 요청을 처리할 수 있는 유효한 할당이 없습니다."
+
+#~ msgid "Require Supporting Document"
+#~ msgstr "증빙 서류 필요"
+
+#~ msgid "This modification is not allowed in the current state."
+#~ msgstr "현재 상태에서는 이 수정이 허용되지 않습니다."
 
 #~ msgid "Pending Requests"
 #~ msgstr "대기 중인 요청"

@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-22 00:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -72,6 +72,13 @@ msgstr ""
 "2. Vahvista, että haluat poistaa tilisi\n"
 "                                        kopioimalla tähän kenttään "
 "käyttäjätunnuksesi ("
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid ""
+"<br/>\n"
+"                            If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -147,38 +154,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Dokumentaatio\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            Changing VAT number is not allowed once "
-"document(s) have\n"
-"                            been issued for your account. Please contact us "
-"directly for this\n"
-"                            operation.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            ALV-numeron muuttaminen ei ole sallittua sen "
-"jälkeen, kun\n"
-"                            tilillesi on jaettu asiakirjoja. Ota meihin "
-"suoraan yhteyttä tämän\n"
-"                            muutoksen tekemiseksi.\n"
-"                        </small>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            The VAT number can only be updated on the "
-"company account.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            ALV-numero voidaan päivittää vain yritystilin "
-"asetuksissa.\n"
-"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -750,11 +725,6 @@ msgstr ""
 "asetuksissa tai ota yhteyttä ylläpitäjääsi."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "If you want to modify it, update"
-msgstr "Jos haluat muokata sitä, päivitä"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr ""
@@ -1241,7 +1211,14 @@ msgid ""
 msgstr "Liitettä ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid "The company billing details can only be updated on the company account."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr "Yrityksen nimi ja ALV-numero voidaan päivittää vain päätilillä."
@@ -1348,6 +1325,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Kytke suotimet"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Updating VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1534,6 +1519,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "tilisi tiedot"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Changing VAT number is not allowed once "
+#~ "document(s) have\n"
+#~ "                            been issued for your account. Please contact "
+#~ "us directly for this\n"
+#~ "                            operation.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            ALV-numeron muuttaminen ei ole sallittua sen "
+#~ "jälkeen, kun\n"
+#~ "                            tilillesi on jaettu asiakirjoja. Ota meihin "
+#~ "suoraan yhteyttä tämän\n"
+#~ "                            muutoksen tekemiseksi.\n"
+#~ "                        </small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            The VAT number can only be updated on the "
+#~ "company account.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            ALV-numero voidaan päivittää vain yritystilin "
+#~ "asetuksissa.\n"
+#~ "                        </small>"
+
+#~ msgid "If you want to modify it, update"
+#~ msgstr "Jos haluat muokata sitä, päivitä"
 
 #~ msgid "Website Messages"
 #~ msgstr "Verkkosivun ilmoitukset"

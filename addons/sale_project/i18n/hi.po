@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-19 04:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-master/"
@@ -95,16 +95,6 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid ""
-"A project must be defined on the quotation %(order)s or on the form of "
-"products creating a task on order.\n"
-"The following product need a project in which to put its task: %"
-"(product_name)s"
 msgstr ""
 
 #. module: sale_project
@@ -520,6 +510,11 @@ msgid "Project Milestones"
 msgstr ""
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_required
+msgid "Project Required"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
@@ -527,8 +522,18 @@ msgid "Project Template"
 msgstr ""
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Project Template Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_warning_text
+msgid "Project Warning"
 msgstr ""
 
 #. module: sale_project
@@ -748,6 +753,11 @@ msgid "Task Template"
 msgstr ""
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_warning_text
+msgid "Task Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
 msgid "Tasks"
 msgstr ""
@@ -847,6 +857,13 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Warning for the partner as set by the user."
 msgstr ""
 
 #. module: sale_project

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 04:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -399,11 +399,6 @@ msgid "<i class=\"fa fa-cart-arrow-down me-2\"/>Order"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
-msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr "<i class=\"fa fa-cart-plus me-2\"/>Tambahkan ke keranjang belanja"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid ""
 "<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
@@ -413,14 +408,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-download me-2\"/>Download"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small "
-"ms-1\">Contact Us</span>"
 msgstr ""
 
 #. module: website_sale
@@ -480,13 +467,6 @@ msgstr ""
 "                    Pesan Lagi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Add to Cart</span>"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
 msgstr ""
@@ -496,6 +476,11 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
+msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
 msgstr ""
 
 #. module: website_sale
@@ -520,6 +505,21 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Next\" title=\"Berikutnya\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                            <span class=\"o_label small "
+"ms-1\">Contact Us</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+"><span class=\"o_label small ms-1\">Add to Cart</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -1421,7 +1421,14 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
+msgid "Add Image"
 msgstr ""
 
 #. module: website_sale
@@ -1429,12 +1436,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
 msgstr "Tambahkan Media"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Add More"
-msgstr "Tambahkan Lebih Banyak"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2314,6 +2315,7 @@ msgstr "Kotak-Kotak yang Dapat Ditutup"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 msgid "Color"
 msgstr "Warna"
 
@@ -2655,11 +2657,6 @@ msgstr "Customer Care"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
 msgstr "Negara Pelanggan"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
-msgid "Customer Reviews"
-msgstr "Review Pelanggan"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -3305,12 +3302,6 @@ msgid "Extra Info"
 msgstr "Info Tambahan"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Extra Media"
-msgstr "Media Tambahan"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 msgid "Extra Product Media"
@@ -3843,6 +3834,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 msgid "Image"
@@ -3984,7 +3976,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr ""
 
@@ -4324,12 +4316,6 @@ msgid "Main Button Label"
 msgstr "Label Tombol Utama"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Main Image"
-msgstr "Gambar Utama"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
 msgstr ""
@@ -4364,6 +4350,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Media"
 msgstr "Media"
@@ -5102,6 +5090,12 @@ msgid "Please select or enter an amount"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__4_5
@@ -5777,6 +5771,7 @@ msgstr "Relokasi dan Perpindahan"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove"
 msgstr "Hapus"
@@ -5784,7 +5779,6 @@ msgstr "Hapus"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Remove All"
 msgstr "Hapus Semua"
 
@@ -5816,6 +5810,12 @@ msgid "Remove from wishlist"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+msgid "Remove image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
@@ -5843,13 +5843,14 @@ msgstr "Perbaikan dan Maintenance"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace"
 msgstr "Ganti"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace image"
 msgstr "Ganti gambar"
 
@@ -5915,6 +5916,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Reviews"
 msgstr "Tinjauan"
 
@@ -6692,8 +6694,15 @@ msgstr "Tab"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Tag"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_template_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Tags"
@@ -7038,6 +7047,12 @@ msgstr "Produk ini sudah tidak tersedia lagi."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale
@@ -8070,6 +8085,21 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Add More"
+#~ msgstr "Tambahkan Lebih Banyak"
+
+#~ msgid "Customer Reviews"
+#~ msgstr "Review Pelanggan"
+
+#~ msgid "Extra Media"
+#~ msgstr "Media Tambahan"
+
+#~ msgid "Main Image"
+#~ msgstr "Gambar Utama"
+
+#~ msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
+#~ msgstr "<i class=\"fa fa-cart-plus me-2\"/>Tambahkan ke keranjang belanja"
 
 #~ msgid "<span>Publish on website</span>"
 #~ msgstr "<span>Publikasikan pada website</span>"

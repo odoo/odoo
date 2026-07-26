@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-20 06:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1392,10 +1392,18 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: hr
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid "Confirm"
 msgstr "确认"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
+msgid "Confirmation Warning"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4540,6 +4548,7 @@ msgstr "相关联系人"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_type.py:0
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__employee_ids
 msgid "Related Employees"
 msgstr "相关员工"
 
@@ -5254,6 +5263,14 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid ""
+"The working schedule '%s' is linked to version(s) not compatible with its "
+"new company."
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "There is no valid version starting before the departure date for %s."
 msgstr ""
@@ -5316,6 +5333,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
 msgstr "这个设置块用于管理前端设计"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
+msgid ""
+"This working schedule is used by  employee(s), are you sure you want change "
+"it for all employees?"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5693,6 +5718,11 @@ msgid "Variable Hours"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_resource_calendar__version_ids
+msgid "Version"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_revision
 msgid "Version Revision"
 msgstr ""
@@ -6032,6 +6062,15 @@ msgstr "您收到此信息是因为您是负责管理该员工的人力资源专
 #: code:addons/hr/static/src/core/common/store_service_patch.js:0
 msgid "You can only chat with employees that have a dedicated user."
 msgstr "您只能与拥有专门用户的员工聊天。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid ""
+"You can't change this working schedule, it's used by employees from other "
+"companies you don't have access to. Contact your admin or create a new "
+"working schedule."
+msgstr ""
 
 #. module: hr
 #. odoo-python

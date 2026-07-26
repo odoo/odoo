@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 18:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/event/"
@@ -2907,7 +2907,6 @@ msgstr "연령"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
-#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "All Events"
 msgstr "모든 일정"
 
@@ -3401,6 +3400,12 @@ msgstr "설정"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Confirm the selected dates."
 msgstr ""
 
 #. module: event
@@ -5081,6 +5086,12 @@ msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr "날짜 범위 선택창을 엽니다. <br/>행사 시작일을 선택하세요."
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Open the Tickets tab."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the "
@@ -5129,6 +5140,18 @@ msgstr "전화번호"
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
 msgstr "전화번호"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick a start date."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick an end date."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -5409,6 +5432,12 @@ msgstr "진행중"
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS 전송 오류"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Save the ticket."
+msgstr ""
 
 #. module: event
 #. odoo-javascript
@@ -6081,6 +6110,13 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid ""
+"Ticket types allow you to distinguish your attendees. Let's create a new one."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
 msgstr ""
@@ -6292,8 +6328,8 @@ msgstr "행사 태그 카테고리를 이용하여 행사 태그를 분류하고
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr "칸반 화면으로 돌아가려면 <b>브레드크럼</b>을 사용하시기 바랍니다."
+msgid "Use the breadcrumbs to go back to your kanban overview."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -6579,6 +6615,9 @@ msgstr "내일"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
+
+#~ msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
+#~ msgstr "칸반 화면으로 돌아가려면 <b>브레드크럼</b>을 사용하시기 바랍니다."
 
 #~ msgid "Continue"
 #~ msgstr "계속"

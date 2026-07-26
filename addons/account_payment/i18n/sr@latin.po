@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-21 12:34+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -145,6 +145,11 @@ msgstr "Platna transakcija sa brojem %s već postoji."
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "Za kreiranje nove platne transakcije neophodan je token."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -322,15 +327,6 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"U test modu, lažna plaćanja se obrađuju kroz testni interfejs plaćanja.\n"
-"Ovaj mod se savetuje kada postavljate provajdera."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -619,11 +615,6 @@ msgid "Source Payment"
 msgstr "Izvorno plaćanje"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "Stanje"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -694,8 +685,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Došlo je do greške prilikom obrade vašeg plaćanja: transakcija nije "
-"uspela.<br/>"
+"Došlo je do greške prilikom obrade vašeg plaćanja: transakcija nije uspela."
+"<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -760,13 +751,9 @@ msgstr "Ništavna transakcija"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Ne možete obrisati metod plaćanja koji je povezan sa provajderom koji je "
-"statusu testiranja.\n"
-"Povezani provajder(i): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -782,11 +769,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Morate prvo deaktivirati provajdera plaćanja pre brisanja unosa u dnevnik.\n"
-"Povezani provajderi: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -820,3 +805,32 @@ msgstr ""
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "U test modu, lažna plaćanja se obrađuju kroz testni interfejs plaćanja.\n"
+#~ "Ovaj mod se savetuje kada postavljate provajdera."
+
+#~ msgid "State"
+#~ msgstr "Stanje"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "Ne možete obrisati metod plaćanja koji je povezan sa provajderom koji je "
+#~ "statusu testiranja.\n"
+#~ "Povezani provajder(i): %s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "Morate prvo deaktivirati provajdera plaćanja pre brisanja unosa u "
+#~ "dnevnik.\n"
+#~ "Povezani provajderi: %s"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 05:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -54,6 +54,13 @@ msgid ""
 msgstr ""
 "2. Konfirmasi apakah Anda ingin menghapus akun Anda dengan\n"
 "                                        menyalin login Anda ("
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid ""
+"<br/>\n"
+"                            If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -130,38 +137,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Dokumentasi\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            Changing VAT number is not allowed once "
-"document(s) have\n"
-"                            been issued for your account. Please contact us "
-"directly for this\n"
-"                            operation.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            Mengubah nomor PPN tidak diizinkan setelah "
-"dokumen telah\n"
-"                            diterbitkan untuk akun Anda. Silakan hubungi "
-"kami langsung untuk operasi\n"
-"                            ini.\n"
-"                        </small>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            The VAT number can only be updated on the "
-"company account.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            Angka PPN hanya dapat diupdate di akun "
-"perusahaan.\n"
-"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -733,11 +708,6 @@ msgstr ""
 "mohon lakukan di pengaturan akun atau hubungi administrator Anda."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "If you want to modify it, update"
-msgstr "Bila Anda ingin memodifikasi, update"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr "Gambar"
@@ -1225,7 +1195,14 @@ msgstr ""
 "Lampiran tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid "The company billing details can only be updated on the company account."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
@@ -1329,6 +1306,14 @@ msgstr "Judul Kartu"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Toggle filter"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Updating VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1515,6 +1500,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "detail akun Anda"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Changing VAT number is not allowed once "
+#~ "document(s) have\n"
+#~ "                            been issued for your account. Please contact "
+#~ "us directly for this\n"
+#~ "                            operation.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Mengubah nomor PPN tidak diizinkan setelah "
+#~ "dokumen telah\n"
+#~ "                            diterbitkan untuk akun Anda. Silakan hubungi "
+#~ "kami langsung untuk operasi\n"
+#~ "                            ini.\n"
+#~ "                        </small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            The VAT number can only be updated on the "
+#~ "company account.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Angka PPN hanya dapat diupdate di akun "
+#~ "perusahaan.\n"
+#~ "                        </small>"
+
+#~ msgid "If you want to modify it, update"
+#~ msgstr "Bila Anda ingin memodifikasi, update"
 
 #~ msgid "Website Messages"
 #~ msgstr "Pesan situs"

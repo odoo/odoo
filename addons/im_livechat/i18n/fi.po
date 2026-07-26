@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-19 18:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -93,20 +93,20 @@ msgstr "% Onnellisuudesta"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
 msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "%(hours)sh"
 msgstr "%(hours)sh"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
 msgstr ""
 
@@ -690,6 +690,12 @@ msgid "Configure Channel"
 msgstr "Määritä kanava"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Connect"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Yhteystiedot"
@@ -1016,6 +1022,12 @@ msgstr "Ota käyttöön ChatBot"
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Engage with visitors to convert leads or offer services."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
@@ -1138,8 +1150,8 @@ msgid ""
 "<strong>Marketing.</strong>"
 msgstr ""
 "Siirry: <strong>Verkkosivu</strong> &gt; <strong>Kokoonpano</strong> &gt; "
-"<strong>Asetukset</strong> &gt; <strong>Sähköposti</strong> &amp; <strong>"
-"Markkinointi.</strong>"
+"<strong>Asetukset</strong> &gt; <strong>Sähköposti</strong> &amp; "
+"<strong>Markkinointi.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1223,6 +1235,12 @@ msgid "Help Status"
 msgstr "Avun tila"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Help needed"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 #, fuzzy
 msgid "Here's a copy of your conversation with"
@@ -1256,7 +1274,8 @@ msgstr ""
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_demo
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
-msgstr "Hmmm, katson, josko löytäisin jonkun, joka voisi auttaa sinua siinä...."
+msgstr ""
+"Hmmm, katson, josko löytäisin jonkun, joka voisi auttaa sinua siinä...."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
@@ -1585,8 +1604,6 @@ msgid "Limited"
 msgstr "Rajoitettu"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -1661,7 +1678,7 @@ msgstr "Livechat-ikkuna"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 #, fuzzy
 msgid "Live Chats"
@@ -1785,7 +1802,6 @@ msgstr "Livechat kielet"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
@@ -1935,6 +1951,12 @@ msgstr "Ei keskusteluja puhelun aikana"
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
 msgstr "Ei virheitä"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "No Livechat Session!"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2232,8 +2254,7 @@ msgstr "Aiheeseen liittyvä sähköpostiviesti"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.xml:0
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 #, fuzzy
 msgid "Relevant to your expertise"
 msgstr "Liittyy asiantuntemukseesi"
@@ -2862,12 +2883,6 @@ msgstr ""
 #, fuzzy
 msgid "View Contact"
 msgstr "Katso yhteystieto"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.js:0
-msgid "View or join live chat channels"
-msgstr ""
 
 #. module: im_livechat
 #. odoo-python

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 14:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -35,7 +35,8 @@ msgstr "<strong>خطأ:</strong> العملة غير موجودة أو غير ص
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 msgid "A POS config cannot have more than one online payment method."
-msgstr "لا يمكن أن يكون لتهيئة نقطة البيع أكثر من طريقة دفع واحدة عبر الإنترنت."
+msgstr ""
+"لا يمكن أن يكون لتهيئة نقطة البيع أكثر من طريقة دفع واحدة عبر الإنترنت."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -47,7 +48,8 @@ msgstr "يجب أن يتم تحديد خيار دفع."
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A validation payment cannot be used for a Point of Sale online payment."
-msgstr "لا يمكن استخدام عملية الدفع للتأكيد من أجل الدفع أونلاين في نقطة البيع."
+msgstr ""
+"لا يمكن استخدام عملية الدفع للتأكيد من أجل الدفع أونلاين في نقطة البيع."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -125,7 +127,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
 
@@ -141,7 +142,6 @@ msgstr "يحتوي على مزود دفع عبر الإنترنت"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -176,7 +176,6 @@ msgstr "عبر الإنترنت"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
 msgstr "الدفع عبر الإنترنت"
 
@@ -184,6 +183,12 @@ msgstr "الدفع عبر الإنترنت"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
 msgstr "طريقة الدفع عبر الإنترنت"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Online Payment Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -235,6 +240,12 @@ msgid "POS Order"
 msgstr "طلب نقطة البيع"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "POS Receivable Transfer"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Payment"
@@ -281,11 +292,6 @@ msgstr ""
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
 msgstr ""
-
-#. module: pos_online_payment
-#: model:ir.model,name:pos_online_payment.model_pos_session
-msgid "Point of Sale Session"
-msgstr "جلسة نقطة البيع"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -379,12 +385,6 @@ msgstr "لم يتم حفظ الطلب بشكل صحيح في الخادم."
 
 #. module: pos_online_payment
 #. odoo-python
-#: code:addons/pos_online_payment/models/pos_session.py:0
-msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr "لم نتمكن من العثور على شريك الدفع الإلكتروني في نقطة البيع (id=%d)"
-
-#. module: pos_online_payment
-#. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
 msgstr "مزود الدفع غير صالح."
@@ -433,8 +433,8 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
-"إجمالي المبلغ المتبقي لدفعه عبر الإنترنت (%s) لا يتوافق مع المبلغ المتبقي دفعه "
-"في الطلب (%s)."
+"إجمالي المبلغ المتبقي لدفعه عبر الإنترنت (%s) لا يتوافق مع المبلغ المتبقي "
+"دفعه في الطلب (%s)."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -457,8 +457,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
-"توجد مشكلة في الخادم. تعذر إحضار حالة الدفع عبر الإنترنت. هل أنت متأكد من أنه "
-"لا يوجد دفع عبر الإنترنت لهذا الطلب؟"
+"توجد مشكلة في الخادم. تعذر إحضار حالة الدفع عبر الإنترنت. هل أنت متأكد من "
+"أنه لا يوجد دفع عبر الإنترنت لهذا الطلب؟"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -505,6 +505,12 @@ msgid "Transaction Reference"
 msgstr "مرجع المعالمة"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
+msgstr ""
+
+#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Try again"
 msgstr "حاول مجدداً"
@@ -519,15 +525,6 @@ msgstr "النوع"
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "تحديث المدفوعات عبر الإنترنت"
-
-#. module: pos_online_payment
-#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-msgid ""
-"Use this payment method for online payments (payments made on a web page "
-"with online payment providers)"
-msgstr ""
-"استخدم طريقة الدفع هذه للمدفوعات عبر الإنترنت (المدفوعات التي تتم على صفحة "
-"الويب باستخدام مزودي الدفع عبر الإنترنت)"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -568,3 +565,16 @@ msgstr "مزود دفع"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "للسماح بالمدفوعات عبر الإنترنت."
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "جلسة نقطة البيع"
+
+#~ msgid "The partner of the POS online payment (id=%d) could not be found"
+#~ msgstr "لم نتمكن من العثور على شريك الدفع الإلكتروني في نقطة البيع (id=%d)"
+
+#~ msgid ""
+#~ "Use this payment method for online payments (payments made on a web page "
+#~ "with online payment providers)"
+#~ msgstr ""
+#~ "استخدم طريقة الدفع هذه للمدفوعات عبر الإنترنت (المدفوعات التي تتم على "
+#~ "صفحة الويب باستخدام مزودي الدفع عبر الإنترنت)"

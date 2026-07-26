@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 09:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-master/"
@@ -126,7 +126,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -142,7 +141,6 @@ msgstr "Har en leverantör av onlinebetalningar"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
 msgid "ID"
 msgstr ""
 
@@ -177,7 +175,6 @@ msgstr "Online"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
 msgstr "Onlinebetalning"
 
@@ -185,6 +182,12 @@ msgstr "Onlinebetalning"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
 msgstr "Betalningsmetod online"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Online Payment Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -236,6 +239,12 @@ msgid "POS Order"
 msgstr "POS Order"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "POS Receivable Transfer"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Payment"
@@ -282,11 +291,6 @@ msgstr ""
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
 msgstr ""
-
-#. module: pos_online_payment
-#: model:ir.model,name:pos_online_payment.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Kassasession"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -379,12 +383,6 @@ msgstr "Beställningen har annullerats."
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr "Ordern har inte sparats på rätt sätt på servern."
-
-#. module: pos_online_payment
-#. odoo-python
-#: code:addons/pos_online_payment/models/pos_session.py:0
-msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr "Partnern för POS-betalningen online (id=%d) kunde inte hittas"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -516,6 +514,12 @@ msgid "Transaction Reference"
 msgstr "Transaktionsreferens"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
+msgstr ""
+
+#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Try again"
 msgstr "Försök Igen"
@@ -530,15 +534,6 @@ msgstr "Typ"
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "Uppdaterade onlinebetalningar"
-
-#. module: pos_online_payment
-#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-msgid ""
-"Use this payment method for online payments (payments made on a web page "
-"with online payment providers)"
-msgstr ""
-"Använd den här betalningsmetoden för onlinebetalningar (betalningar som görs "
-"på en webbsida med leverantörer av onlinebetalningar)"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -579,3 +574,16 @@ msgstr "betalningsleverantör"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "att tillåta betalningar online."
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "Kassasession"
+
+#~ msgid "The partner of the POS online payment (id=%d) could not be found"
+#~ msgstr "Partnern för POS-betalningen online (id=%d) kunde inte hittas"
+
+#~ msgid ""
+#~ "Use this payment method for online payments (payments made on a web page "
+#~ "with online payment providers)"
+#~ msgstr ""
+#~ "Använd den här betalningsmetoden för onlinebetalningar (betalningar som "
+#~ "görs på en webbsida med leverantörer av onlinebetalningar)"

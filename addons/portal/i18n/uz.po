@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 19:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/portal/"
@@ -60,6 +60,13 @@ msgid ""
 "                                        copying down your login ("
 msgstr ""
 "2. Hisobingizni o‘chirishni tasdiqlash uchun loginingizni nusxalab yozing ("
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid ""
+"<br/>\n"
+"                            If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -144,34 +151,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Hujjatlar\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-#, fuzzy
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            Changing VAT number is not allowed once "
-"document(s) have\n"
-"                            been issued for your account. Please contact us "
-"directly for this\n"
-"                            operation.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">Hisobingizga hujjat(lar) "
-"chiqarilgandan so‘ng QQS raqamini o‘zgartirish mumkin emas. Bu amal uchun "
-"bizga to‘g‘ridan-to‘g‘ri murojaat qiling.</small>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-#, fuzzy
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            The VAT number can only be updated on the "
-"company account.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">QQS raqamini faqat kompaniya hisobida "
-"yangilash mumkin.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -819,12 +798,6 @@ msgstr ""
 "yoki administratoringizga murojaat qiling."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-#, fuzzy
-msgid "If you want to modify it, update"
-msgstr "Agar uni o‘zgartirmoqchi bo‘lsangiz, yangilang"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr ""
@@ -1391,7 +1364,14 @@ msgid ""
 msgstr "Ilova mavjud emas yoki sizda unga kirish huquqi yo‘q."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid "The company billing details can only be updated on the company account."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
 #, fuzzy
 msgid ""
 "The company name and VAT number can only be updated on your main account."
@@ -1515,6 +1495,14 @@ msgstr ""
 #, fuzzy
 msgid "Toggle filters"
 msgstr "Filtrlarni yoqish/o‘chirish"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Updating VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1726,6 +1714,34 @@ msgstr ""
 #, fuzzy
 msgid "your account details"
 msgstr "hisobingiz ma'lumotlari"
+
+#, fuzzy
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Changing VAT number is not allowed once "
+#~ "document(s) have\n"
+#~ "                            been issued for your account. Please contact "
+#~ "us directly for this\n"
+#~ "                            operation.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">Hisobingizga hujjat(lar) "
+#~ "chiqarilgandan so‘ng QQS raqamini o‘zgartirish mumkin emas. Bu amal uchun "
+#~ "bizga to‘g‘ridan-to‘g‘ri murojaat qiling.</small>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            The VAT number can only be updated on the "
+#~ "company account.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">QQS raqamini faqat kompaniya "
+#~ "hisobida yangilash mumkin.</small>"
+
+#, fuzzy
+#~ msgid "If you want to modify it, update"
+#~ msgstr "Agar uni o‘zgartirmoqchi bo‘lsangiz, yangilang"
 
 #, fuzzy
 #~ msgid "Website Messages"

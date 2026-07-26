@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-22 01:01+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -42,12 +42,7 @@ msgstr "เพิ่มรีวิว"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-msgid "Average"
-msgstr "เฉลี่ย"
-
-#. module: portal_rating
-#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/portal/portal_chatter_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Close"
 msgstr "ปิด"
@@ -74,12 +69,6 @@ msgstr "แสดงความคิดเห็นเมื่อ"
 #: code:addons/portal_rating/static/src/chatter/portal/message_patch.xml:0
 msgid "Delete"
 msgstr ""
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-msgid "Details"
-msgstr "รายละเอียด"
 
 #. module: portal_rating
 #: model:ir.model.fields,field_description:portal_rating.field_ir_http__display_name
@@ -140,6 +129,12 @@ msgid "Invalid rating"
 msgstr "การให้คะแนนไม่ถูกต้อง"
 
 #. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Log in"
+msgstr ""
+
+#. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
 msgid "Message"
 msgstr "ข้อความ"
@@ -148,6 +143,12 @@ msgstr "ข้อความ"
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Modify your review"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/portal/portal_chatter_patch.xml:0
+msgid "No reviews yet."
 msgstr ""
 
 #. module: portal_rating
@@ -180,12 +181,6 @@ msgstr "การให้คะแนน"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-msgid "Remove Selection"
-msgstr "ลบส่วนที่เลือก"
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Review"
@@ -193,12 +188,29 @@ msgstr "รีวิว"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/portal/message_patch.xml:0
+msgid "Show less"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/portal/message_patch.xml:0
+msgid "Show more"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
 #: code:addons/portal_rating/static/src/interactions/portal_composer.js:0
 msgid ""
 "The rating is required. Please make sure to select one before sending your "
 "review."
+msgstr "จำเป็นต้องมีการให้คะแนน โปรดตรวจสอบให้แน่ใจว่าได้เลือกหนึ่งรายการก่อนที่จะส่งรีวิวของคุณ"
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "To post a review"
 msgstr ""
-"จำเป็นต้องมีการให้คะแนน โปรดตรวจสอบให้แน่ใจว่าได้เลือกหนึ่งรายการก่อนที่จะส่งรีวิวของคุณ"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -210,23 +222,33 @@ msgstr "อัปเดตรีวิว"
 #. odoo-python
 #: code:addons/portal_rating/models/rating_rating.py:0
 msgid "Updating rating comment require write access on related record"
-msgstr ""
-"การอัปเดตความคิดเห็นการให้คะแนนจำเป็นต้องมีการเข้าถึงการเขียนในบันทึกที่เกี่ยวข้อง"
+msgstr "การอัปเดตความคิดเห็นการให้คะแนนจำเป็นต้องมีการเข้าถึงการเขียนในบันทึกที่เกี่ยวข้อง"
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/portal/portal_chatter_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Write a review"
 msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-msgid "comments"
+msgid "review"
 msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-msgid "stars"
+msgid "reviews"
 msgstr ""
+
+#~ msgid "Average"
+#~ msgstr "เฉลี่ย"
+
+#~ msgid "Details"
+#~ msgstr "รายละเอียด"
+
+#~ msgid "Remove Selection"
+#~ msgstr "ลบส่วนที่เลือก"

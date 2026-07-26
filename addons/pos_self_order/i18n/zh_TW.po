@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 00:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -554,9 +554,9 @@ msgstr "捨棄"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_prep_line__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_prep_order__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_product_template_snooze__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_snooze__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_product_tag__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
@@ -789,9 +789,9 @@ msgstr "如何使用"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_prep_line__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_prep_order__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_product_template_snooze__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_snooze__id
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
 #: model:ir.model.fields,field_description:pos_self_order.field_product_tag__id
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
@@ -1268,11 +1268,6 @@ msgid "Point of Sale Payment Method"
 msgstr "POS 銷售點付款方式"
 
 #. module: pos_self_order
-#: model:ir.model,name:pos_self_order.model_pos_product_template_snooze
-msgid "Point of Sale Product Snooze"
-msgstr ""
-
-#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
 msgid "Point of Sale Session"
 msgstr "銷售點操作時段"
@@ -1539,6 +1534,11 @@ msgid "Self Order Kiosk Image Brand Name"
 msgstr "自助訂購服務點品牌名稱圖片"
 
 #. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_snooze__type__self-ordering
+msgid "Self Order Service"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
@@ -1590,6 +1590,12 @@ msgstr "自助下單枱號 %s"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+msgid "Self-ordering is temporarily paused."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
 msgstr "自助訂購："
@@ -1632,6 +1638,22 @@ msgstr "操作時段非活動中"
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
 msgstr "設定背景圖片"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_snooze__type
+msgid "Snoozed for?"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_snooze
+msgid "Snoozed records for Point of Sale"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Source"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1912,13 +1934,6 @@ msgid "You are not authorized to remove this order"
 msgstr "你沒有權限移除此訂單"
 
 #. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
-msgid "You cannot add cash payment methods in kiosk mode."
-msgstr "你不可在自助服務機模式下，新增現金付款方式。"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
@@ -1974,6 +1989,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "by cash"
 msgstr ""
 
 #. module: pos_self_order
@@ -2062,3 +2083,6 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "You cannot add cash payment methods in kiosk mode."
+#~ msgstr "你不可在自助服務機模式下，新增現金付款方式。"

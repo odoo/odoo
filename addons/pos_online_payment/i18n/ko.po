@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 06:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -61,8 +61,8 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
-"온라인 결제 수단에 대해 설정된 모든 결제대행업체는 POS 설정의 판매 전표와 "
-"동일하거나 회사 통화로 설정해야 합니다."
+"온라인 결제 수단에 대해 설정된 모든 결제대행업체는 POS 설정의 판매 전표와 동"
+"일하거나 회사 통화로 설정해야 합니다."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -97,8 +97,8 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
-"POS 온라인 결제는 온라인 결제 방법 및 온라인 계정 결제 없이는 생성할 수 "
-"없습니다."
+"POS 온라인 결제는 온라인 결제 방법 및 온라인 계정 결제 없이는 생성할 수 없습"
+"니다."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -123,7 +123,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -139,7 +138,6 @@ msgstr "온라인 결제대행업체 보유"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
 msgid "ID"
 msgstr "ID"
 
@@ -174,7 +172,6 @@ msgstr "온라인"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
 msgstr "온라인 결제"
 
@@ -182,6 +179,12 @@ msgstr "온라인 결제"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
 msgstr "온라인 결제 수단"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Online Payment Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -233,6 +236,12 @@ msgid "POS Order"
 msgstr "POS 주문"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "POS Receivable Transfer"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Payment"
@@ -281,11 +290,6 @@ msgid "Point of Sale Payment Method"
 msgstr "POS 결제 수단"
 
 #. module: pos_online_payment
-#: model:ir.model,name:pos_online_payment.model_pos_session
-msgid "Point of Sale Session"
-msgstr "점포판매시스템 기간"
-
-#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
 msgstr "처리자"
@@ -320,8 +324,8 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
-"온라인 결제 수단을 찾을 수 없어 POS 온라인 결제 (tx.id=%d)를 올바르게 "
-"저장하지 못했습니다"
+"온라인 결제 수단을 찾을 수 없어 POS 온라인 결제 (tx.id=%d)를 올바르게 저장하"
+"지 못했습니다"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -377,12 +381,6 @@ msgstr "주문이 서버에 올바르게 저장되지 않았습니다."
 
 #. module: pos_online_payment
 #. odoo-python
-#: code:addons/pos_online_payment/models/pos_session.py:0
-msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr "POS 온라인 결제 협력사 (id=%d)를 찾을 수 없습다"
-
-#. module: pos_online_payment
-#. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
 msgstr "결제대행업체가 올바르지 않습니다."
@@ -430,7 +428,8 @@ msgstr "저장한 주문을 검색할 수 없습니다."
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
-msgstr "남은 온라인 결제 금액 (%s)이 남은 미결제 금액 (%s)과 일치하지 않습니다."
+msgstr ""
+"남은 온라인 결제 금액 (%s)이 남은 미결제 금액 (%s)과 일치하지 않습니다."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -453,8 +452,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
-"서버에 문제가 있습니다. 온라인 결제 상태를 확인할 수 없습니다. 이 주문에 "
-"대한 온라인 결제가 없는지 다시 확인해 주십시오."
+"서버에 문제가 있습니다. 온라인 결제 상태를 확인할 수 없습니다. 이 주문에 대"
+"한 온라인 결제가 없는지 다시 확인해 주십시오."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -486,8 +485,8 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"POS 설정에서 온라인 결제 수단을 사용하려면 해당 POS의 설정 통화를 지원하는 "
-"결제대행업체가 하나 이상 있어야 합니다."
+"POS 설정에서 온라인 결제 수단을 사용하려면 해당 POS의 설정 통화를 지원하는 결"
+"제대행업체가 하나 이상 있어야 합니다."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -499,6 +498,12 @@ msgstr "로그아웃한 고객은 토큰화 기능을 사용할 수 없습니다
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference"
 msgstr "거래 참조"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -515,13 +520,6 @@ msgstr "유형"
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "업데이트된 온라인 결제"
-
-#. module: pos_online_payment
-#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-msgid ""
-"Use this payment method for online payments (payments made on a web page "
-"with online payment providers)"
-msgstr "온라인 결제 서비스 업체를 통해 웹페이지에서 이루어진 온라인 결제 수단입니다."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -562,3 +560,16 @@ msgstr "결제대행업체"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "온라인 결제를 허용합니다."
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "점포판매시스템 기간"
+
+#~ msgid "The partner of the POS online payment (id=%d) could not be found"
+#~ msgstr "POS 온라인 결제 협력사 (id=%d)를 찾을 수 없습다"
+
+#~ msgid ""
+#~ "Use this payment method for online payments (payments made on a web page "
+#~ "with online payment providers)"
+#~ msgstr ""
+#~ "온라인 결제 서비스 업체를 통해 웹페이지에서 이루어진 온라인 결제 수단입니"
+#~ "다."

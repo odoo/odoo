@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-18 16:44+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/mail/"
@@ -99,7 +99,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "%(amount)s items marked as read"
 msgstr ""
 
@@ -538,12 +538,6 @@ msgid "(edited)"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
-msgid "(from"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 #, fuzzy
 msgid "(originally assigned to"
@@ -610,7 +604,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "1 item marked as read"
 msgstr ""
 
@@ -827,30 +821,16 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-#, fuzzy
 msgid ""
 "<p>Channels make it easy to organize information across different topics and "
-"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
-"marketing, product XYZ, after work party, etc).</p>"
+"groups.</p>"
 msgstr ""
-"<p>Kanallar turli mavzular va guruhlar bo‘yicha ma'lumotlarni samarali "
-"tashkil etishga yordam beradi.</p> <p><b>Birinchi kanalingizni yaratishga</"
-"b> harakat qiling (masalan, sotuvlar, marketing, XYZ mahsuloti, ishdan "
-"keyingi ziyofat va hokazo).</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-#, fuzzy
-msgid "<p>Create a channel here.</p>"
-msgstr "<p>Bu yerda kanal yarating.</p>"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-#, fuzzy
-msgid "<p>Create a public or private channel.</p>"
-msgstr "<p>Ommaviy yoki shaxsiy kanal yarating.</p>"
+msgid "<p>Click a channel to open the discussion.</p>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1626,21 +1606,18 @@ msgid "Add People"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, fuzzy
 msgid "Add a Reaction"
 msgstr "Munosabat bildirish"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-#, fuzzy
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1686,13 +1663,6 @@ msgstr "Xabardor qilish uchun kontaktlar qo‘shing..."
 #, fuzzy
 msgid "Add followers to this document"
 msgstr "Bu hujjatga kuzatuvchilar qo‘shish"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-#, fuzzy
-msgid "Add or join a channel"
-msgstr "Kanal qo‘shish yoki unga qo‘shilish"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2030,6 +2000,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "Allow multiple options"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/channel_member_list_patch.js:0
+msgid "Also invited"
 msgstr ""
 
 #. module: mail
@@ -2711,12 +2687,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Bookmark important messages"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Bookmark removed"
 msgstr ""
@@ -2737,8 +2707,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "Bookmarks"
 msgstr ""
 
@@ -3374,6 +3343,8 @@ msgid "Change the background color of the related activities of this type."
 msgstr "Ushbu turdagi tegishli faoliyatlarning fon rangini o‘zgartirish."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_last_interest_update__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
@@ -3390,7 +3361,7 @@ msgstr "Kanal"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "Channel Actions"
 msgstr "Kanal amallari"
@@ -3452,6 +3423,7 @@ msgstr "Kanal to‘lgan"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
 msgid "Channel image"
 msgstr ""
 
@@ -3478,9 +3450,7 @@ msgstr "Kanal nomi"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-#: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.actions.act_window,name:mail.discuss_my_conversations_action
 #: model:ir.model.fields,field_description:mail.field_discuss_category__channel_ids
@@ -3504,6 +3474,7 @@ msgstr "Kanallar/A'zolar"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 #, fuzzy
@@ -3512,7 +3483,7 @@ msgstr "Chat"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "Chat Actions"
 msgstr "Chat amallari"
@@ -3537,7 +3508,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Chat with your coworkers on desktop or on mobile."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #, fuzzy
 msgid "Chats"
 msgstr "Chatlar"
@@ -3607,6 +3584,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Clear Time"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
+msgid "Clear search"
 msgstr ""
 
 #. module: mail
@@ -3692,14 +3675,13 @@ msgstr "Panelni yopish"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
-#: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 #, fuzzy
 msgid "Close search"
 msgstr "Qidiruvni yopish"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.js:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.js:0
 #, fuzzy
 msgid "Collapse participants"
 msgstr "Ishtirokchilarni yig‘ish"
@@ -3709,14 +3691,6 @@ msgstr "Ishtirokchilarni yig‘ish"
 #, fuzzy
 msgid "Collect replies on a specific email address"
 msgstr "Muayyan elektron pochta manzilida javoblarni to‘plash"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#, fuzzy
-msgid "Come here often? Install the app for quick and easy access!"
-msgstr ""
-"Bu yerga tez-tez kelib turasizmi? Tez va oson kirish uchun ilovani o‘rnating!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4169,6 +4143,12 @@ msgid "Create Channel"
 msgstr "Kanal yaratish"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Create Chat"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__create_date
 #, fuzzy
@@ -4270,6 +4250,7 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_followers__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_uid
@@ -4324,6 +4305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_followers__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_date
@@ -4781,13 +4763,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
-#, fuzzy
-msgid "Deleted document"
-msgstr "O‘chirilgan hujjat"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__sent
 #, fuzzy
@@ -4871,12 +4846,6 @@ msgstr "Tayyor javobni joriy foydalanuvchi tahrirlashi mumkinligini aniqlaydi"
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
 "Tayyor javob hozirda boshqa foydalanuvchilarga ulashilganligini aniqlaydi"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-msgid "Direct Messages"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5876,13 +5845,6 @@ msgstr "Istisno"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 #, fuzzy
-msgid "Exit Fullscreen"
-msgstr "To‘liq ekrandan chiqish"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#, fuzzy
 msgid "Exit Picture in Picture"
 msgstr "Rasmdan rasm rejimidan chiqish"
 
@@ -5902,7 +5864,7 @@ msgstr "Kengaytirish"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.js:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.js:0
 #, fuzzy
 msgid "Expand participants"
 msgstr "Ishtirokchilarni ko‘rsatish"
@@ -6033,13 +5995,14 @@ msgid "Failure: %(modelName)s"
 msgstr "Xato: %(modelName)s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_favorite
 msgid "Favorite"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, fuzzy
 msgid "Favorites"
@@ -6138,6 +6101,18 @@ msgstr "Xabarlarni saralash"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Find channels to follow below"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
+msgid "Find more channels"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #, fuzzy
 msgid "Fold"
@@ -6146,6 +6121,7 @@ msgstr "Yig‘ish"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
 msgid "Follow"
 msgstr ""
 
@@ -6540,6 +6516,24 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
+msgid "Go online to load attachments."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/pinned_messages_panel.js:0
+msgid "Go online to load pinned messages."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
+msgid "Go online to load threads."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, fuzzy
 msgid "Go to conversation"
@@ -6765,6 +6759,11 @@ msgid "Has on demand responsible"
 msgstr "Talab bo‘yicha mas'ul shaxsga ega"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_unread
+msgid "Has unread messages"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, fuzzy
@@ -6838,14 +6837,6 @@ msgid ""
 msgstr ""
 "Kichik tur konfiguratsiyasidan qat'i nazar, ommaviy/portal foydalanuvchilari "
 "uchun yashirish."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-#, fuzzy
-msgid "History"
-msgstr "Tarix"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
@@ -7245,7 +7236,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
-msgid "If you want to use Tenor API to share GIFs in conversations."
+msgid "If you want to use Klipy API to share GIFs in conversations."
 msgstr ""
 
 #. module: mail
@@ -7259,6 +7250,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_call_server
 msgid "If you want to use your own SFU or ICE servers for video calls."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
 
 #. module: mail
@@ -7334,6 +7333,12 @@ msgstr "Odoo‘da"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/messaging_menu_item_patch.xml:0
+msgid "In a call"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/meeting_chat.xml:0
 msgid "In call messages"
 msgstr ""
@@ -7351,6 +7356,12 @@ msgstr ""
 "sanadan keyin xatlar yuboriladi. Bu sana UTC vaqt mintaqasida hisoblanadi."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/channel_member_list_patch.js:0
+msgid "In this call"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, fuzzy
@@ -7364,9 +7375,6 @@ msgid "Inbound Mail Server"
 msgstr "Kiruvchi pochta serveri"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__inbox
 #, fuzzy
 msgid "Inbox"
@@ -7446,20 +7454,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/plugin/mail_code_block_plugin.js:0
 msgid "Insert code block"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-#, fuzzy
-msgid "Install"
-msgstr "O‘rnatish"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#, fuzzy
-msgid "Install Odoo"
-msgstr "Odoo‘ni o‘rnatish"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
@@ -7687,10 +7681,22 @@ msgstr "Odamlarni taklif qilish"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, fuzzy
 msgid "Invite people"
 msgstr "Odamlarni taklif qilish"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people to \"%(name)s\""
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people to the channel \"%(name)s\""
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8064,9 +8070,14 @@ msgid "Kind Regards"
 msgstr "Hurmat bilan"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.xml:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.xml:0
 #, fuzzy
 msgid "LIVE"
 msgstr "JONLI"
@@ -8172,6 +8183,7 @@ msgstr "Oxirgi yangilangan sana"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_followers__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_uid
@@ -8219,6 +8231,7 @@ msgstr "Oxirgi yangilagan shaxs"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_followers__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_date
@@ -8400,6 +8413,12 @@ msgstr "Ko‘proq yuklash"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "Load more... ("
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_input.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #, fuzzy
@@ -8409,7 +8428,6 @@ msgstr "Yuklanmoqda..."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/navigable_list.xml:0
-#: code:addons/mail/static/src/core/public_web/messaging_menu.xml:0
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 #, fuzzy
 msgid "Loading…"
@@ -8820,7 +8838,7 @@ msgstr "O‘qilgan deb belgilash"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 #, fuzzy
 msgid "Mark all read"
 msgstr "Hammasini o‘qilgan deb belgilash"
@@ -8888,7 +8906,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 #: model:mail.activity.type,summary:mail.mail_activity_data_meeting
 #, fuzzy
@@ -8899,6 +8917,12 @@ msgstr "Uchrashuv"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Meeting, %(date)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Meetings"
 msgstr ""
 
 #. module: mail
@@ -8978,6 +9002,7 @@ msgstr "Quyidagi hamkorlar bilan birlashtirildi: %s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/message_in_dialog.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
@@ -9011,6 +9036,12 @@ msgstr ""
 #, fuzzy
 msgid "Message %(thread name)s…"
 msgstr "%(thread name)s xabari…"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
+msgid "Message Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -9199,7 +9230,7 @@ msgstr "Xabar-ID"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+#: code:addons/mail/static/src/core/web/messaging_menu_in_dropdown.xml:0
 #: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #: model:ir.actions.act_window,name:mail.act_server_history
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -9242,12 +9273,6 @@ msgid "Messages can only be linked to one sub-channel"
 msgstr "Xabarlar faqat bitta quyi kanalga bog‘lanishi mumkin"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Messages marked as read will appear in the history."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
 #, fuzzy
 msgid ""
@@ -9282,6 +9307,12 @@ msgstr "Mikrofon"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
 msgid "Microphone muted by system"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Minimize"
 msgstr ""
 
 #. module: mail
@@ -9544,16 +9575,16 @@ msgstr "Yangi kanal"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.js:0
-#, fuzzy
-msgid "New Meeting"
-msgstr "Yangi uchrashuv"
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "New Chat"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
-msgid "New Message"
-msgstr ""
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+#, fuzzy
+msgid "New Meeting"
+msgstr "Yangi uchrashuv"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__new_message_separator
@@ -9570,16 +9601,16 @@ msgstr "Yangi mavzu"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "New channel"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
 #, fuzzy
 msgid "New message"
 msgstr "Yangi xabar"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "New messages will appear here."
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -9726,24 +9757,11 @@ msgid "No conversation selected."
 msgstr "Hech qanday suhbat tanlanmagan."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "No conversation yet..."
-msgstr ""
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 #, fuzzy
 msgid "No documents found for the selected records."
 msgstr "Tanlangan yozuvlar uchun hujjatlar topilmadi."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-#, fuzzy
-msgid "No history messages"
-msgstr "Tarix xabarlari yo‘q"
 
 #. module: mail
 #. odoo-python
@@ -9778,6 +9796,12 @@ msgstr ""
 #, fuzzy
 msgid "No messages found"
 msgstr "Xabarlar topilmadi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No messages yet!"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9822,6 +9846,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu.js:0
+msgid "No results for \"%s\"."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 #, fuzzy
 msgid "No roles found. Let's create one!"
@@ -9831,12 +9861,6 @@ msgstr "Rollar topilmadi. Keling, birini yarataylik!"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "No saved templates"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "No thread found."
 msgstr ""
 
 #. module: mail
@@ -9867,6 +9891,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No video conference planned!"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/web/list/archive_disabled_list_controller.js:0
 msgid "No, go back"
 msgstr ""
@@ -9892,6 +9922,12 @@ msgstr "Mavjud bo‘lmagan yozuv yoki noto‘g‘ri belgi."
 #, fuzzy
 msgid "None"
 msgstr "Yo‘q"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "None ("
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -9959,6 +9995,12 @@ msgstr ""
 #, fuzzy
 msgid "Nothing"
 msgstr "Hech narsa"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_tab_model.js:0
+msgid "Nothing here yet."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__notification_type
@@ -10066,7 +10108,7 @@ msgstr "Bildirishnoma: Rejalashtirilgan xabarlar haqida xabardor qilish"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 #: model:ir.actions.act_window,name:mail.mail_notification_action
 #: model:ir.actions.client,name:mail.discuss_notification_settings_action
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
@@ -10091,6 +10133,12 @@ msgstr "Bildirishnomalarga ruxsat berilgan"
 #, fuzzy
 msgid "Notifications blocked"
 msgstr "Bildirishnomalar bloklangan"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+msgid "Notifications of the documents you follow will appear here."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author
@@ -10961,7 +11009,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.xml:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.xml:0
 #, fuzzy
 msgid "Participant avatar"
 msgstr "Ishtirokchi avatari"
@@ -11674,20 +11722,6 @@ msgid "Queued"
 msgstr "Navbatda"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-#, fuzzy
-msgid "Quick search"
-msgstr "Tezkor qidiruv"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
-#, fuzzy
-msgid "Quick search…"
-msgstr "Tezkor qidiruv..."
-
-#. module: mail
 #: model:ir.model,name:mail.model_ir_qweb
 #, fuzzy
 msgid "Qweb"
@@ -12041,8 +12075,8 @@ msgstr "Manzilni qora ro‘yxatdan chiqarish"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
-msgid "Remove all bookmarks"
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+msgid "Remove all"
 msgstr ""
 
 #. module: mail
@@ -12561,12 +12595,6 @@ msgid "Save favorite GIF from Tenor API"
 msgstr "Tenor API orqali sevimli GIF-ni saqlash"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Save messages here to easily keep track of them."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -12702,12 +12730,6 @@ msgstr "Skript"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
-msgid "Search"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Search %(threadName)s"
 msgstr ""
@@ -12729,6 +12751,12 @@ msgstr "ICE serverlarini qidirish"
 #, fuzzy
 msgid "Search Incoming Mail Servers"
 msgstr "Kiruvchi pochta serverlarini qidirish"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12767,13 +12795,6 @@ msgstr "Nom bo‘yicha qidirish"
 #, fuzzy
 msgid "Search conversations"
 msgstr "Suhbatlarni qidirish"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#, fuzzy
-msgid "Search for a GIF"
-msgstr "GIF qidirish"
 
 #. module: mail
 #. odoo-javascript
@@ -13327,7 +13348,7 @@ msgstr "SFU server URL manzili"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Share GIFs in your conversations using the Tenor API"
+msgid "Share GIFs in your conversations using the Klipy API."
 msgstr ""
 
 #. module: mail
@@ -13626,13 +13647,6 @@ msgid "Start a Conversation"
 msgstr "Suhbatni boshlash"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-#, fuzzy
-msgid "Start a conversation"
-msgstr "Suhbatni boshlash"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__started_poll_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__started_poll_ids
 msgid "Started Poll"
@@ -13706,6 +13720,12 @@ msgid "Stay tuned! Enable push notifications to never miss a message."
 msgstr ""
 "Diqqat bilan kuzatib boring! Birorta ham xabarni o‘tkazib yubormaslik uchun "
 "push-bildirishnomalarni yoqing."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Stay updated on your favourite topics"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -14073,12 +14093,6 @@ msgstr ""
 #, fuzzy
 msgid "Templates"
 msgstr "Shablonlar"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-#, fuzzy
-msgid "Tenor API key"
-msgstr "Tenor API kaliti"
 
 #. module: mail
 #. odoo-javascript
@@ -14631,7 +14645,7 @@ msgstr "Bu #%(channelName)s kanalining boshlanishi."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.js:0
-#: code:addons/mail/static/src/core/public_web/messaging_menu.xml:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
 msgid "This is the start of your conversation"
 msgstr ""
 
@@ -14778,7 +14792,7 @@ msgstr "\"%(thread_name)s\" mavzusi o‘chirildi"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/subchannel.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
 #, fuzzy
 msgid "Thread Actions"
 msgstr "Mavzu harakatlari"
@@ -14791,13 +14805,6 @@ msgstr "Mavzu harakatlari"
 #, fuzzy
 msgid "Thread Image"
 msgstr "Mavzu rasmi"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
-#, fuzzy
-msgid "Thread has unread messages"
-msgstr "Mavzuda o‘qilmagan xabarlar bor"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_subject_suggested
@@ -14888,6 +14895,12 @@ msgstr ""
 msgid ""
 "To avoid an infinity mirror, don't share your entire screen or browser "
 "window."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+msgid "To minimize, press ESC"
 msgstr ""
 
 #. module: mail
@@ -15334,7 +15347,7 @@ msgstr "Ovozni qaytarish"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Undo"
 msgstr ""
@@ -15386,6 +15399,18 @@ msgstr "Noma'lum xato"
 #, fuzzy
 msgid "Unknown error: %(error)s"
 msgstr "Noma'lum xato: %(error)s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/controllers/messaging_menu.py:0
+msgid "Unknown messaging menu filter %(filter_id)s for tab %(tab_id)s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/controllers/messaging_menu.py:0
+msgid "Unknown messaging menu tab %(tab_id)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15461,6 +15486,13 @@ msgstr "Xabarni qadaqdan chiqarish"
 #, fuzzy
 msgid "Unpin date"
 msgstr "Qadaqdan chiqarish sanasi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Unread"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -15616,6 +15648,11 @@ msgid "Use Google Translate API"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
+msgid "Use Klipy API"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 #, fuzzy
@@ -15627,11 +15664,6 @@ msgstr "Mikrofondan foydalanish"
 #, fuzzy
 msgid "Use SFU server"
 msgstr "SFU serveridan foydalanish"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
-msgid "Use Tenor API"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -16059,12 +16091,11 @@ msgid "Video visible in the call tab"
 msgstr "Video qo‘ng‘iroq oynasida ko‘rinadi"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
-#: code:addons/mail/static/src/views/web/calendar/calendar_common/activity_calendar_common_popover.xml:0
 #: model:ir.model,name:mail.model_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #, fuzzy
 msgid "View"
 msgstr "Ko‘rish"
@@ -16129,13 +16160,6 @@ msgstr "%(channel_name)s bilan suhbatni ko‘rish"
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "View hidden conversations"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
-#, fuzzy
-msgid "View or join channels"
-msgstr "Kanallarni ko‘rish yoki ularga qo‘shilish"
 
 #. module: mail
 #. odoo-javascript
@@ -16415,6 +16439,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_access__operation
 msgid "Which operation(s) this access applies to, a subset of 'crud'."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Wide View"
 msgstr ""
 
 #. module: mail
@@ -16830,7 +16860,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "You're all caught up!"
 msgstr ""
 
@@ -17330,6 +17360,12 @@ msgstr "elektron pochta manzillari"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
+msgid "followers"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "for"
 msgstr ""
@@ -17513,8 +17549,6 @@ msgid "now"
 msgstr "hozir"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, fuzzy
 msgid "on"
@@ -17564,6 +17598,12 @@ msgstr "owner_user_id noyob bo‘lishi kerak"
 #, fuzzy
 msgid "raising hand"
 msgstr "qo‘l ko‘tarmoqda"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "remaining)"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -17736,6 +17776,95 @@ msgstr "\"%(channel_name)s\" kanalidagi \"%(member_name)s\""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Search for a GIF"
+#~ msgstr "GIF qidirish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<p>Channels make it easy to organize information across different topics "
+#~ "and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+#~ "marketing, product XYZ, after work party, etc).</p>"
+#~ msgstr ""
+#~ "<p>Kanallar turli mavzular va guruhlar bo‘yicha ma'lumotlarni samarali "
+#~ "tashkil etishga yordam beradi.</p> <p><b>Birinchi kanalingizni "
+#~ "yaratishga</b> harakat qiling (masalan, sotuvlar, marketing, XYZ "
+#~ "mahsuloti, ishdan keyingi ziyofat va hokazo).</p>"
+
+#, fuzzy
+#~ msgid "<p>Create a channel here.</p>"
+#~ msgstr "<p>Bu yerda kanal yarating.</p>"
+
+#, fuzzy
+#~ msgid "<p>Create a public or private channel.</p>"
+#~ msgstr "<p>Ommaviy yoki shaxsiy kanal yarating.</p>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "GIF qo‘llab-quvvatlashni yoqish uchun Tenor GIF API kalitini kiriting. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#, fuzzy
+#~ msgid "Add or join a channel"
+#~ msgstr "Kanal qo‘shish yoki unga qo‘shilish"
+
+#, fuzzy
+#~ msgid "Come here often? Install the app for quick and easy access!"
+#~ msgstr ""
+#~ "Bu yerga tez-tez kelib turasizmi? Tez va oson kirish uchun ilovani "
+#~ "o‘rnating!"
+
+#, fuzzy
+#~ msgid "Deleted document"
+#~ msgstr "O‘chirilgan hujjat"
+
+#, fuzzy
+#~ msgid "Exit Fullscreen"
+#~ msgstr "To‘liq ekrandan chiqish"
+
+#, fuzzy
+#~ msgid "History"
+#~ msgstr "Tarix"
+
+#, fuzzy
+#~ msgid "Install"
+#~ msgstr "O‘rnatish"
+
+#, fuzzy
+#~ msgid "Install Odoo"
+#~ msgstr "Odoo‘ni o‘rnatish"
+
+#, fuzzy
+#~ msgid "No history messages"
+#~ msgstr "Tarix xabarlari yo‘q"
+
+#, fuzzy
+#~ msgid "Quick search"
+#~ msgstr "Tezkor qidiruv"
+
+#, fuzzy
+#~ msgid "Quick search…"
+#~ msgstr "Tezkor qidiruv..."
+
+#, fuzzy
+#~ msgid "Start a conversation"
+#~ msgstr "Suhbatni boshlash"
+
+#, fuzzy
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API kaliti"
+
+#, fuzzy
+#~ msgid "Thread has unread messages"
+#~ msgstr "Mavzuda o‘qilmagan xabarlar bor"
+
+#, fuzzy
+#~ msgid "View or join channels"
+#~ msgstr "Kanallarni ko‘rish yoki ularga qo‘shilish"
 
 #, fuzzy
 #~ msgid ""

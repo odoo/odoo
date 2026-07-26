@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-20 02:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -141,7 +141,8 @@ msgstr "顧客が %s以前に支払う場合、値引きが適用されます。
 msgid ""
 "A payment has already been made on this invoice, please make sure to not pay "
 "twice."
-msgstr "この請求書はすでに支払されています。二重払いとならないようご注意下さい。"
+msgstr ""
+"この請求書はすでに支払されています。二重払いとならないようご注意下さい。"
 
 #. module: account_payment
 #. odoo-python
@@ -154,6 +155,11 @@ msgstr "参照%sを伴う支払取引がすでに存在します。"
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "新しい支払い取引を作成するには、トークンが必要です。"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -327,17 +333,8 @@ msgstr "ID"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr "すべて同じ通貨でなければ、すべての期限超過請求書を支払うことはできません。"
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
 msgstr ""
-"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
-"す。\n"
-"このモードは、プロバイダを設定する際に推奨されます。"
+"すべて同じ通貨でなければ、すべての期限超過請求書を支払うことはできません。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -628,11 +625,6 @@ msgid "Source Payment"
 msgstr "ソース・ペイメント"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "ステータス"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -763,13 +755,9 @@ msgstr "無効な取引"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"有効ステータスまたはテストステータスのプロバイダーにリンクされている支払方法"
-"を削除することはできません。\n"
-"リンクされているプロバイダー:%s"
 
 #. module: account_payment
 #. odoo-python
@@ -778,18 +766,16 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
-"この支払い方法を使用した支払が既に存在するため、このモジュールを"
-"アンインストールすることはできません。"
+"この支払い方法を使用した支払が既に存在するため、このモジュールをアンインス"
+"トールすることはできません。"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"仕訳帳を削除する前に、決済プロバイダーを無効化する必要があります。\n"
-"リンクされたプロバイダー：%s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -823,3 +809,32 @@ msgstr "期限超過"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr "価格表は許可されていません"
+
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
+#~ "す。\n"
+#~ "このモードは、プロバイダを設定する際に推奨されます。"
+
+#~ msgid "State"
+#~ msgstr "ステータス"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "有効ステータスまたはテストステータスのプロバイダーにリンクされている支払方"
+#~ "法を削除することはできません。\n"
+#~ "リンクされているプロバイダー:%s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "仕訳帳を削除する前に、決済プロバイダーを無効化する必要があります。\n"
+#~ "リンクされたプロバイダー：%s"

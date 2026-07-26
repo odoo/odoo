@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-19 16:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
@@ -124,20 +124,6 @@ msgstr "<span class=\"o_stat_text\">Pedido de venta</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
 msgstr "<span>)</span>"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid ""
-"A project must be defined on the quotation %(order)s or on the form of "
-"products creating a task on order.\n"
-"The following product need a project in which to put its task: %"
-"(product_name)s"
-msgstr ""
-"Debe definir un proyecto en el presupuesto %(order)s o en el formulario de "
-"los productos que crean una tarea al realizar un pedido.\n"
-"El siguiente producto necesita un proyecto para poder asignar la tarea: %"
-"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -576,6 +562,11 @@ msgid "Project Milestones"
 msgstr "Hitos del proyecto"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_required
+msgid "Project Required"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
@@ -583,9 +574,19 @@ msgid "Project Template"
 msgstr "Plantilla de proyecto"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Project Template Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
 msgstr "Asistente de creación de plantillas de proyecto"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_warning_text
+msgid "Project Warning"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -818,6 +819,11 @@ msgid "Task Template"
 msgstr "Plantilla de tareas"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_warning_text
+msgid "Task Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
 msgid "Tasks"
 msgstr "Tareas"
@@ -936,6 +942,13 @@ msgid "View Sales Order"
 msgstr "Ver pedido de venta"
 
 #. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Warning for the partner as set by the user."
+msgstr ""
+
+#. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
 msgstr "Servicio de rediseño de sitio web (proyecto y tarea)"
@@ -972,6 +985,17 @@ msgstr "entregado_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
+
+#~ msgid ""
+#~ "A project must be defined on the quotation %(order)s or on the form of "
+#~ "products creating a task on order.\n"
+#~ "The following product need a project in which to put its task: %"
+#~ "(product_name)s"
+#~ msgstr ""
+#~ "Debe definir un proyecto en el presupuesto %(order)s o en el formulario "
+#~ "de los productos que crean una tarea al realizar un pedido.\n"
+#~ "El siguiente producto necesita un proyecto para poder asignar la tarea: %"
+#~ "(product_name)s"
 
 #~ msgid "Create a customer invoice"
 #~ msgstr "Crear una factura de cliente"

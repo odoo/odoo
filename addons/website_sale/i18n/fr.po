@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 01:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
@@ -501,11 +501,6 @@ msgid "<i class=\"fa fa-cart-arrow-down me-2\"/>Order"
 msgstr "<i class=\"fa fa-cart-arrow-down me-2\"/>Commande"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
-msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr "<i class=\"fa fa-cart-plus me-2\"/>Ajouter au panier"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid ""
 "<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
@@ -516,17 +511,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-download me-2\"/>Download"
 msgstr "<i class=\"fa fa-download me-2\"/>Télécharger"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small "
-"ms-1\">Contact Us</span>"
-msgstr ""
-"<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small "
-"ms-1\">Contactez-nous</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -593,15 +577,6 @@ msgstr ""
 "                    Recommander"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Add to Cart</span>"
-msgstr ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Ajouter au panier</span>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
 msgstr ""
@@ -615,6 +590,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Ajouter au panier"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
+msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -638,6 +618,21 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Suivant\" title=\"Suivant\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                            <span class=\"o_label small "
+"ms-1\">Contact Us</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+"><span class=\"o_label small ms-1\">Add to Cart</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -1592,7 +1587,14 @@ msgstr "Actif"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
+msgid "Add Image"
 msgstr ""
 
 #. module: website_sale
@@ -1600,12 +1602,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
 msgstr "Ajouter un média"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Add More"
-msgstr "Ajouter plus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2492,6 +2488,7 @@ msgstr "Boîtes pliables"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 msgid "Color"
 msgstr "Couleur"
 
@@ -2835,11 +2832,6 @@ msgstr "Service Clientèle"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
 msgstr "Pays du client"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
-msgid "Customer Reviews"
-msgstr "Avis client :"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -3484,12 +3476,6 @@ msgid "Extra Info"
 msgstr "Infos supplémentaires"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Extra Media"
-msgstr "Médias supplémentaires"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 msgid "Extra Product Media"
@@ -4028,6 +4014,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 msgid "Image"
@@ -4169,7 +4156,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr ""
 
@@ -4509,12 +4496,6 @@ msgid "Main Button Label"
 msgstr "Libellé bouton principal"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Main Image"
-msgstr "Image principale"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
 msgstr ""
@@ -4549,6 +4530,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Media"
 msgstr "Média"
@@ -5290,6 +5273,12 @@ msgid "Please select or enter an amount"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__4_5
@@ -5967,6 +5956,7 @@ msgstr "Relocalisation et Déménagement"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove"
 msgstr "Supprimer"
@@ -5974,7 +5964,6 @@ msgstr "Supprimer"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Remove All"
 msgstr "Tout supprimer"
 
@@ -6006,6 +5995,12 @@ msgid "Remove from wishlist"
 msgstr "Retirer de la liste de souhaits"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+msgid "Remove image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
@@ -6033,13 +6028,14 @@ msgstr "Réparation et Entretien"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace"
 msgstr "Remplacer"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace image"
 msgstr "Remplacer l’image"
 
@@ -6105,6 +6101,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Reviews"
 msgstr "Avis"
 
@@ -6888,8 +6885,15 @@ msgstr "Onglets"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Tag"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_template_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Tags"
@@ -7239,6 +7243,12 @@ msgstr "Ce produit n'est plus disponible."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale
@@ -8285,6 +8295,37 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Add More"
+#~ msgstr "Ajouter plus"
+
+#~ msgid "Customer Reviews"
+#~ msgstr "Avis client :"
+
+#~ msgid "Extra Media"
+#~ msgstr "Médias supplémentaires"
+
+#~ msgid "Main Image"
+#~ msgstr "Image principale"
+
+#~ msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
+#~ msgstr "<i class=\"fa fa-cart-plus me-2\"/>Ajouter au panier"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
+#~ "                                            <span class=\"o_label small "
+#~ "ms-1\">Contact Us</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
+#~ "                                            <span class=\"o_label small "
+#~ "ms-1\">Contactez-nous</span>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+#~ "class=\"o_label small ms-1\">Add to Cart</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+#~ "class=\"o_label small ms-1\">Ajouter au panier</span>"
 
 #~ msgid "<span>Publish on website</span>"
 #~ msgstr "<span>Publier sur le site web</span>"

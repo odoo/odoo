@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-19 18:11+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-master/"
@@ -163,6 +163,11 @@ msgstr "Ja existeix una transacció de pagament amb referència %s."
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "Cal un testimoni per crear una transacció de pagament nova."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -343,16 +348,6 @@ msgid ""
 msgstr ""
 "No és possible efectuar el pagament de totes les factures vençudes si no "
 "tenen la mateixa moneda."
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"En mode de prova, un pagament fals es processa a través d'una interfície de "
-"pagament de prova.\n"
-"Es recomana aquest mode quan es configura el proveïdor."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -573,7 +568,8 @@ msgstr "Transaccions de pagament"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr "Si us plau, inicia sessió per abonar l'import de les factures vençudes."
+msgstr ""
+"Si us plau, inicia sessió per abonar l'import de les factures vençudes."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
@@ -640,11 +636,6 @@ msgstr "Token de pagament desat"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
 msgstr "Font de pagament"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "Estat"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
@@ -780,13 +771,9 @@ msgstr "Transacció buida"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"No és possible eliminar un mètode de pagament que estigui vinculat a un "
-"proveïdor en l'estat habilitat o de prova.\n"
-"Proveïdor(s) vinculat(s): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -802,12 +789,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Primer heu de desactivar un proveïdor de pagaments abans d'eliminar el seu "
-"diari.\n"
-"Proveïdors enllaçats: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -841,3 +825,33 @@ msgstr "vençudes"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "En mode de prova, un pagament fals es processa a través d'una interfície "
+#~ "de pagament de prova.\n"
+#~ "Es recomana aquest mode quan es configura el proveïdor."
+
+#~ msgid "State"
+#~ msgstr "Estat"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "No és possible eliminar un mètode de pagament que estigui vinculat a un "
+#~ "proveïdor en l'estat habilitat o de prova.\n"
+#~ "Proveïdor(s) vinculat(s): %s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "Primer heu de desactivar un proveïdor de pagaments abans d'eliminar el "
+#~ "seu diari.\n"
+#~ "Proveïdors enllaçats: %s"

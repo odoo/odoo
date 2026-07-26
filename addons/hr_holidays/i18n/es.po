@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 00:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
@@ -191,6 +191,14 @@ msgstr "%(name)s (%(time)g restantes de %(maximum)g horas)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -280,26 +288,6 @@ msgstr "- Resumen ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "- Resumen de este periodo"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -460,8 +448,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 msgid ""
 "<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                            <span "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
+"                                    <span invisible=\"unit_of_measure != "
+"'hour'\">hours</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -1070,6 +1058,14 @@ msgid "Approved Requests"
 msgstr "Solicitudes aprobadas"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"Approved time off cannot be modified (%(employee)s: %(date_from)s to %"
+"(date_to)s)."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Approved:"
@@ -1560,6 +1556,11 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Current Company"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
 msgid "Current Time Off Status"
 msgstr "Estado de ausencias actual"
@@ -1913,6 +1914,8 @@ msgid "Eligible for Accrual Rate"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
@@ -1997,6 +2000,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Exclude Refused"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "External ID (update only)"
 msgstr ""
 
 #. module: hr_holidays
@@ -3192,6 +3201,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
 msgstr "Periodo"
@@ -3363,11 +3373,15 @@ msgid "Reporting"
 msgstr "Informes"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
 msgstr "Fecha de finalización de la solicitud"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
 msgstr "Fecha de inicio de la solicitud"
@@ -3387,11 +3401,6 @@ msgstr "Solicitado"
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 msgid "Requests"
 msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid "Require Supporting Document"
-msgstr "Necesita un documente de apoyo"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_requires_allocation
@@ -3909,12 +3918,6 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "No hay ninguna asignación válida para cubrir esa solicitud."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "There is no valid allocation to cover this request for the following "
 "employees: %s"
@@ -3998,12 +4001,6 @@ msgstr "Esto indica si aún es posible usar este tipo de permiso"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "This milestone will be reached :"
 msgstr "Este hito se alcanzará:"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "This modification is not allowed in the current state."
-msgstr "No se permite esta modificación en el estado actual."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4233,6 +4230,12 @@ msgid "Time Type Approval"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "Time Type/External ID"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_work_entry_type
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
@@ -4337,6 +4340,14 @@ msgstr "Hasta la fecha"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "To Validate"
 msgstr "A validar"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"To import it as a new time off request instead, leave the External ID column "
+"empty."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4991,8 +5002,8 @@ msgstr "No puede configurar una validez de acumulación con 0."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already                 been taken for this time off type. Changing it "
-"now would affect existing employee balances."
+"have already been taken for this time off type. Changing it now would affect "
+"existing employee balances."
 msgstr ""
 
 #. module: hr_holidays
@@ -5000,9 +5011,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Public Holiday Included' setting since one or more "
-"leaves for that                         time type are overlapping with "
-"public holidays, meaning that the balance of those employees would be "
-"affected by this change."
+"leaves for that time type are overlapping with public holidays, meaning that "
+"the balance of those employees would be affected by this change."
 msgstr ""
 
 #. module: hr_holidays
@@ -5112,6 +5122,12 @@ msgstr "fecha de asignación"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "y el"
@@ -5141,6 +5157,12 @@ msgstr "haga clic aquí"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -5231,6 +5253,12 @@ msgstr "desde el inicio de la asignación"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5249,6 +5277,12 @@ msgstr "ID"
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "leaves of type 'Worked Time' should be always eligible for accrual rate."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -5358,6 +5392,21 @@ msgstr "indefinido"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validar"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr ""
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "No hay ninguna asignación válida para cubrir esa solicitud."
+
+#~ msgid "Require Supporting Document"
+#~ msgstr "Necesita un documente de apoyo"
+
+#~ msgid "This modification is not allowed in the current state."
+#~ msgstr "No se permite esta modificación en el estado actual."
 
 #~ msgid "Pending Requests"
 #~ msgstr "Solicitudes pendientes"

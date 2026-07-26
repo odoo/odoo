@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-20 06:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -893,6 +893,7 @@ msgstr "Arvon aleneminen ja korot"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -1029,8 +1030,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure or             "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
-"Päästöstandardi määrittelee sääntelyyn perustuvan testimenettelyn tai"
-"             ohjeistuksen, jonka mukaisesti ajoneuvon päästöt mitataan."
+"Päästöstandardi määrittelee sääntelyyn perustuvan testimenettelyn "
+"tai             ohjeistuksen, jonka mukaisesti ajoneuvon päästöt mitataan."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1841,11 +1842,6 @@ msgstr "Ei rekisterikilpeä"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
 msgid "None"
 msgstr "Ei mitään"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Note"
-msgstr "Muistiinpano"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
@@ -2854,8 +2850,10 @@ msgstr "Kirjoita tähän kaikki muut suoritettuun palveluun liittyvät tiedot."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Write here any other information related to this vehicle"
-msgstr "Kirjoita tähän kaikki muut tähän ajoneuvoon liittyvät tiedot"
+msgid ""
+"Write here any other information related to this vehicle to show in salary "
+"configurator"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -2967,6 +2965,12 @@ msgstr "näytä ajoneuvon huoltolokit"
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "user_id"
 msgstr ""
+
+#~ msgid "Note"
+#~ msgstr "Muistiinpano"
+
+#~ msgid "Write here any other information related to this vehicle"
+#~ msgstr "Kirjoita tähän kaikki muut tähän ajoneuvoon liittyvät tiedot"
 
 #~ msgid ""
 #~ "A trailer hitch is a device attached to a vehicle's chassis for towing "

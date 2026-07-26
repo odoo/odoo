@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 11:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -130,7 +130,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
 msgstr "Mostrar nombre"
 
@@ -146,7 +145,6 @@ msgstr "Tiene un proveedor de pago en línea"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
 msgid "ID"
 msgstr "ID"
 
@@ -181,7 +179,6 @@ msgstr "En línea"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
-#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
 msgstr "Pago en línea"
 
@@ -189,6 +186,12 @@ msgstr "Pago en línea"
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
 msgstr "Método de pago en línea"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Online Payment Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -238,6 +241,12 @@ msgstr "Problema al guardar la orden"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 msgid "POS Order"
 msgstr "Orden del PdV"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "POS Receivable Transfer"
+msgstr ""
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -290,11 +299,6 @@ msgid "Point of Sale Payment Method"
 msgstr "Método de pago del punto de venta"
 
 #. module: pos_online_payment
-#: model:ir.model,name:pos_online_payment.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Sesión de punto de venta"
-
-#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
 msgstr "Procesado por"
@@ -343,7 +347,8 @@ msgstr "La sesión del PdV no está abierta."
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr "La orden del punto de venta que está vinculada a la transacción de pago"
+msgstr ""
+"La orden del punto de venta que está vinculada a la transacción de pago"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
@@ -385,13 +390,6 @@ msgstr "Se canceló la orden."
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr "La orden no se guardó de manera correcta en el servidor."
-
-#. module: pos_online_payment
-#. odoo-python
-#: code:addons/pos_online_payment/models/pos_session.py:0
-msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
-"El contacto del pago en línea del punto de venta (id=%d) no se pudo encontrar"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -519,6 +517,12 @@ msgid "Transaction Reference"
 msgstr "Referencia de la transacción"
 
 #. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
+msgstr ""
+
+#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Try again"
 msgstr "Vuelve a intentarlo"
@@ -533,15 +537,6 @@ msgstr "Tipo"
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "Pagos en línea actualizados"
-
-#. module: pos_online_payment
-#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
-msgid ""
-"Use this payment method for online payments (payments made on a web page "
-"with online payment providers)"
-msgstr ""
-"Use este método de pago para pagos en línea (pagos realizados en una página "
-"de internet con proveedores de pagos en línea)."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -567,8 +562,8 @@ msgid ""
 "                            Don't hesitate to contact us if you don't "
 "receive it."
 msgstr ""
-"Deberías recibir un correo electrónico que confirme tu pago en unos "
-"minutos.<br/>\n"
+"Deberías recibir un correo electrónico que confirme tu pago en unos minutos."
+"<br/>\n"
 "                        No dudes en contactarnos si no lo recibes."
 
 #. module: pos_online_payment
@@ -585,3 +580,18 @@ msgstr "proveedor de pago"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "para permitir pagos en línea."
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "Sesión de punto de venta"
+
+#~ msgid "The partner of the POS online payment (id=%d) could not be found"
+#~ msgstr ""
+#~ "El contacto del pago en línea del punto de venta (id=%d) no se pudo "
+#~ "encontrar"
+
+#~ msgid ""
+#~ "Use this payment method for online payments (payments made on a web page "
+#~ "with online payment providers)"
+#~ msgstr ""
+#~ "Use este método de pago para pagos en línea (pagos realizados en una "
+#~ "página de internet con proveedores de pagos en línea)."

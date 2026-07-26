@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 02:39+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -83,10 +83,9 @@ msgstr "%(old_pm)s %(old_amount)s uchun %(new_pm)s ga o‘zgartirildi"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "%(session)s da %(partner)s ning %(payment_method)s POS to‘lovi"
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "%(payment_method)s POS session %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -108,13 +107,6 @@ msgstr "%(product_name)s: Buyurtma miqdori: %(old_qty)s"
 #, fuzzy
 msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s PULNI QAYTARISH"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr "%(title)s %(product_name)s %(taxes)s bilan"
 
 #. module: point_of_sale
 #. odoo-python
@@ -193,13 +185,6 @@ msgstr ""
 #, fuzzy
 msgid "%s required"
 msgstr "%s talab etiladi"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "%s untaxed"
-msgstr "%s soliqsiz"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -459,18 +444,6 @@ msgstr ""
 "<span class=\"o_form_label\">Shtrix-kodlar</span> <i class=\"fa fa-info-"
 "circle me-1\" title=\"Bu sozlama barcha PoS uchun umumiy.\" pos-data-"
 "toggle=\"tooltip\"/>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-#, fuzzy
-msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr "<span class=\"o_stat_text\">Naqd pul kassasi</span>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-#, fuzzy
-msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr "<span class=\"o_stat_text\">Jurnal yozuvlari</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -861,13 +834,6 @@ msgid "Account Move"
 msgstr "Buxgalteriya yozuvi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
-#, fuzzy
-msgid "Account payments representing aggregated and bank split payments."
-msgstr ""
-"Jamlangan va bank bo‘linmalari to‘lovlarini aks ettiruvchi hisob-kitoblar."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 #, fuzzy
 msgid ""
@@ -879,29 +845,16 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, fuzzy
 msgid "Accounting"
 msgstr "Buxgalteriya hisobi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-#, fuzzy
-msgid "Accounting journal used to create invoices."
-msgstr "Hisob-fakturalarni yaratish uchun ishlatiladigan buxgalteriya jurnali."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_journal_id
-#, fuzzy
-msgid ""
-"Accounting journal used to post POS session journal entries and POS invoice "
-"payments."
+msgid "Accounting journal used to post POS session receipts and invoices."
 msgstr ""
-"POS sessiyasi jurnali yozuvlari va POS hisob-faktura to‘lovlarini qayd etish "
-"uchun ishlatiladigan buxgalteriya jurnali."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
@@ -1368,12 +1321,6 @@ msgid "Amount of guests"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
-#, fuzzy
-msgid "Amount to balance"
-msgstr "Muvozanatlashtirish uchun summa"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 #, fuzzy
 msgid "Amount total"
@@ -1385,17 +1332,6 @@ msgstr "Umumiy summa"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Amount:"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-#, fuzzy
-msgid ""
-"An error has occurred when trying to close the session.\n"
-"You will be redirected to the back-end to manually close the session."
-msgstr ""
-"Seansni yopishda xatolik yuz berdi. Seansni qo‘lda yopish uchun boshqaruv "
-"paneliga yo‘naltirilasiz."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1833,16 +1769,27 @@ msgid "Bank App (QR Code)"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
-#, fuzzy
-msgid "Bank Payments"
-msgstr "Bank to‘lovlari"
+#: model:ir.model,name:point_of_sale.model_account_bank_statement
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_id
+msgid "Bank Statement"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 #, fuzzy
 msgid "Bank Statement Line"
 msgstr "Bank ko‘chirmasi satri"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
+msgid "Bank Statement Lines"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Bank difference for %(pm)s in %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1916,12 +1863,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
-#, fuzzy
-msgid "Before Closing Difference"
-msgstr "Yopishdan oldingi farq"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -2062,9 +2003,9 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "Cancel"
 msgstr "Bekor qilish"
@@ -2177,7 +2118,6 @@ msgstr "Savat"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__is_cash_count
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__cash
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2212,6 +2152,12 @@ msgstr "Nonvoyxona kassasi"
 #, fuzzy
 msgid "Cash Clothes Shop"
 msgstr "Kiyim do‘koni kassasi"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Control - %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2249,13 +2195,7 @@ msgid "Cash In/Out"
 msgstr "Naqd pul kirimi/chiqimi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
-#, fuzzy
-msgid "Cash Journal"
-msgstr "Kassa jurnali"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__account_bank_statement_id
 #, fuzzy
 msgid "Cash Lines"
 msgstr "Naqd pul qatorlari"
@@ -2292,8 +2232,19 @@ msgid "Cash Receipt"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_cash_register_balance
+msgid "Cash Register"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Cash Statement for %(method_name)s in %(session)s"
 msgstr ""
 
 #. module: point_of_sale
@@ -2313,16 +2264,8 @@ msgstr "Kassa nazorati - ochilish"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr "Hisoblash paytida kuzatilgan pul farqi (Zarar) - yopilish"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Cash difference observed during the counting (Profit) - closing"
-msgstr "Hisoblash paytida kuzatilgan pul farqi (Foyda) - yopilish"
+msgid "Cash correction from %(session)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2363,13 +2306,6 @@ msgstr "Naqd pul harakati o‘chirildi: %s"
 #, fuzzy
 msgid "Cash move details"
 msgstr "Naqd pul harakati tafsilotlari"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Cash register"
-msgstr "Kassa apparati"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -2701,22 +2637,10 @@ msgid "Close Register"
 msgstr "Ro‘yxatdan o‘tishni yopish"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-#, fuzzy
-msgid "Close Session"
-msgstr "Seansni yopish"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, fuzzy
 msgid "Close Session & Post Entries"
 msgstr "Seansni yopish va yozuvlarni joylash"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
-#, fuzzy
-msgid "Close Session Wizard"
-msgstr "Seansni yopish yordamchisi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2745,6 +2669,11 @@ msgid "Closing"
 msgstr "Yopilmoqda"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_balance
+msgid "Closing Balance"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, fuzzy
@@ -2757,6 +2686,11 @@ msgstr "Yopishni nazorat qilish"
 #, fuzzy
 msgid "Closing Date"
 msgstr "Yopilish sanasi"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_difference
+msgid "Closing Difference"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_closing_entry_by_product
@@ -2787,43 +2721,11 @@ msgid "Closing Session"
 msgstr "Yakunlovchi seans"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr "%(payment_method)s da yakuniy farq (%(session)s)"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Closing expected: %s \n"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #, fuzzy
 msgid "Closing note"
 msgstr "Yakuniy eslatma"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
-#, fuzzy
-msgid "Closing session error"
-msgstr "Sessiyani yopish xatosi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2883,13 +2785,6 @@ msgstr "Rang"
 #, fuzzy
 msgid "Color Index"
 msgstr "Rang indeksi"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr "%(session)s dan %(payment_method)s POS to‘lovlarini birlashtirish"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -3204,6 +3099,17 @@ msgid "Conversion rate from company currency to order currency."
 msgstr "Kompaniya valyutasidan buyurtma valyutasiga konvertatsiya kursi."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Convert POS Order to Invoice"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
+msgid "Correction Entries"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #, fuzzy
@@ -3235,6 +3141,12 @@ msgstr "Bog‘langan buyurtmalarni hisoblash"
 #, fuzzy
 msgid "Counted"
 msgstr "Hisoblanganlar"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Counterpart for invoice payment %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -3363,7 +3275,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_uid
@@ -3380,8 +3291,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_uid
 #, fuzzy
 msgid "Created by"
 msgstr "Yaratuvchi"
@@ -3389,7 +3300,6 @@ msgstr "Yaratuvchi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__create_date
@@ -3406,8 +3316,8 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__create_date
 #, fuzzy
 msgid "Created on"
 msgstr "Yaratilgan sana"
@@ -3564,6 +3474,12 @@ msgid "Customer address is required"
 msgstr "Mijoz manzili talab qilinadi"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Customer invoice from %(pos_reference)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
@@ -3667,10 +3583,10 @@ msgid "Default"
 msgstr "Standart"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
-#, fuzzy
-msgid "Default Account Receivable (PoS)"
-msgstr "Standart debitorlik qarzi (PoS)"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "Default Customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -3687,9 +3603,8 @@ msgstr "Standart jurnallar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#, fuzzy
-msgid "Default POS Receivable Account"
-msgstr "Standart POS debitorlik hisobi"
+msgid "Default PoS Partner for closing"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_preset_id
@@ -3876,18 +3791,6 @@ msgid "Desks"
 msgstr "Yozuv stollari"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
-#, fuzzy
-msgid "Destination account"
-msgstr "Manzil hisobi"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_readonly
-#, fuzzy
-msgid "Destination account is readonly"
-msgstr "Manzil hisobi faqat o‘qish uchun"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -3928,21 +3831,6 @@ msgstr "Qurilma ketma-ketligi"
 #, fuzzy
 msgid "Difference"
 msgstr "Farq"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Difference at closing PoS session"
-msgstr "PoS seansini yopishda farq"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
-#, fuzzy
-msgid ""
-"Difference between the theoretical closing balance and the real closing "
-"balance."
-msgstr "Nazariy yakuniy balans va haqiqiy yakuniy balans o‘rtasidagi farq"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
@@ -4040,11 +3928,13 @@ msgstr "Chegirmalar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__display_name
@@ -4057,7 +3947,6 @@ msgstr "Chegirmalar"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__display_name
@@ -4076,8 +3965,8 @@ msgstr "Chegirmalar"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__display_name
@@ -4158,10 +4047,16 @@ msgstr "Mijozni tanlash uchun mijozlar ro‘yxatini ochmoqchimisiz?"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"Do you want to stop the snooze early and make the product available again "
+"Do you want to stop the snooze early and make the %s available again "
 "immediately?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
+msgid "Done"
 msgstr ""
 
 #. module: point_of_sale
@@ -4364,15 +4259,9 @@ msgid "End Date"
 msgstr "Tugash sanasi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__end_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__end_time
 msgid "End Time"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
-#, fuzzy
-msgid "Ending Balance"
-msgstr "Yakuniy qoldiq"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4670,14 +4559,6 @@ msgid "Force Cancel"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
-#, fuzzy
-msgid "Force Close Session"
-msgstr "Sessiyani majburiy yopish"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #, fuzzy
@@ -4689,17 +4570,6 @@ msgstr "Majburiy tugatildi"
 #, fuzzy
 msgid "Forced Outstanding Account"
 msgstr "Majburiy to‘lanmagan hisob"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
-#, fuzzy
-msgid ""
-"Forces to set a customer when using this payment method and splits the "
-"journal entries for each customer. It could slow down the closing process."
-msgstr ""
-"Bu to‘lov usulidan foydalanganda mijozni belgilashni talab qiladi va har bir "
-"mijoz uchun jurnal yozuvlarini ajratadi. Bu yopish jarayonini "
-"sekinlashtirishi mumkin."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4719,13 +4589,6 @@ msgstr ""
 #, fuzzy
 msgid "Free quantity"
 msgstr "Bepul miqdor"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "From invoice payments"
-msgstr "Hisob-faktura to‘lovlaridan"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4821,6 +4684,11 @@ msgid "Global Discounts"
 msgstr "Umumiy chegirmalar"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
+msgid "Global Invoice"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/back_button/back_button.xml:0
@@ -4880,12 +4748,6 @@ msgstr "HTTP yo‘naltirish"
 #, fuzzy
 msgid "Has Active Session"
 msgstr "Faol sessiyaga ega"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
-#, fuzzy
-msgid "Has Cash Control"
-msgstr "Naqd pul nazoratiga ega"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
@@ -5015,11 +4877,13 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax_group__id
@@ -5032,7 +4896,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__id
@@ -5051,8 +4914,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__id
@@ -5100,12 +4963,6 @@ msgstr "Istisno holatni ko‘rsatuvchi belgi."
 #, fuzzy
 msgid "Identification"
 msgstr "Identifikatsiya"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
-#, fuzzy
-msgid "Identify Customer"
-msgstr "Mijozni aniqlash"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction
@@ -5270,12 +5127,6 @@ msgid "Information about your product."
 msgstr "Mahsulotingiz haqidagi ma'lumot."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
-#, fuzzy
-msgid "Information message"
-msgstr "Axborot xabari"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Install App"
@@ -5310,12 +5161,6 @@ msgstr "Integratsiya"
 #, fuzzy
 msgid "Intermediary Account"
 msgstr "Oraliq hisob"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#, fuzzy
-msgid "Intermediary account used for unidentified customers."
-msgstr "Aniqlanmagan mijozlar uchun ishlatiladigan vositachi hisob."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -5373,13 +5218,6 @@ msgid "Invoice Emails"
 msgstr "Hisob-faktura xabarlari"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_invoice_journal_id
-#, fuzzy
-msgid "Invoice Journal"
-msgstr "Hisob-faktura jurnali"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 #, fuzzy
 msgid "Invoice Name"
@@ -5405,16 +5243,6 @@ msgid "Invoice Status"
 msgstr "Hisob-faktura holati"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_payment.py:0
-#, fuzzy
-msgid ""
-"Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr ""
-"%(order)s (%(account_move)s) uchun %(payment_method)s orqali hisob-faktura "
-"to‘lovi"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5423,8 +5251,10 @@ msgid "Invoiced"
 msgstr "Hisob-faktura qilingan"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, fuzzy
 msgid "Invoices"
 msgstr "Hisob-fakturalar"
@@ -5443,10 +5273,9 @@ msgid "Is Follower"
 msgstr "Kuzatuvchimi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
-#, fuzzy
-msgid "Is Invoiced"
-msgstr "Hisob-faktura qilinganmi"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_globally_invoiced
+msgid "Is Globally Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__use_kiosk_mode
@@ -5459,6 +5288,11 @@ msgstr "Kiosk rejimidami"
 #, fuzzy
 msgid "Is Refund"
 msgstr "Qaytarilganmi"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_singly_invoiced
+msgid "Is Singly Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
@@ -5579,17 +5413,14 @@ msgstr "Jurnal"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 #, fuzzy
 msgid "Journal Entry"
 msgstr "Jurnal yozuvi"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Journal Items"
-msgstr "Jurnal moddalari"
+#: model:ir.model,name:point_of_sale.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
@@ -5689,12 +5520,6 @@ msgid "Large Scrollbars"
 msgstr "Katta varaqlash panellari"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
-#, fuzzy
-msgid "Last Session Closing Cash"
-msgstr "Oxirgi seans yopilishidagi naqd pul"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 #, fuzzy
 msgid "Last Session Closing Date"
@@ -5703,7 +5528,6 @@ msgstr "Oxirgi seans yopilgan sana"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_uid
@@ -5720,8 +5544,8 @@ msgstr "Oxirgi seans yopilgan sana"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_uid
 #, fuzzy
 msgid "Last Updated by"
 msgstr "Oxirgi yangilagan shaxs"
@@ -5729,7 +5553,6 @@ msgstr "Oxirgi yangilagan shaxs"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__write_date
@@ -5746,8 +5569,8 @@ msgstr "Oxirgi yangilagan shaxs"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_price_inclusion_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__write_date
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
@@ -6400,26 +6223,6 @@ msgid "Need customer to invoice"
 msgstr "Hisob-faktura uchun mijoz kerak"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"Need loss account for the following journals to post the lost amount: %s\n"
-msgstr ""
-"Yo‘qotilgan summani qayd etish uchun quyidagi jurnallar uchun zarar hisobi "
-"kerak: %s"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"Need profit account for the following journals to post the gained amount: %s"
-msgstr ""
-"Olingan summani qayd etish uchun quyidagi jurnallar uchun foyda hisobi "
-"kerak: %s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
@@ -6436,6 +6239,7 @@ msgstr "Tarmoq xatosi"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
@@ -6509,7 +6313,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Next session"
 msgstr ""
 
@@ -6727,13 +6531,6 @@ msgstr "Hisob-faktura qilinmagan"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-#, fuzzy
-msgid "Not available"
-msgstr "Mavjud emas"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
 msgstr ""
@@ -6847,6 +6644,11 @@ msgid "Number of orders where items from this order were refunded"
 msgstr "Ushbu buyurtmadagi mahsulotlar qaytarilgan buyurtmalar soni"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__account_move_count
+msgid "Number of related journal entries"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 #, fuzzy
 msgid "Number of transactions:"
@@ -6890,7 +6692,6 @@ msgstr "Oflayn buyurtmalar"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
@@ -6910,6 +6711,7 @@ msgstr "Bir bosishli to‘lov"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, fuzzy
 msgid "Ongoing"
@@ -6968,12 +6770,24 @@ msgstr "Yaxlitlashni faqat naqd pulga qo‘llang"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Only cash payment methods can use cash payment lines."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
 #, fuzzy
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
 "To‘lov usullari bilan faqat \"Kassa\" yoki \"Bank\" turidagi jurnallardan "
 "foydalanish mumkin."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Only one cash payment method can be used in a session."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -7081,6 +6895,11 @@ msgid "Opening"
 msgstr "Ochilish"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_balance
+msgid "Opening Balance"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -7103,35 +6922,11 @@ msgid "Opening Notes"
 msgstr "Ochilish qaydlari"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
-#, fuzzy
-msgid "Opening balance summed to all cash transactions."
-msgstr "Barcha naqd pul operatsiyalariga qo‘shilgan boshlang‘ich balans."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #, fuzzy
 msgid "Opening cash"
 msgstr "Boshlang‘ich naqd pul"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash counted: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash difference: %s \n"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Opening cash expected: %s \n"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7440,7 +7235,7 @@ msgid "POS Category"
 msgstr "POS toifasi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__pos_config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__pos_config_id
 msgid "POS Config"
 msgstr ""
 
@@ -7463,6 +7258,11 @@ msgstr "POS qo‘shimcha mahsulotlar"
 #, fuzzy
 msgid "POS Order Count"
 msgstr "POS buyurtmalar soni"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS Order Line"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -7527,11 +7327,24 @@ msgid "POS Session"
 msgstr "POS sessiyasi"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_ids
 #, fuzzy
 msgid "POS Sessions"
 msgstr "POS sessiyalari"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_refunds_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_refunds_ids
+msgid "POS Sessions from Refunds"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_from_sales_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_session_from_sales_ids
+msgid "POS Sessions from Sales"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7560,6 +7373,11 @@ msgstr "#%s konfiguratsiyasidan POS buyurtma"
 #, fuzzy
 msgid "POS order line from config #%s"
 msgstr "#%s konfiguratsiyasidan POS buyurtma satri"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_account_move_line__pos_order_line_id
+msgid "POS order line that generated this invoice line."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_process_pos_orders_ir_actions_server
@@ -7795,6 +7613,12 @@ msgstr "To‘lov so‘rovi kutilmoqda"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Payment reversal %s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment
@@ -7970,28 +7794,6 @@ msgid "Please fill all the required fields."
 msgstr "Iltimos, barcha zarur maydonlarni to‘ldiring."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"Please go on the %s journal and define a Loss Account. This account will be "
-"used to record cash difference."
-msgstr ""
-"Iltimos, %s jurnalida Zarar hisobini belgilang. Bu hisob naqd pul farqini "
-"qayd etish uchun ishlatiladi."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"Please go on the %s journal and define a Profit Account. This account will "
-"be used to record cash difference."
-msgstr ""
-"Iltimos, %s jurnalida Foyda hisobini belgilang. Bu hisob naqd pul farqini "
-"qayd etish uchun ishlatiladi."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
@@ -8023,6 +7825,11 @@ msgstr "Iltimos, qayta skanerlang!"
 #, fuzzy
 msgid "PoS Config"
 msgstr "PoS sozlamasi"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "PoS Config default partner receivable"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8252,11 +8059,6 @@ msgstr "Savdo nuqtasi printeri"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_category_search
 msgid "Point of Sale Product Categories"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
-msgid "Point of Sale Product Snooze"
 msgstr ""
 
 #. module: point_of_sale
@@ -8551,9 +8353,8 @@ msgstr "Narx turi"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-#, fuzzy
-msgid "Price discount from %(original_price)s to %(discounted_price)s"
-msgstr "%(original_price)s dan %(discounted_price)s gacha narx chegirmasi"
+msgid "Price discount from %(list_price)s to %(price_unit)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8834,8 +8635,9 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__product_template_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__product_template_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_snooze__type__product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 #, fuzzy
@@ -9284,21 +9086,6 @@ msgstr "Havola"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-#, fuzzy
-msgid "Refresh customer display"
-msgstr "Mijoz ekranini yangilash"
-
-#. module: point_of_sale
-#. odoo-javascript
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #, fuzzy
@@ -9378,6 +9165,11 @@ msgid "Refunds"
 msgstr "Qaytarishlar"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__refunds_move_id
+msgid "Refunds Entry"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #, fuzzy
@@ -9385,11 +9177,9 @@ msgid "Register"
 msgstr "Ro‘yxatdan o‘tish"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "Related Session: %(link)s"
-msgstr "Tegishli seans: %(link)s"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_ids
+msgid "Related Journal Entries"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9568,13 +9358,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
-#, fuzzy
-msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-"(session)s"
+msgid "Reversal for %s"
 msgstr ""
-"%(session)s seansidagi %(order)s buyurtma uchun %(entry)s POS yopilish "
-"yozuvini bekor qilish"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Reversal of %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9624,6 +9415,12 @@ msgstr "Yaxlitlash usuli"
 #, fuzzy
 msgid "Rounding error in payment lines"
 msgstr "To‘lov qatorlarida yaxlitlash xatosi"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Rounding reversal: %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -9694,8 +9491,6 @@ msgid "Sale line"
 msgstr "Sotuv qatori"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 #, fuzzy
 msgid "Sales"
@@ -9711,6 +9506,11 @@ msgstr "Sotuvlar"
 #, fuzzy
 msgid "Sales Details"
 msgstr "Sotuv tafsilotlari"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sales_move_id
+msgid "Sales Entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
@@ -10075,6 +9875,12 @@ msgid "Session"
 msgstr "Sessiya"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
+msgid "Session Already Closed"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 #, fuzzy
 msgid "Session Control"
@@ -10093,12 +9899,6 @@ msgid "Session ID:"
 msgstr "Sessiya ID raqami:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
-#, fuzzy
-msgid "Session Journal Entry"
-msgstr "Sessiya jurnali yozuvi"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 #, fuzzy
@@ -10110,12 +9910,6 @@ msgstr "Sessiya hisoboti"
 #, fuzzy
 msgid "Session Statistics"
 msgstr "Sessiya statistikasi"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Session already closed"
-msgstr ""
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -10380,7 +10174,17 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
-msgid "Snoozed Products"
+msgid "Snoozed Records"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__type
+msgid "Snoozed for?"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_snooze
+msgid "Snoozed records for Point of Sale"
 msgstr ""
 
 #. module: point_of_sale
@@ -10426,6 +10230,14 @@ msgstr ""
 "Internet aloqasi muammolari tufayli ba'zi buyurtmalar serverga yuborilmadi. "
 "Sotuv nuqtasidan chiqishingiz mumkin, lekin muammo hal bo‘lmaguncha seansni "
 "yopmang"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10480,15 +10292,9 @@ msgid "Start Date"
 msgstr "Boshlanish sanasi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__start_time
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_snooze__start_time
 msgid "Start Time"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
-#, fuzzy
-msgid "Starting Balance"
-msgstr "Boshlang‘ich qoldiq"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -10533,7 +10339,7 @@ msgstr "To‘xtatish"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Stop Snooze"
 msgstr ""
 
@@ -10974,6 +10780,14 @@ msgstr "To‘lov kartasining brendi (masalan, Visa, AMEX, ...)"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash payment method must have a linked bank statement to open the cash "
+"control."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 #, fuzzy
 msgid "The company must have a fiscal country set."
 msgstr "Kompaniya fiskal mamlakatga ega bo‘lishi kerak."
@@ -10990,6 +10804,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The cutter has a foreign matter, please check the cutter mechanism"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__default_partner_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_default_partner_id
+msgid "The default customer used in PoS session closing"
 msgstr ""
 
 #. module: point_of_sale
@@ -11090,17 +10910,6 @@ msgid "The free quantity of an upsell combo must be equal to 0."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, fuzzy
-msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the "
-"company currency if that is not set."
-msgstr ""
-"Hisob-faktura jurnali Savdo jurnali yoki kompaniya valyutasi bilan bir xil "
-"valyutada bo‘lishi kerak, agar u belgilanmagan bo‘lsa."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The invoice will be downloaded on your device whenever you invoice an order"
@@ -11177,6 +10986,11 @@ msgstr "To‘langan summa buyurtmaning umumiy summasidan farq qiladi."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The partner account will be used to generate out receipts."
 msgstr ""
 
 #. module: point_of_sale
@@ -11345,20 +11159,6 @@ msgstr ""
 "kompaniyasiga tegishli bo‘lishi kerak."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"The session has been already closed by another User. All sales completed in "
-"the meantime have been saved in a Rescue Session, which can be reviewed "
-"anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr ""
-"Sessiya allaqachon boshqa foydalanuvchi tomonidan yopilgan. Shu vaqt "
-"oralig‘ida amalga oshirilgan barcha sotuvlar Qutqaruv sessiyasiga saqlangan "
-"bo‘lib, ularni istalgan vaqtda ko‘rib chiqish va Sotuv nuqtasi boshqaruv "
-"panelidan Buxgalteriyaga o‘tkazish mumkin."
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, fuzzy
 msgid ""
@@ -11510,15 +11310,16 @@ msgstr "To‘lov kartasining turi (masalan, kredit karta yoki debet karta)"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_bill.py:0
-msgid "The value of a coin/bill must be greater than 0."
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The type of the payment method must be the same as the type of the journal."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
-#, fuzzy
-msgid "Theoretical Closing Balance"
-msgstr "Nazariy yakuniy balans"
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+msgid "The value of a coin/bill must be greater than 0."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11559,23 +11360,19 @@ msgstr ""
 "uchun quyidagi buyurtmalarni to‘lang yoki bekor qiling: %s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"There is a difference between the amounts to post and the amounts of the "
-"orders, it is probably caused by taxes or accounting configurations changes."
-msgstr ""
-"Joylashtirilishi kerak bo‘lgan summalar va buyurtmalar summalari o‘rtasida "
-"farq mavjud. Bu, ehtimol, soliqlar yoki buxgalteriya sozlamalari o‘zgarishi "
-"tufayli yuzaga kelgan."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
 #, fuzzy
 msgid "There is already an electronic payment in progress."
 msgstr "Elektron to‘lov allaqachon amalga oshirilmoqda."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"There is more than one cash payment method for this PoS Config. Please "
+"correct your configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -11605,13 +11402,6 @@ msgstr ""
 #, fuzzy
 msgid "There is no cash payment method for this PoS Session"
 msgstr "Bu PoS sessiyasi uchun naqd to‘lov usuli mavjud emas"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid "There is no cash register in this session."
-msgstr "Bu sessiyada kassa apparati yo‘q."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11975,16 +11765,6 @@ msgid "To Weigh"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-#, fuzzy
-msgid ""
-"To enable invoice creation, please add a journal for it in the settings."
-msgstr ""
-"Hisob-faktura yaratish imkoniyatini yoqish uchun sozlamalarda uning "
-"jurnalini qo‘shing."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 #, fuzzy
 msgid "To invoice"
@@ -12157,12 +11937,6 @@ msgstr ""
 "matoli krossovkalar."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
-#, fuzzy
-msgid "Transaction"
-msgstr "Tranzaksiya"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #, fuzzy
@@ -12232,19 +12006,6 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "USB Scale"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the "
-"following taxes: \n"
-"%s"
-msgstr ""
-"Seansni yopish va tasdiqlash imkonsiz. Quyidagi soliqlarning har bir qayta "
-"taqsimlash qatorida tegishli soliq hisobini o‘rnating: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12477,6 +12238,14 @@ msgstr "Tasdiqlash"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
+"Validation Error: You cannot assign multiple Cash payment methods to the "
+"same POS Shop. Please create a single Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
 "Validation Error: You cannot assign the same Cash payment method to multiple "
 "POS Shops. Please create a separate Cash payment method for each shop."
 msgstr ""
@@ -12687,7 +12456,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #, fuzzy
 msgid "Yes"
 msgstr "Ha"
@@ -12705,10 +12474,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
 msgid ""
 "You are not allowed to change the rounding configuration while a pos session "
-"using it is already opened."
+"using it is already opened. Make sure to close all open pos session before "
+"proceeding."
 msgstr ""
 
 #. module: point_of_sale
@@ -12852,13 +12622,10 @@ msgstr "Chop etilgan buyurtma to‘lovini o‘zgartira olmaysiz."
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
 msgid ""
 "You cannot close the POS when invoices are not posted.\n"
-"Invoices: %s"
+"Invoices: %(invoices)s"
 msgstr ""
-"Hisob-fakturalar joylashtirilmaganda POSni yopa olmaysiz. Hisob-fakturalar: "
-"%s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -12874,6 +12641,12 @@ msgstr "Kunlik qoralama buyurtmalar mavjud bo‘lganda POSni yopish mumkin emas.
 #, fuzzy
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr "%(lock_date_info)s dan oldin seans yarata olmaysiz"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You cannot create an invoice for orders with different currencies."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -12922,6 +12695,14 @@ msgstr ""
 #, fuzzy
 msgid "You cannot edit a payment for a posted order."
 msgstr "Joylashtirilgan buyurtma uchun to‘lovni tahrirlay olmaysiz."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"You cannot have more than one cash payment method on a point of sale "
+"configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -12988,17 +12769,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "You have"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, fuzzy
-msgid ""
-"You have enabled the \"Identify Customer\" option for %(payment_method)s "
-"payment method,but the order %(order)s does not contain a customer."
-msgstr ""
-"Siz %(payment_method)s to‘lov usuli uchun \"Mijozni aniqlash\" parametrini "
-"yoqdingiz, lekin %(order)s buyurtmasida mijoz mavjud emas."
 
 #. module: point_of_sale
 #. odoo-python
@@ -13495,6 +13265,327 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
+#~ msgstr "%(session)s da %(partner)s ning %(payment_method)s POS to‘lovi"
+
+#, fuzzy
+#~ msgid "%(title)s %(product_name)s with %(taxes)s"
+#~ msgstr "%(title)s %(product_name)s %(taxes)s bilan"
+
+#, fuzzy
+#~ msgid "%s untaxed"
+#~ msgstr "%s soliqsiz"
+
+#, fuzzy
+#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
+#~ msgstr "<span class=\"o_stat_text\">Naqd pul kassasi</span>"
+
+#, fuzzy
+#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
+#~ msgstr "<span class=\"o_stat_text\">Jurnal yozuvlari</span>"
+
+#, fuzzy
+#~ msgid "Account payments representing aggregated and bank split payments."
+#~ msgstr ""
+#~ "Jamlangan va bank bo‘linmalari to‘lovlarini aks ettiruvchi hisob-kitoblar."
+
+#, fuzzy
+#~ msgid "Accounting journal used to create invoices."
+#~ msgstr ""
+#~ "Hisob-fakturalarni yaratish uchun ishlatiladigan buxgalteriya jurnali."
+
+#, fuzzy
+#~ msgid ""
+#~ "Accounting journal used to post POS session journal entries and POS "
+#~ "invoice payments."
+#~ msgstr ""
+#~ "POS sessiyasi jurnali yozuvlari va POS hisob-faktura to‘lovlarini qayd "
+#~ "etish uchun ishlatiladigan buxgalteriya jurnali."
+
+#, fuzzy
+#~ msgid "Amount to balance"
+#~ msgstr "Muvozanatlashtirish uchun summa"
+
+#, fuzzy
+#~ msgid ""
+#~ "An error has occurred when trying to close the session.\n"
+#~ "You will be redirected to the back-end to manually close the session."
+#~ msgstr ""
+#~ "Seansni yopishda xatolik yuz berdi. Seansni qo‘lda yopish uchun boshqaruv "
+#~ "paneliga yo‘naltirilasiz."
+
+#, fuzzy
+#~ msgid "Bank Payments"
+#~ msgstr "Bank to‘lovlari"
+
+#, fuzzy
+#~ msgid "Before Closing Difference"
+#~ msgstr "Yopishdan oldingi farq"
+
+#, fuzzy
+#~ msgid "Cash Journal"
+#~ msgstr "Kassa jurnali"
+
+#, fuzzy
+#~ msgid "Cash difference observed during the counting (Loss) - closing"
+#~ msgstr "Hisoblash paytida kuzatilgan pul farqi (Zarar) - yopilish"
+
+#, fuzzy
+#~ msgid "Cash difference observed during the counting (Profit) - closing"
+#~ msgstr "Hisoblash paytida kuzatilgan pul farqi (Foyda) - yopilish"
+
+#, fuzzy
+#~ msgid "Cash register"
+#~ msgstr "Kassa apparati"
+
+#, fuzzy
+#~ msgid "Close Session"
+#~ msgstr "Seansni yopish"
+
+#, fuzzy
+#~ msgid "Close Session Wizard"
+#~ msgstr "Seansni yopish yordamchisi"
+
+#, fuzzy
+#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
+#~ msgstr "%(payment_method)s da yakuniy farq (%(session)s)"
+
+#, fuzzy
+#~ msgid "Closing session error"
+#~ msgstr "Sessiyani yopish xatosi"
+
+#, fuzzy
+#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
+#~ msgstr "%(session)s dan %(payment_method)s POS to‘lovlarini birlashtirish"
+
+#, fuzzy
+#~ msgid "Default Account Receivable (PoS)"
+#~ msgstr "Standart debitorlik qarzi (PoS)"
+
+#, fuzzy
+#~ msgid "Default POS Receivable Account"
+#~ msgstr "Standart POS debitorlik hisobi"
+
+#, fuzzy
+#~ msgid "Destination account"
+#~ msgstr "Manzil hisobi"
+
+#, fuzzy
+#~ msgid "Destination account is readonly"
+#~ msgstr "Manzil hisobi faqat o‘qish uchun"
+
+#, fuzzy
+#~ msgid "Difference at closing PoS session"
+#~ msgstr "PoS seansini yopishda farq"
+
+#, fuzzy
+#~ msgid ""
+#~ "Difference between the theoretical closing balance and the real closing "
+#~ "balance."
+#~ msgstr "Nazariy yakuniy balans va haqiqiy yakuniy balans o‘rtasidagi farq"
+
+#, fuzzy
+#~ msgid "Ending Balance"
+#~ msgstr "Yakuniy qoldiq"
+
+#, fuzzy
+#~ msgid "Force Close Session"
+#~ msgstr "Sessiyani majburiy yopish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Forces to set a customer when using this payment method and splits the "
+#~ "journal entries for each customer. It could slow down the closing process."
+#~ msgstr ""
+#~ "Bu to‘lov usulidan foydalanganda mijozni belgilashni talab qiladi va har "
+#~ "bir mijoz uchun jurnal yozuvlarini ajratadi. Bu yopish jarayonini "
+#~ "sekinlashtirishi mumkin."
+
+#, fuzzy
+#~ msgid "From invoice payments"
+#~ msgstr "Hisob-faktura to‘lovlaridan"
+
+#, fuzzy
+#~ msgid "Has Cash Control"
+#~ msgstr "Naqd pul nazoratiga ega"
+
+#, fuzzy
+#~ msgid "Identify Customer"
+#~ msgstr "Mijozni aniqlash"
+
+#, fuzzy
+#~ msgid "Information message"
+#~ msgstr "Axborot xabari"
+
+#, fuzzy
+#~ msgid "Intermediary account used for unidentified customers."
+#~ msgstr "Aniqlanmagan mijozlar uchun ishlatiladigan vositachi hisob."
+
+#, fuzzy
+#~ msgid "Invoice Journal"
+#~ msgstr "Hisob-faktura jurnali"
+
+#, fuzzy
+#~ msgid ""
+#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
+#~ msgstr ""
+#~ "%(order)s (%(account_move)s) uchun %(payment_method)s orqali hisob-"
+#~ "faktura to‘lovi"
+
+#, fuzzy
+#~ msgid "Is Invoiced"
+#~ msgstr "Hisob-faktura qilinganmi"
+
+#, fuzzy
+#~ msgid "Journal Items"
+#~ msgstr "Jurnal moddalari"
+
+#, fuzzy
+#~ msgid "Last Session Closing Cash"
+#~ msgstr "Oxirgi seans yopilishidagi naqd pul"
+
+#, fuzzy
+#~ msgid ""
+#~ "Need loss account for the following journals to post the lost amount: %s\n"
+#~ msgstr ""
+#~ "Yo‘qotilgan summani qayd etish uchun quyidagi jurnallar uchun zarar "
+#~ "hisobi kerak: %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "Need profit account for the following journals to post the gained amount: "
+#~ "%s"
+#~ msgstr ""
+#~ "Olingan summani qayd etish uchun quyidagi jurnallar uchun foyda hisobi "
+#~ "kerak: %s"
+
+#, fuzzy
+#~ msgid "Not available"
+#~ msgstr "Mavjud emas"
+
+#, fuzzy
+#~ msgid "Opening balance summed to all cash transactions."
+#~ msgstr "Barcha naqd pul operatsiyalariga qo‘shilgan boshlang‘ich balans."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please go on the %s journal and define a Loss Account. This account will "
+#~ "be used to record cash difference."
+#~ msgstr ""
+#~ "Iltimos, %s jurnalida Zarar hisobini belgilang. Bu hisob naqd pul farqini "
+#~ "qayd etish uchun ishlatiladi."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please go on the %s journal and define a Profit Account. This account "
+#~ "will be used to record cash difference."
+#~ msgstr ""
+#~ "Iltimos, %s jurnalida Foyda hisobini belgilang. Bu hisob naqd pul farqini "
+#~ "qayd etish uchun ishlatiladi."
+
+#, fuzzy
+#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
+#~ msgstr "%(original_price)s dan %(discounted_price)s gacha narx chegirmasi"
+
+#, fuzzy
+#~ msgid "Refresh customer display"
+#~ msgstr "Mijoz ekranini yangilash"
+
+#, fuzzy
+#~ msgid "Related Session: %(link)s"
+#~ msgstr "Tegishli seans: %(link)s"
+
+#, fuzzy
+#~ msgid ""
+#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+#~ "(session)s"
+#~ msgstr ""
+#~ "%(session)s seansidagi %(order)s buyurtma uchun %(entry)s POS yopilish "
+#~ "yozuvini bekor qilish"
+
+#, fuzzy
+#~ msgid "Session Journal Entry"
+#~ msgstr "Sessiya jurnali yozuvi"
+
+#, fuzzy
+#~ msgid "Starting Balance"
+#~ msgstr "Boshlang‘ich qoldiq"
+
+#, fuzzy
+#~ msgid ""
+#~ "The invoice journal must be in the same currency as the Sales Journal or "
+#~ "the company currency if that is not set."
+#~ msgstr ""
+#~ "Hisob-faktura jurnali Savdo jurnali yoki kompaniya valyutasi bilan bir "
+#~ "xil valyutada bo‘lishi kerak, agar u belgilanmagan bo‘lsa."
+
+#, fuzzy
+#~ msgid ""
+#~ "The session has been already closed by another User. All sales completed "
+#~ "in the meantime have been saved in a Rescue Session, which can be "
+#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
+#~ msgstr ""
+#~ "Sessiya allaqachon boshqa foydalanuvchi tomonidan yopilgan. Shu vaqt "
+#~ "oralig‘ida amalga oshirilgan barcha sotuvlar Qutqaruv sessiyasiga "
+#~ "saqlangan bo‘lib, ularni istalgan vaqtda ko‘rib chiqish va Sotuv nuqtasi "
+#~ "boshqaruv panelidan Buxgalteriyaga o‘tkazish mumkin."
+
+#, fuzzy
+#~ msgid "Theoretical Closing Balance"
+#~ msgstr "Nazariy yakuniy balans"
+
+#, fuzzy
+#~ msgid ""
+#~ "There is a difference between the amounts to post and the amounts of the "
+#~ "orders, it is probably caused by taxes or accounting configurations "
+#~ "changes."
+#~ msgstr ""
+#~ "Joylashtirilishi kerak bo‘lgan summalar va buyurtmalar summalari "
+#~ "o‘rtasida farq mavjud. Bu, ehtimol, soliqlar yoki buxgalteriya "
+#~ "sozlamalari o‘zgarishi tufayli yuzaga kelgan."
+
+#, fuzzy
+#~ msgid "There is no cash register in this session."
+#~ msgstr "Bu sessiyada kassa apparati yo‘q."
+
+#, fuzzy
+#~ msgid ""
+#~ "To enable invoice creation, please add a journal for it in the settings."
+#~ msgstr ""
+#~ "Hisob-faktura yaratish imkoniyatini yoqish uchun sozlamalarda uning "
+#~ "jurnalini qo‘shing."
+
+#, fuzzy
+#~ msgid "Transaction"
+#~ msgstr "Tranzaksiya"
+
+#, fuzzy
+#~ msgid ""
+#~ "Unable to close and validate the session.\n"
+#~ "Please set corresponding tax account in each repartition line of the "
+#~ "following taxes: \n"
+#~ "%s"
+#~ msgstr ""
+#~ "Seansni yopish va tasdiqlash imkonsiz. Quyidagi soliqlarning har bir "
+#~ "qayta taqsimlash qatorida tegishli soliq hisobini o‘rnating: %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "You cannot close the POS when invoices are not posted.\n"
+#~ "Invoices: %s"
+#~ msgstr ""
+#~ "Hisob-fakturalar joylashtirilmaganda POSni yopa olmaysiz. Hisob-"
+#~ "fakturalar: %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
+#~ "payment method,but the order %(order)s does not contain a customer."
+#~ msgstr ""
+#~ "Siz %(payment_method)s to‘lov usuli uchun \"Mijozni aniqlash\" "
+#~ "parametrini yoqdingiz, lekin %(order)s buyurtmasida mijoz mavjud emas."
 
 #, fuzzy
 #~ msgid "Link copied to clipboard"

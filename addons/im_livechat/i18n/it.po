@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-21 17:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
@@ -88,19 +88,19 @@ msgstr "% di soddisfazione"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
 msgstr "%(days)s g"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(hours)sh"
 msgstr "%(hours)sh"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
 msgstr "%(minutes)s min"
 
@@ -164,7 +164,7 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
 msgstr "< 1m"
 
@@ -295,7 +295,8 @@ msgstr "Aggiungi esperienza"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Add the following code to the &lt;head&gt; section of your website:"
-msgstr "Aggiungi il seguente codice alla sezione &lt;head&gt; del tuo sito web:"
+msgstr ""
+"Aggiungi il seguente codice alla sezione &lt;head&gt; del tuo sito web:"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -693,6 +694,12 @@ msgid "Configure Channel"
 msgstr "Configura canale"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Connect"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Contatto"
@@ -1019,6 +1026,12 @@ msgstr "Abilita ChatBot"
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Engage with visitors to convert leads or offer services."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
@@ -1224,6 +1237,12 @@ msgstr "Aiuto richiesto (agente)"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
 msgstr "Stato aiuto"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Help needed"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1589,8 +1608,6 @@ msgid "Limited"
 msgstr "Limitata"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -1663,7 +1680,7 @@ msgstr "Finestra live chat"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chats"
 msgstr "Live chat"
@@ -1783,7 +1800,6 @@ msgstr "Lingue chat dal vivo"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
@@ -1937,6 +1953,12 @@ msgstr "Nessuna chat durante la chiamata"
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
 msgstr "Nessun fallimento"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "No Livechat Session!"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2242,8 +2264,7 @@ msgstr "Messaggio e-mail correlato"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.xml:0
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
 msgstr "Pertinente alle tue competenze"
 
@@ -2880,13 +2901,6 @@ msgid "View Contact"
 msgstr "Visualizza contatto"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.js:0
-#, fuzzy
-msgid "View or join live chat channels"
-msgstr "Visualizza o unisciti a canali live chat"
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
@@ -3145,3 +3159,7 @@ msgstr "gestione messaggio websocket"
 #, fuzzy
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"
+
+#, fuzzy
+#~ msgid "View or join live chat channels"
+#~ msgstr "Visualizza o unisciti a canali live chat"

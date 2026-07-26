@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-20 05:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -129,6 +129,15 @@ msgstr ""
 "                            </span>"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Test Mode\n"
+"                        </span>"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
@@ -223,7 +232,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Address"
 msgstr "Endereço"
 
@@ -315,11 +323,9 @@ msgstr "Tem certeza de que deseja excluir esta forma de pagamento?"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid ""
-"Are you sure you want to void the authorized transaction? This action can't "
-"be undone."
+"Are you sure you want to void the authorized transaction? "
+"This                                  action can't be undone."
 msgstr ""
-"Tem certeza de que deseja anular a transação autorizada? Esta ação não pode "
-"ser desfeita."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -398,6 +404,7 @@ msgstr "Captura"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
 msgstr "Capturar quantia manualmente"
 
@@ -408,6 +415,7 @@ msgstr "Capturar transação"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,help:payment.field_payment_transaction__capture_manually
 msgid ""
 "Capture the amount from Odoo, when the delivery is completed. Use this if "
 "you want to charge your customers cards only when you are sure you can ship "
@@ -415,13 +423,13 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
-msgid "Child Transactions"
-msgstr "Transações secundárias"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
+msgid "Child Transaction Count"
+msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "Child transactions"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
+msgid "Child Transactions"
 msgstr "Transações secundárias"
 
 #. module: payment
@@ -431,7 +439,6 @@ msgstr "Selecione outra forma <i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
 msgstr "Cidade"
 
@@ -513,7 +520,6 @@ msgstr "Países"
 #. module: payment
 #: model:ir.model,name:payment.model_res_country
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
 msgstr "País"
 
@@ -587,6 +593,8 @@ msgstr "Moeda"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Customer"
 msgstr "Cliente"
 
@@ -990,6 +998,13 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+msgid "Method"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
 msgstr "Quantidade Mínima"
@@ -1095,6 +1110,13 @@ msgid "Operation"
 msgstr "Operação"
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Operations"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
 msgstr ""
@@ -1164,6 +1186,7 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Payment"
 msgstr "Pagamento"
 
@@ -1186,6 +1209,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
 msgstr "Informações de pagamento"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Payment History"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1271,8 +1300,6 @@ msgid "Payment Transaction"
 msgstr "Transação do pagamento"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_transaction_ids
 #: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
@@ -1429,6 +1456,11 @@ msgid "Post-process"
 msgstr "Pós-processamento"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-processed"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
@@ -1504,6 +1536,7 @@ msgstr "Redsys"
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Reference"
 msgstr "Referência"
 
@@ -1611,7 +1644,6 @@ msgstr "Transação de origem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
 msgstr "Estado"
 
@@ -2112,6 +2144,12 @@ msgid "Toggle the main company in the company switcher."
 msgstr "Alterne a empresa principal no alternador de empresas."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+msgid "Token"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
 msgstr ""
@@ -2512,11 +2550,6 @@ msgid "Your payment operation has been successfully submitted."
 msgstr "Sua operação de pagamento foi enviada com sucesso."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "ZIP"
-msgstr "CEP"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "CEP"
@@ -2531,6 +2564,12 @@ msgstr "id"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "provider"
 msgstr "provedor"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "source_transaction_id"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -2556,6 +2595,19 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid ""
+#~ "Are you sure you want to void the authorized transaction? This action "
+#~ "can't be undone."
+#~ msgstr ""
+#~ "Tem certeza de que deseja anular a transação autorizada? Esta ação não "
+#~ "pode ser desfeita."
+
+#~ msgid "Child transactions"
+#~ msgstr "Transações secundárias"
+
+#~ msgid "ZIP"
+#~ msgstr "CEP"
 
 #~ msgid "(ID:"
 #~ msgstr "(ID:"

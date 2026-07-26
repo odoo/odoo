@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-22 00:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -54,7 +54,7 @@ msgid "A name for your favorite filter is required."
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
 msgid "Access Groups"
 msgstr "Toegangsgroepen"
 
@@ -79,6 +79,11 @@ msgstr "Beheerder"
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
 msgid "All users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__allowed_user_ids
+msgid "Allowed Users"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -289,11 +294,6 @@ msgid "Global Filters"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
-msgid "Group"
-msgstr "Groep"
-
-#. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_group
 msgid "Group of dashboards"
 msgstr "Groep dashboards"
@@ -328,11 +328,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
 msgid "Is Favorite"
 msgstr "Is favoriet"
-
-#. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
-msgid "Is Published"
-msgstr "Is gepubliceerd"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
@@ -437,6 +432,7 @@ msgid "Open sidebar"
 msgstr "Zijbalk openen"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Published"
 msgstr "Gepubliceerd"
@@ -583,6 +579,11 @@ msgid "Users"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__allowed_user_ids
+msgid "Users allowed to access this dashboard"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
 msgid "Users who have favorited this dashboard"
 msgstr "Gebruikers die dit dashboard als favoriet hebben gemarkeerd"
@@ -653,3 +654,9 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/static/src/public/public_dashboard.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Group"
+#~ msgstr "Groep"
+
+#~ msgid "Is Published"
+#~ msgstr "Is gepubliceerd"

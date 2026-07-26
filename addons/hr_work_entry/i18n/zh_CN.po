@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 05:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -98,6 +98,14 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_attendance
 msgid "A"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
+msgid ""
+"A working schedule not linked to a company cannot have a country defined on "
+"one of its work entry types."
 msgstr ""
 
 #. module: hr_work_entry
@@ -382,6 +390,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
 msgid "Breastfeeding Break"
 msgstr "哺乳休息时间"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_thematic_leave_informal_carer
+msgid "CAR"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -815,6 +828,7 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
 msgid "ECO"
 msgstr ""
 
@@ -1507,6 +1521,11 @@ msgid "Last Updated on"
 msgstr "上次更新日期"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_leave_palliative_care
+msgid "Leave palliative care"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
 msgid "Lesson Salary"
 msgstr "课时薪酬"
@@ -2167,6 +2186,11 @@ msgid "Overtime: Week Day"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_leave_palliative_care
+msgid "PAL"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_parental_time_off
 msgid "PAR"
 msgstr ""
@@ -2526,6 +2550,11 @@ msgid "Regular Holiday"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_attendance_ids
+msgid "Resource Calendar Attendance"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
 msgstr "休假详细信息"
@@ -2563,6 +2592,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_sectoral_compensatory_rest
 msgid "SCT"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_seventh_day
+msgid "SD"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2611,6 +2645,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_senior_time_off
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_sick_leave
@@ -2692,6 +2727,11 @@ msgid "Second Degree Relatives Compassionate Leave"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_senior_time_off
+msgid "Senior Time Off"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
 msgid "September"
 msgstr ""
@@ -2711,6 +2751,11 @@ msgstr ""
 msgid ""
 "Service planned but not provided by childminders due to the absence of "
 "children for reasons beyond the control of the childminder"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_seventh_day
+msgid "Seventh Day"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2891,6 +2936,11 @@ msgid "Sunday Shift"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
+msgid "TCN"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_environmental_protection
 msgid "TME"
 msgstr ""
@@ -2968,6 +3018,11 @@ msgid ""
 msgstr "公司技术故障或因环保原因关闭"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
+msgid "Temporary economic unemployment for employee"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather
 msgid "Temporary unemployment due to bad weather"
 msgstr "因恶劣天气导致的临时失业"
@@ -3042,6 +3097,27 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"The country of the work entry type does not match the country of the "
+"associated resource calendar."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
+msgid ""
+"The country of the work entry types linked to the attendances must be the "
+"same as the company's country."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_thematic_leave_informal_carer
+msgid "Thematic leave - Leave for informal carer"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
 #: model:ir.model.fields,help:hr_work_entry.field_resource_calendar_attendance__display_code
 msgid ""
@@ -3061,6 +3137,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
 msgid "Time Types"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
+msgid "Time credit not equated"
 msgstr ""
 
 #. module: hr_work_entry
@@ -3451,8 +3532,8 @@ msgstr "XSH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
-msgid "YSO"
-msgstr "YSO"
+msgid "YTO"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
@@ -3474,7 +3555,7 @@ msgstr "相同员工不能出现两次。"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
-msgid "Youth / Senior Time Off"
+msgid "Youth Time Off"
 msgstr ""
 
 #. module: hr_work_entry
@@ -3497,6 +3578,9 @@ msgstr ""
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "workentries_"
 msgstr ""
+
+#~ msgid "YSO"
+#~ msgstr "YSO"
 
 #~ msgid "Cash Out of Leave in Service"
 #~ msgstr "在职期间休假折算现金"

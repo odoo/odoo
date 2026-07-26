@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-21 19:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -80,21 +80,21 @@ msgstr "% السعادة"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "%(days)sd"
 msgstr "%(days)sd"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "%(hours)sh"
 msgstr "%(hours)s ساعات"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "%(minutes)sm"
 msgstr "%(minutes)sm"
@@ -157,7 +157,7 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "< 1m"
 msgstr "< 1m"
@@ -228,9 +228,9 @@ msgid ""
 "                    <span>Use Channel Rules if you want the Bot to interact "
 "with visitors only when no operator is available.</span>"
 msgstr ""
-"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد إلكتروني، ...) "
-"حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل إلى موظف، ...). </"
-"span>\n"
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
+"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
+"إلى موظف، ...). </span>\n"
 "                    <span>استخدم قواعد القنوات إذا كنت ترغب في أن يتفاعل الـ "
 "Bot مع الزائرين فقط عندما لا يكون هناك موظف متاح.</span>"
 
@@ -241,9 +241,9 @@ msgid ""
 "the Bot can perform more complex actions (Forward to an Operator, ...).</"
 "span>"
 msgstr ""
-"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد إلكتروني، ...) "
-"حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل إلى موظف، ...).</"
-"span>"
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
+"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
+"إلى موظف، ...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -514,8 +514,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"تكون الدردشة خاصة وفريدة بين شخصين 2. الدردشات الجماعية خاصة للأشخاص المدعوين "
-"إليها. بوسك الانضمام إلى القناة متى شئت (بناءً على تهيئتها)."
+"تكون الدردشة خاصة وفريدة بين شخصين 2. الدردشات الجماعية خاصة للأشخاص "
+"المدعوين إليها. بوسك الانضمام إلى القناة متى شئت (بناءً على تهيئتها)."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -673,6 +673,12 @@ msgstr "التهيئة"
 #, fuzzy
 msgid "Configure Channel"
 msgstr "تهيئة القناة "
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Connect"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -869,8 +875,8 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
-"المهلة (بالثواني) قبل فتح نافذة المحادثة تلقائياً. ملاحظة: يجب أن يكون الإجراء "
-"المحدد هو 'الفتح تلقائياً'، وإلا فلن يؤخذ هذا المعيار في الاعتبار."
+"المهلة (بالثواني) قبل فتح نافذة المحادثة تلقائياً. ملاحظة: يجب أن يكون "
+"الإجراء المحدد هو 'الفتح تلقائياً'، وإلا فلن يؤخذ هذا المعيار في الاعتبار."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1003,6 +1009,12 @@ msgstr "تمكين برامج الدردشة الآلية"
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Engage with visitors to convert leads or offer services."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
@@ -1125,8 +1137,8 @@ msgid ""
 "<strong>Marketing.</strong>"
 msgstr ""
 "اذهب إلى <strong>الموقع الإلكتروني</strong> > <strong>التهيئة</strong> > "
-"<strong>الإعدادات</strong> > <strong>البريد الإلكتروني</strong> &amp; <strong>"
-"التسويق.</strong>"
+"<strong>الإعدادات</strong> > <strong>البريد الإلكتروني</strong> &amp; "
+"<strong>التسويق.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1208,6 +1220,12 @@ msgstr "تم طلب المساعدة (موظف الدعم)"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
 msgstr "حالة المساعدة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Help needed"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1395,8 +1413,8 @@ msgstr "معلومات"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
-"عنوان URL غير صالح ’%s‘. يجب أن يبدأ رابط المعاينة بـ ’http://‘ أو ’https://"
-"‘."
+"عنوان URL غير صالح ’%s‘. يجب أن يبدأ رابط المعاينة بـ ’http://‘ أو "
+"’https://‘."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -1572,8 +1590,6 @@ msgid "Limited"
 msgstr "محدود"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -1649,7 +1665,7 @@ msgstr "نافذة الدردشة الحية"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 #, fuzzy
 msgid "Live Chats"
@@ -1774,7 +1790,6 @@ msgstr "لغات الدردشة المباشرة"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
@@ -1928,6 +1943,12 @@ msgstr "لا يتم تلقي أي محادثات أثناء المكالمات "
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
 msgstr "لم يفشل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "No Livechat Session!"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2219,7 +2240,8 @@ msgstr "رابط إعادة التوجيه"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr "التعبير النمطي الذي يحدد صفحات الويب التي سيتم تطبيق هذه القاعدة عليها."
+msgstr ""
+"التعبير النمطي الذي يحدد صفحات الويب التي سيتم تطبيق هذه القاعدة عليها."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
@@ -2228,8 +2250,7 @@ msgstr "رسالة البريد ذات الصلة"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.xml:0
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 #, fuzzy
 msgid "Relevant to your expertise"
 msgstr "ذات صلة بخبرتك"
@@ -2609,9 +2630,9 @@ msgid ""
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
 "سيتم تطبيق هذه القاعدة على هذه البلدان فقط. مثلًا: إذا اخترت 'بلجيكا' "
-"و'الولايات المتحدة' وقمت بتعيين الإجراء إلى 'إخفاء'، سيتم إخفاء زر الدردشة عن "
-"الزوار الموجودين في هذين البلدين في رابط URL المحدد. تتطلب هذه الخاصية تثبيت "
-"GeoIP على خادمك."
+"و'الولايات المتحدة' وقمت بتعيين الإجراء إلى 'إخفاء'، سيتم إخفاء زر الدردشة "
+"عن الزوار الموجودين في هذين البلدين في رابط URL المحدد. تتطلب هذه الخاصية "
+"تثبيت GeoIP على خادمك."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -2853,12 +2874,6 @@ msgstr ""
 #, fuzzy
 msgid "View Contact"
 msgstr "عرض جهة الاتصال"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.js:0
-msgid "View or join live chat channels"
-msgstr ""
 
 #. module: im_livechat
 #. odoo-python

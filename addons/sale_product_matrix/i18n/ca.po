@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-19 01:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-master/"
@@ -20,11 +20,9 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
-msgid "Add product mode"
-msgstr "Afegeix el mode producte"
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Configurator"
+msgstr ""
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
@@ -33,12 +31,8 @@ msgstr "Afegeix el mode producte"
 msgid ""
 "Configurator: choose attribute values to add the matching product variant to "
 "the order.\n"
-"Grid: add several variants at once from the grid of attribute values"
+"Matrix: add several variants at once from the grid of attribute values"
 msgstr ""
-"Configurador: trieu els valors d'atribut per a afegir la variant de producte "
-"coincident a l'ordre.\n"
-"Quadrícula: afegeix diverses variants alhora des de la graella de valors "
-"d'atribut"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__display_name
@@ -65,14 +59,14 @@ msgid "ID"
 msgstr ""
 
 #. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Matrix"
+msgstr ""
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
 msgstr "Emmagatzematge local Matrix"
-
-#. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
-msgid "Order Grid Entry"
-msgstr "Graella d'entrada de comandes"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
@@ -85,11 +79,6 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
-msgid "Product Configurator"
-msgstr "Configurador de productes"
-
-#. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
 msgid "Sales Order"
 msgstr "Comanda"
@@ -98,11 +87,6 @@ msgstr "Comanda"
 #: model:ir.model,name:sale_product_matrix.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Línia comanda de venda"
-
-#. module: sale_product_matrix
-#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
-msgid "Sales Variant Selection"
-msgstr "Vendes Variant Selecció"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -116,6 +100,13 @@ msgstr ""
 "Si no, representa la matriu a obrir."
 
 #. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Variant Selection"
+msgstr ""
+
+#. module: sale_product_matrix
 #. odoo-python
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 msgid ""
@@ -123,3 +114,25 @@ msgid ""
 msgstr ""
 "No es pot canviar la quantitat d'un producte present en múltiples línies de "
 "venda."
+
+#~ msgid "Add product mode"
+#~ msgstr "Afegeix el mode producte"
+
+#~ msgid ""
+#~ "Configurator: choose attribute values to add the matching product variant "
+#~ "to the order.\n"
+#~ "Grid: add several variants at once from the grid of attribute values"
+#~ msgstr ""
+#~ "Configurador: trieu els valors d'atribut per a afegir la variant de "
+#~ "producte coincident a l'ordre.\n"
+#~ "Quadrícula: afegeix diverses variants alhora des de la graella de valors "
+#~ "d'atribut"
+
+#~ msgid "Order Grid Entry"
+#~ msgstr "Graella d'entrada de comandes"
+
+#~ msgid "Product Configurator"
+#~ msgstr "Configurador de productes"
+
+#~ msgid "Sales Variant Selection"
+#~ msgstr "Vendes Variant Selecció"

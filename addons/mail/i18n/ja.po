@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 10:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -103,7 +103,7 @@ msgstr "%(activity)s、担当者: %(name)s、期日 %(deadline)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "%(amount)s items marked as read"
 msgstr "%(amount)s 件を既読にしました"
 
@@ -502,12 +502,6 @@ msgid "(edited)"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
-msgid "(from"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(元々の担当は"
@@ -574,7 +568,7 @@ msgstr "1時間"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "1 item marked as read"
 msgstr "1件を既読にしました"
 
@@ -791,24 +785,14 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
 "<p>Channels make it easy to organize information across different topics and "
-"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
-"marketing, product XYZ, after work party, etc).</p>"
+"groups.</p>"
 msgstr ""
-"<p>チャネルは、異なるトピックやグループにわたる情報の整理を容易にします。</"
-"p> <p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、マーケ"
-"ティング、プロダクトXYZ、ワーキングパーティーなど)</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "<p>Create a channel here.</p>"
-msgstr "<p>ここでチャネルを作成します。</p>"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "<p>Create a public or private channel.</p>"
-msgstr "<p>パブリックチャネルまたはプライベートチャネルを作成します。</p>"
+msgid "<p>Click a channel to open the discussion.</p>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1518,19 +1502,17 @@ msgid "Add People"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add a Reaction"
 msgstr "リアクションを追加"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"Tenor GIF APIキーを追加して、GIFのサポートを有効にします。https://"
-"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1570,12 +1552,6 @@ msgstr "連絡先を追加..."
 #: code:addons/mail/static/src/core/web/follower_list.js:0
 msgid "Add followers to this document"
 msgstr "このドキュメントにフォロワーを追加"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-msgid "Add or join a channel"
-msgstr "チャネルを追加または参加"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1885,6 +1861,12 @@ msgstr "複数の選択肢を許可"
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "Allow multiple options"
 msgstr "複数のオプションを許可"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/channel_member_list_patch.js:0
+msgid "Also invited"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -2499,12 +2481,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Bookmark important messages"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Bookmark removed"
 msgstr ""
@@ -2525,8 +2501,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "Bookmarks"
 msgstr ""
 
@@ -3101,6 +3076,8 @@ msgid "Change the background color of the related activities of this type."
 msgstr "このタイプの関連活動の背景色を変更します。"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_last_interest_update__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
@@ -3116,7 +3093,7 @@ msgstr "チャネル"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 msgid "Channel Actions"
 msgstr "チャネルアクション"
 
@@ -3172,6 +3149,7 @@ msgstr "チャンネル・フル"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
 msgid "Channel image"
 msgstr "チャネル画像"
 
@@ -3195,9 +3173,7 @@ msgstr "チャネル名"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-#: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.actions.act_window,name:mail.discuss_my_conversations_action
 #: model:ir.model.fields,field_description:mail.field_discuss_category__channel_ids
@@ -3219,6 +3195,7 @@ msgstr "チャネル/メンバ"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Chat"
@@ -3226,7 +3203,7 @@ msgstr "チャット"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 msgid "Chat Actions"
 msgstr "チャットアクション"
 
@@ -3247,7 +3224,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/messaging_menu.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Chat with your coworkers on desktop or on mobile."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "Chats"
 msgstr "チャット"
 
@@ -3309,6 +3292,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Clear Time"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
+msgid "Clear search"
 msgstr ""
 
 #. module: mail
@@ -3386,13 +3375,12 @@ msgstr "パネルを閉じる"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
-#: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 msgid "Close search"
 msgstr "検索を終了"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.js:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.js:0
 msgid "Collapse participants"
 msgstr "参加者を退室させる"
 
@@ -3400,14 +3388,6 @@ msgstr "参加者を退室させる"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
 msgstr "特定のメールアドレスで回答を集める"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Come here often? Install the app for quick and easy access!"
-msgstr ""
-"こちらを頻繁に利用される場合は、アプリをインストールして、素早く簡単にアクセ"
-"スしましょう!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3808,6 +3788,12 @@ msgid "Create Channel"
 msgstr "チャネルを作成"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Create Chat"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__create_date
 msgid "Create Date"
@@ -3897,6 +3883,7 @@ msgstr "作成者"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_followers__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_uid
@@ -3950,6 +3937,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_followers__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_date
@@ -4347,12 +4335,6 @@ msgstr "選択肢を削除"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
-msgid "Deleted document"
-msgstr "削除済ドキュメント"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__sent
 msgid "Delivered"
@@ -4423,12 +4405,6 @@ msgstr "返信定型文を現在のユーザが編集できるかどうかを決
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr "canned_responseが現在他のユーザと共有されているかどうかを判断します"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-msgid "Direct Messages"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5351,12 +5327,6 @@ msgstr "例外"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-msgid "Exit Fullscreen"
-msgstr "フルスクリーンを閉じる"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Picture in Picture"
 msgstr "ピクチャ・イン・ピクチャを終了"
 
@@ -5375,7 +5345,7 @@ msgstr "展開"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.js:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.js:0
 msgid "Expand participants"
 msgstr "参加者を拡大"
 
@@ -5488,13 +5458,14 @@ msgid "Failure: %(modelName)s"
 msgstr "失敗: %(modelName)s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_item_patch.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_favorite
 msgid "Favorite"
 msgstr "お気に入り"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Favorites"
 msgstr "お気に入り"
@@ -5583,6 +5554,18 @@ msgstr "メッセージをフィルタリング"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Find channels to follow below"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
+msgid "Find more channels"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
 msgstr "折りたたむ"
@@ -5590,6 +5573,7 @@ msgstr "折りたたむ"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
 msgid "Follow"
 msgstr ""
 
@@ -5946,6 +5930,24 @@ msgstr "投票に戻る"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
+msgid "Go online to load attachments."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/pinned_messages_panel.js:0
+msgid "Go online to load pinned messages."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
+msgid "Go online to load threads."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Go to conversation"
 msgstr "会話へ行く"
@@ -6146,6 +6148,11 @@ msgid "Has on demand responsible"
 msgstr "オンデマンド担当者あり"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_unread
+msgid "Has unread messages"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
@@ -6209,13 +6216,6 @@ msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
 "サブタイプの構成とは関係なく、パブリック/ポータルユーザーに非表示にします。"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "History"
-msgstr "履歴"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
@@ -6582,7 +6582,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_tenor_api
-msgid "If you want to use Tenor API to share GIFs in conversations."
+msgid "If you want to use Klipy API to share GIFs in conversations."
 msgstr ""
 
 #. module: mail
@@ -6593,6 +6593,14 @@ msgstr "TURN/STUNサーバープロバイダーとしてtwilioを使用する場
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_call_server
 msgid "If you want to use your own SFU or ICE servers for video calls."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
 msgstr ""
 
 #. module: mail
@@ -6661,6 +6669,12 @@ msgstr "Odoo内"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/messaging_menu_item_patch.xml:0
+msgid "In a call"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/meeting_chat.xml:0
 msgid "In call messages"
 msgstr ""
@@ -6677,6 +6691,12 @@ msgstr ""
 "とみなされます。"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/channel_member_list_patch.js:0
+msgid "In this call"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "Inactive Alias"
@@ -6688,9 +6708,6 @@ msgid "Inbound Mail Server"
 msgstr "受信メールサーバ"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__inbox
 msgid "Inbox"
 msgstr "受信トレイ"
@@ -6759,18 +6776,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/plugin/mail_code_block_plugin.js:0
 msgid "Insert code block"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "Install"
-msgstr "インストール"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Install Odoo"
-msgstr "Odooをインストール"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
@@ -6974,9 +6979,21 @@ msgstr "招待対象"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite people"
 msgstr "人を招待する"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people to \"%(name)s\""
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people to the channel \"%(name)s\""
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7300,9 +7317,14 @@ msgid "Kind Regards"
 msgstr "宜しくお願いします。"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.xml:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.xml:0
 msgid "LIVE"
 msgstr "ライブ"
 
@@ -7398,6 +7420,7 @@ msgstr "最終更新日:"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_followers__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_uid
@@ -7444,6 +7467,7 @@ msgstr "最終更新者"
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_followers__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_date
@@ -7603,6 +7627,12 @@ msgstr "もっと読み込む"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "Load more... ("
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_input.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "Loading..."
@@ -7611,7 +7641,6 @@ msgstr "読込中..."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/navigable_list.xml:0
-#: code:addons/mail/static/src/core/public_web/messaging_menu.xml:0
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Loading…"
 msgstr "ロード中…"
@@ -7967,7 +7996,7 @@ msgstr "既読にする"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "Mark all read"
 msgstr "すべて既読にする"
 
@@ -8031,7 +8060,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 #: model:mail.activity.type,summary:mail.mail_activity_data_meeting
 msgid "Meeting"
@@ -8041,6 +8070,12 @@ msgstr "ミーティング"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Meeting, %(date)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Meetings"
 msgstr ""
 
 #. module: mail
@@ -8110,6 +8145,7 @@ msgstr "次の連絡先とともに統合:%s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/message_in_dialog.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
@@ -8140,6 +8176,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message %(thread name)s…"
 msgstr "メッセージ %(thread name)s…"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
+msgid "Message Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -8309,7 +8351,7 @@ msgstr "メッセージID"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+#: code:addons/mail/static/src/core/web/messaging_menu_in_dropdown.xml:0
 #: code:addons/mail/static/src/js/tools/debug_manager.js:0
 #: model:ir.actions.act_window,name:mail.act_server_history
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -8348,12 +8390,6 @@ msgid "Messages can only be linked to one sub-channel"
 msgstr "メッセージは1つのサブチャネルにのみリンク可能です"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Messages marked as read will appear in the history."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
@@ -8384,6 +8420,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/microphone_warning.xml:0
 msgid "Microphone muted by system"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Minimize"
 msgstr ""
 
 #. module: mail
@@ -8617,14 +8659,14 @@ msgstr "新規チャネル"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.js:0
-msgid "New Meeting"
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "New Chat"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
-msgid "New Message"
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "New Meeting"
 msgstr ""
 
 #. module: mail
@@ -8640,15 +8682,15 @@ msgstr "新しいスレッド"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
-msgid "New message"
-msgstr "新規メッセージ"
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "New channel"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "New messages will appear here."
-msgstr ""
+#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
+msgid "New message"
+msgstr "新規メッセージ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -8780,22 +8822,10 @@ msgid "No conversation selected."
 msgstr "会話が選択されていません。"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "No conversation yet..."
-msgstr ""
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
 msgstr "選択したレコードのドキュメントが見つかりません。"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "No history messages"
-msgstr "過去メッセージはありません。"
 
 #. module: mail
 #. odoo-python
@@ -8826,6 +8856,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 msgid "No messages found"
 msgstr "メッセージが見つかりません"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No messages yet!"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8870,6 +8906,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu.js:0
+msgid "No results for \"%s\"."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "No roles found. Let's create one!"
 msgstr "役割が見つかりません。作成しましょう!"
@@ -8878,12 +8920,6 @@ msgstr "役割が見つかりません。作成しましょう!"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "No saved templates"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "No thread found."
 msgstr ""
 
 #. module: mail
@@ -8912,6 +8948,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No video conference planned!"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/web/list/archive_disabled_list_controller.js:0
 msgid "No, go back"
 msgstr ""
@@ -8935,6 +8977,12 @@ msgstr "存在するレコードなしまたは誤ったトークン"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "None"
 msgstr "なし"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "None ("
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -8995,6 +9043,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__res_users_settings__channel_notifications__no_notif
 msgid "Nothing"
 msgstr "通知しない"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_tab_model.js:0
+msgid "Nothing here yet."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__notification_type
@@ -9090,7 +9144,7 @@ msgstr "通知: スケジュール済メッセージを通知"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 #: model:ir.actions.act_window,name:mail.mail_notification_action
 #: model:ir.actions.client,name:mail.discuss_notification_settings_action
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification_ids
@@ -9112,6 +9166,12 @@ msgstr "通知が許可されました"
 #: code:addons/mail/static/src/core/common/notification_permission_service.js:0
 msgid "Notifications blocked"
 msgstr "ブロックされた通知"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+msgid "Notifications of the documents you follow will appear here."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author
@@ -9887,7 +9947,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/public_web/discuss_app/sidebar/call_participants.xml:0
+#: code:addons/mail/static/src/discuss/call/public_web/messaging_menu/call_participants.xml:0
 msgid "Participant avatar"
 msgstr "参加者アバター"
 
@@ -10540,18 +10600,6 @@ msgid "Queued"
 msgstr "処理待ち"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
-msgid "Quick search"
-msgstr "クイック検索"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
-msgid "Quick search…"
-msgstr "クイック検索…"
-
-#. module: mail
 #: model:ir.model,name:mail.model_ir_qweb
 msgid "Qweb"
 msgstr "Qweb"
@@ -10867,8 +10915,8 @@ msgstr "ブラックリストから住所を削除する"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
-msgid "Remove all bookmarks"
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+msgid "Remove all"
 msgstr ""
 
 #. module: mail
@@ -11330,12 +11378,6 @@ msgid "Save favorite GIF from Tenor API"
 msgstr "Tenor APIからお気に入りのGIFを保存"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Save messages here to easily keep track of them."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -11453,12 +11495,6 @@ msgstr "スクリプト"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
-msgid "Search"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Search %(threadName)s"
 msgstr ""
@@ -11477,6 +11513,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Search Incoming Mail Servers"
 msgstr "受信メールサーバを検索"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11510,12 +11552,6 @@ msgstr "名前で検索"
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Search conversations"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "GIFを検索"
 
 #. module: mail
 #. odoo-javascript
@@ -12000,7 +12036,7 @@ msgstr "SFUサーバURL"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Share GIFs in your conversations using the Tenor API"
+msgid "Share GIFs in your conversations using the Klipy API."
 msgstr ""
 
 #. module: mail
@@ -12265,12 +12301,6 @@ msgid "Start a Conversation"
 msgstr "会話を開始"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
-msgid "Start a conversation"
-msgstr "会話を始める"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__started_poll_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__started_poll_ids
 msgid "Started Poll"
@@ -12339,6 +12369,12 @@ msgid "Stay tuned! Enable push notifications to never miss a message."
 msgstr ""
 "お見逃しなく! プッシュ通知を有効にしておくと、メッセージを見逃すことがありま"
 "せん。"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Stay updated on your favourite topics"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -12661,11 +12697,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "テンプレート"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API キー"
 
 #. module: mail
 #. odoo-javascript
@@ -13159,7 +13190,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.js:0
-#: code:addons/mail/static/src/core/public_web/messaging_menu.xml:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
 msgid "This is the start of your conversation"
 msgstr ""
 
@@ -13284,7 +13315,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/subchannel.js:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_item.js:0
 msgid "Thread Actions"
 msgstr ""
 
@@ -13295,12 +13326,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
 msgid "Thread Image"
 msgstr "スレッド画像"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
-msgid "Thread has unread messages"
-msgstr "スレッドに未読メッセージがあります。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_subject_suggested
@@ -13382,6 +13407,12 @@ msgstr ""
 msgid ""
 "To avoid an infinity mirror, don't share your entire screen or browser "
 "window."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+msgid "To minimize, press ESC"
 msgstr ""
 
 #. module: mail
@@ -13796,7 +13827,7 @@ msgstr "音声をオンにする"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
-#: code:addons/mail/static/src/core/web/thread_actions.js:0
+#: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Undo"
 msgstr ""
@@ -13842,6 +13873,18 @@ msgstr "不明なエラー"
 #: code:addons/mail/models/mail_notification.py:0
 msgid "Unknown error: %(error)s"
 msgstr "不明なエラー: %(error)s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/controllers/messaging_menu.py:0
+msgid "Unknown messaging menu filter %(filter_id)s for tab %(tab_id)s"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/controllers/messaging_menu.py:0
+msgid "Unknown messaging menu tab %(tab_id)s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13909,6 +13952,13 @@ msgstr "メッセージの固定を解除する"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
 msgstr "日にちを解除する"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Unread"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -14043,6 +14093,11 @@ msgid "Use Google Translate API"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
+msgid "Use Klipy API"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
@@ -14051,11 +14106,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__use_tenor_api
-msgid "Use Tenor API"
 msgstr ""
 
 #. module: mail
@@ -14426,12 +14476,11 @@ msgid "Video visible in the call tab"
 msgstr "通話タブで表示できるビデオ"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
-#: code:addons/mail/static/src/views/web/calendar/calendar_common/activity_calendar_common_popover.xml:0
 #: model:ir.model,name:mail.model_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 msgid "View"
 msgstr "ビュー"
 
@@ -14489,12 +14538,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "View hidden conversations"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
-msgid "View or join channels"
-msgstr "チャネルを表示または参加する"
 
 #. module: mail
 #. odoo-javascript
@@ -14748,6 +14791,12 @@ msgstr "すべての受信者を表示するか、重要な受信者だけを表
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_access__operation
 msgid "Which operation(s) this access applies to, a subset of 'crud'."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Wide View"
 msgstr ""
 
 #. module: mail
@@ -15123,7 +15172,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
+#: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "You're all caught up!"
 msgstr ""
 
@@ -15565,6 +15614,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_empty_channel.xml:0
+msgid "followers"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "for"
 msgstr ""
@@ -15723,8 +15778,6 @@ msgid "now"
 msgstr "今"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "on"
 msgstr "on"
@@ -15769,6 +15822,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "raising hand"
 msgstr "挙げている手"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/discuss_category/discuss_category_kanban_renderer.xml:0
+msgid "remaining)"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -15922,6 +15981,75 @@ msgstr "“%(member_name)s” 、 “%(channel_name)s内”"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "Search for a GIF"
+#~ msgstr "GIFを検索"
+
+#~ msgid ""
+#~ "<p>Channels make it easy to organize information across different topics "
+#~ "and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+#~ "marketing, product XYZ, after work party, etc).</p>"
+#~ msgstr ""
+#~ "<p>チャネルは、異なるトピックやグループにわたる情報の整理を容易にします。"
+#~ "</p> <p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、マー"
+#~ "ケティング、プロダクトXYZ、ワーキングパーティーなど)</p>"
+
+#~ msgid "<p>Create a channel here.</p>"
+#~ msgstr "<p>ここでチャネルを作成します。</p>"
+
+#~ msgid "<p>Create a public or private channel.</p>"
+#~ msgstr "<p>パブリックチャネルまたはプライベートチャネルを作成します。</p>"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Tenor GIF APIキーを追加して、GIFのサポートを有効にします。https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Add or join a channel"
+#~ msgstr "チャネルを追加または参加"
+
+#~ msgid "Come here often? Install the app for quick and easy access!"
+#~ msgstr ""
+#~ "こちらを頻繁に利用される場合は、アプリをインストールして、素早く簡単にアク"
+#~ "セスしましょう!"
+
+#~ msgid "Deleted document"
+#~ msgstr "削除済ドキュメント"
+
+#~ msgid "Exit Fullscreen"
+#~ msgstr "フルスクリーンを閉じる"
+
+#~ msgid "History"
+#~ msgstr "履歴"
+
+#~ msgid "Install"
+#~ msgstr "インストール"
+
+#~ msgid "Install Odoo"
+#~ msgstr "Odooをインストール"
+
+#~ msgid "No history messages"
+#~ msgstr "過去メッセージはありません。"
+
+#~ msgid "Quick search"
+#~ msgstr "クイック検索"
+
+#~ msgid "Quick search…"
+#~ msgstr "クイック検索…"
+
+#~ msgid "Start a conversation"
+#~ msgstr "会話を始める"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API キー"
+
+#~ msgid "Thread has unread messages"
+#~ msgstr "スレッドに未読メッセージがあります。"
+
+#~ msgid "View or join channels"
+#~ msgstr "チャネルを表示または参加する"
 
 #~ msgid ""
 #~ "The Tax Identification Number. Values here will be validated based on the "

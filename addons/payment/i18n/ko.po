@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-21 17:49+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -127,6 +127,15 @@ msgstr ""
 "                            </span>"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Test Mode\n"
+"                        </span>"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
@@ -218,7 +227,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Address"
 msgstr "주소"
 
@@ -310,9 +318,9 @@ msgstr "이 결제 방법을 삭제하시겠습니까?"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid ""
-"Are you sure you want to void the authorized transaction? This action can't "
-"be undone."
-msgstr "승인된 거래를 취소 하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+"Are you sure you want to void the authorized transaction? "
+"This                                  action can't be undone."
+msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -391,6 +399,7 @@ msgstr "매입"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
 msgstr "수동으로 금액 포착"
 
@@ -401,6 +410,7 @@ msgstr "거래 포착"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,help:payment.field_payment_transaction__capture_manually
 msgid ""
 "Capture the amount from Odoo, when the delivery is completed. Use this if "
 "you want to charge your customers cards only when you are sure you can ship "
@@ -408,13 +418,13 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
-msgid "Child Transactions"
-msgstr "하위 거래"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
+msgid "Child Transaction Count"
+msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "Child transactions"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
+msgid "Child Transactions"
 msgstr "하위 거래"
 
 #. module: payment
@@ -424,7 +434,6 @@ msgstr "다른 방법을 선택하세요. <i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
 msgstr "시/군/구"
 
@@ -506,7 +515,6 @@ msgstr "국가"
 #. module: payment
 #: model:ir.model,name:payment.model_res_country
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
 msgstr "국가"
 
@@ -580,6 +588,8 @@ msgstr "통화"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Customer"
 msgstr "고객"
 
@@ -982,6 +992,13 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+msgid "Method"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
 msgstr ""
@@ -1086,6 +1103,13 @@ msgid "Operation"
 msgstr "생산 관리"
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Operations"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
 msgstr ""
@@ -1155,6 +1179,7 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Payment"
 msgstr "결제"
 
@@ -1177,6 +1202,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
 msgstr "결제 상세 정보"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Payment History"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1262,8 +1293,6 @@ msgid "Payment Transaction"
 msgstr "지불 거래"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_transaction_ids
 #: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
@@ -1420,6 +1449,11 @@ msgid "Post-process"
 msgstr "사후 처리"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-processed"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
@@ -1495,6 +1529,7 @@ msgstr "Redsys"
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Reference"
 msgstr "참조"
 
@@ -1599,7 +1634,6 @@ msgstr "원 거래"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
 msgstr "시/도"
 
@@ -2069,6 +2103,12 @@ msgid "Toggle the main company in the company switcher."
 msgstr "회사 전환 메뉴에서 기본 회사를 전환합니다."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+msgid "Token"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
 msgstr ""
@@ -2462,11 +2502,6 @@ msgid "Your payment operation has been successfully submitted."
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "ZIP"
-msgstr "우편번호"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "우편번호"
@@ -2481,6 +2516,12 @@ msgstr "id"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "provider"
 msgstr "업체"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "source_transaction_id"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -2506,6 +2547,17 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid ""
+#~ "Are you sure you want to void the authorized transaction? This action "
+#~ "can't be undone."
+#~ msgstr "승인된 거래를 취소 하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+
+#~ msgid "Child transactions"
+#~ msgstr "하위 거래"
+
+#~ msgid "ZIP"
+#~ msgstr "우편번호"
 
 #~ msgid "(ID:"
 #~ msgstr "(ID:"

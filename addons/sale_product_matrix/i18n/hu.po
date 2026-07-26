@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 19:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-master/"
@@ -25,11 +25,9 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
-#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
-msgid "Add product mode"
-msgstr "Termék mód hozzáadása"
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Configurator"
+msgstr ""
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
@@ -38,12 +36,8 @@ msgstr "Termék mód hozzáadása"
 msgid ""
 "Configurator: choose attribute values to add the matching product variant to "
 "the order.\n"
-"Grid: add several variants at once from the grid of attribute values"
+"Matrix: add several variants at once from the grid of attribute values"
 msgstr ""
-"Konfigurátor: válasszon termékjellemző értékeket a termékváltozat "
-"rendeléshez adásához.\n"
-"Táblázat: adjon egyszerre több termékváltozatot a termékjellemzők "
-"táblázatából"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__display_name
@@ -70,14 +64,14 @@ msgid "ID"
 msgstr ""
 
 #. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Matrix"
+msgstr ""
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
 msgstr "Mátrix helyi tárolás"
-
-#. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
-msgid "Order Grid Entry"
-msgstr "Rendelés rács tétel"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
@@ -90,11 +84,6 @@ msgid "Product"
 msgstr "Termék"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
-msgid "Product Configurator"
-msgstr "Termék konfigurátor"
-
-#. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
 msgid "Sales Order"
 msgstr "Vevői rendelés"
@@ -103,11 +92,6 @@ msgstr "Vevői rendelés"
 #: model:ir.model,name:sale_product_matrix.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Vevői rendelés sor"
-
-#. module: sale_product_matrix
-#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
-msgid "Sales Variant Selection"
-msgstr "Értékesítési változat kiválasztás"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -121,6 +105,13 @@ msgstr ""
 "Ha más, akkor a megjelenítendő mátrixot jelenti."
 
 #. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Variant Selection"
+msgstr ""
+
+#. module: sale_product_matrix
 #. odoo-python
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 msgid ""
@@ -128,3 +119,25 @@ msgid ""
 msgstr ""
 "Nem lehet megváltoztatni a több rendelési soron is szereplő termékek "
 "mennyiségét."
+
+#~ msgid "Add product mode"
+#~ msgstr "Termék mód hozzáadása"
+
+#~ msgid ""
+#~ "Configurator: choose attribute values to add the matching product variant "
+#~ "to the order.\n"
+#~ "Grid: add several variants at once from the grid of attribute values"
+#~ msgstr ""
+#~ "Konfigurátor: válasszon termékjellemző értékeket a termékváltozat "
+#~ "rendeléshez adásához.\n"
+#~ "Táblázat: adjon egyszerre több termékváltozatot a termékjellemzők "
+#~ "táblázatából"
+
+#~ msgid "Order Grid Entry"
+#~ msgstr "Rendelés rács tétel"
+
+#~ msgid "Product Configurator"
+#~ msgstr "Termék konfigurátor"
+
+#~ msgid "Sales Variant Selection"
+#~ msgstr "Értékesítési változat kiválasztás"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 20:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -50,6 +50,13 @@ msgid ""
 msgstr ""
 "2. Confirme que você quer excluir sua conta\n"
 "                                     copiando o seu login ("
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid ""
+"<br/>\n"
+"                            If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -124,36 +131,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            Changing VAT number is not allowed once "
-"document(s) have\n"
-"                            been issued for your account. Please contact us "
-"directly for this\n"
-"                            operation.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            Não é permitido alterar o nome da empresa ou "
-"CNPJ quando há documentos relacionados à sua conta. Entre em contato conosco "
-"diretamente para esta operação..\n"
-"                        </small>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            The VAT number can only be updated on the "
-"company account.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            O número de CNPJ só pode ser atualizado na conta "
-"da empresa.\n"
-"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -725,11 +702,6 @@ msgstr ""
 "faça-o nas configurações da conta ou entre em contato com o administrador."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "If you want to modify it, update"
-msgstr "Se quiser modificá-lo, atualize"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr "Imagem"
@@ -1217,7 +1189,14 @@ msgid ""
 msgstr "O anexo não existe ou você não tem direitos para acessá-lo."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid "The company billing details can only be updated on the company account."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
@@ -1324,6 +1303,14 @@ msgstr "Título do cartão"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Alterar filtros"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Updating VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1510,6 +1497,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "detalhes de sua conta"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Changing VAT number is not allowed once "
+#~ "document(s) have\n"
+#~ "                            been issued for your account. Please contact "
+#~ "us directly for this\n"
+#~ "                            operation.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Não é permitido alterar o nome da empresa ou "
+#~ "CNPJ quando há documentos relacionados à sua conta. Entre em contato "
+#~ "conosco diretamente para esta operação..\n"
+#~ "                        </small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            The VAT number can only be updated on the "
+#~ "company account.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            O número de CNPJ só pode ser atualizado na "
+#~ "conta da empresa.\n"
+#~ "                        </small>"
+
+#~ msgid "If you want to modify it, update"
+#~ msgstr "Se quiser modificá-lo, atualize"
 
 #~ msgid "Website Messages"
 #~ msgstr "Mensagens do site"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
+"POT-Creation-Date: 2026-07-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 01:58+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -54,6 +54,13 @@ msgid ""
 msgstr ""
 "2. Bestätigen Sie, dass Sie Ihr Konto löschen möchten, indem\n"
 "                                        Sie Ihr Login kopieren ("
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+msgid ""
+"<br/>\n"
+"                            If you want to modify it, update"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -129,37 +136,6 @@ msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            Changing VAT number is not allowed once "
-"document(s) have\n"
-"                            been issued for your account. Please contact us "
-"directly for this\n"
-"                            operation.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            Es ist nicht erlaubt, die USt-IdNr. zu ändern,\n"
-"                            sobald Dokumente für Ihr Konto ausgestellt "
-"wurden. Wenden Sie sich für diesen Vorgang\n"
-"                            direkt an uns.\n"
-"                        </small>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                            The VAT number can only be updated on the "
-"company account.\n"
-"                        </small>"
-msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                            Die USt-IdNr. kann nur im Unternehmenskonto "
-"aktualisiert werden.\n"
-"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -735,11 +711,6 @@ msgstr ""
 "Ihren Administrator."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
-msgid "If you want to modify it, update"
-msgstr "Wenn Sie Änderungen vornehmen möchten, aktualisieren Sie"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
 msgstr "Bild"
@@ -1231,7 +1202,14 @@ msgid ""
 msgstr "Der Anhang existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid "The company billing details can only be updated on the company account."
+msgstr ""
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
@@ -1343,6 +1321,14 @@ msgstr "Titel der Karte"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
 msgstr "Filter ein/aus"
+
+#. module: portal
+#. odoo-python
+#: code:addons/portal/controllers/portal.py:0
+msgid ""
+"Updating VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1529,6 +1515,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "Ihre Kontodetails"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Changing VAT number is not allowed once "
+#~ "document(s) have\n"
+#~ "                            been issued for your account. Please contact "
+#~ "us directly for this\n"
+#~ "                            operation.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Es ist nicht erlaubt, die USt-IdNr. zu "
+#~ "ändern,\n"
+#~ "                            sobald Dokumente für Ihr Konto ausgestellt "
+#~ "wurden. Wenden Sie sich für diesen Vorgang\n"
+#~ "                            direkt an uns.\n"
+#~ "                        </small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            The VAT number can only be updated on the "
+#~ "company account.\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                            Die USt-IdNr. kann nur im Unternehmenskonto "
+#~ "aktualisiert werden.\n"
+#~ "                        </small>"
+
+#~ msgid "If you want to modify it, update"
+#~ msgstr "Wenn Sie Änderungen vornehmen möchten, aktualisieren Sie"
 
 #~ msgid "Website Messages"
 #~ msgstr "Website-Nachrichten"

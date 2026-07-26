@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-19 06:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-master/"
@@ -84,20 +84,20 @@ msgstr "% sreče"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
 msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 #, fuzzy
 msgid "%(hours)sh"
 msgstr "%(hours)sh"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
 msgstr ""
 
@@ -228,8 +228,8 @@ msgid ""
 "with visitors only when no operator is available.</span>"
 msgstr ""
 "<span>Nasvet: Preden lahko bot izvede bolj zapletena dejanja (posredovanje "
-"operaterju, ...), je potrebna vsaj ena interakcija (vprašanje, e-pošta, ...)"
-". </span>\n"
+"operaterju, ...), je potrebna vsaj ena interakcija (vprašanje, e-"
+"pošta, ...). </span>\n"
 "                    <span>Uporabite pravila kanala, če želite, da bot "
 "komunicira z obiskovalci le, ko ni na voljo nobenega operaterja.</span>"
 
@@ -241,8 +241,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span>Nasvet: Preden lahko bot izvede bolj zapletena dejanja (posredovanje "
-"operaterju, ...), je potrebna vsaj ena interakcija (vprašanje, e-pošta, ...)"
-".</span>"
+"operaterju, ...), je potrebna vsaj ena interakcija (vprašanje, e-pošta, ...)."
+"</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -284,7 +284,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Add the following code to the &lt;head&gt; section of your website:"
-msgstr "V razdelek svojega &lt;head&gt; spletnega mesta dodajte naslednjo kodo:"
+msgstr ""
+"V razdelek svojega &lt;head&gt; spletnega mesta dodajte naslednjo kodo:"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -673,6 +674,12 @@ msgid "Configure Channel"
 msgstr "Konfiguriraj kanal"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Connect"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Stik"
@@ -998,6 +1005,12 @@ msgstr "Omogoči ChatBot-a"
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Engage with visitors to convert leads or offer services."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
@@ -1119,8 +1132,8 @@ msgid ""
 "<strong>Marketing.</strong>"
 msgstr ""
 "Pojdi na <strong>Spletna stran</strong> &gt; <strong>Konfiguracija</strong> "
-"&gt; <strong>astavitve</strong> &gt; <strong>E-pošta</strong> &amp; <strong>"
-"Trženje.</strong>"
+"&gt; <strong>astavitve</strong> &gt; <strong>E-pošta</strong> &amp; "
+"<strong>Trženje.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1200,6 +1213,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Help needed"
 msgstr ""
 
 #. module: im_livechat
@@ -1555,8 +1574,6 @@ msgid "Limited"
 msgstr "Omejeno"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -1629,7 +1646,7 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chats"
 msgstr ""
@@ -1748,7 +1765,6 @@ msgstr "Jeziki klepeta v živo"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
@@ -1897,6 +1913,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "No Livechat Session!"
 msgstr ""
 
 #. module: im_livechat
@@ -2192,8 +2214,7 @@ msgstr "Povezano poštno sporočilo"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.xml:0
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
 msgstr ""
 
@@ -2568,8 +2589,8 @@ msgid ""
 "chat button will be hidden on the specified URL from the visitors located in "
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
-"Pravilo bo veljalo samo za te države. Primer: če izberete »Belgija« in »"
-"Združene države« ter dejanje nastavite na »Skrij«, bo gumb za klepet na "
+"Pravilo bo veljalo samo za te države. Primer: če izberete »Belgija« in "
+"»Združene države« ter dejanje nastavite na »Skrij«, bo gumb za klepet na "
 "določenem URL-ju skrit pred obiskovalci, ki se nahajajo v teh dveh državah. "
 "Za to funkcijo je potreben GeoIP, nameščen na vašem strežniku."
 
@@ -2805,12 +2826,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.js:0
-msgid "View or join live chat channels"
 msgstr ""
 
 #. module: im_livechat

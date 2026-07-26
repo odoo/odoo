@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-21 15:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-master/"
@@ -111,6 +111,15 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Test Mode\n"
+"                        </span>"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
@@ -193,7 +202,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Address"
 msgstr "نشانی"
 
@@ -285,11 +293,9 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid ""
-"Are you sure you want to void the authorized transaction? This action can't "
-"be undone."
+"Are you sure you want to void the authorized transaction? "
+"This                                  action can't be undone."
 msgstr ""
-"آیا مطمئن هستید که می خواهید تراکنش مجاز را از درجه اعتبار ساقط کنید؟ این "
-"عملکرد قابل برگشت نیست."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -368,6 +374,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
 msgstr ""
 
@@ -378,6 +385,7 @@ msgstr "ضبط تراکنش"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
+#: model:ir.model.fields,help:payment.field_payment_transaction__capture_manually
 msgid ""
 "Capture the amount from Odoo, when the delivery is completed. Use this if "
 "you want to charge your customers cards only when you are sure you can ship "
@@ -385,13 +393,13 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
-msgid "Child Transactions"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
+msgid "Child Transaction Count"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "Child transactions"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
+msgid "Child Transactions"
 msgstr ""
 
 #. module: payment
@@ -401,7 +409,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
 msgstr "شهر"
 
@@ -483,7 +490,6 @@ msgstr "کشورها"
 #. module: payment
 #: model:ir.model,name:payment.model_res_country
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
 msgstr "کشور"
 
@@ -557,6 +563,8 @@ msgstr "ارز"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Customer"
 msgstr "مشتری"
 
@@ -957,6 +965,13 @@ msgid "Messages"
 msgstr "پیام ها"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+msgid "Method"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
 msgstr ""
@@ -1061,6 +1076,13 @@ msgid "Operation"
 msgstr "عملیات"
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Operations"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
 msgstr ""
@@ -1130,6 +1152,7 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Payment"
 msgstr ""
 
@@ -1151,6 +1174,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Payment History"
 msgstr ""
 
 #. module: payment
@@ -1237,8 +1266,6 @@ msgid "Payment Transaction"
 msgstr "تراکنش پرداخت"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_transaction_ids
 #: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
@@ -1395,6 +1422,11 @@ msgid "Post-process"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-processed"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
@@ -1470,6 +1502,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Reference"
 msgstr "مرجع‌"
 
@@ -1572,7 +1605,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
 msgstr "استان"
 
@@ -2020,6 +2052,12 @@ msgid "Toggle the main company in the company switcher."
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+msgid "Token"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
 msgstr ""
@@ -2405,11 +2443,6 @@ msgid "Your payment operation has been successfully submitted."
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
-msgid "ZIP"
-msgstr "کد پستی"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "کدپستی"
@@ -2423,6 +2456,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "provider"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "source_transaction_id"
 msgstr ""
 
 #. module: payment
@@ -2447,6 +2486,16 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid ""
+#~ "Are you sure you want to void the authorized transaction? This action "
+#~ "can't be undone."
+#~ msgstr ""
+#~ "آیا مطمئن هستید که می خواهید تراکنش مجاز را از درجه اعتبار ساقط کنید؟ این "
+#~ "عملکرد قابل برگشت نیست."
+
+#~ msgid "ZIP"
+#~ msgstr "کد پستی"
 
 #~ msgid "Activate"
 #~ msgstr "فعال"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-21 17:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/fleet/"
@@ -878,6 +878,7 @@ msgstr "Dépréciation et intérêts"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Description"
 msgstr "Description"
 
@@ -1828,11 +1829,6 @@ msgid "None"
 msgstr "Aucun"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Note"
-msgstr "Note"
-
-#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Notes"
@@ -2509,7 +2505,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
 msgid "The following vehicle drivers are missing an email address: %s."
-msgstr "Les conducteurs des véhicules suivants n'ont pas d'adresse e-mail : %s."
+msgstr ""
+"Les conducteurs des véhicules suivants n'ont pas d'adresse e-mail : %s."
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_unique_license_plate
@@ -2848,12 +2845,15 @@ msgstr "Ecrivez ici toutes les autres informations concernant ce contrat"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr "Écrivez ici toute autre information relative à l'intervention effectuée"
+msgstr ""
+"Écrivez ici toute autre information relative à l'intervention effectuée"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Write here any other information related to this vehicle"
-msgstr "Écrivez ici toute autre information concernant ce véhicule"
+msgid ""
+"Write here any other information related to this vehicle to show in salary "
+"configurator"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -2968,6 +2968,12 @@ msgstr "montrer l'historique des services pour ce véhicule"
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "user_id"
 msgstr "user_id"
+
+#~ msgid "Note"
+#~ msgstr "Note"
+
+#~ msgid "Write here any other information related to this vehicle"
+#~ msgstr "Écrivez ici toute autre information concernant ce véhicule"
 
 #~ msgid ""
 #~ "A trailer hitch is a device attached to a vehicle's chassis for towing "

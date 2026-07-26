@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-19 04:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/hr/fr/"
@@ -1460,10 +1460,18 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: hr
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid "Confirm"
 msgstr "Confirmer"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
+msgid "Confirmation Warning"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4660,6 +4668,7 @@ msgstr "Contacts associés"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_type.py:0
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__employee_ids
 msgid "Related Employees"
 msgstr "Employés associés"
 
@@ -5403,6 +5412,14 @@ msgstr "Le permis de travail de %(employee_name)s arrive à expiration."
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid ""
+"The working schedule '%s' is linked to version(s) not compatible with its "
+"new company."
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "There is no valid version starting before the departure date for %s."
 msgstr "Aucune version valide ne commence avant la date de départ pour %s."
@@ -5476,6 +5493,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
 msgstr "Ce bloc de paramètres est utilisé pour gérer le design frontend."
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
+msgid ""
+"This working schedule is used by  employee(s), are you sure you want change "
+"it for all employees?"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5856,6 +5881,11 @@ msgid "Variable Hours"
 msgstr "Heures variables"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_resource_calendar__version_ids
+msgid "Version"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_revision
 msgid "Version Revision"
 msgstr ""
@@ -6207,6 +6237,15 @@ msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
 "Vous pouvez seulement dialoguer avec les employés qui ont un utilisateur "
 "désigné."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid ""
+"You can't change this working schedule, it's used by employees from other "
+"companies you don't have access to. Contact your admin or create a new "
+"working schedule."
+msgstr ""
 
 #. module: hr
 #. odoo-python

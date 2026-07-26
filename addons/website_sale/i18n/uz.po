@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 17:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -422,12 +422,6 @@ msgid "<i class=\"fa fa-cart-arrow-down me-2\"/>Order"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
-#, fuzzy
-msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr "<i class=\"fa fa-cart-plus me-2\"/>Savatga qo‘shish"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid ""
 "<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
@@ -437,14 +431,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-download me-2\"/>Download"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid ""
-"<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small "
-"ms-1\">Contact Us</span>"
 msgstr ""
 
 #. module: website_sale
@@ -510,16 +496,6 @@ msgid ""
 msgstr "<i class=\"fa fa-rotate-right me-1\"/> Yana buyurtma berish"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Add to Cart</span>"
-msgstr ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
-"class=\"o_label small ms-1\">Savatga qo‘shish</span>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
 msgstr ""
@@ -531,6 +507,11 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr "<i class=\"fa fa-shopping-cart me-2\"/> Savatga qo‘shish"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
+msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -556,6 +537,21 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Keyingi\" title=\"Keyingi\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                            <span class=\"o_label small "
+"ms-1\">Contact Us</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+"><span class=\"o_label small ms-1\">Add to Cart</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -1509,7 +1505,14 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
+msgid "Add Image"
 msgstr ""
 
 #. module: website_sale
@@ -1518,13 +1521,6 @@ msgstr ""
 #, fuzzy
 msgid "Add Media"
 msgstr "Media qo‘shish"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-#, fuzzy
-msgid "Add More"
-msgstr "Yana qo‘shish"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2514,6 +2510,7 @@ msgstr "Yig‘iladigan qutilar"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 #, fuzzy
 msgid "Color"
 msgstr "Rang"
@@ -2902,12 +2899,6 @@ msgstr "Mijozlarga xizmat ko‘rsatish"
 #, fuzzy
 msgid "Customer Country"
 msgstr "Mijoz mamlakati"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
-#, fuzzy
-msgid "Customer Reviews"
-msgstr "Mijoz sharhlari"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -3620,13 +3611,6 @@ msgid "Extra Info"
 msgstr "Qo‘shimcha ma'lumot"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-#, fuzzy
-msgid "Extra Media"
-msgstr "Qo‘shimcha media"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 #, fuzzy
@@ -4224,6 +4208,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #, fuzzy
@@ -4378,7 +4363,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
 msgstr ""
 
@@ -4757,13 +4742,6 @@ msgid "Main Button Label"
 msgstr "Asosiy tugma matni"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-#, fuzzy
-msgid "Main Image"
-msgstr "Asosiy rasm"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
 msgstr ""
@@ -4802,6 +4780,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #, fuzzy
 msgid "Media"
@@ -5639,6 +5619,12 @@ msgid "Please select or enter an amount"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Please sign in to proceed."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__4_5
@@ -6410,6 +6396,7 @@ msgstr "Ko‘chish va ko‘chirish"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #, fuzzy
 msgid "Remove"
@@ -6418,7 +6405,6 @@ msgstr "O‘chirish"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #, fuzzy
 msgid "Remove All"
 msgstr "Hammasini o‘chirish"
@@ -6453,6 +6439,12 @@ msgid "Remove from wishlist"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
+msgid "Remove image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 #, fuzzy
@@ -6483,7 +6475,7 @@ msgstr "Ta'mirlash va texnik xizmat ko‘rsatish"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #, fuzzy
 msgid "Replace"
 msgstr "Almashtirish"
@@ -6491,6 +6483,7 @@ msgstr "Almashtirish"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #, fuzzy
 msgid "Replace image"
 msgstr "Rasmni almashtirish"
@@ -6563,6 +6556,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 #, fuzzy
 msgid "Reviews"
 msgstr "Sharhlar"
@@ -7436,8 +7430,15 @@ msgstr "Ichki sahifalar"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Tag"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_template_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 #, fuzzy
@@ -7821,6 +7822,12 @@ msgstr "Bu mahsulot endi mavjud emas"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "This product is not eligible for stock notifications."
 msgstr ""
 
 #. module: website_sale
@@ -8961,6 +8968,34 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add More"
+#~ msgstr "Yana qo‘shish"
+
+#, fuzzy
+#~ msgid "Customer Reviews"
+#~ msgstr "Mijoz sharhlari"
+
+#, fuzzy
+#~ msgid "Extra Media"
+#~ msgstr "Qo‘shimcha media"
+
+#, fuzzy
+#~ msgid "Main Image"
+#~ msgstr "Asosiy rasm"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
+#~ msgstr "<i class=\"fa fa-cart-plus me-2\"/>Savatga qo‘shish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+#~ "class=\"o_label small ms-1\">Add to Cart</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+#~ "class=\"o_label small ms-1\">Savatga qo‘shish</span>"
 
 #, fuzzy
 #~ msgid "<span>Publish on website</span>"

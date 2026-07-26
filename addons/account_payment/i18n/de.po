@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
 "PO-Revision-Date: 2026-06-22 00:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -153,6 +153,11 @@ msgstr "Ein Zahlungsvorgang mit Referenz %s ist bereits vorhanden."
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "Ein Token wird benötigt, um eine neue Zahlung zu erstellen."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Accounting"
+msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
@@ -333,16 +338,6 @@ msgid ""
 msgstr ""
 "Es ist unmöglich, alle überfälligen Rechnungen zu bezahlen, wenn sie nicht "
 "dieselbe Währung haben."
-
-#. module: account_payment
-#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
-msgid ""
-"In test mode, a fake payment is processed through a test payment interface.\n"
-"This mode is advised when setting up the provider."
-msgstr ""
-"Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle "
-"simuliert.\n"
-"Dieser Modus wird für die Einrichtung des Anbieters empfohlen."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -635,11 +630,6 @@ msgid "Source Payment"
 msgstr "Ursprüngliche Zahlung"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
-msgid "State"
-msgstr "Status"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -711,7 +701,8 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "Fehler beim Verarbeiten Ihrer Zahlung: Transaktion fehlgeschlagen.<br/>"
+msgstr ""
+"Fehler beim Verarbeiten Ihrer Zahlung: Transaktion fehlgeschlagen.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -774,13 +765,9 @@ msgstr "Transaktion stornieren"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the "
-"enabled or test state.\n"
+"You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im "
-"aktivierten oder Teststatus verknüpft ist.\n"
-"Verknüpfte(r) Anbieter: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -796,12 +783,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
+"You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Sie müssen einen Zahlungsanbieter erst deaktivieren, bevor Sie seine "
-"Journale löschen.\n"
-"Verknüpfte Anbieter: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -837,3 +821,33 @@ msgstr "überfällig"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr "Preisliste nicht erlaubt"
+
+#~ msgid ""
+#~ "In test mode, a fake payment is processed through a test payment "
+#~ "interface.\n"
+#~ "This mode is advised when setting up the provider."
+#~ msgstr ""
+#~ "Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle "
+#~ "simuliert.\n"
+#~ "Dieser Modus wird für die Einrichtung des Anbieters empfohlen."
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid ""
+#~ "You can't delete a payment method that is linked to a provider in the "
+#~ "enabled or test state.\n"
+#~ "Linked providers(s): %s"
+#~ msgstr ""
+#~ "Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im "
+#~ "aktivierten oder Teststatus verknüpft ist.\n"
+#~ "Verknüpfte(r) Anbieter: %s"
+
+#~ msgid ""
+#~ "You must first deactivate a payment provider before deleting its "
+#~ "journal.\n"
+#~ "Linked providers: %s"
+#~ msgstr ""
+#~ "Sie müssen einen Zahlungsanbieter erst deaktivieren, bevor Sie seine "
+#~ "Journale löschen.\n"
+#~ "Verknüpfte Anbieter: %s"

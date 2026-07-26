@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-17 17:38+0000\n"
 "PO-Revision-Date: 2026-06-20 05:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -123,20 +123,6 @@ msgstr "<span class=\"o_stat_text\">Verkooporder</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
 msgstr "<span>)</span>"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid ""
-"A project must be defined on the quotation %(order)s or on the form of "
-"products creating a task on order.\n"
-"The following product need a project in which to put its task: %"
-"(product_name)s"
-msgstr ""
-"Er moet een project gedefinieerd zijn op de offerte %(order)s of op het "
-"formulier van producten die een taak op de order aanmaken. Het volgende "
-"product heeft een project nodig waarin de taak geplaatst moet worden: %"
-"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -582,6 +568,11 @@ msgid "Project Milestones"
 msgstr "Project mijlpalen"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_required
+msgid "Project Required"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
@@ -589,9 +580,19 @@ msgid "Project Template"
 msgstr "Projectsjabloon"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Project Template Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
 msgstr "Wizard projectsjabloon maken"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_warning_text
+msgid "Project Warning"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -824,6 +825,11 @@ msgid "Task Template"
 msgstr "Taaksjabloon"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_warning_text
+msgid "Task Warning"
+msgstr ""
+
+#. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
 msgid "Tasks"
 msgstr "Taken"
@@ -943,6 +949,13 @@ msgid "View Sales Order"
 msgstr "Toon verkooporder"
 
 #. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_warning_text
+#: model:ir.model.fields,help:sale_project.field_project_template_create_wizard__sale_warning_text
+msgid "Warning for the partner as set by the user."
+msgstr ""
+
+#. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
 msgstr "Website herontwerp (project & taak)"
@@ -979,6 +992,17 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
+
+#~ msgid ""
+#~ "A project must be defined on the quotation %(order)s or on the form of "
+#~ "products creating a task on order.\n"
+#~ "The following product need a project in which to put its task: %"
+#~ "(product_name)s"
+#~ msgstr ""
+#~ "Er moet een project gedefinieerd zijn op de offerte %(order)s of op het "
+#~ "formulier van producten die een taak op de order aanmaken. Het volgende "
+#~ "product heeft een project nodig waarin de taak geplaatst moet worden: %"
+#~ "(product_name)s"
 
 #~ msgid "Create a customer invoice"
 #~ msgstr "Maak een klantfactuur"
