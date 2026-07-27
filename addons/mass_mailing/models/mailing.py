@@ -86,7 +86,7 @@ class MassMailing(models.Model):
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
     email_from = fields.Char(
         string='Send From',
-        compute='_compute_email_from', readonly=False, required=True, store=True,
+        compute='_compute_email_from', readonly=False, store=True,
         precompute=True)
     favorite = fields.Boolean('Favorite', copy=False, tracking=True)
     favorite_date = fields.Datetime(
@@ -227,6 +227,11 @@ class MassMailing(models.Model):
         'percentage_valid',
         'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
         'The A/B Testing Percentage needs to be between 0 and 100%'
+    ),
+    (
+        'email_from',
+        "CHECK(email_from IS NOT NULL OR mailing_type != 'mail')",
+        "email from is required for mailing"
     )]
 
     @api.constrains('mailing_model_id', 'mailing_filter_id')
