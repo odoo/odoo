@@ -262,6 +262,8 @@ class StockRule(models.Model):
             final_location_id = move_to_copy.location_final_id.id
         if move_to_copy.location_final_id and move_to_copy.location_final_id._child_of(self.location_dest_id):
             location_dest_id = move_to_copy.location_final_id.id
+        elif move_to_copy.partner_id and self.location_dest_id.usage == 'customer':
+            location_dest_id = move_to_copy.partner_id.property_stock_customer.id
         if move_to_copy.product_uom.compare(move_to_copy.product_uom_qty, 0) < 0:
             copied_quantity = move_to_copy.product_uom_qty
         if not company_id:

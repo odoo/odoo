@@ -2643,6 +2643,36 @@ class TestStockFlow(TestStockCommon):
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
 
+    def test_two_steps_delivery_partner_customer_location(self):
+        """
+        Check that manual multi-step deliveries use the partner's customer
+        location rather than the generic one.
+        """
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        partner_location = self.env['stock.location'].create({
+            'name': 'Acme Customer Location',
+            'usage': 'customer',
+            'location_id': self.customer_location.id,
+        })
+        self.partner.property_stock_customer = partner_location
+        pick = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
+            })],
+        })
+        pick.action_confirm()
+        pick.button_validate()
+        ship = pick.move_ids.move_dest_ids
+        self.assertEqual(ship.picking_id.picking_type_id, self.warehouse_1.out_type_id)
+        self.assertEqual(ship.location_dest_id, partner_location)
+
     def test_multiple_moves_with_different_destinations_putaway_strategy(self):
         '''
         Ensure that, when assigning a batch of moves with different destinations,
