@@ -286,6 +286,14 @@ class Website(models.Model):
         check_company=True,
     )
 
+    extra_step_category_ids = fields.Many2many(
+        string="Extra Step Categories",
+        help="If set, the extra step is only shown when the cart contains"
+        " products from these eCommerce categories.",
+        comodel_name="product.public.category",
+        relation="website_extra_step_category_rel",
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -989,8 +997,13 @@ class Website(models.Model):
         if href == "/shop/address":
             href = "/shop/checkout"
         current_step_sudo = self._get_checkout_step(href)
-        next_step_sudo = current_step_sudo.browse(self._get_next_breadcrumb_step_id(href))
-        previous_step_sudo = current_step_sudo.browse(self._get_previous_breadcrumb_step_id(href))
+        breadcrumb_domain = self._get_breadcrumb_checkout_steps_domain()
+        next_step_sudo = current_step_sudo._get_next_steps(
+            additional_domain=breadcrumb_domain, limit=1
+        )
+        previous_step_sudo = current_step_sudo._get_previous_steps(
+            additional_domain=breadcrumb_domain, limit=1
+        )
 
         return {
             "current_website_checkout_step_href": current_step_sudo.step_href,
@@ -1007,27 +1020,13 @@ class Website(models.Model):
         self.ensure_one()
         return self.env["website.checkout.step"].sudo()._get_step_by_href(href, self).id
 
-    @api.ormcache("self.id", "href")
-    def _get_next_breadcrumb_step_id(self, href):
-        current_step_sudo = self._get_checkout_step(href)
-        return current_step_sudo._get_next_steps(
-            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
-        ).id
-
-    @api.ormcache("self.id", "href")
-    def _get_previous_breadcrumb_step_id(self, href):
-        current_step_sudo = self._get_checkout_step(href)
-        return current_step_sudo._get_previous_steps(
-            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
-        ).id
-
     def _get_next_breadcrumb_step_href(self, href):
         # redirect handled by '/shop/address/submit' route when all values are properly filled
         if href == "/shop/address":
             return False
-
-        next_step_sudo = (
-            self.env["website.checkout.step"].sudo().browse(self._get_next_breadcrumb_step_id(href))
+        current_step_sudo = self._get_checkout_step(href)
+        next_step_sudo = current_step_sudo._get_next_steps(
+            additional_domain=self._get_breadcrumb_checkout_steps_domain(), limit=1
         )
 
         # try_skip_step option required on /shop/checkout next button
@@ -1047,7 +1046,22 @@ class Website(models.Model):
         return self._get_allowed_checkout_steps_domain() & Domain("show_in_breadcrumb", "=", True)
 
     def _get_allowed_checkout_steps_domain(self):
-        return Domain([("website_id", "=", self.id), ("is_published", "=", True)])
+        domain = Domain([("website_id", "=", self.id), ("is_published", "=", True)])
+        if not self._cart_has_extra_step_category():
+            domain &= Domain("step_href", "!=", "/shop/extra_info")
+        return domain
+
+    def _cart_has_extra_step_category(self):
+        """Whether the cart contains a product from the restricted extra-step
+        categories."""
+        restricted_categories = self.sudo().extra_step_category_ids
+        order_sudo = request.cart if request else None
+        if not (order_sudo and restricted_categories):
+            return True
+        order_categories = order_sudo.order_line.product_id.public_categ_ids
+        return bool(
+            order_categories.filtered_domain([("id", "child_of", restricted_categories.ids)])
+        )
 
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
