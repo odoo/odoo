@@ -21,5 +21,24 @@ class ResPartner(models.Model):
     def action_view_stock_serial(self):
         action = self.env["ir.actions.act_window"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('partner_ids', 'child_of', self.ids)]
-        action['context'] = {'display_complete': True}
+        action["context"] = {
+            "display_complete": True,
+            "create": True,
+            "default_partner_ids": self.ids,
+        }
         return action
+
+    def write(self, vals):
+        res = super().write(vals)
+        company_id = vals.get('company_id')
+        if company_id:
+            lots = self.env['stock.lot'].search([
+                ('company_id', '!=', False),
+                ('company_id', '!=', company_id),
+                ('partner_ids', 'in', self.ids),
+            ])
+            for lot in lots:
+                invalid_partners = lot.partner_ids & self
+                if invalid_partners:
+                    lot.partner_ids -= invalid_partners
+        return res
