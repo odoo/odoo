@@ -167,10 +167,10 @@ export class HistoryPlugin extends Plugin {
         /** @type {Set<HistoryCommitId>} Commits reverted by restoring to a save point */
         this.discardedCommits = new Set();
         if (commits) {
-            this.trigger("on_will_rebase_history_handlers");
-            this.editable.replaceChildren();
-            commits.forEach(this.applyCommit.bind(this));
-            this.trigger("on_history_rebased_handlers");
+            this.rebase(() => {
+                this.editable.replaceChildren();
+                commits.forEach(this.applyCommit.bind(this));
+            });
         }
         this.trigger("on_history_reset_handlers");
     }
@@ -518,6 +518,18 @@ export class HistoryPlugin extends Plugin {
         return true;
     }
 
+    /**
+     * Perform an operation that has the effect of rebasing the history. Notify
+     * plugins before starting and after completion.
+     *
+     * @param { Function } operation
+     */
+    rebase(operation) {
+        this.trigger("on_will_rebase_history_handlers");
+        operation();
+        this.trigger("on_history_rebased_handlers");
+    }
+
     // ===========================
     // Collaboration compatibility
     // ===========================
@@ -529,23 +541,23 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     insertRemoteCommit(newCommit, index) {
-        this.trigger("on_will_rebase_history_handlers");
-        // The last commit is an uncommited draft, revert it first.
-        this.stash();
-        const commitsAfterNewCommit = this.commits.slice(index);
-        for (const commitToRevert of commitsAfterNewCommit.slice().reverse()) {
-            this.revertCommit(commitToRevert);
-        }
-        this.applyCommit(newCommit);
-        this.trigger("on_remote_history_commit_applied_handlers", newCommit);
-        this.commits.splice(index, 0, newCommit);
-        for (const commitToApply of commitsAfterNewCommit) {
-            this.applyCommit(commitToApply);
-        }
-        // Reapply the uncommitted draft, since this is not an operation that
-        // should cancel it.
-        this.unstash();
-        this.trigger("on_history_rebased_handlers");
+        this.rebase(() => {
+            // The last commit is an uncommited draft, revert it first.
+            this.stash();
+            const commitsAfterNewCommit = this.commits.slice(index);
+            for (const commitToRevert of commitsAfterNewCommit.slice().reverse()) {
+                this.revertCommit(commitToRevert);
+            }
+            this.applyCommit(newCommit);
+            this.trigger("on_remote_history_commit_applied_handlers", newCommit);
+            this.commits.splice(index, 0, newCommit);
+            for (const commitToApply of commitsAfterNewCommit) {
+                this.applyCommit(commitToApply);
+            }
+            // Reapply the uncommitted draft, since this is not an operation that
+            // should cancel it.
+            this.unstash();
+        });
     }
 
     /**
