@@ -80,7 +80,9 @@ test('click on "add followers" button', async () => {
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await contains("a:text('Add Followers'):count(1)").click();
+    await contains(
+        "button[title='Add Followers']:text('Add') [data-icon='person_add']:count(1)"
+    ).click();
     await waitForNone(".o-mail-Followers-dropdown");
     await expect.waitForSteps(["action:open_view"]);
     await waitFor(".o-mail-Followers-counter:text('2'):count(1)");
@@ -222,7 +224,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
-    await waitFor("a:text('Add Followers'):count(1)");
+    await waitFor("button[title='Add Followers']:text('Add') [data-icon='person_add']:count(1)");
     await mailContains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
     });
