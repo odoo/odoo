@@ -350,23 +350,16 @@ registerRoute("/discuss/channel/sub_channel/fetch", discuss_channel_sub_channel_
 async function discuss_channel_sub_channel_fetch(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").MailMessage} */
-    const MailMessage = this.env["mail.message"];
     const { parent_channel_id, before, limit } = await parseRequestParams(request);
     const domain = [["parent_channel_id", "=", parent_channel_id]];
     if (before) {
         domain.push(["id", "<", before]);
     }
     const subChannels = DiscussChannel.search(domain, makeKwArgs({ limit, order: "id DESC" }));
-    const store = new Store().add(DiscussChannel.browse(subChannels), "_store_channel_fields");
-    const lastMessageIds = [];
-    for (const channel of subChannels) {
-        const lastMessageId = Math.max(channel.message_ids);
-        if (lastMessageId) {
-            lastMessageIds.push(lastMessageId);
-        }
-    }
-    store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
+    const channels = DiscussChannel.browse(subChannels);
+    const store = new Store()
+        .add(channels, "_store_channel_fields")
+        .add(channels._get_last_messages(), "_store_message_fields");
     return {
         store_data: store.as_dict(),
         sub_channel_ids: subChannels,
@@ -894,6 +887,7 @@ async function search(request) {
         ["is_self", "=", true],
     ]);
     store.add(DiscussChannelMember.browse(channelMemberIds), (res) => res.attr("is_favorite"));
+    store.add(DiscussChannel.browse(channelIds)._get_last_messages(), "_store_message_fields");
     ResPartner._search_for_channel_invite(store, term, undefined, limit);
     return store.as_dict();
 }
@@ -984,17 +978,10 @@ function processRequest(fetchParams) {
             .map((member) => member.id);
         store.add(DiscussChannelMember.browse(selfMemberIds), ["is_favorite"]);
         if (store.add_channels_last_message) {
-            const lastMessageIds = channelIds
-                .map(
-                    (channelId) =>
-                        MailMessage._filter([
-                            ["model", "=", "discuss.channel"],
-                            ["res_id", "=", channelId],
-                        ]).sort((a, b) => b.id - a.id)[0]
-                )
-                .filter(Boolean)
-                .map((message) => message.id);
-            store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
+            store.add(
+                DiscussChannel.browse(channelIds)._get_last_messages(),
+                "_store_message_fields"
+            );
         }
         if (store.add_channels_last_needaction) {
             const lastNeedactionMessageIds = channelIds
