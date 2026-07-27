@@ -663,8 +663,8 @@ test("[text composer] Internal user should be displayed first", async () => {
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "@Person ");
     await waitFor(".o-mail-Composer-suggestion:eq(0) strong:text('Person D'):count(1)");
-    await waitFor(".o-mail-Composer-suggestion:eq(1) strong:text('Person B'):count(1)");
-    await waitFor(".o-mail-Composer-suggestion:eq(2) strong:text('Person C'):count(1)");
+    await waitFor(".o-mail-Composer-suggestion:eq(1) strong:text('Person C'):count(1)");
+    await waitFor(".o-mail-Composer-suggestion:eq(2) strong:text('Person B'):count(1)");
     await waitFor(".o-mail-Composer-suggestion:eq(3) strong:text('Person A'):count(1)");
 });
 
@@ -699,8 +699,8 @@ test("Internal user should be displayed first", async () => {
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "@Person ");
     await waitFor(".o-mail-Composer-suggestion:eq(0) strong:text('Person D'):count(1)");
-    await waitFor(".o-mail-Composer-suggestion:eq(1) strong:text('Person B'):count(1)");
-    await waitFor(".o-mail-Composer-suggestion:eq(2) strong:text('Person C'):count(1)");
+    await waitFor(".o-mail-Composer-suggestion:eq(1) strong:text('Person C'):count(1)");
+    await waitFor(".o-mail-Composer-suggestion:eq(2) strong:text('Person B'):count(1)");
     await waitFor(".o-mail-Composer-suggestion:eq(3) strong:text('Person A'):count(1)");
 });
 
@@ -1283,7 +1283,7 @@ test("Recent message authors should be displayed before other partners", async (
     await waitFor(".o-mail-Composer-suggestion:eq(3) strong:text('Person C'):count(1)");
 });
 
-test("[text composer] one separator between partner and role mention suggestions", async () => {
+test("[text composer] separators between users, roles and partners mention suggestions", async () => {
     const pyEnv = await startServer();
     const [roleId] = pyEnv["res.role"].create([{ name: "rd-Discuss" }]);
     const [userId] = pyEnv["res.users"].create([{ role_ids: [roleId] }]);
@@ -1304,17 +1304,21 @@ test("[text composer] one separator between partner and role mention suggestions
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "@");
-    await waitFor(".o-mail-Composer-suggestionList .o-discuss-separator:count(1)");
+    await waitFor(".o-mail-Composer-suggestionList .o-discuss-separator:count(2)");
     await mailContains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
-        before: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(0)"],
     });
     await mailContains(".o-mail-Composer-suggestion:has(:text('rd-Discuss'))", {
-        after: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(0)"],
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(1)"],
+    });
+    await mailContains(".o-mail-Composer-suggestion:has(:text('Alpha Person B'))", {
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(1)"],
     });
 });
 
 test.tags("html composer");
-test("one separator between partner and role mention suggestions", async () => {
+test("separators between users, roles and partners mention suggestions", async () => {
     const pyEnv = await startServer();
     const [roleId] = pyEnv["res.role"].create([{ name: "rd-Discuss" }]);
     const [userId] = pyEnv["res.users"].create([{ role_ids: [roleId] }]);
@@ -1336,11 +1340,15 @@ test("one separator between partner and role mention suggestions", async () => {
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "@");
-    await waitFor(".o-mail-Composer-suggestionList .o-discuss-separator:count(1)");
+    await waitFor(".o-mail-Composer-suggestionList .o-discuss-separator:count(2)");
     await mailContains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
-        before: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(0)"],
     });
     await mailContains(".o-mail-Composer-suggestion:has(:text('rd-Discuss'))", {
-        after: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(0)"],
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(1)"],
+    });
+    await mailContains(".o-mail-Composer-suggestion:has(:text('Alpha Person B'))", {
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator:eq(1)"],
     });
 });
