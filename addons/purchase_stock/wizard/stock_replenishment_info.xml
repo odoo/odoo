@@ -12,7 +12,6 @@
                 <field name="show_set_supplier_button" invisible="1"/>
                 <field name="last_purchase_date"/>
                 <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-link"
-                        context="{'orderpoint_id': parent.orderpoint_id, 'stock_replenishment_info_id': parent.id}"
                         attrs="{'invisible': [('show_set_supplier_button', '=', False)]}"/>
             </field>
             <xpath expr="//tree" position="attributes">
@@ -38,7 +37,7 @@
             <xpath expr="//page" position="before">
                 <page string="Vendors">
                     <field name="supplierinfo_id" invisible="1"/>
-                    <field name="supplierinfo_ids" readonly="1" context="{'tree_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view'}"/>
+                    <field name="supplierinfo_ids" readonly="1" context="{'tree_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
                 </page>
             </xpath>
         </field>
