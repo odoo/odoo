@@ -47,6 +47,7 @@ export class PosSession extends models.ServerModel {
             "ir.module.module",
             "pos.prep.order",
             "pos.prep.line",
+            "pos.snooze",
         ];
     }
 
@@ -158,6 +159,38 @@ export class PosSession extends models.ServerModel {
         return [];
     }
 
+    get_closing_control_data() {
+        const orders = this.env["pos.order"]
+            .search_read([], ["id", "amount_total", "payment_ids"])
+            .filter((o) => o.state === "paid" || o.state === "done");
+        const totalAmount = orders.reduce((sum, o) => sum + (o.amount_total || 0), 0);
+        const cashPayments = this.env["pos.payment"]
+            .search_read([], ["amount", "payment_method_id"])
+            .filter((p) => {
+                const pm = this.env["pos.payment.method"].search_read(
+                    [["id", "=", p.payment_method_id]],
+                    ["type"]
+                )[0];
+                return pm && pm.type === "cash";
+            });
+        const totalCash = cashPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+        return {
+            orders_details: { quantity: orders.length, amount: totalAmount },
+            opening_notes: "",
+            default_cash_details: {
+                id: 1,
+                name: "Cash",
+                amount: totalCash,
+                opening: 0,
+                payment_amount: totalCash,
+                moves: [],
+            },
+            non_cash_payment_methods: [],
+            is_manager: false,
+            amount_authorized_diff: null,
+        };
+    }
+
     get_order_count_by_preset() {
         return [];
     }
@@ -171,7 +204,7 @@ export class PosSession extends models.ServerModel {
             start_at: false,
             stop_at: false,
             payment_method_ids: [2, 1],
-            state: "opening_control",
+            state: "opened",
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
         },
     ];

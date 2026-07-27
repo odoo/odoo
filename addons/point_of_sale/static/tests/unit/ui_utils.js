@@ -1,4 +1,4 @@
-import { animationFrame, tick, waitFor, queryAll } from "@odoo/hoot-dom";
+import { animationFrame, tick, waitFor, queryAll, advanceTime } from "@odoo/hoot-dom";
 import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -59,6 +59,32 @@ export async function clickDisplayedProduct(name) {
     await ensurePane("right");
     await contains(`article.product .product-name:contains("${name}")`).click();
     await animationFrame();
+}
+
+export async function addOrderlineFromProductScreen(productName, { quantity = 1, unitPrice } = {}) {
+    await clickDisplayedProduct(productName);
+
+    if (unitPrice !== undefined) {
+        await clickNumpadButtons("Price", unitPrice, "Qty");
+    }
+    if (quantity.toString() !== "1") {
+        await clickNumpadButtons(quantity);
+    }
+}
+
+export async function clickNumpadButtons(...keys) {
+    await ensurePane("left");
+    const normalizedKeys = keys
+        .flatMap((key) => {
+            const value = key.toString();
+            return /^-?\d*\.?\d+$/.test(value) ? value.split("") : [value];
+        })
+        .map((key) => (key === "-" ? "+/-" : key));
+
+    for (const key of normalizedKeys) {
+        await contains(`.numpad button:contains("${key}")`).click();
+        await animationFrame();
+    }
 }
 
 export async function clickNumpad(key) {
@@ -163,6 +189,13 @@ export async function clickValidatePayment() {
     await animationFrame();
 }
 
+export async function selectedPaymentLineHasAmount(amount) {
+    const selectedLine = document.querySelector(".paymentline.selected");
+    const amountEl = selectedLine.querySelector(".payment-amount");
+    const displayedAmount = amountEl.textContent.trim();
+    return displayedAmount === amount;
+}
+
 export async function clickNextOrder() {
     await contains(".feedback-screen .validation").click();
     await animationFrame();
@@ -189,6 +222,20 @@ export async function clickOrders() {
 
 export async function clickRegister() {
     await contains(".pos-leftheader .register-label").click();
+    await animationFrame();
+}
+
+export async function selectTicketFilter(filterName) {
+    await contains(".ticket-screen .filter").click();
+    await animationFrame();
+    await contains(`.dropdown-item:contains("${filterName}")`).click();
+    await animationFrame();
+}
+
+export async function selectFiscalPosition(name) {
+    await clickControlButton("Tax");
+    await waitFor(".selection-item");
+    await contains(`.selection-item:contains("${name}")`).click();
     await animationFrame();
 }
 
@@ -269,6 +316,12 @@ export async function cancelDialog() {
     await animationFrame();
 }
 
+export async function closePrintingError() {
+    await waitFor(".modal");
+    await contains(".modal .btn-primary").click();
+    await animationFrame();
+}
+
 export async function addCustomerNote(text) {
     await clickControlButton("Customer Note");
     await waitFor(".modal textarea");
@@ -305,6 +358,266 @@ export function getOrderTotal() {
     return el ? el.textContent.trim() : "";
 }
 
+export function getOrderTax() {
+    const el = document.querySelector("#order-widget-taxes .tax");
+    return el ? el.textContent.trim() : "";
+}
+
 export function getOrderlineNames() {
     return queryAll(".orderline .product-name").map((el) => el.textContent.trim());
+}
+
+export function hasOrderline({
+    withClass = "",
+    withoutClass = "",
+    productName,
+    quantity,
+    price,
+    priceUnit,
+    customerNote,
+    internalNote,
+    comboParent,
+    discount,
+    oldPrice,
+    priceNoDiscount,
+    attributeLine,
+    refundQty,
+} = {}) {
+    const orderlines = queryAll(`.order-container .orderline${withClass}`);
+    return orderlines.some((el) => {
+        if (withoutClass && el.matches(withoutClass)) {
+            return false;
+        }
+        if (productName) {
+            const nameEl = el.querySelector(".product-name");
+            if (!nameEl || !nameEl.textContent.includes(productName)) {
+                return false;
+            }
+        }
+        const formatQty = (value) =>
+            parseFloat(value) % 1 === 0 ? parseInt(value, 10).toString() : value;
+        if (quantity) {
+            const qtyEl = el.querySelector(".qty");
+            if (!qtyEl || !qtyEl.textContent.includes(formatQty(quantity))) {
+                return false;
+            }
+        }
+        if (refundQty) {
+            const refundEl = el.querySelector(".qty .refund");
+            if (!refundEl || !refundEl.textContent.includes(formatQty(refundQty))) {
+                return false;
+            }
+        }
+        if (price) {
+            const priceEl = el.querySelector(".price");
+            if (!priceEl || !priceEl.textContent.includes(price)) {
+                return false;
+            }
+        }
+        if (priceUnit) {
+            const puEl = el.querySelector(".price-per-unit");
+            if (!puEl || !puEl.textContent.includes(priceUnit)) {
+                return false;
+            }
+        }
+        if (customerNote) {
+            const noteEl = el.querySelector(".info-list .customer-note");
+            if (!noteEl || !noteEl.textContent.includes(customerNote)) {
+                return false;
+            }
+        }
+        if (internalNote) {
+            const noteEl = el.querySelector(".info-list .o_tag_badge_text");
+            if (!noteEl || !noteEl.textContent.includes(internalNote)) {
+                return false;
+            }
+        }
+        if (comboParent) {
+            const cpEl = el.querySelector(".info-list .combo-parent-name");
+            if (!cpEl || !cpEl.textContent.includes(comboParent)) {
+                return false;
+            }
+        }
+        if (discount || discount === "") {
+            const discEl = el.querySelector(".info-list .discount.em");
+            if (!discEl || !discEl.textContent.includes(discount)) {
+                return false;
+            }
+        }
+        if (priceNoDiscount) {
+            const infoEl = el.querySelector(".info-list");
+            if (!infoEl || !infoEl.textContent.includes(priceNoDiscount)) {
+                return false;
+            }
+        }
+        if (attributeLine) {
+            const attrEl = el.querySelector(".attribute-line");
+            if (!attrEl || !attrEl.textContent.includes(attributeLine)) {
+                return false;
+            }
+        }
+        return true;
+    });
+}
+
+export function doesNotHaveOrderline(options = {}) {
+    return !hasOrderline(options);
+}
+
+export async function longPress(target, fallbackSelector = "article.product") {
+    let el;
+    if (typeof target === "string") {
+        el = document.querySelector(target);
+        if (!el) {
+            const elements = document.querySelectorAll(fallbackSelector);
+            for (const p of elements) {
+                if (p.textContent.includes(target)) {
+                    el = p;
+                    break;
+                }
+            }
+        }
+    } else {
+        el = target;
+    }
+    el.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, pointerType: "mouse", button: 0 })
+    );
+    await advanceTime(600);
+    el.dispatchEvent(
+        new PointerEvent("pointerup", { bubbles: true, pointerType: "mouse", button: 0 })
+    );
+    await animationFrame();
+}
+
+export async function longPressOrderline(productName) {
+    await ensurePane("left");
+    await longPress(productName, ".order-container .orderline");
+}
+
+export async function scanBarcode(barcode) {
+    getService("barcode").bus.trigger("barcode_scanned", { barcode });
+    await animationFrame();
+    await animationFrame();
+}
+
+export async function selectComboItems(items) {
+    for (const item of items) {
+        await selectComboItem(item);
+    }
+}
+
+export async function configureAndConfirmCombo(selections) {
+    for (const selection of selections) {
+        await selectComboItem(selection);
+    }
+    await confirmCombo();
+}
+
+export async function pickColor(name) {
+    await contains(
+        `.modal .configurator_color[data-color="${name}"], .modal label[title="${name}"]`
+    ).click();
+    await animationFrame();
+}
+
+export async function pickRadio(name) {
+    const labels = [
+        ...document.querySelectorAll(
+            ".modal .attribute-name-cell label, .modal .configurator_radio label"
+        ),
+    ];
+    const label = labels.find((l) => l.textContent.includes(name));
+    if (label) {
+        await contains(label).click();
+    } else {
+        const input = [...document.querySelectorAll(".modal .attribute-name-cell input")].find(
+            (i) => i.closest(".attribute-name-cell")?.textContent.includes(name)
+        );
+        if (input) {
+            await contains(input).click();
+        }
+    }
+    await animationFrame();
+}
+
+export async function pickMulti(name) {
+    const label = [...document.querySelectorAll('.modal label[for^="multi-"]')].find((l) =>
+        l.textContent.includes(name)
+    );
+    if (label) {
+        await contains(label).click();
+        await animationFrame();
+    }
+}
+
+export async function pickSelect(name) {
+    const selects = document.querySelectorAll(".modal select.configurator_select");
+    for (const select of selects) {
+        const option = [...select.options].find((opt) => opt.textContent.trim() === name);
+        if (option) {
+            select.value = option.value;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            await animationFrame();
+            return;
+        }
+    }
+}
+
+export async function fillCustomAttribute(value) {
+    await contains(".modal input.custom_value").edit(value);
+    await animationFrame();
+}
+
+export async function confirmConfigurator() {
+    await contains(".modal .btn-primary").click();
+    await animationFrame();
+}
+
+export function isComboItemSelected(productName) {
+    const el = [
+        ...document.querySelectorAll(".modal label.combo-item.selected .product-name"),
+    ].find((el) => el.textContent.includes(productName));
+    return el !== null;
+}
+
+export function isColorSelected(name) {
+    const el = document.querySelector(
+        `.modal .configurator_color.active[data-color="${name}"], .modal label.configurator_color.active[title="${name}"]`
+    );
+    return el !== null;
+}
+
+export function isRadioSelected(name) {
+    const cells = document.querySelectorAll(
+        ".modal .attribute-name-cell, .modal .configurator_radio .attribute-name-cell"
+    );
+    for (const cell of cells) {
+        if (cell.textContent.includes(name)) {
+            const input = cell.querySelector("input:checked");
+            if (input) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function isMultiSelected(name) {
+    const label = [
+        ...document.querySelectorAll(
+            '.modal label[for^="multi-"].active, .modal label.form-check-label.active'
+        ),
+    ].find((l) => l.textContent.includes(name));
+    return label !== null;
+}
+
+export function getSelectValue() {
+    const select = document.querySelector(".modal select.configurator_select");
+    return select ? select.options[select.selectedIndex]?.textContent.trim() : null;
+}
+
+export function getCustomAttributeValue() {
+    const input = document.querySelector(".modal input.custom_value");
+    return input ? input.value : null;
 }
