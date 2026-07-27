@@ -95,7 +95,13 @@ export class PartnerSuggestionPlugin extends Plugin {
 
     /** @param {string} cleanedTerm */
     search(cleanedTerm) {
-        return [...this.searchPartners(cleanedTerm), ...this.searchRoles(cleanedTerm)];
+        const partners = this.searchPartners(cleanedTerm);
+        const isInternalUser = (partner) => partner.main_user_id?.share === false;
+        return [
+            ...partners.filter(isInternalUser),
+            ...this.searchRoles(cleanedTerm),
+            ...partners.filter((partner) => !isInternalUser(partner)),
+        ];
     }
 
     /** @param {string} cleanedTerm */
@@ -173,7 +179,7 @@ export class PartnerSuggestionPlugin extends Plugin {
                 }
                 if (suggestion?.Model?.getName?.() === "res.role") {
                     return {
-                        group: 2,
+                        group: 1,
                         label: suggestion.name,
                         role: suggestion,
                         thread,
