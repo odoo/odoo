@@ -10,7 +10,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { ConnectionAbortedError, rpc } from "@web/core/network/rpc";
 import { SearchInput } from "@mail/core/common/search_input";
@@ -22,7 +21,7 @@ const LOAD_MORE_LIMIT = 20;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static components = { DropdownItem, Follower, SearchInput };
+    static components = { Follower, SearchInput };
 
     followersFullyLoaded = signal(false);
     loadMoreRef = signal.ref();
@@ -124,6 +123,7 @@ export class FollowerList extends Component {
     }
 
     onClickAddFollowers() {
+        this.props.dropdown.close();
         const action = {
             type: "ir.actions.act_window",
             res_model: "mail.followers.edit",
@@ -149,6 +149,7 @@ export class FollowerList extends Component {
         const { thread } = this.props;
         await thread.follow();
         this.props.onFollowerChanged?.(thread);
+        this.props.dropdown.close();
     }
 
     async onClickUnfollow() {
@@ -157,6 +158,7 @@ export class FollowerList extends Component {
             await thread.selfFollower.remove();
             this.props.onFollowerChanged?.(thread);
         }
+        this.props.dropdown.close();
     }
 
     async onClickEdit() {
