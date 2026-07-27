@@ -142,6 +142,7 @@ export class LinkPopover extends Component {
             colorsData: this.computeColorsData(),
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
+            canReplaceTitle: !linkElement.querySelector("img,.fa"),
             showLabel: !linkElement.childElementCount,
             stripDomain: true,
             showAdvancedOptions: false,
