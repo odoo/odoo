@@ -97,11 +97,6 @@ class _Relational(Field[BaseModel]):
         assert self.comodel_name in model.pool, \
             f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
 
-    def _compute_related(self, records):
-        # Related fields for x2m must be computed in sudo to ensure cache
-        # consistency with the related field which is fetched in sudo.
-        return super()._compute_related(records.sudo())
-
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
 
@@ -630,6 +625,11 @@ class _RelationalMulti(_Relational):
                 super()._update_cache(record, value, dirty)
             return
         super()._update_cache(records, cache_value, dirty)
+
+    def _compute_related(self, records):
+        # Related fields for x2m must be computed in sudo to ensure cache
+        # consistency with the related field which is fetched in sudo.
+        return super()._compute_related(records.sudo())
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
