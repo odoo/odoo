@@ -23,6 +23,9 @@ class LivechatMessagingMenuController(DiscussMessagingMenuController):
         return super()._get_menu_tab_priority_domain(tab_id)
 
     def _get_menu_tab_filter_domain(self, tab_id, filter_id):
-        if tab_id == "livechat" and filter_id == "livechat_need_help":
-            return Domain("livechat_status", "=", "need_help")
+        match (tab_id, filter_id):
+            case ("livechat", "livechat_need_help"):
+                return Domain("livechat_status", "=", "need_help")
+            case ("livechat", "livechat_unread"):
+                return Domain("self_member_id.is_unread", "=", True)
         return super()._get_menu_tab_filter_domain(tab_id, filter_id)

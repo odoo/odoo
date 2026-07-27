@@ -49,11 +49,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
     #   1: search bus_bus (_bus_last_id)
-    #   28: _process_request_for_all (discuss):
+    #   29: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
     #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       24: store add channel:
+    #       25: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
@@ -78,17 +78,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
+    #           - fetch res_partner (image_128, _compute_avatar_128 reads the chat correspondent)
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 32
+    _query_count_init_messaging = 33
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
     #   1: search_count discuss_channel_member (store_has_hidden_channels)
-    #   33: channel _to_store_defaults:
+    #   34: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -122,6 +123,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - count discuss_channel_member (member_count)
     #       - _compute_message_needaction
     #       - fetch ir_attachment (_compute_avatar_128)
+    #       - fetch res_partner (image_128, _compute_avatar_128 reads the chat correspondent)
     #       - search discuss_channel_res_groups_rel (group_ids)
     #         [enterprise] fetch discuss_channel (sudo fields, ai_agent_id)
     #       - fetch im_livechat_channel_member_history (requested_by_operator)
@@ -154,7 +156,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -840,6 +842,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
@@ -856,6 +860,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
@@ -872,6 +878,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
@@ -888,6 +896,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
@@ -906,6 +916,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "ai_agent_id": False,
                 "ai_session_ids": [],
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
                 "chatbot": False,
                 "chatbot_current_step_id": False,
@@ -939,6 +951,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "ai_agent_id": False,
                 "ai_session_ids": [],
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
                 "chatbot": False,
                 "chatbot_current_step_id": False,

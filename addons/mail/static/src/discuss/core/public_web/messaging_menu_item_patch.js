@@ -85,6 +85,7 @@ const messagingMenuItemPatch = {
             : undefined;
         return {
             thread: this.channel.thread,
+            className: "border-0 rounded-3",
             message: displayedMessage,
             counter: this.channel.importantCounter ?? this.channel.needactionCounter,
             datetime: displayedMessage?.datetime ?? this.channel.create_date,
@@ -97,6 +98,11 @@ const messagingMenuItemPatch = {
             onSwipeLeft: this.swipeLeft ?? undefined,
             onClick: () => this.onClick(this.channel),
         };
+    },
+    get parentChannelShortName() {
+        const name = this.channel?.parent_channel_id?.displayName ?? "";
+        const maxLength = 4;
+        return name.length > maxLength ? `${name.slice(0, maxLength)}…` : name;
     },
     get prependNameWithStar() {
         return this.channel?.self_member_id?.is_favorite;

@@ -13,7 +13,9 @@ from odoo.tools.mimetypes import get_extension
 from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg
 from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.addons.mail.models.discuss.discuss_channel import avatar_initials
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
@@ -856,6 +858,22 @@ class DiscussChannel(models.Model):
                 # sudo: discuss.channel - writing livechat_status when a new operator joins is acceptable
                 channel.sudo().livechat_status = "in_progress"
         return all_new_members
+
+    def _generate_avatar(self):
+        """Defer to the correspondent's own avatar when that partner has a real
+        uploaded photo, otherwise show the channel name initial (like the base
+        implementation for the other conversation kinds).
+        """
+        if self.channel_type == "livechat":
+            self_is_visitor = self.self_member_id.livechat_member_type == "visitor"
+            # sudo: discuss.channel - the correspondent's avatar is shown to both sides
+            correspondent = self.sudo().channel_member_ids.filtered(
+                lambda member: (member.livechat_member_type == "visitor") != self_is_visitor
+            ).partner_id[:1]
+            if correspondent.image_128:
+                return False
+            return generate_text_avatar_svg(avatar_initials(self.display_name)[:1], str(self.id))
+        return super()._generate_avatar()
 
     def _get_member_join_notification(self, member):
         if self.channel_type == "livechat":

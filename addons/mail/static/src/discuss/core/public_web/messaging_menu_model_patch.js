@@ -39,8 +39,12 @@ const messagingMenuPatch = {
                         {
                             id: "chat_unread",
                             text: _t("Unread"),
-                            includesChannel: (c) =>
-                                Boolean(c.importantCounter ?? c.needactionCounter),
+                            includesChannel: (c) => c.isUnread,
+                        },
+                        {
+                            id: "chat_group",
+                            text: _t("Group"),
+                            includesChannel: (c) => c.channel_type === "group",
                         },
                     ],
                     actions:
@@ -76,6 +80,18 @@ const messagingMenuPatch = {
                         subtitle: _t("Find channels to follow below"),
                         component: MessagingMenuEmptyChannel,
                     },
+                    filters: [
+                        {
+                            id: "channel_unread",
+                            text: _t("Unread"),
+                            includesChannel: (c) => c.isUnread,
+                        },
+                        {
+                            id: "channel_thread",
+                            text: _t("Thread"),
+                            includesChannel: (c) => Boolean(c.parent_channel_id),
+                        },
+                    ],
                     actions:
                         this.store.self_user?.share === false
                             ? [
@@ -114,6 +130,18 @@ const messagingMenuPatch = {
                             "Collaborate with coworkers and customers in video calls."
                         )}<br/>${_t("No install needed.")}`,
                     },
+                    filters: [
+                        {
+                            id: "meeting_unread",
+                            text: _t("Unread"),
+                            includesChannel: (c) => c.isUnread,
+                        },
+                        {
+                            id: "meeting_thread",
+                            text: _t("Thread"),
+                            includesChannel: (c) => Boolean(c.parent_channel_id),
+                        },
+                    ],
                     actions:
                         this.store.self_user?.share === false
                             ? [

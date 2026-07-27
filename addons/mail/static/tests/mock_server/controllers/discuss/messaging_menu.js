@@ -63,6 +63,21 @@ export const messagingMenuHelpers = {
         if (tab_id === "chat" && filter_id === "chat_unread") {
             return [["self_member_id.is_unread", "=", true]];
         }
+        if (tab_id === "chat" && filter_id === "chat_group") {
+            return [["channel_type", "=", "group"]];
+        }
+        if (tab_id === "channel" && filter_id === "channel_unread") {
+            return [["self_member_id.is_unread", "=", true]];
+        }
+        if (tab_id === "channel" && filter_id === "channel_thread") {
+            return [["parent_channel_id", "!=", false]];
+        }
+        if (tab_id === "meeting" && filter_id === "meeting_unread") {
+            return [["self_member_id.is_unread", "=", true]];
+        }
+        if (tab_id === "meeting" && filter_id === "meeting_thread") {
+            return [["parent_channel_id", "!=", false]];
+        }
         return null;
     },
     _get_menu_tab_priority_domain(env, tab_id) {

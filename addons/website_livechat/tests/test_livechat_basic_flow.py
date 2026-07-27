@@ -168,6 +168,8 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                     {
                         "ai_agent_id": False,
                         'ai_session_ids': [],
+                        "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                        "avatar_cache_key": channel.avatar_cache_key,
                         "channel_type": "livechat",
                         "chatbot": False,
                         "chatbot_current_step_id": False,
@@ -346,6 +348,8 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                 {
                     "ai_agent_id": False,
                     "ai_session_ids": [],
+                    "avatar_128_access_token": channel._get_avatar_128_access_token(),
+                    "avatar_cache_key": channel.avatar_cache_key,
                     "channel_type": "livechat",
                     "chatbot": False,
                     "chatbot_current_step_id": False,

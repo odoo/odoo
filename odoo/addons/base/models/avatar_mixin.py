@@ -14,6 +14,25 @@ def get_random_ui_color_from_seed(seed: str):
     return avatar_bg_colors[num % len(avatar_bg_colors)]
 
 
+def generate_text_avatar_svg(text, seed):
+    """Build an SVG avatar showing ``text`` over a ``seed``-stable UI color.
+
+    :param str text: the short text (initials or number) drawn on the avatar.
+    :param str seed: value the background color is derived from.
+    :return: the SVG avatar bytes.
+    :rtype: odoo.tools.BinaryBytes
+    """
+    bgcolor = get_random_ui_color_from_seed(seed)
+    font_size = 104 if len(text) <= 1 else 86
+    return BinaryBytes((
+        "<?xml version='1.0' encoding='UTF-8' ?>"
+        "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg'>"
+        f"<rect fill='{bgcolor}' height='180' width='180'/>"
+        f"<text fill='#ffffff' font-size='{font_size}' font-weight='bold' text-anchor='middle' x='90' y='124' font-family='sans-serif'>{html_escape(text)}</text>"
+        "</svg>"
+    ).encode())
+
+
 class AvatarMixin(models.AbstractModel):
     _name = 'avatar.mixin'
     _inherit = ['image.mixin']

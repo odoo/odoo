@@ -5,7 +5,7 @@
     <ActionSwiper onLeftSwipe="this.props.onSwipeLeft ? this.props.onSwipeLeft : undefined" onRightSwipe="this.props.onSwipeRight ? this.props.onSwipeRight : undefined">
         <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-custom-click="this.onClick" t-ref="this.rootRef" t-att-class="this.attClass" data-available-offline="">
             <div class="o-mail-MessagingMenuItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
-                <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 52 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
+                <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 40 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
                 <t t-if="this.props.slots and this.props.slots.icon" t-call-slot="icon"/>
             </div>

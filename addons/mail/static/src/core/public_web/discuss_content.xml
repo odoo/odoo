@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
-        <div t-if="this.thread" class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
+        <div t-if="this.thread" class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-7_5 gap-1 z-1 flex-grow-0" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
             <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                 <DiscussAvatar record="this.thread" size="26"/>
                 <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
@@ -63,7 +63,7 @@
                             <Composer t-if="!this.thread.channel?.composerHidden" t-key="this.thread.localId" composer="this.thread.composer" autofocus="true" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.rootRef" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                             <span t-if="this.thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-out="this.thread.channel?.composerHiddenText"/>
                         </div>
-                        <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-DiscussApp-sidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
+                        <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-DiscussApp-sidebarBgColor h-100 border-start border-dark o-border-opacity-7_5 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
                             <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
