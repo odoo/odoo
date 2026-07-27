@@ -6,10 +6,7 @@ from urllib import parse
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.partner_identifiers import (
-    is_identifier_void,
-    normalize_identifier,
-)
+from odoo.tools.partner_identifiers import normalize_identifier
 
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
@@ -107,7 +104,7 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
-        return is_identifier_void(self.vat)
+        return not self._l10n_fr_pdp_get_siren()
 
     def _l10n_fr_pdp_get_siren(self):
         self.ensure_one()
