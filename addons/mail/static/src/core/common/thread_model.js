@@ -802,6 +802,7 @@ export class Thread extends Record {
         } else {
             const tmpData = {
                 id: tmpId,
+                message_type: params.post_data.message_type,
                 attachment_ids: attachments,
                 res_id: this.id,
                 model: "discuss.channel",
