@@ -77,7 +77,7 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
-        return self.vat == '/' or not self.vat
+        return not self._l10n_fr_pdp_get_siren()
 
     def _l10n_fr_pdp_get_siren(self):
         self.ensure_one()

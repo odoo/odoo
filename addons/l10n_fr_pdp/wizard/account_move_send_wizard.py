@@ -24,7 +24,7 @@ class AccountMoveSendWizard(models.TransientModel):
         verification_display_state_map = dict(pdp_partner._fields['pdp_verification_display_state']._description_selection(self.env))
         reason = None
         if pdp_partner._l10n_fr_pdp_is_b2c():
-            reason = self.env._("no VAT")
+            reason = self.env._("No Siren/Siret")
         if not partner_is_valid:
             reason = verification_display_state_map[pdp_partner.pdp_verification_display_state]
         if self.move_id.peppol_is_sent:
