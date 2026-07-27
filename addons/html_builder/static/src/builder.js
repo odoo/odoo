@@ -53,7 +53,6 @@ export class Builder extends Component {
         installSnippetModule: t.function().optional(),
         snippetsName: t.string(),
         toggleMobile: t.function(),
-        overlayRef: t.function(),
         iframeLoaded: t.object(),
         isMobile: t.boolean(),
         Plugins: t.array().optional(),
@@ -67,6 +66,9 @@ export class Builder extends Component {
         initialTab: t.string().optional("blocks"),
         onlyCustomizeTab: t.boolean().optional(false),
     });
+
+    // Ref on the local overlay container element, owned by the parent.
+    overlayRef = props.static("overlayRef", t.signal(t.ref()));
 
     builderSidebarRef = signal.ref();
 
@@ -194,7 +196,7 @@ export class Builder extends Component {
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
-                    ref: this.props.overlayRef,
+                    ref: this.overlayRef,
                 },
                 saveSnippet: (snippetEl, cleanForSaveProcessors, wrapWithSaveSnippetHandlers) =>
                     this.snippetModel.saveSnippet(

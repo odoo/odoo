@@ -1,6 +1,7 @@
 import { useComponent, useEnv, useSubEnv } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 import { status } from "@odoo/owl";
@@ -46,11 +47,7 @@ function undefinedAsTrue(val) {
  */
 
 /**
- * @param {{ readonly el: HTMLElement | null } | (() => HTMLElement | null)} ref
- *  The container ref. Supports:
- *  - a forwarded ref object exposing `.el` (`useChildRef`, which is a function
- *    that also exposes an `.el` getter);
- *  - an Owl 3 native signal ref (a function returning the element).
+ * @param {() => HTMLElement | null} ref the container signal ref
  * @param {Options} [options={}]
  */
 export function useViewButtons(ref, options = {}) {
@@ -59,21 +56,8 @@ export function useViewButtons(ref, options = {}) {
     const comp = useComponent();
     const env = useEnv();
 
-    // Resolve the ref to a getter returning the container element. It is
-    // resolved lazily at call time, where the `.el` accessor takes precedence
-    // over *calling* the ref. This matters for `useChildRef`, which returns a
-    // *function* that also exposes an `.el` getter (only defined after it has
-    // been forwarded) — calling it would clear its value and return undefined.
-    const getRefEl = () => {
-        if (ref && "el" in ref) {
-            return ref.el;
-        }
-        if (typeof ref === "function") {
-            // Owl 3 native signal ref: calling it returns the element.
-            return ref();
-        }
-        return null;
-    };
+    // Resolved lazily: the element only exists once the component is mounted.
+    const getRefEl = () => resolveRefEl(ref) ?? null;
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute, newWindow }) {
             async function execute() {

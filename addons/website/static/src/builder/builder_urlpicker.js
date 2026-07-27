@@ -1,9 +1,8 @@
 import { BuilderUrlPicker } from "@html_builder/core/building_blocks/builder_urlpicker";
 import { useActionInfo } from "@html_builder/core/utils";
-import { props, t } from "@odoo/owl";
+import { props, signal, t } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
-import { useChildRef } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 
@@ -30,7 +29,7 @@ patch(BuilderUrlPicker, {
 patch(BuilderUrlPicker.prototype, {
     setup() {
         super.setup();
-        this.urlRef = useChildRef();
+        this.urlRef = signal.ref();
     },
 
     get sources() {
@@ -60,8 +59,8 @@ patch(BuilderUrlPicker.prototype, {
     },
 
     openPreviewUrl() {
-        if (this.urlRef.el.value) {
-            window.open(this.urlRef.el.value, "_blank");
+        if (this.urlRef().value) {
+            window.open(this.urlRef().value, "_blank");
         }
     },
 });

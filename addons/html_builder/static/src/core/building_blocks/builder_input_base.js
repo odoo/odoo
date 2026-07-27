@@ -1,5 +1,4 @@
-import { Component, useEffect, proxy, signal } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { useActionInfo } from "../utils";
 
 // Props given to the builder input components that are then passed to the
@@ -23,7 +22,6 @@ export class BuilderInputBase extends Component {
     static template = "";
     static props = {
         slots: { type: Object, optional: true },
-        inputRef: { type: Function, optional: true },
         ...textInputBasePassthroughProps,
         commit: { type: Function },
         preview: { type: Function },
@@ -35,12 +33,15 @@ export class BuilderInputBase extends Component {
         value: { type: [String, { value: null }], optional: true },
     };
 
-    inputRef = signal.ref();
+    // Ref on the input element, either owned by the parent (`inputRef` prop) or local.
+    inputRef = props.static(
+        "inputRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     setup() {
         this.isEditing = false;
         this.info = useActionInfo();
-        useForwardRefToParent(this.inputRef, "inputRef");
         this.state = proxy({ value: this.props.value });
         useEffect(() => {
             const value = this.props.value;

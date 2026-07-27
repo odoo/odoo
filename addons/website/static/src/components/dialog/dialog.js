@@ -1,7 +1,6 @@
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useChildRef } from "@web/core/utils/hooks";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 
 const NO_OP = () => {};
 
@@ -24,11 +23,17 @@ export class WebsiteDialog extends Component {
         showFooter: t.boolean().optional(true),
     });
 
+    // Ref on the modal element, either owned by the parent (`modalRef` prop) or
+    // local, and forwarded to the inner Dialog.
+    modalRef = props.static(
+        "modalRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
+
     setup() {
         this.state = proxy({
             disabled: false,
         });
-        this.modalRef = useChildRef();
     }
     /**
      * Disables the buttons of the dialog when a click is made.

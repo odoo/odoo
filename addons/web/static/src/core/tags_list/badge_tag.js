@@ -7,7 +7,6 @@ export const badgeTagProps = {
     onClick: t.function().optional(),
     onDelete: t.function().optional(),
     crossTooltip: t.string().optional(_t("Delete")),
-    ref: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
     slots: t.any().optional(),
     text: t.string().optional(),
     tooltip: t.string().optional(),
@@ -18,6 +17,11 @@ export class BadgeTag extends Component {
     static colorType = t.number().optional(0);
     props = useProps(badgeTagProps);
     color = useProps({ color: this.constructor.colorType });
+    // Ref on the tag element, either owned by the parent (`ref` prop) or local.
+    ref = useProps.static(
+        "ref",
+        t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref())
+    );
 
     get tagColorClass() {
         return `o_tag_color_${this.color.color}`;

@@ -7,7 +7,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useChildRef } from "@web/core/utils/hooks";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
@@ -76,7 +75,6 @@ export const selectMenuProps = {
     onClosed: t.function().optional(() => () => {}),
     slots: t.object().optional(),
     disabled: t.boolean().optional(false),
-    menuRef: t.function().optional(),
 };
 
 export class SelectMenu extends Component {
@@ -93,6 +91,12 @@ export class SelectMenu extends Component {
         distanceBeforeReload: 500,
     };
 
+    // Ref on the menu element, either owned by the parent (`menuRef` prop) or local.
+    menuRef = useProps.static(
+        "menuRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
+
     choicesRef = signal.ref();
     inputRefs = {
         toggler: signal(null),
@@ -107,8 +111,6 @@ export class SelectMenu extends Component {
             isFocused: false,
         });
 
-        this.menuRef = useChildRef();
-        this.props.menuRef?.(this.menuRef);
         this.debouncedOnInput = useDebounced(() => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
@@ -311,7 +313,7 @@ export class SelectMenu extends Component {
                 this.inputRefs.menu()?.focus();
             }
             this.choicesRef()?.addEventListener("scroll", (ev) => this.onScroll(ev));
-            const selectedElement = this.menuRef.el?.querySelectorAll(".selected")[0];
+            const selectedElement = this.menuRef()?.querySelectorAll(".selected")[0];
             if (selectedElement) {
                 scrollTo(selectedElement);
             }

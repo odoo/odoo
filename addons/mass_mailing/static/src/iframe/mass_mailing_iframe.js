@@ -7,7 +7,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    props,
+    useProps,
     signal,
     status,
     proxy,
@@ -19,7 +19,7 @@ import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
-import { useBus, useChildRef, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -36,10 +36,8 @@ export class MassMailingIframe extends Component {
         LazyComponent,
         LocalOverlayContainer,
     };
-    props = props({
+    props = useProps({
         config: t.object(),
-        iframeRef: t.function(),
-        iframeWrapperRef: t.function(),
         saveRecord: t.function(),
         discardIframe: t.function(),
         showFullscreen: t.boolean().optional(),
@@ -54,14 +52,12 @@ export class MassMailingIframe extends Component {
     });
 
     sidebarRef = signal.ref();
-    iframeRef = signal.ref();
-    iframeWrapperRef = signal.ref();
+    iframeRef = useProps.static("iframeRef", t.signal(t.ref()));
+    iframeWrapperRef = useProps.static("iframeWrapperRef", t.signal(t.ref()));
 
     setup() {
         this.ui = useService("ui");
-        this.overlayRef = useChildRef();
-        useForwardRefToParent(this.iframeRef, "iframeRef");
-        useForwardRefToParent(this.iframeWrapperRef, "iframeWrapperRef");
+        this.overlayRef = signal.ref();
         this.isRTL = localization.direction === "rtl";
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),

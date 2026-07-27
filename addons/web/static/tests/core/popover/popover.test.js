@@ -10,7 +10,7 @@ import {
     test,
     waitFor,
 } from "@odoo/hoot";
-import { assertType, Component, htmlEscape, useProps, signal, xml } from "@odoo/owl";
+import { assertType, Component, htmlEscape, useProps, signal, t, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,
@@ -500,12 +500,13 @@ test("arrow follows target and can get sucked", async () => {
     `);
     class Parent extends Component {
         static template = xml`
-            <div class="popover-container" t-ref="this.props.containerRef">
-                <div class="popover-target" t-ref="this.props.targetRef" t-on-click="this.openPopover"/>
+            <div class="popover-container" t-ref="this.containerRef">
+                <div class="popover-target" t-ref="this.targetRef" t-on-click="this.openPopover"/>
             </div>
         `;
 
-        props = useProps();
+        containerRef = useProps.static("containerRef", t.signal(t.ref()));
+        targetRef = useProps.static("targetRef", t.signal(t.ref()));
 
         setup() {
             this.popover = usePopover(Content, {

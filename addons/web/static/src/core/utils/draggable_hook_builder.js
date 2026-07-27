@@ -139,9 +139,9 @@ const DEFAULT_ACCEPTED_PARAMS = {
     allowDisconnected: [Boolean], // do not use, introduced for stable versions, to challenge in master
     enable: [Boolean, Function],
     preventDrag: [Function],
-    // `ref` may be a legacy useRef/useChildRef (object, or callable exposing
-    // `.el`) or an Owl 3 native signal ref (zero-arg function). It is normalized
-    // by `makeRefAdapter`/`resolveRefEl` into a null-safe `.el` getter.
+    // `ref` may be a legacy useRef (object exposing `.el`) or an Owl 3 native
+    // signal ref (zero-arg function). It is normalized by
+    // `makeRefAdapter`/`resolveRefEl` into a null-safe `.el` getter.
     ref: [Object, Function],
     elements: [String],
     handle: [String, Function],
@@ -190,9 +190,9 @@ function camelToKebab(str) {
 }
 
 /**
- * Wraps a `ref` of any supported kind (legacy useRef/useChildRef object or
- * callable, or an Owl 3 native signal) into an adapter exposing a null-safe
- * `.el` getter, so all downstream `.el` reads keep working unchanged.
+ * Wraps a `ref` of any supported kind (legacy useRef object, or an Owl 3
+ * native signal) into an adapter exposing a null-safe `.el` getter, so all
+ * downstream `.el` reads keep working unchanged.
  *
  * todo: remove when all refs are migrated to Owl 3 signals
  *

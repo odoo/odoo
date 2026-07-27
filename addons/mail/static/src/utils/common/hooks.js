@@ -90,12 +90,10 @@ export function onExternalClick(ref, cb) {
 
 /**
  * Hook that allows to determine precisely when refs are (mouse-)hovered.
- * Should provide a list of ref names, and can add callbacks when elements are
+ * Should provide a list of refs, and can add callbacks when elements are
  * hovered-in (onHover), hovered-out (onAway), hovering for some time (onHovering).
  *
- * @param {string | string[] | Function} refNames name of refs that determine whether this is in state "hovering".
- *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
- *   menu where dropdown menu container is not accessible. Function type is for useChildRef support.
+ * @param {Function | Function[]} refs signal refs that determine whether this is in state "hovering".
  * @param {Object} param1
  * @param {() => void} [param1.onHover] callback when hovering the ref names.
  * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
@@ -947,11 +945,10 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
     );
 }
 
-/** @typedef {import("@web/core/utils/hooks").useChildRef} useChildRef */
-
 /**
- * Hook that works like `useChildRef()` but allow many refs that each child component can save using an id of their choice.
- * @see useChildRef
+ * Hook that gathers the signal refs of many children, each child saving its own
+ * ref under an id of its choice.
+ * @see useForwardRefsToParent
  */
 export function useChildRefs() {
     /** @type {Map<any, import("@odoo/owl").Signal<Element>>} */
@@ -986,14 +983,13 @@ export class UseForwardRefsToParent {
     }
 }
 
-/** @typedef {import("@web/core/utils/hooks").useForwardRefToParent} useForwardRefToParent */
 /**
- * Hook that works like `useForwardRefToParent()` but allow many refs that each child component can save using an id of their choice.
- * @see useForwardRefToParent
+ * Hook that saves the `ref` of a child in the `useChildRefs()` map of its parent,
+ * under an id of the child's choice.
  *
  * @param {string} propName name of prop that contains a `useChildRefs()` object
  * @param {(Props) => any} getRefIdFn function whose evaluation returns the key in `useChildRefs()` object to save the `ref`, with props passed as param.
- * @param {import("@web/core/utils/hooks").Ref} ref the `ref` that is saved in `useChildRefs()` at key from `getRefIdFn` function evaluation
+ * @param {import("@odoo/owl").Signal<Element>} ref the `ref` that is saved in `useChildRefs()` at key from `getRefIdFn` function evaluation
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);

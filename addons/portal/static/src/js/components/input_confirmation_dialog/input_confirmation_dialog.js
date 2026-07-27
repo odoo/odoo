@@ -26,7 +26,7 @@ export class InputConfirmationDialog extends ConfirmationDialog {
             }
         };
         onMounted(() => {
-            this.inputEl = this.modalRef.el?.querySelector("input");
+            this.inputEl = this.modalRef()?.querySelector("input");
             if (this.inputEl) {
                 this.inputEl.focus();
                 this.inputEl.addEventListener("keydown", onKeydown);

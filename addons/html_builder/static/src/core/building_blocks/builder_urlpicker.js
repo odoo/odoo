@@ -6,8 +6,7 @@ import {
     useBuilderComponent,
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
-import { useChildRef } from "@web/core/utils/hooks";
+import { Component, signal } from "@odoo/owl";
 import { pick } from "@web/core/utils/objects";
 
 export class BuilderUrlPicker extends Component {
@@ -23,7 +22,7 @@ export class BuilderUrlPicker extends Component {
     };
 
     setup() {
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
@@ -39,8 +38,8 @@ export class BuilderUrlPicker extends Component {
     }
 
     openPreviewUrl() {
-        if (this.inputRef.el.value) {
-            window.open(this.inputRef.el.value, "_blank");
+        if (this.inputRef().value) {
+            window.open(this.inputRef().value, "_blank");
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, proxy, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
@@ -36,9 +36,9 @@ export class SelectLotPopup extends Component {
         });
         useAutoFocusToLast(this.rootRef);
         this.notification = useService("notification");
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         onMounted(() => {
-            this.inputRef.el.click();
+            this.inputRef().click();
         });
     }
     _nextId() {

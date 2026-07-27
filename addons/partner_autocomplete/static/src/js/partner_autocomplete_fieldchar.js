@@ -1,4 +1,5 @@
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { signal } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
@@ -19,7 +20,7 @@ export class PartnerAutoCompleteCharField extends CharField {
         this.orm = useService("orm");
         this.partnerAutocomplete = usePartnerAutocomplete();
 
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         useInputField({ getValue: () => this.props.record.data[this.props.name] || "", parse: (v) => this.parse(v), ref: this.inputRef});
     }
 

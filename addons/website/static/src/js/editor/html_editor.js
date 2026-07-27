@@ -1,9 +1,8 @@
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
-import { props, t, onMounted } from "@odoo/owl";
+import { props, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
-import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
@@ -61,9 +60,9 @@ patch(LinkPopover, {
 patch(LinkPopover.prototype, {
     setup() {
         super.setup();
-        this.urlRef = useChildRef();
+        this.urlRef = signal.ref();
         onMounted(() => {
-            const el = this.urlRef.el;
+            const el = this.urlRef();
             if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
                 el.focus();
             }
