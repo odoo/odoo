@@ -3727,7 +3727,9 @@ class AccountEdiUBL(models.AbstractModel):
         for base_line in base_lines:
             for tax_data in base_line['tax_details']['taxes_data']:
                 if tax_data['tax'].price_include:
-                    base_line['price_unit'] += tax_data['raw_tax_amount_currency'] / (base_line['quantity'] if base_line['quantity'] else 1)
+                    discount = base_line['discount'] / 100
+                    raw_tax_amount_currency = tax_data['raw_tax_amount_currency'] / (1 - discount)
+                    base_line['price_unit'] += raw_tax_amount_currency / (base_line['quantity'] if base_line['quantity'] else 1)
 
         # Remove lines having a zero amount except 100% discounts
         collected_values['base_lines'] = [
