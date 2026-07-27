@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="product.ProductCatalogSearchPanel">
+    <t t-if="this.uiService.isSmall">
+        <t t-call="product.SearchPanel.MobileDrawer" />
+    </t>
+    <t t-else="">
+        <t t-if="this.state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
+        <t t-else="" t-call="web.SearchPanel.Sidebar" />
+    </t>
+</t>
+
+<t t-name="product.SearchPanel.MobileDrawer">
+    <div class="o_catalog_search_panel_mobile">
+        <button
+            class="o_catalog_search_panel_toggle btn btn-secondary d-flex align-items-center gap-2"
+            t-on-click="() => this.openMobileDrawer()"
+        >
+            <i class="oi oi-lg oi-panel-right"/>
+        </button>
+
+        <div
+            class="o_catalog_search_panel_drawer_wrapper"
+            t-att-class="{ o_open: this.state.mobileDrawerOpen }"
+        >
+            <div
+                class="o_catalog_search_panel_backdrop"
+                t-on-click="() => this.closeMobileDrawer()"
+            />
+            <div class="o_catalog_search_panel_drawer bg-view d-flex flex-column">
+                <header class="d-flex align-items-center justify-content-between p-2 border-bottom">
+                    <b>Filters</b>
+                    <button class="btn btn-sm" t-on-click="() => this.closeMobileDrawer()">
+                        <i class="fa fa-times"/>
+                    </button>
+                </header>
+                <div class="o_catalog_search_panel_content flex-grow-1 overflow-auto">
+                    <t t-call="web.SearchPanelContent"/>
+                </div>
+                <footer
+                    t-if="this.hasSelection()"
+                    class="p-2 border-top d-flex gap-2"
+                >
+                    <button
+                        class="btn btn-link flex-grow-1"
+                        t-on-click="() => this.clearSelection()"
+                    >
+                        Clear All
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
