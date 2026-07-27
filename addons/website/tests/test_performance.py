@@ -128,7 +128,7 @@ class TestStandardPerformance(UtilPerf):
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
         # not published user, get the not found image placeholder
-        self.assertEqual(self.env.ref('base.user_admin').sudo().website_published, False)
+        self.env.ref('base.user_admin').sudo().website_published = False
         user_id = self.ref('base.user_admin')
         url = f'/web/image/res.users/{user_id}/image_256'
         self.assertEqual(self._get_url_hot_query(url), 7)
