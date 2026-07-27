@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="consent" name="OAuth Consent">
+        <t t-set="title">Authorize Application</t>
+        <t t-set="footer_note">
+            <p class="smaller text-muted text-break text-center mt-3 mb-0">
+                You will be redirected to
+                <span class="font-monospace" t-out="params['redirect_uri']"/>
+            </p>
+        </t>
+        <t t-call="auth_oauth_server_base.oauth_layout" title="title" footer_note="footer_note">
+            <h1 class="h4 text-center mb-4">Authorize Application</h1>
+            <p>
+                <strong t-out="client_name"/> is requesting access to your Odoo
+                account for
+                <strong t-out="resource.label"/>.
+            </p>
+            <form method="post" action="/oauth/authorize/submit_consent" target="_top" id="oauth_consent_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <t t-foreach="params.items()" t-as="param">
+                    <input type="hidden" t-att-name="param[0]" t-att-value="param[1]"/>
+                </t>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" name="allow" value="true" class="btn btn-primary">Allow</button>
+                    <button type="submit" name="allow" value="false" class="btn btn-secondary">Deny</button>
+                </div>
+            </form>
+            <div id="oauth_consent_spinner" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center bg-white bg-opacity-75">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Authorizing...</span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                // Add a spinner to prevent users from clicking submit multiple times quickly which will show an error 
+                // "Unknown auth code" because the first request deleted the code already after it has been processed.
+                document.getElementById("oauth_consent_form").addEventListener("submit", () => {
+                    document.getElementById("oauth_consent_spinner").classList.replace("d-none", "d-flex");
+                });
+            </script>
+        </t>
+    </template>
+</odoo>
