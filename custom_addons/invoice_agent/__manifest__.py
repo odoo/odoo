@@ -2,8 +2,8 @@
     'name': 'Invoice Agent',
     'version': '19.0.0.3.0',
     'category': 'Accounting/Accounting',
-    'summary': 'AI Extraction capabilities for account.move — queue views, vendor matching, journal config, bulk re-extraction wizard, security groups',
-    'depends': ['account', 'sale'],
+    'summary': 'AI Extraction for account.move — queue, wizard, security, automations, cron',
+    'depends': ['account', 'sale', 'base_automation'],
     'data': [
         'security/invoice_agent_groups.xml',
         'security/ir.model.access.csv',
@@ -13,6 +13,7 @@
         'views/account_journal_views.xml',
         'views/invoice_agent_views.xml',
         'wizard/bulk_process_wizard_views.xml',
+        'data/automation_data.xml',
     ],
     'installable': True,
     'application': False,

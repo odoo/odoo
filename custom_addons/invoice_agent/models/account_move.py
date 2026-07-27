@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    # === AI Extraction Fields (existing) ===
+    # === AI Extraction Fields ===
     ai_source_attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
         string='AI Source Attachment',
@@ -32,6 +32,7 @@ class AccountMove(models.Model):
     ai_extraction_status = fields.Selection(
         selection=[
             ('pending', 'Pending'),
+            ('processing', 'Processing'),
             ('extracted', 'Extracted'),
             ('validated', 'Validated'),
             ('failed', 'Failed'),
@@ -68,16 +69,14 @@ class AccountMove(models.Model):
         string='Per-Field Extraction Data',
     )
 
-    # === AI Extracted Total (stored, set by extraction pipeline) ===
-    # The total amount that the AI extracted from the source document.
-    # This is NOT computed from lines — it's the AI's "opinion" of the total.
+    # === AI Extracted Total ===
     ai_extracted_total = fields.Monetary(
         string='AI Extracted Total',
         readonly=True,
         help="Total amount extracted from the source document by the AI service.",
     )
 
-    # === Variance: difference between AI-extracted total and computed system total ===
+    # === Variance ===
     ai_amount_variance = fields.Monetary(
         string='AI Amount Variance',
         compute='_compute_ai_variance',
@@ -134,7 +133,6 @@ class AccountMove(models.Model):
                 move.ai_variance_pct = (ai_total - total) / total
             else:
                 move.ai_variance_pct = 0.0
-            # Check against journal threshold, defaulting to 0.05 (5%)
             threshold = move.journal_id.ai_min_confidence if move.journal_id.ai_agent_enabled else 0.05
             move.ai_needs_review = abs(move.ai_variance_pct) > threshold
 
@@ -166,9 +164,6 @@ class AccountMove(models.Model):
                 ))
 
     def _get_ai_min_confidence(self):
-        """Return the minimum confidence threshold for validation.
-        Reads from the journal's ai_min_confidence if ai_agent_enabled,
-        otherwise defaults to 0.70."""
         self.ensure_one()
         if self.journal_id.ai_agent_enabled:
             return self.journal_id.ai_min_confidence
@@ -178,21 +173,11 @@ class AccountMove(models.Model):
     # VENDOR MATCHING
     # -------------------------------------------------------------------------
     def _match_vendor(self):
-        """Try to match a vendor partner from the AI-extracted JSON payload.
-        
-        Strategy:
-        1. Parse the JSON payload for a 'vat' field and search by exact VAT.
-        2. Fall back to searching by company name (ilike).
-        3. Return the best-matching partner, or None.
-        """
         self.ensure_one()
         if not self.ai_extracted_json:
             return None
-
         payload = self.ai_extracted_json
         partner_obj = self.env['res.partner']
-
-        # Strategy 1: Match by VAT
         vat = payload.get('vat') or payload.get('tax_id') or payload.get('company_vat')
         if vat:
             partner = partner_obj.search(
@@ -201,8 +186,6 @@ class AccountMove(models.Model):
             )
             if partner:
                 return partner
-
-        # Strategy 2: Match by company name
         company_name = payload.get('company_name') or payload.get('supplier_name') or payload.get('vendor_name')
         if company_name:
             partner = partner_obj.search(
@@ -211,32 +194,18 @@ class AccountMove(models.Model):
             )
             if partner:
                 return partner
-
         return None
 
-    # -------------------------------------------------------------------------
-    # ONCHANGE: OCR text → vendor matching
-    # -------------------------------------------------------------------------
     @api.onchange('ai_ocr_text')
     def _onchange_ai_ocr_text(self):
-        """When the OCR text changes, attempt to auto-set the partner
-        by parsing the ai_extracted_json and running vendor matching.
-
-        Returns a warning if a match isn't found with high confidence.
-        """
         if not self.ai_ocr_text:
             return {}
-
-        # Only run if we have a JSON payload (set by the extraction service)
         if not self.ai_extracted_json:
             return {}
-
         partner = self._match_vendor()
         if partner:
             self.partner_id = partner
             return {}
-
-        # No confident match — return a warning
         return {
             'warning': {
                 'title': _('Vendor Not Matched'),
@@ -251,7 +220,6 @@ class AccountMove(models.Model):
     # ORM Overrides
     # -------------------------------------------------------------------------
     def write(self, vals):
-        """Auto-set validated_on when status changes to validated."""
         res = super().write(vals)
         if 'ai_extraction_status' in vals:
             if vals['ai_extraction_status'] == 'validated':
@@ -260,7 +228,34 @@ class AccountMove(models.Model):
                 self.write({'ai_extracted_on': fields.Datetime.now()})
         return res
 
-    # SQL constraints (replacing old _sql_constraints with model-level constraints)
+    # -------------------------------------------------------------------------
+    # CRON: Retry stuck extractions
+    # -------------------------------------------------------------------------
+    @api.model
+    def _cron_retry_stuck_extractions(self):
+        """Called by ir.cron every 30 minutes.
+        Finds bills stuck in 'processing' for more than 1 hour
+        and resets them to 'pending' so the extraction pipeline can retry.
+        """
+        from datetime import timedelta
+        threshold = fields.Datetime.now() - timedelta(hours=1)
+        stuck = self.search([
+            ('ai_extraction_status', '=', 'processing'),
+            ('write_date', '<', threshold),
+        ])
+        count = len(stuck)
+        for move in stuck:
+            try:
+                move.write({
+                    'ai_extraction_status': 'pending',
+                    'ai_confidence': 0.0,
+                })
+            except Exception:
+                _logger.exception("Cron failed to reset stuck extraction on %s", move.display_name)
+        if count:
+            _logger.info("_cron_retry_stuck_extractions: reset %d stuck moves from 'processing' to 'pending'", count)
+        return count
+
     _sql_constraints = [
         (
             'check_ai_confidence_range',
