@@ -80,6 +80,12 @@
                         >
                             Discard
                         </button>
+                        <button
+                            t-if="this.props.edit"
+                            class="btn btn-danger d-md-none"
+                            t-on-click="this.deleteRecord">
+                            Delete
+                        </button>
                     </div>
                     <div class="d-flex gap-3 align-items-center">
                         <div t-if="this.props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">

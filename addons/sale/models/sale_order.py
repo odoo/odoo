@@ -1478,6 +1478,7 @@ class SaleOrder(models.Model):
             "name": self.env._("Discount"),
             "type": "ir.actions.act_window",
             "res_model": "sale.order.discount",
+            "views": [(False, "form")],
             "view_mode": "form",
             "target": "new",
         }

@@ -12,6 +12,10 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 
+import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
+import { getSelectedComboItems } from "@sale/js/sale_utils";
+import { useService } from "@web/core/utils/hooks";
+
 function getComboRecords(listRecords, record) {
     const comboRecords = [];
 
@@ -367,6 +371,27 @@ export class SaleOrderLineOne2Many extends ProductLabelSectionAndNoteOne2Many {
         ...ProductLabelSectionAndNoteOne2Many.components,
         ListRenderer: SaleOrderLineListRenderer,
     };
+
+    setup() {
+        super.setup();
+        this.dialog = useService("dialog");
+        this.orm = useService("orm");
+    }
+
+    async openRecord(record) {
+        if (record.data.product_type === "combo") {
+            const selectedComboItems = await getSelectedComboItems(this.orm, record, true);
+            return openComboConfigurator({
+                dialog: this.dialog,
+                comboLineRecord: record,
+                edit: true,
+                selectedComboItems,
+            });
+        }
+        if (!record.data.combo_item_id?.id) {
+            return super.openRecord(record);
+        }
+    }
 }
 export const saleOrderLineOne2Many = {
     ...productLabelSectionAndNoteOne2Many,

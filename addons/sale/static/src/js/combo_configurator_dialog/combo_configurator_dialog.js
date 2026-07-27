@@ -38,6 +38,7 @@ export class ComboConfiguratorDialog extends Component {
         },
         save: Function,
         discard: Function,
+        deleteRecord: { type: Function, optional: true },
         close: Function,
     };
 
@@ -191,6 +192,13 @@ export class ComboConfiguratorDialog extends Component {
     cancel() {
         if (!this.props.edit) {
             this.props.discard();
+        }
+        this.props.close();
+    }
+
+    async deleteRecord() {
+        if (this.props.deleteRecord) {
+            await this.props.deleteRecord();
         }
         this.props.close();
     }
