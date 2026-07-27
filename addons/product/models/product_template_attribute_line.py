@@ -11,7 +11,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     _name = 'product.template.attribute.line'
     _rec_name = 'attribute_id'
-    _rec_names_search = ['attribute_id', 'value_ids']
+    _rec_names_search = ('attribute_id', 'value_ids')
     _description = "Product Template Attribute Line"
     _order = 'sequence, attribute_id, id'
 

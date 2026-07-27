@@ -16,7 +16,7 @@ class StockLocation(models.Model):
     _parent_name = "location_id"
     _parent_store = True
     _order = 'complete_name, id'
-    _rec_names_search = ['complete_name', 'barcode']
+    _rec_names_search = ('complete_name', 'barcode')
     _check_company_auto = True
 
     @api.model

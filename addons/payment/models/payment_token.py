@@ -9,7 +9,7 @@ class PaymentToken(models.Model):
     _order = "partner_id, id desc"
     _description = "Payment Token"
     _check_company_auto = True
-    _rec_names_search = ["payment_details", "partner_id", "provider_id"]
+    _rec_names_search = ("payment_details", "partner_id", "provider_id")
 
     provider_id = fields.Many2one(
         string="Provider", comodel_name="payment.provider", required=True, index=True

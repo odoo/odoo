@@ -86,7 +86,7 @@ class AccountMove(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
     _sequence_index = "journal_id"
-    _rec_names_search = ['name', 'partner_id.name', 'ref']
+    _rec_names_search = ('name', 'partner_id.name', 'ref')
     _mailing_enabled = True
 
     @property

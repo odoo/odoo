@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
 class L10nHrKpdCategory(models.Model):
     _name = 'l10n_hr.kpd.category'
     _description = 'Croatian KPD Category'
-    _rec_names_search = ['name', 'description']
+    _rec_names_search = ('name', 'description')
 
     name = fields.Char("Code", required=True)
     sector = fields.Char("Industry")

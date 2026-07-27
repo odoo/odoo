@@ -22,7 +22,7 @@ class ResCurrency(models.CachedModel):
     _name = 'res.currency'
     _description = "Currency"
     _explanation = "Represents a monetary unit. Odoo uses this to handle multi-currency transactions, exchange rates, and financial reporting."
-    _rec_names_search = ['name', 'full_name']
+    _rec_names_search = ('name', 'full_name')
     _order = 'active desc, name'
     # invalidate cache for get_all_currencies
     _cached_data_domain = [('active', '=', True)]
@@ -367,7 +367,7 @@ class ResCurrency(models.CachedModel):
 class ResCurrencyRate(models.Model):
     _name = 'res.currency.rate'
     _description = "Currency Rate"
-    _rec_names_search = ['name', 'rate']
+    _rec_names_search = ('name', 'rate')
     _order = "name desc, id"
     _check_company_domain = models.check_company_domain_parent_of
 

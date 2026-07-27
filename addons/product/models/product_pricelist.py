@@ -11,7 +11,7 @@ class ProductPricelist(models.Model):
     _name = 'product.pricelist'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Pricelist"
-    _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
+    _rec_names_search = ('name', 'currency_id')  # TODO check if should be removed
     _order = "sequence, id, name"
 
     def _default_currency_id(self):

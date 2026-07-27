@@ -849,7 +849,7 @@ class SurveyQuestionAnswer(models.Model):
     """
     _name = 'survey.question.answer'
     _rec_name = 'value'
-    _rec_names_search = ['question_id.title', 'value']
+    _rec_names_search = ('question_id.title', 'value')
     _order = 'question_id, sequence, id'
     _description = 'Survey Label'
 

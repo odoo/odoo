@@ -16,7 +16,7 @@ class MrpBom(models.Model):
     _description = 'Bill of Material'
     _inherit = ['mail.thread', 'product.catalog.mixin']
     _rec_name = 'product_tmpl_id'
-    _rec_names_search = ['product_tmpl_id', 'code']
+    _rec_names_search = ('product_tmpl_id', 'code')
     _order = "sequence, id"
     _check_company_auto = True
 

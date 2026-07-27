@@ -25,7 +25,7 @@ class FleetVehicle(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
     _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
-    _rec_names_search = ['name', 'driver_id.name']
+    _rec_names_search = ('name', 'driver_id.name')
 
     def _get_default_state(self):
         state = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)

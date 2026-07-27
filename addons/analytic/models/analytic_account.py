@@ -15,7 +15,7 @@ class AccountAnalyticAccount(models.Model):
     _order = 'plan_id, name asc'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
-    _rec_names_search = ['name', 'code']
+    _rec_names_search = ('name', 'code')
 
     name = fields.Char(
         string='Analytic Account',

@@ -17,7 +17,7 @@ class SaleOrderLine(models.Model):
         "product.catalog.line.mixin",
     ]
     _description = "Sales Order Line"
-    _rec_names_search = ["name", "order_id.name"]
+    _rec_names_search = ("name", "order_id.name")
     _order = "order_id, sequence, id"
     _check_company_auto = True
 
