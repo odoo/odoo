@@ -1,5 +1,3 @@
-import math
-
 from lxml import etree
 from num2words import num2words
 
@@ -94,20 +92,19 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             }
         document_node['cbc:Note'] = [
             document_node['cbc:Note'],
-            {'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}}
+            {'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_total_signed, self.env.ref('base.TRY')), 'note_attrs': {}}
         ]
         if vals['invoice'].currency_id.name != 'TRY':
-            document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
+            document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_total, vals['invoice'].currency_id), 'note_attrs': {}})
             document_node['cbc:Note'].append({'_text': f'KUR : {self._l10n_tr_get_currency_conversion_rate(invoice):.6f} TL'})
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
-        sign = math.copysign(1.0, amount)
         amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
         amount_decimal_part = round(amount_decimal_part * 100)
 
-        text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
-        text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
+        text_i = num2words(amount_integer_part, lang="tr") or 'Sifir'
+        text_d = num2words(amount_decimal_part, lang="tr") or 'Sifir'
         return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.with_context(lang="tr_TR").currency_subunit_label}'.upper()
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
