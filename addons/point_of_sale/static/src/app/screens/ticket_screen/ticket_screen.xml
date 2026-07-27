@@ -15,7 +15,7 @@
                             onSearch.bind="this.onSearch"
                             onFilterSelected.bind="this.onFilterSelected" />
                         <div class="filter-buttons buttons d-flex gap-1 overflow-auto" t-if="usePreset" t-att-class="{'mt-2 mt-sm-0': this.ui.isSmall}">
-                            <t t-set="presets" t-value="this.pos.models['pos.preset'].getAll()"/>
+                            <t t-set="presets" t-value="this.presetFilterButtons"/>
                             <t t-set="dropdownPresets" t-value="presets.slice(3)"/>
                             <button t-foreach="presets.slice(0, 3)" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
@@ -209,7 +209,7 @@
                                     <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
                                         <i t-attf-class="oi {{this.doPrint.status === 'loading' ? 'oi-fw oi-spin' : ''}} me-1" t-att-data-icon="this.doPrint.status === 'loading' ? 'autorenew' : 'print'"/>Receipt
                                     </button>
-                                    <button t-if="this.pos.canSendReceipt" class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
+                                    <button t-if="this.pos.canSendReceipt" class="control-button send-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
                                         <i class="oi oi-filled me-1" data-icon="send" />Send
                                     </button>
                                 </div>

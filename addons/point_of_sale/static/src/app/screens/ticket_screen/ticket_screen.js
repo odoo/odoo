@@ -525,6 +525,11 @@ export class TicketScreen extends Component {
     get showInvoiceButton() {
         return this.isOrderSynced;
     }
+
+    get presetFilterButtons() {
+        return this.pos.models["pos.preset"].getAll();
+    }
+
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
