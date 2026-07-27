@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 02:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -172,8 +172,8 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any "
 "custom page."
 msgstr ""
-"不能将 “前往网址” 设置为 “/”。若要更改主页内容，请使用网站设置中的“主页网址”"
-"字段，或任何自定义页面上的页面属性。"
+"不能将 “前往网址” 设置为 “/”。若要更改主页内容，请使用网站设置中的“主页网"
+"址”字段，或任何自定义页面上的页面属性。"
 
 #. module: website
 #. odoo-python
@@ -736,19 +736,17 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-"
-"to:info@yourcompany.example.com\" title=\"Send an "
-"email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
+"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mail-"
-"to:info@yourcompany.example.com\" title=\"Send an "
-"email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
+"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" "
-"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
+"com\">info@yourcompany.example.com</a>"
 msgstr ""
 
 #. module: website
@@ -1029,73 +1027,87 @@ msgid "<head> and </body>"
 msgstr "<head> 及 </body>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+"<i class=\"oi oi-1x oi-fw i-filled me-1\" data-icon=\"phone\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
 "small></span>"
 msgstr ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.header_text_element
+msgid ""
+"<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>\n"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
+"small></span>"
+msgstr ""
+"<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
 "small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>͏"
-msgstr "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>͏"
+msgid "<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>͏"
+msgstr "<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>͏"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_kanban_view
-msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"URL\"/>"
-msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"URL\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" title=\"URL\"/"
+">"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
-msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-info-circle me-1\"/>\n"
-"                                Supported formats for social share images "
-"are PNG, JPG, WEBP, or GIF."
-msgstr ""
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" title=\"URL\"/"
+">"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">A password is required to "
 "access this page.</span>"
 msgstr ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">访问此网页需要密码。</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
 msgstr ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">密码错误</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"info\"/>\n"
+"                                Supported formats for social share images "
+"are PNG, JPG, WEBP, or GIF."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-danger\" data-"
+"icon=\"circle\" title=\"Offline\"/>"
+msgstr ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-danger\" data-"
+"icon=\"circle\" title=\"Offline\"/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-success\" data-"
+"icon=\"circle\" title=\"Connected\"/>"
+msgstr ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-success\" data-"
+"icon=\"circle\" title=\"Connected\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_badge
@@ -1359,31 +1371,34 @@ msgstr "<p>附件档案：</p>"
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"attach_money\"/>\n"
 "                        Low Price Guarantee\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-"
-"stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"shopping_basket\"/>\n"
 "                        30 Days Online Returns\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/"
-">\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"local_shipping\"/>\n"
 "                        Standard Shipping\n"
 "                    </small>"
 msgstr ""
 "<small class=\"d-flex align-items-center\">\n"
-"                       <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                       <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"attach_money\"/>\n"
 "                        低价保证\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                       <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-stack "
-"me-1\"/>\n"
+"                       <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"shopping_basket\"/>\n"
 "                        30 天在线退货\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                       <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/>\n"
+"                       <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"local_shipping\"/>\n"
 "                        标准送货\n"
 "                    </small>"
 
@@ -1553,12 +1568,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small>\n"
-"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            <i class=\"oi oi-1x oi-fw oi-filled me-1\" data-"
+"icon=\"mail\"/>\n"
 "                            info@yourcompany.example.com\n"
 "                        </small>"
 msgstr ""
 "<small>\n"
-"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            <i class=\"oi oi-1x oi-fw oi-filled me-1\" data-"
+"icon=\"mail\"/>\n"
 "                            info@yourcompany.example.com\n"
 "                        </small>"
 
@@ -1570,10 +1587,10 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"<small><i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"mail\"/> "
 "info@yourcompany.example.com</small>"
 msgstr ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"<small><i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"mail\"/> "
 "info@yourcompany.example.com</small>"
 
 #. module: website
@@ -2278,9 +2295,9 @@ msgid ""
 "<span invisible=\"website_language_count &lt; 2\">Website visitors see the "
 "version matching their browser language, or the default if unavailable.</"
 "span>\n"
-"                                <span invisible=\"website_language_count "
-"&gt;= 2\">Install multiple languages to enable translation across your "
-"website.</span>"
+"                                <span invisible=\"website_language_count &gt;"
+"= 2\">Install multiple languages to enable translation across your website.</"
+"span>"
 msgstr ""
 
 #. module: website
@@ -7878,8 +7895,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s (%"
-"(format)s)."
+"Entered date or time is not correct! It must be before %(start)s "
+"(%(format)s)."
 msgstr ""
 
 #. module: website
@@ -7909,8 +7926,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and %"
-"(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and "
+"%(end)s (%(format)s)."
 msgstr ""
 
 #. module: website
@@ -9864,6 +9881,11 @@ msgid "Icon"
 msgstr "图标"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_configurator_feature__icon_class
+msgid "Icon Class"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_card
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -9875,6 +9897,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/icon_list_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Icons"
 msgstr "图标"
 
@@ -15356,6 +15379,7 @@ msgstr "我们提供全天候协助，确保问题得到快速解决，使您的
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Rounded"
 msgstr "圆形"
 
@@ -16093,6 +16117,12 @@ msgstr "分享的客户帐号"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Shared Link Auth"
 msgstr "共享链接授权"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+msgid "Sharp"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
@@ -17385,8 +17415,8 @@ msgstr "Instagram 页面名称无效"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid ""
-"The URL “%(url)s“ is contained in the “%(field)s” of the following “%"
-"(model)s”"
+"The URL “%(url)s“ is contained in the “%(field)s” of the following "
+"“%(model)s”"
 msgstr ""
 
 #. module: website
@@ -17474,8 +17504,8 @@ msgstr "以下域名无效："
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %"
-"(allowedMimeTypesLabels)s."
+"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): "
+"%(allowedMimeTypesLabels)s."
 msgstr ""
 
 #. module: website
@@ -17602,8 +17632,8 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 msgid ""
 "The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: %"
-"(transferred_settings)s. Note that these settings are still present on the "
+"settings were copied from the old default website to the new one: "
+"%(transferred_settings)s. Note that these settings are still present on the "
 "old default website."
 msgstr ""
 
@@ -18574,8 +18604,8 @@ msgstr ""
 "        302 暂时移动：浏览器不会保留缓存新 URL，下次再次询问新 URL。\n"
 "        404 未找到：如果您想要删除特定网页/控制器（例如：安装了电子商务，但您"
 "不希望/在特定网站上购物）\n"
-"        308 重定向/重写：如果您想要使用新 URL 重命名控制器。（例如： /shop "
-"-> /花园 - 两个网址都可访问，但 /shop 将自动重定向到 /garden）\n"
+"        308 重定向/重写：如果您想要使用新 URL 重命名控制器。（例如： /shop -"
+"> /花园 - 两个网址都可访问，但 /shop 将自动重定向到 /garden）\n"
 "    "
 
 #. module: website
@@ -20352,10 +20382,9 @@ msgstr "您只能使用以 dynamic_filter_template_ 为前缀的模板 "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing "
-"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
-"chat on our website. Our dedicated team is available 24/7 to assist with any "
-"inquiries or issues."
+"You can reach our customer support team by emailing info@yourcompany.example."
+"com, calling +1 555-555-5556, or using the live chat on our website. Our "
+"dedicated team is available 24/7 to assist with any inquiries or issues."
 msgstr ""
 "您可以发送电子邮件至 info@yourcompany.example.com、致电 +1 555-555-5556，或使"
 "用网站上的即时聊天工具联系我们的客户支持团队。我们的专业团队全天候为您提供服"
@@ -22278,1064 +22307,3 @@ msgstr "✽  披萨"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  我们提供的岗位"
-
-#~ msgid ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">Read More <i class=\"fa fa-"
-#~ "angle-right\" role=\"img\"/></a>"
-#~ msgstr ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">阅读更多 <i class=\"fa fa-"
-#~ "angle-right\" role=\"img\"/></a>"
-
-#~ msgid ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">See our case studies <i "
-#~ "class=\"fa fa-long-arrow-right ms-2\"/></a>"
-#~ msgstr ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">看看我们的案例研究 <i "
-#~ "class=\"fa fa-long-arrow-right ms-2\"/></a>"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  24/7 toll-free "
-#~ "support"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  全天候免费支持"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Access all modules"
-#~ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/>  访问所有模块"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Account management"
-#~ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/>  账户管理"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  All modules &amp; "
-#~ "features"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  所有模块和功能"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Complete CRM for "
-#~ "any team"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  完整 CRM 客户关系管"
-#~ "理工具，适合任何团队"
-
-#~ msgid "<i class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-#~ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/>  电子邮件支持"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Limited "
-#~ "customization"
-#~ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/>  有限定制"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Sales &amp; "
-#~ "marketing for 2"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  销售 &amp; 市场 for "
-#~ "2"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Unlimited CRM "
-#~ "support"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  无限制客户关系管理支"
-#~ "持"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Unlimited "
-#~ "customization"
-#~ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/>  无限定制"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-building-o\" role=\"presentation\"/>\n"
-#~ "                        Office"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-building-o\" role=\"presentation\"/>\n"
-#~ "                        办公室"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
-#~ "                      yourcompany@example.com\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                       +32(0)499 123 456\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                      Brussels, Belgium"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
-#~ "                      yourcompany@example.com\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                       +32(0)499 123 456\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                      比利时布鲁塞尔"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"presentation\"/>\n"
-#~ "                        Email"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"presentation\"/>\n"
-#~ "                        电子邮件"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-phone\" role=\"presentation\"/>\n"
-#~ "                        Phone"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-phone\" role=\"presentation\"/>\n"
-#~ "                        电话"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-times text-danger\" role=\"img\"/>  No customization"
-#~ msgstr "<i class=\"fa fa-times text-danger\" role=\"img\"/>  无定制"
-
-#~ msgid "<i class=\"fa fa-times text-danger\" role=\"img\"/>  No support"
-#~ msgstr "<i class=\"fa fa-times text-danger\" role=\"img\"/>  无支持"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
-#~ "                            <b>Events</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
-#~ "                             <b>活动</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>About us</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>关于我们</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                            <b>Partners</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                           <b>合作伙伴</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Services</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>服务</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
-#~ "                            <b>Help center</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
-#~ "                            <b>帮助中心</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
-#~ "                            <b>Guides</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
-#~ "                            <b>向导</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Our blog</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>我们的博客</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
-#~ "                            <b>Customers</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
-#~ "                            <b>客户</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
-#~ "                            <b>Products</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
-#~ "                            <b>产品</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> Contact us"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> 联系我们"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Free returns"
-#~ msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> 免费退货"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> "
-#~ "Pickup in store"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/>店内"
-#~ "取货"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> Express "
-#~ "delivery"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/>特快专递服务"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  24/7 Support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  全天候支持"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Access all modules"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  访问所有模块"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  All modules &amp; features"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  所有模块和功能"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Complete CRM for any team"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check-circle-o\"/>  适用于任何团队的客户关系管理"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Email support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  电子邮件支持"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Limited Customization"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  有限定制"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  PaaS Access"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  PaaS 访问"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Unlimited CRM support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  无限 CRM 支持"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Unlimited customization"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  无限定制"
-
-#~ msgid ""
-#~ "<span class=\"s_badge badge text-bg-secondary o_animable\" data-"
-#~ "name=\"Badge\" data-vxml=\"001\">\n"
-#~ "        <i class=\"fa fa-fw fa-folder o_not-animable\"/>Category\n"
-#~ "    </span>"
-#~ msgstr ""
-#~ "<span class=\"s_badge badge text-bg-secondary o_animable\" data-"
-#~ "name=\"Badge\" data-vxml=\"001\">\n"
-#~ "        <i class=\"fa fa-fw fa-folder o_not-animable\"/>类别\n"
-#~ "    </span>"
-
-#~ msgid ""
-#~ "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr "继续阅读<i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid ""
-#~ "Discover more <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr "了解更多<i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid "Donation Button"
-#~ msgstr "打赏按钮"
-
-#~ msgid "4 steps"
-#~ msgstr "4 个步骤"
-
-#~ msgid "<b>Add</b> the selected image."
-#~ msgstr "<b>添加</b> 选择的图像."
-
-#~ msgid "<b>Click Edit</b> dropdown"
-#~ msgstr "点击一下<b>编辑</b>下拉菜单"
-
-#~ msgid "<b>Click Edit</b> to start designing your homepage."
-#~ msgstr "<b>点击编辑</b> 开始设计您的主页。"
-
-#~ msgid "<b>Click on a snippet</b> to access its options menu."
-#~ msgstr "<b>单击单片段</b> 可以访问他的选项菜单."
-
-#~ msgid "<b>Click on a text</b> to start editing it."
-#~ msgstr "<b>单击文本</b>可以开始编辑它."
-
-#~ msgid "<b>Click</b> on this column to access its options."
-#~ msgstr "<b>单机</b>此列可以访问它的选项菜单."
-
-#~ msgid "<b>Click</b> on this header to configure it."
-#~ msgstr "<b>单击</b> 此标题可以进行配置"
-
-#~ msgid "<b>Click</b> on this option to change the %s of the block."
-#~ msgstr "<b>单击</b> 此选项可以改变构建块的 %s"
-
-#~ msgid ""
-#~ "<b>Customize</b> any block through this menu. Try to change the "
-#~ "background color of this block."
-#~ msgstr "通过此菜单<b>自定义</b> 任何构建块。尝试修改此部件背景色。"
-
-#~ msgid ""
-#~ "<b>Customize</b> any block through this menu. Try to change the "
-#~ "background image of this block."
-#~ msgstr ""
-#~ "通过此菜单可以<b>自定义</b> 任何构建块. 尝试更改此部件的图像背景颜色."
-
-#~ msgid ""
-#~ "<b>Double click on an image</b> to change it with one of your choice."
-#~ msgstr "<b>双击图像</b>可以选择其他的图像."
-
-#~ msgid "<b>Select</b> a %s."
-#~ msgstr "<b>选择</b> 一个 %s."
-
-#~ msgid "<b>Select</b> a Color Palette."
-#~ msgstr "<b>选择</b> 调色板"
-
-#~ msgid "<b>Slide</b> this button to change the %s padding"
-#~ msgstr "<b>滑动</b>此按钮可以更改  %s 的内边距"
-
-#~ msgid "<b>Slide</b> this button to change the column size."
-#~ msgstr "<b>滑动</b> 此按钮可以改变这列的尺寸."
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">下一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">下一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">下一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Previous</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">上一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">上一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                    <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                    <span class=\"visually-hidden\">上一个</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">上一个</span>"
-
-#~ msgid "A PUNCHY HEADLINE"
-#~ msgstr "响亮的标题"
-
-#~ msgid "About"
-#~ msgstr "关于"
-
-#~ msgid "About Me"
-#~ msgstr "关于我"
-
-#~ msgid ""
-#~ "Achieve holistic health with personalized nutritional advice that "
-#~ "complements your workouts, promoting overall well-being."
-#~ msgstr ""
-#~ "通过个性化的营养建议实现全面健康，与您的锻炼相辅相成，促进整体健康。"
-
-#~ msgid "Activating the last features."
-#~ msgstr "正在启用最新功能。"
-
-#~ msgid "Activating your %s."
-#~ msgstr "正在启用您的%s。"
-
-#~ msgid "Adding features."
-#~ msgstr "添加功能。"
-
-#~ msgid ""
-#~ "Adjust volume, skip tracks, answer calls, and activate voice assistants "
-#~ "with a simple tap, keeping your hands free and your focus on what matters "
-#~ "most."
-#~ msgstr ""
-#~ "只需轻点一下，就能调节音量、跳过曲目、接听电话和激活语音助手，让您解放双"
-#~ "手，专注于最重要的事情。"
-
-#~ msgid "All You Can Eat"
-#~ msgstr "吃到饱"
-
-#~ msgid "All-Day Comfort"
-#~ msgstr "全天候舒适体验"
-
-#~ msgid "Amazing Sound Quality"
-#~ msgstr "令人惊叹的音质"
-
-#~ msgid "Backend"
-#~ msgstr "后端"
-
-#~ msgid "Basic"
-#~ msgstr "基础的"
-
-#~ msgid "Beef Carpaccio, Filet Mignon 8oz and Cheesecake"
-#~ msgstr "卡帕奇牛肉、8 盎司菲力牛排和芝士蛋糕"
-
-#~ msgid "Book your table today"
-#~ msgstr "今天就预订餐桌"
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to it. That "
-#~ "way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "不过，删除页面之前，请记得更新所有连向该页的链接，以免客户误进那不太讨好"
-#~ "的 “404” 错误页面。"
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to them. "
-#~ "That way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "不过，删除页面之前，请记得更新所有连向该些页面的链接，以免客户误进那不太讨"
-#~ "好的 “404” 错误页面。"
-
-#~ msgid ""
-#~ "By Crafting unique and compelling brand identities that leave a lasting "
-#~ "impact."
-#~ msgstr "打造独一无二、引人入胜的品牌形象，留下持久的影响。"
-
-#~ msgid "Carousel indicator"
-#~ msgstr "轮播指示器"
-
-#~ msgid "Choose"
-#~ msgstr "选择"
-
-#~ msgid "Click here to go back to block tab."
-#~ msgstr "点击此处返回构建块页卡。"
-
-#~ msgid "Click on the <b>%s</b> building block."
-#~ msgstr "点击<b>%s</b>构建块。"
-
-#~ msgid "Click on the <b>%s</b> category."
-#~ msgstr "点击 <b>%s</b> 类别。"
-
-#~ msgid "Clients"
-#~ msgstr "客户"
-
-#~ msgid "Coming Soon"
-#~ msgstr "即将推出"
-
-#~ msgid "Configuring your %s."
-#~ msgstr "正在设置您的%s。"
-
-#~ msgid "Consulting"
-#~ msgstr "咨询"
-
-#~ msgid ""
-#~ "Contact us today to embark on your path to a healthier, more vibrant you. "
-#~ "Your fitness journey begins here."
-#~ msgstr ""
-#~ "立即与我们联系，踏上更健康、更有活力的新旅程。您的健身之旅由此开始。"
-
-#~ msgid "Crafting Your Digital Success Story"
-#~ msgstr "打造您的数字成功故事"
-
-#~ msgid "Crystal Clear Sound"
-#~ msgstr "水晶般清晰的声音"
-
-#~ msgid "Designed to provide an immersive audio experience on the go."
-#~ msgstr "专为在旅途中提供身临其境的音频体验而设计。"
-
-#~ msgid "Detect"
-#~ msgstr "检测"
-
-#~ msgid "Digital Consulting Expertise"
-#~ msgstr "数字咨询专长"
-
-#~ msgid "Discover New <strong>Opportunities</strong>"
-#~ msgstr "发现新的<strong>商机</strong>"
-
-#~ msgid "Discover Our Univers"
-#~ msgstr "了解我们的大学"
-
-#~ msgid ""
-#~ "Discover our comprehensive marketing service designed to amplify your "
-#~ "brand's reach and impact."
-#~ msgstr "了解我们旨在扩大您的品牌影响力的综合营销服务。"
-
-#~ msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
-#~ msgstr "拖拽 <b>%s</b> 内容块，并放置在页面的最底部。"
-
-#~ msgid "EchoTunes Wireless Earbuds"
-#~ msgstr "EchoTunes 无线耳机"
-
-#~ msgid ""
-#~ "EchoTunes comes with customizable ear tip sizes that provide a secure and "
-#~ "comfortable fit."
-#~ msgstr "EchoTunes 配有可定制的耳塞尺寸，佩戴安全舒适。"
-
-#~ msgid "Elevate Your Audio Journey Today"
-#~ msgstr "今天就提升您的音频之旅"
-
-#~ msgid "Elevate Your Brand With Us"
-#~ msgstr "与我们一起提升您的品牌"
-
-#~ msgid ""
-#~ "Embark on a journey through time as we share the story of our humble "
-#~ "beginnings. What started as a simple idea in a garage has evolved into an "
-#~ "innovative force in the industry."
-#~ msgstr ""
-#~ "踏上时间之旅，我们将与您分享我们的创业故事。从车库中的一个简单想法开始，我"
-#~ "们已经发展成为行业中的一股创新力量。"
-
-#~ msgid ""
-#~ "Empowering your business through strategic digital insights and expertise."
-#~ msgstr "通过战略性数字洞察力和专业知识为您的业务赋能。"
-
-#~ msgid "Enabling your %s."
-#~ msgstr "正在启用您的%s。"
-
-#~ msgid "Enhance Your <strong>Experience</strong>"
-#~ msgstr "增强<strong>体验</strong>"
-
-#~ msgid "Every Friday From 6PM to 7PM !"
-#~ msgstr "每周五下午 6 点至 7 点！"
-
-#~ msgid ""
-#~ "Experience a digital transformation like never before with our range of "
-#~ "innovative solutions, designed to illuminate your brand's potential."
-#~ msgstr ""
-#~ "我们的一系列创新解决方案旨在激发您的品牌潜力，让您体验前所未有的数字化转"
-#~ "型。"
-
-#~ msgid ""
-#~ "Experience the power of our software without breaking the bank – choose a "
-#~ "plan that suits you best and start unlocking its full potential today."
-#~ msgstr ""
-#~ "体验我们软件的强大功能，无需破费--选择最适合您的计划，现在就开始释放它的全"
-#~ "部潜能。"
-
-#~ msgid "Experienced fullstack developer."
-#~ msgstr "经验丰富的全栈开发人员。"
-
-#~ msgid ""
-#~ "Experienced in effective project management, adept at leading cross-"
-#~ "functional teams and delivering successful outcomes with a strategic "
-#~ "approach."
-#~ msgstr ""
-#~ "在有效的项目管理方面经验丰富，善于领导跨职能团队，并以战略方法取得成功。"
-
-#~ msgid ""
-#~ "Explore our captivating gallery, a visual journey showcasing our finest "
-#~ "work and creative projects. Immerse yourself in a collection of images "
-#~ "that capture the essence of our craftsmanship, innovation, and dedication "
-#~ "to excellence."
-#~ msgstr ""
-#~ "探索我们迷人的画廊，这是一次展示我们最优秀作品和创意项目的视觉之旅。您将沉"
-#~ "浸在这些能捕捉到我们的精湛工艺、创新精神和卓越奉献的图片中。"
-
-#~ msgid ""
-#~ "Founder and chief visionary, Tony is the driving force behind the "
-#~ "company. He loves to keep his hands full by participating in the "
-#~ "development of the software, marketing, and customer experience "
-#~ "strategies."
-#~ msgstr ""
-#~ "托尼是公司的创始人和首席远见者，也是公司背后的推动力。他热衷于参与软件开"
-#~ "发、市场营销和客户体验战略，从而让自己的工作变得更加充实。"
-
-#~ msgid ""
-#~ "Founder, Tony is the driving force behind the company. He loves to keep "
-#~ "his hands full by participating in the development of the software, "
-#~ "marketing, and UX strategies."
-#~ msgstr ""
-#~ "公司创始人托尼是公司的幕后推手。他热衷于参与软件开发、市场营销和用户体验战"
-#~ "略，让自己的双手变得充实。"
-
-#~ msgid ""
-#~ "Founder, Tony is the driving force behind the company. He loves to keep "
-#~ "his hands full by participating in the development of the software, "
-#~ "marketing, and customer experience."
-#~ msgstr ""
-#~ "公司创始人托尼是公司的幕后推手。他热衷于参与软件开发、市场营销和客户体验，"
-#~ "从而让自己的双手变得充实。"
-
-#~ msgid ""
-#~ "From SEO to social media, we create campaigns that not only get you "
-#~ "noticed but also drive engagement and conversions."
-#~ msgstr ""
-#~ "从搜索引擎优化到社交媒体，我们创建的活动不仅能让您受到关注，还能推动参与度"
-#~ "和转化率。"
-
-#~ msgid ""
-#~ "From revitalizing your visual identity to realigning your messaging for "
-#~ "the digital landscape, we'll guide you through a strategic process that "
-#~ "ensures your brand remains relevant and resonates with your audience."
-#~ msgstr ""
-#~ "从重塑您的视觉形象到重新调整您的信息以适应数字环境，我们将指导您完成一个战"
-#~ "略过程，确保您的品牌保持相关性并与受众产生共鸣。"
-
-#~ msgid "Frontend"
-#~ msgstr "前端"
-
-#~ msgid "Go to the Theme tab"
-#~ msgstr "转到主题选项卡"
-
-#~ msgid "Good job! It's time to <b>Save</b> your work."
-#~ msgstr "做得好！是时候<b>保存</b>您的工作了。"
-
-#~ msgid ""
-#~ "Great stories are <b>for everyone</b> even when only written <b>for just "
-#~ "one person</b>. If you try to write with a wide, general audience in "
-#~ "mind, your story will sound fake and lack emotion. No one will be "
-#~ "interested. Write for one person. If it’s genuine for the one, it’s "
-#~ "genuine for the rest."
-#~ msgstr ""
-#~ "伟大的故事适合<b>每个人</b>，<b>即使只写给一个人</b>。如果您试图在写作时考"
-#~ "虑到广泛的普通读者，您的故事听起来会很假，而且缺乏情感。没有人会感兴趣。为"
-#~ "一个人写。如果对一个人来说是真的，那么对其他人来说也是真的。"
-
-#~ msgid ""
-#~ "Great stories have a <b>personality</b>. Consider telling a great story "
-#~ "that provides personality. Writing a story with personality for potential "
-#~ "clients will assist with making a relationship connection. This shows up "
-#~ "in small quirks like word choices or phrases. Write from your point of "
-#~ "view, not from someone else's experience."
-#~ msgstr ""
-#~ "伟大的故事有<b>个性</b>。考虑讲一个提供个性的好故事。为潜在客户写一个有个"
-#~ "性的故事将有助于建立关系。这会出现在单词选择或短语等小怪癖中。从您的角度"
-#~ "写，而不是从别人的经验。"
-
-#~ msgid "Growth Rate"
-#~ msgstr "增长率"
-
-#~ msgid "Happy Hour"
-#~ msgstr "欢乐时光"
-
-#~ msgid "Hello, I'm Tony Fred"
-#~ msgstr "你好，我是托尼-弗雷德"
-
-#~ msgid ""
-#~ "I'm a fullstack developer with a background in management. My analytical "
-#~ "skills, coupled with effective communication, enable me to lead cross-"
-#~ "functional teams to success."
-#~ msgstr ""
-#~ "我是一名具有管理背景的全栈开发人员。我的分析能力和有效的沟通使我能够领导跨"
-#~ "职能团队取得成功。"
-
-#~ msgid "Installing your %s."
-#~ msgstr "正在安装您的%s。"
-
-#~ msgid "Integrating your %s."
-#~ msgstr "正在整合您的%s。"
-
-#~ msgid "Intuitive Touch Controls"
-#~ msgstr "直观的触摸控制"
-
-#~ msgid ""
-#~ "It's time to elevate your fitness journey with coaching that's as unique "
-#~ "as you are. Choose your path, embrace the guidance, and transform your "
-#~ "life."
-#~ msgstr ""
-#~ "是时候通过与你一样独特的指导来提升你的健身之旅了。选择你的道路，接受指导，"
-#~ "改变你的生活。"
-
-#~ msgid ""
-#~ "Join us for a remarkable dining experience that blends exquisite flavors "
-#~ "with a warm ambiance."
-#~ msgstr "请与我们一起，体验精致美味与温馨氛围相融合的非凡用餐体验。"
-
-#~ msgid "Landing Pages"
-#~ msgstr "着陆页面"
-
-#~ msgid ""
-#~ "Let's collaborate to create innovative solutions that stand out in the "
-#~ "digital landscape. Reach out today and let's build something "
-#~ "extraordinary together."
-#~ msgstr ""
-#~ "让我们携手合作，共同打造在数字领域脱颖而出的创新解决方案。今天就联系我们，"
-#~ "让我们一起创造非凡。"
-
-#~ msgid "Let's do it"
-#~ msgstr "让我们开始吧"
-
-#~ msgid ""
-#~ "Let's turn your vision into reality. Contact us today to set your brand "
-#~ "on the path to digital excellence with us."
-#~ msgstr ""
-#~ "让我们将您的愿景变为现实。现在就联系我们，与我们一起将您的品牌推向数字卓越"
-#~ "之路。"
-
-#~ msgid "Management"
-#~ msgstr "管理"
-
-#~ msgid "Marketing"
-#~ msgstr "营销"
-
-#~ msgid ""
-#~ "Mastering frontend craftsmanship with expertise in HTML, CSS, and "
-#~ "JavaScript to craft captivating and responsive user experiences."
-#~ msgstr ""
-#~ "掌握 HTML、CSS 和 JavaScript 方面的专业知识，精通前端工艺，打造迷人的响应"
-#~ "式用户体验。"
-
-#~ msgid "Mediterranean buffet of starters, main dishes and desserts"
-#~ msgstr "由开胃菜、主菜和甜点组成的地中海自助餐"
-
-#~ msgid "Meet The Team"
-#~ msgstr "认识团队"
-
-#~ msgid "Menu One"
-#~ msgstr "菜单一"
-
-#~ msgid "Menu Two"
-#~ msgstr "菜单二"
-
-#~ msgid ""
-#~ "Mich loves taking on challenges. With his multi-year experience as "
-#~ "Commercial Director in the software industry, Mich has helped the company "
-#~ "to get where it is today."
-#~ msgstr ""
-#~ "Mich 喜欢接受挑战。凭借在软件行业担任多年商务总监的经验，Mich 帮助公司取得"
-#~ "了今天的成就。"
-
-#~ msgid "Multi Website Published Mixin"
-#~ msgstr "多网站发布的Mixin"
-
-#~ msgid "My Skills"
-#~ msgstr "我的技能"
-
-#~ msgid "Nutritional Guidance"
-#~ msgstr "营养指导"
-
-#~ msgid "OR"
-#~ msgstr "或"
-
-#~ msgid "On-the-Go Charging"
-#~ msgstr "随身充电"
-
-#~ msgid "Our Approach"
-#~ msgstr "我们的方法"
-
-#~ msgid ""
-#~ "Our Coaching combines personalized fitness plans with mindfulness "
-#~ "practices, ensuring you achieve harmony in your body and peace in your "
-#~ "mind."
-#~ msgstr ""
-#~ "我们的教练将个性化的健身计划与正念练习相结合，确保您的身体和谐，心灵平静。"
-
-#~ msgid "Our Goals"
-#~ msgstr "我们的目标"
-
-#~ msgid "Our Menus"
-#~ msgstr "我们的菜单"
-
-#~ msgid "Our Mission"
-#~ msgstr "我们的使命"
-
-#~ msgid "Our Offer"
-#~ msgstr "我们的报价"
-
-#~ msgid "Our Offices"
-#~ msgstr "我们的办公室"
-
-#~ msgid "Our Story"
-#~ msgstr "我们的故事"
-
-#~ msgid "Our Values"
-#~ msgstr "我们的价值观"
-
-#~ msgid ""
-#~ "Our experienced fitness coaches design workouts that align with your "
-#~ "goals, fitness level, and preferences."
-#~ msgstr "我们经验丰富的健身教练会根据您的目标、健身水平和喜好设计健身计划。"
-
-#~ msgid ""
-#~ "Our mission is to create transformative experiences and foster growth, "
-#~ "driven by a relentless pursuit of innovation and a commitment to "
-#~ "exceeding expectations."
-#~ msgstr ""
-#~ "我们的使命是在不懈追求创新和致力于超越期望的驱动下，创造变革性体验并促进增"
-#~ "长。"
-
-#~ msgid ""
-#~ "Our seasoned consultants provide tailored guidance, leveraging their deep "
-#~ "industry knowledge to analyze your current strategies, identify "
-#~ "opportunities, and formulate data-driven recommendations."
-#~ msgstr ""
-#~ "我们经验丰富的顾问利用其深厚的行业知识，为您提供量身定制的指导，分析您当前"
-#~ "的战略，识别机遇，并制定以数据为导向的建议。"
-
-#~ msgid ""
-#~ "Our software plans are designed to cater to a variety of needs, ensuring "
-#~ "that you find the perfect fit for your requirements. From individual "
-#~ "users to businesses of all sizes, we offer pricing options that provide "
-#~ "exceptional value without compromising on features or performance."
-#~ msgstr ""
-#~ "我们的软件计划专为满足各种需求而设计，确保您能找到最适合自己要求的计划。从"
-#~ "个人用户到各种规模的企业，我们都能提供超值的定价选项，而不会在功能或性能上"
-#~ "打折扣。"
-
-#~ msgid ""
-#~ "Our values shape our culture, influence our decisions, and guide us in "
-#~ "providing exceptional service. They reflect our dedication to integrity, "
-#~ "collaboration, and client satisfaction."
-#~ msgstr ""
-#~ "我们的价值观塑造着我们的文化，影响着我们的决策，并指导我们提供卓越的服务。"
-#~ "它们反映了我们对诚信、协作和客户满意度的执着追求。"
-
-#~ msgid "Personalized Fitness"
-#~ msgstr "个性化健身"
-
-#~ msgid "Personalized Workouts"
-#~ msgstr "个性化锻炼"
-
-#~ msgid "Pricing Plans"
-#~ msgstr "价格方案"
-
-#~ msgid ""
-#~ "Proficient in backend development, specializing in Python, Django, and "
-#~ "database management to create efficient and scalable solutions."
-#~ msgstr ""
-#~ "精通后端开发，擅长 Python、Django 和数据库管理，以创建高效、可扩展的解决方"
-#~ "案。"
-
-#~ msgid "Progress Tracking"
-#~ msgstr "进度跟踪"
-
-#~ msgid "Public User"
-#~ msgstr "公众用户"
-
-#~ msgid "Punycode Domain"
-#~ msgstr "域名代码"
-
-#~ msgid "Questions?"
-#~ msgstr "有疑问？"
-
-#~ msgid "Ready to Embrace Your Fitness Journey?"
-#~ msgstr "准备好迎接您的健身之旅？"
-
-#~ msgid "Ready to bring your digital vision to life?"
-#~ msgstr "准备好实现您的数字化愿景了吗？"
-
-#~ msgid "Ready to embark on a journey of digital transformation?"
-#~ msgstr "准备好踏上数字化转型之旅了吗？"
-
-#~ msgid ""
-#~ "Ready to embark on your auditory adventure? Order your EchoTunes Wireless "
-#~ "Earbuds today and let the symphony begin."
-#~ msgstr ""
-#~ "准备好开始听觉探险了吗？今天就订购 EchoTunes 无线耳机，让交响乐开始吧。"
-
-#~ msgid "Rebranding"
-#~ msgstr "品牌重塑"
-
-#~ msgid "Record Rule"
-#~ msgstr "规则"
-
-#~ msgid "Secure and Comfortable Fit"
-#~ msgstr "安全舒适"
-
-#~ msgid "Setting up your %s."
-#~ msgstr "正在设置您的%s。"
-
-#~ msgid ""
-#~ "Step into our past and witness the transformation of a simple idea into "
-#~ "an innovative force. Our journey, born in a garage, reflects the power of "
-#~ "passion and hard work."
-#~ msgstr ""
-#~ "走进我们的过去，见证从一个简单的想法到创新力量的转变。我们在车库中诞生的历"
-#~ "程，体现了激情和勤奋的力量。"
-
-#~ msgid "Strategic Marketing Solutions"
-#~ msgstr "战略营销解决方案"
-
-#~ msgid "Strength Training:"
-#~ msgstr "力量训练："
-
-#~ msgid "Team spotlight"
-#~ msgstr "团队焦点"
-
-#~ msgid ""
-#~ "The compact charging case offers convenient on-the-go charging with a "
-#~ "battery life that lasts up to 17h, you can enjoy your favorite tunes "
-#~ "without interruption."
-#~ msgstr ""
-#~ "小巧的充电盒可提供方便的随身充电功能，电池寿命长达 17 小时，让您可以不间断"
-#~ "地享受最喜爱的音乐。"
-
-#~ msgid ""
-#~ "This coaching program offers specialized strength-focused workouts, "
-#~ "nutrition guidance, and expert coaching. Elevate your fitness level and "
-#~ "achieve feats you never thought possible."
-#~ msgstr ""
-#~ "该辅导计划提供专门的力量训练、营养指导和专家辅导。提升你的健身水平，实现你"
-#~ "从未想过的壮举。"
-
-#~ msgid "Transform Your Brand"
-#~ msgstr "改造您的品牌"
-
-#~ msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
-#~ msgstr "蔬菜沙拉、牛肉汉堡和芒果冰淇淋"
-
-#~ msgid "View more themes"
-#~ msgstr "查看更多主题"
-
-#~ msgid "We Are Coming Soon"
-#~ msgstr "我们即将到来"
-
-#~ msgid "We Are Down for Maintenance"
-#~ msgstr "停机维护"
-
-#~ msgid ""
-#~ "We believe that every fitness journey is unique. Our approach begins with "
-#~ "understanding your fitness aspirations, your current lifestyle, and any "
-#~ "challenges you face."
-#~ msgstr ""
-#~ "我们相信，每一段健身旅程都是独一无二的。我们的方法首先是了解您的健身愿望、"
-#~ "您目前的生活方式以及您面临的任何挑战。"
-
-#~ msgid "We found these links:"
-#~ msgstr "我们找到这些链接："
-
-#~ msgid ""
-#~ "We monitor your progress meticulously, adjusting your plan as needed to "
-#~ "ensure continuous improvement and results."
-#~ msgstr ""
-#~ "我们会认真监测您的进展，根据需要调整计划，以确保不断改进并取得成果。"
-
-#~ msgid ""
-#~ "We're driven by the aspiration to redefine industry standards, to exceed "
-#~ "the expectations of our clients, and to foster a culture of continuous "
-#~ "growth."
-#~ msgstr ""
-#~ "我们渴望重新定义行业标准，超越客户的期望，并培养一种持续增长的文化。"
-
-#~ msgid "Website Domain should be unique."
-#~ msgstr "网站域必须是唯一的"
-
-#~ msgid "Weight Loss Transformation"
-#~ msgstr "减肥转型"
-
-#~ msgid ""
-#~ "Welcome to our comprehensive range of Tailored Fitness Coaching Services, "
-#~ "with personalized workouts, customized nutrition plans, and unwavering "
-#~ "support, we're committed to helping you achieve lasting results that "
-#~ "align with your aspirations."
-#~ msgstr ""
-#~ "欢迎使用我们全方位的定制健身指导服务，通过个性化锻炼、定制营养计划和坚定不"
-#~ "移的支持，我们致力于帮助您实现与您的愿望相一致的持久效果。"
-
-#~ msgid "Wellness Coaching"
-#~ msgstr "健康辅导"
-
-#~ msgid "What Makes Me Proud"
-#~ msgstr "让我自豪的是"
-
-#~ msgid "Wireless Freedom"
-#~ msgstr "无线自由"
-
-#~ msgid ""
-#~ "With personalized fitness plans, tailored nutrition guidance, and "
-#~ "consistent support, you'll shed unwanted pounds while building healthy "
-#~ "habits that last."
-#~ msgstr ""
-#~ "通过个性化的健身计划、量身定制的营养指导和始终如一的支持，您将减掉多余的体"
-#~ "重，同时养成持久的健康习惯。"
-
-#~ msgid ""
-#~ "Your brand is your story. We help you tell it through cohesive visual "
-#~ "identity and messaging that resonates with your audience."
-#~ msgstr ""
-#~ "您的品牌就是您的故事。我们帮助您通过具有凝聚力的视觉识别和信息传递来讲述您"
-#~ "的故事，引起受众的共鸣。"
-
-#~ msgid "a new image"
-#~ msgstr "一张新的图像"
-
-#~ msgid "blog"
-#~ msgstr "博客"
-
-#~ msgid "develop the brand"
-#~ msgstr "发展品牌"
-
-#~ msgid "e-learning platform"
-#~ msgstr "在线学习平台"
-
-#~ msgid "e.g. /my-awesome-page"
-#~ msgstr "例如 /my-awesome-page"
-
-#~ msgid "forum"
-#~ msgstr "论坛"
-
-#~ msgid "get leads"
-#~ msgstr "获得线索"
-
-#~ msgid "inform customers"
-#~ msgstr "通知客户"
-
-#~ msgid "online appointment system"
-#~ msgstr "网上预约系统"
-
-#~ msgid "online store"
-#~ msgstr "在线商店"
-
-#~ msgid "perfect website?"
-#~ msgstr "完美的网站？"
-
-#~ msgid "recruitment platform"
-#~ msgstr "招聘平台"
-
-#~ msgid "schedule appointments"
-#~ msgstr "安排约会"
-
-#~ msgid "sell more"
-#~ msgstr "销售更多"
-
-#~ msgid ""
-#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
-#~ "experience on this website.</span>\n"
-#~ "                                            <a href=\"/cookie-policy\" "
-#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-#~ "o_translate_inline\">Cookie Policy</a>"
-#~ msgstr ""
-#~ "<span class=\"pe-1\">我们使用 cookie 为你提供更好的网站使用体验。</span>\n"
-#~ "                                            <a href=\"/cookie-policy\" "
-#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-#~ "o_translate_inline\">Cookie 政策</a>"
-
-#~ msgid "The language of the keyword and related keywords."
-#~ msgstr "关键字和相关关键字的语言。"
-
-#~ msgid "Google Analytics"
-#~ msgstr "谷歌 分析"
-
-#~ msgid "How to get my Measurement ID"
-#~ msgstr "如何获取我的计量单位 ID"
-
-#~ msgid "Measurement ID or Tag"
-#~ msgstr "量度识别码或标签"
-
-#~ msgid "Track visits using Google Analytics or Google Tag Manager"
-#~ msgstr "使用 Google Analytics 或 Google Tag Manager 追踪浏览情况"
-
-#~ msgid "UTM Campaign"
-#~ msgstr "UTM营销"
-
-#~ msgid "UTM Medium"
-#~ msgstr "UTM媒介"
-
-#~ msgid "UTM Source"
-#~ msgstr "UTM来源"

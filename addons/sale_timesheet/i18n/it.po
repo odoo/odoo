@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 19:21+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
@@ -103,8 +103,8 @@ msgid ""
 "timesheet."
 msgstr ""
 "Piano/i analitico/i \"%(missing_plan_names)s\" richiesto/i per la "
-"distribuzione analitica dell'articolo dell'ordine di vendita \"%"
-"(so_line_name)s\" collegato al foglio ore."
+"distribuzione analitica dell'articolo dell'ordine di vendita "
+"\"%(so_line_name)s\" collegato al foglio ore."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -165,7 +165,7 @@ msgstr "<b>Prezzo unitario: </b>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
-"<i class=\"fa fa-lightbulb-o\"/>\n"
+"<i class=\"oi\" data-icon=\"lightbulb\"/>\n"
 "                        <span>\n"
 "                            Define the rate at which an employee's time is "
 "billed based on their expertise, skills, or experience.\n"
@@ -173,24 +173,13 @@ msgid ""
 "create separate sales order items.\n"
 "                        </span>"
 msgstr ""
-"<i class=\"fa fa-lightbulb-o\"/>\n"
+"<i class=\"oi\" data-icon=\"lightbulb\"/>\n"
 "                        <span>\n"
 "                            Definisci la tariffa per la fatturazione del "
 "tempo di un dipendente in base a esperienza e competenze.\n"
 "                            Per fatturare lo stesso servizio con tariffe "
 "diverse è necessario creare differenti articoli dell'ordine di vendita.\n"
 "                        </span>"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this timesheet entry has been cancelled.\" "
-"invisible=\"sale_order_state != 'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this timesheet entry has been cancelled.\" "
-"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -207,6 +196,17 @@ msgstr "<span class=\"o_stat_text\">Registrate</span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Ordine di Vendita</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -1703,25 +1703,3 @@ msgstr "delle ore vendute."
 #: code:addons/sale_timesheet/models/account_move.py:0
 msgid "project_id"
 msgstr "project_id"
-
-#~ msgid "remaining"
-#~ msgstr "rimanente"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\">Timesheets without a sales order item are "
-#~ "reported as</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\">I fogli ore senza una voce dell'ordine di "
-#~ "vendita vengono segnalati come</span>"
-
-#~ msgid "- Timesheet product"
-#~ msgstr "- Prodotto foglio ore"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "Ricavi (Tempo e materiale)"
-
-#~ msgid "S0001"
-#~ msgstr "S0001"
-
-#~ msgid "Timesheets for the"
-#~ msgstr "Fogli ore per il"

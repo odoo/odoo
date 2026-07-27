@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-22 01:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/mail/"
@@ -310,10 +310,10 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
-"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people%"
-"(new_line)s%(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
-"(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
-"(bold_start)s:emoji:%(bold_end)s to insert an emoji"
+"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple "
+"people%(new_line)s%(bold_start)s/command%(bold_end)s to run a "
+"command%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned "
+"response%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
 
 #. module: mail
@@ -387,11 +387,11 @@ msgstr "%(user1)s, %(user2)s a další píší..."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
-"(strong_end)s channel."
+"%(user_name)s has invited you to the "
+"%(strong_start)s%(channel_name)s%(strong_end)s channel."
 msgstr ""
-"%(user_name)s vás pozval/a do kanálu %(strong_start)s%(channel_name)s%"
-"(strong_end)s."
+"%(user_name)s vás pozval/a do kanálu "
+"%(strong_start)s%(channel_name)s%(strong_end)s."
 
 #. module: mail
 #. odoo-python
@@ -673,91 +673,94 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid ""
-"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
-"title=\"to\"/>"
+"<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
+"out_of_office_from\" title=\"to\"/>"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-calendar\" title=\"Due date\"/>"
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
+"title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
-msgid "<i class=\"fa fa-check\"/> Done"
-msgstr "<i class=\"fa fa-check\"/> Hotovo"
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Assigned to\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Note\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Role\" "
+"aria-label=\"Role\" style=\"font-size: 12px;\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
 msgid ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
-"title=\"Steps count\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"Steps count\" title=\"Steps count\"/>"
 msgstr ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
-"title=\"Steps count\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"Steps count\" title=\"Steps count\"/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
+msgid "<i class=\"oi\" data-icon=\"check\"/> Done"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> Hotovo"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"To "
+"Assign\" aria-label=\"To Assign\" style=\"font-size: 12px;\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"oi\" data-icon=\"label\" title=\"Summary\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"login\" role=\"img\"/> Join"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> Leave"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "<i class=\"oi\" data-icon=\"oi_odoo\" title=\"Link to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
-msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-hourglass-end\" role=\"img\" title=\"To Assign\" aria-"
-"label=\"To Assign\" style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-sticky-note pt-1\" title=\"Note\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-tag\" title=\"Summary\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-user mb-2\" title=\"Assigned to\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-users mb-2\" role=\"img\" title=\"Role\" aria-"
-"label=\"Role\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-users\" role=\"img\" title=\"Role\" aria-label=\"Role\" "
-"style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "<i class=\"oi oi-odoo\" title=\"Link to\"/>"
-msgstr ""
+msgid "<i class=\"oi\" data-icon=\"public\" aria-label=\"Document url\"/>"
+msgstr "<i class=\"oi\" data-icon=\"public\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. odoo-javascript
@@ -1723,23 +1726,23 @@ msgstr "Alias"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
+"%(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) je už propojen s %"
-"(alias_model_name)s (%(matching_id)s) a používán přes %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) je už propojen s "
+"%(alias_model_name)s (%(matching_id)s) a používán přes %(parent_name)s "
+"%(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) je už propojen s %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) je už propojen s "
+"%(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -2004,8 +2007,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid ""
-"Are you sure you want to remove %(member_name)s from the members of '%"
-"(channel_name)s'?"
+"Are you sure you want to remove %(member_name)s from the members of "
+"'%(channel_name)s'?"
 msgstr ""
 
 #. module: mail
@@ -2444,8 +2447,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Blokováno smazáním účtu portálu %(portal_user_name)s přes %(user_name)s (#%"
-"(user_id)s)"
+"Blokováno smazáním účtu portálu %(portal_user_name)s přes %(user_name)s "
+"(#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -2547,11 +2550,11 @@ msgstr "Bounce e-maily by měly být jedinečný"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid ""
-"Bounce/Catchall '%(matching_alias_name)s' is already used by %"
-"(document_name)s. Choose another alias or change it on the other document."
+"Bounce/Catchall '%(matching_alias_name)s' is already used by "
+"%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' se již používá pro%"
-"(document_name)s. Použijte jiný alias nebo změňte jej na jiný dokument."
+"Bounce/Catchall '%(matching_alias_name)s' se již používá "
+"pro%(document_name)s. Použijte jiný alias nebo změňte jej na jiný dokument."
 
 #. module: mail
 #. odoo-python
@@ -2828,8 +2831,8 @@ msgstr "Rychlá odpověď"
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
 msgid ""
 "Canned response that will automatically be substituted with longer content "
-"in your messages. Type '::' followed by the name of your shortcut "
-"(e.g. ::hello) to use in your messages."
+"in your messages. Type '::' followed by the name of your shortcut (e.g. ::"
+"hello) to use in your messages."
 msgstr ""
 "Rychlá odpověď, která bude automaticky nahrazena delším obsahem ve vašich "
 "zprávách. Do zprávy zadejte „::“ následované názvem zkratky (např. ::hello)."
@@ -5663,18 +5666,6 @@ msgid "Following"
 msgstr "Odběr zpráv"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
-#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
-#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
-#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona v rámci awesome font, např. fa-tasks"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
@@ -5719,12 +5710,12 @@ msgstr "Po dobu 8 hodin"
 #: model:ir.model.fields,help:mail.field_ir_cron__value
 msgid ""
 "For Python expressions, this field may hold a Python expression that can use "
-"the same values as for the code field on the server action,e.g. "
-"`env.user.name` to set the current user's name as the value or `record.id` "
-"to set the ID of the record on which the action is run.\n"
+"the same values as for the code field on the server action,e.g. `env.user."
+"name` to set the current user's name as the value or `record.id` to set the "
+"ID of the record on which the action is run.\n"
 "\n"
-"For Static values, the value will be used directly without evaluation, "
-"e.g.`42` or `My custom name` or the selected record."
+"For Static values, the value will be used directly without evaluation, e.g."
+"`42` or `My custom name` or the selected record."
 msgstr ""
 "Pro výrazy Pythonu může toto pole obsahovat výraz Pythonu, který může "
 "používat stejné hodnoty jako pole kódu v akci serveru, např. `env.user.name` "
@@ -6898,8 +6889,8 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Neplatná šablona nebo záznam zobrazení zdroje %(svalue)s, místo toho je %"
-"(model)s"
+"Neplatná šablona nebo záznam zobrazení zdroje %(svalue)s, místo toho je "
+"%(model)s"
 
 #. module: mail
 #. odoo-python
@@ -6907,8 +6898,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Neplatná šablona nebo odkaz na zdroj zobrazení %(svalue)s, místo toho je %"
-"(model)s"
+"Neplatná šablona nebo odkaz na zdroj zobrazení %(svalue)s, místo toho je "
+"%(model)s"
 
 #. module: mail
 #. odoo-python
@@ -7920,11 +7911,11 @@ msgstr "Poštovní schránka nedostupná  - %s"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Mailing or posting with a source should not be called with an empty %"
-"(source_type)s"
+"Mailing or posting with a source should not be called with an empty "
+"%(source_type)s"
 msgstr ""
-"Odesílání nebo publikování se zdrojem by nemělo být voláno s prázdným %"
-"(source_type)s"
+"Odesílání nebo publikování se zdrojem by nemělo být voláno s prázdným "
+"%(source_type)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -8019,6 +8010,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
+#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
+#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
+#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: mail
@@ -8891,8 +8894,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"No responsible or role specified for %(activity_type_name)s: %"
-"(activity_summary)s.%(error_detail)s"
+"No responsible or role specified for %(activity_type_name)s: "
+"%(activity_summary)s.%(error_detail)s"
 msgstr ""
 
 #. module: mail
@@ -9099,15 +9102,15 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Oznámení by mělo přijímat přílohy jako seznam seznamů nebo n-tic (přijato %"
-"(aids)s)"
+"Oznámení by mělo přijímat přílohy jako seznam seznamů nebo n-tic (přijato "
+"%(aids)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive attachments records as a list of IDs (received %"
-"(aids)s)"
+"Notification should receive attachments records as a list of IDs (received "
+"%(aids)s)"
 msgstr ""
 "Oznámení by mělo přijímat záznamy příloh jako seznam ID (přijato %(aids)s)"
 
@@ -9115,8 +9118,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive partners given as a list of IDs (received %"
-"(pids)s)"
+"Notification should receive partners given as a list of IDs (received "
+"%(pids)s)"
 msgstr "Oznámení by mělo přijímat partnery jako seznam ID (přijato %(pids)s)"
 
 #. module: mail
@@ -9475,11 +9478,11 @@ msgstr "Obsah lze aktualizovat pouze u zpráv typu komentář"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"Only messages type comment can have their content updated on model "
-"'discuss.channel'"
+"Only messages type comment can have their content updated on model 'discuss."
+"channel'"
 msgstr ""
-"Pouze zprávy typu komentář mohou mít aktualizovaný obsah na modelu "
-"'discuss.channel'"
+"Pouze zprávy typu komentář mohou mít aktualizovaný obsah na modelu 'discuss."
+"channel'"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_attachment_mail_call_artifact_uniq
@@ -10421,11 +10424,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Posting a message should receive partners as a list of IDs (received %"
-"(pids)s)"
+"Posting a message should receive partners as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
-"Při odeslání zprávy by měly být partneři přijati jako seznam ID (přijato %"
-"(pids)s)"
+"Při odeslání zprávy by měly být partneři přijati jako seznam ID (přijato "
+"%(pids)s)"
 
 #. module: mail
 #. odoo-python
@@ -10465,9 +10468,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
-"(close_cancel)s%(close_em)s, %(open_samp)s%(save_keyboard_shortcut)s%"
-"(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+"Press %(open_samp)sESC%(close_samp)s %(open_em)sto "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
+"%(open_samp)s%(save_keyboard_shortcut)s%(close_samp)s %(open_em)sto "
+"%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 
 #. module: mail
@@ -12674,8 +12678,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Template rendering should only be called with a list of IDs. Received “%"
-"(res_ids)s” instead."
+"Template rendering should only be called with a list of IDs. Received "
+"“%(res_ids)s” instead."
 msgstr ""
 "Renderování šablony by mělo být voláno pouze se seznamem ID. Místo toho bylo "
 "přijato \"%(res_ids)s\"."
@@ -12772,11 +12776,11 @@ msgstr ""
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
 "The activity type \"%(activity_type_name)s\" is not compatible with the plan "
-"\"%(plan_name)s\" because it is limited to the model \"%"
-"(activity_type_model)s\"."
+"\"%(plan_name)s\" because it is limited to the model "
+"\"%(activity_type_model)s\"."
 msgstr ""
-"Typ aktivity \"%(activity_type_name)s\" není kompatibilní s plánem \"%"
-"(plan_name)s\", protože je omezen na model \"%(activity_type_model)s\"."
+"Typ aktivity \"%(activity_type_name)s\" není kompatibilní s plánem "
+"\"%(plan_name)s\", protože je omezen na model \"%(activity_type_model)s\"."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_category_name_unique
@@ -12871,8 +12875,8 @@ msgstr "Níže uvedená zpráva nemohla být přijata adresou."
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "                 Only %(contact_description)s are allowed to contact it.<br /"
 "><br />\n"
 "                 Please make sure you are using the correct address or "
@@ -12888,8 +12892,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
 "Zpráva níže nebyla přijata přes adresu %(alias_display_name)s.\n"
@@ -12998,8 +13002,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid ""
-"The role '%(role_name)s' is not supported for the channel type '%"
-"(channel_type)s'."
+"The role '%(role_name)s' is not supported for the channel type "
+"'%(channel_type)s'."
 msgstr ""
 
 #. module: mail
@@ -13215,8 +13219,8 @@ msgstr "Zda se, že tento rozvrh již neexistuje."
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
-"Tento potenciální zákazník je v této fázi již několik dní ( %"
-"(numberOfDays)s )."
+"Tento potenciální zákazník je v této fázi již několik dní "
+"( %(numberOfDays)s )."
 
 #. module: mail
 #. odoo-javascript
@@ -13299,8 +13303,8 @@ msgstr "Tento týden"
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Tyto hodnoty nejsou podporovány jako možnosti během vykreslování: %"
-"(param_names)s"
+"Tyto hodnoty nejsou podporovány jako možnosti během vykreslování: "
+"%(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -13308,8 +13312,8 @@ msgstr ""
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Tyto hodnoty nejsou podporovány při zveřejňování a oznamování: %"
-"(param_names)s"
+"Tyto hodnoty nejsou podporovány při zveřejňování a oznamování: "
+"%(param_names)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -14141,8 +14145,8 @@ msgstr "Použijte server Outlook"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid ""
-"Use canned responses to quickly insert prewritten messages with "
-"<i>::shortcut</i>. You can edit the text before sending."
+"Use canned responses to quickly insert prewritten messages with <i>::"
+"shortcut</i>. You can edit the text before sending."
 msgstr ""
 "Používejte rychlé odpovědi, k rychlému vložení předem napsaných odpovědi "
 "pomocí <i>::zkratky</i>. Před odesláním můžete text upravit."
@@ -14678,24 +14682,24 @@ msgstr "Varování"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Nebyli jsme schopní vytvořit alias %(alias_name)s, protože doména %"
-"(alias_domain_name)s patří společnosti %(alias_company_names)s, zatímco "
+"Nebyli jsme schopní vytvořit alias %(alias_name)s, protože doména "
+"%(alias_domain_name)s patří společnosti %(alias_company_names)s, zatímco "
 "dokument vlastníka patří společnosti %(company_name)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Nebyli jsme schopní vytvořit alias %(alias_name)s, protože doména %"
-"(alias_domain_name)s patří společnosti %(alias_company_names)s, zatímco "
+"Nebyli jsme schopní vytvořit alias %(alias_name)s, protože doména "
+"%(alias_domain_name)s patří společnosti %(alias_company_names)s, zatímco "
 "cílový dokument patří společnosti %(company_name)s."
 
 #. module: mail
@@ -16003,180 +16007,3 @@ msgstr "“%(member_name)s” v “%(channel_name)s”"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
-
-#~ msgid ""
-#~ "<p>Channels make it easy to organize information across different topics "
-#~ "and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
-#~ "marketing, product XYZ, after work party, etc).</p>"
-#~ msgstr ""
-#~ "<p>Kanály usnadňují uspořádání informací v různých tématech a skupinách.</"
-#~ "p> <p>Zkuste si <b>vytvořit první kanál</b> (např. prodej, marketing, "
-#~ "produkt XYZ, večírek po práci atd.).</p>"
-
-#~ msgid "<p>Create a channel here.</p>"
-#~ msgstr "<p>Zde vytvořit nový kanál.</p>"
-
-#~ msgid "<p>Create a public or private channel.</p>"
-#~ msgstr "<p>Vytvořte veřejný nebo soukromý kanál.</p>"
-
-#~ msgid ""
-#~ "Add a Tenor GIF API key to enable GIFs support. https://"
-#~ "developers.google.com/tenor/guides/quickstart#setup"
-#~ msgstr ""
-#~ "Přidejte Tenor GIF API klíč, abyste umožnili podporu GIFů v Odoo. https://"
-#~ "developers.google.com/tenor/guides/quickstart#setup"
-
-#~ msgid "Add or join a channel"
-#~ msgstr "Přidejte kanál nebo se k němu připojte"
-
-#~ msgid "Come here often? Install the app for quick and easy access!"
-#~ msgstr ""
-#~ "Chodíte sem často? Nainstalujte si aplikaci pro rychlý a jednoduchý "
-#~ "přístup!"
-
-#~ msgid "Exit Fullscreen"
-#~ msgstr "Opustit celoobrazovkový režim"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "Install"
-#~ msgstr "Instalovat"
-
-#~ msgid "Install Odoo"
-#~ msgstr "Instalovat ODoo"
-
-#~ msgid "No history messages"
-#~ msgstr "Žádné zprávy z historie"
-
-#~ msgid "Quick search"
-#~ msgstr "Rychlé vyhledávání"
-
-#~ msgid "Start a conversation"
-#~ msgstr "Zahajte konverzaci"
-
-#~ msgid "Tenor API key"
-#~ msgstr "Tenor API klíč"
-
-#~ msgid "Thread has unread messages"
-#~ msgstr "Vlákno má nepřečtené zprávy"
-
-#~ msgid "View or join channels"
-#~ msgstr "Zobrazit kanály nebo se k ním připojit"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Daňové identifikační číslo. Hodnoty zde budou ověřeny na základě formátu "
-#~ "země. Pomocí '/' můžete označit, že partner nepodléhá dani."
-
-#~ msgid "Default user"
-#~ msgstr "Výchozí uživatel"
-
-#~ msgid "Insert a Canned response"
-#~ msgstr "Vložte rychlou odpověď"
-
-#~ msgid "Linked to"
-#~ msgstr "Propojeno s"
-
-#~ msgid "Unassigned"
-#~ msgstr "Nepřiřazeno"
-
-#~ msgid "Uploaded"
-#~ msgstr "Nahráno"
-
-#~ msgid ""
-#~ "When selecting \"Default user\" assignment, you must specify a "
-#~ "responsible."
-#~ msgstr ""
-#~ "Při výběru přiřazení \"výchozího uživatele\" musíte určit odpovědnou "
-#~ "osobu."
-
-#~ msgid "%(name)s <%(email)s>"
-#~ msgstr "%(name)s <%(email)s>"
-
-#~ msgid ""
-#~ "<p><b>Write a message</b> to the members of the channel here.</p> <p>You "
-#~ "can notify someone with <i>'@'</i> or link another channel with <i>'#'</"
-#~ "i>. Start your message with <i>'/'</i> to get the list of possible "
-#~ "commands.</p>"
-#~ msgstr ""
-#~ "<p><b>Zde můžete napsat zprávu</b> členům kanálu.</p> <p>Můžete někoho "
-#~ "upozornit pomocí <i>'@'</i> nebo propojit jiný kanál pomocí <i>'#'</i>. "
-#~ "Zprávu začněte znakem <i>'/'</i>, abyste získali seznam možných příkazů.</"
-#~ "p>"
-
-#~ msgid "Activity Settings"
-#~ msgstr "Nastavení aktivit"
-
-#~ msgid "Activity type"
-#~ msgstr "Typ aktivity"
-
-#~ msgid "Comma-separated ids of recipient partners"
-#~ msgstr "ID partnerů příjemců oddělené čárkami"
-
-#~ msgid ""
-#~ "Comma-separated ids of recipient partners (placeholders may be used here)"
-#~ msgstr ""
-#~ "ID partnerů příjemců oddělené čárkami  (zde mohou být použity zástupné "
-#~ "symboly)"
-
-#~ msgid "Copy Link"
-#~ msgstr "Kopírovat odkaz"
-
-#~ msgid "Created"
-#~ msgstr "Vytvořeno"
-
-#~ msgid "Default deadline for the activities..."
-#~ msgstr "Výchozí termín pro aktivity..."
-
-#~ msgid "Feedback:"
-#~ msgstr "Zpětná vazba:"
-
-#~ msgid "Hide sidebar"
-#~ msgstr "Skrýt boční panel"
-
-#~ msgid "Next Activity"
-#~ msgstr "Navazující činnost"
-
-#~ msgid "Notify everyone"
-#~ msgstr "Informujte všechny"
-
-#~ msgid "Ongoing call"
-#~ msgstr "Probíhající hovor"
-
-#~ msgid "Original note:"
-#~ msgstr "Původní poznámka:"
-
-#~ msgid "Upload Avatar"
-#~ msgstr "Nahrát avatar"
-
-#~ msgid ""
-#~ "You cannot delete those groups, as the Whole Company group is required by "
-#~ "other modules."
-#~ msgstr ""
-#~ "Tyto skupiny nelze smazat, protože ostatní moduly vyžadují skupinu celé "
-#~ "společnosti."
-
-#~ msgid "You have been invited to #%s"
-#~ msgstr "Byl jste pozván k #%s"
-
-#~ msgid "Edit Subscription of %(name)s"
-#~ msgstr "Upravit předplatné %(name)s"
-
-#~ msgid "Edit subscription"
-#~ msgstr "Upravit odebírání"
-
-#~ msgid "The subscription preferences were successfully applied."
-#~ msgstr "Předvolby předplatného byly úspěšně použity."
-
-#~ msgid "Blur video background"
-#~ msgstr "Rozostřit pozadí videa"
-
-#~ msgid "Log RTC events"
-#~ msgstr "Zapsat RTC událost"
-
-#~ msgid "The conversation is empty."
-#~ msgstr "Konverzace je prázdná."

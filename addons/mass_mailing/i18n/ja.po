@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 11:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -315,14 +315,14 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> "
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
 "Contacts\n"
 "                                    </span>"
 msgstr ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> 連絡"
-"先\n"
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
+"連絡先\n"
 "                                    </span>"
 
 #. module: mass_mailing
@@ -549,75 +549,78 @@ msgstr ""
 "<font style=\"font-size: 12px;\">イノベーションとパフォーマンスの融合</font>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
-msgstr "<i class=\"fa fa-bar-chart\"/> バージョンを比較"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-1\" title=\"Recipient Model\" aria-"
-"hidden=\"true\"/>"
+"<i class=\"oi me-1\" data-icon=\"crisis_alert\" title=\"Recipient Model\" "
+"aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/"
-"Opportunity\"/>"
+"<i class=\"oi me-2\" data-icon=\"crisis_alert\" role=\"img\" aria-"
+"label=\"Lead/Opportunity\"/>"
 msgstr ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/"
-"Opportunity\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-copy\"/> Create an Alternative"
-msgstr "<i class=\"fa fa-copy\"/> 代替案を作成"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope text-primary me-2\" title=\"Eメール\"/>"
+msgid ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" title=\"Eメー"
+"ル\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/>これを当選者として送ります。"
+msgid "<i class=\"oi oi-filled\" data-icon=\"mail\"/> Send this as winner"
+msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/>これを当選者として送ります。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    今すぐ当選者を送る\n"
 "                                                </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign "
 "totals"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                       このA/Bキャンペーンのすべてのパーセンテージの合計は次"
 "のとおりです。"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
-msgid "<i class=\"oi oi-arrow-right\"></i> Configure Opt-out Reasons"
-msgstr "<i class=\"oi oi-arrow-right\"></i> オプトアウト理由を設定"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"text-muted fa fa-paper-plane-o me-1\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-muted me-1\" data-icon=\"send\" aria-hidden=\"true\"/>\n"
 "                                    <span class=\"text-muted "
 "fs-5\">Mailings</span>"
 msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Compare Version"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> バージョンを比較"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"content_copy\"/> Create an Alternative"
+msgstr "<i class=\"oi\" data-icon=\"content_copy\"/> 代替案を作成"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "<i class=\"oi\" data-icon=\"east\"></i> Configure Opt-out Reasons"
+msgstr "<i class=\"oi\" data-icon=\"east\"></i> オプトアウト理由を設定"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -628,15 +631,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                   返信を追跡するには、このア"
 "ドレスがこのデータベースに属している必要があります\n"
 "                                                </small>"
@@ -660,42 +663,6 @@ msgstr "<span class=\"display-4-fs\">2</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
 msgid "<span class=\"display-4-fs\">3</span>"
 msgstr "<span class=\"display-4-fs\">3</span>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
-msgid ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>What We Offer"
-msgstr ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>ご提供内容"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-msgstr ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>Next Batch</span>"
-msgstr ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>次のバッチ</span>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
-msgstr ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -786,6 +753,44 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
 msgstr "<span class=\"o_stat_text\">受信者を開く</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>Next Batch</span>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>次のバッチ</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/>ご"
+"提供内容"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Sent date\"/>"
+msgstr ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Sent date\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_button
@@ -1230,8 +1235,8 @@ msgstr "<u>月曜日</u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr "<u>リフレッシュ <i class=\"fa fa-refresh ms-1\"/></u>"
+msgid "<u>Refresh <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
+msgstr "<u>リフレッシュ <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
@@ -1850,8 +1855,8 @@ msgstr "ポータルからのブロックリスト削除要求"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
 "メーリング %(mailing_link)s (ドキュメント %(record_link)s)のポータルからのブ"
 "ロックリスト削除要求"
@@ -1866,8 +1871,8 @@ msgstr "ポータルからのブロックリスト要求"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
 "メーリング %(mailing_link)s (ドキュメント %(record_link)s)のポータルからのブ"
 "ロックリスト削除要求"
@@ -3309,11 +3314,6 @@ msgid "Font Family"
 msgstr "フォントファミリー"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesomeのアイコン 例. fa-tasks"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
 msgstr "フッタ"
@@ -4395,6 +4395,11 @@ msgstr "メール一括配信(技術用)"
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "メール一括配信"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -7292,264 +7297,3 @@ msgstr "✽  パスタ"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr "✽  ピザ"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Curated "
-#~ "Industry Insights"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  厳選された業界"
-#~ "インサイト"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Expert Tips "
-#~ "&amp; How-Tos"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/> エキスパートのヒ"
-#~ "ント &amp; ハウツー"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Guides &amp; "
-#~ "Resources"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  ガイド&amp; リ"
-#~ "ソース"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Access all "
-#~ "modules"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  すべてのモジュー"
-#~ "ルにアクセス"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Account "
-#~ "management"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> アカウント管理"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Complete CRM for "
-#~ "any team"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  あらゆるチームに"
-#~ "対応する完全なCRM"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  メールサポート"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Limited "
-#~ "customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> 限られたカスタマイ"
-#~ "ズ"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Sales &amp; "
-#~ "marketing for 2"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> 販売&amp; マーケ"
-#~ "ティング 2"
-
-#~ msgid "<span class=\"fa fa-fw fa-folder\"/>Category"
-#~ msgstr "<span class=\"fa fa-fw fa-folder\"/>カテゴリ"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  What do you want "
-#~ "to promote&amp;nbsp;?"
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  何を宣伝しますか"
-#~ "&amp;nbsp;?"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/"
-#~ ">  Huge holiday sale savings. Don't miss out."
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/>祝日"
-#~ "ビッグセール開催中!このチャンスをお見逃しなく。"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/"
-#~ ">  <strong>Special Offers</strong>. Complimentary care packs included "
-#~ "with every sofa."
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/> <strong>スペ"
-#~ "シャルキャンペーン</strong>:すべてのソファに「専用ケアキット」をプレゼン"
-#~ "ト!"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/> カスタマイズ不可"
-
-#~ msgid "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No support"
-#~ msgstr "<span class=\"fa fa-times text-danger\" role=\"img\"/> サポートなし"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-user me-2\" contenteditable=\"false\"/>My "
-#~ "Account<span class=\"fa fa-chevron-right ms-2\" contenteditable=\"false\"/"
-#~ ">"
-#~ msgstr ""
-#~ "<span class=\"fa fa-user me-2\" contenteditable=\"false\"/>マイアカウント"
-#~ "<span class=\"fa fa-chevron-right ms-2\" contenteditable=\"false\"/>"
-
-#~ msgid ""
-#~ "Continue reading <span class=\"fa fa-long-arrow-right align-middle ms-1\"/"
-#~ ">"
-#~ msgstr ""
-#~ "続きを読む<span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid ""
-#~ "Discover more <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr ""
-#~ "さらに詳しく<span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid "See more <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-#~ msgstr "さらに見る <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-
-#~ msgid "# Favorite Filters"
-#~ msgstr "# お気に入りフィルタ"
-
-#~ msgid "<span name=\"canceled_text\">emails have been cancelled.</span>"
-#~ msgstr "<span name=\"canceled_text\">メールはキャンセルされました。</span>"
-
-#~ msgid "<span name=\"failed_text\">emails failed.</span>"
-#~ msgstr "<span name=\"failed_text\">メールの送信に失敗しました。</span>"
-
-#~ msgid "<span name=\"process_text\">emails are being processed.</span>"
-#~ msgstr "<span name=\"process_text\">Eメールが処理中です</span>"
-
-#~ msgid ""
-#~ "<span name=\"scheduled_text\">emails are in queue and will be sent soon.</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span name=\"scheduled_text\">メールは送信予約済みで、まもなく送信されま"
-#~ "す。</span>"
-
-#~ msgid "<span name=\"sent\">emails have been sent.</span>"
-#~ msgstr "<span name=\"sent\">メールが送信されました。</span>"
-
-#~ msgid ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">There wasn't "
-#~ "enough recipients given to this mailing. </span>\n"
-#~ "                            </strong>"
-#~ msgstr ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">このメーリング"
-#~ "には十分な受信者がいませんでした。</span>\n"
-#~ "                            </strong>"
-
-#~ msgid "Domain field"
-#~ msgstr "ドメインフィールド"
-
-#~ msgid "Favorite Filter"
-#~ msgstr "お気に入りのフィルタ"
-
-#~ msgid "Favorite Filters"
-#~ msgstr "お気に入りフィルタ"
-
-#~ msgid "Favorite filter domain"
-#~ msgstr "お気に入りのフィルタドメイン"
-
-#~ msgid "Filter Name"
-#~ msgstr "フィルタ名"
-
-#~ msgid "Filters saved by me"
-#~ msgstr "自分が保存したフィルタ"
-
-#~ msgid "Fullscreen"
-#~ msgstr "全画面表示"
-
-#~ msgid "Mailing Favorite Filter"
-#~ msgstr "メール配信のお気に入りフィルタ"
-
-#~ msgid "Mailing List Contacts"
-#~ msgstr "メーリングリスト連絡先"
-
-#~ msgid "Model field"
-#~ msgstr "モデルフィールド"
-
-#~ msgid "My Filters"
-#~ msgstr "自分のフィルタ"
-
-#~ msgid "No saved filter yet!"
-#~ msgstr "保存されたフィルタはまだありません"
-
-#~ msgid "Open Recipient"
-#~ msgstr "受信者を開く"
-
-#~ msgid "Please provide a name for the filter"
-#~ msgstr "フィルタ用の名前を提供して下さい。"
-
-#~ msgid "Reload a favorite filter"
-#~ msgstr "お気に入りフィルタの再ロード"
-
-#~ msgid "Remove from Favorites"
-#~ msgstr "お気に入りから削除"
-
-#~ msgid "Save as Favorite Filter"
-#~ msgstr "お気に入りフィルタとして保存"
-
-#~ msgid "Save as favorite"
-#~ msgstr "お気に入りとして保存"
-
-#~ msgid ""
-#~ "The saved filter targets different recipients and is incompatible with "
-#~ "this mailing."
-#~ msgstr ""
-#~ "保存されたフィルタは異なる受信者を対象としており、このメール配信とは互換性"
-#~ "がありません。"
-
-#~ msgid ""
-#~ "While designing the mailing, you can define the rules to filter "
-#~ "recipients.\n"
-#~ "                To save the same criteria for future use, you can add it "
-#~ "to the favorite list\n"
-#~ "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></"
-#~ "i> icon next to \"Recipients\"."
-#~ msgstr ""
-#~ "メールのデザイン中に、受信者をフィルタリングするためのルールを定義すること"
-#~ "ができます。\n"
-#~ "                同じ条件を保存して後で使用するには、\n"
-#~ "　　　　 \"受信者\"の隣にある <i class=\"fa fa-floppy-o text-warning\"></"
-#~ "i>アイコンをクリックして、お気に入りリストに追加します。"
-
-#~ msgid "e.g. \"VIP Customers\""
-#~ msgstr "例: \"VIP顧客\""
-
-#~ msgid "Add Contacts to Mailing List"
-#~ msgstr "連絡先をメーリングリストに追加"
-
-#~ msgid "Add Contacts to a Mailing List"
-#~ msgstr "メール配信リストに連絡先を追加"
-
-#~ msgid "Select a list..."
-#~ msgstr "リストを選択してください..."
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイト通信履歴"
-
-#~ msgid "Heading 1"
-#~ msgstr "見出し 1"
-
-#~ msgid "Heading 2"
-#~ msgstr "見出し 2"
-
-#~ msgid "Heading 3"
-#~ msgstr "見出し 3"
-
-#~ msgid "Primary Button"
-#~ msgstr "メインボタン"
-
-#~ msgid "Secondary Button"
-#~ msgstr "サブボタン"

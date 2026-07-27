@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 10:41+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -61,12 +61,13 @@ msgstr " <br/><br/>Os componentes serão retirados de<b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards <b>%"
-"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
 msgstr ""
-" <br/><br/> Os produtos manufaturados serão transferidos para <b>%"
-"(destination)s</b>, <br/> conforme especificado pelo destino da <b>%"
-"(operation)s</b>."
+" <br/><br/> Os produtos manufaturados serão transferidos para "
+"<b>%(destination)s</b>, <br/> conforme especificado pelo destino da "
+"<b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -283,47 +284,54 @@ msgid ":  hours"
 msgstr ":  horas"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
+"<i class=\"oi me-1 my-auto\" data-icon=\"schedule\" title=\"planned date "
+"start\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
-msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
-msgstr "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"hourglass_bottom\" title=\"time remaining\"/"
+">"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
-"Availability\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Child "
+"MO's\"/>"
 msgstr ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
-"Availability\"/>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
-msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
-msgstr "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Child "
+"MO's\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
-"Time\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 msgstr ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
-"Time\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
-msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Remaining Time\"/>"
 msgstr ""
-"<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Remaining Time\"/>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Components Availability\"/>"
+msgstr ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Components Availability\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -2676,14 +2684,6 @@ msgid "Followers (Partners)"
 msgstr "Seguidores (usuários)"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ícone do Font Awesome. Ex.: fa-tasks"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 msgid "Forecast"
@@ -3759,6 +3759,14 @@ msgstr "Plano mestre de produção"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
 msgstr "Disponibilidade de material"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
@@ -7308,11 +7316,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: "
+"%(missing_products)s"
 msgstr ""
-"É necessário fornecer o número de lote/série dos produtos e \"consumi-los\":%"
-"(missing_products)s"
+"É necessário fornecer o número de lote/série dos produtos e \"consumi-los\":"
+"%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7444,166 +7452,3 @@ msgstr "duração real"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divididas"
-
-#~ msgid "Allocation Report for Manufacturing Orders"
-#~ msgstr "Relatório de alocação para ordens de produção"
-
-#~ msgid "Create backorder"
-#~ msgstr "Criar pedido em espera"
-
-#~ msgid "MRP Reception Report"
-#~ msgstr "Relatório de recepção de fabricação"
-
-#~ msgid "No Backorder"
-#~ msgstr "Nenhum pedido em espera"
-
-#~ msgid "Operation Category"
-#~ msgstr "Categoria de Operação"
-
-#~ msgid "Produce All"
-#~ msgstr "Produzir tudo"
-
-#~ msgid "Set Quantities & Validate"
-#~ msgstr "Definir quantidades e validar"
-
-#~ msgid "Show Produce"
-#~ msgstr "Exibir 'Produzir'"
-
-#~ msgid "Show Produce All"
-#~ msgstr "Exibir 'Produzir tudo'"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "Relatório de recebimento de estoque"
-
-#~ msgid "Technical field to check if produce all button can be shown"
-#~ msgstr ""
-#~ "Campo técnico para verificar se o botão 'produzir tudo' pode ser exibido"
-
-#~ msgid "Technical field to check if produce button can be shown"
-#~ msgstr "Campo técnico para verificar se o botão 'produzir' pode ser exibido"
-
-#~ msgid "Use Reception Report with Manufacturing Orders"
-#~ msgstr "Usar relatório de recepção com ordens de produção"
-
-#~ msgid ""
-#~ "View and allocate production quantities to customer orders or other "
-#~ "manufacturing orders"
-#~ msgstr ""
-#~ "Visualizar e alocar quantidades de produção para pedidos de clientes ou "
-#~ "outras ordens de produção"
-
-#~ msgid "Check availability"
-#~ msgstr "Verificar disponibilidade"
-
-#~ msgid ""
-#~ "Create operation level dependencies that will influence both planning and "
-#~ "the status of work orders upon MO confirmation. If this feature is "
-#~ "ticked, and nothing is specified, Odoo will assume that all operations "
-#~ "can be started simultaneously."
-#~ msgstr ""
-#~ "Crie dependências no nível da operação que influenciarão o planejamento e "
-#~ "o status das ordens de trabalho após a confirmação da OP. Se esse recurso "
-#~ "estiver marcado e nada for especificado, o Odoo assumirá que todas as "
-#~ "operações podem ser iniciadas simultaneamente."
-
-#~ msgid "Custom Work Order Dependencies"
-#~ msgstr "Dependências de ordens de trabalho personalizadas"
-
-#~ msgid "MO Cancelled"
-#~ msgstr "OP cancelada"
-
-#~ msgid "MO Confirmed"
-#~ msgstr "OP confirmada"
-
-#~ msgid "MO Done"
-#~ msgstr "OP concluída"
-
-#~ msgid "MO Planned"
-#~ msgstr "OP Planejada"
-
-#~ msgid "MO Progress"
-#~ msgstr "OP em andamento"
-
-#~ msgid "MO To Close"
-#~ msgstr "MO a fechar"
-
-#~ msgid "Operation Dependencies"
-#~ msgstr "Dependências de operação"
-
-#~ msgid ""
-#~ "Set the order that work orders should be processed in. Activate the "
-#~ "feature within each BoM's Miscellaneous tab"
-#~ msgstr ""
-#~ "Define a ordem em que as ordens de trabalho devem ser processadas. Ative "
-#~ "o recurso na aba Diversos de cada LM"
-
-#~ msgid "The number of products already handled by this work order"
-#~ msgstr "O número de produtos já tratados por esta ordem de trabalho"
-
-#, fuzzy
-#~ msgid "Time Remaining"
-#~ msgstr "Dias restantes"
-
-#~ msgid "Total To Consume"
-#~ msgstr "Total a consumir"
-
-#~ msgid "Unbuild: %s"
-#~ msgstr "Desmontar: %s"
-
-#~ msgid "Use Operation Dependencies"
-#~ msgstr "Usar dependências de operação"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do site"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de comunicação do site"
-
-#~ msgid "days"
-#~ msgstr "dias"
-
-#~ msgid "Final Location from procurement"
-#~ msgstr "Local final da aquisição"
-
-#~ msgid ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Upload files to your product\n"
-#~ "                    </p><p>\n"
-#~ "                        Use this feature to store any files, like "
-#~ "drawings or specifications.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Envie arquivos para o seu produto\n"
-#~ "                    </p><p>\n"
-#~ "                        Use este recurso para armazenar quaisquer "
-#~ "arquivos, como desenhos ou especificações.\n"
-#~ "                    </p>"
-
-#~ msgid "Attachments Count"
-#~ msgstr "Contagem de anexos"
-
-#~ msgid "Files attached to the product."
-#~ msgstr "Arquivos anexados ao produto."
-
-#~ msgid "Hidden"
-#~ msgstr "Oculto"
-
-#~ msgid ""
-#~ "Leave hidden if document only accessible on product form.\n"
-#~ "Select Bill of Materials to visualise this document as a product "
-#~ "attachment when this product is in a bill of material."
-#~ msgstr ""
-#~ "Deixe oculto se o documento for acessível apenas no formulário do "
-#~ "produto.\n"
-#~ "Selecione Lista de materiais para visualizar esse documento como um anexo "
-#~ "do produto quando esse produto estiver em uma lista de materiais."
-
-#~ msgid "MRP : Visible at"
-#~ msgstr "MRP: Visível em"
-
-#~ msgid "Product Attachments"
-#~ msgstr "Anexos do produto"
-
-#~ msgid "Product Document"
-#~ msgstr "Documento do produto"

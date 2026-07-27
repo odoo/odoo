@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 15:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -54,9 +54,19 @@ msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
+msgid "<i class=\"oi me-2\" data-icon=\"chevron_backward\"/>Back"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
+msgid "<i class=\"oi oi-filled me-1\" data-icon=\"edit\"/>Edit"
+msgstr "<i class=\"oi oi-filled me-1\" data-icon=\"edit\"/>Muokkaa"
+
+#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid ""
-"<i class=\"fa fa-info-circle me-2\"/>\n"
+"<i class=\"oi oi-filled me-2\" data-icon=\"info\"/>\n"
 "            There are no matching partners found for the selected country. "
 "Displaying results across all countries instead."
 msgstr ""
@@ -64,64 +74,40 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 msgid ""
-"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
-"title=\"Open map\"/>"
+"<i class=\"oi\" data-icon=\"location_on\" role=\"img\" aria-label=\"Open "
+"map\" title=\"Open map\"/>"
 msgstr ""
-"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Avaa kartta\" "
-"title=\"Avaa kartta\"/>"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr "<i class=\"fa fa-pencil me-1\"/>Muokkaa"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
-msgid "<i class=\"oi oi-chevron-left me-2\"/>Back"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid ""
-"<span class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
-msgstr ""
-"<span class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-msgid ""
-"<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" "
-"title=\"Phone\"/>"
-msgstr ""
-"<span class=\"fa fa-phone\" role=\"img\" aria-label=\"Puhelin\" "
-"title=\"Puhelin\"/>"
+"<i class=\"oi\" data-icon=\"location_on\" role=\"img\" aria-label=\"Avaa "
+"kartta\" title=\"Avaa kartta\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid ""
 "<span class=\"input-group-text o_input_group_date_icon\">\n"
-"                                                        <span class=\"fa fa-"
-"calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
+"                                                        <span class=\"oi oi-"
+"filled\" data-icon=\"calendar_today\" role=\"img\" aria-label=\"Calendar\" "
+"title=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
 "<span class=\"input-group-text o_input_group_date_icon\">\n"
-"                                                        <span class=\"fa fa-"
-"calendar\" role=\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>\n"
+"                                                        <span class=\"oi oi-"
+"filled\" data-icon=\"calendar_today\" role=\"img\" aria-label=\"Kalenteri\" "
+"title=\"Kalenteri\"/>\n"
 "                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid ""
 "<span class=\"input-group-text o_input_group_date_icon\">\n"
-"                                                        <span class=\"fa fa-"
-"calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
+"                                                        <span class=\"oi oi-"
+"filled\" data-icon=\"calendar_today\" role=\"img\" aria-label=\"Calendar\"/"
+">\n"
 "                                                    </span>"
 msgstr ""
 "<span class=\"input-group-text o_input_group_date_icon\">\n"
-"                                                        <span class=\"fa fa-"
-"calendar\" role=\"img\" aria-label=\"Kalenteri\"/>\n"
+"                                                        <span class=\"oi oi-"
+"filled\" data-icon=\"calendar_today\" role=\"img\" aria-label=\"Kalenteri\"/"
+">\n"
 "                                                    </span>"
 
 #. module: website_crm_partner_assign
@@ -132,6 +118,24 @@ msgstr "<span class=\"me-1\">Kumppani:</span>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
+"<span class=\"oi oi-filled\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Email\" title=\"Email\"/>"
+msgstr ""
+"<span class=\"oi oi-filled\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Email\" title=\"Email\"/>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid ""
+"<span class=\"oi oi-filled\" data-icon=\"phone\" role=\"img\" aria-"
+"label=\"Phone\" title=\"Phone\"/>"
+msgstr ""
+"<span class=\"oi oi-filled\" data-icon=\"phone\" role=\"img\" aria-"
+"label=\"Puhelin\" title=\"Puhelin\"/>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
@@ -143,13 +147,13 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">You need to fill up the next action and contact the "
-"customer before accepting the lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">You need to fill up the next action and contact the customer before "
+"accepting the lead</span>"
 msgstr ""
-"<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Sinun on täytettävä seuraava toiminto ja otettava "
-"yhteyttä asiakkaaseen ennen liidin hyväksymistä</span>"
+"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
+"none;\">Sinun on täytettävä seuraava toiminto ja otettava yhteyttä "
+"asiakkaaseen ennen liidin hyväksymistä</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -199,16 +203,15 @@ msgid ""
 "href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject "
 "Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name "
 "or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name "
-"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and "
-"lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</"
-"t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
+"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id']."
+"country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-"
+"out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
 "Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> "
 "</li><br/>\n"
 "</ol>\n"
 "<t t-if=\"ctx.get('partner_in_portal')\">\n"
-"    Please connect to your <a t-att-href=\"'%s?db=%s' % "
-"(object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get "
-"details.\n"
+"    Please connect to your <a t-att-href=\"'%s?db=%s' % (object."
+"get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details.\n"
 "    <t t-if=\"any(lead['lead_id'].type == 'lead' for lead in "
 "ctx['partner_leads'])\">On each lead, there are two buttons that you should "
 "press after contacting the lead: \"I'm interested\" &amp; \"I'm not "
@@ -1332,6 +1335,3 @@ msgstr "user_id"
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "won_status"
 msgstr "won_status"
-
-#~ msgid "Communication history"
-#~ msgstr "Viestintähistoria"

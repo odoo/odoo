@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-20 17:35+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -92,8 +92,8 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object."
+"mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -101,99 +101,101 @@ msgid ""
 msgstr ""
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-msgid ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"วันที่\" title=\"Date\"/>"
-
-#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"รูปภาพ\" aria-label=\"นามแฝง\" "
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"รูปภาพ\" aria-label=\"นามแฝง\" "
 "title=\"นามแฝง\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"นามแฝ"
-"ง\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"วันที่\" title=\"Date\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
+"label=\"Recipients\" title=\"Recipients\"/>"
+msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"รูปภาพ\" aria-"
+"label=\"ผู้รับ\" title=\"ผู้รับ\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
-"title=\"Recipients\"/>"
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"รูปภาพ\" aria-label=\"ผู้รับ\" title=\"ผู้รั"
-"บ\"/>"
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"รูปภาพ\" aria-"
+"label=\"ซ่อนไฟล์แนบ\" title=\"ซ่อนไฟล์แนบ\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"replies\" title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"รูปภาพ\" aria-"
+"label=\"ซ่อนการตอบกลับ\" title=\"ซ่อนการตอบกลับ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
-msgstr ""
-"<i class=\"oi oi-arrow-left\" role=\"รูปภาพ\" aria-label=\"ข้อความก่อนหน้า\" "
-"title=\"ข้อความก่อนหน้า\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_message
-msgid ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right\" role=\"รูปภาพ\" aria-label=\"ข้อความถัดไป\" "
+"<i class=\"oi\" data-icon=\"east\" role=\"รูปภาพ\" aria-label=\"ข้อความถัดไป\" "
 "title=\"ข้อความถัดไป\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
-"title=\"Show attachments\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show attachments\" title=\"Show attachments\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"รูปภาพ\" aria-label=\"แสดงไฟล์แนบ\" "
-"title=\"แสดงไฟล์แนบ\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"รูปภาพ\" aria-"
+"label=\"แสดงไฟล์แนบ\" title=\"แสดงไฟล์แนบ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show replies\" title=\"Show replies\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"รูปภาพ\" aria-label=\"แสดงการตอบกลับ\" "
-"title=\"แสดงการตอบกลับ\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"รูปภาพ\" aria-"
+"label=\"แสดงการตอบกลับ\" title=\"แสดงการตอบกลับ\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
 msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"รูปภาพ\" aria-label=\"ซ่อนไฟล์แนบ\" "
-"title=\"ซ่อนไฟล์แนบ\"/>"
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"นามแฝง\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
+"<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"Previous "
+"message\" title=\"Previous message\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"รูปภาพ\" aria-label=\"ซ่อนการตอบกลับ\" "
-"title=\"ซ่อนการตอบกลับ\"/>"
+"<i class=\"oi\" data-icon=\"west\" role=\"รูปภาพ\" aria-"
+"label=\"ข้อความก่อนหน้า\" title=\"ข้อความก่อนหน้า\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -268,8 +270,7 @@ msgstr "เปิดใช้งาน"
 msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
-msgstr ""
-"เพิ่มที่อยู่อีเมลนี้ในรายชื่อบุคคลที่อนุญาตและยอมรับข้อความที่รอดำเนินการทั้งหมดจากผู้เขียนคนเดียวกัน"
+msgstr "เพิ่มที่อยู่อีเมลนี้ในรายชื่อบุคคลที่อนุญาตและยอมรับข้อความที่รอดำเนินการทั้งหมดจากผู้เขียนคนเดียวกัน"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
@@ -372,8 +373,7 @@ msgstr "สถานะการกลั่นกรองผู้เขีย
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
-msgstr ""
-"ผู้เขียนข้อความ หากไม่ได้ตั้งค่า email_from อาจมีที่อยู่อีเมลที่ไม่ตรงกับพาร์ทเนอร์รายใด"
+msgstr "ผู้เขียนข้อความ หากไม่ได้ตั้งค่า email_from อาจมีที่อยู่อีเมลที่ไม่ตรงกับพาร์ทเนอร์รายใด"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
@@ -557,8 +557,7 @@ msgstr "อีเมลจาก"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr ""
-"ที่อยู่อีเมลของผู้ส่ง ฟิลด์นี้ถูกตั้งค่าเมื่อไม่พบคู่ที่ตรงกันและแทนที่ฟิลด์ author_id ในการแชท."
+msgstr "ที่อยู่อีเมลของผู้ส่ง ฟิลด์นี้ถูกตั้งค่าเมื่อไม่พบคู่ที่ตรงกันและแทนที่ฟิลด์ author_id ในการแชท."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
@@ -663,16 +662,14 @@ msgstr "ไอดี"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
-msgstr ""
-"ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
+msgstr "ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr ""
-"หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
+msgstr "หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -986,11 +983,12 @@ msgstr "ชื่อ"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
-"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi oi-2x float-"
+"end\" data-icon=\"south\" role=\"img\" aria-label=\"\" title=\"Read this !\"/"
+">"
 msgstr ""
-"ต้องการยกเลิกการสมัครหรือไม่? <br/>มันอยู่ที่นี่!<span class=\"oi fa-2x oi-arrow-down "
-"float-end\" role=\"รูปภาพ\" aria-label=\"\" title=\"อ่านทีนี่\"/>"
+"ต้องการยกเลิกการสมัครหรือไม่? <br/>มันอยู่ที่นี่!<span class=\"oi oi-2x float-end\" data-"
+"icon=\"south\" role=\"รูปภาพ\" aria-label=\"\" title=\"อ่านทีนี่\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
@@ -1038,8 +1036,7 @@ msgstr "จำนวนข้อความในกลุ่มนี้"
 #: code:addons/mail_group/models/mail_group.py:0
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
-msgstr ""
-"มีเพียงผู้ดูแลระบบหรือผู้ดูแลเท่านั้นที่สามารถส่งแนวทางปฏิบัติไปยังสมาชิกกลุ่มได้"
+msgstr "มีเพียงผู้ดูแลระบบหรือผู้ดูแลเท่านั้นที่สามารถส่งแนวทางปฏิบัติไปยังสมาชิกกลุ่มได้"
 
 #. module: mail_group
 #. odoo-python
@@ -1051,8 +1048,7 @@ msgstr "เฉพาะสมาชิกเท่านั้นที่สา
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only selected groups of users can send email to the mailing list."
-msgstr ""
-"เฉพาะกลุ่มผู้ใช้ที่เลือกเท่านั้นที่สามารถส่งอีเมลไปยังรายการส่งจดหมายได้"
+msgstr "เฉพาะกลุ่มผู้ใช้ที่เลือกเท่านั้นที่สามารถส่งอีเมลไปยังรายการส่งจดหมายได้"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -1066,8 +1062,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม หากตั้"
-"งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
+"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม "
+"หากตั้งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1124,8 +1120,7 @@ msgstr "รอการกลั่นกรอง"
 msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
-msgstr ""
-"ผู้คนจะได้รับการแจ้งเตือนอัตโนมัติเกี่ยวกับข้อความที่พวกเขากำลังรอการกลั่นกรอง"
+msgstr "ผู้คนจะได้รับการแจ้งเตือนอัตโนมัติเกี่ยวกับข้อความที่พวกเขากำลังรอการกลั่นกรอง"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
@@ -1334,8 +1329,8 @@ msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has "
 "been sent. Please contact an administrator to fix this issue."
 msgstr ""
-"ไม่พบเทมเพลต \"mail_group.mail_template_guidelines\" ไม่มีการส่งอีเมล โปรดติดต่อผู้ดูแล"
-"ระบบเพื่อแก้ไขปัญหานี้"
+"ไม่พบเทมเพลต \"mail_group.mail_template_guidelines\" ไม่มีการส่งอีเมล "
+"โปรดติดต่อผู้ดูแลระบบเพื่อแก้ไขปัญหานี้"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1384,8 +1379,8 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ อีเมลขาเข้าที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำให้เกิด"
-"การสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
+"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ "
+"อีเมลขาเข้าที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำให้เกิดการสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name

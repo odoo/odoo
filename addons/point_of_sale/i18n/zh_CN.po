@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 05:02+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -298,14 +298,14 @@ msgstr "纯棉牛仔布五袋牛仔裤。"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -331,47 +331,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> 编辑"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> 编辑"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>亲爱的 %(client_name)s：<br/>附上您的收据 %(is_invoiced)s 销售"
 "点：             %(pos_name)s，总金额：%(amount)s，公司：%(company_name)s。</"
@@ -395,12 +401,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">条码</span>\n"
-"                                     <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                     <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -3976,11 +3984,6 @@ msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome图标，例如：fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5263,6 +5266,11 @@ msgid "Margins & Costs"
 msgstr "毛利和成本"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6133,8 +6141,8 @@ msgstr "可选产品："
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "顾客将商品加入购物车时，会建议加购产品（例如：购买汉堡包时，会建议加购冻饮或"
 "薯条）。"
@@ -9967,19 +9975,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11265,8 +11273,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11674,333 +11682,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr ""
-#~ "POS 付款，付款方式：%(payment_method)s，合作伙伴：%(partner)s，操作时段：%"
-#~ "(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s 及 %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s未缴税"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">收银机</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">日记账项目</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "账户支付代表汇总支付和银行拆分支付."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "创建结算单所用的会计日记账."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr "会计凭证用于 POS 凭证录入和 POS结算单付款。"
-
-#~ msgid "Amount to balance"
-#~ msgstr "余额"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr "尝试关闭会话时发生错误。您将被重定向至后台手工关闭会话。"
-
-#~ msgid "Bank Payments"
-#~ msgstr "银行支付"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "结束前的差异"
-
-#~ msgid "Cash Journal"
-#~ msgstr "现金日记账"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "计算现金时观察到的差额（损失） - 结算"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "盘点期间观察到的现金差额（利润）- 结算"
-
-#~ msgid "Cash register"
-#~ msgstr "收银机"
-
-#~ msgid "Close Session"
-#~ msgstr "关闭会话"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "关闭会话向导"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "结算差额出现在%(payment_method)s（%(session)s）"
-
-#~ msgid "Closing session error"
-#~ msgstr "结业会话错误"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "将%(payment_method)sPOS 付款与%(session)s结合起来"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "默认应收科目(PoS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "默认 POS 应收款账户"
-
-#~ msgid "Destination account"
-#~ msgstr "目标账户"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "目标账户是只读的"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "结束POS营业点时的差额"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "理论期末余额和实际期末余额之间的差异。"
-
-#~ msgid "Ending Balance"
-#~ msgstr "期末余额"
-
-#~ msgid "Force Close Session"
-#~ msgstr "强制关闭会话"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "在使用此支付方式时强制设置客户并且分客户拆分日记账录入。这将减慢关闭进程。"
-
-#~ msgid "From invoice payments"
-#~ msgstr "从开票支付"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "现金管理"
-
-#~ msgid "Identify Customer"
-#~ msgstr "区分客户"
-
-#~ msgid "Information message"
-#~ msgstr "信息"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "用于身份不明客户的中间账户。"
-
-#~ msgid "Invoice Journal"
-#~ msgstr "结算单日记账"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "发票付款：订单 %(order)s (%(account_move)s)，以 %(payment_method)s 付款"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "已结算"
-
-#~ msgid "Journal Items"
-#~ msgstr "日记账项目"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "上次会话关闭支付金额"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr "需要提供下述凭证的损耗科目用于过账损耗金额：%s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr "需要提供下述凭证的盈利科目用于过账盈利金额：%s"
-
-#~ msgid "Not available"
-#~ msgstr "不可用"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "所有现金交易的期初余额总和。"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr "请转到 %s 日记账并定义损失科目。此账户将用于记录现金差额。"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr "请转到 %s 日志并定义利润科目。此账户将用于记录现金差额。"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "价格折扣从%(original_price)s到%(discounted_price)s"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "刷新顾客显示屏"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "相关操作时段：%(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "撤回销售点结算记项%(entry)s，相关订单：%(order)s，操作时段：%(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "营业点日志条目"
-
-#~ msgid "Starting Balance"
-#~ msgstr "初始余额"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "结算单日记账所使用币别在未设置的情况下必须与销售日记账或公司币别一致。"
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "会话已被另一用户关闭。在此期间完成的所有销售已保存在救援会话中，可以随时查"
-#~ "看，并从POS仪表板过账至Accounting应用程序。"
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "理论期末余额"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr "订单计数和过账计数有差异，这可能是由于税收和会计配置变更导致的。"
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "本门店未设收银机。"
-
-#~ msgid "Transaction"
-#~ msgstr "交易"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "无法关闭和验证营业点.\n"
-#~ "请在以下税种的每个重新分配行中设置相应的税款科目: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "当结算单没有入账时，您不能关闭POS机。\n"
-#~ "结算单。%s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "您为 %(payment_method)s付款方式启用了“区分客户”选项，但订单%(order)s中没有"
-#~ "客户。"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "链接已复制到剪贴板"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr "检查网络连接之后点击红色wifi按钮（屏幕右上方）以尝试再次同步。"
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "请稍等！在 POS 操作时段激活时对产品进行存档，就像吃饭吃到一半收盘子！\n"
-#~ "确保先关闭所有操作时段，以避免出现任何问题。"
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "请从后台打印结算单"
-
-#~ msgid "Thank you."
-#~ msgstr "谢谢。"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "因为未知错误，订单不能发送到服务器"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr "订单已提前同步。请从后台为订单开具结算单吧: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "在收到您的订单的时候，服务器遇到了错误."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "要删除产品，请确保所有销售点会话都已关闭。\n"
-#~ "\n"
-#~ "删除会话中的可用产品就好比试图从顾客手中抢走吃到一半的汉堡包，番茄酱和蛋黄"
-#~ "酱会四处飞溅，混乱不堪！"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "无法同步订单"
-
-#~ msgid "Welcome."
-#~ msgstr "欢迎！"
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>跳过预览屏幕</b></span>"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "基本收据"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson打印机IP地址"
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "打印基础收据"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "打印完整收据"
-
-#~ msgid "Print Receipt"
-#~ msgstr "打印收据"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "打印基础票务信息，不包含价格。可用于赠送。"
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "跳过预览屏幕"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "如果自动打印收据，选择打印界面会跳过。"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "Info"
-#~ msgstr "信息"
-
-#~ msgid "Last preparation change"
-#~ msgstr "最后一次准备变化"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "订单的最后打印状态"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "POS"

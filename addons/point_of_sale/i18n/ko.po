@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 15:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -299,14 +299,14 @@ msgstr "코튼 데님 5포켓 진..."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -332,47 +332,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> 편집"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> 편집"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>안녕하세요 %(client_name)s님,<br/>영수증%(is_invoiced)s이 발행되었습니"
 "다.             %(pos_name)s 금액 %(amount)s이 %(company_name)s에 청구되었습"
@@ -396,12 +402,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">바코드</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4010,11 +4018,6 @@ msgid "Followers (Partners)"
 msgstr "팔로워 (협력사)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예: fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr "푸드"
@@ -5308,6 +5311,11 @@ msgid "Margins & Costs"
 msgstr "마진 및 미용"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6188,8 +6196,8 @@ msgstr "선택 품목:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "고객이 장바구니에 항목을 추가하면 선택 품목이 추천됩니다(예: 햄버거를 추가하"
 "면 시원한 음료나 감자튀김 추천)."
@@ -10055,19 +10063,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11386,8 +11394,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11797,380 +11805,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s의 %(partner)s에 대한 %(session)s 결제"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s 비과세"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">금전 등록</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">전표 항목</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "전체 계정 결제 및 은행 분할 납부"
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "청구서 생성에 사용되는 회계 전표"
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "POS 세션 전표 입력 및 POS 청구서 결제를 진행하기 위한 회계 전표입니다."
-
-#~ msgid "Amount to balance"
-#~ msgstr "잔액"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "세션을 종료하는 중에 오류가 발생했습니다.\n"
-#~ "수기로 세션을 종료하기 위해 백엔드로 이동합니다."
-
-#~ msgid "Bank Payments"
-#~ msgstr "은행 결제"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "차액 마감 전"
-
-#~ msgid "Cash Journal"
-#~ msgstr "현금 전표"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "계산 중 발견된 현금 차이 (손실) - 마감"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "계산 중 발견된 현금 차이 (이익) - 마감"
-
-#~ msgid "Cash register"
-#~ msgstr "금전등록기"
-
-#~ msgid "Close Session"
-#~ msgstr "세션 종료"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "세션 마법사 종료"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "%(payment_method)s의 마감 차액 (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "세션 마감 오류"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "%(payment_method)s의 POS 결제 결합 %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "기본 미수금 (POS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "기본 POS 미수금 계정"
-
-#~ msgid "Destination account"
-#~ msgstr "대상 계정"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "대상 계정은 읽기 전용입니다."
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "POS 세션 종료 시의 차액"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "이론적 결산 잔액과 실질 결산 잔액의 차이."
-
-#~ msgid "Ending Balance"
-#~ msgstr "기말 잔액"
-
-#~ msgid "Force Close Session"
-#~ msgstr "세션 강제 종료"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니"
-#~ "다. 종료 단계의 과정이 느려질 수 있습니다."
-
-#~ msgid "From invoice payments"
-#~ msgstr "청구서 결제에서"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "현금 제어됨"
-
-#~ msgid "Identify Customer"
-#~ msgstr "고객 확인"
-
-#~ msgid "Information message"
-#~ msgstr "정보 메시지"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "확인되지 않은 고객용으로 사용하는 임시 계정"
-
-#~ msgid "Invoice Journal"
-#~ msgstr "청구서 전표"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "%(order)s에 대한 (%(account_move)s)은 %(payment_method)s을 사용하여 결제합"
-#~ "니다."
-
-#~ msgid "Is Invoiced"
-#~ msgstr "청구서 발행 완료되었습니다"
-
-#~ msgid "Journal Items"
-#~ msgstr "전표 항목"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "최근 세션 마감 시재"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr "손실 금액에 대한 전표 발행용 손실 계정이 있어야 합니다: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr "수익 금액에 대한 전표 발행용 수익 계정이 있어야 합니다: %s"
-
-#~ msgid "Not available"
-#~ msgstr "사용할 수 없습니다"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "전체 현금 거래에 대한 기초 잔액 합계액입니다."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계정은 현금 차액을 기록하"
-#~ "는데 사용합니다."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "%s 전표로 이동하여 수익 계정을 설정하십시오. 이 계정은 현금 차액을 기록하"
-#~ "는데 사용합니다."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "%(original_price)s에서 %(discounted_price)s으로 가격 할인"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "고객 디스플레이 새로 고침"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "관련 세션: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "세션 전표입력"
-
-#~ msgid "Snoozed Products"
-#~ msgstr "품목 잠그기"
-
-#~ msgid "Starting Balance"
-#~ msgstr "개시 잔액"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화로 설정해야 합니다."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "다른 사용자가 이미 세션을 종료하였습니다. 그동안 완료된 전체 매출 내역은 "
-#~ "헬프 세션에 저장되어 언제든 확인하실 수 있으며 POS 현황판에서 회계로 발행"
-#~ "할 수 있습니다."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "이론적인 결산 잔액"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "발행 금액과 주문 금액 사이에 차이가 있으며, 세금이나 회계 구성 변경으로 발"
-#~ "생한 것일 수 있습니다."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "이 세션에는 금전등록기가 없습니다."
-
-#~ msgid "Transaction"
-#~ msgstr "거래"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "세션을 닫고 유효성을 검사할 수 없습니다.\n"
-#~ "다음 세금의 각 분할 명세에 해당 세금 계정을 설정하십시오 :\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "청구서를 발행하지 않으면 POS를 종료할 수 없습니다.\n"
-#~ "청구서: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했"
-#~ "지만 %(order)s 주문 내용에 고객 정보가 포함되어 있지 않습니다."
-
-#~ msgid "Chose a combo to apply"
-#~ msgstr "적용할 콤보를 선택하세요"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "클립보드에 링크 복사"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "인터넷 연결을 확인하신 후 빨간색 와이파이 버튼 (화면 우측 상단)을 클릭하"
-#~ "여 동기화를 다시 시도합니다."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "잠시만요! POS 세션이 활성화되어 있는 동안 품목을 보관하면 갑자기 불안정해"
-#~ "질 수 있습니다.\n"
-#~ "문제를 발생하지 않도록 먼저 모든 세션을 닫아주세요."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "백엔드에서 청구서를 인쇄하십시오"
-
-#~ msgid "Thank you."
-#~ msgstr "감사합니다."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "알 수없는 오류로 인해 주문을 서버로 보낼 수 없습니다"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "주문이 이전에 동기화되었습니다. 주문에 대한 백엔드에서 송장을 작성하십시"
-#~ "오 : "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "주문을 받는 중 서버에 오류가 발생했습니다."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "품목을 삭제하려면 전체 POS 세션 종료 여부를 확인하세요.\n"
-#~ "\n"
-#~ "세션에서 사용되고 있는 품목을 삭제하는 것은 고객이 막 선택한 상품이 갑자"
-#~ "기 삭제되는 결과를 낳을 수 있으며, 큰 혼란을 줄 수 있습니다!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "주문을 동기화할 수 없습니다."
-
-#~ msgid "Welcome."
-#~ msgstr "환영합니다."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>미리보기 화면 통과</b></span>"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "기본 영수증"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson 프린터 IP 주소"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Epson 영수증 프린터의 로컬 IP 주소 또는 해당 프린터의 일련 번호입니다 (프"
-#~ "린터 설정에서 '자동 인증서 업데이트' 옵션을 활성화한 경우)."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "기본 영수증 인쇄"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "전체 영수증 인쇄"
-
-#~ msgid "Print Receipt"
-#~ msgstr "영수증 인쇄"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr ""
-#~ "가격 정보 없이 기본 티켓을 인쇄합니다. 선물용으로 사용할 수 있습니다."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "미리보기 화면 통과"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "영수증을 자동으로 인쇄할 수 있으면 영수증 화면을 건너 뜁니다."
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"
-
-#~ msgid "Bill"
-#~ msgstr "공급업체 청구서"
-
-#~ msgid "Info"
-#~ msgstr "정보"
-
-#~ msgid "Last preparation change"
-#~ msgstr "최근 준비 변경"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "주문 관련 최근 인쇄 상태"
-
-#~ msgid "Order Outdated"
-#~ msgstr "기한이 지난 주문서"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "POS"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "다른 장치에서 해당 주문이 수정되었습니다. 기존 주문서 내역을 수정한 경우, "
-#~ "변경 사항을 덮어쓰지 않았는지 확인하세요.\n"
-#~ "\n"
-#~ "이 장치에서 최근 변경된 내용을 기준으로 주문을 서버로 전송합니다."

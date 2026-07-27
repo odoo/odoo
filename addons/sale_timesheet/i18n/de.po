@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 01:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -166,7 +166,7 @@ msgstr "<b>Einheitspreis: </b>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid ""
-"<i class=\"fa fa-lightbulb-o\"/>\n"
+"<i class=\"oi\" data-icon=\"lightbulb\"/>\n"
 "                        <span>\n"
 "                            Define the rate at which an employee's time is "
 "billed based on their expertise, skills, or experience.\n"
@@ -174,23 +174,12 @@ msgid ""
 "create separate sales order items.\n"
 "                        </span>"
 msgstr ""
-"<i class=\"fa fa-lightbulb-o\"/>\n"
+"<i class=\"oi\" data-icon=\"lightbulb\"/>\n"
 "                        <span>Legen Sie den Satz fest, zu dem die Zeit eines "
 "Mitarbeiters auf der Grundlage seines Fachwissens, seiner Kompetenzen oder "
 "seiner Erfahrung abgerechnet wird.\n"
 "                        Wenn Sie dieselbe Leistung zu einem anderen Tarif "
 "abrechnen möchten, erstellen Sie separate Verkaufsauftragspositionen.</span>"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this timesheet entry has been cancelled.\" "
-"invisible=\"sale_order_state != 'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this timesheet entry has been cancelled.\" "
-"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -207,6 +196,17 @@ msgstr "<span class=\"o_stat_text\">Erfasst </span>"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Verkaufsauftrag</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this timesheet entry has been cancelled.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -1727,25 +1727,3 @@ msgstr "der verkauften Stunden."
 #: code:addons/sale_timesheet/models/account_move.py:0
 msgid "project_id"
 msgstr "project_id"
-
-#~ msgid "remaining"
-#~ msgstr "verbleibend"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\">Timesheets without a sales order item are "
-#~ "reported as</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\">Zeiterfassungen ohne Verkaufsauftragsposition "
-#~ "werden gemeldet als</span>"
-
-#~ msgid "- Timesheet product"
-#~ msgstr "- Zeiterfassungsprodukt"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "Einnahmen (Zeit & Material)"
-
-#~ msgid "S0001"
-#~ msgstr "S0001"
-
-#~ msgid "Timesheets for the"
-#~ msgstr "Zeiterfassungen für"

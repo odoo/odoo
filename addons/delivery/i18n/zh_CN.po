@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-21 17:35+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -93,8 +93,8 @@ msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>获取费率"
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>获取费率"
 
 #. module: delivery
 #. odoo-python
@@ -1284,15 +1284,6 @@ msgstr "即：https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_note
 msgid ""
-"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
-"{{ object.so_id.name or 'n/a' }})"
+"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref {{ object."
+"so_id.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "Payment Transaction"
-#~ msgstr "付款交易"
-
-#~ msgid "Your payment has been processed."
-#~ msgstr "您的付款已被处理。"
-
-#~ msgid "cash on delivery not allowed by selected delivery method"
-#~ msgstr "所选送货方式不允许选用货到现金付款"

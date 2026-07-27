@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-22 00:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -46,8 +46,8 @@ msgstr "# 产品"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s 然后套用 %(discount)s%% %(discount_type)s 并加上 %(surcharge)s 额外"
 "费用\n"
@@ -57,8 +57,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date (%"
-"(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date "
+"(%(start_date)s)"
 msgstr ""
 "%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(start_date)s）之后"
 
@@ -248,19 +248,20 @@ msgstr "<b>提示：想将尾数设为 9.99 吗？</b>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"箭头 "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"箭头 "
 "icon\" title=\"箭头\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"币别\" "
+"title=\"币别\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -991,13 +992,13 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %"
-"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 "
+"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"若更改产品的计量单位，将会套用以下换算：1 %(old_uom_name)s = 1 %"
-"(new_uom_name)s。\n"
+"若更改产品的计量单位，将会套用以下换算：1 %(old_uom_name)s = 1 "
+"%(new_uom_name)s。\n"
 "所有包括此产品的现有记录（销售单、采购订单等）都会相应更新，替换新的单位名"
 "称。"
 
@@ -1834,13 +1835,6 @@ msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome图标，例如：fa-tasks"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to "
@@ -2554,6 +2548,13 @@ msgid "Material"
 msgstr "物料"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "最大毛利"
@@ -2923,11 +2924,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute %"
-"(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%"
-"(attribute_dest)s。"
+"对于产品%(product)s，您无法将属性转换为%(attribute_src)s属"
+"性%(attribute_dest)s。"
 
 #. module: product
 #. odoo-javascript
@@ -4185,8 +4186,8 @@ msgstr "参考 “%s” 已经存在。"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product %"
-"(product)s."
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr "属性%(attribute)s必须至少具有产品%(product)s的一个值。"
 
 #. module: product
@@ -4225,8 +4226,8 @@ msgstr "产品配置器中使用的显示类型。"
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
-"(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
+"\"%(id)s\""
 msgstr ""
 
 #. module: product
@@ -5097,16 +5098,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr "无法更改在产品%(product)s上设置的产品值%(value)s。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr "无法更改在产品%(product)s上设置的值%(value)s。"
 
 #. module: product
@@ -5466,33 +5467,3 @@ msgstr "到"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
-
-#~ msgid "Attached To"
-#~ msgstr "附加到"
-
-#~ msgid "Creation"
-#~ msgstr "创建"
-
-#~ msgid "Document"
-#~ msgstr "文档"
-
-#~ msgid "History"
-#~ msgstr "历史"
-
-#~ msgid "Image is a link"
-#~ msgstr "图像是一个链接"
-
-#~ msgid "on"
-#~ msgstr "在"
-
-#~ msgid "<strong>Qty: </strong>"
-#~ msgstr "<strong>数量: </strong>"
-
-#~ msgid "Eco-friendly Wooden Chair"
-#~ msgstr "环保木椅"
-
-#~ msgid "Package Type A"
-#~ msgstr "包装类型 A"
-
-#~ msgid "Price:"
-#~ msgstr "价格:"

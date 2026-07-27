@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 17:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -302,14 +302,14 @@ msgstr ""
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -335,47 +335,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Редагувати"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Редагувати"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 
 #. module: point_of_sale
@@ -396,8 +402,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -4009,11 +4016,6 @@ msgid "Followers (Partners)"
 msgstr "Підписники (Партнери)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5310,6 +5312,11 @@ msgid "Margins & Costs"
 msgstr "Маржа і вартість"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6189,8 +6196,8 @@ msgstr "Додаткові товари:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -6901,8 +6908,8 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Будь ласка, визначте рахунок доходу для цього товару: '%(product)s' (id:%"
-"(id)d)."
+"Будь ласка, визначте рахунок доходу для цього товару: '%(product)s' (id:"
+"%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10062,19 +10069,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11400,8 +11407,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11811,300 +11818,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s Оплата POS %(partner)s в %(session)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s неоподатковується"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Касовий апарат</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Записи у журналі</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Платежі за рахунками, що представляють зведені та банківські роздільні "
-#~ "платежі."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Журнал бухобліку використовується для створення рахунків."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Бухгалтерський журнал, який використовується для оприбуткування записів у "
-#~ "журналі сесій POS та платежів за рахунками-фактурами."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Сума для балансу"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Під час спроби закрити сесію сталася помилка.\n"
-#~ "Ви будете перенаправлені на бекенд, щоб вручну закрити сесію."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Банківські платежі"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Перед закриттям різниці"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Журнал каси"
-
-#~ msgid "Cash register"
-#~ msgstr "Касова скринька"
-
-#~ msgid "Close Session"
-#~ msgstr "Закрити сесію"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Помічник закриття сесії"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Різниця закриття в %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Помилка закриття сесії"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Комбінуйте %(payment_method)s платежі точки продажу з %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Дебіторська заборгованість за замовчуванням (PoS)"
-
-#~ msgid "Destination account"
-#~ msgstr "Рахунок призначення"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Рахунок призначення лише для читання"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Різниця під час закриття сесії точки продажу"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "Різниця між теоретичним та реальним балансом закриття."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Кінцевий баланс"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Примусове закриття сеансу"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Примусово встановлювати клієнта під час використання цього способу оплати "
-#~ "та розділяє записи журналу для кожного клієнта. Це може уповільнити "
-#~ "процес закриття."
-
-#~ msgid "From invoice payments"
-#~ msgstr "З платежів рахунку"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Має контроль готівки"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Ідентифікувати клієнта"
-
-#~ msgid "Information message"
-#~ msgstr "Інформативне повідомлення"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr ""
-#~ "Посередницький рахунок, який використовується для неідентифікованих "
-#~ "клієнтів."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Журнал рахунків"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Оплата рахунка для %(order)s (%(account_move)s) використовуючи %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Виставлений рахунок"
-
-#~ msgid "Journal Items"
-#~ msgstr "Елементи журналу"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Остання сесія закриття готівки"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Для оприбуткування втраченої суми потрібен рахунок збитків для наступних "
-#~ "журналів: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Для оприбуткування отриманої суми потрібен рахунок прибутку для наступних "
-#~ "журналів: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Недоступний"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Початковий баланс, підсумований для всіх касових операцій."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Перейдіть у %s журнал та визначіть рахунок витрат. Цей рахунок буде "
-#~ "використовуватися для грошових різниць."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Перейдіть у %s журнал та визначіть рахунок доходу. Цей рахунок буде "
-#~ "використаний для грошової різниці."
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Переоцінка запису закриття точки продажу %(entry)s для замовлення %"
-#~ "(order)s із сесії %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Запис журналу сесії"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Початковий баланс"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Журнал рахунку має бути в тій же валюті, що й журнал продажів або валюта "
-#~ "компанії, якщо вона не встановлена."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Сесію уже закрито іншим користувачем. Усі продажі, здійснені тим часом, "
-#~ "було збережено в сесії відновлення, яку можна будь-коли переглянути та "
-#~ "опублікувати в Бухобліку з інформаційної панелі точки продажу."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Теоретичний баланс закриття"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Існує різниця між сумами для оприбуткування та сумами замовлень, "
-#~ "ймовірно, це викликано податками або змінами налаштування бухобліку."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "У цій сесії немає касового апарату."
-
-#~ msgid "Transaction"
-#~ msgstr "Операція"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Неможливо закрити та підтвердити сесію.\n"
-#~ "Встановіть кореспондуючий рахунок податку у кожному розділеному рядку "
-#~ "наступних податків: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Ви не можете закрити Точку продажу, якщо рахунки ще не опубліковані.\n"
-#~ "Рахунки: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Ви ввімкнули опцію «Ідентифікувати клієнта» для %(payment_method)s "
-#~ "способу оплати, але замовлення %(order)s не містить клієнта."
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Перевірте з'єднання з інтернетом, потім спробуйте з'єднатися знову, "
-#~ "натиснувши на червону кнопку wifi (вверху справа)."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Будь ласка, надрукуйте рахунок з бекенду"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Замовлення неможливо надіслати на сервер через невідому помилку"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Замовлення було синхронізовано раніше. Будь ласка, зробіть рахунок-"
-#~ "фактуру з бекенду для замовлення: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Під час отримання замовлення на сервері виникла помилка."
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Не вдається синхронізувати замовлення"
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Пропустити попередній екран</b></span>"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "IP-адреса принтера Epson"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Друк квитанції"
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Пропустити попередній перегляд екрану"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Екран квитанції буде пропущено, якщо чек може бути роздрукований "
-#~ "автоматично."
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на сайті"
-
-#~ msgid "Info"
-#~ msgstr "Інформація"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Зміна останнього приготування"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Останній роздрукований статус замовлення"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Точка продажу"

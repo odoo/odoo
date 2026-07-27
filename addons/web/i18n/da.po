@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 02:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/web/"
@@ -201,18 +201,18 @@ msgstr "<em class=\"d-block my-3 small text-center text-muted\">- eller -</em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> Nulstil"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> Nulstil"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -293,10 +293,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
 
 #. module: web
@@ -3856,8 +3856,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -5327,21 +5327,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s er understøttet for kategori (fundet type %"
-"(field_type)s)"
+"Kun typer %(supported_types)s er understøttet for kategori (fundet type "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s understøtter filter (fundet type %"
-"(field_type)s)"
+"Kun typer %(supported_types)s understøtter filter (fundet type "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -6511,11 +6511,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"Vælg <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Vælg <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7239,8 +7239,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7276,11 +7276,11 @@ msgstr "Det valgte felt bruges til automatisk at udfylde signaturen"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
-"Den valgte fil (%(size)sB) overskrider den maksimalt tilladte størrelse (%"
-"(maxSize)sB)."
+"Den valgte fil (%(size)sB) overskrider den maksimalt tilladte størrelse "
+"(%(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7881,8 +7881,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27480,88 +27480,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "Udfør \"Klik overalt\""
-
-#~ msgid "All day"
-#~ msgstr "Hele dagen"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Skatteregistreringsnummeret. Værdierne valideres ud fra landets format. "
-#~ "Brug '/' for at angive, at partneren ikke er skattepligtig."
-
-#~ msgid "Custom"
-#~ msgstr "Brugerdefineret"
-
-#~ msgid "Hue"
-#~ msgstr "Farvetone"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "Kanban: ingen handling for type: %(type)s"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "Model for datasætregler"
-
-#~ msgid "Opacity"
-#~ msgstr "Opacitet"
-
-#~ msgid "Record Rules"
-#~ msgstr "Dokumentregler"
-
-#~ msgid "Reset"
-#~ msgstr "Nulstil"
-
-#~ msgid "Saturation and brightness color picker."
-#~ msgstr "Farvevælger til mætning og lysstyrke."
-
-#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-#~ msgstr "Mætning: %(saturationLvl)s %. Lysstyrke: %(brightnessLvl)s %"
-
-#~ msgid "Solid"
-#~ msgstr "Fast"
-
-#~ msgid ""
-#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
-#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
-#~ "the same time to have finer control."
-#~ msgstr ""
-#~ "Brug pil op og pil ned til at justere lysstyrken, og pil venstre og pil "
-#~ "højre til at justere mætningen. Hold Ctrl- eller Cmd-tasten nede på samme "
-#~ "tid for præcis justering."
-
-#~ msgid "hex"
-#~ msgstr "hex"
-
-#~ msgid "Autosave"
-#~ msgstr "Gem automatisk"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr ""
-#~ "Hvis denne indstilling er aktiveret, gemmes posten med det samme, når "
-#~ "feltet ændres."
-
-#~ msgid "Invalid data"
-#~ msgstr "Ugyldige data"
-
-#~ msgid "No settings found"
-#~ msgstr "Ingen indstillinger fundet"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "Cirkeldiagrammet kan ikke blande positive og negative tal. Prøv at ændre "
-#~ "dit domæne til kun at vise positive resultater"
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "Prøv at søge efter et andet nøgleord"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

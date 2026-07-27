@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 14:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -68,8 +68,8 @@ msgstr "ĐƠN HOÀN TIỀN %(name)s"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành %"
-"(new_amount)s"
+"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành "
+"%(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -303,14 +303,14 @@ msgstr "Quần jean 5 túi chất liệu denim cotton."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -336,47 +336,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"Cài đặt này dùng chung cho tất "
-"cả POS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"Cài đặt này dùng chung cho "
+"tất cả POS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Chỉnh sửa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Chỉnh sửa"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>Xin chào %(client_name)s,<br/>Đây là Biên lai của bạn %(is_invoiced)s "
 "cho             %(pos_name)s với số tiền là %(amount)s từ %(company_name)s. "
@@ -400,13 +406,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Mã vạch</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Cài đặt này dùng chung cho tất cả POS.\" pos-data-toggle=\"tooltip\"/"
-">"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"Cài đặt này dùng chung cho tất cả POS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -1179,8 +1186,8 @@ msgstr "Số tiền đã trả"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %"
-"(new_amount)s"
+"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành "
+"%(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4062,11 +4069,6 @@ msgid "Followers (Partners)"
 msgstr "Người theo dõi (Đối tác)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font biểu tượng, ví dụ: fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr "Ẩm thực"
@@ -5388,6 +5390,11 @@ msgid "Margins & Costs"
 msgstr "Biên lợi nhuận & chi phí"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6273,8 +6280,8 @@ msgstr "Sản phẩm tuỳ chọn:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Các sản phẩm tùy chọn sẽ được gợi ý khi khách hàng thêm mặt hàng vào giỏ "
 "hàng (VD: việc thêm một chiếc burger sẽ gợi ý nước ngọt hoặc khoai tây "
@@ -6988,8 +6995,8 @@ msgstr "Vui lòng tạo/chọn một POS ở trên để hiển thị các tùy 
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' (id:%"
-"(id)d)."
+"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' (id:"
+"%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10183,19 +10190,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11551,8 +11558,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11962,410 +11969,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s thanh toán POS của %(partner)s trong %(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s với %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s trước thuế"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Máy tính tiền</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Hạng mục bút toán</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Tài khoản thanh toán đại diện cho các khoản thanh toán tổng hợp và chia "
-#~ "nhỏ qua ngân hàng."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Sổ nhật ký kế toán được sử dụng để tạo hoá đơn."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Sổ nhật ký kế toán được dùng để vào sổ bút toán phiên POS và thanh toán "
-#~ "hóa đơn POS."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Số tiền cần cân đối"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Đã xảy ra lỗi khi cố đóng phiên.\n"
-#~ "Bạn sẽ được điều hướng tới back-end để đóng phiên theo cách thủ công."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Thanh toán ngân hàng"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Chênh lệch trước khi đóng"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Sổ tiền mặt"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Chênh lệch tiền được phát hiện trong quá trình kiểm đếm (Lỗ) - đóng"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr ""
-#~ "Chênh lệch tiền được phát hiện trong quá trình kiểm đếm (Lãi) - đóng"
-
-#~ msgid "Cash register"
-#~ msgstr "Máy tính tiền"
-
-#~ msgid "Close Session"
-#~ msgstr "Đóng phiên"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Công cụ đóng phiên"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Chênh lệch đóng phiên trong %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Lỗi đóng phiên"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Kết các khoản thanh toán POS %(payment_method)s từ %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Tài khoản phải thu mặc định (PoS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Tài khoản phải thu POS mặc định"
-
-#~ msgid "Destination account"
-#~ msgstr "Tài khoản đích"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Tài khoản đích ở dạng chỉ đọc"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Chênh lệch khi đóng phiên PoS"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Chênh lệch giữa số dư đóng phiên theo lý thuyết và số dư đóng phiên thực "
-#~ "tế"
-
-#~ msgid ""
-#~ "Do you want to stop the snooze early and make the product available again "
-#~ "immediately?"
-#~ msgstr ""
-#~ "Bạn có muốn dừng chế độ tạm ngừng sớm và đưa sản phẩm trở lại ngay lập "
-#~ "tức không?"
-
-#~ msgid "Ending Balance"
-#~ msgstr "Số dư cuối kỳ"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Bắt buộc đóng phiên"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Bắt buộc chọn khách hàng khi dùng phương thức thanh toán này và tách bút "
-#~ "toán cho mỗi khách hàng. Việc này có thể làm chậm quá trình đóng phiên."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Từ thanh toán hóa đơn"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Có kiểm soát tiền mặt"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Xác nhận khách hàng"
-
-#~ msgid "Information message"
-#~ msgstr "Tin nhắn thông tin"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Tài khoản trung gian dùng cho khách hàng không xác định."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Sổ nhật ký hoá đơn"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Thanh toán hoá đơn cho %(order)s (%(account_move)s) bằng %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Đã xuất hóa đơn"
-
-#~ msgid "Journal Items"
-#~ msgstr "Hạng mục bút toán"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Tiền mặt khi đóng phiên gần nhất"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Cần tải khoản ghi lỗ cho sổ nhật ký sau để vào sổ khoản tiền lỗ: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Cần tài khoản ghi lãi cho sổ nhật ký sau để vào sổ khoản tiền lãi: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Không khả dụng"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Số dư mở phiên tổng hợp cho tất cả giao dịch tiền mặt."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Vui lòng đi đến sổ nhật ký %s và cài đặt một tài khoản ghi lỗ. Tài khoản "
-#~ "này sẽ được dùng để ghi nhận chênh lệch tiền mặt."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Vui lòng đi đến sổ nhật ký %s và cài đặt một tài khoản ghi lãi. Tài khoản "
-#~ "này sẽ được dùng để ghi nhận chênh lệch tiền mặt."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Giảm giá từ %(original_price)s xuống %(discounted_price)s"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Phiên liên quan: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Đảo ngược bút toán đóng phiên POS %(entry)s cho đơn hàng %(order)s từ "
-#~ "phiên %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Bút toán phiên"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Số dư đầu kỳ"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Sổ nhật ký hoá đơn phải có cùng đơn vị tiền tệ với sổ nhật ký bán hàng "
-#~ "hoặc tiền tệ công ty nếu chưa được thiết lập."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Một người dùng khác đã đóng phiên. Tất cả doanh số bán hàng hoàn thành đã "
-#~ "được lưu trong một phiên khôi phục, phiên này có thể được xem xét lại bất "
-#~ "kỳ lúc nào và được ghi sổ vào Kế toán từ bảng điều khiển của POS."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Số dư đóng phiên theo lý thuyết"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Có chênh lệch giữa số tiền cần vào sổ và số tiền của đơn hàng, điều này "
-#~ "có thể là do thay đổi trong cấu hình kế toán hoặc thuế."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Không có máy tính tiền cho phiên này."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr ""
-#~ "Để kích hoạt tính năng tạo hóa đơn, vui lòng thêm một sổ nhật ký cho tính "
-#~ "năng này trong phần cài đặt."
-
-#~ msgid "Transaction"
-#~ msgstr "Giao dịch"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Không thể đóng và xác nhận phiên.\n"
-#~ "Vui lòng đặt tài khoản thuế tương ứng trong mỗi dòng phân loại của các "
-#~ "loại thuế sau: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You are not allowed to change the rounding configuration while a pos "
-#~ "session using it is already opened."
-#~ msgstr ""
-#~ "Bạn không được phép thay đổi cấu hình làm tròn tiền mặt trong khi có một "
-#~ "phiên POS còn mở đang sử dụng."
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Bạn không thể đóng POS khi hoá đơn chưa được đăng.\n"
-#~ "Hoá đơn: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Bạn đã bật tùy chọn \"Xác định khách hàng\" cho phương thức thanh toán %"
-#~ "(payment_method)s, nhưng đơn hàng %(order)s không chứa khách hàng."
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Kiểm tra kết nối internet và thử đồng bộ lại bằng cách bấm vào nút wifi "
-#~ "màu đỏ (góc trên bên phải màn hình)."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Chú ý! Lưu trữ sản phẩm khi các phiên POS đang hoạt động không khác nào "
-#~ "gác đũa giữa bữa ăn. \n"
-#~ "Hãy nhớ đóng tất cả các phiên trước để tránh bất kỳ sự cố nào."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Vui lòng in hóa đơn từ back-end"
-
-#~ msgid "Thank you."
-#~ msgstr "Cảm ơn bạn!"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Không thể gửi đơn hàng về máy chủ vì một lỗi không xác định"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Đơn hàng đã được đồng bộ trước đó. Hãy tạo hóa đơn cho đơn hàng từ back-"
-#~ "end: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Máy chủ gặp lỗi khi nhận đơn hàng."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Để xóa một sản phẩm, hãy đảm bảo tất cả các phiên POS đều đã đóng.\n"
-#~ "\n"
-#~ "Việc xóa một sản phẩm hiện có trong phiên không khác nào bạn cố gắng giật "
-#~ "chiếc bánh hamburger mà khách hàng đang cắn dở; rồi hỗn loạn sẽ xảy ra "
-#~ "khi sốt cà chua và mayo bay tứ tung!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Không thể đồng bộ đơn hàng"
-
-#~ msgid "Welcome."
-#~ msgstr "Xin chào."
-
-#~ msgid ""
-#~ "You cannot archive a product that is set as a special product in a Point "
-#~ "of Sale configuration. Please change the configuration first."
-#~ msgstr ""
-#~ "Bạn không thể lưu trữ một sản phẩm được đặt làm sản phẩm đặc biệt trong "
-#~ "cấu hình POS. Vui lòng thay đổi cấu hình trước."
-
-#~ msgid ""
-#~ "You cannot delete a category which is currently in use in a point of sale."
-#~ msgstr "Bạn không thể xóa một danh mục đang được sử dụng tại một POS."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Bỏ qua màn hình xem trước</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr "Yêu cầu vẫn đang được xử lý ở chế độ nền. Vui lòng đợi."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Biên lai cơ bản"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Địa chỉ IP máy in Epson"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Địa chỉ IP nội bộ của máy in hóa đơn Epson, hoặc số sê-ri nếu tùy chọn "
-#~ "“Cập nhật chứng chỉ tự động” được bật trong phần cài đặt máy in."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "In biên lai cơ bản"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "In biên lai đầy đủ"
-
-#~ msgid "Print Receipt"
-#~ msgstr "In biên lai"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "In biên lai cơ bản không có giá. Có thể áp dụng cho quà tặng."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Bỏ qua màn hình xem trước"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Màn hình biên lai sẽ được bỏ qua nếu biên lai có thể được in tự động."
-
-#~ msgid "Website Messages"
-#~ msgstr "Thông báo trên trang web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Lịch sử trao đổi qua trang web"
-
-#~ msgid "Info"
-#~ msgstr "Thông tin"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Thay đổi khâu chuẩn bị cuối cùng"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Trạng thái đơn hàng được in cuối cùng"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "POS"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Đơn hàng đã được chỉnh sửa trên một thiết bị khác. Nếu bạn đã thay đổi "
-#~ "các dòng trong đơn hàng hiện có, hãy kiểm tra để đảm bảo thay đổi của bạn "
-#~ "không bị ghi đè.\n"
-#~ "\n"
-#~ "Đơn hàng sẽ được gửi lên máy chủ với các chỉnh sửa cuối cùng được thực "
-#~ "hiện trên thiết bị này."

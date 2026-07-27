@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 07:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -306,14 +306,14 @@ msgstr "Katoenen denimbroek met 5 zakken.."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -337,14 +337,14 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hallo <t t-"
 "out=\"client_name\">naam klant</t>,</t>\n"
@@ -369,51 +369,62 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
-"<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Bedrijf\"/>"
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Bedrijf\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
-msgstr "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"E-mail\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"E-mail\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
-msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Telefoon\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
+msgstr ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Telefoon\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"Deze instelling geldt voor alle "
-"kassa's.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"Deze instelling geldt voor "
+"alle kassa's.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Bewerk"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Bewerk"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
-"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %"
-"(is_invoiced)svoor             %(pos_name)s voor een bedrag van %(amount)s "
+"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs "
+"%(is_invoiced)svoor             %(pos_name)s voor een bedrag van %(amount)s "
 "bij %(company_name)s. </p>"
 
 #. module: point_of_sale
@@ -438,12 +449,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Deze instelling geldt voor alle kassa's.\" pos-data-"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"Deze instelling geldt voor alle kassa's.\" pos-data-"
 "toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
@@ -4117,11 +4129,6 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Partners)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon bijv. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr "Eten"
@@ -5463,6 +5470,11 @@ msgid "Margins & Costs"
 msgstr "Marges & Kosten"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6351,8 +6363,8 @@ msgstr "Optionele producten:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Optionele producten worden voorgesteld wanneer klanten items aan hun "
 "winkelwagen toevoegen (bijv. bij het toevoegen van een burger worden koude "
@@ -10312,9 +10324,9 @@ msgstr "De waarde van een munt/briefje moet groter zijn dan 0."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 "Er zijn %(count)s producten beschikbaar voor deze Kassa (geconfigureerde "
 "limiet: %(limit)s). Het laden van alle producten kan het kassasysteem "
@@ -10324,10 +10336,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 "Er zijn %(count)s producten beschikbaar voor deze Kassa (geconfigureerde "
 "limiet: %(limit)s). Het laden van zoveel producten zal het systeem ernstig "
@@ -11707,8 +11719,8 @@ msgstr "Je hebt nog"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -12118,470 +12130,3 @@ msgstr "met een waarde van"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s Kassabetaling van %(partner)s in %(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s met %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s excl. BTW"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Kassa</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Boekingsregels</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Rekeningbetalingen die geaggregeerde en bankgesplitste betalingen "
-#~ "vertegenwoordigen."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Dagboek gebruikt voor het maken van facturen."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Boekhoud dagboek dat wordt gebruikt om boekingen van kassasessies en "
-#~ "Kassafactuurbetalingen te boeken."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Te balanceren bedrag"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Er is een fout opgetreden bij het sluiten van de sessie.\n"
-#~ "Je wordt doorgestuurd naar de back-end om de sessie handmatig te sluiten."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Bankbetalingen"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Voor afsluitverschil"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Kasboek"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Contant verschil gevonden tijdens het tellen (verlies) - sluiting"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Contant verschil gevonden tijdens het tellen (winst) - sluiting"
-
-#~ msgid "Cash register"
-#~ msgstr "Kassa"
-
-#~ msgid "Close Session"
-#~ msgstr "Sessie sluiten"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Wizard sessie sluiten"
-
-#~ msgid "Closing counted: %s \n"
-#~ msgstr "Geteld bij afsluiting: %s \n"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Kasverschil voor %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing difference: %s \n"
-#~ msgstr "Verschil bij afsluiting: %s \n"
-
-#~ msgid "Closing expected: %s \n"
-#~ msgstr "Verwacht bij afsluiting: %s \n"
-
-#~ msgid "Closing session error"
-#~ msgstr "Fout bij sluiten van sessie"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Voeg kassabetalingen %(payment_method)s van %(session)s samen"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Standaard debiteurenrekening (Kassa)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Standaard Kassa-debiteurenrekening"
-
-#~ msgid "Destination account"
-#~ msgstr "Bestemmingsrekening"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Bestemmingsrekening is alleen-lezen"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Verschil bij het sluiten van Kassasessie"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Verschil tussen het theoretische afsluitsaldo en het werkelijke "
-#~ "afsluitsaldo."
-
-#~ msgid ""
-#~ "Do you want to stop the snooze early and make the product available again "
-#~ "immediately?"
-#~ msgstr ""
-#~ "Wil je de snoozefunctie vroegtijdig stoppen en het product onmiddellijk "
-#~ "weer beschikbaar maken?"
-
-#~ msgid "Ending Balance"
-#~ msgstr "Eindsaldo"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Sluit sessie forceren"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Dwingt om een klant in te stellen bij gebruik van deze betaalmethode en "
-#~ "splitst de boekingen voor elke klant. Het kan het sluitingsproces "
-#~ "vertragen."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Van factuurbetalingen"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Heeft kascontrole"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Identificeer klant"
-
-#~ msgid "Information message"
-#~ msgstr "Informatiebericht"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Tussenrekening gebruikt voor niet-geïdentificeerde klanten."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Factuurdagboek"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Factuurbetaling van %(order)s (%(account_move)s) aan de hand van %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Is gefactureerd"
-
-#~ msgid "Journal Items"
-#~ msgstr "Boekingsregels"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Laatste sessie afsluiting kas"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Verliesrekening nodig voor de volgende dagboeken om het verloren bedrag "
-#~ "te boeken: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Winstrekening nodig voor de volgende dagboeken om het gewonnen bedrag te "
-#~ "boeken: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Niet beschikbaar"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Beginsaldo opgeteld bij alle contante transacties."
-
-#~ msgid "Opening cash counted: %s \n"
-#~ msgstr "Beginsaldo geteld: %s \n"
-
-#~ msgid "Opening cash difference: %s \n"
-#~ msgstr "Verschil beginschaldo: %s \n"
-
-#~ msgid "Opening cash expected: %s \n"
-#~ msgstr "Verwacht beginsaldo: %s \n"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Ga naar het %s dagboek en definieer een verliesrekening. Deze rekening "
-#~ "wordt gebruikt om het kasverschil vast te leggen."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Ga naar het %s dagboek en definieer een winstrekening. Deze rekening "
-#~ "wordt gebruikt om het kasverschil vast te leggen."
-
-#~ msgid "Point of Sale Product Snooze"
-#~ msgstr "Kassa Product snoozen"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Prijskorting van %(original_price)s naar %(discounted_price)s"
-
-#~ msgid "Refresh"
-#~ msgstr "Vernieuwen"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "Klantenweergave herladen"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Gerelateerde sessie: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Omkering van kassa-afsluitingboeking %(entry)s voor order %(order)s van "
-#~ "sessie %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Sessie boeking"
-
-#~ msgid "Snoozed Products"
-#~ msgstr "Gesnoozede producten"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Beginsaldo"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Het factuur dagboek dient in dezelfde valuta te zijn als het "
-#~ "verkoopdagboek of in de bedrijfsvaluta."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "De sessie is al afgesloten door een andere gebruiker. Alle in de "
-#~ "tussentijd afgesloten verkopen zijn opgeslagen in een reddingssessie, die "
-#~ "op elk moment kan worden beken en geboekt naar de Boekhouding vanuit het "
-#~ "Kassadashboard."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Theoretisch eindsaldo"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Er is een verschil tussen de te boeken bedragen en de bedragen van de "
-#~ "orders, dit wordt waarschijnlijk veroorzaakt door wijzigingen in btw of "
-#~ "boekhoudkundige instellingen."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Er is geen kassa in deze sessie."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr ""
-#~ "Om het maken van facturen mogelijk te maken moet je een dagboek toevoegen "
-#~ "in de instellingen."
-
-#~ msgid "Transaction"
-#~ msgstr "Transactie"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Niet in staat om de sessie te sluiten en te bevestigen.\n"
-#~ "Stel de overeenstemmende btw-rekening in elke regel van de volgende "
-#~ "btw's:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You are not allowed to change the rounding configuration while a pos "
-#~ "session using it is already opened."
-#~ msgstr ""
-#~ "Je kunt de afrondingsmethode niet wijzigen terwijl een open kassasessie "
-#~ "deze gebruikt."
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Je kunt de kassa niet sluiten wanneer facturen niet zijn geboekt.\n"
-#~ "facturen: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Je hebt de optie 'Klant identificeren' ingeschakeld voor %"
-#~ "(payment_method)s betaalmethode, maar de order %(order)s bevat geen klant."
-
-#~ msgid "Chose a combo to apply"
-#~ msgstr "Kies een combo om toe te passen"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "Link gekopieerd naar klembord"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Controleer de internetverbinding en probeer opnieuw te synchroniseren "
-#~ "door op de rode wifi-knop (rechtsboven in het scherm) te klikken."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Wacht even! Producten archiveren terwijl Kassasessies actief zijn, is "
-#~ "alsof je een bord weghaalt midden in de maaltijd.\n"
-#~ "Zorg ervoor dat je eerst alle sessies afsluit om problemen te voorkomen."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Je dient de factuur via de backend af te drukken"
-
-#~ msgid "Thank you."
-#~ msgstr "Dank je wel."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr ""
-#~ "Het order kon niet naar de server worden verzonden door een onbekende fout"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Deze order is al eerder gesynchroniseerd. Je dient de factuur vanuit de "
-#~ "backend aan te maken voor deze order: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr ""
-#~ "De server heeft een fout tegengekomen tijdens het ontvangen van je order."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Om een product te verwijderen moeten alle kassasessies gesloten zijn.\n"
-#~ "\n"
-#~ "Het verwijderen van een product dat tijdens een sessie beschikbaar is, "
-#~ "zou hetzelfde zijn als proberen een hamburger uit de hand van een klant "
-#~ "te grissen terwijl hij een hap neemt; Er zal chaos ontstaan als ketchup "
-#~ "en mayonaise in het rond vliegen!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Kan order niet synchroniseren"
-
-#~ msgid "Welcome."
-#~ msgstr "Welkom."
-
-#~ msgid ""
-#~ "You cannot archive a product that is set as a special product in a Point "
-#~ "of Sale configuration. Please change the configuration first."
-#~ msgstr ""
-#~ "Je kunt een product dat in een kassaconfiguratie is ingesteld als "
-#~ "speciaal product niet archiveren. Wijzig eerst de configuratie."
-
-#~ msgid ""
-#~ "You cannot delete a category which is currently in use in a point of sale."
-#~ msgstr ""
-#~ "Je kunt geen categorie verwijderen die momenteel wordt gebruikt in een "
-#~ "kassa."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Voorbeeldscherm overslaan</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr ""
-#~ "Er wordt nog een verzoek verwerkt op de achtergrond. Even geduld "
-#~ "alsjeblieft."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Eenvoudige kassabon"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson printer IP-adres"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Lokaal IP-adres van een Epson-bonnenprinter, of het serienummer ervan als "
-#~ "de optie 'Automatische certificaatupdate' is ingeschakeld in de "
-#~ "printerinstellingen."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Eenvoudige kassabon afdrukken"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Volledig ontvangstbewijs afdrukken"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Kassabon afdrukken"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr ""
-#~ "Eenvoudige kassabon afdrukken zonder prijzen. Kan gebruikt worden als "
-#~ "cadeau."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Sla vorig scherm over"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Het kassabonscherm wordt overgeslagen als de kassabon automatisch "
-#~ "afgedrukt kan worden."
-
-#~ msgid "Website Messages"
-#~ msgstr "Websiteberichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatiegeschiedenis"
-
-#~ msgid "Barcode must start with `042`"
-#~ msgstr "Barcode moet beginnen met `042`"
-
-#~ msgid "Bill"
-#~ msgstr "Rekening"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Wijziging laatste keukenscherm"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Laatste afdruk van de order"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Bestelling verouderd"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Kassa"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "De bestelling is aangepast op een ander apparaat. Als je bestaande "
-#~ "bestelregels hebt aangepast, controleer dan of je wijzigingen niet zijn "
-#~ "overschreven.\n"
-#~ "\n"
-#~ "De bestelling wordt naar de server gestuurd met de laatste wijzigingen "
-#~ "die op dit apparaat zijn doorgevoerd."

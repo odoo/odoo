@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 12:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -312,31 +312,31 @@ msgid ""
 "                    <p>I'm requesting a Time Off. I would appreciate if you "
 "could approve it whenever possible!</p>\n"
 "                    <ul>\n"
-"                        <li>Time Type: <t t-"
-"out=\"object.work_entry_type_id.name\"/></li>\n"
+"                        <li>Time Type: <t t-out=\"object.work_entry_type_id."
+"name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Reason: <t t-"
-"out=\"object.name\"/></li>\n"
+"                        <li t-if=\"object.name\">Reason: <t t-out=\"object."
+"name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    Apreciable <b><t t-"
-"out=\"object.env.context.get('manager')\"/></b>,\n"
+"                    Apreciable <b><t t-out=\"object.env.context."
+"get('manager')\"/></b>,\n"
 "                    <br/><br/>\n"
 "                    <p>Solicitaré un permiso. Te agradecería mucho que lo "
 "apruebes cuando te sea posible.</p>\n"
 "                    <ul>\n"
-"                        <li>Tipo de tiempo: <t t-"
-"out=\"object.work_entry_type_id.name\"/></li>\n"
+"                        <li>Tipo de tiempo: <t t-out=\"object."
+"work_entry_type_id.name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Motivo: <t t-"
-"out=\"object.name\"/></li>\n"
+"                        <li t-if=\"object.name\">Motivo: <t t-out=\"object."
+"name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
@@ -344,27 +344,34 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
-msgid "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
-msgstr "<i class=\"fa fa-long-arrow-right\" title=\"a\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<i class=\"fa fa-paperclip\" title=\"Attachments\"/>"
-msgstr "<i class=\"fa fa-paperclip\" title=\"Archivos adjuntos\"/>"
+msgid "<i class=\"oi\" data-icon=\"attach_file\" title=\"Attachments\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"attach_file\" title=\"Archivos adjuntos\"/>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "<i class=\"oi\" data-icon=\"east\" title=\"to\"/>"
+msgstr "<i class=\"oi\" data-icon=\"east\" title=\"a\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -647,12 +654,12 @@ msgstr "Ausente hoy"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "According to your working schedule you are expected to work %(days)s days in "
-"this period, but %(nb_days)s days will be used because this leave %"
-"(work_entry_type_name)s can only be taken by days."
+"this period, but %(nb_days)s days will be used because this leave "
+"%(work_entry_type_name)s can only be taken by days."
 msgstr ""
 "Según tu horario laboral debes trabajar %(days)s días en este periodo, pero "
-"se usarán %(nb_days)s días porque este tipo de permiso %"
-"(work_entry_type_name)s solo se puede tomar por días."
+"se usarán %(nb_days)s días porque este tipo de permiso "
+"%(work_entry_type_name)s solo se puede tomar por días."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1105,8 +1112,8 @@ msgstr "Solicitudes aprobadas"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"Approved time off cannot be modified (%(employee)s: %(date_from)s to %"
-"(date_to)s)."
+"Approved time off cannot be modified (%(employee)s: %(date_from)s to "
+"%(date_to)s)."
 msgstr ""
 
 #. module: hr_holidays
@@ -2044,11 +2051,11 @@ msgstr "Fecha de finalización"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee_departure.py:0
 msgid ""
-"End date has been updated because the employee will leave the company on %"
-"(departure_date)s."
+"End date has been updated because the employee will leave the company on "
+"%(departure_date)s."
 msgstr ""
-"La fecha final se actualizó porque el empleado dejará la empresa el %"
-"(departure_date)s."
+"La fecha final se actualizó porque el empleado dejará la empresa el "
+"%(departure_date)s."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2109,12 +2116,6 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seguidores (contactos)"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome, por ejemplo, fa-tasks"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -2321,13 +2322,11 @@ msgstr "Visualización del icono de RR. HH."
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.new_timeoff_request_template
 msgid ""
-"I'm requesting {{ object.duration_display }} of "
-"{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
-"{{ object.request_date_to }}"
+"I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id."
+"name }} from {{ object.request_date_from }} to {{ object.request_date_to }}"
 msgstr ""
-"Solicito {{ object.duration_display }} de "
-"{{ object.work_entry_type_id.name }} del {{ object.request_date_from }} al "
-"{{ object.request_date_to }}"
+"Solicito {{ object.duration_display }} de {{ object.work_entry_type_id."
+"name }} del {{ object.request_date_from }} al {{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -2674,6 +2673,12 @@ msgstr "Días obligatorios"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_month__3
 msgid "March"
 msgstr "Marzo"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__max_leaves
@@ -3975,8 +3980,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"The total negative allocation within this validity period cannot exceed %"
-"(max)s %(unit)s."
+"The total negative allocation within this validity period cannot exceed "
+"%(max)s %(unit)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -5501,49 +5506,3 @@ msgstr "validar"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr ""
-
-#~ msgid "There is no valid allocation to cover that request."
-#~ msgstr "No tiene una asignación válida para cubrir esa solicitud."
-
-#~ msgid "Require Supporting Document"
-#~ msgstr "Necesita un justificante"
-
-#~ msgid "This modification is not allowed in the current state."
-#~ msgstr "No se permite esta modificación en el estado actual."
-
-#~ msgid ""
-#~ "You cannot modify the 'Public Holiday Included' setting since one or more "
-#~ "leaves for that                         time type are overlapping with "
-#~ "public holidays, meaning that the balance of those employees would be "
-#~ "affected by this change."
-#~ msgstr ""
-#~ "No puede modificar la función \" Día festivo incluido\" ya que uno o más "
-#~ "permisos para ese tipo de permiso se traslapan con días festivos, por lo "
-#~ "que este cambio afectará el balance de esos empleados."
-
-#~ msgid "Pending Requests"
-#~ msgstr "Solicitudes pendientes"
-
-#~ msgid "Personal"
-#~ msgstr "Personal"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"
-
-#~ msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
-#~ msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
-
-#~ msgid ""
-#~ "<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-#~ "                                            <span class=\"mx-2\" "
-#~ "invisible=\"unit_of_measure != 'hour'\">hours</span>"
-#~ msgstr ""
-#~ "<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">días</span>\n"
-#~ "                                            <span class=\"mx-2\" "
-#~ "invisible=\"unit_of_measure != 'hour'\">horas</span>"
-
-#~ msgid "<span class=\"mx-2\">up to</span>"
-#~ msgstr "<span class=\"mx-2\">hasta</span>"

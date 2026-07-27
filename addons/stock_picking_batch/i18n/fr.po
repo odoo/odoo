@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:40+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 05:54+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
@@ -33,8 +33,12 @@ msgstr "%s a été retiré du lot, aucune quantité traitée"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
-msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
-msgstr "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendrier\"/>"
+msgid ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"calendar_today\" "
+"title=\"Calendar\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"calendar_today\" "
+"title=\"Calendrier\"/>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -502,11 +506,6 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icône Font Awesome par ex. fa-tasks"
-
-#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Future Activities"
 msgstr "Activités futures"
@@ -673,6 +672,11 @@ msgstr "Numéro de lot"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Lot/Serial Number"
 msgstr "Lot/numéro de série"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -1131,8 +1135,8 @@ msgid ""
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"Les transferts suivants ne peuvent pas être ajoutés au transfert par lot %"
-"(batch)s. Veuillez vérifier leurs statuts et types d'opération.\n"
+"Les transferts suivants ne peuvent pas être ajoutés au transfert par lot "
+"%(batch)s. Veuillez vérifier leurs statuts et types d'opération.\n"
 "\n"
 "Incompatibilités : %(incompatible_transfers)s"
 
@@ -1351,21 +1355,3 @@ msgstr "volume de l'envoi"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
 msgid "shipping_weight"
 msgstr "poids de l'envoi"
-
-#~ msgid "Choose Labels Layout"
-#~ msgstr "Choisir le modèle d'étiquettes"
-
-#~ msgid "Operation Category"
-#~ msgstr "Catégorie d’opération"
-
-#~ msgid "Check Availability"
-#~ msgstr "Vérifier la disponibilité"
-
-#~ msgid "Show Check Availability"
-#~ msgstr "Afficher Vérifier la disponibilité"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"

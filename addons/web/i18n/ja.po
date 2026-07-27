@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-22 01:02+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/web/"
@@ -199,18 +199,18 @@ msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> 再設定"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> 再設定"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -299,15 +299,15 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>警告:</b> テンポラルモードでは、すべてのサンプルが"
-"統合されます。<br/>同時実行プロファイルの場合、結果が一部無効になる可能性があ"
-"ります。<br/>注意して使用してください。</span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>警告:</b> テンポラルモードでは、すべてのサンプルが統合されます。"
+"<br/>同時実行プロファイルの場合、結果が一部無効になる可能性があります。<br/>"
+"注意して使用してください。</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -3887,8 +3887,8 @@ msgstr "ID%sを持つレコードが見つからないようです。削除さ�
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 "「%(parentName)s」%(parentFieldLabel)s を使用しているすべてのユーザに対して削"
 "除されます。"
@@ -5364,8 +5364,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
 "カテゴリについては、タイプ%(supported_types)sのみがサポートされています。（発"
 "見されたタイプ%(field_type)s）"
@@ -5374,8 +5374,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
 "フィルタについてはタイプ%(supported_types)sのみがサポートされています。（発見"
 "されたタイプ %(field_type)s）"
@@ -6550,10 +6550,10 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"<i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"<i class=\"oi\" data-icon=\"database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>を選択"
 
 #. module: web
@@ -7278,8 +7278,8 @@ msgstr "%(field_name)s 内の ID は重複してはいけません: “%(action_
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 "%(field_name)s フィールドには、整数または \"false\" の値のみを含めることがで"
 "きます: “%(action_ids)s”"
@@ -7315,11 +7315,11 @@ msgstr "選択されたフィールドは署名を事前入力するのに使用
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
-"選択されたファイル (%(size)sB)は許可されている最大ファイルサイズ(%"
-"(maxSize)sB)を超えています。"
+"選択されたファイル (%(size)sB)は許可されている最大ファイルサイズ"
+"(%(maxSize)sB)を超えています。"
 
 #. module: web
 #. odoo-javascript
@@ -7921,15 +7921,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
 msgstr ""
 "演算子\"+=\"、\"-=\" を使用して、現在の日付を日単位(%(days)s )、\n"
-"週単位(%(weeks)s )、月単位(%(months)s )、年単位(%(years)s )、時間単位(%"
-"(hours)s )、\n"
+"週単位(%(weeks)s )、月単位(%(months)s )、年単位(%(years)s )、時間単位"
+"(%(hours)s )、\n"
 "分単位(%(minutes)s )、秒単位(%(seconds)s )で更新します。"
 
 #. module: web
@@ -27526,95 +27526,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "'Oh snap!'"
-#~ msgstr "'ご確認ください!'"
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "Click Everywhereを実行"
-
-#~ msgid "All day"
-#~ msgstr "終日"
-
-#~ msgid "Memory limit (in bytes)"
-#~ msgstr "メモリ上限 (バイト単位)"
-
-#~ msgid "Memory profile"
-#~ msgstr "メモリプロファイル"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "登録番号(Tax Identification Number)。ここでの値は、国の形式に基づいて検証"
-#~ "されます。取引先に税金がかからないことを示すには、'/' を使用して下さい。"
-
-#~ msgid "Custom"
-#~ msgstr "カスタム"
-
-#~ msgid "Hue"
-#~ msgstr "色相"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "かんばん: タイプ: %(type)s用のアクションなし"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "モデルレコード規則"
-
-#~ msgid "Opacity"
-#~ msgstr "不透明度"
-
-#~ msgid "Record Rules"
-#~ msgstr "レコード規則"
-
-#~ msgid "Reset"
-#~ msgstr "リセット"
-
-#~ msgid "Saturation and brightness color picker."
-#~ msgstr "彩度と明度のカラーピッカー。"
-
-#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-#~ msgstr "彩度: %(saturationLvl)s %。 明度: %(brightnessLvl)s %"
-
-#~ msgid "Solid"
-#~ msgstr "実線"
-
-#~ msgid ""
-#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
-#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
-#~ "the same time to have finer control."
-#~ msgstr ""
-#~ "上下の矢印キーで明度を調整し、左右の矢印キーで彩度を調整できます。Control"
-#~ "キー（またはCommandキー）を同時に押すと、より細かい調整が可能です。"
-
-#~ msgid "hex"
-#~ msgstr "hex"
-
-#~ msgid "Autosave"
-#~ msgstr "自動保存"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr ""
-#~ "チェックした場合、フィールドが変更されるとレコードは直ちに保存されます。"
-
-#~ msgid "Invalid data"
-#~ msgstr "無効なデータ"
-
-#~ msgid "No settings found"
-#~ msgstr "設定が見つかりません"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "円グラフは正と負の数値を混在させることはできません。 肯定的な結果のみを表"
-#~ "示するようにドメインを変更してみてください"
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "別のキーワードで検索してみてください"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

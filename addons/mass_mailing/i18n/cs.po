@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 14:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
@@ -321,13 +321,13 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> "
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
 "Contacts\n"
 "                                    </span>"
 msgstr ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                       <i class=\"fa fa-envelope-o\"/> "
+"                                       <i class=\"oi\" data-icon=\"mail\"/> "
 "Kontakty\n"
 "                                   </span>"
 
@@ -547,49 +547,41 @@ msgstr ""
 "<font style=\"font-size: 12px;\">Kde se setkává inovace s výkonem</font>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
-msgstr "<i class=\"fa fa-bar-chart\"/> Porovnat verze"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-1\" title=\"Recipient Model\" aria-"
-"hidden=\"true\"/>"
+"<i class=\"oi me-1\" data-icon=\"crisis_alert\" title=\"Recipient Model\" "
+"aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/"
-"Opportunity\"/>"
+"<i class=\"oi me-2\" data-icon=\"crisis_alert\" role=\"img\" aria-"
+"label=\"Lead/Opportunity\"/>"
 msgstr ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Prospekt/"
-"Příležitost\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-copy\"/> Create an Alternative"
-msgstr "<i class=\"fa fa-copy\"/> Vytvořit alternativu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope text-primary me-2\" title=\"E-mail\"/>"
+msgid ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" title=\"E-"
+"mail\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/> Poslat to jako vítěze"
+msgid "<i class=\"oi oi-filled\" data-icon=\"mail\"/> Send this as winner"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"mail\"/> Poslat to jako vítěze"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Odeslat oznámení výherce "
 "hned\n"
 "                                               </span>"
@@ -597,26 +589,36 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign "
 "totals"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        Součet všech procentních podílů pro tuto kampaň A/B "
 "činí celkem"
 
 #. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
-msgid "<i class=\"oi oi-arrow-right\"></i> Configure Opt-out Reasons"
-msgstr "<i class=\"oi oi-arrow-right\"></i> Nastavte důvody pro odhlášení"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"text-muted fa fa-paper-plane-o me-1\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-muted me-1\" data-icon=\"send\" aria-hidden=\"true\"/>\n"
 "                                    <span class=\"text-muted "
 "fs-5\">Mailings</span>"
 msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Compare Version"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> Porovnat verze"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"content_copy\"/> Create an Alternative"
+msgstr "<i class=\"oi\" data-icon=\"content_copy\"/> Vytvořit alternativu"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "<i class=\"oi\" data-icon=\"east\"></i> Configure Opt-out Reasons"
+msgstr "<i class=\"oi\" data-icon=\"east\"></i> Nastavte důvody pro odhlášení"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -627,15 +629,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Aby bylo možné sledovat "
 "odpovědi, musí tato adresa patřit do této databáze.\n"
 "                                               </small>"
@@ -659,41 +661,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
 msgid "<span class=\"display-4-fs\">3</span>"
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
-msgid ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>What We Offer"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-msgstr ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>Next Batch</span>"
-msgstr ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>Další dávka</span>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
-msgstr ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Datum "
-"odeslání\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -780,6 +747,42 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
 msgstr "<span class=\"o_stat_text\">Otevřít příjemce</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>Next Batch</span>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>Další dávka</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Sent date\"/>"
+msgstr ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Datum odeslání\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_button
@@ -1207,8 +1210,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr "<u>Obnovit <i class=\"fa fa-refresh ms-1\"/></u>"
+msgid "<u>Refresh <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
+msgstr "<u>Obnovit <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
@@ -1829,11 +1832,11 @@ msgstr "Žádost o odstranění blokování z portálu"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
-"Žádost o odstranění blokovacího seznamu z poštovního portálu%"
-"(mailing_link)s(dokument%(record_link)s)"
+"Žádost o odstranění blokovacího seznamu z poštovního "
+"portálu%(mailing_link)s(dokument%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1845,11 +1848,11 @@ msgstr "Žádost o blokování z portálu"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
-"Žádost o blokovací seznam z portálu zasílání%(mailing_link)s(dokemt%"
-"(record_link)s)"
+"Žádost o blokovací seznam z portálu "
+"zasílání%(mailing_link)s(dokemt%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1858,8 +1861,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct "
 "link usage)"
 msgstr ""
-"Žádost o blokování z odkazu na odhlášení z mailingového seznamu%"
-"(mailing_link)s(použití přímého odkazu)"
+"Žádost o blokování z odkazu na odhlášení z mailingového "
+"seznamu%(mailing_link)s(použití přímého odkazu)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1868,8 +1871,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Žádost o zařazení na blokovací seznam z odkazu pro odhlášení z odběru %"
-"(mailing_link)s (dokument %(record_link)s)"
+"Žádost o zařazení na blokovací seznam z odkazu pro odhlášení z odběru "
+"%(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3293,11 +3296,6 @@ msgid "Font Family"
 msgstr "Rodina písma"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona v rámci awesome font, např. fa-tasks"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
 msgstr "Zápatí"
@@ -4383,6 +4381,11 @@ msgstr "Technické informace o hromadném zasílání e-mailů"
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "Hromadné zprávy"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -7293,217 +7296,3 @@ msgstr "✽ Těstoviny"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr "✽ Pizzy"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Access all "
-#~ "modules"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Přístup ke všem "
-#~ "modulům"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Account "
-#~ "management"
-#~ msgstr "<span class=\"fa fa-check text-success\" role=\"img\"/> Správa účtu"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Complete CRM for "
-#~ "any team"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Kompletní CRM pro "
-#~ "jakýkoli tým"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Podpora "
-#~ "prostřednictvím e-mailu"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Limited "
-#~ "customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Omezené možnosti "
-#~ "přizpůsobení"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Sales &amp; "
-#~ "marketing for 2"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Prodej a "
-#~ "marketing pro 2"
-
-#~ msgid "<span class=\"fa fa-fw fa-folder\"/>Category"
-#~ msgstr "<span class=\"fa fa-fw fa-folder\"/>Kategorie"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  What do you want "
-#~ "to promote&amp;nbsp;?"
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  Co chcete "
-#~ "propagovat&amp;nbsp;?"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/> Žádné přizpůsobení"
-
-#~ msgid "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No support"
-#~ msgstr ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/> Žádná podpora"
-
-#~ msgid ""
-#~ "Continue reading <span class=\"fa fa-long-arrow-right align-middle ms-1\"/"
-#~ ">"
-#~ msgstr ""
-#~ "Pokračovat ve čtení <span class=\"fa fa-long-arrow-right align-middle "
-#~ "ms-1\"/>"
-
-#~ msgid ""
-#~ "Discover more <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr ""
-#~ "Objevte více <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid "See more <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-#~ msgstr ""
-#~ "Více informací <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-
-#~ msgid "# Favorite Filters"
-#~ msgstr "# oblíbených filtrů"
-
-#~ msgid "<span name=\"process_text\">emails are being processed.</span>"
-#~ msgstr "<span name=\"process_text\">e-maily jsou zpracovávány.</span>"
-
-#~ msgid ""
-#~ "<span name=\"scheduled_text\">emails are in queue and will be sent soon.</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span name=\"scheduled_text\">e-maily jsou ve frontě a budou brzy "
-#~ "odeslány.</span>"
-
-#~ msgid "<span name=\"sent\">emails have been sent.</span>"
-#~ msgstr "<span name=\"sent\">e-maily byly odeslány.</span>"
-
-#~ msgid ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">There wasn't "
-#~ "enough recipients given to this mailing. </span>\n"
-#~ "                            </strong>"
-#~ msgstr ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">Tento e-mail "
-#~ "nebyl zaslán dostatečnému počtu příjemců. </span>\n"
-#~ "                            </strong>"
-
-#~ msgid "Domain field"
-#~ msgstr "Oblast domény"
-
-#~ msgid "Favorite Filter"
-#~ msgstr "Oblíbený filtr"
-
-#~ msgid "Favorite Filters"
-#~ msgstr "Oblíbené filtry"
-
-#~ msgid "Favorite filter domain"
-#~ msgstr "Oblíbený filtr domény"
-
-#~ msgid "Filter Name"
-#~ msgstr "Název filtru"
-
-#~ msgid "Filters saved by me"
-#~ msgstr "Filtry uložené mnou"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Celá obrazovka"
-
-#~ msgid "Mailing Favorite Filter"
-#~ msgstr "Odesílání oblíbeného filtru"
-
-#~ msgid "Mailing List Contacts"
-#~ msgstr "Kontakty emailových seznamů"
-
-#~ msgid "Model field"
-#~ msgstr "Modelové pole"
-
-#~ msgid "My Filters"
-#~ msgstr "Moje Filtry"
-
-#~ msgid "No saved filter yet!"
-#~ msgstr "Zatím žádný uložený filtr!"
-
-#~ msgid "Open Recipient"
-#~ msgstr "Otevřít příjemce"
-
-#~ msgid "Please provide a name for the filter"
-#~ msgstr "Zadejte název filtru"
-
-#~ msgid "Reload a favorite filter"
-#~ msgstr "Načíst oblíbený filtr znovu"
-
-#~ msgid "Remove from Favorites"
-#~ msgstr "Odstranit z Oblíbených"
-
-#~ msgid "Save as Favorite Filter"
-#~ msgstr "Uložit jako oblíbený filtr"
-
-#~ msgid "Save as favorite"
-#~ msgstr "Uložit jako oblíbené"
-
-#~ msgid ""
-#~ "The saved filter targets different recipients and is incompatible with "
-#~ "this mailing."
-#~ msgstr ""
-#~ "Uložený filtr je určen pro různé příjemce a není kompatibilní s touto "
-#~ "zásilkou."
-
-#~ msgid ""
-#~ "While designing the mailing, you can define the rules to filter "
-#~ "recipients.\n"
-#~ "                To save the same criteria for future use, you can add it "
-#~ "to the favorite list\n"
-#~ "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></"
-#~ "i> icon next to \"Recipients\"."
-#~ msgstr ""
-#~ "Při navrhování mailingu můžete definovat pravidla pro filtrování "
-#~ "příjemců.\n"
-#~ "                Chcete-li uložit stejná kritéria pro budoucí použití, "
-#~ "můžete je přidat do seznamu oblíbených položek\n"
-#~ "                kliknutím na ikonu <i class=\"fa fa-floppy-o text-"
-#~ "warning\"></i> vedle položky „Příjemci“."
-
-#~ msgid "e.g. \"VIP Customers\""
-#~ msgstr "např. „VIP zákazníci“"
-
-#~ msgid "Add Contacts to Mailing List"
-#~ msgstr "Přidání kontaktů do emailového seznamu"
-
-#~ msgid "Add Contacts to a Mailing List"
-#~ msgstr "Přidání kontaktů do seznamu adresátů"
-
-#~ msgid "Select a list..."
-#~ msgstr "Vyberte seznam..."
-
-#~ msgid "Website Messages"
-#~ msgstr "Webové zprávy"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webová historie komunikace"
-
-#~ msgid "Heading 1"
-#~ msgstr "Nadpis 1"
-
-#~ msgid "Heading 2"
-#~ msgstr "Nadpis 2"
-
-#~ msgid "Heading 3"
-#~ msgstr "Nadpis 3"
-
-#~ msgid "Primary Button"
-#~ msgstr "Primární tlačítko"
-
-#~ msgid "Secondary Button"
-#~ msgstr "Sekundární tlačítko"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 04:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -52,36 +52,6 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"La orden de "
-"venta asociada a este proyecto se canceló. Le recomendamos actualizar el "
-"artículo de la orden de venta o cancelar el proyecto para que coincida con "
-"la cancelación de la orden de venta.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"La orden de "
-"venta asociada a esta tarea se canceló. Le recomendamos ya sea actualizar el "
-"artículo de la orden de venta o cancelar esta tarea, de acuerdo con la "
-"cancelación de la orden de venta.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            <span class=\"o_stat_value\">0</span> Sales "
 "Order\n"
@@ -119,6 +89,36 @@ msgstr "<span class=\"o_stat_text\">Vista del cliente</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Orden de venta</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"La orden de "
+"venta asociada a este proyecto se canceló. Le recomendamos actualizar el "
+"artículo de la orden de venta o cancelar el proyecto para que coincida con "
+"la cancelación de la orden de venta.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"La orden de "
+"venta asociada a esta tarea se canceló. Le recomendamos ya sea actualizar el "
+"artículo de la orden de venta o cancelar esta tarea, de acuerdo con la "
+"cancelación de la orden de venta.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -998,64 +998,3 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
-
-#~ msgid ""
-#~ "A project must be defined on the quotation %(order)s or on the form of "
-#~ "products creating a task on order.\n"
-#~ "The following product need a project in which to put its task: %"
-#~ "(product_name)s"
-#~ msgstr ""
-#~ "Debes definir un proyecto en la cotización %(order)s o en el formulario "
-#~ "de los productos que crean una tarea al ordenarlos.\n"
-#~ "Los siguientes productos necesitan un proyecto en el que puedan agregar "
-#~ "la tarea: %(product_name)s"
-
-#~ msgid "Create a customer invoice"
-#~ msgstr "Crear una factura de cliente"
-
-#~ msgid "Create a vendor bill"
-#~ msgstr "Crear una factura de proveedor"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your customers."
-#~ msgstr ""
-#~ "Crea facturas, registra pagos y lleva el seguimiento de las "
-#~ "conversaciones con tus clientes."
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your vendors."
-#~ msgstr ""
-#~ "Cree facturas, registra pagos y lleve el seguimiento de las "
-#~ "conversaciones con sus proveedores."
-
-#~ msgid "%(name)s's Real Margins"
-#~ msgstr "Márgenes reales de %(name)s"
-
-#~ msgid "Create Sales Order"
-#~ msgstr "Crear orden de venta"
-
-#~ msgid "Real Margin"
-#~ msgstr "Margen real"
-
-#~ msgid "Real Margins"
-#~ msgstr "Márgenes reales"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "Ingresos (tiempo y material)"
-
-#~ msgid "Timesheets (Fixed Price)"
-#~ msgstr "Registro de horas (precio fijo)"
-
-#~ msgid "Timesheets (Non-Billable)"
-#~ msgstr "Registro de horas (no facturable)"
-
-#~ msgid "Timesheets (Manual) "
-#~ msgstr "Registro de horas (manual)"
-
-#~ msgid "Timesheets (Milestones)"
-#~ msgstr "Registro de horas (objetivos)"
-
-#~ msgid "Timesheets (Time & Materials)"
-#~ msgstr "Registro de horas (tiempo y materiales)"

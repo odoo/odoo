@@ -44,7 +44,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 17:49+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/mrp/"
@@ -89,12 +89,13 @@ msgstr " <br/><br/> Komponenty zostaną pobrane z <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards <b>%"
-"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
 msgstr ""
-" <br/><br/> Wyprodukowane produkty zostaną przesunięte do <b>%"
-"(destination)s</b>, <br/> jak określono w miejscu docelowym<b>%(operation)s</"
-"b>."
+" <br/><br/> Wyprodukowane produkty zostaną przesunięte do "
+"<b>%(destination)s</b>, <br/> jak określono w miejscu "
+"docelowym<b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -312,45 +313,54 @@ msgid ":  hours"
 msgstr ":  godziny"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
+"<i class=\"oi me-1 my-auto\" data-icon=\"schedule\" title=\"planned date "
+"start\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"hourglass_bottom\" title=\"time remaining\"/"
+">"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
-"Availability\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Child "
+"MO's\"/>"
 msgstr ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Dostępność "
-"komponentów\"/>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
-msgstr ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Podrzędne "
+"ZP\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
-"Time\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 msgstr ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Pozostały "
-"czas\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
-msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Remaining Time\"/>"
 msgstr ""
-"<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Podrzędne ZP\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Pozostały czas\"/>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Components Availability\"/>"
+msgstr ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Dostępność komponentów\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -1046,9 +1056,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Ponieważ dla tego produktu zostały już użyte inne jednostki miary  niż %"
-"(uom)s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. Jeśli "
-"chcesz ją zmienić, zarchiwizuj produkt i utwórz nowy."
+"Ponieważ dla tego produktu zostały już użyte inne jednostki miary  niż "
+"%(uom)s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. "
+"Jeśli chcesz ją zmienić, zarchiwizuj produkt i utwórz nowy."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -2696,14 +2706,6 @@ msgid "Followers (Partners)"
 msgstr "Obserwujący (partnerzy)"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona Font awesome np. fa-tasks"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 msgid "Forecast"
@@ -3780,6 +3782,14 @@ msgstr "Główny harmonogram produkcji (MPS)"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
 msgstr "Dostępność materiałów"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
@@ -7325,11 +7335,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: "
+"%(missing_products)s"
 msgstr ""
-"W przypadku produktów należy podać numer partii/seryjny i 'zużyć' je: %"
-"(missing_products)s"
+"W przypadku produktów należy podać numer partii/seryjny i 'zużyć' je: "
+"%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7461,183 +7471,3 @@ msgstr "rzeczywisty czas trwania"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "podział"
-
-#~ msgid "Allocation Report for Manufacturing Orders"
-#~ msgstr "Raport przydziału dla zleceń produkcyjnych"
-
-#~ msgid "Create backorder"
-#~ msgstr "Utwórz zamówienie oczekujące"
-
-#~ msgid "MRP Reception Report"
-#~ msgstr "Raport odbioru MRP"
-
-#~ msgid "No Backorder"
-#~ msgstr "Bez pobrania częściowego"
-
-#~ msgid "Operation Category"
-#~ msgstr "Kategoria operacji"
-
-#~ msgid "Produce All"
-#~ msgstr "Produkuj wszystko"
-
-#~ msgid "Set Quantities & Validate"
-#~ msgstr "Ustawianie ilości i walidacja"
-
-#~ msgid "Show Produce"
-#~ msgstr "Pokaż produkuj"
-
-#~ msgid "Show Produce All"
-#~ msgstr "Pokaż produkuj wszystko"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "Raport odbioru akcji"
-
-#~ msgid "Technical field to check if produce all button can be shown"
-#~ msgstr ""
-#~ "Pole techniczne do sprawdzenia, czy przycisk produkuj wszystko może być "
-#~ "wyświetlany"
-
-#~ msgid "Technical field to check if produce button can be shown"
-#~ msgstr ""
-#~ "Pole techniczne do sprawdzenia, czy przycisk produkcji może być "
-#~ "wyświetlany"
-
-#~ msgid "Use Reception Report with Manufacturing Orders"
-#~ msgstr "Korzystanie z raportu przyjęcia z zamówieniami produkcji"
-
-#~ msgid ""
-#~ "View and allocate production quantities to customer orders or other "
-#~ "manufacturing orders"
-#~ msgstr ""
-#~ "Przeglądaj i przypisuj produkowane ilości do zamówień klientów lub innych "
-#~ "zleceń produkcji."
-
-#~ msgid "Check availability"
-#~ msgstr "Sprawdź dostępność"
-
-#~ msgid ""
-#~ "Create operation level dependencies that will influence both planning and "
-#~ "the status of work orders upon MO confirmation. If this feature is "
-#~ "ticked, and nothing is specified, Odoo will assume that all operations "
-#~ "can be started simultaneously."
-#~ msgstr ""
-#~ "Utwórz zależności na poziomie operacji, które będą miały wpływ zarówno na "
-#~ "planowanie, jak i status zleceń pracy po potwierdzeniu MO. Jeśli ta "
-#~ "funkcja jest zaznaczona i nic nie zostanie określone, Odoo założy, że "
-#~ "wszystkie operacje mogą być uruchamiane jednocześnie."
-
-#~ msgid "Custom Work Order Dependencies"
-#~ msgstr "Zależności niestandardowych zleceń pracy"
-
-#~ msgid "MO Cancelled"
-#~ msgstr "Anulowane ZP"
-
-#~ msgid "MO Confirmed"
-#~ msgstr "Potwierdzone MO"
-
-#~ msgid "MO Done"
-#~ msgstr "Wykonane ZP"
-
-#~ msgid "MO Planned"
-#~ msgstr "Zaplanowane zlecenia prod."
-
-#~ msgid "MO Progress"
-#~ msgstr "Postęp ZP"
-
-#~ msgid "MO To Close"
-#~ msgstr "ZP do zamknięcia"
-
-#~ msgid "Operation Dependencies"
-#~ msgstr "Zależności operacji"
-
-#~ msgid ""
-#~ "Set the order that work orders should be processed in. Activate the "
-#~ "feature within each BoM's Miscellaneous tab"
-#~ msgstr ""
-#~ "Ustaw kolejność przetwarzania zleceń pracy. Aktywuj tę aktywność w "
-#~ "zakładce Różne w każdym BoM."
-
-#~ msgid "Show BoM Lines"
-#~ msgstr "Pokaż pozycje Zest. Mat."
-
-#~ msgid "The number of products already handled by this work order"
-#~ msgstr "Liczba produktów już obsłużonych przez to zlecenie robocze"
-
-#~ msgid "Time Remaining"
-#~ msgstr "Pozostały czas"
-
-#~ msgid "Total To Consume"
-#~ msgstr "Całkowite zużycie"
-
-#~ msgid "Unbuild: %s"
-#~ msgstr "Demontaż: %s"
-
-#~ msgid "Use Operation Dependencies"
-#~ msgstr "Użycie zależności operacji"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia komunikacji"
-
-#~ msgid "days"
-#~ msgstr "dni"
-
-#~ msgid "Final Location from procurement"
-#~ msgstr "Końcowa lokacja z zamówienia"
-
-#~ msgid ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Upload files to your product\n"
-#~ "                    </p><p>\n"
-#~ "                        Use this feature to store any files, like "
-#~ "drawings or specifications.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "Prześlij i załącz pliki do produktu\n"
-#~ "</p><p>\n"
-#~ "Ta funkcja służy do przechowywania dowolnych plików, takich jak rysunki "
-#~ "czy specyfikacje\n"
-#~ "</p>"
-
-#~ msgid "Are you sure you want to Update the Planning ?"
-#~ msgstr "Czy na pewno chcesz zaktualizować planowanie?"
-
-#~ msgid "Are you sure you want to Update the Work Center Planning ?"
-#~ msgstr "Czy na pewno chcesz zaktualizować planowanie gniazda roboczego?"
-
-#~ msgid "Attachments Count"
-#~ msgstr "Liczba załączników"
-
-#~ msgid "Files attached to the product."
-#~ msgstr "Pliki załączone do produktu"
-
-#~ msgid "Hidden"
-#~ msgstr "Ukryte"
-
-#~ msgid ""
-#~ "Leave hidden if document only accessible on product form.\n"
-#~ "Select Bill of Materials to visualise this document as a product "
-#~ "attachment when this product is in a bill of material."
-#~ msgstr ""
-#~ "Zostaw ukryte, jeśli dostęp do dokumentu jest tylko przez formularz "
-#~ "produktu.\n"
-#~ "Wybierz Zestawienie Materiałów aby zwizualizować ten dokument jako "
-#~ "załącznik produktu, kiedy ten produkt jest w zestawieniu materiałów."
-
-#~ msgid "MRP : Visible at"
-#~ msgstr "MRP : Widoczne na"
-
-#~ msgid "Product Attachments"
-#~ msgstr "Załączniki produktu"
-
-#~ msgid "Product Document"
-#~ msgstr "Product Document"
-
-#~ msgid "Update"
-#~ msgstr "Aktualizacja"
-
-#~ msgid "Update work center planning"
-#~ msgstr "Zaktualizuj planowanie centrum roboczego"

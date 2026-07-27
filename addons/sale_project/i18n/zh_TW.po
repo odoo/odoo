@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 09:33+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -54,32 +54,6 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"與此專案關聯"
-"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此專案。"
-"\" invisible=\"sale_order_state != 'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"與此任務關聯"
-"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此任務。"
-"\" invisible=\"sale_order_state != 'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            <span class=\"o_stat_value\">0</span> Sales "
 "Order\n"
@@ -117,6 +91,32 @@ msgstr "<span class=\"o_stat_text\">客戶檢視畫面</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">銷售訂單</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"與此專案關聯的"
+"銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此專案。\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"與此任務關聯的"
+"銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此任務。\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -945,31 +945,3 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
-
-#~ msgid ""
-#~ "A project must be defined on the quotation %(order)s or on the form of "
-#~ "products creating a task on order.\n"
-#~ "The following product need a project in which to put its task: %"
-#~ "(product_name)s"
-#~ msgstr ""
-#~ "必須在報價單 %(order)s，或在建立訂單任務的產品表單上，設定一個專案。\n"
-#~ "以下產品需要有專案，以放置其相關任務：%(product_name)s"
-
-#~ msgid "Create a customer invoice"
-#~ msgstr "建立客戶發票"
-
-#~ msgid "Create a vendor bill"
-#~ msgstr "建立供應商帳單"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your customers."
-#~ msgstr "建立發票，登記付款，並追蹤與客戶的溝通歷程。"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your vendors."
-#~ msgstr "建立發票，登記付款，並追蹤與供應商的溝通歷程。"
-
-#~ msgid "Create Sales Order"
-#~ msgstr "建立銷售訂單"
