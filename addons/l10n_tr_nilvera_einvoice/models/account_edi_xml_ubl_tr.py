@@ -928,16 +928,40 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             line_node['cac:Item']['cac:StandardItemIdentification'] = None
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
+        """Fill <cbc:Name> and <cbc:Description> from the line label.
+
+        The first line of the label is the name (the product name stays when there is a product),
+        the next lines are the description, falling back to the product's sales description.
+        On bills, the description stays the product's purchase description.
+
+        :param line_node: dict representing the invoice line XML structure to update.
+        :param vals: dict containing invoice line data.
+        """
         # EXTENDS account.edi.xml.ubl_20
-        # Without a product, the first line of the label is the item name and the next lines its description.
         super()._add_invoice_line_item_nodes(line_node, vals)
         line = vals['base_line']['record']
-        if vals['base_line']['product_id'] or not line or not line.name:
-            return
-        name, _separator, description = line.name.partition('\n')
         item_node = line_node['cac:Item']
-        item_node['cbc:Name']['_text'] = name.strip() or item_node['cbc:Name']['_text']
-        item_node['cbc:Description']['_text'] = ' '.join(description.split()) or None
+        if line.move_id.is_purchase_document():
+            item_node['cbc:Description']['_text'] = self._l10n_tr_get_item_description(line)
+            return
+        name, _separator, description = (line.name or '').partition('\n')
+        if not vals['base_line']['product_id']:
+            item_node['cbc:Name']['_text'] = name.strip() or item_node['cbc:Name']['_text']
+        item_node['cbc:Description']['_text'] = ' '.join(description.split()) or self._l10n_tr_get_item_description(line)
+
+    def _l10n_tr_get_item_description(self, line):
+        """Build the <cbc:Description> value from the product's commercial description.
+
+        Uses the purchase description for purchase documents and the sale description
+        otherwise. The internal reference is not repeated here as it is already
+        reported in <cac:SellersItemIdentification>, so the node is dropped when the
+        description is not set.
+
+        :param line: The invoice line.
+        :return: The description string, or ``False`` when there is nothing to report.
+        """
+        product = line.product_id
+        return product.description_purchase if line.move_id.is_purchase_document() else product.description_sale
 
     def _add_document_line_tax_category_nodes(self, line_node, vals):
         # No InvoiceLine/Item/ClassifiedTaxCategory in Turkey
