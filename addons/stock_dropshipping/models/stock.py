@@ -33,6 +33,19 @@ class StockPicking(models.Model):
 
     is_dropship = fields.Boolean("Is a Dropship", compute='_compute_is_dropship')
 
+    def _get_lot_partner(self):
+        self.ensure_one()
+        if self.is_dropship and self.sale_id.partner_shipping_id:
+            return self.sale_id.partner_shipping_id
+        return super()._get_lot_partner()
+
+    def _action_done(self):
+        res = super()._action_done()
+        for picking in self.filtered(lambda p: p.picking_type_id.code == 'dropship'):
+            if partner := picking._get_lot_partner():
+                picking.move_ids.move_line_ids.lot_id.partner_ids |= partner
+        return res
+
     @api.depends('location_dest_id.usage', 'location_dest_id.company_id', 'location_id.usage', 'location_id.company_id')
     def _compute_is_dropship(self):
         for picking in self:
@@ -84,16 +97,6 @@ class StockPickingType(models.Model):
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'
-
-    def _compute_partner_ids(self):
-        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
-        all_picking_ids = tuple(id_ for ids in delivery_ids_by_lot.values() for id_ in ids)
-        for lot in self:
-            if delivery_ids_by_lot.get(lot.id, []):
-                picking_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).with_prefetch(all_picking_ids).sorted(key='date_done', reverse=True)
-                lot.partner_ids = picking_ids.mapped(lambda p: p.sale_id.partner_shipping_id if p.is_dropship and p.sale_id.partner_shipping_id else p.partner_id)
-            else:
-                lot.partner_ids = False
 
     def _get_outgoing_domain(self):
         res = super()._get_outgoing_domain()
