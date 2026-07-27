@@ -684,6 +684,46 @@ describe("fullscreen", () => {
         expect("nav .o_menu_brand").toHaveCount(1);
         expect("nav .o_menu_brand").toHaveText("MAIN APP");
     });
+
+    test("hide navbar during empty transition for fullscreen actions", async () => {
+        const slowRpcDef = Promise.withResolvers();
+        onRpc("web_search_read", () => slowRpcDef.promise);
+
+        await mountWithCleanup(WebClient);
+
+        getService("action").doAction(15, { clearBreadcrumbs: true });
+        await animationFrame();
+
+        // Navbar is hidden during transition before action loads
+        expect(".o_main_navbar").toHaveCount(0);
+
+        slowRpcDef.resolve();
+        await animationFrame();
+
+        expect(".o_kanban_view").toHaveCount(1);
+        expect(".o_main_navbar").toHaveCount(0);
+    });
+
+    test("keep navbar visible on current action when navigating to a fullscreen action", async () => {
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction(1);
+        expect(".o_main_navbar").toHaveCount(1);
+
+        const slowRpcDef = Promise.withResolvers();
+        onRpc("web_search_read", () => slowRpcDef.promise);
+
+        getService("action").doAction(15);
+        await animationFrame();
+
+        // Navbar stays visible while current view is displayed and next action is loading
+        expect(".o_main_navbar").toHaveCount(1);
+
+        slowRpcDef.resolve();
+        await animationFrame();
+
+        expect(".o_kanban_view").toHaveCount(1);
+        expect(".o_main_navbar").toHaveCount(0);
+    });
 });
 
 describe("main", () => {
