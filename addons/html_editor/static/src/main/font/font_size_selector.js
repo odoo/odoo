@@ -8,7 +8,6 @@ import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { useChildRef } from "@web/core/utils/hooks";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 export const MAX_FONT_SIZE = 144;
@@ -36,10 +35,10 @@ export class FontSizeSelector extends Component {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
         this.dropdown = useDropdownState();
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
-        this.iframeContentRef = useChildRef();
-        this.fontSizeInputRef = useChildRef();
+        this.iframeContentRef = signal.ref();
+        this.fontSizeInputRef = signal.ref();
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
         const htmlStyle = getHtmlStyle(document);
@@ -47,7 +46,7 @@ export class FontSizeSelector extends Component {
     }
 
     get fontSizeInput() {
-        return this.fontSizeInputRef.el;
+        return this.fontSizeInputRef();
     }
 
     onDropdownStateChanged(isOpen) {
@@ -56,7 +55,7 @@ export class FontSizeSelector extends Component {
         }
         if (isOpen) {
             this.fontSizeInput.select();
-        } else if (this.iframeContentRef.el?.contains(this.props.document.activeElement)) {
+        } else if (this.iframeContentRef()?.contains(this.props.document.activeElement)) {
             this.fontSizeInput.blur();
             this.props.onBlur?.();
         }
@@ -66,7 +65,7 @@ export class FontSizeSelector extends Component {
         if (!this.dropdown.isOpen) {
             this.dropdown.open();
             requestAnimationFrame(() => {
-                if (this.menuRef.el?.closest(".o_bottom_sheet")) {
+                if (this.menuRef()?.closest(".o_bottom_sheet")) {
                     this.props.onBlur?.();
                 }
             });

@@ -4,8 +4,6 @@ import { BuilderInputBase } from "./builder_input_base";
 export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
     props = props({
-        // BuilderInputBase props (converted inline)
-        inputRef: t.function().optional(),
         // textInputBasePassthroughProps (converted inline)
         action: t.string().optional(),
         placeholder: t.string().optional(),

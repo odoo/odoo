@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { useChildRef, useService } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { Component, proxy, signal } from "@odoo/owl";
 
 /**
  * @typedef {import('./google_map_option_plugin.js').ApiKeyValidation} ApiKeyValidation
@@ -17,7 +17,7 @@ export class GoogleMapsApiKeyDialog extends Component {
     };
 
     setup() {
-        this.modalRef = useChildRef();
+        this.modalRef = signal.ref();
         /** @type {{ apiKey?: string, apiKeyValidation: ApiKeyValidation }} */
         this.state = proxy({
             apiKey: this.props.originalApiKey,
@@ -35,7 +35,7 @@ export class GoogleMapsApiKeyDialog extends Component {
     async onClickSave() {
         if (this.state.apiKey) {
             /** @type {NodeList} */
-            const buttons = this.modalRef.el.querySelectorAll("button");
+            const buttons = this.modalRef().querySelectorAll("button");
             buttons.forEach((button) => button.setAttribute("disabled", true));
             /** @type {ApiKeyValidation} */
             const apiKeyValidation = await this.googleMapsService.validateGMapsApiKey(

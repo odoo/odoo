@@ -5,7 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Time, parseTime } from "@web/core/l10n/time";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { range } from "@web/core/utils/numbers";
 
 /**
@@ -42,7 +42,6 @@ export class TimePicker extends Component {
     inputRef = signal.ref();
 
     setup() {
-        this.menuRef = useChildRef();
         this.dropdownState = useDropdownState();
         this.uiService = useService("ui");
 

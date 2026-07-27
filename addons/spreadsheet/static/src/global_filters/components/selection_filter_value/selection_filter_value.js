@@ -1,8 +1,9 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { Component, onWillStart, onWillUpdateProps, props, signal, t } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -22,15 +23,15 @@ export class SelectionFilterValue extends Component {
     });
 
     setup() {
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         useLayoutEffect(
             () => {
-                if (this.inputRef.el) {
+                if (this.inputRef()) {
                     // Prevent the user from typing free-text by setting the maxlength to 0
-                    this.inputRef.el.setAttribute("maxlength", 0);
+                    this.inputRef().setAttribute("maxlength", 0);
                 }
             },
-            () => [this.inputRef.el]
+            () => [resolveRefEl(this.inputRef)]
         );
         this.tags = [];
         this.sources = [];

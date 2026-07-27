@@ -1,4 +1,4 @@
-import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -27,7 +27,6 @@ export const autoCompleteProps = {
     onBlur: t.function().optional(() => () => {}),
     onFocus: t.function().optional(() => () => {}),
     searchOnInputClick: t.boolean().optional(true),
-    input: t.function().optional(),
     inputDebounceDelay: t.number().optional(250),
     dropdown: t.boolean().optional(true),
     autofocus: t.boolean().optional(),
@@ -43,7 +42,11 @@ export class AutoComplete extends Component {
 
     listRef = signal.ref();
     root = signal.ref();
-    inputRef = signal.ref();
+    // Ref on the input element, either owned by the parent (`input` prop) or local.
+    inputRef = useProps.static(
+        "input",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     get timeout() {
         return this.props.inputDebounceDelay;
@@ -63,7 +66,6 @@ export class AutoComplete extends Component {
             value: this.props.value,
         });
 
-        useForwardRefToParent(this.inputRef, "input");
         if (this.props.autofocus) {
             useAutofocus({ ref: this.inputRef });
         }

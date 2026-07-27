@@ -1,5 +1,5 @@
-import { Component, onWillDestroy, props, proxy, t, useEffect } from "@odoo/owl";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { Component, onWillDestroy, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -58,11 +58,11 @@ export class SelectMany2X extends Component {
             this.prevSearchValue = undefined;
             this.state.searchResults = [];
         });
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         onWillDestroy(() => this.removeListeners?.());
     }
     onOpened() {
-        const menuEl = this.menuRef.el;
+        const menuEl = this.menuRef();
         if (menuEl) {
             this.removeListeners?.();
             const onNavigatedAway = this.onNavigatedAway.bind(this);

@@ -1,10 +1,10 @@
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, props, t, useListener, useEffect, untrack } from "@odoo/owl";
+import { Component, onMounted, props, signal, t, useListener, useEffect, untrack } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { TabHeader, TabPanel, Tabs } from "./tabs";
 
 export class MessageReactionMenu extends Component {
@@ -13,7 +13,7 @@ export class MessageReactionMenu extends Component {
 
     setup() {
         super.setup();
-        this.tabsRef = useChildRef();
+        this.tabsRef = signal.ref();
         this.store = useService("mail.store");
         this.props = props({
             close: t.function([]),

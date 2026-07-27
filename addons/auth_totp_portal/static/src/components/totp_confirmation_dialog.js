@@ -1,4 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -17,7 +18,7 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
         const onClickClipboardButton = async (ev) => {
             ev.preventDefault();
             const clipboardButtonEl = ev.currentTarget;
-            const secretSpan = this.modalRef.el.querySelector("span[name='secret']");
+            const secretSpan = this.modalRef().querySelector("span[name='secret']");
             browser.navigator.clipboard.writeText(secretSpan.textContent).then(() => {
                 this.tooltip.open(clipboardButtonEl, { tooltip: _t("Copied!") });
                 setTimeout(this.tooltip.close, 800);
@@ -31,7 +32,11 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
                         clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
                 }
             },
-            () => [this.modalRef.el?.querySelector("#collapseTotpSecret .o_clipboard_button")]
+            () => [
+                resolveRefEl(this.modalRef)?.querySelector(
+                    "#collapseTotpSecret .o_clipboard_button"
+                ),
+            ]
         );
     }
 }

@@ -1,6 +1,5 @@
-import { props, signal, t } from "@odoo/owl";
+import { useProps, signal, t } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { useRegistry } from "@web/core/registry_hook";
 
@@ -9,12 +8,16 @@ import { useRegistry } from "@web/core/registry_hook";
  */
 export class LocalOverlayContainer extends MainComponentsContainer {
     static template = "html_editor.LocalOverlayContainer";
-    props = props({
-        localOverlay: t.function().optional(),
+    props = useProps({
         identifier: t.string().optional("overlay_components"),
     });
 
-    overlayRef = signal.ref();
+    // Ref on the overlay element, either owned by the parent (`localOverlay`
+    // prop) or local.
+    localOverlay = useProps.static(
+        "localOverlay",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     setup() {
         const overlayComponents = registry.category(this.props.identifier);
@@ -28,6 +31,5 @@ export class LocalOverlayContainer extends MainComponentsContainer {
             );
         }
         this.Components = useRegistry(overlayComponents);
-        useForwardRefToParent(this.overlayRef, "localOverlay");
     }
 }

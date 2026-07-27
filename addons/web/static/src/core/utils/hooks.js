@@ -1,13 +1,4 @@
-import {
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    proxy,
-    t,
-    toRaw,
-    useProps,
-    useScope,
-} from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -228,54 +219,6 @@ export function useSpellCheck({ ref } = {}) {
     );
 }
 
-/**
- * @typedef {Function} ForwardRef
- * @property {HTMLElement | undefined} el
- */
-
-/**
- * Use a ref that was forwarded by a child @see useForwardRefToParent
- *
- * @returns {ForwardRef} a ref that can be called to set its value to that of a
- *  child ref, but can otherwise be used as a normal ref object
- */
-export function useChildRef() {
-    let value;
-    function ref(v) {
-        value = v;
-    }
-    // Define `el` eagerly (rather than on the first assignment) so that the ref
-    // is recognizable as a ref-like object (`"el" in ref` is always true) even
-    // before it has been forwarded a child ref. The forwarded value may be a
-    // legacy ref object (`.el`) or an Owl 3 signal ref (a zero-arg callable);
-    // `resolveRefEl` reads either form, and returns undefined before mount (or
-    // while detached) instead of throwing.
-    Object.defineProperty(ref, "el", {
-        get() {
-            return resolveRefEl(value);
-        },
-    });
-    return ref;
-}
-/**
- * Forwards a ref to the parent by calling the corresponding ForwardRef received
- * as prop. @see useChildRef
- *
- * The signal ref is forwarded as-is (the child already owns it via `t-ref`) and
- * returned unchanged.
- *
- * @param {(() => HTMLElement | null) | Ref} ref an Owl 3 signal ref (or legacy
- *  ref object) to forward as-is
- * @param {string} propName name of the prop to forward the ref to
- * @returns {(() => HTMLElement | null) | Ref} the same ref, unchanged
- */
-export function useForwardRefToParent(ref, propName) {
-    const compProps = useProps();
-    if (compProps[propName]) {
-        compProps[propName](ref);
-    }
-    return ref;
-}
 /**
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.

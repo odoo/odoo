@@ -27,13 +27,17 @@ export class SearchInput extends Component {
             /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
             autofocus: t.or([t.boolean(), autofocusParamsType]).optional(false),
             classNames: t.string().optional(),
-            inputRef: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
             loadingDelay: t.number().optional(200),
             onClear: t.function([t.instanceOf(MouseEvent)]).optional(),
             onKeydown: t.function([t.instanceOf(KeyboardEvent)]).optional(),
             placeholder: t.string().optional(),
             search: t.instanceOf(SearchState),
         });
+        /** Input element, either owned by the parent (`inputRef` prop) or local. */
+        this.inputRef = props.static(
+            "inputRef",
+            t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref())
+        );
         this.uniqueId = `mail.SearchInput.${nextId++}`;
         this.spinner = signal(false);
         useEffect(() => {
@@ -46,7 +50,7 @@ export class SearchInput extends Component {
         });
         if (this.props.autofocus) {
             const opts = typeof this.props.autofocus === "object" ? this.props.autofocus : {};
-            useAutofocus({ ...opts, ref: this.props.inputRef });
+            useAutofocus({ ...opts, ref: this.inputRef });
         }
     }
 }

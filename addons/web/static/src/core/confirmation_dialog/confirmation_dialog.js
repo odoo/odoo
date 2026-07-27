@@ -1,8 +1,6 @@
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useChildRef } from "@web/core/utils/hooks";
-
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export const deleteConfirmationMessage = _t(
     `Ready to make your record disappear into thin air? Are you sure? It will be gone forever!
@@ -33,7 +31,7 @@ export class ConfirmationDialog extends Component {
 
     setup() {
         this.env.dialogData.dismiss = () => this._dismiss();
-        this.modalRef = useChildRef();
+        this.modalRef = signal.ref();
         this.isProcess = false;
     }
 
@@ -51,10 +49,10 @@ export class ConfirmationDialog extends Component {
 
     setButtonsDisabled(disabled) {
         this.isProcess = disabled;
-        if (!this.modalRef.el) {
+        if (!this.modalRef()) {
             return; // safety belt for stable versions
         }
-        for (const button of [...this.modalRef.el.querySelectorAll(".modal-footer button")]) {
+        for (const button of [...this.modalRef().querySelectorAll(".modal-footer button")]) {
             button.disabled = disabled;
         }
     }

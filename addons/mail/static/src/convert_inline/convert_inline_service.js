@@ -4,13 +4,14 @@ import { registry } from "@web/core/registry";
 const mainComponents = registry.category("main_components");
 
 export class ConvertInlineContainer extends Component {
-    static template = xml`<div class="o-convert-inline" t-ref="this.props.rootRef"/>`;
+    static template = xml`<div class="o-convert-inline" t-ref="this.rootRef"/>`;
 
     setup() {
         this.props = props({
             onMounted: types.function([]),
-            rootRef: types.signal(types.instanceOf(HTMLDivElement)),
         });
+        /** Root element, owned by the service and bound here with `t-ref`. */
+        this.rootRef = props.static("rootRef", types.signal(types.instanceOf(HTMLDivElement)));
         onMounted(() => {
             this.props.onMounted();
         });
