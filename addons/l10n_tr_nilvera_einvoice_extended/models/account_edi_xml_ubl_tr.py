@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from lxml import etree
 
 from odoo import api, models
@@ -286,6 +288,34 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             vals['withholding_tax_total_vals_list'] = self._get_tr_tax_totals(line.move_id, taxes_vals, withholding=True)
         return vals
 
+    def _get_invoice_line_item_vals(self, line, taxes_vals):
+        """Extend the invoice line Item values with a Turkish product description.
+
+        Replaces the default description (the invoice line label, which duplicates the
+        product name reported in <cbc:Name>) with the product's commercial description.
+
+        :param line: The invoice line.
+        :param taxes_vals: The tax details for the current invoice line.
+        :return: A dictionary of invoice line item values.
+        """
+        line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
+        line_item_vals["description"] = self._l10n_tr_get_item_description(line)
+        return line_item_vals
+
+    def _l10n_tr_get_item_description(self, line):
+        """Build the <cbc:Description> value from the product's commercial description.
+
+        Uses the purchase description for purchase documents and the sale description
+        otherwise. The internal reference is not repeated here as it is already
+        reported in <cac:SellersItemIdentification>, so the node is dropped when the
+        description is not set.
+
+        :param line: The invoice line.
+        :return: The description string, or ``False`` when there is nothing to report.
+        """
+        product = line.product_id
+        return product.description_purchase if line.move_id.is_purchase_document() else product.description_sale
+
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
         # EXTENDS account.edi.xml.ubl_20
         vals = super()._get_invoice_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
@@ -349,3 +379,14 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             if element.text == "NO_ID":
                 element.text = ""
         return etree.tostring(xml_root, xml_declaration=True, encoding="UTF-8"), errors
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        # EXTENDS account.edi.xml.ubl_20
+        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+        lines_by_description = defaultdict(lambda: self.env["account.move.line"])
+        for line in invoice.invoice_line_ids.filtered("product_id"):
+            if description := self._l10n_tr_get_item_description(line):
+                lines_by_description[description] |= line
+        for description, lines in lines_by_description.items():
+            lines.name = description
+        return logs
