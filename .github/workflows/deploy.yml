@@ -24,11 +24,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/odoo-app
-
+            ccd /home/ubuntu/odoo
             # Pull specifically from the production branch
             git pull origin production
-
             docker system prune -f
             docker compose down
             docker compose up -d
+
+            # Run upgrade on all databases across all modules
+            docker compose exec -T odoo odoo -u all -d all --stop-after-init
