@@ -5,6 +5,7 @@ import time
 from unittest.mock import patch
 from psycopg2.errors import UndefinedTable
 
+from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, HttpCase
 from odoo.tests.result import stats_logger
@@ -20,18 +21,28 @@ class TestProfileAccess(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_profile = cls.env['ir.profile'].create({})
+        cls.test_profile = cls.env['ir.profile'].create({
+            'query_ids': [Command.create({
+                'query': 'SELECT 1',
+                'full_query': 'SELECT 1',
+            })]
+        })
 
     def test_admin_has_access(self):
         self.assertEqual(self.env['ir.profile'].search([('id', '=', self.test_profile.id)]), self.test_profile)
         self.test_profile.read(['name'])
+        self.test_profile.query_ids.mapped('full_query')
 
     def test_user_no_access(self):
         user = new_test_user(self.env, login='noProfile', groups='base.group_user')
         with self.with_user('noProfile'), self.assertRaises(AccessError):
             self.env['ir.profile'].search([])
+        with self.with_user('noProfile'), self.assertRaises(AccessError):
+            self.env['ir.profile.query'].search([])
         with self.assertRaises(AccessError):
             self.test_profile.with_user(user).read(['name'])
+        with self.assertRaises(AccessError):
+            self.test_profile.with_user(user).query_ids.mapped('full_query')
 
 
 @tagged('post_install', '-at_install', 'profiling')
@@ -175,6 +186,7 @@ class TestSpeedscope(BaseCase):
         sql_profile[0]['time'] = 3
         sql_profile[0]['query'] = 'SELECT 1'
         sql_profile[0]['full_query'] = 'SELECT 1'
+        sql_profile[0]['query_preview'] = "'SELECT 1'"
         # some check to ensure the take makes sence
         self.assertEqual(async_profile[1]['start'], 3)
         self.assertEqual(async_profile[2]['start'], 4)
@@ -219,6 +231,7 @@ class TestSpeedscope(BaseCase):
                 'time': 1,
                 'query': 'SELECT 1',
                 'full_query': 'SELECT 1',
+                'query_preview': "'SELECT 1'",
                 'stack': stack[:]
             },
             {
@@ -226,6 +239,7 @@ class TestSpeedscope(BaseCase):
                 'time': 1,
                 'query': 'SELECT 1',
                 'full_query': 'SELECT 1',
+                'query_preview': "'SELECT 1'",
                 'stack': stack[:]
             }
         ]

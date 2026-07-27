@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import reprlib
 
-shortener = reprlib.Repr()
-shortener.maxstring = 150
-shorten = shortener.repr
 
 class Speedscope:
     def __init__(self, name='Speedscope', init_stack_trace=None):
@@ -27,9 +23,9 @@ class Speedscope:
             self.caller_frame = self.init_caller_frame
             self.convert_stack(entry['stack'] or [])
             if 'query' in entry:
-                query = entry['query']
                 full_query = entry['full_query']
-                entry['stack'].append((f'sql({shorten(query)})', full_query, None))
+                query_preview = entry['query_preview']
+                entry['stack'].append((f"sql({query_preview})", full_query, None))
         self.profiles_raw[key] = profile
 
     def convert_stack(self, stack):

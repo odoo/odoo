@@ -7,6 +7,8 @@ from odoo.http import Controller, Response, request, route
 from odoo.http.stream import content_disposition
 
 SPEEDSCOPE_CDN = "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"
+PEV2_CDN = "https://cdn.jsdelivr.net/npm/pev2@1.23.0/dist"
+VUE_CDN = "https://cdn.jsdelivr.net/npm/vue@3.5.40/dist"
 
 
 class Profiling(Controller):
@@ -68,6 +70,22 @@ class Profiling(Controller):
             response.headers['X-Content-Type-Options'] = 'nosniff'
             response.headers['Content-Type'] = 'text/html'
         return response
+
+    @route([
+        '/web/query_plan/<model("ir.profile.query"):query>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def query_plan(self, query, **kwargs):
+        if not query or not query.plan:
+            return request.not_found()
+
+        icp = request.env['ir.config_parameter'].sudo()
+        context = {
+            'plan': query.plan,
+            'query': query.full_query,
+            'vue_cdn': icp.get_str('web.vue_cdn') or VUE_CDN,
+            'pev2_cdn': icp.get_str('web.pev2_cdn') or PEV2_CDN,
+        }
+        return request.render('web.view_query_plan', context)
 
     @route([
       '/web/profile_config/<profile>',
