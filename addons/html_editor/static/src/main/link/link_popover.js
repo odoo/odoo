@@ -143,6 +143,7 @@ export class LinkPopover extends Component {
             customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
+            canReplaceTitle: !linkElement.querySelector("img,.fa"),
             showLabel: !linkElement.childElementCount,
             stripDomain: true,
             showAdvancedOptions: false,
