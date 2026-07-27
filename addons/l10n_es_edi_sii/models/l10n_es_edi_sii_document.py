@@ -1,9 +1,11 @@
 import base64
 import json
 import requests
+import logging
+from lxml import etree
 
 from odoo import api, models, fields
-from odoo.tools import html_escape, zeep
+from odoo.tools import html_escape, zeep, BinaryBytes
 from odoo.addons.certificate.tools import CertificateAdapter
 
 EUSKADI_CIPHERS = "DEFAULT:!DH"
@@ -20,6 +22,54 @@ GIPUZKOA_TEST_BASE_URL = "https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FA
 NAVARRA_BASE_URL = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws"
 NAVARRA_ADDRESS = "https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx"
 NAVARRA_TEST_ADDRESS = "https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx"
+
+_logger = logging.getLogger(__name__)
+
+
+def _get_zeep_operation(company, document, connection_vals, header, info_list, simulation=False):
+
+    """Build the zeep client/service/operation for a SII document."""
+    move = document.move_id
+    is_sale = move.is_sale_document()
+
+    session = requests.Session()
+    session.cert = company.l10n_es_sii_certificate_id
+    session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
+
+    client = company._get_zeep_client__(
+        connection_vals['url'], session=session,
+        operation_timeout=20, timeout=20
+    )
+
+    port_name = 'SuministroFactEmitidas' if is_sale else 'SuministroFactRecibidas'
+    if company.l10n_es_sii_test_env and not connection_vals.get('test_url'):
+        port_name += 'Pruebas'
+
+    if document.state == 'to_cancel':
+        operation_name = 'AnulacionLRFacturasEmitidas' if is_sale else 'AnulacionLRFacturasRecibidas'
+    else:
+        operation_name = 'SuministroLRFacturasEmitidas' if is_sale else 'SuministroLRFacturasRecibidas'
+
+    if connection_vals.get('custom_navarra'):
+        header['_attributes'] = {
+            'xmlns:sum': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroLR.xsd',
+            'xmlns:sum1': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroInformacion.xsd',
+        }
+
+    if simulation:
+        zeep_client = client._Client__obj
+        service = zeep_client.bind('siiService', port_name)
+    else:
+        service = client.bind('siiService', port_name)
+
+    if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
+        service._binding_options['address'] = connection_vals['test_url']
+    elif not company.l10n_es_sii_test_env and connection_vals.get('address'):
+        service._binding_options['address'] = connection_vals['address']
+
+    if simulation:
+        return zeep_client.create_message(service, operation_name, header, info_list)
+    return service[operation_name](header, info_list)
 
 
 class L10nEsEdiSiiDocument(models.Model):
@@ -69,6 +119,14 @@ class L10nEsEdiSiiDocument(models.Model):
         string="JSON Filename",
         compute='_compute_sii_json_file',
     )
+    xml_attachment_raw = fields.Binary(
+        string="XML",
+        compute='_compute_xml_attachment'
+    )
+    xml_attachment_filename = fields.Char(
+        string="XML Filename",
+        compute='_compute_xml_attachment'
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -87,6 +145,35 @@ class L10nEsEdiSiiDocument(models.Model):
                 json_str = json.dumps(full_payload, indent=4, ensure_ascii=False).encode('utf-8')
                 doc.sii_json_file = base64.b64encode(json_str).decode('utf-8')
 
+    @api.depends('attachment_id')
+    def _compute_xml_attachment(self):
+        for document in self:
+            document.xml_attachment_filename = document._get_attachment_name().replace('.json', '.xml')
+
+            connection_vals = document._get_agency_urls()
+            if not connection_vals:
+                document.xml_attachment_raw = False
+                continue
+
+            try:
+                company = document.company_id
+                move = document.move_id
+
+                if document.attachment_id:
+                    payload = json.loads(bytes(document.attachment_id.raw))
+                    header, info_list = payload['Cabecera'], payload['Cuerpo']
+                else:
+                    communication_type = 'A1' if move.l10n_es_edi_csv and document.state != 'to_cancel' else 'A0'
+                    header = self._get_web_service_header(company, communication_type)
+                    info_list = move._l10n_es_edi_get_invoices_info()
+
+                xml_node = _get_zeep_operation(company, document, connection_vals, header, info_list, simulation=True)
+                document.xml_attachment_raw = BinaryBytes(
+                    etree.tostring(xml_node, encoding='utf-8', xml_declaration=True, pretty_print=True)
+                )
+            except (zeep.exceptions.Error, requests.exceptions.RequestException) as error:
+                _logger.error("Could not generate SII XML for document %s: %s", document.id, error)
+                document.xml_attachment_raw = False
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
@@ -100,6 +187,14 @@ class L10nEsEdiSiiDocument(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'url': f'/web/content/l10n_es_edi_sii.document/{self.id}/sii_json_file?download=true',
+            'target': 'self',
+        }
+
+    def action_download_xml(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{self._name}/{self.id}/xml_attachment_raw/{self.xml_attachment_filename}?download=true',
             'target': 'self',
         }
 
@@ -222,51 +317,16 @@ class L10nEsEdiSiiDocument(models.Model):
         def response_for_documents(success, response_data):
             return {doc: (success, response_data) for doc in self}
 
-        with requests.Session() as session:
-            try:
-                session.cert = company.l10n_es_sii_certificate_id
-                session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
+        header = self._get_web_service_header(company, communication_type)
 
-                client = company._get_zeep_client__(connection_vals['url'], session=session)
-
-                is_sale = document.move_id.is_sale_document()
-                service_name = 'SuministroFactEmitidas' if is_sale else 'SuministroFactRecibidas'
-                header = self._get_web_service_header(company, communication_type)
-
-                if connection_vals.get('custom_navarra'):
-                    header['_attributes'] = {
-                        'xmlns:sum': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroLR.xsd',
-                        'xmlns:sum1': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroInformacion.xsd',
-                    }
-
-                if company.l10n_es_sii_test_env and not connection_vals.get('test_url'):
-                    service_name += 'Pruebas'
-
-                serv = client.bind('siiService', service_name)
-
-                if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
-                    serv._binding_options['address'] = connection_vals['test_url']
-
-                elif not company.l10n_es_sii_test_env and connection_vals.get('address'):
-                    serv._binding_options['address'] = connection_vals['address']
-
-                if document.state == 'to_cancel':
-                    if is_sale:
-                        res = serv.AnulacionLRFacturasEmitidas(header, info_list)
-                    else:
-                        res = serv.AnulacionLRFacturasRecibidas(header, info_list)
-                else:
-                    if is_sale:
-                        res = serv.SuministroLRFacturasEmitidas(header, info_list)
-                    else:
-                        res = serv.SuministroLRFacturasRecibidas(header, info_list)
-
-            except requests.exceptions.SSLError:
-                return response_for_documents(False, {'response_message': self.env._("The SSL certificate could not be validated.")})
-            except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
-                return response_for_documents(False, {'response_message': self.env._("Networking error:\n%s", error)})
-            except Exception as error:  # noqa: BLE001
-                return response_for_documents(False, {'response_message': str(error)})
+        try:
+            res = _get_zeep_operation(company, document, connection_vals, header, info_list, simulation=False)
+        except requests.exceptions.SSLError:
+            return response_for_documents(False, {'response_message': self.env._("The SSL certificate could not be validated.")})
+        except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
+            return response_for_documents(False, {'response_message': self.env._("Networking error:\n%s", error)})
+        except Exception as error:  # noqa: BLE001
+            return response_for_documents(False, {'response_message': str(error)})
 
         if not res or not res.RespuestaLinea:
             return response_for_documents(False, {'response_message': self.env._("The web service is not responding")})
