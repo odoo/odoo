@@ -34,9 +34,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
             id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
             if not id_type or not id_value:
-                constraints[f"ubl_21_fr_{partner_type}_siret_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
-            if not commercial_partner.vat or commercial_partner.vat == '/':
-                constraints[f"ubl_21_fr_{partner_type}_vat_required"] = self.env._("The following partner's VAT is missing: %s", commercial_partner.display_name)
+                constraints[f"ubl_21_fr_{partner_type}_identifier_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
 
         if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
             constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = self.env._("The original journal entry's name or issue date are missing: %s", vals['invoice'].name)
