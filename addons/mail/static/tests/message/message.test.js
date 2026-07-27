@@ -1139,6 +1139,24 @@ test("message comment of same author within 5min. should be squashed", async () 
     await contains(".o-mail-Message:has(:text('body3')) .o-mail-Message-header");
 });
 
+test("pending message is squashed while it is being sent", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>first</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    onRpcBefore("/mail/message/post", () => new Promise(() => {}));
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "second");
+    await click("button[title='Send']:enabled");
+    await contains(".o-mail-Message.o-squashed:has(:text('second'))");
+});
+
 test("open author avatar card", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
