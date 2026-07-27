@@ -58,7 +58,8 @@
     ],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': True, 
+    # this is must insalled, because it is the base module for all other MuK Web modules
     'post_init_hook': '_setup_module',
     'uninstall_hook': '_uninstall_cleanup',
 }
