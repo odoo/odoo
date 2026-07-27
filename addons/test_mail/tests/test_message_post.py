@@ -691,43 +691,10 @@ class TestMessageLog(TestMessagePostCommon):
                     test_record.id: Markup('<p>Test _message_log_batch</p>')
                     for test_record in test_records
                 },
-            )
-        for test_record, new_note in zip(test_records, new_notes):
-            self.assertMailNotifications(
-                new_note,
-                [{
-                    'content': '<p>Test _message_log_batch</p>',
-                    'message_type': 'notification',
-                    'message_values': {
-                        'author_id': self.partner_employee,
-                        'body': '<p>Test _message_log_batch</p>',
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-                        'is_internal': True,
-                        'model': test_record._name,
-                        'notified_partner_ids': self.env['res.partner'],
-                        'partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
-                        'res_id': test_record.id,
-                    },
-                    'notif': [],
-                    'subtype': 'mail.mt_note',
-                }],
-            )
-
-    @users('employee')
-    def test_message_log_batch_with_partners(self):
-        """ Partners can be given to log, but this should not generate any
-        notification. """
-        test_records = self.test_records.with_env(self.env)
-        test_records.message_subscribe(self.partner_employee_2.ids)
-
-        with self.mock_mail_gateway():
-            new_notes = test_records._message_log_batch(
-                bodies={
-                    test_record.id: Markup('<p>Test _message_log_batch</p>')
+                partner_ids={
+                    test_record.id: self.test_partners[:5].ids
                     for test_record in test_records
                 },
-                partner_ids=self.test_partners[:5].ids,
             )
         for test_record, new_note in zip(test_records, new_notes):
             self.assertMailNotifications(
@@ -759,7 +726,8 @@ class TestMessageLog(TestMessagePostCommon):
         with self.mock_mail_gateway():
             new_notes = test_records._message_log_with_view(
                 'test_mail.mail_template_simple_test',
-                render_values={'partner': self.user_employee.partner_id}
+                render_values={'partner': self.user_employee.partner_id},
+                partner_ids={rec.id: self.partner_admin.ids for rec in test_records},
             )
         for test_record, new_note in zip(test_records, new_notes):
             self.assertMailNotifications(
@@ -774,6 +742,7 @@ class TestMessageLog(TestMessagePostCommon):
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
+                        'partner_ids': self.partner_admin,  # using '_message_log', recipients are for log only - no notification
                         'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                     },
