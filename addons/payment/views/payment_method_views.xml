@@ -13,7 +13,9 @@
                         <h1><field name="name" placeholder="Name"/></h1>
                     </div>
                     <group>
-                        <field name="code" readonly="id"/>
+                        <field name="code" invisible="id"/>
+                        <field name="code" invisible="not id" readonly="id" groups="base.group_no_one"/>
+                        <field name="primary_payment_method_id" invisible="is_primary or context.get('hide_primary_pm')"/>
                         <field name="active"/>
                         <label for="supported_country_ids"/>
                         <div>
@@ -44,7 +46,7 @@
                             <field
                                 name="brand_ids"
                                 delete="False"
-                                context="{'default_provider_id': provider_id}"
+                                context="{'default_provider_id': provider_id, 'hide_primary_pm': True}"
                             />
                         </page>
                         <page string="Configuration"
