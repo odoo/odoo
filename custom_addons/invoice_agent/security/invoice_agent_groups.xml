@@ -17,7 +17,7 @@
          ============================================================ -->
     <record id="group_invoice_agent_user" model="res.groups">
         <field name="name">Agent Reviewer</field>
-        <field name="category_id" ref="module_category_invoice_agent"/>
+        <field name="category_ids" eval="[(4, ref('module_category_invoice_agent'))]"/>
         <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="comment">Can view AI extraction fields, review and validate extracted bills.</field>
     </record>
@@ -31,7 +31,7 @@
          ============================================================ -->
     <record id="group_invoice_agent_manager" model="res.groups">
         <field name="name">Agent Manager</field>
-        <field name="category_id" ref="module_category_invoice_agent"/>
+        <field name="category_ids" eval="[(4, ref('module_category_invoice_agent'))]"/>
         <field name="implied_ids" eval="[(4, ref('group_invoice_agent_user'))]"/>
         <field name="comment">Can re-run extraction, approve/reject, configure journal AI settings.</field>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
