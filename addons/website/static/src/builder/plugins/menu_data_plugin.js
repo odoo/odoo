@@ -64,6 +64,7 @@ export class MenuDataPlugin extends Plugin {
 
     setup() {
         this.websiteService = this.services.website;
+        this.ui = this.services.ui;
     }
 
     openEditMenu(linkEl) {
@@ -80,15 +81,20 @@ export class MenuDataPlugin extends Plugin {
                 {
                     rootID: isNaN(rootID) ? null : rootID,
                     save: async (newPageUrl) => {
-                        // Save the page before reloading the editor.
-                        await this.dependencies.savePlugin.save();
-                        await this.config.reloadEditor();
-                        if (newPageUrl) {
-                            this.websiteService.goToWebsite({
-                                path: newPageUrl,
-                                edition: true,
-                                websiteId: this.websiteService.currentWebsite.id,
-                            });
+                        this.ui.block();
+                        try {
+                            // Save the page before reloading the editor.
+                            await this.dependencies.savePlugin.save();
+                            await this.config.reloadEditor();
+                            if (newPageUrl) {
+                                await this.websiteService.goToWebsite({
+                                    path: newPageUrl,
+                                    edition: true,
+                                    websiteId: this.websiteService.currentWebsite.id,
+                                });
+                            }
+                        } finally {
+                            this.ui.unblock();
                         }
                     },
                 },
