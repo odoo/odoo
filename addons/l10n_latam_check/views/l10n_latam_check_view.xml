@@ -18,7 +18,7 @@
                 <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
                 <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
                 <separator/>
-                <filter string="Partner" name="groupby_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter string="Customer/Vendor" name="groupby_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                 <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'payment_date'}"/>
                 <filter string="State" name="groupby_issue_state" domain="[]" context="{'group_by': 'issue_state'}"/>
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -69,7 +69,7 @@
                 <field name="name"/>
                 <field name="payment_type"/>
                 <field name="journal_id"/>
-                <field name="partner_id" string="Customer"/>
+                <field name="partner_id"/>
                 <field name="state" column_invisible="True"/>
             </list>
         </field>
@@ -131,6 +131,7 @@
                             <field name="payment_date"/>
                             <field name="original_journal_id"/>
                             <field name="current_journal_id" invisible="issue_state"/>
+                            <field name="first_payment_date" invisible="issue_state"/>
                         </group>
                         <group>
                             <field name="amount"/>
@@ -138,6 +139,7 @@
                             <field name="issuer_vat"  invisible="issue_state"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="memo" invisible="issue_state"/>
                         </group>
                     </group>
                 </sheet>
@@ -161,7 +163,7 @@
                     <field name="original_journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="payment_method_line_id" column_invisible="True"/>
-                    <field name="partner_id" string="Customer"/>
+                    <field name="partner_id" string="Vendor"/>
                     <field name="amount"  optional="show"/>
                     <field name="currency_id" string="Payment Currency" optional="hide"/>
                     <field name="issue_state" widget="badge" decoration-info="issue_state == 'handed'"  decoration-muted="issue_state in ('voided','debited')"/>
@@ -198,6 +200,15 @@
             </field>
             <field name="original_journal_id" position="replace">
                 <field name="current_journal_id" string="Current Journal"/>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Customer</attribute>
+            </field>
+            <field name="payment_date" position="after">
+                <field name="first_payment_date" optional="hide"/>
+            </field>
+            <field name="currency_id" position="after">
+                <field name="memo" optional="hide"/>
             </field>
 
             <list position="inside">

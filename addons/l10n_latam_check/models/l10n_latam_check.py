@@ -37,7 +37,11 @@ class L10n_LatamCheck(models.Model):
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
-    payment_date = fields.Date(readonly=False, required=True)
+    payment_date = fields.Date(
+        readonly=False,
+        required=True,
+        help="The date when the check can be collected or cashed.",
+    )
     amount = fields.Monetary()
     outstanding_line_id = fields.Many2one('account.move.line', readonly=True, check_company=True)
     issue_state = fields.Selection(
@@ -51,6 +55,12 @@ class L10n_LatamCheck(models.Model):
     original_journal_id = fields.Many2one(related='payment_id.journal_id')
     company_id = fields.Many2one(related='payment_id.company_id', store=True)
     currency_id = fields.Many2one(related='payment_id.currency_id')
+    first_payment_date = fields.Date(
+        related='payment_id.date',
+        string="First Payment Date",
+        help="The date when the check was created.",
+    )
+    memo = fields.Char(related='payment_id.memo')
     payment_method_line_id = fields.Many2one(
         related='payment_id.payment_method_line_id',
         store=True,
