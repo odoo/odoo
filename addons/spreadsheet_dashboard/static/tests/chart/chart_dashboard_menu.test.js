@@ -28,8 +28,8 @@ test("can change granularity", async () => {
     });
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    expect("select.o-chart-dashboard-item").toHaveValue("month");
-    await contains("select.o-chart-dashboard-item", { visible: false }).select("quarter");
+    expect("select.o-chart-menu-item").toHaveValue("month");
+    await contains("select.o-chart-menu-item", { visible: false }).select("quarter");
     expect(model.getters.getChartGranularity(chartId)).toEqual({
         fieldName: "date",
         granularity: "quarter",
