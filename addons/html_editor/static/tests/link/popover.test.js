@@ -2133,3 +2133,24 @@ test("Should open link popover in read only mode when link is not editable", asy
     await waitFor(".o-we-linkpopover");
     expect(".o_we_edit_link").toHaveCount(0);
 });
+
+test("should hide title replace icon on popover for an image link", async () => {
+    const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click('.o-we-toolbar button[name="link"]');
+    await expectElementCount(".o-we-linkpopover", 1);
+    await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.com/");
+    expect(cleanLinkArtifacts(getContent(el))).toBe(
+        `<p><a href="http://test.com/"><img src="${base64Img}">[]</a></p>`
+    );
+    expect(".o-we-linkpopover .o_we_replace_title_btn").toHaveCount(0);
+});
+
+test("should hide title replace icon on popover for a link with image", async () => {
+    await setupEditor(
+        `<p><a href="https://google.com">https://google.c[]om<img src="${base64Img}"></a></p>`
+    );
+    await expectElementCount(".o-we-linkpopover", 1);
+    expect(".o-we-linkpopover .o_we_replace_title_btn").toHaveCount(0);
+});
