@@ -145,6 +145,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project_card"/>
         <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="allow_billable"/>
+            </xpath>
             <xpath expr="//div[@name='project_customer_rating_menu']" position="attributes">
                 <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value</attribute>
             </xpath>
