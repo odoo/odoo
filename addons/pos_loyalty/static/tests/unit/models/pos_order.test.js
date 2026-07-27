@@ -253,6 +253,18 @@ describe("pos.order - loyalty", () => {
         expect(order._computeNItems(rule)).toBe(5);
     });
 
+    test("totalItemQuantity", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order);
+        const rewardLine = await addProductLineToOrder(store, order);
+        rewardLine.is_reward_line = true;
+
+        expect(order._isItemCountExcludedLine(rewardLine)).toBe(true);
+        expect(order.totalItemQuantity).toBe(1);
+    });
+
     test("_canGenerateRewards", async () => {
         const store = await setupPosEnv();
         const models = store.models;

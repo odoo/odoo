@@ -25,10 +25,32 @@ test("uiState", async () => {
     });
 });
 
-test("totalQuantity", async () => {
+test("totalItemQuantity", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
-    expect(order.totalQuantity).toBe(5);
+    const weightedProduct = store.models["product.template"].get(12);
+    weightedProduct.uom_id = 15;
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: store.models["product.template"].get(7),
+            payload: [
+                [
+                    { combo_item_id: store.models["product.combo.item"].get(1), qty: 1 },
+                    { combo_item_id: store.models["product.combo.item"].get(3), qty: 1 },
+                ],
+            ],
+            qty: 1,
+        },
+        order
+    );
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: weightedProduct,
+            qty: 2.5,
+        },
+        order
+    );
+    expect(order.totalItemQuantity).toBe(8);
 });
 
 test("setPreset", async () => {

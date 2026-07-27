@@ -266,6 +266,7 @@ export class GeneratePrinterData {
                 cashier_name: this.order.getCashierName(),
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
                 service_fee: serviceFee,
+                total_item_count: this.order.totalItemQuantity,
             },
         };
     }

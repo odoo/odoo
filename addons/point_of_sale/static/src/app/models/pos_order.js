@@ -98,8 +98,20 @@ export class PosOrder extends PosOrderAccounting {
         return (this.finalized && this.isSynced) || this.state === "cancel";
     }
 
-    get totalQuantity() {
-        return this.lines.reduce((sum, line) => sum + line.getQuantity(), 0);
+    get totalItemQuantity() {
+        return this.lines.reduce((sum, line) => {
+            if (this._isItemCountExcludedLine(line)) {
+                return sum;
+            } else if (line.getUnit()?.is_pos_groupable) {
+                return sum + line.getQuantity();
+            } else {
+                return sum + 1;
+            }
+        }, 0);
+    }
+
+    _isItemCountExcludedLine(line) {
+        return line.combo_line_ids?.length;
     }
 
     get isUnsyncedPaid() {

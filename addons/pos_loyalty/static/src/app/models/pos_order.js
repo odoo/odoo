@@ -543,6 +543,11 @@ patch(PosOrder.prototype, {
         }, {});
         return !this.refunded_order_id?.lines.some((l) => l.qty !== lineQtyMap[l.id]);
     },
+
+    _isItemCountExcludedLine(line) {
+        return super._isItemCountExcludedLine(line) || line.is_reward_line;
+    },
+
     /**
      * Computes how much points each program gives.
      *
