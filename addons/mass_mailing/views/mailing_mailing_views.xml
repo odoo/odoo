@@ -373,7 +373,10 @@
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>
                                         <field name="name" string="Name" required="False" readonly="state in ('sending', 'done')"/>
-                                        <field name="mail_server_id" invisible="not mail_server_available" readonly="state in ('sending', 'done')"/>
+                                        <field name="mail_server_id"
+                                            invisible="not mail_server_available"
+                                            readonly="state in ('sending', 'done')"
+                                            domain="[('owner_user_id', '=', False)]" />
                                         <field name="keep_archives" readonly="state in ('sending', 'done')"/>
                                         <!-- Not using a dedicated server and being set means generic sending, won't allow disabling it. -->
                                         <field name="use_exclusion_list" invisible="not mail_server_id and use_exclusion_list" readonly="state != 'draft'"/>
