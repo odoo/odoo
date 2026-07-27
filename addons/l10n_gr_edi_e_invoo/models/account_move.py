@@ -3,6 +3,7 @@ import base64
 from lxml import etree
 
 from odoo import api, fields, models
+from odoo.addons.l10n_gr_edi import utils
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node, float_repr
@@ -313,8 +314,8 @@ class AccountMove(models.Model):
         # EXTENDS 'l10n_gr_edi'
         valid_move_ids = []
         for move in self.filtered('l10n_gr_edi_enable_send_invoices'):
-            if error := move._l10n_gr_edi_get_pre_error_string():
-                move._l10n_gr_edi_create_error_document({'error': error})
+            if error := move._l10n_gr_edi_get_pre_error_dict():
+                self.env['l10n_gr_edi.document']._l10n_gr_edi_create_error_document(move, {'error': utils.get_pre_error_string(error)})
             else:
                 valid_move_ids.append(move.id)
 
