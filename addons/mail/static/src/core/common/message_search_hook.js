@@ -65,8 +65,8 @@ export function searchHighlight(searchTerm, target) {
 
 export class MessageSearchState extends SearchState {
     count = 0;
-    /** @type {boolean | undefined} */
-    is_notification = undefined;
+    /** @type {string|undefined} */
+    search_filter = undefined;
     hasMore = false;
     /** @type {import('@mail/core/common/message_model').Message[]} */
     messages = [];
@@ -87,11 +87,11 @@ export class MessageSearchState extends SearchState {
     }
 
     get isActive() {
-        return !!this.searchTerm || this.is_notification !== undefined;
+        return !!this.searchTerm || this.search_filter !== undefined;
     }
 
     get deps() {
-        return [this.is_notification];
+        return [this.search_filter];
     }
 
     /** @param {string} term */
@@ -103,7 +103,7 @@ export class MessageSearchState extends SearchState {
             term,
             this.thread,
             before ?? false,
-            this.is_notification
+            this.search_filter
         );
         if (!data || currentSearchId !== this.searchId) {
             return; // Search was cleared or superseded during request.
@@ -130,7 +130,7 @@ export class MessageSearchState extends SearchState {
     reset() {
         this.searchId++;
         super.reset();
-        this.is_notification = undefined;
+        this.search_filter = undefined;
         this.messages = [];
         this.searched = false;
         this.count = 0;

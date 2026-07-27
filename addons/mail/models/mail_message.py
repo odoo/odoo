@@ -976,7 +976,7 @@ class MailMessage(models.Model):
         ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_term=None, search_filter=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(True if domain is None else domain)
         if thread:
@@ -985,10 +985,19 @@ class MailMessage(models.Model):
                 & Domain("model", "=", thread._name)
                 & Domain("message_type", "!=", "user_notification")
             )
-        if is_notification is True:
-            domain &= Domain("message_type", "=", "notification")
-        elif is_notification is False:
-            domain &= Domain("message_type", "!=", "notification")
+        if search_filter:
+            xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
+            if search_filter == "messages":
+                domain &= Domain("subtype_id", "=", xmlid_to_res_id("mail.mt_comment"))
+            elif search_filter == "notes":
+                domain &= Domain("subtype_id", "=", xmlid_to_res_id("mail.mt_note"))
+            elif search_filter == "activities":
+                domain &= Domain("mail_activity_type_id", "!=", False)
+            elif search_filter == "changes":
+                domain &= (
+                    Domain("message_type", "in", ("tracking", "notification"))
+                    & Domain("mail_activity_type_id", "=", False)
+                )
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
@@ -1004,7 +1013,7 @@ class MailMessage(models.Model):
                 [("subtype_id.description", "ilike", search_term)],
             ])
             domain &= message_domain
-        if search_term or is_notification is not None:
+        if search_term or search_filter:
             res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")

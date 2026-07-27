@@ -152,14 +152,17 @@ test("Switching chatter filters after empty result should show messages", async 
         body: "not empty",
         model: "res.partner",
         res_id: serverState.partnerId,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_comment"],
+        ])[0],
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click("[title='Search Messages']");
     await click("[title='Filter Messages']");
-    await click(".o-dropdown-item:text('Tracked Changes')");
+    await click(".o-dropdown-item:text('Changes')");
     await contains(".o-mail-MessageCardList:text('No messages found')");
     await click("[title='Filter Messages']");
-    await click(".o-dropdown-item:text('Conversations')");
+    await click(".o-dropdown-item:text('Messages')");
     await contains(".o-mail-SearchMessageResult .o-mail-Message-content:text('not empty')");
 });

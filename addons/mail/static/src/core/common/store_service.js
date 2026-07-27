@@ -803,15 +803,15 @@ export class Store extends BaseStore {
      * @param {string} searchTerm
      * @param {Thread} thread
      * @param {number} before
-     * @param {true|false|undefined} is_notification
+     * @param {string|undefined} search_filter
      */
-    async searchMessagesInThread(searchTerm, thread, before, is_notification) {
+    async searchMessagesInThread(searchTerm, thread, before, search_filter) {
         const { count, messages } = await this.fetchStoreData(
             thread.getFetchRoute(),
             {
                 ...thread.getFetchParams(),
                 fetch_params: {
-                    is_notification,
+                    search_filter,
                     search_term: (await prettifyMessageText(searchTerm)).replaceAll(nbsp, " "), // formatted like message_post
                     before,
                 },
