@@ -722,6 +722,23 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(new_order.order_line.price_unit, 22.0)
 
+    def test_technical_price_unit_if_precomputed_unit_price(self):
+        # Pre-computed price (not in the create values) shouldn't be protected
+        self.pricelist = self._enable_pricelists()
+        self.pricelist.item_ids = [
+            Command.create({
+                "product_id": self.product.id,
+                "fixed_price": 18.0,
+                "min_quantity": 3.0,
+            })
+        ]
+        order = self._create_so()
+        sol = order.order_line
+
+        self.assertRecordValues(sol, [{"price_unit": 20.0, "technical_price_unit": 20.0}])
+        sol.product_uom_qty = 7
+        self.assertRecordValues(sol, [{"price_unit": 18.0, "technical_price_unit": 18.0}])
+
     def test_sale_warnings(self):
         """Test warnings when partner/products with sale warnings are used."""
         partner_with_warning = self.env["res.partner"].create({
