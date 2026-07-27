@@ -27,6 +27,9 @@ patch(messagingMenuHelpers, {
         if (tab_id === "livechat" && filter_id === "livechat_need_help") {
             return [["livechat_status", "=", "need_help"]];
         }
+        if (tab_id === "livechat" && filter_id === "livechat_unread") {
+            return [["self_member_id.is_unread", "=", true]];
+        }
         return super._get_menu_tab_filter_domain(env, tab_id, filter_id);
     },
 });

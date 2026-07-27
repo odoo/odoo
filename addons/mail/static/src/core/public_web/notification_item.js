@@ -28,6 +28,7 @@ export class NotificationItem extends Component {
         this.ui = useService("ui");
         this.store = useService("mail.store");
         this.props = props({
+            className: t.string().optional(""),
             counter: t.number().optional(0),
             datetime: t.instanceOf(DateTime).optional(),
             first: t.boolean().optional(),
@@ -73,10 +74,11 @@ export class NotificationItem extends Component {
             "o-interest border-secondary": this.props.muted === 0,
             "border-secondary": this.props.muted === 1,
             "opacity-50 border-secondary": this.props.muted === 2,
-            "px-3 py-2 gap-1 o-small": this.ui.isSmall,
+            "px-1 py-2 gap-1 o-small": this.ui.isSmall,
             "border-top-0": this.props.first,
             "o-px-2_5 o-py-1_5 gap-2": !this.ui.isSmall,
             "o-active": this.props.isActive,
+            [this.props.className]: this.props.className,
         };
     }
 

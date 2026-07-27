@@ -65,7 +65,7 @@ test("Show looking for help in the sidebar", async () => {
         livechat_status: "in_progress",
     });
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
-    await click("button:text('Help Needed')");
+    await click("button:text('All')");
     await contains(".o-mail-MessagingMenuItem:has(:text(bob))");
 });
 

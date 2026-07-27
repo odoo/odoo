@@ -68,14 +68,150 @@ test("unread filter shows only unread chats", async () => {
     await contains(".o-mail-MessagingMenuItem:has(:text('Alice'))");
     await contains(".o-mail-MessagingMenuItem:has(:text('Bob'))");
     await click("button:text(Unread)");
-    await contains("button.active:text(Unread)");
+    await contains("button.o-active:text(Unread)");
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem-name:text(Alice)");
-    await click("button:text(Unread)");
-    await contains("button.active:text(Unread)");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-MessagingMenuItem:has(:text('Alice'))");
     await contains(".o-mail-MessagingMenuItem:has(:text('Bob'))");
+});
+
+test("unread filter shows only unread channels", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const [alphaChannelId, betaChannelId] = pyEnv["discuss.channel"].create([
+        {
+            name: "Alpha",
+            channel_type: "channel",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+        {
+            name: "Beta",
+            channel_type: "channel",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+    ]);
+    const [, betaMessageId] = pyEnv["mail.message"].create([
+        { author_id: partnerId, body: "hello", model: "discuss.channel", res_id: alphaChannelId },
+        { author_id: partnerId, body: "hi", model: "discuss.channel", res_id: betaChannelId },
+    ]);
+    const [betaMemberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", betaChannelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    // Beta is marked read: its separator is past its last message.
+    pyEnv["discuss.channel.member"].write([betaMemberId], {
+        new_message_separator: betaMessageId + 1,
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alpha'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Beta'))");
+    await click("button:text(Unread)");
+    await contains("button.o-active:text(Unread)");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem-name:text(Alpha)");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alpha'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Beta'))");
+});
+
+test("group filter shows only group chats", async () => {
+    const pyEnv = await startServer();
+    const [aliceId, bobId] = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Bob" }]);
+    pyEnv["discuss.channel"].create([
+        {
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: aliceId }),
+            ],
+        },
+        {
+            name: "Team",
+            channel_type: "group",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+                Command.create({ partner_id: aliceId }),
+                Command.create({ partner_id: bobId }),
+            ],
+        },
+    ]);
+    await start();
+    await openMessagingMenu();
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alice'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Team'))");
+    await click("button:text(Group)");
+    await contains("button.o-active:text(Group)");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem-name:text(Team)");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alice'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Team'))");
+});
+
+test("thread filter shows only channel threads", async () => {
+    const pyEnv = await startServer();
+    const generalId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+        ],
+    });
+    pyEnv["discuss.channel"].create({
+        name: "Bug thread",
+        parent_channel_id: generalId,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+        ],
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Bug thread'))");
+    await click("button:text(Thread)");
+    await contains("button.o-active:text(Thread)");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem:has(:text('Bug thread'))");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Bug thread'))");
+});
+
+test("active filter with no match shows a neutral empty state, not the tab onboarding", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+        ],
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem", { count: 1 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await click("button:text(Thread)");
+    await contains("button.o-active:text(Thread)");
+    await contains(".o-mail-MessagingMenuEmpty:has(:text('No conversation matches this filter.'))");
 });
 
 test("create new chat from chat tab", async () => {
@@ -129,6 +265,57 @@ test("create new meeting from meeting tab", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.MEETING);
     await click("button:text(Meeting)");
     await contains(".o-mail-Meeting");
+});
+
+test("unread filter shows only unread meetings", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const [standupId, retroId] = pyEnv["discuss.channel"].create([
+        {
+            name: "Standup",
+            channel_type: "group",
+            default_display_mode: "video_full_screen",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+        {
+            name: "Retro",
+            channel_type: "group",
+            default_display_mode: "video_full_screen",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+    ]);
+    const [, retroMessageId] = pyEnv["mail.message"].create([
+        { author_id: partnerId, body: "hello", model: "discuss.channel", res_id: standupId },
+        { author_id: partnerId, body: "hi", model: "discuss.channel", res_id: retroId },
+    ]);
+    const [retroMemberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", retroId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    // Retro is marked read: its separator is past its last message.
+    pyEnv["discuss.channel.member"].write([retroMemberId], {
+        new_message_separator: retroMessageId + 1,
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.MEETING);
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Standup'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Retro'))");
+    await click("button:text(Unread)");
+    await contains("button.o-active:text(Unread)");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem:has(:text('Standup'))");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Standup'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Retro'))");
 });
 
 test("join most popular channel from empty channel tab", async () => {

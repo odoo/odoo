@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 from odoo.tools import consteq, get_lang
 from odoo import _, api, fields, models
 from odoo.http import request
+from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.mail.models.discuss.discuss_channel import avatar_initials
 from odoo.exceptions import UserError
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import limited_field_access_token
@@ -124,6 +126,14 @@ class MailGuest(models.Model):
         """
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
+
+    def _avatar_generate_svg(self):
+        """Generate an ``id``-stable avatar showing the guest initials.
+
+        Overrides the single-initial default from ``avatar.mixin`` so guest
+        avatars show the full initials like channel avatars.
+        """
+        return generate_text_avatar_svg(avatar_initials(self.name), str(self.id))
 
     def _store_avatar_fields(self, res: Store.FieldList):
         res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())

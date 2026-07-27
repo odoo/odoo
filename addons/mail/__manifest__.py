@@ -131,6 +131,7 @@ For more specific needs, you may also assign custom-defined actions
         'demo/res_role_demo.xml',
         'demo/mail_activity_demo.xml',
         'demo/discuss_channel_demo.xml',
+        'demo/discuss_channel_chat_demo.xml',
         'demo/discuss/public_channel_demo.xml',
         "demo/discuss/readonly_channel_demo.xml",
         'demo/discuss/call_debrief_discuss_demo.xml',

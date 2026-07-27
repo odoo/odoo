@@ -45,8 +45,19 @@ class DiscussMessagingMenuController(WebclientController):
                 return super()._get_menu_tab_domain(tab_id)
 
     def _get_menu_tab_filter_domain(self, tab_id, filter_id):
-        if tab_id == "chat" and filter_id == "chat_unread":
-            return Domain("self_member_id.is_unread", "=", True)
+        match (tab_id, filter_id):
+            case ("chat", "chat_unread"):
+                return Domain("self_member_id.is_unread", "=", True)
+            case ("chat", "chat_group"):
+                return Domain("channel_type", "=", "group")
+            case ("channel", "channel_unread"):
+                return Domain("self_member_id.is_unread", "=", True)
+            case ("channel", "channel_thread"):
+                return Domain("parent_channel_id", "!=", False)
+            case ("meeting", "meeting_unread"):
+                return Domain("self_member_id.is_unread", "=", True)
+            case ("meeting", "meeting_thread"):
+                return Domain("parent_channel_id", "!=", False)
         return super()._get_menu_tab_filter_domain(tab_id, filter_id)
 
     def _get_menu_tab_priority_domain(self, tab_id):

@@ -74,16 +74,16 @@ export class MessagingMenu extends Component {
         });
     }
 
-    get navigationAtBottom() {
-        return this.ui.isSmall;
-    }
-
     get isEmpty() {
         return !this.messages().length;
     }
 
     get noSearchResultText() {
         return this.searchTerm() ? _t('No results for "%s".', this.searchTerm()) : "";
+    }
+
+    get noFilterResultText() {
+        return _t("No conversation matches this filter.");
     }
 
     /** @param {import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabAction} action */
@@ -125,9 +125,5 @@ export class MessagingMenu extends Component {
                 throw error;
             });
         this.close?.();
-    }
-
-    onNavbarWheel(ev) {
-        ev.currentTarget.scrollLeft += ev.deltaY;
     }
 }

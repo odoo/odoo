@@ -34,15 +34,22 @@ const messagingMenuModelPatch = {
                               }
                             : undefined,
                     },
-                    filters: this.store.has_access_livechat
-                        ? [
-                              {
-                                  id: "livechat_need_help",
-                                  text: _t("Help needed"),
-                                  includesChannel: (c) => c.livechat_status === "need_help",
-                              },
-                          ]
-                        : [],
+                    filters: [
+                        {
+                            id: "livechat_unread",
+                            text: _t("Unread"),
+                            includesChannel: (c) => c.isUnread,
+                        },
+                        ...(this.store.has_access_livechat
+                            ? [
+                                  {
+                                      id: "livechat_need_help",
+                                      text: _t("Help needed"),
+                                      includesChannel: (c) => c.livechat_status === "need_help",
+                                  },
+                              ]
+                            : []),
+                    ],
                     includesChannel: (c) =>
                         c.channel_type === "livechat" &&
                         (c.self_member_id?.is_pinned ||

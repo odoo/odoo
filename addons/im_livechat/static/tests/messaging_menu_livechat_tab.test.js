@@ -96,3 +96,61 @@ test("live chat tab has a need help filter", async () => {
     await contains(".o-mail-NotificationItem", { count: 1 });
     await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
 });
+
+test("live chat tab has an unread filter", async () => {
+    const pyEnv = await startServer();
+    const [guest1, guest2] = pyEnv["mail.guest"].create([
+        { name: "Visitor #1" },
+        { name: "Visitor #2" },
+    ]);
+    const [chat1Id, chat2Id] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    is_pinned: true,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    is_pinned: true,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+    ]);
+    const [, chat2MessageId] = pyEnv["mail.message"].create([
+        { author_guest_id: guest1, body: "hello", model: "discuss.channel", res_id: chat1Id },
+        { author_guest_id: guest2, body: "hi", model: "discuss.channel", res_id: chat2Id },
+    ]);
+    const [chat2MemberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", chat2Id],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    // Visitor #2's session is marked read: its separator is past its last message.
+    pyEnv["discuss.channel.member"].write([chat2MemberId], {
+        new_message_separator: chat2MessageId + 1,
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
+    await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+    await click("button:text('Unread')");
+    await contains("button.o-active:text('Unread')");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
+    await click("button:text('All')");
+    await contains("button.o-active:text('All')");
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
+    await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+});

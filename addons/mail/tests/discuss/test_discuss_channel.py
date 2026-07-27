@@ -3,6 +3,8 @@
 import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+from io import BytesIO
+from PIL import Image
 from unittest.mock import patch
 from markupsafe import Markup
 
@@ -10,7 +12,7 @@ from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusResult
-from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
+from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
@@ -737,17 +739,50 @@ class TestChannelInternals(MailCommon, HttpCase):
         ])
         self.assertFalse(messages)
 
+    def _expected_default_avatar(self, text, seed):
+        """Rebuild the SVG produced by ``generate_text_avatar_svg`` for a given text/seed.
+
+        :param str text: the initials or number drawn on the avatar.
+        :param str seed: value the background color is derived from.
+        :return: the expected avatar bytes.
+        :rtype: bytes
+        """
+        bgcolor = get_random_ui_color_from_seed(seed)
+        font_size = 104 if len(text) <= 1 else 86
+        return (
+            "<?xml version='1.0' encoding='UTF-8' ?>"
+            "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg'>"
+            f"<rect fill='{bgcolor}' height='180' width='180'/>"
+            f"<text fill='#ffffff' font-size='{font_size}' font-weight='bold' text-anchor='middle' x='90' y='124' font-family='sans-serif'>{html_escape(text)}</text>"
+            "</svg>"
+        ).encode()
+
     def test_channel_should_generate_correct_default_avatar(self):
         test_channel = self.env['discuss.channel']._create_channel(name='Channel', group_id=self.env.ref('base.group_user').id)
-        private_group = self.env['discuss.channel']._create_group(users_to=self.user_employee)
-        bgcolor_channel = html_escape(get_random_ui_color_from_seed(str(test_channel.id)))
-        bgcolor_group = html_escape(get_random_ui_color_from_seed(str(private_group.id)))
-        expected_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
-        expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_group}"')).encode()
+        private_group = self.env['discuss.channel']._create_group(users_to=self.user_employee, name="Sales Team")
+        meeting = self.env['discuss.channel']._create_group(users_to=self.user_employee, default_display_mode="video_full_screen")
+        image = BytesIO()
+        Image.new("RGB", (1, 1)).save(image, format="PNG")
+        photoless_partner = self.env['res.partner'].create({"name": "John Doe"})
+        photo_partner = self.env['res.partner'].create({"name": "Jane Roe", "image_1920": BinaryBytes(image.getvalue())})
+        chat_initials = self.env['discuss.channel']._get_or_create_chat(partners_to=[photoless_partner.id])
+        chat_photo = self.env['discuss.channel']._get_or_create_chat(partners_to=[photo_partner.id])
 
-        self.assertEqual(test_channel.avatar_128.content, expected_avatar_channel)
-        self.assertEqual(private_group.avatar_128.content, expected_avatar_group)
+        # channel: first initial of the name
+        self.assertEqual(test_channel.avatar_128.content, self._expected_default_avatar("C", str(test_channel.id)))
+        # regular group: the group glyph recolored with the UI palette
+        bgcolor_group = get_random_ui_color_from_seed(str(private_group.id))
+        expected_group = group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_group}"').encode()
+        self.assertEqual(private_group.avatar_128.content, expected_group)
+        # meeting: day of month of the creation date
+        self.assertEqual(meeting.avatar_128.content, self._expected_default_avatar(str(meeting.create_date.day), str(meeting.id)))
+        # chat with a photo-less correspondent: first and last name initials, seeded by partner
+        self.assertEqual(chat_initials.avatar_128.content, self._expected_default_avatar("JD", str(photoless_partner.id)))
+        # chat with a correspondent that has a real photo: defer to the partner avatar
+        self.assertFalse(chat_photo.avatar_128)
+        self.assertEqual(chat_photo.avatar_cache_key, "no-avatar")
 
+        # an uploaded channel image always wins over the generated avatar
         test_channel.image_128 = BinaryBytes(b"<svg/>")
         self.assertEqual(test_channel.avatar_128.content, test_channel.image_128.content)
 

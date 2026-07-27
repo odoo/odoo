@@ -61,10 +61,10 @@ test("can manually unpin a sub-thread", async () => {
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     await click(
-        ".o-mail-MessagingMenuItem:has(:text('General New Thread')) [title='Channel Actions']"
+        ".o-mail-MessagingMenuItem:has(:text('Gene… New Thread')) [title='Channel Actions']"
     );
     await click(".o-dropdown-item:text('Hide Until New Message')");
-    await contains(".o-mail-NotificationItem:has(:text('General New Thread'))", { count: 0 });
+    await contains(".o-mail-NotificationItem:has(:text('Gene… New Thread'))", { count: 0 });
 });
 
 test("create sub thread from existing message", async () => {
@@ -280,7 +280,7 @@ test("sub-thread is visually muted when mute is active", async () => {
     await click("button[title='Threads']");
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-NotificationItem.opacity-50:has(:text('New Thread'))", { count: 0 });
-    await click(".o-mail-NotificationItem:has(:text('General New Thread'))");
+    await click(".o-mail-NotificationItem:has(:text('Gene… New Thread'))");
     await click("button[title='Notification Settings']");
     await hover("button:has(:text('Mute Conversation'))");
     await click(".o-dropdown-item:contains('Until I turn it back on')");

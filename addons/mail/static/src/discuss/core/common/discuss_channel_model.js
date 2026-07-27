@@ -130,7 +130,10 @@ export class DiscussChannel extends Record {
     /** @type {string} */
     avatar_cache_key;
     get avatarUrl() {
-        if (["channel", "group"].includes(this.channel_type)) {
+        const hasOwnAvatar =
+            ["channel", "group"].includes(this.channel_type) ||
+            (this.avatar_cache_key && this.avatar_cache_key !== "no-avatar");
+        if (hasOwnAvatar) {
             const accessTokenParam = {};
             if (this.store.self_user?.share !== false) {
                 accessTokenParam.access_token = this.avatar_128_access_token;
@@ -461,6 +464,9 @@ export class DiscussChannel extends Record {
     }
     get isChatChannel() {
         return this.chatChannelTypes.includes(this.channel_type);
+    }
+    get isUnread() {
+        return Boolean(this.self_member_id?.message_unread_counter_ui || this.markedAsUnread);
     }
     otherTypingMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
