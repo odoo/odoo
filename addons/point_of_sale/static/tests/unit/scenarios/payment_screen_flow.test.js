@@ -231,9 +231,7 @@ test("AutofillCashCount: cash count autofill with comma decimal separator", asyn
         ".pos-leftheader button:has([data-icon='menu']), .pos-topheader button:has([data-icon='menu'])"
     ).click();
     await animationFrame();
-    await contains(
-        '.dropdown-item:contains("Close Register"), .o-dropdown-item:contains("Close Register")'
-    ).click();
+    await contains(".o_pos_burger_menu_buttons button:contains('Close Register')").click();
     await animationFrame();
 
     await waitFor(".close-pos-popup");

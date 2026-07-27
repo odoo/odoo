@@ -327,9 +327,7 @@ test("customer_display_shows_qr_popup: customer display QR code popup", async ()
     ).click();
     await animationFrame();
 
-    await contains(
-        '.dropdown-item:contains("Customer Display"), .o-dropdown-item:contains("Customer Display")'
-    ).click();
+    await contains('.o_pos_burger_menu_buttons button:contains("Customer Display")').click();
     await animationFrame();
 
     await waitFor(".modal");

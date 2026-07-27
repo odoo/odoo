@@ -4,16 +4,6 @@
        <xpath expr="//div[hasclass('pos-topheader')]" position="after">
            <FloorPlanEditorNavBar  t-if="this.floorPlanStore?.isEditToolbarVisible()"/>
        </xpath>
-        <xpath expr="//DropdownItem/i[@data-icon='chevron_left']/.." position="before">
-            <t t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall">
-                <DropdownItem t-if="this.showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.floorPlanStore.startEditMode()">
-                    <i class="oi oi-fw" data-icon="edit_square" aria-hidden="true" /> Edit Plan
-                </DropdownItem>
-            </t>
-            <DropdownItem t-if="this.pos.router.currentScreen() == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
-                <i class="oi oi-fw" data-icon="visibility" aria-hidden="true" /> Switch Floor View
-            </DropdownItem>
-        </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]//OrderTabs" position="attributes">
             <attribute name="t-if">!this.pos.config.module_pos_restaurant</attribute>
         </xpath>
@@ -35,6 +25,22 @@
         </xpath>
         <xpath expr="//button[hasclass('orders-button')]" position="attributes">
             <attribute name="t-att-class">{'active': this.mainButton === 'order', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}</attribute>
+        </xpath>
+    </t>
+    <t t-name="pos_restaurant.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='backend']" position="before">
+            <t t-call="point_of_sale.BurgerDialogMenuButton"
+                t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall and this.showEditPlanButton and this.pos.config.floor_ids.length"
+                dataIcon="'edit_square'"
+                onClick="() => this.floorPlanStore.startEditMode()"
+                btnLabel.translate="Edit Plan"
+            />
+            <t t-call="point_of_sale.BurgerDialogMenuButton"
+                t-if="this.pos.router.currentScreen() == 'FloorScreen'"
+                dataIcon="'visibility'"
+                onClick="() => this.onSwitchButtonClick()"
+                btnLabel.translate="Switch Floor View"
+            />
         </xpath>
     </t>
 </templates>

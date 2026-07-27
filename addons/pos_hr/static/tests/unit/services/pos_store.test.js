@@ -104,3 +104,17 @@ test("validateOrder", async () => {
     const order = store.getOrder();
     expect(order.employee_id.id).toBe(2);
 });
+
+test("hasProductCreationAccessWithAdmin", async () => {
+    const store = await setupPosEnv();
+    const admin = store.models["hr.employee"].get(2);
+    store.setCashier(admin);
+    expect(store.hasProductCreationAccess).toBe(true);
+});
+
+test("hasProductCreationAccessWithNonAdmin", async () => {
+    const store = await setupPosEnv();
+    const emp = store.models["hr.employee"].get(3);
+    store.setCashier(emp);
+    expect(store.hasProductCreationAccess).toBe(false);
+});
