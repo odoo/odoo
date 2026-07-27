@@ -31,6 +31,7 @@ _ref_vat = {
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
     'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
+    'ca': _lt('123456782 or 123456782RT0001'),
     'cr': '3101012009',
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
@@ -805,6 +806,22 @@ class ResPartner(models.Model):
         # Foreign companies that trade with non-enterprises in the EU
         # may have a VATIN starting with "EU" instead of a country code.
         return vat
+
+    def format_vat_ca(self, vat):
+        """Normalize the case of a Canadian Business Number (BN).
+
+        Two forms are accepted:
+          9 digits, the business number itself, for example 123456782
+          9 digits followed by a 2 letter program identifier and a 4 digit
+          reference number, for example 123456782RT0001
+
+        The program identifier tells which account the number refers to.
+        RT is goods and services tax, RP is payroll, RC is corporate income
+        tax and RM is import and export. It is always written in upper case,
+        but stdnum keeps the case as it was typed and then rejects a lower
+        case identifier, so upper case the number before compacting it.
+        """
+        return stdnum.get_cc_module('ca', 'bn').compact(vat.upper())
 
     def format_vat_ch(self, vat):
         stdnum_vat_format = stdnum.util.get_cc_module('ch', 'vat').format
