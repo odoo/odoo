@@ -179,3 +179,20 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'discount': 0.0,
             'price_subtotal': 449.32,
         }])
+
+    def test_partial_import_invoice_line_with_discount_and_included_tax(self):
+        self.env['account.tax'].create({
+            'name': '21 included',
+            'amount': 21.0,
+            'amount_type': 'percent',
+            'price_include_override': 'tax_included',
+            'type_tax_use': 'purchase',
+            'company_id': self.company_data['company'].id
+        })
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_with_discount_and_included_tax')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 121.0,
+            'quantity': 2.0,
+            'discount': 50.0,
+            'price_subtotal': 100.0,
+        }])
