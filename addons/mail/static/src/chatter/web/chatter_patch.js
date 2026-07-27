@@ -435,7 +435,6 @@ const chatterPatch = {
 
     /** @param {import("models").Thread} thread */
     onFollowerChanged(thread) {
-        document.body.click(); // hack to close dropdown
         if (thread?.eq(this.state.thread)) {
             this.reloadParentView();
         }

@@ -46,23 +46,36 @@
 }
 
 .o-mail-Followers-dropdown {
-    /**
-     * Note: Min() refers to CSS min() and not SCSS min().
-     *
-     * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
-     */
-    max-width: Min(400px, 95vw);
-    max-height: Min(500px, 50vh);
+    width: min(400px, 95vw);
+    max-height: min(500px, 50vh);
 }
 
-.o-mail-Follower:hover, .o-mail-Follower:focus-within {
+.o-mail-Follower:hover, .o-mail-Follower:has(:focus-visible), .o-mail-Follower.o-editing {
     background-color: var(--o-bs-dropdown-link-hover-bg) !important;
 }
 
-.o-mail-Follower-avatar {
-    --Avatar-size: var(--o-mail-Avatar-sizeSmall);
+.o-mail-Follower:has(:focus-visible) .opacity-100-hover {
+    opacity: 1 !important;
 }
 
-.o-mail-Follower:has(.o-mail-Follower-action:hover), .o-mail-FollowerList-unfollow:has(.o-mail-Follower-action:hover) {
-    background-color: inherit !important;
+.o-mail-Follower-avatar {
+    --Avatar-size: 30px;
+}
+
+.o-mail-FollowerList-avatar {
+    --Avatar-size: 34px;
+}
+
+.o-mail-Follower-action, .o-mail-FollowerList-action {
+    --btn-hover-bg: var(--o-bs-dropdown-link-hover-bg);
+}
+
+.o-mail-FollowerList-action {
+    --btn-border-color: var(--dropdown-border-color);
+    --btn-hover-border-color: var(--dropdown-border-color);
+}
+
+.o-mail-FollowerList-self .o-mail-FollowerList-action {
+    --btn-border-color: var(--o-gray-400);
+    --btn-hover-border-color: var(--o-gray-400);
 }

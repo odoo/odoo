@@ -17,19 +17,23 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await start();
     await openFormView("res.partner", threadId);
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
-    await waitFor("[title='Show Followers'] [data-icon='person']:count(1)");
-    await contains("[title='Show Followers']:enabled:count(1)").click();
-    await contains(".o-dropdown-item:text('Follow'):count(1)").click();
+    await contains("button[title='Show Followers']:enabled:count(1)").click();
+    await waitFor(".o-mail-FollowerList-self :text('Not following'):count(1)");
+    await contains("button[title='Follow']:text('Follow'):count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
-    await waitFor("[title='Show Followers'] .oi-filled[data-icon='person']:count(1)");
-    await contains("[title='Show Followers']:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await contains("[title='Edit Notification Preferences']:count(1)").click();
-    await waitForNone(".o-mail-Followers-dropdown");
-    await contains("[title='Show Followers']:enabled:count(1)").click();
-    await contains(".o-dropdown-item:text('Unfollow'):count(1)").click();
+    await waitFor(".o-mail-FollowerList-self :text('Following'):count(1)");
+    await contains(
+        ".o-mail-FollowerList-self button[title='Edit Notification Preferences']:count(1)"
+    ).click();
+    await waitFor(".o-mail-FollowerSubtypeDialog:count(1)");
+    await contains(".o-mail-FollowerSubtypeDialog button:text('Discard'):count(1)").click();
+    await waitForNone(".o-mail-FollowerSubtypeDialog");
+    await waitFor(".o-mail-Followers-dropdown:count(1)");
+    await contains("button[title='Unfollow']:text('Unfollow'):count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
-    await waitFor("[title='Show Followers'] [data-icon='person']:count(1)");
+    await waitFor("button[title='Show Followers']:count(1)");
+    await waitFor(".o-mail-FollowerList-self :text('Not following'):count(1)");
 });
 
 test("following during a slow RPC should not reload another record opened via the pager", async () => {
@@ -51,9 +55,10 @@ test("following during a slow RPC should not reload another record opened via th
         resIds: [partnerId_1, partnerId_2],
     });
     await expect.waitForSteps([`read ${partnerId_1}`]);
-    await contains("[title='Show Followers']:enabled:count(1)").click();
-    await contains(".o-dropdown-item:text('Follow'):count(1)").click();
+    await contains("button[title='Show Followers']:enabled:count(1)").click();
+    await contains("button[title='Follow']:text('Follow'):count(1)").click();
     await expect.waitForSteps(["subscribe"]);
+    await waitFor(".o-mail-Followers-dropdown:count(1)");
     // Switch to the second record while the subscribe RPC of the first is still pending.
     await pagerNext();
     await waitFor(".o_pager:text(2 / 2):count(1)");
