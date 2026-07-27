@@ -79,6 +79,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            trigger: "body:not(:has(.modal))",
+            timeout: 30000,
+        },
+        {
             content: "Wait to land on '/zoe-s-di-ner' page",
             trigger: ':iframe a[href="/zoe-s-di-ner"].nav-link.active',
         },
@@ -106,6 +110,10 @@ registerWebsitePreviewTour(
             content: "Save the menu",
             trigger: ".modal-footer .btn-primary",
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
+            timeout: 30000,
         },
         {
             content: "Check that we are on the new page.",
@@ -171,6 +179,10 @@ registerWebsitePreviewTour(
             content: "Save the menu",
             trigger: ".modal-footer .btn-primary",
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(.modal))",
+            timeout: 30000,
         },
         ...clickOnSave(),
         {
