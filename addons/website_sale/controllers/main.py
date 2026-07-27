@@ -1695,14 +1695,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         list_as_website_content=system_page_extra_info,
     )
     def extra_info(self, **post):
-        # Check that this option is activated
+        order_sudo = request.cart
         extra_step = self.env.website.viewref("website_sale.extra_info")
-        if not extra_step.active:
+        if not extra_step.active or not self.env.website._cart_has_extra_step_category():
             return request.redirect(
                 self.env.website._get_next_breadcrumb_step_href("/shop/extra_info")
             )
 
-        order_sudo = request.cart
         if redirect := self.env["website.checkout.step"].validate_checkout_progress(
             "/shop/extra_info", order_sudo
         ):
@@ -1993,6 +1992,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             extra_step_view = self.env.website.viewref("website_sale.extra_info")
             extra_step = self.env.website._get_checkout_step("/shop/extra_info")
             extra_step_view.active = extra_step.is_published = options.get("extra_step") == "true"
+
+        if "extra_step_category_ids" in options:
+            category_ids = options["extra_step_category_ids"]
+            self.env.website.extra_step_category_ids = (
+                self.env["product.public.category"].browse(category_ids).exists()
+            )
 
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
