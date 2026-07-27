@@ -154,9 +154,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         # If the route is fetched from the link previewer avoid triggering that quotation is viewed.
         is_link_preview = request.httprequest.headers.get('Odoo-Link-Preview')
-        if request.env.user.share and access_token and is_link_preview != 'True':
-            # If a public/portal user accesses the order with the access token
-            # Log a note on the chatter.
+        if (
+            request.env.user.share
+            and access_token
+            and is_link_preview != "True"
+            and order_sudo.state in ["draft", "sent"]
+        ):
+            # If a public/portal user accesses the order which is in draft or sent state with the
+            # access token. Log a note on the chatter.
             today = fields.Date.today().isoformat()
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != today:
