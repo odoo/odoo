@@ -78,7 +78,7 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { onRendered, onWillRender } from "@web/owl2/utils";
+import { onRendered } from "@web/owl2/utils";
 import { onMounted, onPatched } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -6460,11 +6460,13 @@ test("rerenders only once after resequencing records", async () => {
     patchWithCleanup(KanbanRecord.prototype, {
         setup() {
             super.setup();
-            onWillRender(() => {
+            const trackRender = () => {
                 const id = this.props.record.resId;
                 renderCounts[id] = renderCounts[id] || 0;
                 renderCounts[id]++;
-            });
+            };
+            onMounted(trackRender);
+            onPatched(trackRender);
         },
     });
 
