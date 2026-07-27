@@ -93,6 +93,31 @@ test("command palette search finds livechats", async () => {
     await contains(".o-mail-ChatWindow-displayName:text('Visitor 11')");
 });
 
+test("command palette search shows last message preview for livechats", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId,
+        body: "Hello, I need help!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
+    await contains(
+        ".o-mail-DiscussCommand:has(:text('Visitor 11')) .o-livechat-DiscussCommand-lastMessage",
+        { text: "Hello, I need help!" }
+    );
+});
+
 test("open visitor's partner profile if visitor has one", async () => {
     const pyEnv = await startServer();
     const livechatPartner = pyEnv["res.partner"].create({ name: "Joel Willis" });
