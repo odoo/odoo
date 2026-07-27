@@ -499,6 +499,11 @@ registry.category("web_tour.tours").add("edit_menus", {
             },
         },
         {
+            content: "Wait for drop",
+            trigger:
+                '.oe_menu_editor li:contains("new_menu") > ul > li:contains("new_nested_menu")',
+        },
+        {
             content: "Drag 'Modnar !!' below 'new_menu'",
             trigger:
                 '.oe_menu_editor li:contains("Home") > ul > li:contains("Modnar !!") [data-icon="drag_indicator"]',
