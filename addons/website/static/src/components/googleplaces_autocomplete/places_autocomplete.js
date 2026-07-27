@@ -7,10 +7,10 @@ export class PlacesAutoComplete extends Component {
     static template = "website.PlacesAutoComplete";
     static components = { AutoCompleteWithPages };
     static props = {
-        targetDropdown: { type: HTMLElement, required: true },
-        maps: { type: Object, required: true },
-        onPlaceSelected: { type: Function, required: true },
-        onError: { type: Function, required: true },
+        targetDropdown: { type: HTMLElement },
+        maps: { type: Object },
+        onPlaceSelected: { type: Function },
+        onError: { type: Function },
     };
 
     setup() {
