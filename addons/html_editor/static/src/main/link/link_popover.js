@@ -124,6 +124,7 @@ export class LinkPopover extends Component {
             buttonShape: getButtonShape(linkElement),
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
+            canReplaceTitle: !linkElement.querySelector("img,.fa"),
             showLabel: !linkElement.childElementCount,
             stripDomain: true,
             showAdvancedOptions: false,
