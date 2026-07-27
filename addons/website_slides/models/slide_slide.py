@@ -810,6 +810,14 @@ class SlideSlide(models.Model):
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
 
+    def get_image_1024_src(self):
+        attachment = self.env["ir.attachment"].search([
+            ("res_model", "=", self._name),
+            ("res_id", "=", self.id),
+            ("res_field", "=", "image_1024"),
+        ], limit=1)
+        return attachment and ("%s?access_token=%s" % (attachment.image_src, attachment.generate_access_token()[0]))
+
     def action_set_viewed(self, quiz_attempts_inc=False):
         if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
