@@ -71,7 +71,7 @@ registerWebsitePreviewTour(
         ),
         {
             content: "Wait for no loading",
-            trigger: "body:not(:has(.o_we_ui_loading))",
+            trigger: ":iframe body:not(:has(.o_loading_screen))",
         },
         verifyShapeColorsUpdated(":iframe .s_company_team", TEST_COLOR_HEX_2),
         goBackToBlocks(),
@@ -100,7 +100,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Wait for no loading",
-            trigger: "body:not(:has(.o_we_ui_loading))",
+            trigger: ":iframe body:not(:has(.o_loading_screen))",
         },
         verifyShapeColorsUpdated(":iframe .s_company_team", TEST_COLOR_HEX),
         clickOnElement("any image in the snippet", ":iframe .s_company_team img[data-shape]"),
