@@ -2,10 +2,10 @@
 
 import useStore from "../hooks/store_hook.js";
 
-const { Component, xml, onMounted, props, types: t } = owl;
+const { Component, xml, onMounted, useProps, types: t } = owl;
 
 export class LoadingFullScreen extends Component {
-    props = props({
+    props = useProps({
         slots: t.object(["body"]),
     });
 
