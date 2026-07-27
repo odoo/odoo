@@ -79,13 +79,16 @@
                             data-hotkey="q"
                             invisible="pdp_kyc_status != 'success'">
                         <span invisible="edi_mode != 'prod'">
-                            Validate Registration (Production)
+                            <span invisible="'company_pdp_annuaire_warning' in warnings">Validate Registration (Production)</span>
+                            <span invisible="'company_pdp_annuaire_warning' not in warnings">Migrate to Odoo (Production)</span>
                         </span>
                         <span invisible="edi_mode != 'test'">
-                            Validate Registration (Test)
+                            <span invisible="'company_pdp_annuaire_warning' in warnings">Validate Registration (Test)</span>
+                            <span invisible="'company_pdp_annuaire_warning' not in warnings">Migrate to Odoo (Test)</span>
                         </span>
                         <span invisible="edi_mode != 'demo'">
-                            Validate Registration (Demo)
+                            <span invisible="'company_pdp_annuaire_warning' in warnings">Validate Registration (Demo)</span>
+                            <span invisible="'company_pdp_annuaire_warning' not in warnings">Migrate to Odoo (Demo)</span>
                         </span>
                     </button>
                     <button name="button_deregister_pdp_participant"
