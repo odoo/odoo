@@ -133,6 +133,10 @@
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
             'point_of_sale/static/src/backend/views/**/*',
+
+            'point_of_sale/static/src/customer_display/**/*',
+            ('remove', 'point_of_sale/static/src/customer_display/root.js'),
+            ('remove', 'point_of_sale/static/src/customer_display/styles.scss'),
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
@@ -273,7 +277,6 @@
             "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
             "point_of_sale/static/tests/customer_display/customer_display_utils.js",
-            "point_of_sale/static/tests/customer_display/customer_display_tour.js",
         ],
         'point_of_sale.assets_debug': [
             ('include', 'point_of_sale.base_tests'),

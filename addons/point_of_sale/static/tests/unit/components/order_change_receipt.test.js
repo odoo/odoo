@@ -1,6 +1,7 @@
 import { test, expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { renderToElement } from "@web/core/utils/render";
-import { setupPosEnv } from "../utils";
+import { setupPosEnv, setupAndMountPosApp, createComboSetup } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import {
     normalizeText,
@@ -124,5 +125,92 @@ test("order change ticket renders multiple new lines", async () => {
             { name: "Burger", quantity: "2" },
             { name: "Pizza", quantity: "1" },
         ],
+    });
+});
+
+test("test_printer_restricts_to_allowed_categories_for_combo: only combo items in allowed categories print", async () => {
+    const store = await setupAndMountPosApp({ use_pricelist: false, module_pos_restaurant: true });
+
+    const { template: comboTmpl } = createComboSetup(store, {
+        id: 8500,
+        name: "Office Combo",
+        price: 40,
+        categoryId: 1,
+        combos: [
+            {
+                name: "Combo 1",
+                items: [{ name: "Combo Product 3", price: 16 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+            },
+            {
+                name: "Combo 2",
+                items: [{ name: "Combo Product 5", price: 25 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+            },
+            {
+                name: "Combo 3",
+                items: [{ name: "Combo Product 8", price: 40 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+            },
+        ],
+    });
+    comboTmpl.pos_categ_ids = [store.models["pos.category"].get(1)];
+
+    const comboProduct5 = store.models["product.template"]
+        .getAll()
+        .find((p) => p.name === "Combo Product 5");
+    if (comboProduct5) {
+        comboProduct5.pos_categ_ids = [store.models["pos.category"].get(2)];
+    }
+    await animationFrame();
+
+    await Utils.clickDisplayedProduct("Office Combo");
+    const order = store.getOrder();
+    const { tickets } = renderOrderChangeReceipt(store, order, {}, [2]);
+    expectOrderChangeTicket(tickets[0], {
+        orderlines: [
+            { name: "Office Combo", quantity: "1" },
+            { name: "Combo Product 5", quantity: "1" },
+        ],
+        invisibleInDom: ["Combo Product 3", "Combo Product 8"],
+    });
+});
+
+test("test_printer_not_linked_to_any_combo_category: printer only shows non-combo items in its category", async () => {
+    const store = await setupAndMountPosApp({ use_pricelist: false, module_pos_restaurant: true });
+
+    createComboSetup(store, {
+        id: 8600,
+        name: "Office Combo",
+        price: 40,
+        categoryId: 1,
+        combos: [
+            {
+                name: "Combo 1",
+                items: [{ name: "Combo Product 5", price: 25 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+            },
+        ],
+    });
+
+    const category2 = store.models["pos.category"].get(2);
+    store.models["product.template"].get(5).pos_categ_ids = [category2];
+    store.models["product.product"].get(5).pos_categ_ids = [category2];
+    await animationFrame();
+    await Utils.clickDisplayedProduct("Office Combo");
+    await Utils.clickDisplayedProduct("TEST");
+    const order = store.getOrder();
+    const { tickets } = renderOrderChangeReceipt(store, order, {}, [2]);
+    expectOrderChangeTicket(tickets[0], {
+        orderlines: [{ name: "TEST", quantity: "1" }],
+        invisibleInDom: ["Office Combo", "Combo Product 5"],
     });
 });

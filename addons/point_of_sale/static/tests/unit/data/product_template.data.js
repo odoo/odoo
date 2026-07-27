@@ -833,4 +833,16 @@ export class ProductTemplate extends models.ServerModel {
             optional_products: [],
         };
     }
+    load_product_from_pos(self, config_id, domain, offset = 0, limit = false) {
+        return {
+            "account.tax": [],
+            "product.product": [],
+            "product.template": [],
+            "product.uom": [],
+            "product.combo": [],
+            "product.combo.item": [],
+            "product.template.attribute.value": [],
+            "product.template.attribute.line": [],
+        };
+    }
 }

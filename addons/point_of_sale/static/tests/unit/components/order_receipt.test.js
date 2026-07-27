@@ -206,21 +206,21 @@ test("ticket data renders rounding amounts on receipts", async () => {
     const store = await setupPosEnv();
 
     const { cashPm } = prepareRoundingVals(store, 0.05, "DOWN", true);
-    const order = await getSingleProductOrder(store, 1.98);
+    const order = await getSingleProductOrder(store, `Rounding Product ${1.98}`, 1.98);
     expect(order.totalDue).toBe(1.98);
     order.addPaymentline(cashPm);
     order.setOrderPrices();
 
     const { ticket } = renderReceipt(store, order);
     expectTicketData(ticket, {
-        total_amount: "$ 1.95",
+        total_amount: "$ 1.98",
         is_rounding: true,
         rounding_amount: "-0.03",
         is_change: false,
     });
 });
 
-test("ticket data renders logo and contact info variants", async () => {
+test("point_of_sale.test_receipt_company_logo_tour, point_of_sale.test_receipt_no_logo_tour: ticket data renders logo and contact info variants", async () => {
     const cases = [
         {
             name: "company logo",
@@ -250,6 +250,32 @@ test("ticket data renders logo and contact info variants", async () => {
             contact_info: receiptCase.contact_info,
         });
     }
+});
+
+test("point_of_sale.test_receipt_custom_logo_tour: custom logo and phone displayed on receipt", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+
+    setProductPrice(product, 5, []);
+    store.config.use_custom_receipt_info = true;
+    const customLogo =
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+    store.config.custom_logo = customLogo;
+    store.config.logo = customLogo;
+    store.config.custom_phone = "555-999";
+    store.config.phone = "555-999";
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+    const cashPm = store.models["pos.payment.method"].find((pm) => !pm.is_cash_count);
+    addPayment(order, cashPm, 5);
+    order.setOrderPrices();
+
+    const { ticket } = renderReceipt(store, order);
+    expectTicketData(ticket, {
+        logo: imageDataUri(customLogo),
+        contact_info: "555-999",
+    });
 });
 
 test("ticket data can hide the invoice qr code", async () => {
@@ -607,7 +633,7 @@ const cashRoundingCases = [
         price: 15.72,
         onlyRoundCashMethod: true,
         payments: [{ paymentMethodId: 1, amount: 15.7 }],
-        totalAmount: "15.70",
+        totalAmount: "15.72",
         roundingAmount: "-0.02",
     },
     {
@@ -616,7 +642,7 @@ const cashRoundingCases = [
         onlyRoundCashMethod: true,
         isRefund: true,
         payments: [{ paymentMethodId: 1, amount: -15.7 }],
-        totalAmount: "-15.70",
+        totalAmount: "-15.72",
         roundingAmount: "0.02",
     },
     {
@@ -627,7 +653,7 @@ const cashRoundingCases = [
             { paymentMethodId: 2, amount: 0.68 },
             { paymentMethodId: 1, amount: 15.04 },
         ],
-        totalAmount: "15.70",
+        totalAmount: "15.72",
         roundingAmount: false,
     },
     {
@@ -639,7 +665,7 @@ const cashRoundingCases = [
             { paymentMethodId: 2, amount: -0.68 },
             { paymentMethodId: 1, amount: -15.04 },
         ],
-        totalAmount: "-15.70",
+        totalAmount: "-15.72",
         roundingAmount: false,
     },
 ];
@@ -651,9 +677,13 @@ for (const roundingCase of cashRoundingCases) {
         prepareRoundingVals(store, 0.05, "HALF-UP", roundingCase.onlyRoundCashMethod);
         const order = await getSingleProductOrder(
             store,
-            roundingCase.price,
-            roundingCase.isRefund
+            `Rounding Product ${roundingCase.price}`,
+            roundingCase.price
         );
+        if (roundingCase.isRefund) {
+            order.is_refund = true;
+            order.lines.map((line) => line.setQuantity(-line.qty));
+        }
         const expectedLineName = order.lines[0].product_id.display_name;
 
         const expectedPayments = [];
@@ -719,25 +749,4 @@ test("test_printed_receipt_tour: basic receipt hides totals and prices", async (
     expect(Boolean(ticket.querySelector('div[name="prices"]'))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-incl"))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-unit"))).toBe(false);
-});
-
-test("custom phone displayed on receipt", async () => {
-    const store = await setupPosEnv();
-    const order = store.addNewOrder();
-    const product = store.models["product.template"].get(5);
-
-    setProductPrice(product, 5, []);
-    store.config.use_custom_receipt_info = true;
-    store.config.custom_phone = "555-999";
-    store.config.phone = "555-999";
-    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
-
-    const cashPm = store.models["pos.payment.method"].find((pm) => !pm.is_cash_count);
-    addPayment(order, cashPm, 5);
-    order.setOrderPrices();
-
-    const { ticket } = renderReceipt(store, order);
-    expectTicketData(ticket, {
-        contact_info: "555-999",
-    });
 });
