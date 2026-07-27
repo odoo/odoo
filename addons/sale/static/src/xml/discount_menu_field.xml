@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale.DiscountMenuField">
+        <Dropdown menuClass="'py-0'">
+            <button class="btn btn-secondary w-100">
+                Discounts
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="() => this.openDiscountWizard()">
+                    Manual Discount
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
