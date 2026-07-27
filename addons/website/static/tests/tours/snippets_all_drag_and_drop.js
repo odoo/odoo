@@ -14,6 +14,7 @@ export const SUB_SNIPPET_TEMPLATES = {
     s_masonry_block_mosaic_template: "s_masonry_block",
     s_masonry_block_alternation_text_image_template: "s_masonry_block",
     s_masonry_block_alternation_image_text_template: "s_masonry_block",
+    s_masonry_block_quad_template: "s_masonry_block",
 };
 
 const DROP_IN_ONLY_SNIPPETS = {
