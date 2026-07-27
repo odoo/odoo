@@ -394,7 +394,7 @@ export class EditMenuDialog extends Component {
             { context: { lang: this.website.currentWebsite.metadata.lang } }
         );
         if (this.props.save) {
-            this.props.save(url);
+            await this.props.save(url);
         } else if (goToWebsite) {
             this.website.goToWebsite();
         }
