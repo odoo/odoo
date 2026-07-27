@@ -64,6 +64,9 @@ class PosConfig(models.Model):
             tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
         return tip_product_id
 
+    def _default_partner(self):
+        return self.sudo()._get_or_create_default_partner()
+
     name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.")
     preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", domain="[('use_type', '=', 'preparation')]")
     receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", domain="[('use_type', '=', 'receipt')]")
@@ -82,6 +85,7 @@ class PosConfig(models.Model):
         string='Default Customer',
         help="The default customer used in PoS session closing",
         required=True,
+        default=_default_partner,
         check_company=True)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, compute_sudo=True, string="Currency")
     order_seq_id = fields.Many2one('ir.sequence', string='Order Sequence', readonly=True, copy=False)
@@ -651,9 +655,6 @@ class PosConfig(models.Model):
             if not vals.get('iface_tipproduct', False):
                 vals['tip_product_id'] = False
                 vals['set_tip_after_payment'] = False
-
-            if not vals.get('default_partner_id', False):
-                vals['default_partner_id'] = self.sudo()._get_or_create_default_partner().id
 
             self._check_header_footer(vals)
 
