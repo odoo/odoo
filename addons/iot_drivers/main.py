@@ -183,7 +183,13 @@ class Manager(Thread):
             system.update_conf,
             {"actions": None, "general": None, "longpolling": None}, "devtools"
         )
-        schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
+        # Odoo weekly code update
+        weekday = upgrade.get_update_day(self.identifier)
+        _logger.info("Scheduled weekly code update on %s", weekday)
+        every = schedule.every()
+        every.start_day = weekday
+        every.unit = "weeks"
+        every.at("00:00").do(upgrade.check_git_branch)
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
