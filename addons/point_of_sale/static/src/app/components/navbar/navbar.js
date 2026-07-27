@@ -9,14 +9,51 @@ import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
 import { isPrivateIp } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Dialog } from "@web/core/dialog/dialog";
+
+export class BurgerMenuDialog extends Component {
+    static template = "point_of_sale.BurgerMenuDialog";
+    static components = { Dialog };
+    static props = {
+        pos: Object,
+        ui: Object,
+        isDisplayStandalone: Boolean,
+        isBarcodeScannerSupported: Function,
+        appUrl: String,
+        showCashMoveButton: Boolean,
+        showCreateProductButton: Boolean,
+        showPrinterButton: Boolean,
+        openLnaPopup: Function,
+        openCustomerDisplay: Function,
+        onClickScan: Function,
+        showSaleDetails: Function,
+        reloadProducts: Function,
+        close: Function,
+    };
+
+    setup() {
+        this.pos = usePos();
+        this.ui = useService("ui");
+        this.dialog = useService("dialog");
+        this.isDisplayStandalone = isDisplayStandalone();
+        this.isBarcodeScannerSupported = isBarcodeScannerSupported;
+        this.appUrl = this.props.appUrl;
+        this.showCashMoveButton = this.props.showCashMoveButton;
+        this.showCreateProductButton = this.props.showCreateProductButton;
+        this.showPrinterButton = this.props.showPrinterButton;
+    }
+
+    closeAndRun(fn) {
+        this.props.close();
+        fn();
+    }
+}
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -25,8 +62,6 @@ export class Navbar extends Component {
         CashierName,
         SaleDetailsButton,
         Input,
-        Dropdown,
-        DropdownItem,
         OrderTabs,
         OrderTrackerDropdown,
     };
@@ -87,6 +122,24 @@ export class Navbar extends Component {
             body: this.pos.lnaState.message,
             size: "sm",
             backdrop: true,
+        });
+    }
+
+    openBurgerMenu() {
+        this.dialog.add(BurgerMenuDialog, {
+            pos: this.pos,
+            ui: this.ui,
+            isDisplayStandalone: this.isDisplayStandalone,
+            isBarcodeScannerSupported: this.isBarcodeScannerSupported,
+            appUrl: this.appUrl,
+            showCashMoveButton: this.showCashMoveButton,
+            showCreateProductButton: this.showCreateProductButton,
+            showPrinterButton: this.showPrinterButton,
+            openLnaPopup: () => this.openLnaPopup(),
+            openCustomerDisplay: () => this.openCustomerDisplay(),
+            onClickScan: () => this.onClickScan(),
+            showSaleDetails: () => this.showSaleDetails(),
+            reloadProducts: () => this.reloadProducts(),
         });
     }
 

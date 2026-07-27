@@ -1,4 +1,4 @@
-import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
+import { Navbar, BurgerMenuDialog } from "@point_of_sale/app/components/navbar/navbar";
 import { patch } from "@web/core/utils/patch";
 import { FloorPlanEditorNavBar } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/navbar/navbar";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
@@ -17,12 +17,6 @@ patch(Navbar.prototype, {
         } else {
             return super.showTabs();
         }
-    },
-    onSwitchButtonClick() {
-        this.floorPlanStore?.toggleFloorPlanStyle();
-    },
-    get showEditPlanButton() {
-        return this.pos.showEditPlanButton;
     },
     makeButtonBounce() {
         this.pos.shouldSetTable = true;
@@ -51,3 +45,18 @@ patch(Navbar.prototype, {
 });
 
 Navbar.components = { ...Navbar.components, FloorPlanEditorNavBar };
+
+patch(BurgerMenuDialog.prototype, {
+    setup() {
+        super.setup();
+        if (this.pos.config.module_pos_restaurant) {
+            this.floorPlanStore = useFloorPlanStore();
+        }
+    },
+    get showEditPlanButton() {
+        return this.pos.showEditPlanButton;
+    },
+    onSwitchButtonClick() {
+        this.floorPlanStore?.toggleFloorPlanStyle();
+    },
+});
