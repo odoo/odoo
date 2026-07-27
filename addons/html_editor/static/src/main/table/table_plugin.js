@@ -1931,21 +1931,92 @@ export class TablePlugin extends Plugin {
                 (table.parentElement && !!closestElement(table.parentElement, ".o_selected_td")) ||
                 getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
             if (!isTableFullySelected) {
-                for (const td of tableClone.querySelectorAll(":is(td, th):not(.o_selected_td)")) {
-                    if (closestElement(td, "table") === tableClone) {
-                        // ignore nested
-                        td.remove();
+                const grid = this.buildTableGrid(tableClone);
+                const rows = [...tableClone.rows];
+
+                // Keep the smallest rectangle of the grid that contains every
+                // selected cell.
+                let firstRow = Infinity;
+                let lastRow = -Infinity;
+                let firstColumn = Infinity;
+                let lastColumn = -Infinity;
+                for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+                    for (const [columnIndex, cell] of grid[rowIndex].entries()) {
+                        if (cell?.classList.contains("o_selected_td")) {
+                            firstRow = Math.min(firstRow, rowIndex);
+                            lastRow = Math.max(lastRow, rowIndex);
+                            firstColumn = Math.min(firstColumn, columnIndex);
+                            lastColumn = Math.max(lastColumn, columnIndex);
+                        }
                     }
                 }
-                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
-                    (row) => !row.querySelector("td, th")
-                );
-                for (const tr of trsWithoutTd) {
-                    if (closestElement(tr, "table") === tableClone) {
-                        // ignore nested
-                        tr.remove();
+                for (const [rowIndex, row] of rows.entries()) {
+                    if (rowIndex < firstRow || rowIndex > lastRow) {
+                        row.remove();
                     }
                 }
+                const colGroup = tableClone.querySelector(":scope > colgroup");
+                if (colGroup) {
+                    const originalCols = [...table.querySelector(":scope > colgroup").children];
+                    let width = 0;
+                    for (const [index, col] of [...colGroup.children].entries()) {
+                        if (index < firstColumn || index > lastColumn) {
+                            col.remove();
+                        } else {
+                            width += parseFloat(getComputedStyle(originalCols[index]).width) || 0;
+                        }
+                    }
+                    tableClone.style.width = `${width}px`;
+                }
+
+                // Rebuild each kept row from the grid. A cell covering several
+                // positions is written once, at its first position in the
+                // rectangle, with its spans measured within the rectangle. The
+                // cells that are not selected are emptied but kept, as they
+                // hold the structure of the table.
+                const writtenCells = new Set();
+                for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
+                    const rowCells = [];
+                    for (let columnIndex = firstColumn; columnIndex <= lastColumn; columnIndex++) {
+                        const cell = grid[rowIndex][columnIndex];
+                        if (!cell || writtenCells.has(cell)) {
+                            continue;
+                        }
+                        writtenCells.add(cell);
+                        if (!cell.classList.contains("o_selected_td")) {
+                            cell.replaceChildren(
+                                this.dependencies.baseContainer.createBaseContainer()
+                            );
+                        }
+                        let rowSpan = 1;
+                        while (
+                            rowIndex + rowSpan <= lastRow &&
+                            grid[rowIndex + rowSpan][columnIndex] === cell
+                        ) {
+                            rowSpan++;
+                        }
+                        let colSpan = 1;
+                        while (
+                            columnIndex + colSpan <= lastColumn &&
+                            grid[rowIndex][columnIndex + colSpan] === cell
+                        ) {
+                            colSpan++;
+                        }
+                        if (rowSpan > 1) {
+                            cell.rowSpan = rowSpan;
+                        } else {
+                            cell.removeAttribute("rowspan");
+                        }
+                        if (colSpan > 1) {
+                            cell.colSpan = colSpan;
+                        } else {
+                            cell.removeAttribute("colspan");
+                        }
+                        rowCells.push(cell);
+                    }
+                    rows[rowIndex].replaceChildren(...rowCells);
+                }
+                this.tableGridMap?.delete(tableClone);
             }
             // If it is fully selected, clone the whole table rather than
             // just its rows.
