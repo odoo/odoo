@@ -13,34 +13,6 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         this.descriptionColumn = "name";
         // product_template_id is added for purchase_product_matrix's PO view and sale's SO view
         this.productColumns = ["product_id", "product_template_id"];
-        this.conditionalColumns = ["product_id", "quantity", "product_uom_id"];
-    }
-
-    processAllColumn(allColumns, list) {
-        allColumns = allColumns.map((column) => {
-            if (column["optional"] === "conditional" && this.conditionalColumns.includes(column["name"])) {
-                /**
-                 * The preference should be different whether:
-                 *     - It's a Vendor Bill or an Invoice
-                 *     - Sale module is installed
-                 * Vendor Bills -> Product should be hidden by default (except when self billing)
-                 * Invoices -> conditionalColumns should be hidden by default if Sale module is not installed
-                 */
-                const isBill = ["in_invoice", "in_refund", "in_receipt"].includes(this.props.list.evalContext.parent.move_type);
-                const isInvoice = ["out_invoice", "out_refund", "out_receipt"].includes(this.props.list.evalContext.parent.move_type);
-                const isSelfBilling = this.props.list.evalContext.parent.is_self_billing;
-                const isSaleInstalled = this.props.list.evalContext.parent.is_sale_installed;
-                column["optional"] = "show";
-                if (isBill && column["name"] === "product_id" && !isSelfBilling) {
-                    column["optional"] = "hide";
-                }
-                else if (isInvoice && !isSaleInstalled) {
-                    column["optional"] =  "hide";
-                }
-            }
-            return column;
-        });
-        return super.processAllColumn(allColumns, list);
     }
 
     isCellReadonly(column, record) {
