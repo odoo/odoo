@@ -229,6 +229,8 @@ class StockRule(models.Model):
             final_location_id = move_to_copy.forecasted_location_id.id
         if move_to_copy.forecasted_location_id and move_to_copy.forecasted_location_id._child_of(self.location_dest_id):
             location_dest_id = move_to_copy.forecasted_location_id.id
+        elif move_to_copy.partner_id and self.location_dest_id.usage == 'customer':
+            location_dest_id = move_to_copy.partner_id.property_stock_customer.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
