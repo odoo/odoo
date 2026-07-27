@@ -82,6 +82,11 @@
                                 <field name="csv" string="CSV"/>
                                 <field name="response_message" optional="hide"/>
                                 <field name="sii_json_file" filename="sii_json_filename" widget="binary" string="Download JSON" groups="base.group_no_one"/>
+                                <button name="action_download_xml"
+                                        class="btn btn-primary"
+                                        string="Download XML"
+                                        type="object"
+                                        invisible="not attachment_id"/>
                             </list>
                         </field>
                     </page>
