@@ -229,7 +229,7 @@ test("Posting message should transform links.", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
     await press("Enter");
-    await contains("a[href='https://www.odoo.com/']");
+    await contains(".o-mail-Message a[href='https://www.odoo.com/']");
 });
 
 test("[text composer] Posting message should transform relevant data to emoji.", async () => {
