@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 05:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-master/"
@@ -310,14 +310,14 @@ msgstr ""
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -343,45 +343,51 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
-msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
-"title=\"Currency\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Szerkesztés"
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Szerkesztés"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid ""
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 
 #. module: point_of_sale
@@ -402,8 +408,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -3982,11 +3989,6 @@ msgid "Followers (Partners)"
 msgstr "Követők (Partnerek)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome ikon pld: fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5259,6 +5261,11 @@ msgid "Margins & Costs"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6135,8 +6142,8 @@ msgstr "Opcionális termékek:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -9963,19 +9970,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11279,8 +11286,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11686,98 +11693,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s POS fizetés %(partner)s részéről %(session)s-ben"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Kassza</span>"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Készpénz napló"
-
-#~ msgid "Cash register"
-#~ msgstr "Kassza"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Az elméleti záró egyenleg és a tényleges záró egyenleg közti különbség."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Záró egyenleg"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Van készpénz ellenőrzés"
-
-#~ msgid "Journal Items"
-#~ msgstr "Könyvelési tételek"
-
-#~ msgid "Not available"
-#~ msgstr "Nem elérhető"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "A nyitóegyenleg az összes készpénzes tranzakció összegével együtt."
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Kapcsolódó munkamenet: %(link)s"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Nyitó egyenleg"
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "A munkamenetet egy másik felhasználó már lezárta. Az időközben befejezett "
-#~ "összes értékesítés egy mentési munkamenetben lett elmentve, amely "
-#~ "bármikor megtekinthető és a POS-panelről könyvelésre továbbítható."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Elméleti záró egyenleg"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "A könyvelendő összegek és a megrendelések összegei között eltérés van, "
-#~ "ami valószínűleg adók vagy számviteli beállítások változásai miatt "
-#~ "alakult ki."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Ebben a munkamenetben nincs pénztárgép."
-
-#~ msgid "Transaction"
-#~ msgstr "Tranzakció"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr ""
-#~ "A megrendelést nem lehetett elküldeni a szerverre ismeretlen hiba miatt"
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "A szerverben hiba lépett fel a megrendelése fogadása közben."
-
-#~ msgid "Print Receipt"
-#~ msgstr "Nyugta (újra) nyomtatása"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "A bizonylat nyugta képernyőt átugorja, ha a nyugtát automatikusan is "
-#~ "nyomtathatja."
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal kommunikációs előzmények"
-
-#~ msgid "Info"
-#~ msgstr "Információ"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Értékesítési pont"

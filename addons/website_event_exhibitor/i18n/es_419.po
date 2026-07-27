@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:39+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 20:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -52,21 +52,21 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Icono de flecha\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Icono de flecha\" "
 "title=\"Flecha\"/>"
-
-#. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
-msgid "<span class=\"fa fa-plus me-1\"/> Add Exhibitors"
-msgstr "<span class=\"fa fa-plus me-1\"/> Agregar expositores"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 m-3\">Other exhibitors</span>"
 msgstr "<span class=\"h5 m-3\">Otros expositores</span>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Add Exhibitors"
+msgstr "<span class=\"oi me-1\" data-icon=\"add\"/> Agregar expositores"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -410,11 +410,6 @@ msgid "Followers (Partners)"
 msgstr "Seguidores (contactos)"
 
 #. module: website_event_exhibitor
-#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome, por ejemplo, fa-tasks"
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
 msgid "Footer Logo Only"
 msgstr "Logo solo en el pie de página"
@@ -556,6 +551,11 @@ msgstr "En vivo"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__image_512
 msgid "Logo"
 msgstr "Logo"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__menu_type
@@ -983,9 +983,3 @@ msgstr "comienza en"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "starts on"
 msgstr "comienza el"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"

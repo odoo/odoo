@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:36+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 18:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/crm/cs/"
@@ -134,80 +134,59 @@ msgstr "<b>Napište několik dopisů</b>hledat společnost nebo vytvořit novou.
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"mail\" title=\"Contact Email\"/>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-envelope\" title=\"Contact Email\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Contact\"/>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-mobile fa-lg\" title=\"Contact Phone\"/>"
+msgid ""
+"<i class=\"oi oi-lg\" data-icon=\"smartphone\" title=\"Contact Phone\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Install Extension"
+msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Instalovat rozšíření prohlížeče"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+msgid "<i class=\"oi\" data-icon=\"payments\" title=\"Expected Revenue\"/>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-money\" title=\"Expected Revenue\"/>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-refresh\" title=\"Recurring Revenue\"/>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-user\" title=\"Contact\"/>"
+msgid "<i class=\"oi\" data-icon=\"refresh\" title=\"Recurring Revenue\"/>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid ""
-"<i class=\"fa fa-warning\" title=\"Exceeded\" invisible=\"not "
+"<i class=\"oi\" data-icon=\"warning\" title=\"Exceeded\" invisible=\"not "
 "lead_all_assigned_month_exceeded\"/>"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                                Install Extension"
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+msgid "<i class=\"oi\" data-icon=\"work\" title=\"Opportunity Name\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                                Instalovat rozšíření prohlížeče"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa fa-"
-"fw fa-refresh\"/>"
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"oi oi-"
+"fw\" data-icon=\"refresh\"/>"
 msgstr ""
-"<i title=\"Aktualizujte\" role=\"img\" aria-label=\"Update now\" class=\"fa "
-"fa-fw fa-refresh\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"By saving this change, the customer email will also be updated.\" "
-"invisible=\"not partner_email_update\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"Uložením této změny, bude aktulizován také e-mail zákazníka.\" "
-"invisible=\"not partner_email_update\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"By saving this change, the customer phone number will also be "
-"updated.\" invisible=\"not partner_phone_update\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"Uložením této změny, bude aktulizováno také telefonní číslo "
-"zákazníka.\" invisible=\"not partner_phone_update\"/>"
+"<i title=\"Aktualizujte\" role=\"img\" aria-label=\"Update now\" class=\"oi "
+"oi-fw\" data-icon=\"refresh\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -252,6 +231,28 @@ msgstr "<span class=\"o_stat_text\"> Potenciální zákazník</span>"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
 msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"oi text-warning oe_edit_only\" data-icon=\"warning\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
+msgstr ""
+"<span class=\"oi text-warning oe_edit_only\" data-icon=\"warning\" "
+"title=\"Uložením této změny, bude aktulizován také e-mail zákazníka.\" "
+"invisible=\"not partner_email_update\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"<span class=\"oi text-warning oe_edit_only\" data-icon=\"warning\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
+msgstr ""
+"<span class=\"oi text-warning oe_edit_only\" data-icon=\"warning\" "
+"title=\"Uložením této změny, bude aktulizováno také telefonní číslo "
+"zákazníka.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -340,8 +341,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or "
-"''\">mark.brown23@example.com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
+"com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -1599,11 +1600,6 @@ msgid "Followers (Partners)"
 msgstr "Odběratelé (partneři)"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona v rámci awesome font, např. fa-tasks"
-
-#. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid ""
 "For a sales team, there is nothing worse than being dry on leads. "
@@ -2483,6 +2479,11 @@ msgstr "Marketing"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Marketing:"
 msgstr "Marketing:"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
@@ -4668,9 +4669,3 @@ msgstr ""
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr ""
-
-#~ msgid "Website Messages"
-#~ msgstr "Webové zprávy"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webová historie komunikace"

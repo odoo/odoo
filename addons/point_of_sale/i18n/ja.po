@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 06:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -300,14 +300,14 @@ msgstr "コットンデニムの5ポケット・ジーンズ。"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -331,14 +331,14 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\"><t t-"
 "out=\"client_name\">Client name</t>様</t>\n"
@@ -365,47 +365,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> 編集"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> 編集"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p> %(client_name)s様、<br/>領収書 %(is_invoiced)s             %(pos_name)s金"
 "額 %(amount)s 発行元:%(company_name)sをお送りします</p>"
@@ -428,12 +434,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">バーコード</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4053,11 +4061,6 @@ msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesomeのアイコン 例. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5371,6 +5374,11 @@ msgid "Margins & Costs"
 msgstr "マージン & コスト"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6253,8 +6261,8 @@ msgstr "オプションプロダクト:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "顧客がカートに商品を追加すると、オプションのプロダクトが提案されます(例えば、"
 "ハンバーガーを追加すると、冷たい飲み物やフライドポテトが提案されます)。"
@@ -10136,19 +10144,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11475,8 +11483,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11886,384 +11894,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s %(partner)sのPOS支払、%(session)sでの"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s 税: %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s 税抜金額"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">現金レジスタ</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">仕訳明細</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "アカウント決済は、アグリゲート決済と銀行分割支払を表します。"
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "請求作成に使用する会計仕訳帳。"
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "POSセッションの仕訳とPOS請求書の支払を計上するために使用される会計仕訳帳。"
-
-#~ msgid "Amount to balance"
-#~ msgstr "残高金額"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "セッションを閉じる際にエラーが発生しました。\n"
-#~ "手動でセッションを閉じるためにバックエンドにリダイレクトされます。"
-
-#~ msgid "Bank Payments"
-#~ msgstr "銀行支払"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "違いを閉じる前に"
-
-#~ msgid "Cash Journal"
-#~ msgstr "現金出納帳"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "計上中に発生した現金差(損) - クロージング"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "計上中に発生した現金差(益) - クロージング"
-
-#~ msgid "Cash register"
-#~ msgstr "キャッシュレジスタ"
-
-#~ msgid "Close Session"
-#~ msgstr "セッションクローズ"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "クローズセッションウィザード"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "クロージング差異%(payment_method)s(%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "クロージングセッションエラー"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "%(payment_method)sのPOS支払を組合せます( %(session)sから)"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "デフォルト売掛金勘定(POS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "デフォルトPOS売掛勘定"
-
-#~ msgid "Destination account"
-#~ msgstr "振替先勘定科目"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "振替先勘定科目は読取専用です"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "PoSセッション終了時の違い"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "理論終了残高と実際終了残高の差異"
-
-#~ msgid "Ending Balance"
-#~ msgstr "終了残高"
-
-#~ msgid "Force Close Session"
-#~ msgstr "セッション強制終了"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "この決済方法を使用する場合、強制的に顧客を設定する必要があり、顧客ごとに仕"
-#~ "訳が分割されます。クロージング処理が遅くなる可能性があります。"
-
-#~ msgid "From invoice payments"
-#~ msgstr "請求書支払より"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "現金管理あり"
-
-#~ msgid "Identify Customer"
-#~ msgstr "顧客を特定"
-
-#~ msgid "Information message"
-#~ msgstr "情報メッセージ"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "未定義な顧客に対して使用される中間勘定科目"
-
-#~ msgid "Invoice Journal"
-#~ msgstr "請求仕訳帳"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "顧客請求書支払 %(order)s用 (%(account_move)s) %(payment_method)sを使用"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "請求されます"
-
-#~ msgid "Journal Items"
-#~ msgstr "仕訳明細"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "最後のセッションのクロージングキャッシュ"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr "損失額を計上するために、以下の仕訳帳に費用勘定が必要です: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr "獲得した金額を計上するため、以下の仕訳帳に収益勘定が必要です:%s"
-
-#~ msgid "Not available"
-#~ msgstr "利用不可"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "すべての現金取引を合計したオープニング残高。"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "%s仕訳帳にアクセスして、損失勘定を定義してください。このアカウントは、現金"
-#~ "の差額を記録するために使用されます。"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "%s仕訳帳にアクセスして、利益勘定を定義してください。このアカウントは、現金"
-#~ "の差額を記録するために使用されます。"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "%(original_price)s から %(discounted_price)sへの価格割引"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "顧客ディスプレイを更新"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "関連セッション:%(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "POS締めの取消仕訳%(entry)sオーダ %(order)s用、セッション %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "セッション仕訳"
-
-#~ msgid "Starting Balance"
-#~ msgstr "期首残高"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "請求書仕訳帳は、販売仕訳帳と同じ通貨であるか、設定されていない場合は会社の"
-#~ "通貨である必要があります。"
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "セッションは他のユーザによって既に終了されています。その間に完了したすべて"
-#~ "の売上はレスキューセッションに保存され、いつでも確認し、POSダッシュボード"
-#~ "から会計に計上することができます。"
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "理論終了残高"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "計上する金額とオーダ金額に差異があるのは、おそらく税金か会計設定の変更が原"
-#~ "因です。"
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "このPOSセッションの現金レジはありません。"
-
-#~ msgid "Transaction"
-#~ msgstr "取引"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "セッションを閉じて検証できません。次の税金の各再分割行に対応する税勘定を設"
-#~ "定してください:%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "請求書が記帳されていない時はPOSをクローズすることができません。\n"
-#~ "請求書: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "%(payment_method)s支払方法の\"顧客の特定\"オプションを有効にしましたが、"
-#~ "オーダ%(order)sに顧客が含まれていません。"
-
-#~ msgid "Chose a combo to apply"
-#~ msgstr "適用するコンボを選択してください"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "リンクはクリップボードにコピーされました。"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "インターネット接続を確認してから、赤いWi-Fiボタン(画面の右上)をクリックし"
-#~ "て同期を再試行してください。"
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "お待ち下さい! POSセッションがまだ有効なのに商品をアーカイブするのは、まる"
-#~ "で食事の途中でお皿を下げるようなものです。\n"
-#~ "問題を避けるために、必ずすべてのセッションをクローズしてからにして下さい。"
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "バックエンドから請求書を印刷してください"
-
-#~ msgid "Thank you."
-#~ msgstr "ありがとうございました。"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "不明なエラーのため、注文をサーバーに送信できませんでした"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "注文は以前に同期されています。注文のバックエンドから請求書を作成してくださ"
-#~ "い。 "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "注文の受信中にサーバーでエラーが発生しました。"
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "プロダクトを削除するには、すべてのPOSセッションが終了していることを確認し"
-#~ "て下さい。\n"
-#~ "\n"
-#~ "セッションで利用可能なプロダクトを削除することは、ハンバーガーを食べている"
-#~ "途中の客の手からハンバーガーを奪い取ろうとするようなものです!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "順序を同期できません"
-
-#~ msgid "Welcome."
-#~ msgstr "ようこそ。"
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>プレビュー画面をスキップ</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr ""
-#~ "バックグラウンドでリクエストを処理しています。しばらくお待ちください。"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "基本の領収書"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "EpsonプリンタIPアドレス"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "プリンタ設定で「自動証明書更新」オプションが有効な場合は、Epsonレシートプ"
-#~ "リンタのローカル IP アドレス、またはシリアル番号。"
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "基本の領収書を印刷"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "完全な領収書を印刷"
-
-#~ msgid "Print Receipt"
-#~ msgstr "レシート印刷"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr ""
-#~ "価格を表示しない基本チケットを印刷します。ギフト用として利用できます。"
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "プレビュー画面をスキップ"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "レシートを自動印刷できる場合は、レシート画面をスキップします。"
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイト通信履歴"
-
-#~ msgid "Barcode must start with `042`"
-#~ msgstr "バーコードは `042` で始まる必要があります"
-
-#~ msgid "Bill"
-#~ msgstr "仕入先請求書"
-
-#~ msgid "Info"
-#~ msgstr "情報"
-
-#~ msgid "Last preparation change"
-#~ msgstr "最終準備変更"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "オーダの最終印刷ステイタス"
-
-#~ msgid "Order Outdated"
-#~ msgstr "オーダが古くなっています"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "POS"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "このオーダは、別のデバイスで変更されています。既存のオーダ明細を編集してい"
-#~ "る場合は、変更内容が上書きされていないかご確認ください。\n"
-#~ "\n"
-#~ "このデバイス上で最後に行った変更内容が、サーバに送信されます。"

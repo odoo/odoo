@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 04:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/mrp/"
@@ -62,11 +62,12 @@ msgstr " <br/><br/>構成品は以下から使用されます: <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards <b>%"
-"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
 msgstr ""
-" <br/><br/> 製造プロダクトは <b>%(destination)s</b>宛に、 <br/>  <b>%"
-"(operation)s</b>の移動先で定義されたように移動されます。"
+" <br/><br/> 製造プロダクトは <b>%(destination)s</b>宛に、 <br/>  "
+"<b>%(operation)s</b>の移動先で定義されたように移動されます。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -283,44 +284,54 @@ msgid ":  hours"
 msgstr ":  時間"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
-msgstr "<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"期日\"/>"
+"<i class=\"oi me-1 my-auto\" data-icon=\"schedule\" title=\"planned date "
+"start\"/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
-msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
-msgstr "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"hourglass_bottom\" title=\"time remaining\"/"
+">"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
-"Availability\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Child "
+"MO's\"/>"
 msgstr ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"構成品在庫状況\"/>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
-msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
-msgstr "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"子製造オー"
+"ダ\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
-"Time\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 msgstr ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"残り時間\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"期日\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
-msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Remaining Time\"/>"
 msgstr ""
-"<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"子製造オーダ\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"残り時間\"/>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Components Availability\"/>"
+msgstr ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" title=\"構成"
+"品在庫状況\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -2649,14 +2660,6 @@ msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesomeのアイコン 例. fa-tasks"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 msgid "Forecast"
@@ -3722,6 +3725,14 @@ msgstr "基準生産計画"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
 msgstr "材料の在庫状況"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
@@ -7218,11 +7229,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: "
+"%(missing_products)s"
 msgstr ""
-"プロダクトのロット/シリアル番号を提供し、それらを'消費'する必要があります: %"
-"(missing_products)s"
+"プロダクトのロット/シリアル番号を提供し、それらを'消費'する必要があります: "
+"%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7353,176 +7364,3 @@ msgstr "実所要時間"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "分割"
-
-#~ msgid "Allocation Report for Manufacturing Orders"
-#~ msgstr "製造オーダ用割当レポート"
-
-#~ msgid "Create backorder"
-#~ msgstr "バックオーダを作成"
-
-#~ msgid "MRP Reception Report"
-#~ msgstr "MRP入荷レポート"
-
-#~ msgid "No Backorder"
-#~ msgstr "バックオーダなし"
-
-#~ msgid "Operation Category"
-#~ msgstr "オペレーションカテゴリ"
-
-#~ msgid "Produce All"
-#~ msgstr "すべて生産"
-
-#~ msgid "Set Quantities & Validate"
-#~ msgstr "数量を設定＆検証"
-
-#~ msgid "Show Produce"
-#~ msgstr "生産を表示"
-
-#~ msgid "Show Produce All"
-#~ msgstr "すべて生産を表示"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "在庫入荷レポート"
-
-#~ msgid "Technical field to check if produce all button can be shown"
-#~ msgstr "すべて生産ボタンが表示されるかを確認するための技術フィールド"
-
-#~ msgid "Technical field to check if produce button can be shown"
-#~ msgstr "生産ボタンが表示されるかを確認するための技術フィールド"
-
-#~ msgid "Use Reception Report with Manufacturing Orders"
-#~ msgstr "製造オーダつき入荷レポートを使用する"
-
-#~ msgid ""
-#~ "View and allocate production quantities to customer orders or other "
-#~ "manufacturing orders"
-#~ msgstr "顧客オーダや他の製造オーダへの製造数量の表示と割当"
-
-#~ msgid "Check availability"
-#~ msgstr "在庫を確認"
-
-#~ msgid ""
-#~ "Create operation level dependencies that will influence both planning and "
-#~ "the status of work orders upon MO confirmation. If this feature is "
-#~ "ticked, and nothing is specified, Odoo will assume that all operations "
-#~ "can be started simultaneously."
-#~ msgstr ""
-#~ "工程レベルの依存関係を作成すると、計画とMO確認時の作業オーダのステータスの"
-#~ "両方に影響を与えることができます。この機能にチェックを入れ、何も指定しない"
-#~ "場合、Odooはすべての工程を同時に開始できるものと見なします。"
-
-#~ msgid "Custom Work Order Dependencies"
-#~ msgstr "作業指示の依存関係をカスタマイズ"
-
-#~ msgid "MO Cancelled"
-#~ msgstr "製造オーダがキャンセルされました"
-
-#~ msgid "MO Confirmed"
-#~ msgstr "製造オーダが確認されました"
-
-#~ msgid "MO Done"
-#~ msgstr "製造オーダが完了しました"
-
-#~ msgid "MO Planned"
-#~ msgstr "製造オーダが計画されました"
-
-#~ msgid "MO Progress"
-#~ msgstr "製造オーダ進捗"
-
-#~ msgid "MO To Close"
-#~ msgstr "クローズ対象の製造オーダ"
-
-#~ msgid "Operation Dependencies"
-#~ msgstr "オペレーション依存関係"
-
-#~ msgid ""
-#~ "Set the order that work orders should be processed in. Activate the "
-#~ "feature within each BoM's Miscellaneous tab"
-#~ msgstr ""
-#~ "作業オーダが処理される順番を設定します。各部品表の「その他」タブでこの機能"
-#~ "を有効にして下さい。"
-
-#~ msgid "Show BoM Lines"
-#~ msgstr "部品表明細を表示"
-
-#~ msgid "The number of products already handled by this work order"
-#~ msgstr "この番号の製品は、すでにこの作業オーダによって処理されています"
-
-#~ msgid "Time Remaining"
-#~ msgstr "残時間"
-
-#~ msgid "Total To Consume"
-#~ msgstr "消費予定合計"
-
-#~ msgid "Unbuild: %s"
-#~ msgstr "解体: %s"
-
-#~ msgid "Use Operation Dependencies"
-#~ msgstr "工程依存関係を使用"
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイト通信履歴"
-
-#~ msgid "days"
-#~ msgstr "日"
-
-#~ msgid "Final Location from procurement"
-#~ msgstr "調達からの最終的なロケーション"
-
-#~ msgid ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Upload files to your product\n"
-#~ "                    </p><p>\n"
-#~ "                        Use this feature to store any files, like "
-#~ "drawings or specifications.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        ファイルをプロダクトにアップロードしましょう。\n"
-#~ "                    </p><p>\n"
-#~ "                       この機能を使って、図面や設計書などいろいろなファイ"
-#~ "ルを保存しましょう。\n"
-#~ "                    </p>"
-
-#~ msgid "Are you sure you want to Update the Planning ?"
-#~ msgstr "計画の更新を続行しますか?"
-
-#~ msgid "Are you sure you want to Update the Work Center Planning ?"
-#~ msgstr "作業区計画の更新を続行しますか?"
-
-#~ msgid "Attachments Count"
-#~ msgstr "添付数"
-
-#~ msgid "Files attached to the product."
-#~ msgstr "プロダクトに添付されたファイル"
-
-#~ msgid "Hidden"
-#~ msgstr "非表示"
-
-#~ msgid ""
-#~ "Leave hidden if document only accessible on product form.\n"
-#~ "Select Bill of Materials to visualise this document as a product "
-#~ "attachment when this product is in a bill of material."
-#~ msgstr ""
-#~ "プロダクトフォームでのみドキュメントにアクセスできる場合は、非表示のままに"
-#~ "します。\n"
-#~ "このプロダクトが仕入先請求書にある場合、このドキュメントをプロダクトの添付"
-#~ "ファイルとして表示するには、部品表を選択します。"
-
-#~ msgid "MRP : Visible at"
-#~ msgstr "MRP : 以下で表示"
-
-#~ msgid "Product Attachments"
-#~ msgstr "プロダクト添付"
-
-#~ msgid "Product Document"
-#~ msgstr "プロダクトドキュメント"
-
-#~ msgid "Update"
-#~ msgstr "更新"
-
-#~ msgid "Update work center planning"
-#~ msgstr "作業区計画を更新"

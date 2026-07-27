@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 17:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -239,8 +239,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
+"name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -260,8 +260,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Olá,<br/><br/>\n"
-"        Você foi inscrito em um novo curso: <t t-"
-"out=\"object.channel_id.name or ''\">Noções básicas de jardinagem</t>.\n"
+"        Você foi inscrito em um novo curso: <t t-out=\"object.channel_id."
+"name or ''\">Noções básicas de jardinagem</t>.\n"
 "   </p>\n"
 "</div> <div style=\"margin: 32px 0px 32px 0px;\">\n"
 "    <a t-att-href=\"object.invitation_link\" style=\"background-color: "
@@ -282,8 +282,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -303,8 +303,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Olá,<br/><br/>\n"
-"        Você foi convidado a conferir este curso: <t t-"
-"out=\"object.channel_id.name or ''\">Noções básicas de jardinagem</t>.\n"
+"        Você foi convidado a conferir este curso: <t t-out=\"object."
+"channel_id.name or ''\">Noções básicas de jardinagem</t>.\n"
 "   </p>\n"
 "</div> <div style=\"margin: 32px 0px 32px 0px;\">\n"
 "    <a t-att-href=\"object.invitation_link\" style=\"background-color: "
@@ -325,11 +325,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -356,11 +356,11 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                       <p style=\"margin: 0px;\"> Olá, <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/> <p><b> "
-"Parabéns!</b></p> <p> Você concluiu o curso <b t-"
-"out=\"object.channel_id.name or ''\">Noções básicas de jardinagem</b></p> "
-"<p> Confira os outros cursos disponíveis.</p><br/>\n"
+"                       <p style=\"margin: 0px;\"> Olá, <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/> <p><b> Parabéns!</b></"
+"p> <p> Você concluiu o curso <b t-out=\"object.channel_id.name or "
+"''\">Noções básicas de jardinagem</b></p> <p> Confira os outros cursos "
+"disponíveis.</p><br/>\n"
 " <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a href=\"/slides\" t-attf-style=\"background-"
 "color: {{object.channel_id.user_id.company_id.email_secondary_color or "
@@ -369,8 +369,8 @@ msgstr ""
 "border-radius: 5px;\">\n"
 "Explore os cursos </a>\n"
 "                        </div>\n"
-"Aproveite este conteúdo exclusivo! <t t-"
-"if=\"object.channel_id.user_id.signature\">\n"
+"Aproveite este conteúdo exclusivo! <t t-if=\"object.channel_id.user_id."
+"signature\">\n"
 "                            <br/> <div data-o-mail-quote=\"1\"> --<br data-o-"
 "mail-quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or "
 "''\">Mitchell Admin</t></div>\n"
@@ -531,11 +531,10 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -578,310 +577,313 @@ msgstr ""
 "            "
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
-msgstr "<i class=\"fa fa-arrow-right\"/> Comece seu aprendizado"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> Estatísticas"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Lessons</span>"
-msgstr ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Aulas</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-msgid "<i class=\"fa fa-check me-1\"/>Completed"
-msgstr "<i class=\"fa fa-check me-1\"/>Concluído"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_card
-msgid "<i class=\"fa fa-check\" aria-hidden=\"true\"/> Completed"
-msgstr "<i class=\"fa fa-check\" aria-hidden=\"true\"/> Concluído"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-check\"/> Completed"
-msgstr "<i class=\"fa fa-check\"/> Concluído"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Carregando...</b>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-msgstr ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-cloud-upload me-1\"/>Add Content"
-msgstr "<i class=\"fa fa-cloud-upload me-1\"/>Adicionar conteúdo"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments\"/> Comments"
-msgstr "<i class=\"fa fa-comments\"/> Comentários"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
-msgstr ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Tela cheia</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-eraser me-1\"/>Clear filters"
-msgstr "<i class=\"fa fa-eraser me-1\"/>Limpar filtros"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> This document is private."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> Este documento é privado."
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-msgstr ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-msgstr ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-msgstr ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-msgstr ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-msgstr ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-msgstr ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
-msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr "<i class=\"fa fa-flag text-warning\"/> Quiz"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
-msgid "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
-msgstr "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-folder-o me-1\"/><span>Add Section</span>"
-msgstr "<i class=\"fa fa-folder-o me-1\"/><span>Adicionar seção</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
-msgstr "<i class=\"fa fa-folder-o me-1\"/>Adicionar seção"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> Sobre"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/> Curso"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
-"to course</span>"
-msgstr ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Voltar ao curso</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-msgid ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Course Locked</span>"
-msgstr ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Curso bloqueado</span>"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
-"Content</span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">Add Content</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
 "block\">Adicionar conteúdo</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-plus me-1\"/><span>Add Content</span>"
-msgstr "<i class=\"fa fa-plus me-1\"/><span>Adicionar conteúdo</span>"
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/><span>Add Content</span>"
+msgstr ""
+"<i class=\"oi me-1\" data-icon=\"add\"/><span>Adicionar conteúdo</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+msgid "<i class=\"oi me-1\" data-icon=\"check\"/>Completed"
+msgstr "<i class=\"oi me-1\" data-icon=\"check\"/>Concluído"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Add Content"
+msgstr "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Adicionar conteúdo"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>All Courses"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Todos os cursos"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/><span>Add Section</span>"
+msgstr ""
+"<i class=\"oi me-1\" data-icon=\"folder\"/><span>Adicionar seção</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/>Add a section"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/>Adicionar seção"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Clear filters"
+msgstr "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Limpar filtros"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+msgid ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"          My Courses"
+msgstr ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"                      Meus cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Adicionar pergunta</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Adicionar quiz</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
-msgstr ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Prev</span>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Anterior</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
+msgstr ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Tela cheia</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Compartilhar</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Share"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Compartilhar"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Quiz"
+msgstr "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Quiz"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi oi-filled\" data-icon=\"forum\"/> Comments"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"forum\"/> Comentários"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Loading...</b>"
+msgstr ""
+"<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Carregando...</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
+msgid "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Quiz"
+msgstr "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Quiz"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi\" data-icon=\"arrow_forward\"/> Start Learning"
+msgstr "<i class=\"oi\" data-icon=\"arrow_forward\"/> Comece seu aprendizado"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Statistics"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> Estatísticas"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+msgid "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> Concluído"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "<i class=\"oi\" data-icon=\"check\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> Concluído"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">Share</"
 "span>"
 msgstr ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block "
 "ms-2\">Compartilhar</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> Compartilhar"
+msgid "<i class=\"oi\" data-icon=\"family_history\"/> Share"
+msgstr "<i class=\"oi\" data-icon=\"family_history\"/> Compartilhar"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"home\"/> About"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> Sobre"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"oi\" data-icon=\"home\"/> Course"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> Curso"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Back to course</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Voltar ao curso</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+msgid ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Course Locked</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Curso bloqueado</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Exit Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Sair da tela cheia</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"          My Courses"
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lessons</span>"
 msgstr ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"                      Meus cursos"
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Aulas</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"oi oi-arrow-right me-1\"/>All Courses"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>Todos os cursos"
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Share"
+msgstr ""
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Compartilhar"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Prev</span>"
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> This document is private."
 msgstr ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Anterior</span>"
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> Este documento é privado."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>You are enrolled</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>You are enrolled</small>"
 msgstr ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>Você está inscrito</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>Você está inscrito</small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -897,21 +899,23 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> Completed</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> Completed</span></small>"
 msgstr ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> Concluído</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> Concluído</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 
 #. module: website_slides
@@ -950,19 +954,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Start now</span><i "
-"class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"class=\"oi d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Comece agora</span><i "
-"class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"class=\"oi d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">Próximo</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Próximo</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -972,11 +976,11 @@ msgstr "<span class=\"fw-normal\">Última atualização:</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi oi-"
-"arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
-"<span class=\"me-2 d-none d-md-inline\">Continuar</span><i class=\"oi oi-"
-"arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">Continuar</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -1005,10 +1009,10 @@ msgstr "<span class=\"o_stat_text\">Visualizações incorporadas</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                        Create a Google Project and Get a Key"
 msgstr ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                Crie um Google Project e obtenha uma chave"
 
 #. module: website_slides
@@ -1089,42 +1093,46 @@ msgstr "<span class=\"text-muted\">Partes da ciência da computação</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 msgstr ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1132,24 +1140,24 @@ msgstr ""
 msgid ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1610,14 +1618,15 @@ msgid ""
 "All the courses you attend will appear here. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> Start Learning\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> "
+"Start Learning\n"
 "                        </a>"
 msgstr ""
 "Todos os cursos dos quais você participou aparecerão aqui. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> Comece seu "
-"aprendizado\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> "
+"Comece seu aprendizado\n"
 "                        </a>"
 
 #. module: website_slides
@@ -3388,11 +3397,6 @@ msgid "Followers (Partners)"
 msgstr "Seguidores (usuários)"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ícone do Font Awesome. Ex.: fa-tasks"
-
-#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
@@ -3797,8 +3801,8 @@ msgstr "Origem da imagem"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "Impossível enviar e-mails. Selecione primeiro um modelo de canal de "
 "compartilhamento para os cursos %(course_names)s"
@@ -3807,8 +3811,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "Impossível enviar e-mails. Selecione primeiro um modelo de compartilhamento "
 "para os cursos %(course_names)s"
@@ -4368,6 +4372,11 @@ msgstr "Marcar como não concluído"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 msgid "Mark the correct answer by checking the <b>correct</b> mark."
 msgstr "Marque a resposta correta selecionando o ícone de <b>correto</b>."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5741,8 +5750,8 @@ msgstr "m2m decorado por usuário/slide"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
-msgid "Slide Icon fa-class"
-msgstr "Ícone do slide fa-class"
+msgid "Slide Icon oi-class"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -7408,9 +7417,3 @@ msgstr "{{ user.name }} compartilhou {{ object.slide_category }} com você!"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">Sem categoria</span>"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do site"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de comunicação do site"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 18:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
@@ -37,41 +37,21 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of "
-"their integration with\n"
-"                                Odoo regarding this payment method. Any "
-"change may result in errors\n"
-"                                and should be tested on a test database "
-"first."
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Aceste proprietăți sunt setate "
-"pentru a se potrivi cu\n"
-"                                comportamentul furnizorilor și al integrării "
-"acestora cu Odoo în\n"
-"                                ceea ce privește această metodă de plată. "
-"Orice modificare poate\n"
-"                                duce la erori și ar trebui testată mai întâi "
-"pe o bază de date de test."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Acasă\" aria-label=\"Acasă\"/>"
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configurați un furnizor de plată"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Unele dintre "
 "tranzacțiile pe care intenționați să le capturați pot fi capturate doar în "
 "totalitate. Gestionați tranzacțiile individual pentru a captura o sumă "
@@ -80,17 +60,42 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Șterge metoda de plată\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Șterge metoda de "
+"plată\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Configurați un furnizor de plată"
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Acasă\" aria-"
+"label=\"Acasă\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> Aceste proprietăți sunt setate "
+"pentru a se potrivi cu\n"
+"                                comportamentul furnizorilor și al integrării "
+"acestora cu Odoo în\n"
+"                                ceea ce privește această metodă de plată. "
+"Orice modificare poate\n"
+"                                duce la erori și ar trebui testată mai întâi "
+"pe o bază de date de test."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -146,16 +151,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Securizat de</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr "<span><i class=\"oi\" data-icon=\"lock\"/> Securizat de</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Arată raportul de disponibilitate</"
-"strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Arată raportul de "
+"disponibilitate</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -438,8 +444,8 @@ msgstr "Tranzacții Copil"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Alegeți o altă metodă <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr "Alegeți o altă metodă <i class=\"oi\" data-icon=\"south\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -752,8 +758,8 @@ msgstr "Generează și copiază linkul de plată"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Du-te la Contul meu <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr "Du-te la Contul meu <i class=\"oi ms-2\" data-icon=\"east\"/>"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -2531,8 +2537,8 @@ msgstr "Metodele dvs. de plată"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 "Operațiunea dvs. de plată nu a putut fi finalizată pentru următoarele "
 "tranzacții: %(tx_refs)s"
@@ -2587,780 +2593,3 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to void the authorized transaction? This action "
-#~ "can't be undone."
-#~ msgstr ""
-#~ "Sunteți sigur că doriți să anulați tranzacția autorizată? Această acțiune "
-#~ "nu poate fi anulată."
-
-#~ msgid "Child transactions"
-#~ msgstr "Tranzacții copil"
-
-#~ msgid "ZIP"
-#~ msgstr "Cod poștal"
-
-#~ msgid "(ID:"
-#~ msgstr "(ID:"
-
-#~ msgid "7Eleven"
-#~ msgstr "7Eleven"
-
-#~ msgid ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Enable Payment Methods"
-#~ msgstr ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Activați Metodele de Plată"
-
-#~ msgid ""
-#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-#~ "em> button is not supported.\n"
-#~ "                        Please use the <em>Duplicate</em> action instead."
-#~ msgstr ""
-#~ "<strong>Atenție</strong> Crearea unui furnizor de plată din butonul "
-#~ "<em>CREARE</em> nu este acceptată.\n"
-#~ "                        Vă rugăm să folosiți în schimb acțiunea "
-#~ "<em>Duplicare</em>."
-
-#~ msgid "ACH Direct Debit"
-#~ msgstr "ACH Direct Debit"
-
-#~ msgid "Abitab"
-#~ msgstr "Abitab"
-
-#~ msgid "Activate"
-#~ msgstr "Activează"
-
-#~ msgid "Active Provider"
-#~ msgstr "Furnizor Activ"
-
-#~ msgid "Affirm"
-#~ msgstr "Affirm"
-
-#~ msgid "AfterPay"
-#~ msgstr "AfterPay"
-
-#~ msgid "Afterpay"
-#~ msgstr "Afterpay"
-
-#~ msgid "Akulaku PayLater"
-#~ msgstr "Akulaku PayLater"
-
-#~ msgid "AliPayHK"
-#~ msgstr "AliPayHK"
-
-#~ msgid "Alipay"
-#~ msgstr "Alipay"
-
-#~ msgid "Alipay+"
-#~ msgstr "Alipay+"
-
-#~ msgid "Alma"
-#~ msgstr "Alma"
-
-#~ msgid "Aman"
-#~ msgstr "Aman"
-
-#~ msgid "Amazon Pay"
-#~ msgstr "Amazon Pay"
-
-#~ msgid "American Express"
-#~ msgstr "American Express"
-
-#~ msgid "Argencard"
-#~ msgstr "Argencard"
-
-#~ msgid "Astropay TEF"
-#~ msgstr "Astropay TEF"
-
-#~ msgid "Atome"
-#~ msgstr "Atome"
-
-#~ msgid "Availability"
-#~ msgstr "Disponibilitate"
-
-#~ msgid "BACS Direct Debit"
-#~ msgstr "Debit direct BACS"
-
-#~ msgid "BCA"
-#~ msgstr "BCA"
-
-#~ msgid "BECS Direct Debit"
-#~ msgstr "Debit direct BECS"
-
-#~ msgid "BLIK"
-#~ msgstr "BLIK"
-
-#~ msgid "BRI"
-#~ msgstr "BRI"
-
-#~ msgid "BancNet"
-#~ msgstr "BancNet"
-
-#~ msgid "Banco Guayaquil"
-#~ msgstr "Banco Guayaquil"
-
-#~ msgid "Banco Pichincha"
-#~ msgstr "Banco Pichincha"
-
-#~ msgid "Banco de Bogota"
-#~ msgstr "Banca din Bogota"
-
-#~ msgid "Bancolombia"
-#~ msgstr "Bancolombia"
-
-#~ msgid "Bancontact"
-#~ msgstr "Bancontact"
-
-#~ msgid "Bangkok Bank"
-#~ msgstr "Bangkok Bank"
-
-#~ msgid "Bank Account"
-#~ msgstr "Cont bancar"
-
-#~ msgid "Bank Installments"
-#~ msgstr "Rate bancare"
-
-#~ msgid "Bank Negara Indonesia"
-#~ msgstr "Banca Națională a Indoneziei"
-
-#~ msgid "Bank Permata"
-#~ msgstr "Permata Bank"
-
-#~ msgid "Bank Syariah Indonesia"
-#~ msgstr "Banca Syariah Indonesia"
-
-#~ msgid "Bank Transfer"
-#~ msgstr "Transfer bancar"
-
-#~ msgid "Bank of Ayudhya"
-#~ msgstr "Banca Ayudhya"
-
-#~ msgid "Bank reference"
-#~ msgstr "Referință bancară"
-
-#~ msgid "Belfius"
-#~ msgstr "Belfius"
-
-#~ msgid "Benefit"
-#~ msgstr "Benefit"
-
-#~ msgid "BharatQR"
-#~ msgstr "BharatQR"
-
-#~ msgid "BillEase"
-#~ msgstr "BillEase"
-
-#~ msgid "Billink"
-#~ msgstr "Billink"
-
-#~ msgid "Bizum"
-#~ msgstr "Bizum"
-
-#~ msgid "Boleto"
-#~ msgstr "Boleto"
-
-#~ msgid "Boost"
-#~ msgstr "Boost"
-
-#~ msgid "CIMB Niaga"
-#~ msgstr "CIMB Niaga"
-
-#~ msgid "CMR"
-#~ msgstr "CMR"
-
-#~ msgid "Cabal"
-#~ msgstr "Cabal"
-
-#~ msgid "Caixa"
-#~ msgstr "Caixa"
-
-#~ msgid "Card"
-#~ msgstr "Card"
-
-#~ msgid "Card / Mobile"
-#~ msgstr "Card / Mobil"
-
-#~ msgid "Carnet"
-#~ msgstr "Carnet"
-
-#~ msgid "Cartes Bancaires"
-#~ msgstr "Cartes Bancaires"
-
-#~ msgid "Cash App Pay"
-#~ msgstr "Cash App Pay"
-
-#~ msgid "Cashalo"
-#~ msgstr "Cashalo"
-
-#~ msgid "Cebuana"
-#~ msgstr "Cebuana"
-
-#~ msgid "Cencosud"
-#~ msgstr "Cencosud"
-
-#~ msgid "Cirrus"
-#~ msgstr "Cirrus"
-
-#~ msgid "Clearpay"
-#~ msgstr "Clearpay"
-
-#~ msgid "Codensa"
-#~ msgstr "Codensa"
-
-#~ msgid "Color"
-#~ msgstr "Color"
-
-#~ msgid "Cordial"
-#~ msgstr "Cordial"
-
-#~ msgid "Cordobesa"
-#~ msgstr "Cordobesa"
-
-#~ msgid "Credit Payment"
-#~ msgstr "Plată prin Credit"
-
-#~ msgid "Dana"
-#~ msgstr "Dana"
-
-#~ msgid "Dankort"
-#~ msgstr "Dankort"
-
-#~ msgid "Davivienda"
-#~ msgstr "Davivienda"
-
-#~ msgid "Diners Club International"
-#~ msgstr "Diners Club International"
-
-#~ msgid "Disabled"
-#~ msgstr "Dezactivat"
-
-#~ msgid "Discover"
-#~ msgstr "Discover"
-
-#~ msgid "DuitNow"
-#~ msgstr "DuitNow"
-
-#~ msgid "EMI"
-#~ msgstr "EMI"
-
-#~ msgid "EPS"
-#~ msgstr "EPS"
-
-#~ msgid "EasyPaisa"
-#~ msgstr "EasyPaisa"
-
-#~ msgid "Elo"
-#~ msgstr "Elo"
-
-#~ msgid "Enabled"
-#~ msgstr "Activ"
-
-#~ msgid "FPS"
-#~ msgstr "FPS"
-
-#~ msgid "FPX"
-#~ msgstr "FPX"
-
-#~ msgid "Facilito"
-#~ msgstr "Facilito"
-
-#~ msgid "Floa Bank"
-#~ msgstr "Floa Bank"
-
-#~ msgid "Forsa"
-#~ msgstr "Forsa"
-
-#~ msgid "GCash"
-#~ msgstr "GCash"
-
-#~ msgid "GoPay"
-#~ msgstr "GoPay"
-
-#~ msgid "GrabPay"
-#~ msgstr "GrabPay"
-
-#~ msgid "HD Bank"
-#~ msgstr "HD Bank"
-
-#~ msgid "Halan"
-#~ msgstr "Halan"
-
-#~ msgid "Has Enabled Provider"
-#~ msgstr "Are furnizor activat"
-
-#~ msgid "Hipercard"
-#~ msgstr "Hipercard"
-
-#~ msgid "Hoolah"
-#~ msgstr "Hoolah"
-
-#~ msgid "Humm"
-#~ msgstr "Humm"
-
-#~ msgid ""
-#~ "In test mode, a fake payment is processed through a test payment "
-#~ "interface.\n"
-#~ "This mode is advised when setting up the provider."
-#~ msgstr ""
-#~ "În modul de testare, o plată falsă este procesată prin o interfață de "
-#~ "plată de testare."
-
-#~ msgid "JCB"
-#~ msgstr "JCB"
-
-#~ msgid "JazzCash"
-#~ msgstr "JazzCash"
-
-#~ msgid "JeniusPay"
-#~ msgstr "JeniusPay"
-
-#~ msgid "Jkopay"
-#~ msgstr "Jkopay"
-
-#~ msgid "KBC/CBC"
-#~ msgstr "KBC/CBC"
-
-#~ msgid "KNET"
-#~ msgstr "KNET"
-
-#~ msgid "KakaoPay"
-#~ msgstr "KakaoPay"
-
-#~ msgid "Kasikorn Bank"
-#~ msgstr "Kasikorn Bank"
-
-#~ msgid "Kiosk"
-#~ msgstr "Kiosk"
-
-#~ msgid "Klarna"
-#~ msgstr "Klarna"
-
-#~ msgid "Klarna - Pay Now"
-#~ msgstr "Klarna - Plătește acum"
-
-#~ msgid "Klarna - Pay over time"
-#~ msgstr "Klarna - Plătește în rate"
-
-#~ msgid "Kredivo"
-#~ msgstr "Kredivo"
-
-#~ msgid "KrungThai Bank"
-#~ msgstr "KrungThai Bank"
-
-#~ msgid "LINE Pay"
-#~ msgstr "LINE Pay"
-
-#~ msgid "Lider"
-#~ msgstr "Lider"
-
-#~ msgid "LinkAja"
-#~ msgstr "LinkAja"
-
-#~ msgid "Local Payments"
-#~ msgstr "Plăți Locale"
-
-#~ msgid "M-Pesa"
-#~ msgstr "M-Pesa"
-
-#~ msgid "MB WAY"
-#~ msgstr "MB WAY"
-
-#~ msgid "Mada"
-#~ msgstr "Mada"
-
-#~ msgid "Maestro"
-#~ msgstr "Maestro"
-
-#~ msgid "Magna"
-#~ msgstr "Magna"
-
-#~ msgid ""
-#~ "Making a request to the provider is not possible because the provider is "
-#~ "disabled."
-#~ msgstr ""
-#~ "Nu se poate face o cerere către furnizor deoarece furnizorul este "
-#~ "dezactivat."
-
-#~ msgid "Mandiri"
-#~ msgstr "Mandiri"
-
-#~ msgid "MasterCard"
-#~ msgstr "MasterCard"
-
-#~ msgid "Maya"
-#~ msgstr "Maya"
-
-#~ msgid "Maybank"
-#~ msgstr "Maybank"
-
-#~ msgid "Meeza"
-#~ msgstr "Meeza"
-
-#~ msgid "Mercado Livre"
-#~ msgstr "Mercado Livre"
-
-#~ msgid "Mercado Pago Wallet"
-#~ msgstr "Portofel Mercado Pago"
-
-#~ msgid "MoMo"
-#~ msgstr "MoMo"
-
-#~ msgid "Mobile Wallets Egypt"
-#~ msgstr "Portofele mobile Egipt"
-
-#~ msgid "Mobile money"
-#~ msgstr "Bani mobili"
-
-#~ msgid "MobilePay"
-#~ msgstr "MobilePay"
-
-#~ msgid "Multibanco"
-#~ msgstr "Multibanco"
-
-#~ msgid "MyBank"
-#~ msgstr "MyBank"
-
-#~ msgid "NAPS"
-#~ msgstr "NAPS"
-
-#~ msgid "Napas Card"
-#~ msgstr "Card Napas"
-
-#~ msgid "Naranja"
-#~ msgstr "Naranja"
-
-#~ msgid "Nativa"
-#~ msgstr "Nativa"
-
-#~ msgid "Netbanking"
-#~ msgstr "Netbanking"
-
-#~ msgid "OVO"
-#~ msgstr "OVO"
-
-#~ msgid "Oca"
-#~ msgstr "Oca"
-
-#~ msgid "Octopus"
-#~ msgstr "Caracatiță"
-
-#~ msgid "OmanNet"
-#~ msgstr "OmanNet"
-
-#~ msgid "Online Banking Czech Republic"
-#~ msgstr "Servicii bancare online Republica Cehă"
-
-#~ msgid "Online Banking India"
-#~ msgstr "Servicii bancare online India"
-
-#~ msgid "Online Banking Slovakia"
-#~ msgstr "Servicii bancare online Slovacia"
-
-#~ msgid "Online Banking Thailand"
-#~ msgstr "Servicii bancare online Thailanda"
-
-#~ msgid "Open banking"
-#~ msgstr "Open banking"
-
-#~ msgid "Oxxo Pay"
-#~ msgstr "Oxxo Pay"
-
-#~ msgid "P24"
-#~ msgstr "P24"
-
-#~ msgid "POLi"
-#~ msgstr "POLi"
-
-#~ msgid "PPS"
-#~ msgstr "PPS"
-
-#~ msgid "PSE"
-#~ msgstr "PSE"
-
-#~ msgid "Pace."
-#~ msgstr "Pace."
-
-#~ msgid "Pay Later"
-#~ msgstr "Plătește mai târziu"
-
-#~ msgid "PayBright"
-#~ msgstr "PayBright"
-
-#~ msgid "PayID"
-#~ msgstr "PayID"
-
-#~ msgid "PayMe"
-#~ msgstr "PayMe"
-
-#~ msgid "PayNow"
-#~ msgstr "PayNow"
-
-#~ msgid "PaySafeCard"
-#~ msgstr "PaySafeCard"
-
-#~ msgid "Payment Followup"
-#~ msgstr "Payment Followup"
-
-#~ msgid "Payment Form"
-#~ msgstr "Formular Plată"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Paytm"
-#~ msgstr "Paytm"
-
-#~ msgid "Paytrail"
-#~ msgstr "Paytrail"
-
-#~ msgid "Pix"
-#~ msgstr "Pix"
-
-#~ msgid ""
-#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
-#~ msgstr ""
-#~ "Vă rugăm să vă asigurați că %(payment_method)s este acceptată de %"
-#~ "(provider)s."
-
-#~ msgid "PostFinance Pay"
-#~ msgstr "PostFinance Pay"
-
-#~ msgid "PostePay"
-#~ msgstr "PostePay"
-
-#~ msgid "Premium Card"
-#~ msgstr "Card Premium"
-
-#~ msgid "Presto"
-#~ msgstr "Presto"
-
-#~ msgid "Prompt Pay"
-#~ msgstr "Plată promptă"
-
-#~ msgid "Providers"
-#~ msgstr "Furnizori"
-
-#~ msgid "QRIS"
-#~ msgstr "QRIS"
-
-#~ msgid "Rabbit LINE Pay"
-#~ msgstr "Rabbit LINE Pay"
-
-#~ msgid "Ratepay"
-#~ msgstr "Ratepay"
-
-#~ msgid "Reason:"
-#~ msgstr "Motiv:"
-
-#~ msgid "Redpagos"
-#~ msgstr "Redpagos"
-
-#~ msgid "Revolut Pay"
-#~ msgstr "Pay Revolut"
-
-#~ msgid "RuPay"
-#~ msgstr "RuPay"
-
-#~ msgid "SPEI"
-#~ msgstr "SPEI"
-
-#~ msgid "STCPay"
-#~ msgstr "STCPay"
-
-#~ msgid "Samsung Pay"
-#~ msgstr "Samsung Pay"
-
-#~ msgid "Select countries. Leave empty to make available everywhere."
-#~ msgstr "Selectați țările. Lăsați gol pentru a face disponibil peste tot."
-
-#~ msgid "Select currencies. Leave empty not to restrict any."
-#~ msgstr "Selectați valutele. Lăsați gol pentru a nu restricționa niciuna."
-
-#~ msgid "ShopBack"
-#~ msgstr "ShopBack"
-
-#~ msgid "ShopeePay"
-#~ msgstr "ShopeePay"
-
-#~ msgid "Shopping Card"
-#~ msgstr "Card de cumpărături"
-
-#~ msgid "Siam Commerical Bank"
-#~ msgstr "Siam Commerical Bank"
-
-#~ msgid "Souhoola"
-#~ msgstr "Souhoola"
-
-#~ msgid "Supported providers:"
-#~ msgstr "Furnizori suportați:"
-
-#~ msgid "Swish"
-#~ msgstr "Swish"
-
-#~ msgid "Sympl"
-#~ msgstr "Sympl"
-
-#~ msgid "TENPAY"
-#~ msgstr "TENPAY"
-
-#~ msgid "TTB"
-#~ msgstr "TTB"
-
-#~ msgid "Tabby"
-#~ msgstr "Tabby"
-
-#~ msgid "Tamara"
-#~ msgstr "Tamara"
-
-#~ msgid "Tamilnad Mercantile Bank Limited"
-#~ msgstr "Tamilnad Mercantile Bank Limited"
-
-#~ msgid "Tarjeta MercadoPago"
-#~ msgstr "Tarjeta MercadoPago"
-
-#~ msgid "Techcombank"
-#~ msgstr "Techcombank"
-
-#~ msgid "TendoPay"
-#~ msgstr "TendoPay"
-
-#~ msgid "The color of the card in kanban view"
-#~ msgstr "Culoarea cardului în vizualizarea kanban"
-
-#~ msgid "The list of providers supporting this payment method."
-#~ msgstr "Lista furnizorilor care acceptă această metodă de plată."
-
-#~ msgid ""
-#~ "This payment method needs a partner in crime; you should enable a payment "
-#~ "provider supporting this method first."
-#~ msgstr ""
-#~ "Această metodă de plată are nevoie de un partener de crimă; ar trebui să "
-#~ "activați mai întâi un furnizor de plată care acceptă această metodă."
-
-#~ msgid "Tienphong"
-#~ msgstr "Tienphong"
-
-#~ msgid "Tinka"
-#~ msgstr "Tinka"
-
-#~ msgid "Touch'n Go"
-#~ msgstr "Touch'n Go"
-
-#~ msgid "Troy"
-#~ msgstr "Troy"
-
-#~ msgid "TrueMoney"
-#~ msgstr "TrueMoney"
-
-#~ msgid "Trustly"
-#~ msgstr "Trustly"
-
-#~ msgid "Twint"
-#~ msgstr "Twint"
-
-#~ msgid "UPI"
-#~ msgstr "UPI"
-
-#~ msgid "USSD"
-#~ msgstr "USSD"
-
-#~ msgid "UnionPay"
-#~ msgstr "UnionPay"
-
-#~ msgid "United Overseas Bank"
-#~ msgstr "United Overseas Bank"
-
-#~ msgid "Universal Air Travel Plan"
-#~ msgstr "Universal Air Travel Plan"
-
-#~ msgid "V PAY"
-#~ msgstr "V PAY"
-
-#~ msgid "VISA"
-#~ msgstr "VISA"
-
-#~ msgid "ValU"
-#~ msgstr "ValU"
-
-#~ msgid "Venmo"
-#~ msgstr "Venmo"
-
-#~ msgid "Vietcombank"
-#~ msgstr "Vietcombank"
-
-#~ msgid "Vipps"
-#~ msgstr "Vipps"
-
-#~ msgid "Wallets India"
-#~ msgstr "Portofele India"
-
-#~ msgid "Walley"
-#~ msgstr "Walley"
-
-#~ msgid "WeChat Pay"
-#~ msgstr "WeChat Pay"
-
-#~ msgid "WeLend"
-#~ msgstr "WeLend"
-
-#~ msgid "WebPay"
-#~ msgstr "WebPay"
-
-#~ msgid ""
-#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
-#~ "providers."
-#~ msgstr ""
-#~ "Nu puteți dezarhiva tokenuri legate de metode de plată inactive sau "
-#~ "furnizori dezactivați."
-
-#~ msgid ""
-#~ "You cannot delete the payment provider %s; disable it or uninstall it "
-#~ "instead."
-#~ msgstr ""
-#~ "Nu puteți șterge furnizorul de plată %s; dezactivați-l sau dezinstalați-l "
-#~ "în schimb."
-
-#~ msgid "You cannot publish a disabled provider."
-#~ msgstr "Nu puteți publica un furnizor dezactivat."
-
-#~ msgid "cofidis"
-#~ msgstr "cofidis"
-
-#~ msgid "eNETS"
-#~ msgstr "eNETS"
-
-#~ msgid "express checkout not supported"
-#~ msgstr "plata rapidă nu este acceptată"
-
-#~ msgid "iDEAL"
-#~ msgstr "iDEAL"
-
-#~ msgid "in3"
-#~ msgstr "in3"
-
-#~ msgid "incompatible country"
-#~ msgstr "țară incompatibilă"
-
-#~ msgid "incompatible currency"
-#~ msgstr "monedă incompatibilă"
-
-#~ msgid "incompatible website"
-#~ msgstr "site web incompatibil"
-
-#~ msgid "manual capture not supported"
-#~ msgstr "captură manuală neacceptată"
-
-#~ msgid "no supported provider available"
-#~ msgstr "nu există niciun furnizor acceptat disponibil"
-
-#~ msgid "payment method"
-#~ msgstr "metoda de plată"
-
-#~ msgid "tokenization not supported"
-#~ msgstr "tokenizarea nu este acceptată"
-
-#~ msgid "tokenization without payment no supported"
-#~ msgstr "tokenizarea fără plată nu este acceptată"

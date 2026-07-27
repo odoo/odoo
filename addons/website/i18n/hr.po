@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 05:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
@@ -734,16 +734,15 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-"
-"to:info@yourcompany.example.com\" title=\"Send an "
-"email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
+"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" "
-"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
+"com\">info@yourcompany.example.com</a>"
 msgstr ""
 
 #. module: website
@@ -990,65 +989,76 @@ msgid "<head> and </body>"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+"<i class=\"oi oi-1x oi-fw i-filled me-1\" data-icon=\"phone\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
 "small></span>"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>͏"
+msgid ""
+"<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>\n"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
+"small></span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.header_text_element
+msgid "<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>͏"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_kanban_view
-msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"URL\"/>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-info-circle me-1\"/>\n"
-"                                Supported formats for social share images "
-"are PNG, JPG, WEBP, or GIF."
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" title=\"URL\"/"
+">"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">A password is required to "
 "access this page.</span>"
 msgstr ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Za pristup ovoj stranici "
 "potrebna je lozinka.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"info\"/>\n"
+"                                Supported formats for social share images "
+"are PNG, JPG, WEBP, or GIF."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-danger\" data-"
+"icon=\"circle\" title=\"Offline\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-success\" data-"
+"icon=\"circle\" title=\"Connected\"/>"
 msgstr ""
 
 #. module: website
@@ -1313,17 +1323,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"attach_money\"/>\n"
 "                        Low Price Guarantee\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-"
-"stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"shopping_basket\"/>\n"
 "                        30 Days Online Returns\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/"
-">\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"local_shipping\"/>\n"
 "                        Standard Shipping\n"
 "                    </small>"
 msgstr ""
@@ -1483,7 +1494,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small>\n"
-"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            <i class=\"oi oi-1x oi-fw oi-filled me-1\" data-"
+"icon=\"mail\"/>\n"
 "                            info@yourcompany.example.com\n"
 "                        </small>"
 msgstr ""
@@ -1496,7 +1508,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"<small><i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"mail\"/> "
 "info@yourcompany.example.com</small>"
 msgstr ""
 
@@ -2176,9 +2188,9 @@ msgid ""
 "<span invisible=\"website_language_count &lt; 2\">Website visitors see the "
 "version matching their browser language, or the default if unavailable.</"
 "span>\n"
-"                                <span invisible=\"website_language_count "
-"&gt;= 2\">Install multiple languages to enable translation across your "
-"website.</span>"
+"                                <span invisible=\"website_language_count &gt;"
+"= 2\">Install multiple languages to enable translation across your website.</"
+"span>"
 msgstr ""
 
 #. module: website
@@ -3200,8 +3212,8 @@ msgid ""
 "Add your own title or leave empty to use \"%(defaultTitle)s\". Your page "
 "title should contain max 65 characters."
 msgstr ""
-"Dodajte vlastiti naslov ili ostavite prazno da biste koristili \"%"
-"(defaultTitle)s\". Naslov vaše stranice trebao bi sadržavati najviše 65 "
+"Dodajte vlastiti naslov ili ostavite prazno da biste koristili "
+"\"%(defaultTitle)s\". Naslov vaše stranice trebao bi sadržavati najviše 65 "
 "znakova."
 
 #. module: website
@@ -7672,8 +7684,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s (%"
-"(format)s)."
+"Entered date or time is not correct! It must be before %(start)s "
+"(%(format)s)."
 msgstr ""
 
 #. module: website
@@ -7703,8 +7715,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and %"
-"(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and "
+"%(end)s (%(format)s)."
 msgstr ""
 
 #. module: website
@@ -8523,8 +8535,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
-"Natpis akcije forme, npr: crm.lead može biti 'Pošalji mail' ili "
-"project.issue može biti 'Kreiraj zadatak'."
+"Natpis akcije forme, npr: crm.lead može biti 'Pošalji mail' ili project."
+"issue može biti 'Kreiraj zadatak'."
 
 #. module: website
 #. odoo-javascript
@@ -9636,6 +9648,11 @@ msgid "Icon"
 msgstr "Ikona"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_configurator_feature__icon_class
+msgid "Icon Class"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_card
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -9647,6 +9664,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/icon_list_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Icons"
 msgstr "Ikone"
 
@@ -15075,6 +15093,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Rounded"
 msgstr ""
 
@@ -15806,6 +15825,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Shared Link Auth"
 msgstr "Auth. dijeljene veze"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+msgid "Sharp"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
@@ -17093,8 +17118,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid ""
-"The URL “%(url)s“ is contained in the “%(field)s” of the following “%"
-"(model)s”"
+"The URL “%(url)s“ is contained in the “%(field)s” of the following "
+"“%(model)s”"
 msgstr ""
 
 #. module: website
@@ -17178,8 +17203,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %"
-"(allowedMimeTypesLabels)s."
+"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): "
+"%(allowedMimeTypesLabels)s."
 msgstr ""
 
 #. module: website
@@ -17306,8 +17331,8 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 msgid ""
 "The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: %"
-"(transferred_settings)s. Note that these settings are still present on the "
+"settings were copied from the old default website to the new one: "
+"%(transferred_settings)s. Note that these settings are still present on the "
 "old default website."
 msgstr ""
 
@@ -20000,10 +20025,9 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing "
-"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
-"chat on our website. Our dedicated team is available 24/7 to assist with any "
-"inquiries or issues."
+"You can reach our customer support team by emailing info@yourcompany.example."
+"com, calling +1 555-555-5556, or using the live chat on our website. Our "
+"dedicated team is available 24/7 to assist with any inquiries or issues."
 msgstr ""
 
 #. module: website
@@ -21768,102 +21792,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr ""
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>About us</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>O nama</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                            <b>Partners</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                            <b>Partneri</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Services</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Usluge</b>"
-
-#~ msgid "Donation Button"
-#~ msgstr "Gumb za donaciju"
-
-#~ msgid "<b>Click Edit</b> to start designing your homepage."
-#~ msgstr "<b>Kliknite Uredi</b> za početak dizajniranja početne stranice."
-
-#~ msgid "About"
-#~ msgstr "O programu"
-
-#~ msgid "Backend"
-#~ msgstr "U pozadinu"
-
-#~ msgid "Basic"
-#~ msgstr "Osnovno"
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to it. That "
-#~ "way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "Ali prije brisanja, provjerite jeste li ažurirali sve poveznice koje vode "
-#~ "na njega. Na taj način vaši kupci neće naići na ne tako poznatu stranicu "
-#~ "s greškom 404."
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to them. "
-#~ "That way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "Ali prije brisanja, provjerite jeste li ažurirali sve poveznice koje vode "
-#~ "na njih. Na taj način vaši kupci neće naići na ne tako poznatu stranicu s "
-#~ "greškom 404."
-
-#~ msgid "Choose"
-#~ msgstr "Odaberite"
-
-#~ msgid "Consulting"
-#~ msgstr "Savjetovanje"
-
-#~ msgid "Experienced fullstack developer."
-#~ msgstr "Full Stack programer."
-
-#~ msgid "Landing Pages"
-#~ msgstr "Odredišne stranice"
-
-#~ msgid "Let's do it"
-#~ msgstr "Učinimo to!"
-
-#~ msgid "Management"
-#~ msgstr "Rukovodstvo"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid "OR"
-#~ msgstr "ILI"
-
-#~ msgid "Our Offer"
-#~ msgstr "Naša ponuda"
-
-#~ msgid "Pricing Plans"
-#~ msgstr "Cjenovni planovi"
-
-#~ msgid "Public User"
-#~ msgstr "Javni korisnik"
-
-#~ msgid "Record Rule"
-#~ msgstr "Pravilo zapisa"
-
-#~ msgid "Google Analytics"
-#~ msgstr "Google Analytics"
-
-#~ msgid "How to get my Measurement ID"
-#~ msgstr "Kako pronaći svoj ID za mjerenje"
-
-#~ msgid "UTM Campaign"
-#~ msgstr "UTM kampanja"

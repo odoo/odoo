@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 18:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -25,8 +25,8 @@ msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
+msgid "<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/>"
+msgstr "<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
@@ -1168,14 +1168,6 @@ msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome图标，例如：fa-tasks"
-
-#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__4wd
 msgid "Four-Wheel Drive (4WD)"
 msgstr "四轮驱动（4WD）"
@@ -1613,6 +1605,14 @@ msgstr "制造商"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
 msgstr "制造商"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -2926,15 +2926,3 @@ msgstr "显示该车辆的服务记录"
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "user_id"
 msgstr ""
-
-#~ msgid "Note"
-#~ msgstr "备注"
-
-#~ msgid "Write here any other information related to this vehicle"
-#~ msgstr "在此写下与此车辆有关的任何其他信息"
-
-#~ msgid ""
-#~ "A trailer hitch is a device attached to a vehicle's chassis for towing "
-#~ "purposes,            such as pulling trailers, boats, or other vehicles."
-#~ msgstr ""
-#~ "拖车挂钩 ，一种安装在车辆底盘上的牵引装置，用于拖曳拖车、船只或其他车辆。"

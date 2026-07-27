@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 11:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -330,14 +330,14 @@ msgstr "Puuvillafarkut viidellä taskulla..."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -363,47 +363,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"Tämä asetus on yhteinen kaikille "
-"kassajärjestelmille.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"Tämä asetus on yhteinen "
+"kaikille kassajärjestelmille.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Muokkaa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Muokkaa"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>Hyvä %(client_name)s,<br/>Tässä on kuittinne %(is_invoiced)s %(pos_name)s "
 "summasta %(amount)s, terveisin %(company_name)s . </p>"
@@ -427,13 +433,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Viivakoodit</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Tämä asetus on yhteinen kaikille kassajärjestelmille.\" pos-data-"
-"toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"Tämä asetus on yhteinen kaikille kassajärjestelmille."
+"\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4080,11 +4087,6 @@ msgid "Followers (Partners)"
 msgstr "Seuraajat (kumppanit)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr "Ruoka"
@@ -5408,6 +5410,11 @@ msgid "Margins & Costs"
 msgstr "Katteet ja kustannukset"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6130,8 +6137,8 @@ msgstr ""
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" "
-"-tyyppisiä päiväkirjoja."
+"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" -"
+"tyyppisiä päiväkirjoja."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6293,8 +6300,8 @@ msgstr "Valinnaiset tuotteet:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Valinnaisia tuotteita ehdotetaan, kun asiakas lisää tuotteita ostoskoriin "
 "(esim. hampurilaisen lisäämisen yhteydessä ehdottaa juomia tai ranskalaisia)."
@@ -9697,8 +9704,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "Maksuriviesi määrä tulee pyöristää maksun vahvistamiseksi.\n"
-"Pyöristystarkkuus on %(rounding)s, joten sinun pitäisi asettaa %"
-"(expectedAmount)s maksun määräksi %(paidAmount)s sijaan."
+"Pyöristystarkkuus on %(rounding)s, joten sinun pitäisi asettaa "
+"%(expectedAmount)s maksun määräksi %(paidAmount)s sijaan."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10200,19 +10207,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11562,8 +11569,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11973,453 +11980,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr ""
-#~ "%(payment_method)s Kassajärjestelmän maksu %(partner)s istunnossa %"
-#~ "(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s ja %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s veroton"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Kassakone</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Kirjausrivit</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Tilin maksut, jotka edustavat yhteenlaskettuja ja pankkien välille "
-#~ "jaettuja maksuja."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Kirjanpitopäiväkirja laskujen luomiseen."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Kirjanpitopäiväkirja kassajärjestelmän istuntojen ja laskujen maksujen "
-#~ "kirjaamiseen."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Tasattava summa"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Istuntoa suljettaessa tapahtui virhe.\n"
-#~ "Sinut ohjataan taustajärjestelmään sulkemaan istunto manuaalisesti."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Pankkimaksut"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Ero ennen sulkemista"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Kassapäiväkirja"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr ""
-#~ "Laskennan aikana havaittu kassavarojen erotus (tappio) - päättäminen"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Laskennan aikana havaittu kassavarojen ero (voitto) - päättäminen"
-
-#~ msgid "Cash register"
-#~ msgstr "Kassakone"
-
-#~ msgid "Close Session"
-#~ msgstr "Sulje istunto"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Ohjattu istunnon sulkeminen"
-
-#~ msgid "Closing counted: %s \n"
-#~ msgstr "Päätöskassa laskettu: %s \n"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Sulkemisero %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing difference: %s \n"
-#~ msgstr "Päätöserotus: %s \n"
-
-#~ msgid "Closing expected: %s \n"
-#~ msgstr "Odotettu päätöskassa: %s \n"
-
-#~ msgid "Closing session error"
-#~ msgstr "Istunnon sulkemisvirhe"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Yhdistä %(payment_method)s Kassa-maksut %(session)s:stä"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Oletusarvoinen saatavien tili (kassa)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Kassapäätteen myyntisaatavien oletustili"
-
-#~ msgid "Destination account"
-#~ msgstr "Kohdetili"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Määränpään tili on vain luettava"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Erotus kassaistunnon päättyessä"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "Teoreettisen ja todellisen loppusaldon ero."
-
-#~ msgid ""
-#~ "Do you want to stop the snooze early and make the product available again "
-#~ "immediately?"
-#~ msgstr ""
-#~ "Haluatko lopettaa torkutuksen aikaisemmin ja saada tuotteen heti "
-#~ "saataville?"
-
-#~ msgid "Ending Balance"
-#~ msgstr "Loppusaldo"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Pakota sulkemaan istunto"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Pakottaa asettamaan asiakkaan, kun käytetään tätä maksutapaa, ja jakaa "
-#~ "päiväkirjamerkinnät asiakaskohtaisesti. Voi hidastaa sulkemisprosessia."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Laskujen maksuista"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Käteiskontrolli käytössä"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Tunnista asiakas"
-
-#~ msgid "Information message"
-#~ msgstr "Infoviesti"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Tunnistamattomien asiakkaiden välitili."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Laskutuspäiväkirja"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Laskun maksu tilaukselle %(order)s (%(account_move)s) käyttäen %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "On laskutettava"
-
-#~ msgid "Journal Items"
-#~ msgstr "Kirjausrivit"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Viimeisimmän istunnon päättämisen käteinen"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Tarvitaan tappiotili seuraaville päiväkirjoille, jotta menetetty määrä "
-#~ "voidaan kirjata: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Tarvitaan voittotili seuraaville päiväkirjoille saadun määrän kirjaamista "
-#~ "varten: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Ei saatavilla"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr ""
-#~ "Alkusaldo, joka on laskettu yhteen kaikkien käteistapahtumien kanssa."
-
-#~ msgid "Opening cash counted: %s \n"
-#~ msgstr "Laskettu avauskassa: %s \n"
-
-#~ msgid "Opening cash difference: %s \n"
-#~ msgstr "Avauskassan erotus: %s\n"
-
-#~ msgid "Opening cash expected: %s \n"
-#~ msgstr "Odotettu avauskassa: %s\n"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Siirry %s päiväkirjaan ja määritä tappiotili. Tätä tiliä käytetään "
-#~ "kassaeron kirjaamiseen."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Siirry %s päiväkirjaan ja määritä voittotili. Tätä tiliä käytetään "
-#~ "kassaeron kirjaamiseen."
-
-#~ msgid "Point of Sale Product Snooze"
-#~ msgstr "Kassajärjestelmän tuotteen torkutustoiminto"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Hinta-alennus %(original_price)s - %(discounted_price)s"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "Päivitä asiakasnäyttö"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Aiheeseen liittyvä istunto: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Kassa-sulkemiskirjauksen %(entry)s peruutus toimeksiannon %(order)s "
-#~ "osalta istunnosta %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Istunnon päiväkirjamerkintä"
-
-#~ msgid "Snoozed Products"
-#~ msgstr "Torkutetut tuotteet"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Alkusaldo"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Laskutuspäiväkirjan on oltava samassa valuutassa myyntikirjan kanssa, tai "
-#~ "jos sitä ei ole asetettu, yrityksen kanssa samassa valuutassa."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Toinen käyttäjä on jo sulkenut istunnon. Kaikki tällä välin tehdyt "
-#~ "myynnit on tallennettu Rescue Sessioniin, jota voi tarkastella milloin "
-#~ "tahansa ja kirjata kirjanpitoon kassan kojelaudalta."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Teoreettinen loppusaldo"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Kirjattavien määrien ja tilausten määrien välillä on ero, joka johtuu "
-#~ "todennäköisesti veroista tai kirjanpitomääritysten muutoksista."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Tässä istunnossa ei ole kassakonetta."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr "Salliaksesi laskun luomisen, lisää sille päiväkirja asetuksissa."
-
-#~ msgid "Transaction"
-#~ msgstr "Tapahtuma"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Istuntoa ei pystytä sulkemaan ja vahvistamaan.\n"
-#~ "Aseta vastaava verotili jokaiselle seuraavien verojen jakoriville:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You are not allowed to change the rounding configuration while a pos "
-#~ "session using it is already opened."
-#~ msgstr ""
-#~ "Et saa muuttaa pyöristysasetuksia, kun niitä käyttävä kassajärjestelmän "
-#~ "istunto on jo avattu."
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Et voi sulkea kassaa, kun laskuja ei ole kirjattu.\n"
-#~ "Laskut: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Olet ottanut \"Tunnista asiakas\" -vaihtoehdon käyttöön maksutapaa %"
-#~ "(payment_method)s varten, mutta tilauksessa %(order)s ei ole asiakasta."
-
-#~ msgid "Chose a combo to apply"
-#~ msgstr "Valitse sovellettava yhdistelmä"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "Linkki kopioitu leikepöydälle"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Tarkista internet-yhteys ja yritä synkronoida uudelleen napsauttamalla "
-#~ "punaista wlan-painiketta (näytön oikeassa yläkulmassa)."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Hetkinen! Tuotteiden arkistointi aktiivisen Kassajärjestelmäistunnon "
-#~ "aikana on kuin vetäisin maton jalkojen alta.\n"
-#~ "Varmista ensin, että kaikki istunnot on suljettu ongelmien välttämiseksi."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Tulosta lasku taustajärjestelmästä"
-
-#~ msgid "Thank you."
-#~ msgstr "Kiitos."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr ""
-#~ "Tilausta ei voitu lähettää palvelimelle tuntemattoman virheen vuoksi"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Tilaus on synkronoitu aiemmin. Tee laskutus taustajärjestelmästä "
-#~ "tilauksesta: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Palvelimella tapahtui virhe tilauksen vastaanotossa."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Jos haluat poistaa tuotteen, varmista, että kaikki kassan istunnot on "
-#~ "suljettu.\n"
-#~ "\n"
-#~ "Tuotteen poistaminen kesken istunnon on nakkimukin nykäiseminen "
-#~ "lätkäfanin kädestä. Ketsuppi roiskuu kravatille!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Tilausta ei voida synkronoida"
-
-#~ msgid "Welcome."
-#~ msgstr "Tervetuloa."
-
-#~ msgid ""
-#~ "You cannot archive a product that is set as a special product in a Point "
-#~ "of Sale configuration. Please change the configuration first."
-#~ msgstr ""
-#~ "Et voi arkistoida tuotetta, joka on määritetty erityistuotteeksi "
-#~ "Kassajärjestelmän asetuksissa. Muuta ensin asetuksia."
-
-#~ msgid ""
-#~ "You cannot delete a category which is currently in use in a point of sale."
-#~ msgstr ""
-#~ "Et voi poistaa kategoriaa, joka on tällä hetkellä kassajärjestelmän "
-#~ "käytössä."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Ohita esikatselunäyttö</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr "Pyyntöä käsitellään yhä taustalla. Odota hetki."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Peruskuitti"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson-tulostimen IP-osoite"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Epson-kuittitulostimen paikallinen IP-osoite tai sen sarjanumero, jos "
-#~ "'Automaattinen sertifikaatin päivitys' on sallittu tulostimen asetuksissa."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Tulosta peruskuitti"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Tulosta täydellinen kuitti"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Tulosta kuitti"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Tulosta peruslippu ilman hintoja. Voidaan käyttää lahjoihin."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Ohita esikatselunäyttö"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "Kuittiruutu ohitetaan, jos kuitti voidaan tulostaa automaattisesti."
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid "Barcode must start with `042`"
-#~ msgstr "Viivakoodin on alettava numeroilla `042`"
-
-#~ msgid "Bill"
-#~ msgstr "Lasku"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Viimeisin valmistelun muutos"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Tilauksen viimeisin tila"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Tilaus on vanhentunut"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Kassajärjestelmä"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Tilausta on muokattu toisella laitteella. Jos olet muokannut olemassa "
-#~ "olevia tilausrivejä, tarkista, ettei muutoksiasi ole korvattu.\n"
-#~ "\n"
-#~ "Tilaus lähetetään palvelimelle tällä laitteella viimeksi tehtyjen "
-#~ "muutosten kera."

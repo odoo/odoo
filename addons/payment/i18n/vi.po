@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 05:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -32,42 +32,22 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of "
-"their integration with\n"
-"                                Odoo regarding this payment method. Any "
-"change may result in errors\n"
-"                                and should be tested on a test database "
-"first."
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Các thuộc tính này được thiết lập "
-"để\n"
-"                                khớp hành vi của nhà cung cấp và hành vi "
-"tích hợp của họ với\n"
-"                                Odoo liên quan đến phương thức thanh toán "
-"này. Mọi thay đổi đều có thể\n"
-"                                tạo ra lỗi và trước tiên phải được kiểm tra "
-"trên cơ sở dữ liệu kiểm thử."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Trang chủ\" aria-label=\"Home\"/"
-">"
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Cấu hình nhà cung cấp dịch vụ "
+"thanh toán"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Một số giao "
 "dịch bạn định thu hồi chỉ có thể được thu đầy đủ. Hãy xử lý các giao dịch "
 "một cách riêng lẻ để thu tiền từng phần.\"/>"
@@ -75,18 +55,42 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Xoá phương thức thanh toán\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Xoá phương thức thanh "
+"toán\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Cấu hình nhà cung cấp dịch vụ thanh "
-"toán"
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Trang chủ\" aria-"
+"label=\"Home\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> Các thuộc tính này được thiết lập "
+"để\n"
+"                                khớp hành vi của nhà cung cấp và hành vi "
+"tích hợp của họ với\n"
+"                                Odoo liên quan đến phương thức thanh toán "
+"này. Mọi thay đổi đều có thể\n"
+"                                tạo ra lỗi và trước tiên phải được kiểm tra "
+"trên cơ sở dữ liệu kiểm thử."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -142,16 +146,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Bảo mật bởi</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr "<span><i class=\"oi\" data-icon=\"lock\"/> Bảo mật bởi</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Hiện báo cáo tình trạng khả dụng</"
-"strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Hiện báo cáo tình "
+"trạng khả dụng</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -438,8 +443,8 @@ msgstr "Giao dịch phụ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Chọn phương thức khác <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr "Chọn phương thức khác <i class=\"oi\" data-icon=\"south\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -752,8 +757,8 @@ msgstr "Tạo và sao chép liên kết thanh toán"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Đi đến tài khoản của tôi <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr "Đi đến tài khoản của tôi <i class=\"oi ms-2\" data-icon=\"east\"/>"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -2523,8 +2528,8 @@ msgstr "Phương thức thanh toán của bạn"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -2579,760 +2584,3 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to void the authorized transaction? This action "
-#~ "can't be undone."
-#~ msgstr ""
-#~ "Bạn có chắc chắn muốn vô hiệu giao dịch được ủy quyền không? Bạn không "
-#~ "thể hoàn tác tác vụ này."
-
-#~ msgid "Child transactions"
-#~ msgstr "Giao dịch phụ"
-
-#~ msgid "ZIP"
-#~ msgstr "Mã bưu chính"
-
-#~ msgid "(ID:"
-#~ msgstr "(ID:"
-
-#~ msgid "7Eleven"
-#~ msgstr "7Eleven"
-
-#~ msgid ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Enable Payment Methods"
-#~ msgstr ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Bật phương thức thanh toán"
-
-#~ msgid ""
-#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-#~ "em> button is not supported.\n"
-#~ "                        Please use the <em>Duplicate</em> action instead."
-#~ msgstr ""
-#~ "<strong>Cảnh báo</strong> Không hỗ trợ tạo nhà cung cấp dịch vụ thanh "
-#~ "toán từ nút <em>TẠO</em>.\n"
-#~ "                        Thay vào đó, vui lòng sử dụng thao tác <em>Nhân "
-#~ "bản</em>."
-
-#~ msgid "ACH Direct Debit"
-#~ msgstr "Ghi nợ trực tiếp ACH"
-
-#~ msgid "Abitab"
-#~ msgstr "Abitab"
-
-#~ msgid "Activate"
-#~ msgstr "Kích hoạt"
-
-#~ msgid "Affirm"
-#~ msgstr "Affirm"
-
-#~ msgid "AfterPay"
-#~ msgstr "AfterPay"
-
-#~ msgid "Afterpay"
-#~ msgstr "Afterpay"
-
-#~ msgid "Akulaku PayLater"
-#~ msgstr "Akulaku PayLater"
-
-#~ msgid "AliPayHK"
-#~ msgstr "AliPayHK"
-
-#~ msgid "Alipay"
-#~ msgstr "Alipay"
-
-#~ msgid "Alipay+"
-#~ msgstr "Alipay+"
-
-#~ msgid "Alma"
-#~ msgstr "Alma"
-
-#~ msgid "Aman"
-#~ msgstr "Aman"
-
-#~ msgid "Amazon Pay"
-#~ msgstr "Amazon Pay"
-
-#~ msgid "American Express"
-#~ msgstr "American Express"
-
-#~ msgid "Argencard"
-#~ msgstr "Argencard"
-
-#~ msgid "Astropay TEF"
-#~ msgstr "Astropay TEF"
-
-#~ msgid "Atome"
-#~ msgstr "Atome"
-
-#~ msgid "Availability"
-#~ msgstr "Trạng thái khả dụng"
-
-#~ msgid "BACS Direct Debit"
-#~ msgstr "Ghi nợ trực tiếp BACS"
-
-#~ msgid "BCA"
-#~ msgstr "BCA"
-
-#~ msgid "BECS Direct Debit"
-#~ msgstr "Ghi nợ trực tiếp BECS"
-
-#~ msgid "BLIK"
-#~ msgstr "BLIK"
-
-#~ msgid "BRI"
-#~ msgstr "BRI"
-
-#~ msgid "BancNet"
-#~ msgstr "BancNet"
-
-#~ msgid "Banco Guayaquil"
-#~ msgstr "Banco Guayaquil"
-
-#~ msgid "Banco Pichincha"
-#~ msgstr "Banco Pichincha"
-
-#~ msgid "Banco de Bogota"
-#~ msgstr "Banco de Bogota"
-
-#~ msgid "Bancolombia"
-#~ msgstr "Bancolombia"
-
-#~ msgid "Bancontact"
-#~ msgstr "Bancontact"
-
-#~ msgid "Bangkok Bank"
-#~ msgstr "Bangkok Bank"
-
-#~ msgid "Bank Account"
-#~ msgstr "Tài khoản ngân hàng"
-
-#~ msgid "Bank Negara Indonesia"
-#~ msgstr "Bank Negara Indonesia"
-
-#~ msgid "Bank Permata"
-#~ msgstr "Bank Permata"
-
-#~ msgid "Bank Syariah Indonesia"
-#~ msgstr "Bank Syariah Indonesia"
-
-#~ msgid "Bank Transfer"
-#~ msgstr "Chuyển khoản ngân hàng"
-
-#~ msgid "Bank of Ayudhya"
-#~ msgstr "Bank of Ayudhya"
-
-#~ msgid "Bank reference"
-#~ msgstr "Mã tham chiếu ngân hàng"
-
-#~ msgid "Belfius"
-#~ msgstr "Belfius"
-
-#~ msgid "Benefit"
-#~ msgstr "Quyền lợi"
-
-#~ msgid "BharatQR"
-#~ msgstr "BharatQR"
-
-#~ msgid "BillEase"
-#~ msgstr "BillEase"
-
-#~ msgid "Billink"
-#~ msgstr "Billink"
-
-#~ msgid "Bizum"
-#~ msgstr "Bizum"
-
-#~ msgid "Boleto"
-#~ msgstr "Boleto"
-
-#~ msgid "Boost"
-#~ msgstr "Boost"
-
-#~ msgid "CIMB Niaga"
-#~ msgstr "CIMB Niaga"
-
-#~ msgid "CMR"
-#~ msgstr "CMR"
-
-#~ msgid "Cabal"
-#~ msgstr "Cabal"
-
-#~ msgid "Caixa"
-#~ msgstr "Caixa"
-
-#~ msgid "Card"
-#~ msgstr "Thẻ"
-
-#~ msgid "Carnet"
-#~ msgstr "Carnet"
-
-#~ msgid "Cartes Bancaires"
-#~ msgstr "Cartes Bancaires"
-
-#~ msgid "Cash App Pay"
-#~ msgstr "Cash App Pay"
-
-#~ msgid "Cashalo"
-#~ msgstr "Cashalo"
-
-#~ msgid "Cebuana"
-#~ msgstr "Cebuana"
-
-#~ msgid "Cencosud"
-#~ msgstr "Cencosud"
-
-#~ msgid "Cirrus"
-#~ msgstr "Cirrus"
-
-#~ msgid "Clearpay"
-#~ msgstr "Clearpay"
-
-#~ msgid "Codensa"
-#~ msgstr "Codensa"
-
-#~ msgid "Color"
-#~ msgstr "Màu sắc"
-
-#~ msgid "Cordial"
-#~ msgstr "Cordial"
-
-#~ msgid "Cordobesa"
-#~ msgstr "Cordobesa"
-
-#~ msgid "Credit Payment"
-#~ msgstr "Thanh toán tín dụng"
-
-#~ msgid "Dana"
-#~ msgstr "Dana"
-
-#~ msgid "Dankort"
-#~ msgstr "Dankort"
-
-#~ msgid "Davivienda"
-#~ msgstr "Davivienda"
-
-#~ msgid "Diners Club International"
-#~ msgstr "Diners Club International"
-
-#~ msgid "Disabled"
-#~ msgstr "Đã vô hiệu"
-
-#~ msgid "Discover"
-#~ msgstr "Khám phá"
-
-#~ msgid "DuitNow"
-#~ msgstr "DuitNow"
-
-#~ msgid "EMI"
-#~ msgstr "EMI"
-
-#~ msgid "EPS"
-#~ msgstr "EPS"
-
-#~ msgid "EasyPaisa"
-#~ msgstr "EasyPaisa"
-
-#~ msgid "Elo"
-#~ msgstr "Elo"
-
-#~ msgid "Enabled"
-#~ msgstr "Đã bật"
-
-#~ msgid "FPS"
-#~ msgstr "FPS"
-
-#~ msgid "FPX"
-#~ msgstr "FPX"
-
-#~ msgid "Facilito"
-#~ msgstr "Facilito"
-
-#~ msgid "Floa Bank"
-#~ msgstr "Floa Bank"
-
-#~ msgid "Forsa"
-#~ msgstr "Forsa"
-
-#~ msgid "GCash"
-#~ msgstr "GCash"
-
-#~ msgid "GoPay"
-#~ msgstr "GoPay"
-
-#~ msgid "GrabPay"
-#~ msgstr "GrabPay"
-
-#~ msgid "HD Bank"
-#~ msgstr "HD Bank"
-
-#~ msgid "Halan"
-#~ msgstr "Halan"
-
-#~ msgid "Hipercard"
-#~ msgstr "Hipercard"
-
-#~ msgid "Hoolah"
-#~ msgstr "Hoolah"
-
-#~ msgid "Humm"
-#~ msgstr "Humm"
-
-#~ msgid ""
-#~ "In test mode, a fake payment is processed through a test payment "
-#~ "interface.\n"
-#~ "This mode is advised when setting up the provider."
-#~ msgstr ""
-#~ "Trong chế độ kiểm thử, một khoản thanh toán giả sẽ được xử lý thông qua "
-#~ "giao diện thanh toán kiểm thử.\n"
-#~ "Nên dùng chế độ này khi thiết lập nhà cung cấp dịch vụ thanh toán."
-
-#~ msgid "JCB"
-#~ msgstr "JCB"
-
-#~ msgid "JazzCash"
-#~ msgstr "JazzCash"
-
-#~ msgid "JeniusPay"
-#~ msgstr "JeniusPay"
-
-#~ msgid "Jkopay"
-#~ msgstr "Jkopay"
-
-#~ msgid "KBC/CBC"
-#~ msgstr "KBC/CBC"
-
-#~ msgid "KNET"
-#~ msgstr "KNET"
-
-#~ msgid "KakaoPay"
-#~ msgstr "KakaoPay"
-
-#~ msgid "Kasikorn Bank"
-#~ msgstr "Kasikorn Bank"
-
-#~ msgid "Kiosk"
-#~ msgstr "Ki-ốt"
-
-#~ msgid "Klarna"
-#~ msgstr "Klarna"
-
-#~ msgid "Klarna - Pay Now"
-#~ msgstr "Klarna - Thanh toán ngay"
-
-#~ msgid "Klarna - Pay over time"
-#~ msgstr "Klarna - Trả góp"
-
-#~ msgid "Kredivo"
-#~ msgstr "Kredivo"
-
-#~ msgid "KrungThai Bank"
-#~ msgstr "KrungThai Bank"
-
-#~ msgid "LINE Pay"
-#~ msgstr "LINE Pay"
-
-#~ msgid "Lider"
-#~ msgstr "Lider"
-
-#~ msgid "LinkAja"
-#~ msgstr "LinkAja"
-
-#~ msgid "Local Payments"
-#~ msgstr "Phương thức thanh toán nội địa"
-
-#~ msgid "M-Pesa"
-#~ msgstr "M-Pesa"
-
-#~ msgid "MB WAY"
-#~ msgstr "MB WAY"
-
-#~ msgid "Mada"
-#~ msgstr "Mada"
-
-#~ msgid "Maestro"
-#~ msgstr "Maestro"
-
-#~ msgid "Magna"
-#~ msgstr "Magna"
-
-#~ msgid ""
-#~ "Making a request to the provider is not possible because the provider is "
-#~ "disabled."
-#~ msgstr ""
-#~ "Không thể tạo yêu cầu cho nhà cung cấp vì nhà cung cấp đã bị vô hiệu hóa."
-
-#~ msgid "Mandiri"
-#~ msgstr "Mandiri"
-
-#~ msgid "MasterCard"
-#~ msgstr "MasterCard"
-
-#~ msgid "Maya"
-#~ msgstr "Maya"
-
-#~ msgid "Maybank"
-#~ msgstr "Maybank"
-
-#~ msgid "Meeza"
-#~ msgstr "Meeza"
-
-#~ msgid "Mercado Livre"
-#~ msgstr "Mercado Livre"
-
-#~ msgid "MoMo"
-#~ msgstr "MoMo"
-
-#~ msgid "Mobile money"
-#~ msgstr "Ví điện tử viễn thông"
-
-#~ msgid "MobilePay"
-#~ msgstr "MobilePay"
-
-#~ msgid "Multibanco"
-#~ msgstr "Multibanco"
-
-#~ msgid "MyBank"
-#~ msgstr "MyBank"
-
-#~ msgid "NAPS"
-#~ msgstr "NAPS"
-
-#~ msgid "Napas Card"
-#~ msgstr "Thẻ Napas"
-
-#~ msgid "Naranja"
-#~ msgstr "Naranja"
-
-#~ msgid "Nativa"
-#~ msgstr "Nativa"
-
-#~ msgid "Netbanking"
-#~ msgstr "Ngân hàng trực tuyến"
-
-#~ msgid "OVO"
-#~ msgstr "OVO"
-
-#~ msgid "Oca"
-#~ msgstr "Oca"
-
-#~ msgid "Octopus"
-#~ msgstr "Octopus"
-
-#~ msgid "OmanNet"
-#~ msgstr "OmanNet"
-
-#~ msgid "Online Banking Czech Republic"
-#~ msgstr "Ngân hàng trực tuyến Cộng hoà Séc"
-
-#~ msgid "Online Banking India"
-#~ msgstr "Ngân hàng trực tuyến Ấn Độ"
-
-#~ msgid "Online Banking Slovakia"
-#~ msgstr "Ngân hàng trực tuyến Slovakia"
-
-#~ msgid "Online Banking Thailand"
-#~ msgstr "Ngân hàng trực tuyến Thái Lan"
-
-#~ msgid "Open banking"
-#~ msgstr "Ngân hàng mở"
-
-#~ msgid "Oxxo Pay"
-#~ msgstr "Oxxo Pay"
-
-#~ msgid "P24"
-#~ msgstr "P24"
-
-#~ msgid "POLi"
-#~ msgstr "POLi"
-
-#~ msgid "PPS"
-#~ msgstr "PPS"
-
-#~ msgid "PSE"
-#~ msgstr "PSE"
-
-#~ msgid "Pace."
-#~ msgstr "Pace."
-
-#~ msgid "Pay Later"
-#~ msgstr "Trả sau"
-
-#~ msgid "PayBright"
-#~ msgstr "PayBright"
-
-#~ msgid "PayID"
-#~ msgstr "PayID"
-
-#~ msgid "PayMe"
-#~ msgstr "PayMe"
-
-#~ msgid "PayNow"
-#~ msgstr "PayNow"
-
-#~ msgid "PaySafeCard"
-#~ msgstr "PaySafeCard"
-
-#~ msgid "Payment Followup"
-#~ msgstr "Follow-up thanh toán"
-
-#~ msgid "Payment Form"
-#~ msgstr "Biểu mẫu thanh toán"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Paytm"
-#~ msgstr "Paytm"
-
-#~ msgid "Paytrail"
-#~ msgstr "Paytrail"
-
-#~ msgid "Pix"
-#~ msgstr "Pix"
-
-#~ msgid ""
-#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
-#~ msgstr "Hãy đảm bảo rằng %(payment_method)s được %(provider)s hỗ trợ."
-
-#~ msgid "PostFinance Pay"
-#~ msgstr "PostFinance Pay"
-
-#~ msgid "PostePay"
-#~ msgstr "PostePay"
-
-#~ msgid "Premium Card"
-#~ msgstr "Thẻ Premium"
-
-#~ msgid "Presto"
-#~ msgstr "Presto"
-
-#~ msgid "Prompt Pay"
-#~ msgstr "PromptPay"
-
-#~ msgid "Providers"
-#~ msgstr "Nhà cung cấp"
-
-#~ msgid "QRIS"
-#~ msgstr "QRIS"
-
-#~ msgid "Rabbit LINE Pay"
-#~ msgstr "Rabbit LINE Pay"
-
-#~ msgid "Ratepay"
-#~ msgstr "Ratepay"
-
-#~ msgid "Reason:"
-#~ msgstr "Lý do:"
-
-#~ msgid "Redpagos"
-#~ msgstr "Redpagos"
-
-#~ msgid "Revolut Pay"
-#~ msgstr "Revolut Pay"
-
-#~ msgid "RuPay"
-#~ msgstr "RuPay"
-
-#~ msgid "SPEI"
-#~ msgstr "SPEI"
-
-#~ msgid "STCPay"
-#~ msgstr "STCPay"
-
-#~ msgid "Samsung Pay"
-#~ msgstr "Samsung Pay"
-
-#~ msgid "Select countries. Leave empty to make available everywhere."
-#~ msgstr "Chọn quốc gia. Để trống để sử dụng ở mọi nơi."
-
-#~ msgid "Select currencies. Leave empty not to restrict any."
-#~ msgstr "Chọn tiền tệ. Để trống để không giới hạn loại tiền tệ."
-
-#~ msgid "ShopBack"
-#~ msgstr "ShopBack"
-
-#~ msgid "ShopeePay"
-#~ msgstr "ShopeePay"
-
-#~ msgid "Shopping Card"
-#~ msgstr "Thẻ mua sắm"
-
-#~ msgid "Siam Commerical Bank"
-#~ msgstr "Siam Commerical Bank"
-
-#~ msgid "Souhoola"
-#~ msgstr "Souhoola"
-
-#~ msgid "Supported providers:"
-#~ msgstr "Nhà cung cấp được hỗ trợ:"
-
-#~ msgid "Swish"
-#~ msgstr "Swish"
-
-#~ msgid "Sympl"
-#~ msgstr "Sympl"
-
-#~ msgid "TENPAY"
-#~ msgstr "TENPAY"
-
-#~ msgid "TTB"
-#~ msgstr "TTB"
-
-#~ msgid "Tabby"
-#~ msgstr "Tabby"
-
-#~ msgid "Tamara"
-#~ msgstr "Tamara"
-
-#~ msgid "Tamilnad Mercantile Bank Limited"
-#~ msgstr "Tamilnad Mercantile Bank Limited"
-
-#~ msgid "Tarjeta MercadoPago"
-#~ msgstr "Tarjeta MercadoPago"
-
-#~ msgid "Techcombank"
-#~ msgstr "Techcombank"
-
-#~ msgid "TendoPay"
-#~ msgstr "TendoPay"
-
-#~ msgid "The color of the card in kanban view"
-#~ msgstr "Màu của thẻ trong chế độ xem kanban"
-
-#~ msgid "The list of providers supporting this payment method."
-#~ msgstr "Danh sách nhà cung cấp hỗ trợ phương thức thanh toán này."
-
-#~ msgid ""
-#~ "This payment method needs a partner in crime; you should enable a payment "
-#~ "provider supporting this method first."
-#~ msgstr ""
-#~ "Phương thức thanh toán này cần có nhà cung cấp; trước tiên bạn cần kích "
-#~ "hoạt nhà cung cấp dịch vụ thanh toán hỗ trợ phương thức này."
-
-#~ msgid "Tienphong"
-#~ msgstr "Tienphong"
-
-#~ msgid "Tinka"
-#~ msgstr "Tinka"
-
-#~ msgid "Touch'n Go"
-#~ msgstr "Touch'n Go"
-
-#~ msgid "Troy"
-#~ msgstr "Troy"
-
-#~ msgid "TrueMoney"
-#~ msgstr "TrueMoney"
-
-#~ msgid "Trustly"
-#~ msgstr "Trustly"
-
-#~ msgid "Twint"
-#~ msgstr "Twint"
-
-#~ msgid "UPI"
-#~ msgstr "UPI"
-
-#~ msgid "USSD"
-#~ msgstr "USSD"
-
-#~ msgid "UnionPay"
-#~ msgstr "UnionPay"
-
-#~ msgid "United Overseas Bank"
-#~ msgstr "United Overseas Bank"
-
-#~ msgid "Universal Air Travel Plan"
-#~ msgstr "Universal Air Travel Plan"
-
-#~ msgid "V PAY"
-#~ msgstr "V PAY"
-
-#~ msgid "VISA"
-#~ msgstr "VISA"
-
-#~ msgid "ValU"
-#~ msgstr "ValU"
-
-#~ msgid "Venmo"
-#~ msgstr "Venmo"
-
-#~ msgid "Vietcombank"
-#~ msgstr "Vietcombank"
-
-#~ msgid "Vipps"
-#~ msgstr "Vipps"
-
-#~ msgid "Wallets India"
-#~ msgstr "Ví điện tử Ấn Độ"
-
-#~ msgid "Walley"
-#~ msgstr "Walley"
-
-#~ msgid "WeChat Pay"
-#~ msgstr "WeChat Pay"
-
-#~ msgid "WeLend"
-#~ msgstr "WeLend"
-
-#~ msgid "WebPay"
-#~ msgstr "WebPay"
-
-#~ msgid ""
-#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
-#~ "providers."
-#~ msgstr ""
-#~ "Bạn không thể hủy lưu trữ các token liên kết với phương thức thanh toán "
-#~ "không hoạt động hoặc nhà cung cấp bị vô hiệu hóa."
-
-#~ msgid ""
-#~ "You cannot delete the payment provider %s; disable it or uninstall it "
-#~ "instead."
-#~ msgstr ""
-#~ "Bạn không thể xóa nhà cung cấp dịch vụ thanh toán %s; thay vào đó hãy vô "
-#~ "hiệu hoá hoặc gỡ cài đặt nhà cung cấp này."
-
-#~ msgid "You cannot publish a disabled provider."
-#~ msgstr "Bạn không thể hiển thị một nhà cung cấp đã bị vô hiệu hóa."
-
-#~ msgid "cofidis"
-#~ msgstr "cofidis"
-
-#~ msgid "eNETS"
-#~ msgstr "eNETS"
-
-#~ msgid "express checkout not supported"
-#~ msgstr "không hỗ trợ thanh toán nhanh"
-
-#~ msgid "iDEAL"
-#~ msgstr "iDEAL"
-
-#~ msgid "in3"
-#~ msgstr "in3"
-
-#~ msgid "incompatible country"
-#~ msgstr "quốc gia không tương thích"
-
-#~ msgid "incompatible currency"
-#~ msgstr "tiền tệ không tương thích"
-
-#~ msgid "incompatible website"
-#~ msgstr "trang web không tương thích"
-
-#~ msgid "manual capture not supported"
-#~ msgstr "không hỗ trợ thu hồi thủ công"
-
-#~ msgid "no supported provider available"
-#~ msgstr "không có nhà cung cấp nào được hỗ trợ"
-
-#~ msgid "payment method"
-#~ msgstr "phương thức thanh toán"
-
-#~ msgid "tokenization not supported"
-#~ msgstr "không hỗ trợ token hoá"
-
-#~ msgid "tokenization without payment no supported"
-#~ msgstr "không hỗ trợ token hoá không có thanh toán"

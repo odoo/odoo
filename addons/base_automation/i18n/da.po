@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-18 23:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/"
@@ -104,30 +104,27 @@ msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgid ""
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" "
+"title=\"Actions\"/>"
+msgstr ""
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" "
+"title=\"Actions\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-info-circle\"/> The default target record getter will work "
-"out-of-the-box for any webhook coming from another Odoo instance."
+"<i class=\"oi\" data-icon=\"info\"/> The default target record getter will "
+"work out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> Standardforespørgselsmetoden for målposten "
-"virker straks for alle webhooks, der kommer fra en anden Odoo-instans."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-warning\"/> Automation rules triggered by UI changes will "
-"be executed <em>every time</em> the watched fields change, <em>whether you "
-"save or not</em>."
+"<i class=\"oi\" data-icon=\"warning\"/> Automation rules triggered by UI "
+"changes will be executed <em>every time</em> the watched fields change, "
+"<em>whether you save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> Automatiseringsregler, der udløses af ændringer "
-"i brugergrænsefladen, køres <em>hver gang</em> de overvågede felter ændres, "
-"<em>uanset om du gemmer eller ej</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -405,11 +402,6 @@ msgid "Following child actions have warnings: %(children)s"
 msgstr "Følgende underordnede handlinger har advarsler: %(children)s"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 #, fuzzy
 msgid "Has Mail Thread"
@@ -538,6 +530,11 @@ msgstr ""
 "diskussionsfunktion kan anvendes."
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_error
 msgid "Message Delivery error"
 msgstr "Besked ved leveringsfejl"
@@ -567,11 +564,11 @@ msgstr "Modelnavn"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, fuzzy
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule %"
-"(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
 msgstr ""
-"Modellen for handling %(action_name)s skal matche den automatiserede regel %"
-"(rule_name)s."
+"Modellen for handling %(action_name)s skal matche den automatiserede regel "
+"%(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -888,11 +885,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
-"(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s Kan kun bruges sammen med \"%"
-"(state_value)s\" handlingstypen"
+"\"%(trigger_value)s\" %(trigger_label)s Kan kun bruges sammen med "
+"\"%(state_value)s\" handlingstypen"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -1125,9 +1122,3 @@ msgstr "ingen handling fastlagt ..."
 #, fuzzy
 msgid "path"
 msgstr "sti"
-
-#~ msgid "Website Messages"
-#~ msgstr "Beskeder fra hjemmesiden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website kommunikations historik"

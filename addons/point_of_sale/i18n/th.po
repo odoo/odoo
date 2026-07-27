@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-07-14 11:08+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -305,14 +305,14 @@ msgstr "กางเกงยีนส์ 5 กระเป๋า ผ้าเ�
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -338,50 +338,56 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"การตั้งค่านี้เป็นปกติสำหรับ PoS ทั้งหมด\" "
-"pos-data-toggle=\"คำแนะนำ\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"การตั้งค่านี้เป็นปกติสำหรับ PoS "
+"ทั้งหมด\" pos-data-toggle=\"คำแนะนำ\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> แก้ไข"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> แก้ไข"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
-"<p>เรียนคุณ %(client_name)s <br/>นี่คือใบเสร็จรับเงิน %(is_invoiced)s สำหรับ %"
-"(pos_name)s ซึ่งมีจำนวนเงิน %(amount)s จาก %(company_name)s</p>"
+"<p>เรียนคุณ %(client_name)s <br/>นี่คือใบเสร็จรับเงิน %(is_invoiced)s สำหรับ "
+"%(pos_name)s ซึ่งมีจำนวนเงิน %(amount)s จาก %(company_name)s</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -401,8 +407,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -3991,11 +3998,6 @@ msgid "Followers (Partners)"
 msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5284,6 +5286,11 @@ msgid "Margins & Costs"
 msgstr "กำไร & ต้นทุน"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6159,8 +6166,8 @@ msgstr "สินค้าทางเลือก:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -10004,19 +10011,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11310,8 +11317,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11719,332 +11726,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)sการชำระเงิน POS ของ %(partner)s ใน %(session)s"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">เครื่องบันทึกเงินสด</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">รายการสมุดรายวัน</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "การชำระเงินในบัญชีที่แสดงการชำระเงินแบบรวมและแบบแยกส่วนธนาคาร"
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "บันทึกบัญชีที่ใช้ในการสร้างใบแจ้งหนี้"
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "สมุดรายวันการบัญชีที่ใช้ในการลงรายการบัญชีสมุดรายวันของเซสชัน POS "
-#~ "และการชำระเงินตามใบแจ้งหนี้ของ POS"
-
-#~ msgid "Amount to balance"
-#~ msgstr "ยอดเงินคงเหลือ"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "เกิดข้อผิดพลาดขณะพยายามปิดเซสชัน\n"
-#~ "คุณจะถูกเปลี่ยนเส้นทางไปยังส่วนหลังเพื่อปิดเซสชันด้วยตนเอง"
-
-#~ msgid "Bank Payments"
-#~ msgstr "การชำระเงินผ่านธนาคาร"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "ส่วนต่างก่อนปิด"
-
-#~ msgid "Cash Journal"
-#~ msgstr "บันทึกเงินสด"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "ผลต่างเงินสดที่สังเกตได้ระหว่างการนับ (ขาดทุน) - ปิดบัญชี"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "ผลต่างเงินสดที่สังเกตได้ระหว่างการนับ (กำไร) - ปิดบัญชี"
-
-#~ msgid "Cash register"
-#~ msgstr "เครื่องบันทึกเงินสด"
-
-#~ msgid "Close Session"
-#~ msgstr "ปิดเซสชั่น"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "ปิดตัวช่วยสร้างเซสชัน"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "ผลต่างการปิดบัญชีใน %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "ข้อผิดพลาดในการปิดเซสชัน"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "รวมการชำระเงิน POS %(payment_method)s จาก %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "บัญชีลูกหนี้เริ่มต้น (PoS)"
-
-#~ msgid "Destination account"
-#~ msgstr "บัญชีปลายทาง"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "บัญชีปลายทางเป็นแบบอ่านอย่างเดียว"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "ส่วนต่างเมื่อปิดเซสชัน PoS"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "ส่วนต่างระหว่างยอดคงเหลือการปิดตามทฤษฎีกับยอดคงเหลือการปิดจริง"
-
-#~ msgid "Ending Balance"
-#~ msgstr "ยอดคงเหลือปลายทาง"
-
-#~ msgid "Force Close Session"
-#~ msgstr "บังคับให้ปิดเซสชัน"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "บังคับให้ตั้งค่าลูกค้าเมื่อใช้วิธีการชำระเงินนี้และแยกรายการสมุดรายวันสำหรับลูกค้าแต่ละราย "
-#~ "อาจทำให้กระบวนการปิดช้าลง"
-
-#~ msgid "From invoice payments"
-#~ msgstr "จากการชำระเงินตามใบแจ้งหนี้"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "มีการควบคุมเงินสด"
-
-#~ msgid "Identify Customer"
-#~ msgstr "ระบุลูกค้า"
-
-#~ msgid "Information message"
-#~ msgstr "ข้อความข้อมูล"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "บัญชีตัวกลางที่ใช้สำหรับลูกค้าที่ไม่ระบุชื่อ"
-
-#~ msgid "Invoice Journal"
-#~ msgstr "บันทึกใบแจ้งหนี้"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "การชำระเงินตามใบแจ้งหนี้สำหรับ %(order)s (%(account_move)s) โดยใช้ %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "ออกใบแจ้งหนี้แล้ว"
-
-#~ msgid "Journal Items"
-#~ msgstr "รายการบันทึก"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "เงินสดปิดเซสชันล่าสุด"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr "ต้องการบัญชีขาดทุนสำหรับการบันทึกรายวันต่อไปนี้เพื่อลงบันทึกจำนวนขาดทุน: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr "ต้องการบัญชีกำไรสำหรับบันทึกรายวันต่อไปนี้เพื่อลงบันทึกจำนวนเงินที่ได้รับเพิ่ม: %s"
-
-#~ msgid "Not available"
-#~ msgstr "ไม่พร้อมใช้งาน"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "ยอดคงเหลือยกมารวมเข้ากับธุรกรรมเงินสดทั้งหมด"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr "โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีการสูญเสีย บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr "โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีกำไร บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "ลดราคาจาก %(original_price)s ถึง %(discounted_price)s"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "เซสชันที่เกี่ยวข้อง: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "การกลับรายการของรายการปิด POS %(entry)s สำหรับใบสั่ง %%(order)s จากเซสชัน %"
-#~ "(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "รายการสมุดรายวันเซสชัน"
-
-#~ msgid "Starting Balance"
-#~ msgstr "ยอดเงินเริ่มต้น"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "สมุดรายวันใบแจ้งหนี้จะต้องอยู่ในสกุลเงินเดียวกันกับสมุดรายวันการขายหรือสกุลเงินของบริษัท "
-#~ "ถ้าไม่ได้ถูกตั้งค่าไว้"
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "เซสชั่นถูกปิดไปแล้วโดยผู้ใช้รายอื่น "
-#~ "การขายทั้งหมดที่เสร็จสมบูรณ์ในระหว่างนี้ได้รับการบันทึกไว้ในเซสชั่นกู้ภัย "
-#~ "ซึ่งสามารถตรวจสอบได้ตลอดเวลาและถูกผ่านรายการไปยังระบบบัญชีจากแดชบอร์ดของการขายหน้าร้าน"
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "ยอดปิดบัญชีตามทฤษฎี"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "มีความแตกต่างระหว่างจำนวนเงินที่จะผ่านรายการและจำนวนใบสั่ง "
-#~ "ซึ่งอาจเกิดจากการเปลี่ยนแปลงการตั้งค่าการกำหนดค่าทางบัญชีหรือภาษี"
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "ไม่มีเครื่องบันทึกเงินสดในเซสชั่นนี้"
-
-#~ msgid "Transaction"
-#~ msgstr "ธุรกรรม"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "ไม่สามารถปิดและตรวจสอบเซสชันได้\n"
-#~ "โปรดตั้งค่าบัญชีภาษีที่เกี่ยวข้องในแต่ละรายการการแบ่งส่วนของภาษีต่อไปนี้:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "คุณไม่สามารถปิด POS ได้ เมื่อไม่มีการลงรายการบัญชีใบแจ้งหนี้\n"
-#~ "ใบแจ้งหนี้: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "คุณได้เปิดใช้งานตัวเลือก \"ระบุลูกค้า\" สำหรับวิธีการชำระเงิน %(payment_method)s "
-#~ "แต่คำสั่งซื้อ %(order)s ไม่มีลูกค้า"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต จากนั้นลองซิงค์อีกครั้งโดยคลิกที่ปุ่ม wifi สีแดง "
-#~ "(ด้านขวาบนของหน้าจอ)"
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "เดี๋ยวก่อน! การเก็บถาวรสินค้าขณะที่เซสชัน POS "
-#~ "กำลังใช้งานอยู่ก็เหมือนกับการดึงจานอาหารกลางมื้อ\n"
-#~ "อย่าลืมปิดเซสชันทั้งหมดก่อนเพื่อหลีกเลี่ยงปัญหาที่อาจเกิดขึ้น"
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "กรุณาพิมพ์ใบแจ้งหนี้จากการทำงานเบื้องหลัง"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "ไม่สามารถส่งคำสั่งซื้อไปยังเซิร์ฟเวอร์ได้ เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr "คำสั่งซื้อได้รับการซิงโครไนซ์ก่อนหน้านี้ โปรดสร้างใบแจ้งหนี้จากส่วนหลังสำหรับคำสั่งซื้อ: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "เซิร์ฟเวอร์พบข้อผิดพลาดขณะรับคำสั่งซื้อของคุณ"
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "หากต้องการลบสินค้า ตรวจสอบให้แน่ใจว่าเซสชั่นการขายหน้าร้านทั้งหมดปิดแล้ว\n"
-#~ "\n"
-#~ "การลบผลิตภัณฑ์ที่มีอยู่ในเซสชันก็เหมือนกับการพยายามแย่งแฮมเบอร์เกอร์จากมือลูกค้าที่กำลังรับประทานอยู่ "
-#~ "ความวุ่นวายจะตามมาเมื่อซอสมะเขือเทศและมายองเนสกระจัดกระจายไปทั่ว!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "ไม่สามารถซิงค์คำสั่งซื้อได้"
-
-#~ msgid "Welcome."
-#~ msgstr "ยินดีต้อนรับ"
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>ข้ามหน้าจอแสดงตัวอย่าง</b></span>"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "ที่อยู่ IP ของเครื่องพิมพ์ Epson"
-
-#~ msgid "Print Receipt"
-#~ msgstr "พิมพ์ใบเสร็จรับเงิน"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "พิมพ์ตั๋วธรรมดาไม่มีราคา สามารถใช้เป็นของขวัญได้"
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "ข้ามหน้าจอแสดงตัวอย่าง"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "หน้าพิมพ์ใบเสร็จจะถูกข้ามหากใบเสร็จสามารถพิมพ์อัตโนมัติได้ \n"
-#~ "ดู การตั้งค่า \"พิมพ์ใบเสร็จอัตโนมัติ\""
-
-#~ msgid "Website Messages"
-#~ msgstr "ข้อความเว็บไซต์"
-
-#~ msgid "Website communication history"
-#~ msgstr "ประวัติการสื่อสารของเว็บไซต์"
-
-#~ msgid "Info"
-#~ msgstr "ข้อมูล"
-
-#~ msgid "Last preparation change"
-#~ msgstr "การเปลี่ยนแปลงการเตรียมการครั้งล่าสุด"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "สถานะการพิมพ์ครั้งสุดท้ายของคำสั่งซื้อ"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "ระบบการขายหน้าร้าน"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "มีการแก้ไขคำสั่งซื้อบนอุปกรณ์อื่น หากคุณได้แก้ไขรายการคำสั่งซื้อที่มีอยู่แล้ว "
-#~ "โปรดตรวจสอบว่าการเปลี่ยนแปลงของคุณไม่ได้ถูกเขียนทับ\n"
-#~ "\n"
-#~ "คำสั่งซื้อจะถูกส่งไปยังเซิร์ฟเวอร์พร้อมการเปลี่ยนแปลงล่าสุดที่เกิดขึ้นบนอุปกรณ์นี้"

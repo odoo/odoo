@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-22 00:18+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -90,8 +90,8 @@ msgstr "%(name)s İADESİ"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, %"
-"(new_amount)s olarak güncellendi."
+"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, "
+"%(new_amount)s olarak güncellendi."
 
 #. module: point_of_sale
 #. odoo-python
@@ -329,14 +329,14 @@ msgstr "Pamuklu kot kumaşından 5 cepli kot pantolon.."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -362,47 +362,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/>Düzenle"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/>Düzenle"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>Sayın %(client_name)s,<br/>işte %(pos_name)s için %(amount)s tutarındaki "
 "fişiniz %(is_invoiced)s - %(company_name)s tarafından düzenlenmiştir. </p>"
@@ -425,12 +431,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Barkodlar</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4073,11 +4081,6 @@ msgid "Followers (Partners)"
 msgstr "Takipçiler (İş ortakları)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Yazı tipi harika simgesi ör. fa-görevler"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5383,6 +5386,11 @@ msgid "Margins & Costs"
 msgstr "Marjlar ve Maliyetler"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6266,8 +6274,8 @@ msgstr "Opsiyonel Ürünler:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Müşteriler sepetlerine ürün eklediklerinde isteğe bağlı ürünler önerilir "
 "(örneğin, burger eklendiğinde soğuk içecekler veya patates kızartması "
@@ -9670,8 +9678,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "İşlemi doğrulamak için ödeme satırlarınızın tutarı yuvarlanmalıdır.\n"
-"Yuvarlama hassasiyeti %(rounding)s olduğundan ödeme tutarı olarak %"
-"(paidAmount)s yerine %(expectedAmount)s ayarlamalısınız."
+"Yuvarlama hassasiyeti %(rounding)s olduğundan ödeme tutarı olarak "
+"%(paidAmount)s yerine %(expectedAmount)s ayarlamalısınız."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10178,19 +10186,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11536,8 +11544,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11947,394 +11955,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s %(partner)s %(session)s POS ödemesi"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s, %(taxes)s ile"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s vergisiz"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Yazar Kasa</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Yevmiye Kayıtları</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "Toplamı temsil eden hesap ödemeleri ve bölünmüş banka ödemeleri."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Faturalar oluşurken kullanılacak muhasebe yevmiyesi."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "POS oturumu yevmiye kayıtlarını onaylamak için kullanılan yevmiye ve ve "
-#~ "POS fatura ödemeleri."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Bakiye tutarı"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Oturumu kapatmaya çalışırken bir hata oluştu.\n"
-#~ "Oturumu manuel kapatmak için arka uca yönlendirilirsiniz."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Banka Ödemeleri"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Kapanıştan Önce Fark"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Nakit Yevmiye"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Sayım sırasında gözlemlenen nakit farkı (Zarar) - kapanış"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Sayım sırasında gözlemlenen nakit farkı (Kar) - kapanış"
-
-#~ msgid "Cash register"
-#~ msgstr "Kasa"
-
-#~ msgid "Close Session"
-#~ msgstr "Oturumu Kapat"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Oturum Kapatma Sihirbazı"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "%(payment_method)s kapanış farkı (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Kapanış oturumu hatası"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "%(payment_method)s'den %(session)s POS ödemelerini birleştirin"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Varsayılan Alacak Hesabı (PoS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Varsayılan Satış Noktası Alacak Hesabı"
-
-#~ msgid "Destination account"
-#~ msgstr "Hedef hesabı"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Hedef hesap salt okunur"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "PoS oturumu kapanış farkı"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "Teorik kapanış bakiyesi ve gerçek kapanış bakiyesi arasındaki fark."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Kapanış Bakiyesi"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Oturumu Kapatmaya Zorla"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Bu ödeme yöntemi kullanılırken bir müşteri ayarlamaya zorlar ve her "
-#~ "müşteri için yevmiye kayıtlarını böler. Kapanış sürecini yavaşlatabilir."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Fatura ödemelerinden"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Nakit Kontrolü Var"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Müşteriyi Tanımla"
-
-#~ msgid "Information message"
-#~ msgstr "Bilgi mesajı"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Kimliği belirsiz müşteriler için kullanılan aracı hesap."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Fatura Yevmiyesi"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "%(order)s kullanarak %(account_move)s (%(payment_method)s) için fatura "
-#~ "ödemesi"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Is Invoiced"
-
-#~ msgid "Journal Items"
-#~ msgstr "Yevmiye Kalemleri"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Son Oturum Kapatma Sırasındaki Nakit"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Kayıp tutarı kaydetmek için aşağıdaki yevmiyelerde kayıp hesabı gerekir: "
-#~ "%s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Kazanç tutarı kaydetmek için aşağıdaki yevmiyelerde kazanç hesabı "
-#~ "gerekir: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Mevcut değil"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Açılış bakiyesi tüm nakit işlemlerine özetlenmiştir."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Lütfen %s yevmiye defterine gidin ve bir Zarar Hesabı tanımlayın. Bu "
-#~ "hesap, nakit farkını kaydetmek için kullanılacaktır."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Lütfen %s yevmiye defterine gidin ve bir Zarar Hesabı tanımlayın. Bu "
-#~ "hesap, nakit farkını kaydetmek için kullanılacaktır."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Fiyat indirimi: %(original_price)s 'den%(discounted_price)s'ye"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "Müşteri ekranını yenileyin"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "İlgili Oturum: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Sipariş %(entry)s için POS kapanış giriş %(order)s oturum %(session)s "
-#~ "tersine çevrilmesi"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Oturum Yevmiye Kaydı"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Açılış Bakiyesi"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Fatura günlüğü, Satış Günlüğü ile aynı para biriminde veya bunun "
-#~ "ayarlanmamış olduğu durumda şirket para biriminde olmalıdır."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Oturum başka bir Kullanıcı tarafından zaten sonlandırılmıştır. Bu sırada "
-#~ "tamamlanan tüm satışlar bir Kurtarma Oturumuna kaydedilmiştir ve bu "
-#~ "oturum her zaman gözden geçirilebilir ve Satış Noktasının kontrol "
-#~ "panelinden Muhasebeye gönderilebilir."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Teorik Kapanış Bakiyesi"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Gönderilecek tutarlar ile siparişlerin tutarları arasında bir fark var, "
-#~ "muhtemelen vergilerden veya muhasebe yapılandırma değişikliklerinden "
-#~ "kaynaklanıyor."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Bu POS Oturumu için bir nakit kaydı yok."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr ""
-#~ "Fatura oluşturmayı etkinleştirmek için lütfen ayarlardan bunun için bir "
-#~ "yevmiye defteri ekleyin."
-
-#~ msgid "Transaction"
-#~ msgstr "İşlem"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Oturum kapatılamıyor ve doğrulanamıyor.\n"
-#~ "Lütfen aşağıdaki vergilerin her bir yeniden bölümleme satırında ilgili "
-#~ "vergi hesabını ayarlayın: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Faturalar deftere aktarılmadığında POS'u kapatamazsınız.\n"
-#~ "Faturalar: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "%(payment_method)s ödeme yöntemi için \"Müşteriyi Tanımla\" seçeneğini "
-#~ "etkinleştirdiniz, ancak sipariş %(order)s bir müşteri içermiyor."
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "Panoya kopyalanan bağlantı"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "İnternet bağlantısını kontrol edin, ardından kırmızı wifi düğmesine "
-#~ "(ekranın sağ üst köşesi) tıklayarak tekrar senkronize etmeyi deneyin."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Durun! Satış Noktası oturumları aktifken ürünleri arşivlemek, yemeğin "
-#~ "ortasında tabak çekmeye benzer.\n"
-#~ "Herhangi bir sorunla karşılaşmamak için önce tüm oturumları "
-#~ "kapattığınızdan emin olun."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Lütfen faturayı sunucu uygulamadan yazdırın"
-
-#~ msgid "Thank you."
-#~ msgstr "Teşekkürler."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Bilinmeyen bir hata nedeniyle sipariş sunucuya iletilemedi"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Sipariş daha önce eşleştirildi. Lütfen sipariş için sunucu uygulamadan "
-#~ "fatura yapın: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Sipariş alınırken sunucuda bir sorun oluştu."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Bir ürünü silmek için tüm satış noktası oturumlarının kapalı olduğundan "
-#~ "emin olun.\n"
-#~ "\n"
-#~ "Bir oturumda mevcut olan ürünü silmek, müşterinin elinden ısırmak üzere "
-#~ "olduğu hamburgeri kapmaya çalışmak gibidir; ketçap ve mayonez etrafa "
-#~ "saçılırken tam bir kaos çıkar!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Sipariş senkronize edilemiyor"
-
-#~ msgid "Welcome."
-#~ msgstr "Hoş geldiniz."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Önizleme Ekranını Atla</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr "Arka planda bir talep hala işleniyor. Lütfen bekleyin."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Temel Fiş"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson Yazıcısı IP Adresi"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Epson makbuz yazıcısının yerel IP adresi veya yazıcı ayarlarında "
-#~ "'Otomatik Sertifika Güncelleme' seçeneği etkinleştirilmişse seri numarası."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Temel Makbuz Yazdır"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Tam Makbuz Yazdır"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Fişi Yazdır"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Fiyat içermeyen temel fişi yazdırın. Hediye amaçlı kullanılabilir."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Önizleme Ekranını Atla"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "Fiş otomatik yazdırılabiliyorsa önizleme ekranı gösterilmeyecektir."
-
-#~ msgid "Website Messages"
-#~ msgstr "Websitesi Mesajları"
-
-#~ msgid "Website communication history"
-#~ msgstr "Websitesi iletişim geçmişi"
-
-#~ msgid "Info"
-#~ msgstr "Bilgi"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Son hazırlık değişikliği"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Siparişin son basılı durumu"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Sipariş Güncel Değil"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Satış Noktası"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Sipariş başka bir cihazda değiştirildi. Mevcut sipariş satırlarını "
-#~ "değiştirdiyseniz, değişikliklerinizin üzerine yazılıp yazılmadığını "
-#~ "kontrol edin.\n"
-#~ "\n"
-#~ "Sipariş, bu cihazda yapılan son değişikliklerle birlikte sunucuya "
-#~ "gönderilecek."

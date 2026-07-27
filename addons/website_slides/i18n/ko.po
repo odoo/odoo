@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 09:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -231,8 +231,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
+"name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -276,8 +276,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -297,8 +297,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        안녕하세요<br/><br/>\n"
-"        다음 강좌를 확인하실 수 있도록 초대합니다: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        다음 강좌를 확인하실 수 있도록 초대합니다: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -321,11 +321,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -491,8 +491,8 @@ msgstr ""
 "\">\n"
 "                        안녕하세요<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> 님이 "
-"<t t-out=\"object.slide_category or ''\">문서 </t> <strong t-"
-"out=\"object.name or ''\">Trees</strong> 항목을 공유했습니다!\n"
+"<t t-out=\"object.slide_category or ''\">문서 </t> <strong t-out=\"object."
+"name or ''\">Trees</strong> 항목을 공유했습니다!\n"
 "                        </p><div style=\"margin: 16px 8px 16px 8px; text-"
 "align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?"
@@ -545,11 +545,10 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -565,9 +564,9 @@ msgstr ""
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
 "                        안녕하세요<br/><br/>\n"
-"                        현재 팔로우 중인 <strong t-"
-"out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> 강좌에 "
-"신규 항목이 추가되었습니다:<br/><br/>\n"
+"                        현재 팔로우 중인 <strong t-out=\"object.channel_id."
+"name or ''\">Trees, Wood and Gardens</strong> 강좌에 신규 항목이 추가되었습니"
+"다:<br/><br/>\n"
 "                        </p><center><strong t-out=\"object.name or "
 "''\">Trees</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
@@ -583,11 +582,10 @@ msgstr ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        독점 제공 콘텐츠를 즐겨 보세요!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -600,305 +598,306 @@ msgstr ""
 "            "
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
-msgstr "<i class=\"fa fa-arrow-right\"/> 학습 시작하기"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> 통계"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Lessons</span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">Add Content</span>"
 msgstr ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block ms-1\">강의</"
-"span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">콘텐츠 추가</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/><span>Add Content</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/><span>콘텐츠 추가</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-msgid "<i class=\"fa fa-check me-1\"/>Completed"
-msgstr "<i class=\"fa fa-check me-1\"/>완료"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_card
-msgid "<i class=\"fa fa-check\" aria-hidden=\"true\"/> Completed"
-msgstr "<i class=\"fa fa-check\" aria-hidden=\"true\"/> 완료"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-check\"/> Completed"
-msgstr "<i class=\"fa fa-check\"/> 완료"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>불러오는 중...</b>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-msgstr ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"지속 시간\" role=\"img\" "
-"title=\"지속 시간\"/>"
+msgid "<i class=\"oi me-1\" data-icon=\"check\"/>Completed"
+msgstr "<i class=\"oi me-1\" data-icon=\"check\"/>완료"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-cloud-upload me-1\"/>Add Content"
-msgstr "<i class=\"fa fa-cloud-upload me-1\"/>콘텐츠 추가"
+msgid "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Add Content"
+msgstr "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>콘텐츠 추가"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments\"/> Comments"
-msgstr "<i class=\"fa fa-comments\"/> 댓글"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
-msgstr ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">전체화면</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-eraser me-1\"/>Clear filters"
-msgstr "<i class=\"fa fa-eraser me-1\"/>필터 제거"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> This document is private."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> 이 문서는 비공개입니다."
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-msgstr ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"조회수\" role=\"img\" title=\"조회수"
-"\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-msgstr ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-msgstr ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-msgstr ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"문서\" role=\"img\" "
-"title=\"문서\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-msgstr ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"동영상\" role=\"img\" "
-"title=\"동영상\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-msgstr ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"퀴즈\" role=\"img\" title=\"퀴즈\"/"
-">"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
-msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr "<i class=\"fa fa-flag text-warning\"/> 문제"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
-msgid "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
-msgstr "<i class=\"fa fa-flag-checkered text-warning\"/>문제"
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>All Courses"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>모든 강좌"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-folder-o me-1\"/><span>Add Section</span>"
-msgstr "<i class=\"fa fa-folder-o me-1\"/><span>영역 추가</span>"
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/><span>Add Section</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/><span>영역 추가</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
-msgstr "<i class=\"fa fa-folder-o me-1\"/>영역 추가"
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/>Add a section"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/>영역 추가"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Clear filters"
+msgstr "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>필터 제거"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> 소개"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/> 강좌"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
 msgid ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
-"to course</span>"
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"          My Courses"
 msgstr ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">강좌"
-"로 돌아가기</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-msgid ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Course Locked</span>"
-msgstr ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>강좌 잠금</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
-"Content</span>"
-msgstr ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">콘텐"
-"츠 추가</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-plus me-1\"/><span>Add Content</span>"
-msgstr "<i class=\"fa fa-plus me-1\"/><span>콘텐츠 추가</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>질문 추가</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>퀴즈 추가</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
-msgstr ""
-"<i class=\"fa fa-question me-2\" aria-label=\"질문 수\" role=\"img\" "
-"title=\"질문 수\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Prev</span>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">이전</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"질문 수\" role=\"img\" "
+"title=\"질문 수\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"동영상\" role=\"img\" "
+"title=\"동영상\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"문서\" "
+"role=\"img\" title=\"문서\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"지속 시간\" "
+"role=\"img\" title=\"지속 시간\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"조회수\" "
+"role=\"img\" title=\"조회수\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
+msgstr ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">전체화면</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">공유</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Share"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"공유\" title=\"공유\"/>\n"
-"                                            공유"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"퀴즈\" "
+"role=\"img\" title=\"퀴즈\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Quiz"
+msgstr "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> 문제"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi oi-filled\" data-icon=\"forum\"/> Comments"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"forum\"/> 댓글"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Loading...</b>"
+msgstr ""
+"<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>불러오는 중...</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
+msgid "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Quiz"
+msgstr "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>문제"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi\" data-icon=\"arrow_forward\"/> Start Learning"
+msgstr "<i class=\"oi\" data-icon=\"arrow_forward\"/> 학습 시작하기"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Statistics"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> 통계"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+msgid "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> 완료"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "<i class=\"oi\" data-icon=\"check\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> 완료"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">Share</"
 "span>"
 msgstr ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">공유</"
 "span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> 공유"
+msgid "<i class=\"oi\" data-icon=\"family_history\"/> Share"
+msgstr "<i class=\"oi\" data-icon=\"family_history\"/> 공유"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"home\"/> About"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> 소개"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"oi\" data-icon=\"home\"/> Course"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> 강좌"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Back to course</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">강좌로 돌아가기</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+msgid ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Course Locked</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>강좌 잠금</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Exit Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block ms-1\">전"
-"체화면 나가기</span>"
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">전체화면 나가기</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"          My Courses"
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lessons</span>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">강의</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"oi oi-arrow-right me-1\"/>All Courses"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>모든 강좌"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Prev</span>"
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Share"
 msgstr ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">이전</span>"
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"공유\" title=\"공유\"/>\n"
+"                                            공유"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> This document is private."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> 이 문서는 비공개입니다."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>You are enrolled</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>You are enrolled</small>"
 msgstr ""
 
 #. module: website_slides
@@ -915,21 +914,23 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> Completed</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> Completed</span></small>"
 msgstr ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> 완료</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> 완료</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 
 #. module: website_slides
@@ -967,17 +968,17 @@ msgstr "<span class=\"badge text-bg-success fw-normal m-1\">미리보기</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Start now</span><i "
-"class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"class=\"oi d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">다음</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">다음</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -987,8 +988,8 @@ msgstr "<span class=\"fw-normal\">최근 업데이트:</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi oi-"
-"arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -1018,7 +1019,7 @@ msgstr "<span class=\"o_stat_text\">조회수 삽입</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                        Create a Google Project and Get a Key"
 msgstr ""
 
@@ -1095,42 +1096,47 @@ msgstr "<span class=\"text-muted\">컴퓨터 과학의 일부</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 msgstr ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"첫 슬라이드\" aria-"
-"label=\"첫 슬라이드\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"첫 슬라이드\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"이전 슬라이드\" aria-label=\"이전 슬라이드\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"다음 슬라이드\" aria-label=\"다음 슬라이드\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/"
+"></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"마지막 슬라이드\" aria-label=\"마지막 슬라이드\" "
-"role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
+"role=\"button\"><i class=\"oi\" data-icon=\"skip_next\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"전체화면 보기\" aria-"
 "label=\"전체화면\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1138,24 +1144,24 @@ msgstr ""
 msgid ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1607,13 +1613,15 @@ msgid ""
 "All the courses you attend will appear here. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> Start Learning\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> "
+"Start Learning\n"
 "                        </a>"
 msgstr ""
 "모든 수강 내역이 여기에 표시됩니다. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> 학습 시작\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> 학"
+"습 시작\n"
 "                        </a>"
 
 #. module: website_slides
@@ -3371,11 +3379,6 @@ msgid "Followers (Partners)"
 msgstr "팔로워 (협력사)"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예: fa-tasks"
-
-#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
@@ -3767,8 +3770,8 @@ msgstr "이미지 소스"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "이메일을 전송할 수 없습니다. %(course_names)s 강좌에 대한 \"채널 공유 양식"
 "\"을 먼저 선택하세요"
@@ -3777,8 +3780,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "이메일을 전송할 수 없습니다. %(course_names)s 강좌에 대한 \"공유 양식\"을 먼"
 "저 선택하세요"
@@ -4332,6 +4335,11 @@ msgstr "완료하지 않음으로 표시"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 msgid "Mark the correct answer by checking the <b>correct</b> mark."
 msgstr "<b>정답</b> 을 선택하여 올바른 답을 표시하세요."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5700,8 +5708,8 @@ msgstr "슬라이드 / 파트너 장식 m2m"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
-msgid "Slide Icon fa-class"
-msgstr "슬라이드 아이콘 fa-class"
+msgid "Slide Icon oi-class"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -7354,9 +7362,3 @@ msgstr "{{ user.name }}님이 {{ object.slide_category }}를 공유했습니다!
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">미분류</span>"
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 05:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -29,41 +29,21 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of "
-"their integration with\n"
-"                                Odoo regarding this payment method. Any "
-"change may result in errors\n"
-"                                and should be tested on a test database "
-"first."
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Эти свойства устанавливаются для "
-"того, чтобы\n"
-"                                чтобы соответствовать поведению провайдеров "
-"и их интеграции с\n"
-"                                Odoo в отношении данного метода оплаты. "
-"Любые изменения могут привести к ошибкам\n"
-"                                и должны быть сначала проверены на тестовой "
-"базе данных."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Настройка провайдера платежей"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
@@ -71,16 +51,42 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Настройка провайдера платежей"
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> Эти свойства устанавливаются для "
+"того, чтобы\n"
+"                                чтобы соответствовать поведению провайдеров "
+"и их интеграции с\n"
+"                                Odoo в отношении данного метода оплаты. "
+"Любые изменения могут привести к ошибкам\n"
+"                                и должны быть сначала проверены на тестовой "
+"базе данных."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -136,15 +142,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Обеспечен</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr "<span><i class=\"oi\" data-icon=\"lock\"/> Обеспечен</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Показать отчет о доступности</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Показать отчет о "
+"доступности</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -430,8 +438,8 @@ msgstr "Сделки с детьми"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Выберите другой метод <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr "Выберите другой метод <i class=\"oi\" data-icon=\"south\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -744,8 +752,8 @@ msgstr "Создайте и скопируйте ссылку для оплат�
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Перейти в мой аккаунт <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr "Перейти в мой аккаунт <i class=\"oi ms-2\" data-icon=\"east\"/>"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -2512,8 +2520,8 @@ msgstr "Ваши методы оплаты"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -2568,717 +2576,3 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to void the authorized transaction? This action "
-#~ "can't be undone."
-#~ msgstr ""
-#~ "Вы уверены, что хотите аннулировать авторизованную транзакцию? Это "
-#~ "действие нельзя отменить."
-
-#~ msgid "Child transactions"
-#~ msgstr "Операции с детьми"
-
-#~ msgid "ZIP"
-#~ msgstr "ИНДЕКС"
-
-#~ msgid "(ID:"
-#~ msgstr "(ID:"
-
-#~ msgid "7Eleven"
-#~ msgstr "7Eleven"
-
-#~ msgid ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Enable Payment Methods"
-#~ msgstr ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Включить способы оплаты"
-
-#~ msgid ""
-#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-#~ "em> button is not supported.\n"
-#~ "                        Please use the <em>Duplicate</em> action instead."
-#~ msgstr ""
-#~ "<strong>Предупреждение</strong> Создание платежного провайдера с помощью "
-#~ "кнопки <em>CREATE</em> не поддерживается.\n"
-#~ "                        Вместо этого используйте действие "
-#~ "<em>Дублировать</em>."
-
-#~ msgid "ACH Direct Debit"
-#~ msgstr "Прямой дебет ACH"
-
-#~ msgid "Abitab"
-#~ msgstr "Abitab"
-
-#~ msgid "Activate"
-#~ msgstr "Активировать"
-
-#~ msgid "Affirm"
-#~ msgstr "Affirm"
-
-#~ msgid "AfterPay"
-#~ msgstr "AfterPay"
-
-#~ msgid "Afterpay"
-#~ msgstr "Afterpay"
-
-#~ msgid "Akulaku PayLater"
-#~ msgstr "Akulaku PayLater"
-
-#~ msgid "AliPayHK"
-#~ msgstr "AliPayHK"
-
-#~ msgid "Alipay"
-#~ msgstr "Alipay"
-
-#~ msgid "Alipay+"
-#~ msgstr "Alipay+"
-
-#~ msgid "Alma"
-#~ msgstr "Alma"
-
-#~ msgid "Amazon Pay"
-#~ msgstr "Amazon Pay"
-
-#~ msgid "American Express"
-#~ msgstr "American Express"
-
-#~ msgid "Argencard"
-#~ msgstr "Argencard"
-
-#~ msgid "Astropay TEF"
-#~ msgstr "Astropay TEF"
-
-#~ msgid "Atome"
-#~ msgstr "Atome"
-
-#~ msgid "Availability"
-#~ msgstr "Наличие"
-
-#~ msgid "BACS Direct Debit"
-#~ msgstr "Прямой дебет BACS"
-
-#~ msgid "BCA"
-#~ msgstr "BCA"
-
-#~ msgid "BECS Direct Debit"
-#~ msgstr "Прямой дебет BECS"
-
-#~ msgid "BLIK"
-#~ msgstr "BLIK"
-
-#~ msgid "BRI"
-#~ msgstr "BRI"
-
-#~ msgid "BancNet"
-#~ msgstr "BancNet"
-
-#~ msgid "Banco Guayaquil"
-#~ msgstr "Banco Guayaquil"
-
-#~ msgid "Banco Pichincha"
-#~ msgstr "Banco Pichincha"
-
-#~ msgid "Banco de Bogota"
-#~ msgstr "Banco de Bogota"
-
-#~ msgid "Bancolombia"
-#~ msgstr "Bancolombia"
-
-#~ msgid "Bancontact"
-#~ msgstr "Bancontact"
-
-#~ msgid "Bangkok Bank"
-#~ msgstr "Bangkok Bank"
-
-#~ msgid "Bank Account"
-#~ msgstr "Расчётный счет"
-
-#~ msgid "Bank Negara Indonesia"
-#~ msgstr "Bank Negara Indonesia"
-
-#~ msgid "Bank Permata"
-#~ msgstr "Bank Permata"
-
-#~ msgid "Bank Syariah Indonesia"
-#~ msgstr "Bank Syariah Indonesia"
-
-#~ msgid "Bank Transfer"
-#~ msgstr "Банковский перевод"
-
-#~ msgid "Bank of Ayudhya"
-#~ msgstr "Bank of Ayudhya"
-
-#~ msgid "Bank reference"
-#~ msgstr "Справка из банка"
-
-#~ msgid "Belfius"
-#~ msgstr "Belfius"
-
-#~ msgid "Benefit"
-#~ msgstr "Преимущество"
-
-#~ msgid "BharatQR"
-#~ msgstr "BharatQR"
-
-#~ msgid "BillEase"
-#~ msgstr "BillEase"
-
-#~ msgid "Billink"
-#~ msgstr "Billink"
-
-#~ msgid "Bizum"
-#~ msgstr "Bizum"
-
-#~ msgid "Boleto"
-#~ msgstr "Boleto"
-
-#~ msgid "Boost"
-#~ msgstr "Boost"
-
-#~ msgid "CIMB Niaga"
-#~ msgstr "CIMB Niaga"
-
-#~ msgid "CMR"
-#~ msgstr "CMR"
-
-#~ msgid "Cabal"
-#~ msgstr "Cabal"
-
-#~ msgid "Caixa"
-#~ msgstr "Caixa"
-
-#~ msgid "Card"
-#~ msgstr "Карта"
-
-#~ msgid "Carnet"
-#~ msgstr "Carnet"
-
-#~ msgid "Cartes Bancaires"
-#~ msgstr "Cartes Bancaires"
-
-#~ msgid "Cash App Pay"
-#~ msgstr "Cash App Pay"
-
-#~ msgid "Cashalo"
-#~ msgstr "Cashalo"
-
-#~ msgid "Cebuana"
-#~ msgstr "Cebuana"
-
-#~ msgid "Cencosud"
-#~ msgstr "Cencosud"
-
-#~ msgid "Cirrus"
-#~ msgstr "Cirrus"
-
-#~ msgid "Clearpay"
-#~ msgstr "Clearpay"
-
-#~ msgid "Codensa"
-#~ msgstr "Codensa"
-
-#~ msgid "Color"
-#~ msgstr "Цвет"
-
-#~ msgid "Cordial"
-#~ msgstr "Cordial"
-
-#~ msgid "Cordobesa"
-#~ msgstr "Cordobesa"
-
-#~ msgid "Credit Payment"
-#~ msgstr "Оплата в кредит"
-
-#~ msgid "Dana"
-#~ msgstr "Dana"
-
-#~ msgid "Dankort"
-#~ msgstr "Dankort"
-
-#~ msgid "Davivienda"
-#~ msgstr "Davivienda"
-
-#~ msgid "Diners Club International"
-#~ msgstr "Diners Club International"
-
-#~ msgid "Disabled"
-#~ msgstr "Отключено"
-
-#~ msgid "Discover"
-#~ msgstr "Обнаружить"
-
-#~ msgid "DuitNow"
-#~ msgstr "DuitNow"
-
-#~ msgid "EMI"
-#~ msgstr "EMI"
-
-#~ msgid "EPS"
-#~ msgstr "EPS"
-
-#~ msgid "Elo"
-#~ msgstr "Elo"
-
-#~ msgid "Enabled"
-#~ msgstr "Включено"
-
-#~ msgid "FPS"
-#~ msgstr "FPS"
-
-#~ msgid "FPX"
-#~ msgstr "FPX"
-
-#~ msgid "Facilito"
-#~ msgstr "Facilito"
-
-#~ msgid "Floa Bank"
-#~ msgstr "Floa Bank"
-
-#~ msgid "GCash"
-#~ msgstr "GCash"
-
-#~ msgid "GoPay"
-#~ msgstr "GoPay"
-
-#~ msgid "GrabPay"
-#~ msgstr "GrabPay"
-
-#~ msgid "HD Bank"
-#~ msgstr "HD Bank"
-
-#~ msgid "Hipercard"
-#~ msgstr "Hipercard"
-
-#~ msgid "Hoolah"
-#~ msgstr "Hoolah"
-
-#~ msgid "Humm"
-#~ msgstr "Humm"
-
-#~ msgid ""
-#~ "In test mode, a fake payment is processed through a test payment "
-#~ "interface.\n"
-#~ "This mode is advised when setting up the provider."
-#~ msgstr ""
-#~ "В тестовом режиме через тестовый платежный интерфейс обрабатывается "
-#~ "фальшивый платеж.\n"
-#~ "Этот режим рекомендуется использовать при настройке провайдера."
-
-#~ msgid "JCB"
-#~ msgstr "JCB"
-
-#~ msgid "JeniusPay"
-#~ msgstr "JeniusPay"
-
-#~ msgid "Jkopay"
-#~ msgstr "Jkopay"
-
-#~ msgid "KBC/CBC"
-#~ msgstr "KBC/CBC"
-
-#~ msgid "KNET"
-#~ msgstr "KNET"
-
-#~ msgid "KakaoPay"
-#~ msgstr "KakaoPay"
-
-#~ msgid "Kasikorn Bank"
-#~ msgstr "Kasikorn Bank"
-
-#~ msgid "Klarna"
-#~ msgstr "Klarna"
-
-#~ msgid "Klarna - Pay Now"
-#~ msgstr "Klarna - Оплата сейчас"
-
-#~ msgid "Klarna - Pay over time"
-#~ msgstr "Klarna - Оплата в рассрочку"
-
-#~ msgid "Kredivo"
-#~ msgstr "Kredivo"
-
-#~ msgid "KrungThai Bank"
-#~ msgstr "KrungThai Bank"
-
-#~ msgid "LINE Pay"
-#~ msgstr "LINE Pay"
-
-#~ msgid "Lider"
-#~ msgstr "Lider"
-
-#~ msgid "LinkAja"
-#~ msgstr "LinkAja"
-
-#~ msgid "Local Payments"
-#~ msgstr "Локальные платежи"
-
-#~ msgid "M-Pesa"
-#~ msgstr "M-Pesa"
-
-#~ msgid "MB WAY"
-#~ msgstr "MB WAY"
-
-#~ msgid "Mada"
-#~ msgstr "Mada"
-
-#~ msgid "Maestro"
-#~ msgstr "Maestro"
-
-#~ msgid "Magna"
-#~ msgstr "Magna"
-
-#~ msgid ""
-#~ "Making a request to the provider is not possible because the provider is "
-#~ "disabled."
-#~ msgstr "Запрос к провайдеру невозможен, так как провайдер отключен."
-
-#~ msgid "Mandiri"
-#~ msgstr "Mandiri"
-
-#~ msgid "MasterCard"
-#~ msgstr "MasterCard"
-
-#~ msgid "Maya"
-#~ msgstr "Maya"
-
-#~ msgid "Maybank"
-#~ msgstr "Maybank"
-
-#~ msgid "Meeza"
-#~ msgstr "Meeza"
-
-#~ msgid "Mercado Livre"
-#~ msgstr "Mercado Livre"
-
-#~ msgid "MoMo"
-#~ msgstr "MoMo"
-
-#~ msgid "Mobile money"
-#~ msgstr "Мобильный банк"
-
-#~ msgid "MobilePay"
-#~ msgstr "MobilePay"
-
-#~ msgid "Multibanco"
-#~ msgstr "Multibanco"
-
-#~ msgid "MyBank"
-#~ msgstr "MyBank"
-
-#~ msgid "NAPS"
-#~ msgstr "NAPS"
-
-#~ msgid "Napas Card"
-#~ msgstr "Napas Card"
-
-#~ msgid "Naranja"
-#~ msgstr "Naranja"
-
-#~ msgid "Nativa"
-#~ msgstr "Nativa"
-
-#~ msgid "Netbanking"
-#~ msgstr "Онлайн-банкинг"
-
-#~ msgid "OVO"
-#~ msgstr "OVO"
-
-#~ msgid "Oca"
-#~ msgstr "Oca"
-
-#~ msgid "Octopus"
-#~ msgstr "Octopus"
-
-#~ msgid "OmanNet"
-#~ msgstr "OmanNet"
-
-#~ msgid "Online Banking Czech Republic"
-#~ msgstr "Онлайн-банкинг (Чехия)"
-
-#~ msgid "Online Banking India"
-#~ msgstr "Онлайн-банкинг (Индия)"
-
-#~ msgid "Online Banking Slovakia"
-#~ msgstr "Онлайн-банкинг (Словакия)"
-
-#~ msgid "Online Banking Thailand"
-#~ msgstr "Онлайн-банкинг (Таиланд)"
-
-#~ msgid "Open banking"
-#~ msgstr "Открытый банкинг"
-
-#~ msgid "Oxxo Pay"
-#~ msgstr "Oxxo Pay"
-
-#~ msgid "P24"
-#~ msgstr "P24"
-
-#~ msgid "POLi"
-#~ msgstr "POLi"
-
-#~ msgid "PPS"
-#~ msgstr "PPS"
-
-#~ msgid "PSE"
-#~ msgstr "PSE"
-
-#~ msgid "Pace."
-#~ msgstr "Pace."
-
-#~ msgid "Pay Later"
-#~ msgstr "Оплатить позже"
-
-#~ msgid "PayBright"
-#~ msgstr "PayBright"
-
-#~ msgid "PayID"
-#~ msgstr "PayID"
-
-#~ msgid "PayMe"
-#~ msgstr "PayMe"
-
-#~ msgid "PayNow"
-#~ msgstr "PayNow"
-
-#~ msgid "PaySafeCard"
-#~ msgstr "PaySafeCard"
-
-#~ msgid "Payment Followup"
-#~ msgstr "Напоминание Платежа"
-
-#~ msgid "Payment Form"
-#~ msgstr "Форма оплаты"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Paytm"
-#~ msgstr "Paytm"
-
-#~ msgid "Paytrail"
-#~ msgstr "Paytrail"
-
-#~ msgid "Pix"
-#~ msgstr "Pix"
-
-#~ msgid ""
-#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
-#~ msgstr "Убедитесь, что %(payment_method)s поддерживается %(provider)s."
-
-#~ msgid "PostFinance Pay"
-#~ msgstr "PostFinance Pay"
-
-#~ msgid "PostePay"
-#~ msgstr "PostePay"
-
-#~ msgid "Presto"
-#~ msgstr "Presto"
-
-#~ msgid "Prompt Pay"
-#~ msgstr "Prompt Pay"
-
-#~ msgid "Providers"
-#~ msgstr "Провайдеры"
-
-#~ msgid "QRIS"
-#~ msgstr "QRIS"
-
-#~ msgid "Rabbit LINE Pay"
-#~ msgstr "Rabbit LINE Pay"
-
-#~ msgid "Ratepay"
-#~ msgstr "Ratepay"
-
-#~ msgid "Reason:"
-#~ msgstr "Причина:"
-
-#~ msgid "Redpagos"
-#~ msgstr "Redpagos"
-
-#~ msgid "Revolut Pay"
-#~ msgstr "Revolut Pay"
-
-#~ msgid "RuPay"
-#~ msgstr "RuPay"
-
-#~ msgid "SPEI"
-#~ msgstr "SPEI"
-
-#~ msgid "Samsung Pay"
-#~ msgstr "Samsung Pay"
-
-#~ msgid "Select countries. Leave empty to make available everywhere."
-#~ msgstr "Выберите страны. Оставьте пустым, чтобы сделать доступным везде."
-
-#~ msgid "Select currencies. Leave empty not to restrict any."
-#~ msgstr "Выберите валюты. Оставьте пустым, чтобы не ограничивать выбор."
-
-#~ msgid "ShopBack"
-#~ msgstr "ShopBack"
-
-#~ msgid "ShopeePay"
-#~ msgstr "ShopeePay"
-
-#~ msgid "Shopping Card"
-#~ msgstr "Карточка для покупок"
-
-#~ msgid "Siam Commerical Bank"
-#~ msgstr "Siam Commerical Bank"
-
-#~ msgid "Supported providers:"
-#~ msgstr "Поддерживаемые провайдеры:"
-
-#~ msgid "Swish"
-#~ msgstr "Swish"
-
-#~ msgid "TENPAY"
-#~ msgstr "TENPAY"
-
-#~ msgid "TTB"
-#~ msgstr "TTB"
-
-#~ msgid "Tamilnad Mercantile Bank Limited"
-#~ msgstr "Tamilnad Mercantile Bank Limited"
-
-#~ msgid "Tarjeta MercadoPago"
-#~ msgstr "Tarjeta MercadoPago"
-
-#~ msgid "Techcombank"
-#~ msgstr "Techcombank"
-
-#~ msgid "TendoPay"
-#~ msgstr "TendoPay"
-
-#~ msgid "The color of the card in kanban view"
-#~ msgstr "Цвет карточки в режиме просмотра канбан"
-
-#~ msgid "The list of providers supporting this payment method."
-#~ msgstr "Список провайдеров, поддерживающих данный метод оплаты."
-
-#~ msgid ""
-#~ "This payment method needs a partner in crime; you should enable a payment "
-#~ "provider supporting this method first."
-#~ msgstr ""
-#~ "Этому методу оплаты нужен партнер по преступлению; сначала нужно "
-#~ "подключить поставщика услуг, поддерживающего этот метод."
-
-#~ msgid "Tienphong"
-#~ msgstr "Tienphong"
-
-#~ msgid "Tinka"
-#~ msgstr "Tinka"
-
-#~ msgid "Touch'n Go"
-#~ msgstr "Touch'n Go"
-
-#~ msgid "TrueMoney"
-#~ msgstr "TrueMoney"
-
-#~ msgid "Trustly"
-#~ msgstr "Trustly"
-
-#~ msgid "Twint"
-#~ msgstr "Twint"
-
-#~ msgid "UPI"
-#~ msgstr "UPI"
-
-#~ msgid "USSD"
-#~ msgstr "USSD"
-
-#~ msgid "UnionPay"
-#~ msgstr "UnionPay"
-
-#~ msgid "United Overseas Bank"
-#~ msgstr "United Overseas Bank"
-
-#~ msgid "Universal Air Travel Plan"
-#~ msgstr "Universal Air Travel Plan"
-
-#~ msgid "V PAY"
-#~ msgstr "V PAY"
-
-#~ msgid "VISA"
-#~ msgstr "VISA"
-
-#~ msgid "Venmo"
-#~ msgstr "Venmo"
-
-#~ msgid "Vietcombank"
-#~ msgstr "Vietcombank"
-
-#~ msgid "Vipps"
-#~ msgstr "Vipps"
-
-#~ msgid "Wallets India"
-#~ msgstr "Wallets India"
-
-#~ msgid "Walley"
-#~ msgstr "Walley"
-
-#~ msgid "WeChat Pay"
-#~ msgstr "WeChat Pay"
-
-#~ msgid "WeLend"
-#~ msgstr "WeLend"
-
-#~ msgid "WebPay"
-#~ msgstr "WebPay"
-
-#~ msgid ""
-#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
-#~ "providers."
-#~ msgstr ""
-#~ "Вы не можете разархивировать токены, привязанные к неактивным методам "
-#~ "оплаты или отключенным провайдерам."
-
-#~ msgid ""
-#~ "You cannot delete the payment provider %s; disable it or uninstall it "
-#~ "instead."
-#~ msgstr ""
-#~ "Вы не можете удалить провайдера платежей %s; вместо этого отключите или "
-#~ "удалите его."
-
-#~ msgid "You cannot publish a disabled provider."
-#~ msgstr "Вы не можете опубликовать провайдера с ограниченными возможностями."
-
-#~ msgid "cofidis"
-#~ msgstr "cofidis"
-
-#~ msgid "eNETS"
-#~ msgstr "eNETS"
-
-#~ msgid "express checkout not supported"
-#~ msgstr "экспресс-оформление заказа не поддерживается"
-
-#~ msgid "iDEAL"
-#~ msgstr "iDEAL"
-
-#~ msgid "in3"
-#~ msgstr "in3"
-
-#~ msgid "incompatible country"
-#~ msgstr "несовместимая страна"
-
-#~ msgid "incompatible currency"
-#~ msgstr "несовместимая валюта"
-
-#~ msgid "incompatible website"
-#~ msgstr "несовместимый вебсайт"
-
-#~ msgid "manual capture not supported"
-#~ msgstr "списание вручную не поддерживается"
-
-#~ msgid "no supported provider available"
-#~ msgstr "нет доступных провайдеров"
-
-#~ msgid "payment method"
-#~ msgstr "способ оплаты"
-
-#~ msgid "tokenization not supported"
-#~ msgstr "токенизация не поддерживается"
-
-#~ msgid "tokenization without payment no supported"
-#~ msgstr "токенизация без оплаты не поддерживается"

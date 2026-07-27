@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 16:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/payment/"
@@ -31,40 +31,20 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of "
-"their integration with\n"
-"                                Odoo regarding this payment method. Any "
-"change may result in errors\n"
-"                                and should be tested on a test database "
-"first."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> คุณสมบัติเหล่านี้ได้รับการตั้งค่า\n"
-"                              ให้ตรงกับพฤติกรรมของผู้ให้บริการและการบูรณาการกับ "
-"Odoo \n"
-"                              เกี่ยวกับวิธีการชำระเงินนี้ การเปลี่ยนแปลงใดๆ "
-"อาจส่งผลให้เกิดข้อผิดพลาด \n"
-"                              และควรได้รับการทดสอบกับฐานข้อมูลทดสอบก่อน"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-home\" role=\"รูปหน้า\" title=\"หน้าแรก\" aria-"
-"label=\"หน้าแรก\"/>"
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"></i> กำหนดค่าผู้ให้บริการชำระเงิน"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" "
 "title=\"ธุรกรรมบางรายการที่คุณตั้งใจจะบันทึกสามารถบันทึกได้ทั้งหมดเท่านั้น "
 "จัดการธุรกรรมทีละรายการเพื่อบันทึกจำนวนเงินบางส่วน\"/>"
@@ -72,16 +52,39 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"ลบวิธีการชำระเงิน\" data-bs-"
-"toggle=\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"ลบวิธีการชำระเงิน\" data-"
+"bs-toggle=\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" data-bs-delay=\"0\"/>"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> กำหนดค่าผู้ให้บริการชำระเงิน"
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\" role=\"รูปหน้า\" title=\"หน้าแรก\" aria-"
+"label=\"หน้าแรก\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> คุณสมบัติเหล่านี้ได้รับการตั้งค่า\n"
+"                              ให้ตรงกับพฤติกรรมของผู้ให้บริการและการบูรณาการกับ "
+"Odoo \n"
+"                              เกี่ยวกับวิธีการชำระเงินนี้ การเปลี่ยนแปลงใดๆ "
+"อาจส่งผลให้เกิดข้อผิดพลาด \n"
+"                              และควรได้รับการทดสอบกับฐานข้อมูลทดสอบก่อน"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -137,13 +140,14 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> รับความปลอดภัยจาก</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr "<span><i class=\"oi\" data-icon=\"lock\"/> รับความปลอดภัยจาก</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
 
 #. module: payment
@@ -425,8 +429,8 @@ msgstr "ธุรกรรมย่อย"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "เลือกวิธีอื่น <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr "เลือกวิธีอื่น <i class=\"oi\" data-icon=\"south\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -737,8 +741,8 @@ msgstr "สร้างและคัดลอกลิงค์การชำ
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "ไปที่บัญชีของฉัน <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr "ไปที่บัญชีของฉัน <i class=\"oi ms-2\" data-icon=\"east\"/>"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -2476,8 +2480,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -2532,654 +2536,3 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to void the authorized transaction? This action "
-#~ "can't be undone."
-#~ msgstr ""
-#~ "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
-
-#~ msgid "Child transactions"
-#~ msgstr "ธุรกรรมย่อย"
-
-#~ msgid "ZIP"
-#~ msgstr "รหัสไปรษณีย์"
-
-#~ msgid "(ID:"
-#~ msgstr "(ID:"
-
-#~ msgid "7Eleven"
-#~ msgstr "7Eleven"
-
-#~ msgid ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Enable Payment Methods"
-#~ msgstr ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            เปิดใช้งานวิธีการชำระเงิน"
-
-#~ msgid ""
-#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-#~ "em> button is not supported.\n"
-#~ "                        Please use the <em>Duplicate</em> action instead."
-#~ msgstr ""
-#~ "<strong>คำเตือน</strong> ไม่รองรับการสร้างผู้ให้บริการชำระเงินจากปุ่ม<em>สร้าง</em> \n"
-#~ "                        โปรดใช้การดำเนินการ<em>ซ้ำ</em>แทน"
-
-#~ msgid "ACH Direct Debit"
-#~ msgstr "ACH Direct Debit"
-
-#~ msgid "Activate"
-#~ msgstr "เปิดใช้งาน"
-
-#~ msgid "Affirm"
-#~ msgstr "Affirm"
-
-#~ msgid "AfterPay"
-#~ msgstr "AfterPay"
-
-#~ msgid "Afterpay"
-#~ msgstr "Afterpay"
-
-#~ msgid "Akulaku PayLater"
-#~ msgstr "Akulaku PayLater"
-
-#~ msgid "AliPayHK"
-#~ msgstr "AliPayHK"
-
-#~ msgid "Alipay"
-#~ msgstr "Alipay"
-
-#~ msgid "Alipay+"
-#~ msgstr "Alipay+"
-
-#~ msgid "Alma"
-#~ msgstr "Alma"
-
-#~ msgid "Amazon Pay"
-#~ msgstr "Amazon Pay"
-
-#~ msgid "American Express"
-#~ msgstr "American Express"
-
-#~ msgid "Argencard"
-#~ msgstr "Argencard"
-
-#~ msgid "Atome"
-#~ msgstr "Atome"
-
-#~ msgid "Availability"
-#~ msgstr "ความพร้อม"
-
-#~ msgid "BACS Direct Debit"
-#~ msgstr "BACS Direct Debit"
-
-#~ msgid "BCA"
-#~ msgstr "BCA"
-
-#~ msgid "BECS Direct Debit"
-#~ msgstr "BECS Direct Debit"
-
-#~ msgid "BLIK"
-#~ msgstr "BLIK"
-
-#~ msgid "BRI"
-#~ msgstr "BRI"
-
-#~ msgid "BancNet"
-#~ msgstr "BancNet"
-
-#~ msgid "Banco de Bogota"
-#~ msgstr "Banco de Bogota"
-
-#~ msgid "Bancolombia"
-#~ msgstr "Bancolombia"
-
-#~ msgid "Bancontact"
-#~ msgstr "Bancontact"
-
-#~ msgid "Bangkok Bank"
-#~ msgstr "ธนาคารกรุงเทพ"
-
-#~ msgid "Bank Account"
-#~ msgstr "บัญชีธนาคาร"
-
-#~ msgid "Bank Negara Indonesia"
-#~ msgstr "Bank Negara Indonesia"
-
-#~ msgid "Bank Permata"
-#~ msgstr "Bank Permata"
-
-#~ msgid "Bank Syariah Indonesia"
-#~ msgstr "Bank Syariah Indonesia"
-
-#~ msgid "Bank Transfer"
-#~ msgstr "โอนเงินผ่านธนาคาร"
-
-#~ msgid "Bank of Ayudhya"
-#~ msgstr "Bank of Ayudhya"
-
-#~ msgid "Bank reference"
-#~ msgstr "Bank reference"
-
-#~ msgid "Belfius"
-#~ msgstr "Belfius"
-
-#~ msgid "Benefit"
-#~ msgstr "สิทธิประโยชน์"
-
-#~ msgid "BharatQR"
-#~ msgstr "BharatQR"
-
-#~ msgid "BillEase"
-#~ msgstr "BillEase"
-
-#~ msgid "Billink"
-#~ msgstr "Billink"
-
-#~ msgid "Bizum"
-#~ msgstr "Bizum"
-
-#~ msgid "Boleto"
-#~ msgstr "Boleto"
-
-#~ msgid "Boost"
-#~ msgstr "Boost"
-
-#~ msgid "CIMB Niaga"
-#~ msgstr "CIMB Niaga"
-
-#~ msgid "CMR"
-#~ msgstr "CMR"
-
-#~ msgid "Cabal"
-#~ msgstr "Cabal"
-
-#~ msgid "Caixa"
-#~ msgstr "Caixa"
-
-#~ msgid "Card"
-#~ msgstr "การ์ด"
-
-#~ msgid "Carnet"
-#~ msgstr "Carnet"
-
-#~ msgid "Cartes Bancaires"
-#~ msgstr "Cartes Bancaires"
-
-#~ msgid "Cash App Pay"
-#~ msgstr "Cash App Pay"
-
-#~ msgid "Cashalo"
-#~ msgstr "Cashalo"
-
-#~ msgid "Cebuana"
-#~ msgstr "Cebuana"
-
-#~ msgid "Cencosud"
-#~ msgstr "Cencosud"
-
-#~ msgid "Cirrus"
-#~ msgstr "Cirrus"
-
-#~ msgid "Clearpay"
-#~ msgstr "Clearpay"
-
-#~ msgid "Codensa"
-#~ msgstr "Codensa"
-
-#~ msgid "Color"
-#~ msgstr "สี"
-
-#~ msgid "Cordial"
-#~ msgstr "Cordial"
-
-#~ msgid "Cordobesa"
-#~ msgstr "Cordobesa"
-
-#~ msgid "Credit Payment"
-#~ msgstr "Credit Payment"
-
-#~ msgid "Dana"
-#~ msgstr "Dana"
-
-#~ msgid "Dankort"
-#~ msgstr "Dankort"
-
-#~ msgid "Davivienda"
-#~ msgstr "Davivienda"
-
-#~ msgid "Diners Club International"
-#~ msgstr "Diners Club International"
-
-#~ msgid "Disabled"
-#~ msgstr "Disabled"
-
-#~ msgid "Discover"
-#~ msgstr "ค้นพบ"
-
-#~ msgid "DuitNow"
-#~ msgstr "DuitNow"
-
-#~ msgid "EMI"
-#~ msgstr "EMI"
-
-#~ msgid "EPS"
-#~ msgstr "EPS"
-
-#~ msgid "Elo"
-#~ msgstr "Elo"
-
-#~ msgid "Enabled"
-#~ msgstr "เปิดใช้งานแล้ว"
-
-#~ msgid "FPS"
-#~ msgstr "FPS"
-
-#~ msgid "FPX"
-#~ msgstr "FPX"
-
-#~ msgid "Floa Bank"
-#~ msgstr "Floa Bank"
-
-#~ msgid "GCash"
-#~ msgstr "GCash"
-
-#~ msgid "GoPay"
-#~ msgstr "GoPay"
-
-#~ msgid "GrabPay"
-#~ msgstr "GrabPay"
-
-#~ msgid "HD Bank"
-#~ msgstr "HD Bank"
-
-#~ msgid "Hipercard"
-#~ msgstr "Hipercard"
-
-#~ msgid "Hoolah"
-#~ msgstr "Hoolah"
-
-#~ msgid "Humm"
-#~ msgstr "Humm"
-
-#~ msgid ""
-#~ "In test mode, a fake payment is processed through a test payment "
-#~ "interface.\n"
-#~ "This mode is advised when setting up the provider."
-#~ msgstr ""
-#~ "ในโหมดทดสอบ การชำระเงินปลอมจะถูกประมวลผลผ่านอินเทอร์เฟซการชำระเงินทดสอบ\n"
-#~ "แนะนำให้ใช้โหมดนี้เมื่อตั้งค่าผู้ให้บริการ"
-
-#~ msgid "JCB"
-#~ msgstr "JCB"
-
-#~ msgid "JeniusPay"
-#~ msgstr "JeniusPay"
-
-#~ msgid "Jkopay"
-#~ msgstr "Jkopay"
-
-#~ msgid "KBC/CBC"
-#~ msgstr "KBC/CBC"
-
-#~ msgid "KNET"
-#~ msgstr "KNET"
-
-#~ msgid "KakaoPay"
-#~ msgstr "KakaoPay"
-
-#~ msgid "Kasikorn Bank"
-#~ msgstr "Kasikorn Bank"
-
-#~ msgid "Kiosk"
-#~ msgstr "คีออสก์"
-
-#~ msgid "Klarna"
-#~ msgstr "Klarna"
-
-#~ msgid "Klarna - Pay Now"
-#~ msgstr "Klarna - Pay Now"
-
-#~ msgid "Klarna - Pay over time"
-#~ msgstr "Klarna - Pay over time"
-
-#~ msgid "Kredivo"
-#~ msgstr "Kredivo"
-
-#~ msgid "KrungThai Bank"
-#~ msgstr "KrungThai Bank"
-
-#~ msgid "LINE Pay"
-#~ msgstr "LINE Pay"
-
-#~ msgid "Lider"
-#~ msgstr "Lider"
-
-#~ msgid "LinkAja"
-#~ msgstr "LinkAja"
-
-#~ msgid "M-Pesa"
-#~ msgstr "M-Pesa"
-
-#~ msgid "MB WAY"
-#~ msgstr "MB WAY"
-
-#~ msgid "Mada"
-#~ msgstr "Mada"
-
-#~ msgid "Maestro"
-#~ msgstr "Maestro"
-
-#~ msgid "Magna"
-#~ msgstr "Magna"
-
-#~ msgid ""
-#~ "Making a request to the provider is not possible because the provider is "
-#~ "disabled."
-#~ msgstr "ไม่สามารถส่งคำขอไปยังผู้ให้บริการได้เนื่องจากผู้ให้บริการถูกปิดใช้งาน"
-
-#~ msgid "Mandiri"
-#~ msgstr "Mandiri"
-
-#~ msgid "MasterCard"
-#~ msgstr "MasterCard"
-
-#~ msgid "Maya"
-#~ msgstr "Maya"
-
-#~ msgid "Maybank"
-#~ msgstr "Maybank"
-
-#~ msgid "Meeza"
-#~ msgstr "Meeza"
-
-#~ msgid "Mercado Livre"
-#~ msgstr "Mercado Livre"
-
-#~ msgid "MoMo"
-#~ msgstr "MoMo"
-
-#~ msgid "Mobile money"
-#~ msgstr "Mobile money"
-
-#~ msgid "MobilePay"
-#~ msgstr "MobilePay"
-
-#~ msgid "Multibanco"
-#~ msgstr "Multibanco"
-
-#~ msgid "MyBank"
-#~ msgstr "MyBank"
-
-#~ msgid "NAPS"
-#~ msgstr "NAPS"
-
-#~ msgid "Napas Card"
-#~ msgstr "Napas Card"
-
-#~ msgid "Naranja"
-#~ msgstr "Naranja"
-
-#~ msgid "Nativa"
-#~ msgstr "Nativa"
-
-#~ msgid "Netbanking"
-#~ msgstr "Netbanking"
-
-#~ msgid "OVO"
-#~ msgstr "OVO"
-
-#~ msgid "Oca"
-#~ msgstr "Oca"
-
-#~ msgid "Octopus"
-#~ msgstr "Octopus"
-
-#~ msgid "OmanNet"
-#~ msgstr "OmanNet"
-
-#~ msgid "Online Banking Czech Republic"
-#~ msgstr "Online Banking Czech Republic"
-
-#~ msgid "Online Banking India"
-#~ msgstr "Online Banking India"
-
-#~ msgid "Online Banking Slovakia"
-#~ msgstr "Online Banking Slovakia"
-
-#~ msgid "Online Banking Thailand"
-#~ msgstr "Online Banking Thailand"
-
-#~ msgid "Open banking"
-#~ msgstr "Open banking"
-
-#~ msgid "P24"
-#~ msgstr "P24"
-
-#~ msgid "POLi"
-#~ msgstr "POLi"
-
-#~ msgid "PPS"
-#~ msgstr "PPS"
-
-#~ msgid "PSE"
-#~ msgstr "PSE"
-
-#~ msgid "Pace."
-#~ msgstr "Pace."
-
-#~ msgid "Pay Later"
-#~ msgstr "Pay Later"
-
-#~ msgid "PayBright"
-#~ msgstr "PayBright"
-
-#~ msgid "PayID"
-#~ msgstr "PayID"
-
-#~ msgid "PayMe"
-#~ msgstr "PayMe"
-
-#~ msgid "PayNow"
-#~ msgstr "PayNow"
-
-#~ msgid "PaySafeCard"
-#~ msgstr "PaySafeCard"
-
-#~ msgid "Payment Followup"
-#~ msgstr "ติดตามการชำระเงิน"
-
-#~ msgid "Payment Form"
-#~ msgstr "แบบฟอร์มการชำระเงิน"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Paytm"
-#~ msgstr "Paytm"
-
-#~ msgid "Paytrail"
-#~ msgstr "Paytrail"
-
-#~ msgid "Pix"
-#~ msgstr "Pix"
-
-#~ msgid ""
-#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
-#~ msgstr "โปรดตรวจสอบให้แน่ใจว่า %(payment_method)s ได้รับการรับรองโดย%(provider)s."
-
-#~ msgid "PostFinance Pay"
-#~ msgstr "PostFinance Pay"
-
-#~ msgid "PostePay"
-#~ msgstr "PostePay"
-
-#~ msgid "Presto"
-#~ msgstr "Presto"
-
-#~ msgid "Prompt Pay"
-#~ msgstr "Prompt Pay"
-
-#~ msgid "Providers"
-#~ msgstr "ผู้ให้บริการ"
-
-#~ msgid "QRIS"
-#~ msgstr "QRIS"
-
-#~ msgid "Rabbit LINE Pay"
-#~ msgstr "Rabbit LINE Pay"
-
-#~ msgid "Ratepay"
-#~ msgstr "Ratepay"
-
-#~ msgid "Reason:"
-#~ msgstr "เหตุผล:"
-
-#~ msgid "Revolut Pay"
-#~ msgstr "Revolut Pay"
-
-#~ msgid "RuPay"
-#~ msgstr "RuPay"
-
-#~ msgid "Samsung Pay"
-#~ msgstr "Samsung Pay"
-
-#~ msgid "Select countries. Leave empty to make available everywhere."
-#~ msgstr "เลือกประเทศ เว้นว่างไว้เพื่อให้สามารถใช้ได้ทุกที่"
-
-#~ msgid "Select currencies. Leave empty not to restrict any."
-#~ msgstr "เลือกสกุลเงิน เว้นว่างไว้เพื่อไม่จำกัดสกุลเงินใดๆ"
-
-#~ msgid "ShopBack"
-#~ msgstr "ShopBack"
-
-#~ msgid "ShopeePay"
-#~ msgstr "ShopeePay"
-
-#~ msgid "Shopping Card"
-#~ msgstr "Shopping Card"
-
-#~ msgid "Siam Commerical Bank"
-#~ msgstr "Siam Commerical Bank"
-
-#~ msgid "Swish"
-#~ msgstr "Swish"
-
-#~ msgid "TENPAY"
-#~ msgstr "TENPAY"
-
-#~ msgid "TTB"
-#~ msgstr "TTB"
-
-#~ msgid "Tamilnad Mercantile Bank Limited"
-#~ msgstr "Tamilnad Mercantile Bank Limited"
-
-#~ msgid "Tarjeta MercadoPago"
-#~ msgstr "Tarjeta MercadoPago"
-
-#~ msgid "Techcombank"
-#~ msgstr "Techcombank"
-
-#~ msgid "TendoPay"
-#~ msgstr "TendoPay"
-
-#~ msgid "The color of the card in kanban view"
-#~ msgstr "สีของการ์ดในมุมมองคัมบัง"
-
-#~ msgid "The list of providers supporting this payment method."
-#~ msgstr "รายชื่อผู้ให้บริการที่รองรับวิธีการชำระเงินนี้"
-
-#~ msgid ""
-#~ "This payment method needs a partner in crime; you should enable a payment "
-#~ "provider supporting this method first."
-#~ msgstr ""
-#~ "วิธีการชำระเงินนี้จำเป็นต้องมีพาร์ทเนอร์ คุณควรเปิดใช้งานผู้ให้บริการการชำระเงินที่รองรับวิธีนี้ก่อน"
-
-#~ msgid "Tienphong"
-#~ msgstr "Tienphong"
-
-#~ msgid "Tinka"
-#~ msgstr "Tinka"
-
-#~ msgid "Touch'n Go"
-#~ msgstr "Touch'n Go"
-
-#~ msgid "TrueMoney"
-#~ msgstr "TrueMoney"
-
-#~ msgid "Trustly"
-#~ msgstr "Trustly"
-
-#~ msgid "Twint"
-#~ msgstr "Twint"
-
-#~ msgid "UPI"
-#~ msgstr "UPI"
-
-#~ msgid "USSD"
-#~ msgstr "USSD"
-
-#~ msgid "UnionPay"
-#~ msgstr "UnionPay"
-
-#~ msgid "United Overseas Bank"
-#~ msgstr "United Overseas Bank"
-
-#~ msgid "Universal Air Travel Plan"
-#~ msgstr "Universal Air Travel Plan"
-
-#~ msgid "V PAY"
-#~ msgstr "V PAY"
-
-#~ msgid "VISA"
-#~ msgstr "VISA"
-
-#~ msgid "Venmo"
-#~ msgstr "Venmo"
-
-#~ msgid "Vietcombank"
-#~ msgstr "Vietcombank"
-
-#~ msgid "Vipps"
-#~ msgstr "Vipps"
-
-#~ msgid "Wallets India"
-#~ msgstr "Wallets India"
-
-#~ msgid "Walley"
-#~ msgstr "Walley"
-
-#~ msgid "WeChat Pay"
-#~ msgstr "WeChat Pay"
-
-#~ msgid "WeLend"
-#~ msgstr "WeLend"
-
-#~ msgid ""
-#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
-#~ "providers."
-#~ msgstr "คุณไม่สามารถยกเลิกการเก็บถาวรโทเค็นที่เชื่อมโยงกับวิธีการชำระเงินที่ไม่ได้ใช้งานหรือผู้ให้บริการที่ถูกปิดการใช้งานได้"
-
-#~ msgid ""
-#~ "You cannot delete the payment provider %s; disable it or uninstall it "
-#~ "instead."
-#~ msgstr "คุณไม่สามารถลบผู้ให้บริการชำระเงิน %s ได้ ปิดการใช้งานหรือถอนการติดตั้งแทน"
-
-#~ msgid "You cannot publish a disabled provider."
-#~ msgstr "คุณไม่สามารถเผยแพร่ผู้ให้บริการที่ถูกปิดใช้งานได้"
-
-#~ msgid "cofidis"
-#~ msgstr "cofidis"
-
-#~ msgid "eNETS"
-#~ msgstr "eNETS"
-
-#~ msgid "iDEAL"
-#~ msgstr "iDEAL"
-
-#~ msgid "in3"
-#~ msgstr "in3"
-
-#~ msgid "payment method"
-#~ msgstr "วิธีการชำระเงิน"

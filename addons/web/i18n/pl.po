@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 03:34+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/web/"
@@ -230,18 +230,18 @@ msgstr "<em class=\"d-block my-3 small text-center text-muted\">- lub </em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> Reset"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> Reset"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -322,10 +322,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
 
 #. module: web
@@ -3891,8 +3891,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -5298,8 +5298,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Spośród %(selectedRecord)s wybranych rekordów tylko pierwsze %"
-"(firstRecords)s zostały zarchiwizowane/od-archiwizowane."
+"Spośród %(selectedRecord)s wybranych rekordów tylko pierwsze "
+"%(firstRecords)s zostały zarchiwizowane/od-archiwizowane."
 
 #. module: web
 #. odoo-javascript
@@ -5362,21 +5362,21 @@ msgstr "Usunięto tylko pierwsze %(count)s rekordów (z %(total)s wybranych)"
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
-"Tylko typy %(supported_types)s są obsługiwane dla kategorii (znaleziony typ %"
-"(field_type)s)"
+"Tylko typy %(supported_types)s są obsługiwane dla kategorii (znaleziony typ "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
-"Tylko typy %(supported_types)s są obsługiwane dla filtra (znaleziony typ %"
-"(field_type)s)"
+"Tylko typy %(supported_types)s są obsługiwane dla filtra (znaleziony typ "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -6544,11 +6544,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"Wybierz <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Wybierz <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7274,8 +7274,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7311,8 +7311,8 @@ msgstr "Wybrane pole zostanie użyte do wstępnego wypełnienia podpisu"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
 "Wybrany plik (%(size)sB) jest większy niż maksymalny dozwolony rozmiar pliku "
 "(%(maxSize)sB)."
@@ -7918,8 +7918,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27516,89 +27516,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "Uruchom \"Kliknij wszędzie\""
-
-#~ msgid "All day"
-#~ msgstr "Cały dzień"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Numer identyfikacji podatkowej. Wartości tutaj będą walidowane w oparciu "
-#~ "o format kraju. Możesz użyć '/', aby wskazać, że partner nie podlega "
-#~ "opodatkowaniu."
-
-#~ msgid "Custom"
-#~ msgstr "Własne"
-
-#~ msgid "Hue"
-#~ msgstr "Odcień"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "Kanban: brak akcji dla typu: %(type)s"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "Zasady rekordów modelu"
-
-#~ msgid "Opacity"
-#~ msgstr "Przezroczystość"
-
-#~ msgid "Record Rules"
-#~ msgstr "Reguły rekordu"
-
-#~ msgid "Reset"
-#~ msgstr "Zresetuj"
-
-#~ msgid "Saturation and brightness color picker."
-#~ msgstr "Selektor kolorów, nasycenia i jasności."
-
-#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-#~ msgstr "Nasycenie: %(saturationLvl)s%. Jasność: %(brightnessLvl)s%"
-
-#~ msgid "Solid"
-#~ msgstr "Solidny"
-
-#~ msgid ""
-#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
-#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
-#~ "the same time to have finer control."
-#~ msgstr ""
-#~ "Użyj klawiszy strzałek w górę i w dół, aby dostosować jasność. Użyj "
-#~ "klawiszy strzałek w lewo i prawo, aby dostosować nasycenie. Naciśnij "
-#~ "klawisz CTRL lub CMD w tym samym czasie dla bardziej precyzyjnej kontroli."
-
-#~ msgid "hex"
-#~ msgstr "hex"
-
-#~ msgid "Autosave"
-#~ msgstr "Auto-zapis"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr ""
-#~ "Jeśli zaznaczone, ten rekord zostanie zapisany natychmiast po edycji tego "
-#~ "pola."
-
-#~ msgid "Invalid data"
-#~ msgstr "Nieprawidłowe dane"
-
-#~ msgid "No settings found"
-#~ msgstr "Nie znaleziono żadnych ustawień"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "Wykres kołowy nie może mieszać liczb dodatnich i ujemnych. Spróbuj "
-#~ "zmienić domenę, aby wyświetlała tylko pozytywne wyniki"
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "Spróbuj wyszukać innego słowa kluczowego"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

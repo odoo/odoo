@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-21 13:33+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -91,8 +91,8 @@ msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
-msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>효율 확인"
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Get rate"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>효율 확인"
 
 #. module: delivery
 #. odoo-python
@@ -1295,15 +1295,6 @@ msgstr "예: https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_note
 msgid ""
-"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
-"{{ object.so_id.name or 'n/a' }})"
+"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref {{ object."
+"so_id.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "Payment Transaction"
-#~ msgstr "지불 거래"
-
-#~ msgid "Your payment has been processed."
-#~ msgstr "결제가 처리되었습니다."
-
-#~ msgid "cash on delivery not allowed by selected delivery method"
-#~ msgstr "선택한 배송 방법은 수령 후 결제 방식이 허용되지 않습니다."

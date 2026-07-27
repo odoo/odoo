@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 23:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -73,36 +73,17 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid ""
-"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
-"title=\"Period\"/>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"calendar_today\" aria-"
+"label=\"Period\" role=\"img\" title=\"Period\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar me-1\" aria-label=\"Zeitraum\" role=\"img\" "
-"title=\"Zeitraum\"/>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"calendar_today\" aria-"
+"label=\"Zeitraum\" role=\"img\" title=\"Zeitraum\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Installation Manual"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Installationshandbuch"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
-msgid ""
-"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
-"label=\"Available\" title=\"Available\"/>"
+msgid "<i class=\"oi oi-fw\" data-icon=\"arrow_forward\"/>Installation Manual"
 msgstr ""
-"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
-"label=\"Verfügbar\" title=\"Verfügbar\"/>"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
-msgid ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
-"available\" title=\"Not available\">\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-"
-"label=\"Nicht verfügbar\" title=\"Nicht verfügbar\">\n"
-"                                    </span>"
+"<i class=\"oi oi-fw\" data-icon=\"arrow_forward\"/>Installationshandbuch"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -186,6 +167,26 @@ msgstr ""
 "<span class=\"o_stat_text\">Mitarbeiter</span>\n"
 "                                   <span class=\"o_stat_value\">hinzufügen</"
 "span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span class=\"oi oi-filled text-success me-1\" data-icon=\"circle\" "
+"role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+msgstr ""
+"<span class=\"oi oi-filled text-success me-1\" data-icon=\"circle\" "
+"role=\"img\" aria-label=\"Verfügbar\" title=\"Verfügbar\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span class=\"oi oi-filled text-warning me-1\" data-icon=\"circle\" "
+"role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"oi oi-filled text-warning me-1\" data-icon=\"circle\" "
+"role=\"img\" aria-label=\"Nicht verfügbar\" title=\"Nicht verfügbar\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2837,73 +2838,3 @@ msgstr "mit einem Satz von"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "mit optionalem PIN-Code"
-
-#~ msgid "Create the name of the new employee below"
-#~ msgstr "Erstellen Sie den Namen des unten stehenden neuen Mitarbeiters"
-
-#~ msgid "Enter Badge Number"
-#~ msgstr "Ausweisnummer eingeben"
-
-#~ msgid "Print It"
-#~ msgstr "Drucken!"
-
-#~ msgid "Select Employee Without Badge"
-#~ msgstr "Mitarbeiter ohne Ausweis auswählen"
-
-#~ msgid "Set the Badge"
-#~ msgstr "Ausweis festlegen"
-
-#~ msgid "Set-up"
-#~ msgstr "Einrichten"
-
-#~ msgid "e.g. John Doe"
-#~ msgstr "z. B. Lieschen Müller"
-
-#~ msgid "Start"
-#~ msgstr "Start"
-
-#~ msgid "Starting time should be before end time."
-#~ msgstr "Startzeit sollte vor Endzeit liegen."
-
-#~ msgid "Stop"
-#~ msgstr "Stopp"
-
-#~ msgid "Theoretical Hours"
-#~ msgstr "Theoretische Stunden"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website-Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website-Kommunikationsverlauf"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                        <span class=\"text-muted\">When "
-#~ "enabled, only the first check-in within the scheduled working hours "
-#~ "(Including tolerance) is recorded. Further check-ins are allowed only "
-#~ "after an automatic check-out.</span>"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "                                        <span class=\"text-muted\">Wenn "
-#~ "diese Option aktiviert ist, wird nur die erste Anmeldung innerhalb der "
-#~ "geplanten Arbeitszeiten (einschließlich Toleranz) erfasst. Weitere "
-#~ "Anmeldungen sind erst nach einer automatischen Abmeldung zulässig.</span>"
-
-#~ msgid ""
-#~ "Automatically Check-Out Employees based on their working schedule with an "
-#~ "additional tolerance. Does not apply to employees with a flexible working "
-#~ "schedule."
-#~ msgstr ""
-#~ "Melden Sie Mitarbeiter basierend auf ihrem Arbeitsplan mit einer "
-#~ "zusätzlichen Toleranz automatisch ab. Gilt nicht für Mitarbeiter mit "
-#~ "flexiblen Arbeitsplänen."
-
-#~ msgid "There are no employees without an overtime ruleset."
-#~ msgstr "Es gibt keine Mitarbeiter ohne Überstundenregelung."
-
-#~ msgid "Check IN"
-#~ msgstr "Anmelden"
-
-#~ msgid "Check OUT"
-#~ msgstr "Abmelden"

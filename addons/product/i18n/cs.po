@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 19:19+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
@@ -54,23 +54,23 @@ msgstr "Počet produktů"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s s %(discount)s %% %(discount_type)s a příplatkem %(surcharge)s\n"
-"Příklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Příklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, fuzzy
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date (%"
-"(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date "
+"(%(start_date)s)"
 msgstr ""
-"%(item_name)s: datum ukončení (%(end_date)s) by mělo být po datu zahájení (%"
-"(start_date)s)"
+"%(item_name)s: datum ukončení (%(end_date)s) by mělo být po datu zahájení "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -278,19 +278,19 @@ msgstr "<b>Tip: Chcete zaokrouhlit při 9,99?</b>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 
 #. module: product
@@ -1050,8 +1050,8 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %"
-"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 "
+"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
@@ -1911,13 +1911,6 @@ msgid "Followers (Partners)"
 msgstr "Odběratelé (partneři)"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona v rámci awesome font, např. fa-tasks"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to "
@@ -2652,6 +2645,13 @@ msgid "Material"
 msgstr "Materiál"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Max. marže"
@@ -3022,15 +3022,15 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
-"Na produktu %(product)s nemůžete přiřadit hodnotu %(value)s k atributu %"
-"(attribute)s, protože se neshodují."
+"Na produktu %(product)s nemůžete přiřadit hodnotu %(value)s k atributu "
+"%(attribute)s, protože se neshodují."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute %"
-"(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "Na produktu %(product)s nemůžete atribut %(attribute_src)s převést na "
 "atribut %(attribute_dest)s."
@@ -4334,8 +4334,8 @@ msgstr "Odkaz „%s “ již existuje."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product %"
-"(product)s."
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
 "Atribut %(attribute)s musí mít pro produkt %(product)s alespoň jednu hodnotu."
 
@@ -4379,8 +4379,8 @@ msgstr "Typ zobrazení použitý v konfigurátoru produktu."
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
-"(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
+"\"%(id)s\""
 msgstr ""
 
 #. module: product
@@ -4479,8 +4479,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Hodnota %(value)s není definována pro atribut %(attribute)s na produktu %"
-"(product)s."
+"Hodnota %(value)s není definována pro atribut %(attribute)s na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -5174,8 +5174,8 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Chystáte se přidat hodnotu „%(attribute_value)s “ k produktům %"
-"(product_count)s."
+"Chystáte se přidat hodnotu „%(attribute_value)s “ k produktům "
+"%(product_count)s."
 
 #. module: product
 #. odoo-python
@@ -5305,8 +5305,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
 "Produkt nelze změnit na hodnotu %(value)s nastavenou na produktu %(product)s."
 
@@ -5314,8 +5314,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
 "Hodnotu nelze změnit na hodnotu %(value)s nastavenou na produktu %(product)s."
 
@@ -5672,27 +5672,3 @@ msgstr "k"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
-
-#~ msgid "Attached To"
-#~ msgstr "Připojený k"
-
-#~ msgid "Creation"
-#~ msgstr "Vytvoření"
-
-#~ msgid "Document"
-#~ msgstr "Dokument"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "Image is a link"
-#~ msgstr "Obrázek je odkaz"
-
-#~ msgid "on"
-#~ msgstr "na"
-
-#~ msgid "<strong>Qty: </strong>"
-#~ msgstr "<strong>Množství: </strong>"
-
-#~ msgid "Price:"
-#~ msgstr "Cena:"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 18:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -68,8 +68,8 @@ msgstr "%(name)s REFUND"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s diubah menjadi %(new_pm)s dan dari %(old_amount)s menjadi %"
-"(new_amount)s"
+"%(old_pm)s diubah menjadi %(new_pm)s dan dari %(old_amount)s menjadi "
+"%(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -303,14 +303,14 @@ msgstr "5-pocket jeans in cotton denim.."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -336,51 +336,57 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"Ini pengaturan umum untuk semua "
-"POS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"Ini pengaturan umum untuk "
+"semua POS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Edit"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -400,12 +406,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Barcode</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4047,11 +4055,6 @@ msgid "Followers (Partners)"
 msgstr "Follower (Mitra)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikon font awesome, misalnya fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5370,6 +5373,11 @@ msgid "Margins & Costs"
 msgstr "Margin & Biaya"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6253,8 +6261,8 @@ msgstr "Produk Opsional:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Produk-produk opsional disarankan saat pelanggan menambahkan barang ke "
 "keranjang mereka (contoh, menambahkan burger menyarankan minuman dingin atau "
@@ -6966,8 +6974,8 @@ msgstr "Mohon buat/pilih POS di atas untuk menunjukkan opsi konfigurasi."
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: %"
-"(id)d)."
+"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: "
+"%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9655,8 +9663,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "Jumlah baris pembayaran Anda harus dibulatkan untuk memvalidasi transaksi.\n"
-"Ketepatan pembulatan adalah %(rounding)s jadi Anda harus menetapkan %"
-"(expectedAmount)s sebagai jumlah pembayaran alih-alih %(paidAmount)s."
+"Ketepatan pembulatan adalah %(rounding)s jadi Anda harus menetapkan "
+"%(expectedAmount)s sebagai jumlah pembayaran alih-alih %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10162,19 +10170,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11533,8 +11541,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11944,404 +11952,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s pembayaran POS %(partner)s di %(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s dengan %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s sebelum pajak"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Mesin Kasir</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Item Jurnal</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Jumlah pembayaran yang mewakili pembayaran bank yang agregat dan split."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Jurnal akuntasi yang digunakan untuk membuat faktur."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Jurnal akuntansi yang digunakan untuk memposting entri jurnal sesi POS "
-#~ "dan pembayaran faktur POS."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Jumlah untuk di-balance"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Eror terjadi saat mencoba menutup sesi.\n"
-#~ "Anda akan dialihkan ulang ke back-end untuk secara manual menutup sesi."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Pembayaran Bank"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Before Closing Difference"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Jurnal Kas"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Perbedaan kas yang ditemukan pada perhitungan (Rugi) - closing"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Perbedaan kas yang ditemukan pada perhitungan (Laba) - closing"
-
-#~ msgid "Cash register"
-#~ msgstr "Kasir"
-
-#~ msgid "Close Session"
-#~ msgstr "Tutup Sesi"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Wizard Tutup Sesi"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Perbedaan closing di %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Eror menutup sesi"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Gabungkan %(payment_method)s pembayaran POS dari %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Akun Piutang Default (POS)"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Akun Receivable POS Default"
-
-#~ msgid "Destination account"
-#~ msgstr "Akun tujuan"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Akun tujuan bersifat readonly"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Selisih pada sesi closing POS"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Selisih antara saldo penutupan teoritis dan saldo penutupan sebenarnya."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Saldo Akhir"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Paksa Tutup Sesi"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Paksa penetapan pelanggan saat menggunakan metode pembayaran ini dan "
-#~ "pisah entri jurnal untuk setiap pelanggan. Dapat memelankan proses "
-#~ "closing."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Dari pembayaran faktur"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Ada Kontrol Kas"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Identifikasi Pelanggan"
-
-#~ msgid "Information message"
-#~ msgstr "Pesan informasi"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Akun perantara digunakan untuk pelanggan yang belum diidentifikasi."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Jurnal Tagihan"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Pembayaran faktur untuk %(order)s (%(account_move)s) menggunakan %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Apakah Difaktur"
-
-#~ msgid "Journal Items"
-#~ msgstr "Item Jurnal"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Saldo Penutupan Sesi Terakhir"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Butuh akun rugi untuk jurnal-jurnal berikut untuk memposting jumlah yang "
-#~ "hilang: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Butuh akun laba untuk jurnal-jurnal berikut untuk memposting jumlah yang "
-#~ "didapatkan: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Tidak tersedia"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Saldo opening dijumlahkan ke semua transaksi kas."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Silahkan masuk ke %s jurnal dan tentukan Akun Kerugian. Akun ini akan "
-#~ "digunakan untuk mencatat perbedaan kas."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Silahkan masuk ke %s jurnal dan tentukan Akun Keuntungan. Akun ini akan "
-#~ "digunakan untuk mencatat perbedaan kas."
-
-#~ msgid "Point of Sale Product Snooze"
-#~ msgstr "Snooze Produk POS"
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Diskon harga dari %(original_price)s sampai %(discounted_price)s"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "Refresh tampilan pelanggan"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Sesi Terkait: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Reversal entri closing POS %(entry)s untuk pesanan %(order)s dari sesi %"
-#~ "(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Entri Jurnal Sesi"
-
-#~ msgid "Snoozed Products"
-#~ msgstr "Produk yang Disnooze"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Saldo Awal"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Semua jurnal penagihan harus dalam mata uang yang sama dengan Jurnal "
-#~ "Penjualan atau dengan perusahaan jika mata uangnya tidak diatur."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Sesi sudah ditutup oleh User lain. Semua sales yang diselesaikan "
-#~ "sementara ini disimpan di Sesi Rescue, yang dapat ditinjau kapapun dan "
-#~ "diposting ke Akuntansi dari dashboard POS."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Saldo Penutupan Teoritis"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Terdapat selisih di antara jumlah untuk dipost dan jumlah pada pesanan, "
-#~ "mungkin disebabkan oleh pajak atau perubahan konfigurasi akuntansi."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Tidak ada kasir di sesi ini."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr ""
-#~ "Untuk mengaktifkan pembuatan faktur, silakan tambahkan jurnalnya di "
-#~ "pengaturan."
-
-#~ msgid "Transaction"
-#~ msgstr "Transaksi"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Tidak dapat menutup dan memvalidasi sesi.\n"
-#~ "Mohon tetapkan akun pajak yang sesuai di setiap baris repartition untuk "
-#~ "pajak-pajak berikut: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Anda tidak dapat menutup POS saat faktur tidak dipost.\n"
-#~ "Faktur: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Anda telah mengaktifkan opsi \"Identifikasi Pelanggan\" untuk metode "
-#~ "pembayaran %(payment_method)s, tapi order %(order)s tidak memiliki "
-#~ "pelanggan."
-
-#~ msgid "Chose a combo to apply"
-#~ msgstr "Pilih combo untuk diterapkan"
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "Link disalin ke papan klip"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Periksa koneksi internet lalu coba untuk sinkronisasi lagi dengan "
-#~ "mengeklik tombol wifi merah (kanan atas layar)."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Tunggu! Mengarsip produk selagi sesi POS aktif itu seperti menarik piring "
-#~ "selagi tengah makan.\n"
-#~ "Pastikan sudah mentutup semua sesi terlebih dahulu untuk menghindari "
-#~ "masalah apa pun."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Mohon cetak faktur dari backend"
-
-#~ msgid "Thank you."
-#~ msgstr "Terima kasih."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr ""
-#~ "Order tidak dapat dikirim ke server karena eror yang tidak diketahui"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Order telah disinkronisasi lebih awal. Mohon buat faktur dari backend "
-#~ "untuk pesanan: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Server mengalami eror saat menerima order Anda."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Untuk menghapus produk, pastikan semua sesi POS ditutup.\n"
-#~ "\n"
-#~ "Menghapus produk yang tersedia di sesi akan seperti mencoba merenggut "
-#~ "hamburger dari tanggan pelanggan; kekacauan akan terjadi dengan kecap dan "
-#~ "mayonaise berterbangan di mana-mana!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Tidak dapat menyinkronkan pesanan"
-
-#~ msgid "Welcome."
-#~ msgstr "Selamat Datang."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Lewati Halaman Pratinjau</b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr "Permintaan masih diproses di latar belakang. Silakan tunggu."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Resi Standar"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Alamat Ip Epson Printer"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Alamat IP lokal printer kwitansi Epson, atau nomor serinya bila opsi "
-#~ "'Update Sertifikat Otomatis' diaktifkan di pengaturan printer."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Cetak Resi Standar"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Cetak Resi Lengkap"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Cetak Resi"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Cetak tiket standar tanpa harga. Dapat digunakan untuk hadiah."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Lewati Layar Pratinjau"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "Layar resi akan dilewati jika resi dapat dicetak secara otomatis."
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid "Info"
-#~ msgstr "Informasi"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Perubahan persiapan terakhir"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Status order yang ditecak terakhir"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Pesanan Outdated"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "POS"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Pesanan telah dimodifikasi di perangkat lain. Bila Anda memodifikasi "
-#~ "baris pesanan yang tersedia, periksa bahwa perubahan belum ditimpa.\n"
-#~ "\n"
-#~ "Pesanan akan dikirim ke server dengan perubahan terakhir yang dibuat pada "
-#~ "perangkat ini."

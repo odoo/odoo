@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 14:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -195,18 +195,18 @@ msgstr "<em class=\"d-block my-3 small text-center text-muted\">- 或 -</em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> 重設"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> 重設"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -287,10 +287,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
 
 #. module: web
@@ -3810,8 +3810,8 @@ msgstr "似乎找不到識別碼為 %s 的記錄。它們可能已被刪除。"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -5279,16 +5279,16 @@ msgstr "只刪除了首 %(count)s 項記錄（在全部所選的 %(total)s 項�
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr "僅支援類型為 %(supported_types)s 的類別 (發現類型為 %(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr "僅支援類型為  %(supported_types)s 的篩選 (發現類型為 %(field_type)s)"
 
 #. module: web
@@ -6451,11 +6451,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"選擇 <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"選擇 <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7177,8 +7177,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7212,8 +7212,8 @@ msgstr "所選欄位將用於預填簽名"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr "所選檔案（%(size)s B）超過檔案大小上限（%(maxSize)s B）。"
 
 #. module: web
@@ -7241,8 +7241,8 @@ msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
 msgstr ""
-"嘗試匯出為 Excel 2007-2013（.xlsx）格式的列數太多（%(count)s 列，上限：%"
-"(limit)s）。可考慮分拆匯出。"
+"嘗試匯出為 Excel 2007-2013（.xlsx）格式的列數太多（%(count)s 列，上限："
+"%(limit)s）。可考慮分拆匯出。"
 
 #. module: web
 #. odoo-javascript
@@ -7805,8 +7805,8 @@ msgstr "與「使用者友善格式」選項一併使用，以自訂格式。"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27397,60 +27397,3 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "運行「點擊各處」測試"
-
-#~ msgid "All day"
-#~ msgstr "全天"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "稅務識別號碼。此處的值將根據國家/地區格式進行驗證。可使用「/」表示合作夥伴"
-#~ "不須納稅。"
-
-#~ msgid "Custom"
-#~ msgstr "自訂"
-
-#~ msgid "Hue"
-#~ msgstr "色調"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "看板：沒有適用於此類型的操作：%(type)s"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "模型記錄規則"
-
-#~ msgid "Record Rules"
-#~ msgstr "記錄規則"
-
-#~ msgid "Reset"
-#~ msgstr "重設"
-
-#~ msgid "Solid"
-#~ msgstr "實線"
-
-#~ msgid "hex"
-#~ msgstr "hex"
-
-#~ msgid "Autosave"
-#~ msgstr "自動儲存"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr "若勾選，修改欄位時會立即儲存記錄。"
-
-#~ msgid "Invalid data"
-#~ msgstr "無效的資料"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr "圓餅圖不能混用正數和負數。嘗試改變您的domain只顯示正數結果"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-21 19:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
@@ -122,8 +122,8 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object."
+"mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -140,101 +140,103 @@ msgstr ""
 "        "
 
 #. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"Date\" title=\"Date\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
+"label=\"Recipients\" title=\"Recipients\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_name
-msgid ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
-msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
+"label=\"Odběratelé\" title=\"Odběratelé\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Návštěvnost\" "
-"title=\"Návštěvnost\"/>"
+"<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Návštěvnost\" title=\"Návštěvnost\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
-"title=\"Recipients\"/>"
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Odběratelé\" "
-"title=\"Odběratelé\"/>"
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Skrýt přílohy\" title=\"Skrýt přílohy\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"replies\" title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Skrýt odpovědi\" title=\"Skrýt odpovědi\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
-msgstr ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Předchozí zpráva\" "
-"title=\"Předchozí zpráva\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_message
-msgid ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Další zpráva\" "
+"<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"Další zpráva\" "
 "title=\"Další zpráva\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
-"title=\"Show attachments\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show attachments\" title=\"Show attachments\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Zobrazit přílohy\" "
-"title=\"Zobrazit přílohy\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Zobrazit přílohy\" title=\"Zobrazit přílohy\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show replies\" title=\"Show replies\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Zobrazit "
-"odpovědi\" title=\"Zobrazit odpovědi\"/>"
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Zobrazit odpovědi\" title=\"Zobrazit odpovědi\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
 msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Skrýt přílohy\" "
-"title=\"Skrýt přílohy\"/>"
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
+"<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"Previous "
+"message\" title=\"Previous message\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Skrýt odpovědi\" "
-"title=\"Skrýt odpovědi\"/>"
+"<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"Předchozí "
+"zpráva\" title=\"Předchozí zpráva\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -1044,11 +1046,13 @@ msgstr "Název"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
-"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi oi-2x float-"
+"end\" data-icon=\"south\" role=\"img\" aria-label=\"\" title=\"Read this !\"/"
+">"
 msgstr ""
-"Chcete se odhlásit? <br/>Je to právě tady! <span class=\"oi fa-2x oi-arrow-"
-"down float-end\" role=\"img\" aria-label=\"\" title=\"Přečtete si to!\"/>"
+"Chcete se odhlásit? <br/>Je to právě tady! <span class=\"oi oi-2x float-"
+"end\" data-icon=\"south\" role=\"img\" aria-label=\"\" title=\"Přečtete si "
+"to!\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines

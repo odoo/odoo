@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 09:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/mail/"
@@ -305,10 +305,10 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
-"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people%"
-"(new_line)s%(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
-"(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
-"(bold_start)s:emoji:%(bold_end)s to insert an emoji"
+"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple "
+"people%(new_line)s%(bold_start)s/command%(bold_end)s to run a "
+"command%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned "
+"response%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
 
 #. module: mail
@@ -383,8 +383,8 @@ msgstr "%(user1)s, %(user2)s님 등이 입력 중입니다..."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
-"(strong_end)s channel."
+"%(user_name)s has invited you to the "
+"%(strong_start)s%(channel_name)s%(strong_end)s channel."
 msgstr ""
 
 #. module: mail
@@ -664,91 +664,94 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid ""
-"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
-"title=\"to\"/>"
+"<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
+"out_of_office_from\" title=\"to\"/>"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-calendar\" title=\"Due date\"/>"
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
+"title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
-msgid "<i class=\"fa fa-check\"/> Done"
-msgstr "<i class=\"fa fa-check\"/> 완료"
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Assigned to\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Note\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Role\" "
+"aria-label=\"Role\" style=\"font-size: 12px;\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
 msgid ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
-"title=\"Steps count\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"Steps count\" title=\"Steps count\"/>"
 msgstr ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"단계 수\" "
-"title=\"단계 수\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"단계 수\" title=\"단계 수\"/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
+msgid "<i class=\"oi\" data-icon=\"check\"/> Done"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> 완료"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"To "
+"Assign\" aria-label=\"To Assign\" style=\"font-size: 12px;\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"oi\" data-icon=\"label\" title=\"Summary\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"login\" role=\"img\"/> Join"
+msgstr "<i class=\"oi\" data-icon=\"login\" role=\"img\"/> 입장하기"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> Leave"
+msgstr "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> 나가기"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "<i class=\"oi\" data-icon=\"oi_odoo\" title=\"Link to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
-msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-hourglass-end\" role=\"img\" title=\"To Assign\" aria-"
-"label=\"To Assign\" style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr "<i class=\"fa fa-sign-in\" role=\"img\"/> 입장하기"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr "<i class=\"fa fa-sign-out\" role=\"img\"/> 나가기"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-sticky-note pt-1\" title=\"Note\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-tag\" title=\"Summary\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-user mb-2\" title=\"Assigned to\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-users mb-2\" role=\"img\" title=\"Role\" aria-"
-"label=\"Role\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-users\" role=\"img\" title=\"Role\" aria-label=\"Role\" "
-"style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "<i class=\"oi oi-odoo\" title=\"Link to\"/>"
-msgstr ""
+msgid "<i class=\"oi\" data-icon=\"public\" aria-label=\"Document url\"/>"
+msgstr "<i class=\"oi\" data-icon=\"public\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. odoo-javascript
@@ -1703,23 +1706,23 @@ msgstr "별칭"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
+"%(parent_model_name)s."
 msgstr ""
-"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s (%"
-"(matching_id)s)에 연결되어 있으며 %(parent_name)s %(parent_model_name)s 항목"
-"에서 사용 중입니다."
+"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s "
+"(%(matching_id)s)에 연결되어 있으며 %(parent_name)s %(parent_model_name)s 항"
+"목에서 사용 중입니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s (%"
-"(matching_id)s)에 연결되어 있습니다."
+"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s "
+"(%(matching_id)s)에 연결되어 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1987,8 +1990,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid ""
-"Are you sure you want to remove %(member_name)s from the members of '%"
-"(channel_name)s'?"
+"Are you sure you want to remove %(member_name)s from the members of "
+"'%(channel_name)s'?"
 msgstr ""
 
 #. module: mail
@@ -2528,8 +2531,8 @@ msgstr "반송 이메일은 고유해야 합니다."
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid ""
-"Bounce/Catchall '%(matching_alias_name)s' is already used by %"
-"(document_name)s. Choose another alias or change it on the other document."
+"Bounce/Catchall '%(matching_alias_name)s' is already used by "
+"%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
 "'%(matching_alias_name)s' 반송/캐치올은 이미%(document_name)s에서 사용 중입니"
 "다. 다른 별칭을 선택하거나 다른 문서에서 변경하세요."
@@ -2809,8 +2812,8 @@ msgstr "미리 준비된 응답"
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
 msgid ""
 "Canned response that will automatically be substituted with longer content "
-"in your messages. Type '::' followed by the name of your shortcut "
-"(e.g. ::hello) to use in your messages."
+"in your messages. Type '::' followed by the name of your shortcut (e.g. ::"
+"hello) to use in your messages."
 msgstr ""
 "미리 준비된 응답은 메시지에서 더 긴 내용으로 자동 대체될 수 있습니다. '::'를 "
 "입력한 다음 단축키 이름(예: ::hello)을 입력하면 메시지를 사용할 수 있습니다."
@@ -5636,18 +5639,6 @@ msgid "Following"
 msgstr "팔로잉"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
-#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
-#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
-#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예: fa-tasks"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
@@ -5692,12 +5683,12 @@ msgstr "8시간 동안"
 #: model:ir.model.fields,help:mail.field_ir_cron__value
 msgid ""
 "For Python expressions, this field may hold a Python expression that can use "
-"the same values as for the code field on the server action,e.g. "
-"`env.user.name` to set the current user's name as the value or `record.id` "
-"to set the ID of the record on which the action is run.\n"
+"the same values as for the code field on the server action,e.g. `env.user."
+"name` to set the current user's name as the value or `record.id` to set the "
+"ID of the record on which the action is run.\n"
 "\n"
-"For Static values, the value will be used directly without evaluation, "
-"e.g.`42` or `My custom name` or the selected record."
+"For Static values, the value will be used directly without evaluation, e.g."
+"`42` or `My custom name` or the selected record."
 msgstr ""
 "파이썬 표현식의 경우 이 필드에는 서버 작업의 코드 필드와 동일한 값을 사용할 "
 "수 있는 파이썬 표현식(예: `env.user.name`를 사용하여 현재 사용자의 이름을 값"
@@ -7879,8 +7870,8 @@ msgstr "메일함을 사용할 수 없음 - %s"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Mailing or posting with a source should not be called with an empty %"
-"(source_type)s"
+"Mailing or posting with a source should not be called with an empty "
+"%(source_type)s"
 msgstr ""
 "소스가 포함되어 있는 메일이나 포스팅은 %(source_type)s 항목을 비운 채로 호출"
 "해서는 안됩니다."
@@ -7977,6 +7968,18 @@ msgstr "읽지 않음으로 표시"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
+#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
+#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
+#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: mail
@@ -8848,8 +8851,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"No responsible or role specified for %(activity_type_name)s: %"
-"(activity_summary)s.%(error_detail)s"
+"No responsible or role specified for %(activity_type_name)s: "
+"%(activity_summary)s.%(error_detail)s"
 msgstr ""
 
 #. module: mail
@@ -9062,21 +9065,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive attachments records as a list of IDs (received %"
-"(aids)s)"
+"Notification should receive attachments records as a list of IDs (received "
+"%(aids)s)"
 msgstr ""
-"알림은 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신된 %"
-"(aids)s)."
+"알림은 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신된 "
+"%(aids)s)."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive partners given as a list of IDs (received %"
-"(pids)s)"
+"Notification should receive partners given as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
-"알림은 주어진 협력사 정보를 아이디 목록으로 수신해야 합니다 (수신된 %"
-"(pids)s)."
+"알림은 주어진 협력사 정보를 아이디 목록으로 수신해야 합니다 (수신된 "
+"%(pids)s)."
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -9429,8 +9432,8 @@ msgstr "메시지 유형 코멘트에서만 내용을 업데이트할 수 있습
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"Only messages type comment can have their content updated on model "
-"'discuss.channel'"
+"Only messages type comment can have their content updated on model 'discuss."
+"channel'"
 msgstr ""
 "댓글 종류가 메시지인 경우에만 '메일 및 채팅 채널' 모델에서 업데이트됩니다."
 
@@ -10349,8 +10352,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"메시지를 게시하면 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 %"
-"(aids)s)."
+"메시지를 게시하면 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 "
+"%(aids)s)."
 
 #. module: mail
 #. odoo-python
@@ -10374,11 +10377,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Posting a message should receive partners as a list of IDs (received %"
-"(pids)s)"
+"Posting a message should receive partners as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
-"메시지를 게시하면 아이디 목록으로 된 협력사 정보를 수신해야 합니다 (수신된 %"
-"(pids)s)."
+"메시지를 게시하면 아이디 목록으로 된 협력사 정보를 수신해야 합니다 (수신된 "
+"%(pids)s)."
 
 #. module: mail
 #. odoo-python
@@ -10418,9 +10421,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
-"(close_cancel)s%(close_em)s, %(open_samp)s%(save_keyboard_shortcut)s%"
-"(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+"Press %(open_samp)sESC%(close_samp)s %(open_em)sto "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
+"%(open_samp)s%(save_keyboard_shortcut)s%(close_samp)s %(open_em)sto "
+"%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 
 #. module: mail
@@ -12613,8 +12617,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Template rendering should only be called with a list of IDs. Received “%"
-"(res_ids)s” instead."
+"Template rendering should only be called with a list of IDs. Received "
+"“%(res_ids)s” instead."
 msgstr ""
 "서식 렌더링은 반드시 ID 목록에서만 호출해야 합니다. 대신 “%(res_ids)s ” 항목"
 "을 수신합니다."
@@ -12711,8 +12715,8 @@ msgstr "활동을 시작할 수 없습니다:"
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
 "The activity type \"%(activity_type_name)s\" is not compatible with the plan "
-"\"%(plan_name)s\" because it is limited to the model \"%"
-"(activity_type_model)s\"."
+"\"%(plan_name)s\" because it is limited to the model "
+"\"%(activity_type_model)s\"."
 msgstr ""
 "\"%(activity_type_name)s\"의 활동 유형은 \"%(plan_name)s\"과 호환될 수 없습니"
 "다. 이 활동 유형은 현재 \"%(activity_type_model)s\"의 모델로 제한되어 있습니"
@@ -12810,8 +12814,8 @@ msgstr "아래의 메시지는 주소에서 받을 수 없습니다."
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "                 Only %(contact_description)s are allowed to contact it.<br /"
 "><br />\n"
 "                 Please make sure you are using the correct address or "
@@ -12827,8 +12831,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
 "아래의 메시지는 %(alias_display_name)s 주소에서 받을 수 없습니다.\n"
@@ -12936,8 +12940,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid ""
-"The role '%(role_name)s' is not supported for the channel type '%"
-"(channel_type)s'."
+"The role '%(role_name)s' is not supported for the channel type "
+"'%(channel_type)s'."
 msgstr ""
 
 #. module: mail
@@ -14062,8 +14066,8 @@ msgstr "Outlook 서버 사용"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid ""
-"Use canned responses to quickly insert prewritten messages with "
-"<i>::shortcut</i>. You can edit the text before sending."
+"Use canned responses to quickly insert prewritten messages with <i>::"
+"shortcut</i>. You can edit the text before sending."
 msgstr ""
 "미리 준비된 응답은 <i>:: 단축키</i>를 사용하여 미리 작성된 메시지를 빠르게 삽"
 "입할 수 있습니다. 전송 전에 텍스트를 편집할 수도 있습니다."
@@ -14591,25 +14595,25 @@ msgstr "주의"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 %"
-"(alias_company_names)s에 포함되어 있으며, 소유자의 문서가 %(company_name)s에 "
-"포함되어 있습니다."
+"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 "
+"%(alias_company_names)s에 포함되어 있으며, 소유자의 문서가 %(company_name)s"
+"에 포함되어 있습니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 회사%"
-"(alias_company_names)s에 포함되어 있고, 대상 문서가 %(company_name)s에 포함되"
-"어 있습니다."
+"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 회"
+"사%(alias_company_names)s에 포함되어 있고, 대상 문서가 %(company_name)s에 포"
+"함되어 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -15910,229 +15914,3 @@ msgstr "“%(member_name)s”의 “%(channel_name)s”"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
-
-#~ msgid "Search for a GIF"
-#~ msgstr "GIF 검색"
-
-#~ msgid ""
-#~ "<p>Channels make it easy to organize information across different topics "
-#~ "and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
-#~ "marketing, product XYZ, after work party, etc).</p>"
-#~ msgstr ""
-#~ "<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성할 수 있습니다.</"
-#~ "p> <p><b>첫 번째 채널을 만드십시오</b>(예 : 영업, 마케팅, 제품 XYZ, 업무"
-#~ "용 파티 등).</p>"
-
-#~ msgid "<p>Create a channel here.</p>"
-#~ msgstr "<p>여기서 채널을 만듭니다.</p>"
-
-#~ msgid "<p>Create a public or private channel.</p>"
-#~ msgstr "<p>공개 또는 비공개 채널을 만듭니다.</p>"
-
-#~ msgid ""
-#~ "Add a Tenor GIF API key to enable GIFs support. https://"
-#~ "developers.google.com/tenor/guides/quickstart#setup"
-#~ msgstr ""
-#~ "GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요. https://"
-#~ "developers.google.com/tenor/guides/quickstart#setup"
-
-#~ msgid "Add or join a channel"
-#~ msgstr "채널에 추가 또는 가입"
-
-#~ msgid "Come here often? Install the app for quick and easy access!"
-#~ msgstr ""
-#~ "자주 방문하시나요? 앱을 설치하면 더 빠르고 쉽게 액세스할 수 있습니다!"
-
-#~ msgid "Deleted document"
-#~ msgstr "삭제된 문서"
-
-#~ msgid "Exit Fullscreen"
-#~ msgstr "전체 화면에서 나가기"
-
-#~ msgid "History"
-#~ msgstr "이전 기록"
-
-#~ msgid "Install"
-#~ msgstr "설치"
-
-#~ msgid "Install Odoo"
-#~ msgstr "Odoo 설치"
-
-#~ msgid "No history messages"
-#~ msgstr "이전 메시지 내역이 없습니다."
-
-#~ msgid "Quick search"
-#~ msgstr "빠른 검색"
-
-#~ msgid "Quick search…"
-#~ msgstr "빠른 검색…"
-
-#~ msgid "Start a conversation"
-#~ msgstr "대화 시작"
-
-#~ msgid "Tenor API key"
-#~ msgstr "Tenor API 키"
-
-#~ msgid "Thread has unread messages"
-#~ msgstr "스레드에 읽지 않은 메시지가 있습니다."
-
-#~ msgid "View or join channels"
-#~ msgstr "채널 보기 또는 가입"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
-#~ "다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
-
-#~ msgid "Create a poll"
-#~ msgstr "투표 생성하기"
-
-#~ msgid "Default user"
-#~ msgstr "기본 사용자"
-
-#~ msgid "Insert a Canned response"
-#~ msgstr "미리 준비된 답변을 입력하세요."
-
-#~ msgid "Linked to"
-#~ msgstr "다음과 연결됨"
-
-#~ msgid "Option Label"
-#~ msgstr "옵션 라벨"
-
-#~ msgid "Start a poll"
-#~ msgstr "투표 시작하기"
-
-#~ msgid "Unassigned"
-#~ msgstr "미지정"
-
-#~ msgid "Uploaded"
-#~ msgstr "업로드함"
-
-#~ msgid ""
-#~ "When selecting \"Default user\" assignment, you must specify a "
-#~ "responsible."
-#~ msgstr "'기본 사용자'에게 할당을 선택할 때는 담당자를 지정해야 합니다."
-
-#~ msgid "%(name)s <%(email)s>"
-#~ msgstr "%(name)s <%(email)s>"
-
-#~ msgid ""
-#~ "<p><b>Write a message</b> to the members of the channel here.</p> <p>You "
-#~ "can notify someone with <i>'@'</i> or link another channel with <i>'#'</"
-#~ "i>. Start your message with <i>'/'</i> to get the list of possible "
-#~ "commands.</p>"
-#~ msgstr ""
-#~ "<p>여기 채널의 참여자에게<b>메시지를 쓰세요.</b></p> <p><i>'@'</i>를 사용"
-#~ "하여 다른 사용자에게 알리거나 <i>'#'</i>를 사용하여 다른 채널을 연결할 수 "
-#~ "있습니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 시작하"
-#~ "십시오.</p>"
-
-#~ msgid "Activity Settings"
-#~ msgstr "활동 설정"
-
-#~ msgid "Activity type"
-#~ msgstr "업무 유형"
-
-#~ msgid "Comma-separated ids of recipient partners"
-#~ msgstr "쉼표로 수신인의 id 구분"
-
-#~ msgid ""
-#~ "Comma-separated ids of recipient partners (placeholders may be used here)"
-#~ msgstr ""
-#~ "쉼표로 구분된 수신 협력사 ID (사전 표시 문자를 여기에 사용할 수 있습니다)"
-
-#~ msgid "Copy Link"
-#~ msgstr "링크 복사"
-
-#~ msgid "Created"
-#~ msgstr "작성"
-
-#~ msgid "Default deadline for the activities..."
-#~ msgstr "작업의 기본 마감일 ..."
-
-#~ msgid "Feedback:"
-#~ msgstr "피드백:"
-
-#~ msgid "Hide sidebar"
-#~ msgstr "사이드바 숨기기"
-
-#~ msgid "Join call"
-#~ msgstr "통화 참여"
-
-#~ msgid "Next Activity"
-#~ msgstr "다음 활동"
-
-#~ msgid "No one else is here."
-#~ msgstr "아직 참가자가 없습니다."
-
-#~ msgid "Notify everyone"
-#~ msgstr "모두에게 알림"
-
-#~ msgid "Ongoing call"
-#~ msgstr "진행 중인 통화"
-
-#~ msgid "Original note:"
-#~ msgstr "원본 메모:"
-
-#~ msgid "Push-to-talk"
-#~ msgstr "1:1 대화하기"
-
-#~ msgid "Search for a channel..."
-#~ msgstr "채널 검색"
-
-#~ msgid "Show sidebar"
-#~ msgstr "사이드바 보기"
-
-#~ msgid "Stop camera"
-#~ msgstr "카메라 중지"
-
-#~ msgid "Upload Avatar"
-#~ msgstr "아바타 업로드"
-
-#~ msgid ""
-#~ "You cannot delete those groups, as the Whole Company group is required by "
-#~ "other modules."
-#~ msgstr ""
-#~ "해당 그룹을 삭제할 수 없습니다. 전체 회사 그룹은 다른 모듈에서 사용합니다."
-
-#~ msgid "You have been invited to #%s"
-#~ msgstr "#%s에 초대되었습니다."
-
-#~ msgid "Edit Subscription of %(name)s"
-#~ msgstr "%(name)s의 설명 편집"
-
-#~ msgid "Edit subscription"
-#~ msgstr "구독 편집"
-
-#~ msgid "The duration of voice messages is limited to 1 minute."
-#~ msgstr "음성 메시지의 길이는 1분으로 제한됩니다."
-
-#~ msgid "The subscription preferences were successfully applied."
-#~ msgstr "구독 추가 설정이 성공적으로 적용되었습니다."
-
-#~ msgid "Auto-focus speaker"
-#~ msgstr "자동 초점 스피커"
-
-#~ msgid "Blur video background"
-#~ msgstr "동영상 배경 흐리게 처리"
-
-#~ msgid "Log RTC events"
-#~ msgstr "RTC 행사 불러오기"
-
-#~ msgid "Search Sub Channels"
-#~ msgstr "하위 채널 검색"
-
-#~ msgid "Search in progress"
-#~ msgstr "검색 진행 중"
-
-#~ msgid "Show video participants only"
-#~ msgstr "동영상 참가자만 표시"
-
-#~ msgid "The conversation is empty."
-#~ msgstr "대화가 비어 있습니다."
-
-#~ msgid "Search button"
-#~ msgstr "버튼 검색"

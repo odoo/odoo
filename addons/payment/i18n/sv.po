@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 02:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-master/"
@@ -42,40 +42,22 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of "
-"their integration with\n"
-"                                Odoo regarding this payment method. Any "
-"change may result in errors\n"
-"                                and should be tested on a test database "
-"first."
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Dessa egenskaper är inställda för "
-"att\n"
-"                                matcha beteendet hos leverantörer och deras "
-"integration med Odoo\n"
-"                                Odoo när det gäller denna betalningsmetod. "
-"Alla ändringar kan resultera i fel\n"
-"                                och bör testas på en testdatabas först."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Hem\"/>"
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Konfigurera en "
+"betalningsleverantör"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
 "invisible=\"support_partial_capture != 'full_only'\" title=\"Vissa av de "
 "transaktioner som du avser att fånga kan bara fångas i sin helhet. Hantera "
 "transaktionerna individuellt för att fånga en del av beloppet.\"/>"
@@ -83,17 +65,41 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Ta bort betalningsmetod\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Ta bort "
+"betalningsmetod\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-"
+"bs-delay=\"0\"/>"
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Konfigurera en betalningsleverantör"
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Hem\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> Dessa egenskaper är inställda för "
+"att\n"
+"                                matcha beteendet hos leverantörer och deras "
+"integration med Odoo\n"
+"                                Odoo när det gäller denna betalningsmetod. "
+"Alla ändringar kan resultera i fel\n"
+"                                och bör testas på en testdatabas först."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -149,15 +155,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Säkerställd av</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr "<span><i class=\"oi\" data-icon=\"lock\"/> Säkerställd av</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Visa tillgänglighetsrapport</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Visa "
+"tillgänglighetsrapport</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -443,8 +451,8 @@ msgstr "Transaktioner med underordnad"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Välj en annan metod <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr "Välj en annan metod <i class=\"oi\" data-icon=\"south\"/>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -757,8 +765,8 @@ msgstr "Generera och kopiera betalningslänk"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Gå till mitt konto <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr "Gå till mitt konto <i class=\"oi ms-2\" data-icon=\"east\"/>"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -2532,8 +2540,8 @@ msgstr "Dina betalningsmetoder"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -2588,691 +2596,3 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to void the authorized transaction? This action "
-#~ "can't be undone."
-#~ msgstr ""
-#~ "Är du säker på att du vill annullera den auktoriserade transaktionen? "
-#~ "Denna åtgärd kan inte ångras."
-
-#~ msgid "Child transactions"
-#~ msgstr "Transaktioner med underordnad"
-
-#~ msgid "ZIP"
-#~ msgstr "Postnummer"
-
-#~ msgid "(ID:"
-#~ msgstr "(ID:"
-
-#~ msgid "7Eleven"
-#~ msgstr "7Eleven"
-
-#~ msgid ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Enable Payment Methods"
-#~ msgstr ""
-#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-#~ "                                            Aktivera betalningsmetoder"
-
-#~ msgid ""
-#~ "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
-#~ "em> button is not supported.\n"
-#~ "                        Please use the <em>Duplicate</em> action instead."
-#~ msgstr ""
-#~ "<strong>Varning</strong> Det finns inget stöd för att skapa en "
-#~ "betalningsleverantör från knappen <em>CREATE</em>.\n"
-#~ "                        Använd åtgärden <em>Duplicera</em> istället."
-
-#~ msgid "ACH Direct Debit"
-#~ msgstr "ACH Direktdebitering"
-
-#~ msgid "Activate"
-#~ msgstr "Aktivera"
-
-#~ msgid "Affirm"
-#~ msgstr "Bekräfta"
-
-#~ msgid "AfterPay"
-#~ msgstr "Efterskottsbetalning"
-
-#~ msgid "Afterpay"
-#~ msgstr "Efterskottsbetalning"
-
-#~ msgid "Akulaku PayLater"
-#~ msgstr "Akulaku BetalningsLater"
-
-#~ msgid "AliPayHK"
-#~ msgstr "AliPayHK"
-
-#~ msgid "Alipay"
-#~ msgstr "Alipay"
-
-#~ msgid "Alipay+"
-#~ msgstr "Alipay"
-
-#~ msgid "Alma"
-#~ msgstr "Alma"
-
-#~ msgid "Amazon Pay"
-#~ msgstr "Amazon Pay"
-
-#~ msgid "American Express"
-#~ msgstr "American Express"
-
-#~ msgid "Argencard"
-#~ msgstr "Argencard"
-
-#~ msgid "Atome"
-#~ msgstr "Atomer"
-
-#~ msgid "Availability"
-#~ msgstr "Tillgänglighet"
-
-#~ msgid "BACS Direct Debit"
-#~ msgstr "BACS Direktdebitering"
-
-#~ msgid "BCA"
-#~ msgstr "BCA"
-
-#~ msgid "BECS Direct Debit"
-#~ msgstr "BECS direktdebitering"
-
-#~ msgid "BLIK"
-#~ msgstr "BLIK"
-
-#~ msgid "BRI"
-#~ msgstr "BRI"
-
-#~ msgid "BancNet"
-#~ msgstr "BancNet"
-
-#~ msgid "Banco de Bogota"
-#~ msgstr "Bank i Bogota"
-
-#~ msgid "Bancolombia"
-#~ msgstr "Bancolombia"
-
-#~ msgid "Bancontact"
-#~ msgstr "Bancontact"
-
-#~ msgid "Bangkok Bank"
-#~ msgstr "Bangkok Bank"
-
-#~ msgid "Bank Account"
-#~ msgstr "Bankkonto"
-
-#~ msgid "Bank Negara Indonesia"
-#~ msgstr "Bank Negara Indonesien"
-
-#~ msgid "Bank Permata"
-#~ msgstr "Permata Bank"
-
-#~ msgid "Bank Syariah Indonesia"
-#~ msgstr "Bank Syariah Indonesien"
-
-#~ msgid "Bank Transfer"
-#~ msgstr "Banköverföring"
-
-#~ msgid "Bank of Ayudhya"
-#~ msgstr "Bank of Ayudhya"
-
-#~ msgid "Bank reference"
-#~ msgstr "Bankreferens"
-
-#~ msgid "Belfius"
-#~ msgstr "Belfius"
-
-#~ msgid "Benefit"
-#~ msgstr "Förmån"
-
-#~ msgid "BharatQR"
-#~ msgstr "BharatQR"
-
-#~ msgid "BillEase"
-#~ msgstr "BillEase"
-
-#~ msgid "Billink"
-#~ msgstr "Billink"
-
-#~ msgid "Bizum"
-#~ msgstr "Bizum"
-
-#~ msgid "Boleto"
-#~ msgstr "Boleto"
-
-#~ msgid "Boost"
-#~ msgstr "Boost"
-
-#~ msgid "CIMB Niaga"
-#~ msgstr "CIMB Niaga"
-
-#~ msgid "CMR"
-#~ msgstr "CMR"
-
-#~ msgid "Cabal"
-#~ msgstr "Cabal"
-
-#~ msgid "Caixa"
-#~ msgstr "Låda"
-
-#~ msgid "Card"
-#~ msgstr "Kort"
-
-#~ msgid "Carnet"
-#~ msgstr "Carnet"
-
-#~ msgid "Cartes Bancaires"
-#~ msgstr "Kreditkort"
-
-#~ msgid "Cash App Pay"
-#~ msgstr "Kontanter App Pay"
-
-#~ msgid "Cashalo"
-#~ msgstr "Cashalo"
-
-#~ msgid "Cebuana"
-#~ msgstr "Cebuana"
-
-#~ msgid "Cencosud"
-#~ msgstr "Cencosud"
-
-#~ msgid "Cirrus"
-#~ msgstr "Cirrus"
-
-#~ msgid "Clearpay"
-#~ msgstr "Clearpay"
-
-#~ msgid "Codensa"
-#~ msgstr "Codensa"
-
-#~ msgid "Color"
-#~ msgstr "Färg"
-
-#~ msgid "Cordial"
-#~ msgstr "Hjärtlig"
-
-#~ msgid "Cordobesa"
-#~ msgstr "Cordobesa"
-
-#~ msgid "Credit Payment"
-#~ msgstr "Kreditbetalning"
-
-#~ msgid "Dana"
-#~ msgstr "Dana"
-
-#~ msgid "Dankort"
-#~ msgstr "Tackkort"
-
-#~ msgid "Davivienda"
-#~ msgstr "Davivienda"
-
-#~ msgid "Diners Club International"
-#~ msgstr "Diners Club International"
-
-#~ msgid "Disabled"
-#~ msgstr "Inaktiverad"
-
-#~ msgid "Discover"
-#~ msgstr "Upptäck"
-
-#~ msgid "DuitNow"
-#~ msgstr "DuitNow"
-
-#~ msgid "EMI"
-#~ msgstr "EMI"
-
-#~ msgid "EPS"
-#~ msgstr "EPS"
-
-#~ msgid "Elo"
-#~ msgstr "Elo"
-
-#~ msgid "Enabled"
-#~ msgstr "Aktiverad"
-
-#~ msgid "FPS"
-#~ msgstr "FPS"
-
-#~ msgid "FPX"
-#~ msgstr "FPX"
-
-#~ msgid "Floa Bank"
-#~ msgstr "Floa Bank"
-
-#~ msgid "GCash"
-#~ msgstr "GCash"
-
-#~ msgid "GoPay"
-#~ msgstr "GoPay"
-
-#~ msgid "GrabPay"
-#~ msgstr "GrabPay"
-
-#~ msgid "HD Bank"
-#~ msgstr "HD Bank"
-
-#~ msgid "Hipercard"
-#~ msgstr "Hipercard"
-
-#~ msgid "Hoolah"
-#~ msgstr "Hoolah"
-
-#~ msgid "Humm"
-#~ msgstr "Humm"
-
-#~ msgid ""
-#~ "In test mode, a fake payment is processed through a test payment "
-#~ "interface.\n"
-#~ "This mode is advised when setting up the provider."
-#~ msgstr ""
-#~ "I testläget behandlas en falsk betalning via ett "
-#~ "testbetalningsgränssnitt.\n"
-#~ "Detta läge rekommenderas när du konfigurerar leverantören."
-
-#~ msgid "JCB"
-#~ msgstr "JCB"
-
-#~ msgid "JeniusPay"
-#~ msgstr "JeniusPay"
-
-#~ msgid "Jkopay"
-#~ msgstr "Jkopay"
-
-#~ msgid "KBC/CBC"
-#~ msgstr "KBC/CBC"
-
-#~ msgid "KNET"
-#~ msgstr "KNET"
-
-#~ msgid "KakaoPay"
-#~ msgstr "CocoaPay"
-
-#~ msgid "Kasikorn Bank"
-#~ msgstr "Kasikorn Bank"
-
-#~ msgid "Kiosk"
-#~ msgstr "Kiosk"
-
-#~ msgid "Klarna"
-#~ msgstr "Klarna"
-
-#~ msgid "Klarna - Pay Now"
-#~ msgstr "Klarna - Betala nu"
-
-#~ msgid "Klarna - Pay over time"
-#~ msgstr "Klarna - Pay over time"
-
-#~ msgid "Kredivo"
-#~ msgstr "Kredit"
-
-#~ msgid "KrungThai Bank"
-#~ msgstr "KrungThai Bank"
-
-#~ msgid "LINE Pay"
-#~ msgstr "LINE Betalning"
-
-#~ msgid "Lider"
-#~ msgstr "Ögonlocken"
-
-#~ msgid "LinkAja"
-#~ msgstr "LinkAja"
-
-#~ msgid "M-Pesa"
-#~ msgstr "M-Weigh"
-
-#~ msgid "MB WAY"
-#~ msgstr "MB VÄG"
-
-#~ msgid "Mada"
-#~ msgstr "Mada"
-
-#~ msgid "Maestro"
-#~ msgstr "Mästare"
-
-#~ msgid "Magna"
-#~ msgstr "Magna"
-
-#~ msgid ""
-#~ "Making a request to the provider is not possible because the provider is "
-#~ "disabled."
-#~ msgstr ""
-#~ "Det är inte möjligt att göra en förfrågan till leverantören eftersom "
-#~ "leverantören är inaktiverad."
-
-#~ msgid "Mandiri"
-#~ msgstr "Oberoende"
-
-#~ msgid "MasterCard"
-#~ msgstr "MasterCard"
-
-#~ msgid "Maya"
-#~ msgstr "Maya"
-
-#~ msgid "Maybank"
-#~ msgstr "Maybank"
-
-#~ msgid "Meeza"
-#~ msgstr "Meeza"
-
-#~ msgid "Mercado Livre"
-#~ msgstr "Fri marknad"
-
-#~ msgid "MoMo"
-#~ msgstr "MoMo"
-
-#~ msgid "Mobile money"
-#~ msgstr "Mobila pengar"
-
-#~ msgid "MobilePay"
-#~ msgstr "MobilePay"
-
-#~ msgid "Multibanco"
-#~ msgstr "ATM"
-
-#~ msgid "MyBank"
-#~ msgstr "MyBank"
-
-#~ msgid "NAPS"
-#~ msgstr "NAPS"
-
-#~ msgid "Napas Card"
-#~ msgstr "Napas-kort"
-
-#~ msgid "Naranja"
-#~ msgstr "Naranja"
-
-#~ msgid "Nativa"
-#~ msgstr "Nativa"
-
-#~ msgid "Netbanking"
-#~ msgstr "Nätbank"
-
-#~ msgid "OVO"
-#~ msgstr "OVO"
-
-#~ msgid "Oca"
-#~ msgstr "Oca"
-
-#~ msgid "Octopus"
-#~ msgstr "Bläckfisk"
-
-#~ msgid "OmanNet"
-#~ msgstr "OmanNet"
-
-#~ msgid "Online Banking Czech Republic"
-#~ msgstr "Online Banking Tjeckien"
-
-#~ msgid "Online Banking India"
-#~ msgstr "Onlinebank Indien"
-
-#~ msgid "Online Banking Slovakia"
-#~ msgstr "Onlinebank Slovakien"
-
-#~ msgid "Online Banking Thailand"
-#~ msgstr "Online Banking Thailand"
-
-#~ msgid "Open banking"
-#~ msgstr "Öppen bankverksamhet"
-
-#~ msgid "P24"
-#~ msgstr "P24"
-
-#~ msgid "POLi"
-#~ msgstr "POLi"
-
-#~ msgid "PPS"
-#~ msgstr "PPS"
-
-#~ msgid "PSE"
-#~ msgstr "PSE"
-
-#~ msgid "Pace."
-#~ msgstr "Fred."
-
-#~ msgid "Pay Later"
-#~ msgstr "Betala senare"
-
-#~ msgid "PayBright"
-#~ msgstr "PayBright"
-
-#~ msgid "PayID"
-#~ msgstr "BetalningsID"
-
-#~ msgid "PayMe"
-#~ msgstr "PayMe"
-
-#~ msgid "PayNow"
-#~ msgstr "PayNow"
-
-#~ msgid "PaySafeCard"
-#~ msgstr "PaySafeCard"
-
-#~ msgid "Payment Followup"
-#~ msgstr "Uppföljning av betalningar"
-
-#~ msgid "Payment Form"
-#~ msgstr "Betalningsblankett"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Paytm"
-#~ msgstr "Paytm"
-
-#~ msgid "Paytrail"
-#~ msgstr "Paytrail"
-
-#~ msgid "Pix"
-#~ msgstr "Pix"
-
-#~ msgid ""
-#~ "Please make sure that %(payment_method)s is supported by %(provider)s."
-#~ msgstr "Se till att %(payment_method)s stöds av %(provider)s."
-
-#~ msgid "PostFinance Pay"
-#~ msgstr "PostFinance Pay"
-
-#~ msgid "PostePay"
-#~ msgstr "PostePay"
-
-#~ msgid "Presto"
-#~ msgstr "Presto"
-
-#~ msgid "Prompt Pay"
-#~ msgstr "Snabb betalning"
-
-#~ msgid "Providers"
-#~ msgstr "Leverantörer"
-
-#~ msgid "QRIS"
-#~ msgstr "QRIS"
-
-#~ msgid "Rabbit LINE Pay"
-#~ msgstr "Rabbit LINE Betalning"
-
-#~ msgid "Ratepay"
-#~ msgstr "Räntebetalning"
-
-#~ msgid "Reason:"
-#~ msgstr "Anledning:"
-
-#~ msgid "Revolut Pay"
-#~ msgstr "Revolut betala"
-
-#~ msgid "RuPay"
-#~ msgstr "RuPay"
-
-#~ msgid "Samsung Pay"
-#~ msgstr "Samsung Betalning"
-
-#~ msgid "Select countries. Leave empty to make available everywhere."
-#~ msgstr "Välj land. Lämna tomt för att göra den tillgänglig överallt."
-
-#~ msgid "Select currencies. Leave empty not to restrict any."
-#~ msgstr "Välj valutor. Lämna tomt för att inte begränsa någon."
-
-#~ msgid "ShopBack"
-#~ msgstr "ShopBack"
-
-#~ msgid "ShopeePay"
-#~ msgstr "ShopeePay"
-
-#~ msgid "Shopping Card"
-#~ msgstr "Shoppingkort"
-
-#~ msgid "Siam Commerical Bank"
-#~ msgstr "Siam Commerical Bank"
-
-#~ msgid "Supported providers:"
-#~ msgstr "Leverantörer som stöds:"
-
-#~ msgid "Swish"
-#~ msgstr "Swish"
-
-#~ msgid "TENPAY"
-#~ msgstr "TENPAY"
-
-#~ msgid "TTB"
-#~ msgstr "TTB"
-
-#~ msgid "Tamilnad Mercantile Bank Limited"
-#~ msgstr "Tamilnad Mercantile Bank Limited"
-
-#~ msgid "Tarjeta MercadoPago"
-#~ msgstr "MercadoPago-kort"
-
-#~ msgid "Techcombank"
-#~ msgstr "Techcombank"
-
-#~ msgid "TendoPay"
-#~ msgstr "TendoPay"
-
-#~ msgid "The color of the card in kanban view"
-#~ msgstr "Färgen på kortet i kanban-vyn"
-
-#~ msgid "The list of providers supporting this payment method."
-#~ msgstr "Lista över leverantörer som stöder den här betalningsmetoden."
-
-#~ msgid ""
-#~ "This payment method needs a partner in crime; you should enable a payment "
-#~ "provider supporting this method first."
-#~ msgstr ""
-#~ "Denna betalningsmetod behöver en partner i brott; du bör aktivera en "
-#~ "betalningsleverantör som stöder denna metod först."
-
-#~ msgid "Tienphong"
-#~ msgstr "Tienphong"
-
-#~ msgid "Tinka"
-#~ msgstr "Tinka"
-
-#~ msgid "Touch'n Go"
-#~ msgstr "Touch'n Go"
-
-#~ msgid "TrueMoney"
-#~ msgstr "TrueMoney"
-
-#~ msgid "Trustly"
-#~ msgstr "Förtroendefull"
-
-#~ msgid "Twint"
-#~ msgstr "Twint"
-
-#~ msgid "UPI"
-#~ msgstr "UPI"
-
-#~ msgid "USSD"
-#~ msgstr "USSD"
-
-#~ msgid "UnionPay"
-#~ msgstr "UnionPay"
-
-#~ msgid "United Overseas Bank"
-#~ msgstr "Förenade utomeuropeiska banken"
-
-#~ msgid "Universal Air Travel Plan"
-#~ msgstr "Universell plan för flygresor"
-
-#~ msgid "V PAY"
-#~ msgstr "V PAY"
-
-#~ msgid "VISA"
-#~ msgstr "VISA"
-
-#~ msgid "Venmo"
-#~ msgstr "Venmo"
-
-#~ msgid "Vietcombank"
-#~ msgstr "Vietcombank"
-
-#~ msgid "Vipps"
-#~ msgstr "Vipps"
-
-#~ msgid "Wallets India"
-#~ msgstr "Plånböcker Indien"
-
-#~ msgid "Walley"
-#~ msgstr "Walley"
-
-#~ msgid "WeChat Pay"
-#~ msgstr "WeChat Betalning"
-
-#~ msgid "WeLend"
-#~ msgstr "WeLend"
-
-#~ msgid ""
-#~ "You can't unarchive tokens linked to inactive payment methods or disabled "
-#~ "providers."
-#~ msgstr ""
-#~ "Du kan inte arkivera polletter kopplade till inaktiva betalningsmetoder "
-#~ "eller inaktiverade leverantörer."
-
-#~ msgid ""
-#~ "You cannot delete the payment provider %s; disable it or uninstall it "
-#~ "instead."
-#~ msgstr ""
-#~ "Du kan inte ta bort betalningsleverantören %s; inaktivera eller "
-#~ "avinstallera den i stället."
-
-#~ msgid "You cannot publish a disabled provider."
-#~ msgstr "Du kan inte publicera en funktionshindrad leverantör."
-
-#~ msgid "cofidis"
-#~ msgstr "cofidis"
-
-#~ msgid "eNETS"
-#~ msgstr "eNETS"
-
-#~ msgid "express checkout not supported"
-#~ msgstr "expressutcheckning stöds inte"
-
-#~ msgid "iDEAL"
-#~ msgstr "iDEAL"
-
-#~ msgid "in3"
-#~ msgstr "in3"
-
-#~ msgid "incompatible country"
-#~ msgstr "inkompatibelt land"
-
-#~ msgid "incompatible currency"
-#~ msgstr "oförenlig valuta"
-
-#~ msgid "incompatible website"
-#~ msgstr "inkompatibel webbplats"
-
-#~ msgid "manual capture not supported"
-#~ msgstr "manuell registrering stöds inte"
-
-#~ msgid "no supported provider available"
-#~ msgstr "ingen leverantör med stöd tillgänglig"
-
-#~ msgid "payment method"
-#~ msgstr "betalningsmetod"
-
-#~ msgid "tokenization not supported"
-#~ msgstr "tokenisering stöds inte"
-
-#~ msgid "tokenization without payment no supported"
-#~ msgstr "tokenisering utan betalning utan stöd"

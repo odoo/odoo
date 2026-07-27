@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 00:34+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -33,21 +33,23 @@ msgstr "點擊次數"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "<a class=\"copy-to-clipboard btn btn-success text-nowrap "
-"o_translate_inline\"><i class=\"fa fa-copy me-2\"/>Copy</a>\n"
+"o_translate_inline\"><i class=\"oi me-2\" data-icon=\"content_copy\"/>Copy</"
+"a>\n"
 "                                        <a class=\"download-qr-code btn btn-"
-"info text-nowrap o_translate_inline\"><i class=\"fa fa-qrcode align-middle "
-"me-2\"/>Download QR Code</a>"
+"info text-nowrap o_translate_inline\"><i class=\"oi align-middle me-2\" data-"
+"icon=\"qr_code\"/>Download QR Code</a>"
 msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "<i class=\"fa fa-copy me-2\"/>Copy"
-msgstr "<i class=\"fa fa-copy me-2\"/> 複製"
+msgid ""
+"<i class=\"oi align-middle me-2\" data-icon=\"qr_code\"/>Download QR Code"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "<i class=\"fa fa-qrcode align-middle me-2\"/>Download QR Code"
-msgstr ""
+msgid "<i class=\"oi me-2\" data-icon=\"content_copy\"/>Copy"
+msgstr "<i class=\"oi me-2\" data-icon=\"content_copy\"/> 複製"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -66,8 +68,8 @@ msgstr ""
 "class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
 "href=\"#\">確定</a> 或\n"
 "                                        <a "
-"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">取消</a>"
-"\n"
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">取消</"
+"a>\n"
 "                                    </span>"
 
 #. module: website_links
@@ -230,6 +232,14 @@ msgid "Number of Clicks"
 msgstr "點選次數"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
+msgid ""
+"Only letters (A–Z, a–z), numbers (0–9), underscores (_) and hyphens (-) are "
+"allowed. No spaces."
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Read More"
 msgstr "閱讀更多"
@@ -239,7 +249,8 @@ msgstr "閱讀更多"
 msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
-msgstr "使用包含<strong>分析追蹤器</strong>的<strong>短網址</strong> 來分享這個頁面。"
+msgstr ""
+"使用包含<strong>分析追蹤器</strong>的<strong>短網址</strong> 來分享這個頁面。"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -352,32 +363,3 @@ msgstr "例：LinkedIn、Facebook、潛在客戶⋯"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
 msgstr "例：https://www.odoo.com/contactus"
-
-#~ msgid ""
-#~ "<span class=\"o_website_links_short_url d-flex align-items-center text-"
-#~ "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
-#~ "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
-#~ "                                        <span "
-#~ "class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;"
-#~ "\">\n"
-#~ "                                            <a role=\"button\" "
-#~ "class=\"o_website_links_ok_edit btn btn-sm btn-primary "
-#~ "o_translate_inline\" href=\"#\">ok</a> or\n"
-#~ "                                            <a "
-#~ "class=\"o_website_links_cancel_edit o_translate_inline\" "
-#~ "href=\"#\">cancel</a>\n"
-#~ "                                        </span>"
-#~ msgstr ""
-#~ "<span class=\"o_website_links_short_url d-flex align-items-center text-"
-#~ "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
-#~ "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
-#~ "                                        <span "
-#~ "class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;"
-#~ "\">\n"
-#~ "                                            <a role=\"button\" "
-#~ "class=\"o_website_links_ok_edit btn btn-sm btn-primary "
-#~ "o_translate_inline\" href=\"#\">確定</a> 或\n"
-#~ "                                            <a "
-#~ "class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">取消</"
-#~ "a>\n"
-#~ "                                        </span>"

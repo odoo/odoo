@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-18 18:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/web/"
@@ -197,18 +197,18 @@ msgstr "<em class=\"d-block my-3 small text-center text-muted\">- 또는 -</em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> 재설정"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> 재설정"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -293,10 +293,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
 
 #. module: web
@@ -3839,8 +3839,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -5309,8 +5309,8 @@ msgstr "처음 %(count)s개의 레코드만 삭제되었습니다. (총 %(total)
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
 "해당 범주는 %(supported_types)s 유형만 지원됩니다. (발견 유형 %(field_type)s)"
 
@@ -5318,8 +5318,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
 "해당 필터는 %(supported_types)s 유형만 지원됩니다. (발견 유형 %(field_type)s)"
 
@@ -6490,11 +6490,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"선택하기 <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"선택하기 <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7217,8 +7217,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7254,8 +7254,8 @@ msgstr "선택한 필드는 서명을 미리 입력하는 데 사용됩니다"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
 "선택한 파일(%(size)sB)이 허용된 최대 파일 크기(%(maxSize)sB)보다 큽니다."
 
@@ -7285,8 +7285,8 @@ msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
 msgstr ""
-"Excel 2007-2013(.xlsx) 형식으로 내보낼 행이 너무 많아 %(count)s의 행, 제한: %"
-"(limit)s의 행) 내보낼 수 없습니다. 내보내기를 나누는 것이 좋습니다."
+"Excel 2007-2013(.xlsx) 형식으로 내보낼 행이 너무 많아 %(count)s의 행, 제한: "
+"%(limit)s의 행) 내보낼 수 없습니다. 내보내기를 나누는 것이 좋습니다."
 
 #. module: web
 #. odoo-javascript
@@ -7853,8 +7853,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27446,95 +27446,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "'Oh snap!'"
-#~ msgstr "'잠시만요!'"
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "어디에서나 클릭 실행"
-
-#~ msgid "All day"
-#~ msgstr "종일"
-
-#~ msgid "Memory limit (in bytes)"
-#~ msgstr "메모리 제한 (바이트 단위)"
-
-#~ msgid "Memory profile"
-#~ msgstr "메모리 프로파일"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
-#~ "다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
-
-#~ msgid "Custom"
-#~ msgstr "사용자 지정"
-
-#~ msgid "Hue"
-#~ msgstr "색조"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "칸반: 유형: %(type)s에 대한 작업 없음"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "모델 레코드 규칙"
-
-#~ msgid "Opacity"
-#~ msgstr "불투명"
-
-#~ msgid "Record Rules"
-#~ msgstr "레코드 규칙"
-
-#~ msgid "Reset"
-#~ msgstr "초기화"
-
-#~ msgid "Saturation and brightness color picker."
-#~ msgstr "채도 및 밝기 색상 선택기."
-
-#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-#~ msgstr "채도: %(saturationLvl)s%. 밝기: %(brightnessLvl)s%"
-
-#~ msgid "Solid"
-#~ msgstr "고체"
-
-#~ msgid ""
-#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
-#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
-#~ "the same time to have finer control."
-#~ msgstr ""
-#~ "위아래 화살표 키를 이용하여 밝기를 조절하고, 좌우 화살표 키를 사용하여 채"
-#~ "도를 조절할 수 있습니다. Ctrl 키와 Command 키를 동시에 누르면 더욱 정교하"
-#~ "게 조정할 수 있습니다."
-
-#~ msgid "hex"
-#~ msgstr "헥사"
-
-#~ msgid "Autosave"
-#~ msgstr "자동 저장"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr "이 옵션을 선택하면 필드가 수정될 때 기록이 즉시 저장됩니다."
-
-#~ msgid "Invalid data"
-#~ msgstr "잘못된 데이터"
-
-#~ msgid "No settings found"
-#~ msgstr "설정 없음"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "원형 차트는 양수와 음수를 혼합할 수 없습니다. 긍정적인 결과만 표시하도록 "
-#~ "도메인을 변경하십시오."
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "다른 키워드로 검색해 보세요"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

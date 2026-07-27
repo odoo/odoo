@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 12:39+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
@@ -313,14 +313,14 @@ msgstr ""
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -346,45 +346,51 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
-msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
-"title=\"Currency\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Uredi"
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Uredi"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid ""
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 
 #. module: point_of_sale
@@ -405,8 +411,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -4003,11 +4010,6 @@ msgid "Followers (Partners)"
 msgstr "Pratitelji (Partneri)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome ikona npr. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5286,6 +5288,11 @@ msgid "Margins & Costs"
 msgstr "Marže i troškovi"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6158,8 +6165,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -9998,19 +10005,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11306,8 +11313,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11715,147 +11722,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Knjigovodstveni dnevnik korišten za kreiranje računa."
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Prije zatvaranja razlike"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Dnevnik gotovine"
-
-#~ msgid "Close Session"
-#~ msgstr "Zatvori sesiju"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Razlika u zatvaranju POS sesija"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Razlika između teoretskog salda zatvaranja i stvarnog salda zatvaranja."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Završni saldo"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Koristi kontrolu novčanica"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Posrednički račun koji se koristi za neidentificirane kupce."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Dnevnik računa"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Je obračunat"
-
-#~ msgid "Journal Items"
-#~ msgstr "Stavke dnevnika"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Gotovina na zatvaranju posljednje sesije"
-
-#~ msgid "Not available"
-#~ msgstr "Nije dostupno"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Temeljnice sesije"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Početni saldo"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Dnevnik računa mora biti u istoj valuti kao i dnevnik prodaje ili valuta "
-#~ "tvrtke ako to nije postavljeno."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Teoretski saldo zatvaranja"
-
-#~ msgid "Transaction"
-#~ msgstr "Transakcija"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nije moguće zatvoriti i potvrditi sesiju.\n"
-#~ "Molimo vas da postavite odgovarajući porezni račun u svaki red za podjelu "
-#~ "sljedećih poreza:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Provjerite internetsku vezu, a zatim pokušajte ponovo sinkronizirati "
-#~ "klikom na crveni WIFI gumb (gornji desni dio zaslona)."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Ispišite račun iz pozadine"
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Narudžba se ne može poslati na server zbog nepoznate greške"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Narudžba je ranije sinkronizirana. Za narudžbu napravite račun s "
-#~ "pozadine: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Poslužitelj je naišao na grešku prilikom zaprimanja narudžbe."
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Nije moguće sinkronizirati narudžbu"
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr ""
-#~ "<span class=\"oe_inline\"><b>Preskočite zaslon za pregled</b></span>"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Osnovni račun"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "IP adresa Epson pisača"
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Ispiši osnovni račun"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Ispiši potvrdu"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Ispis osnovne potvrde bez cijena. Može se koristiti za poklone."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Preskoči zaslon za pregled"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Zaslon računa će se preskočiti ako se račun može automatski ispisati."
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke webstranica"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"
-
-#~ msgid "Info"
-#~ msgstr "Informacija"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Zadnja promjena pripreme"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Prodajno mjesto"

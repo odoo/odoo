@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-18 17:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -198,18 +198,18 @@ msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/>Перезавантажити"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/>Перезавантажити"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -290,10 +290,10 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
 
 #. module: web
@@ -3839,8 +3839,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -5308,21 +5308,21 @@ msgstr "Лише перші записи %(count)s видалено (з вибр
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
-"Підтримуються тільки типи %(supported_types)s для категорій (знайдено тип %"
-"(field_type)s)"
+"Підтримуються тільки типи %(supported_types)s для категорій (знайдено тип "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
-"Для фільтрів підтримуються лише типи %(supported_types)s (знайдено тип %"
-"(field_type)s)"
+"Для фільтрів підтримуються лише типи %(supported_types)s (знайдено тип "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -6480,11 +6480,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"Вибрати <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Вибрати <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7208,8 +7208,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7245,8 +7245,8 @@ msgstr "Вибране поле буде використано для попе�
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
 
 #. module: web
@@ -7846,8 +7846,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27443,57 +27443,3 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
-
-#~ msgid "All day"
-#~ msgstr "Ввесь день"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Ідентифікаційний податковий номер. Значення тут буде перевірено на основі "
-#~ "формату країни. Ви можете використовувати '/', щоб вказати, що партнер не "
-#~ "платить податок."
-
-#~ msgid "Custom"
-#~ msgstr "Кастомний"
-
-#~ msgid "Hue"
-#~ msgstr "Відтінок"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "Правила запису моделі"
-
-#~ msgid "Record Rules"
-#~ msgstr "Правила запису"
-
-#~ msgid "Reset"
-#~ msgstr "Скинути"
-
-#~ msgid "Solid"
-#~ msgstr "Суцільний"
-
-#~ msgid "hex"
-#~ msgstr "шістнадцятковий"
-
-#~ msgid "Autosave"
-#~ msgstr "Автозбереження"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr "Якщо позначено, запис буде збережено одразу після зміни поля."
-
-#~ msgid "Invalid data"
-#~ msgstr "Некоректні дані"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "Діаграма не може містити числа більше і менше нуля. Спробуйте змінити "
-#~ "домен, щоби показати значення тільки більше нуля."
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

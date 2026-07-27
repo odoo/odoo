@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-19 03:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/web/"
@@ -201,18 +201,18 @@ msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr "<i class=\"fa fa-download\"/> (html)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr "<i class=\"fa fa-download\"/> (json)"
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
-msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/> Resetta"
+msgid "<i class=\"oi\" data-icon=\"redo\"/> Reset"
+msgstr "<i class=\"oi\" data-icon=\"redo\"/> Resetta"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -301,15 +301,15 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
-"<br/>It can lead to partially invalid result in case of concurrent profiles."
-"<br/>Use with caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
+"to partially invalid result in case of concurrent profiles.<br/>Use with "
+"caution </span>"
 msgstr ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
-"style=\"display:none\"><b>Avviso:</b> la modalità temporale unirà tutti i "
-"campioni.<br/>Ciò può portare a risultati parzialmente non validi in caso di "
-"profili concorrenti.<br/>Utilizza con cautela </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
+"none\"><b>Avviso:</b> la modalità temporale unirà tutti i campioni.<br/>Ciò "
+"può portare a risultati parzialmente non validi in caso di profili "
+"concorrenti.<br/>Utilizza con cautela </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -3908,8 +3908,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" %"
-"(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" "
+"%(parentFieldLabel)s."
 msgstr ""
 "Verrà eliminata per tutti usando \"%(parentName)s\" %(parentFieldLabel)s."
 
@@ -5383,21 +5383,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type "
+"%(field_type)s)"
 msgstr ""
-"La categoria supporta solo le tipologie %(supported_types)s (trovata %"
-"(field_type)s)"
+"La categoria supporta solo le tipologie %(supported_types)s (trovata "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type %"
-"(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type "
+"%(field_type)s)"
 msgstr ""
-"Il filtro supporta solo le tipologie %(supported_types)s (trovata %"
-"(field_type)s)"
+"Il filtro supporta solo le tipologie %(supported_types)s (trovata "
+"%(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -6569,11 +6569,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid ""
-"Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Select <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 msgstr ""
-"Seleziona <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
-"title=\"Database\"/>"
+"Seleziona <i class=\"oi\" data-icon=\"database\" role=\"img\" aria-"
+"label=\"Database\" title=\"Database\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -7300,11 +7300,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": “%"
-"(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": "
+"“%(action_ids)s”"
 msgstr ""
-"Gli id in %(field_name)s devono essere interi oppure \"false\": \"%"
-"(action_ids)s\""
+"Gli id in %(field_name)s devono essere interi oppure \"false\": "
+"\"%(action_ids)s\""
 
 #. module: web
 #. odoo-javascript
@@ -7339,11 +7339,11 @@ msgstr "Il campo selezionato verrà utilizzato per precompilare la firma"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
-"(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size "
+"(%(maxSize)sB)."
 msgstr ""
-"Il file selezionato (%(size)sB) supera la massima dimensione consentita (%"
-"(maxSize)sB)."
+"Il file selezionato (%(size)sB) supera la massima dimensione consentita "
+"(%(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7946,16 +7946,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days (%"
-"(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days "
+"(%(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
 msgstr ""
 "Utilizza gli operatori \"+=\", \"-=\" per aggiornare la data corrente in "
 "base ai giorni (%(days)s), \n"
-"            alle settimane (%(weeks)s), ai mesi (%(months)s), agli anni (%"
-"(years)s), alle ore (%(hours)s), \n"
+"            alle settimane (%(weeks)s), ai mesi (%(months)s), agli anni "
+"(%(years)s), alle ore (%(hours)s), \n"
 "            ai minuti (%(minutes)s) e ai secondi (%(seconds)s)."
 
 #. module: web
@@ -27562,102 +27562,3 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
-
-#~ msgid "'Oh snap!'"
-#~ msgstr "Oh, no!"
-
-#~ msgid "Run Click Everywhere"
-#~ msgstr "Esegui fare clic ovunque"
-
-#~ msgid "All day"
-#~ msgstr "Tutto il giorno"
-
-#~ msgid "Memory limit (in bytes)"
-#~ msgstr "Limite memoria (in byte)"
-
-#~ msgid "Memory profile"
-#~ msgstr "Profilo memoria"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Il numero di partita IVA. I valori saranno convalidati in base al formato "
-#~ "del Paese. Puoi usare '/' per indicare che il partner non è soggetto a "
-#~ "tassazione."
-
-#~ msgid "Custom"
-#~ msgstr "Personalizzata"
-
-#~ msgid "Having problems ?"
-#~ msgstr "Stai riscontrando problemi?"
-
-#~ msgid "Hue"
-#~ msgstr "Tonalità"
-
-#~ msgid "Kanban: no action for type: %(type)s"
-#~ msgstr "Kanban: nessun'azione per il tipo: %(type)s"
-
-#~ msgid "Model Record Rules"
-#~ msgstr "Regole su record modello"
-
-#~ msgid "Opacity"
-#~ msgstr "Opacità"
-
-#~ msgid "Record Rules"
-#~ msgstr "Regole su record"
-
-#~ msgid "Reset"
-#~ msgstr "Azzera"
-
-#~ msgid "Saturation and brightness color picker."
-#~ msgstr "Selettore di colore per saturazione e luminosità."
-
-#~ msgid "Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %"
-#~ msgstr "Saturazione: %(saturationLvl)s %. Luminosità: %(brightnessLvl)s %"
-
-#~ msgid "Solid"
-#~ msgstr "Tinta unita"
-
-#~ msgid ""
-#~ "Use up and down arrow keys to adapt the brightness. Use left and right "
-#~ "arrow keys to adapt the saturation. Press the Control or Command key at "
-#~ "the same time to have finer control."
-#~ msgstr ""
-#~ "Utilizza i tasti freccia su e giù per regolare la luminosità. Utilizza i "
-#~ "tasti freccia sinistra e destra per regolare la saturazione. Premi "
-#~ "contemporaneamente il tasto Ctrl o Command per ottenere un controllo più "
-#~ "preciso."
-
-#~ msgid "hex"
-#~ msgstr "esadecimale"
-
-#~ msgid "Autosave"
-#~ msgstr "Salvataggio automatico"
-
-#~ msgid ""
-#~ "If checked, the record will be saved immediately when the field is "
-#~ "modified."
-#~ msgstr ""
-#~ "Se selezionato, il record verrà salvato immediatamente quando il campo "
-#~ "viene modificato."
-
-#~ msgid "Invalid data"
-#~ msgstr "Dati non validi"
-
-#~ msgid "No settings found"
-#~ msgstr "Nessuna impostazione trovata"
-
-#~ msgid ""
-#~ "Pie chart cannot mix positive and negative numbers. Try to change your "
-#~ "domain to only display positive results"
-#~ msgstr ""
-#~ "Il grafico a torta non può gestire sia numeri positivi che negativi. "
-#~ "Prova a cambiare il dominio per visualizzare solo risultati positivi."
-
-#~ msgid "Try searching for another keyword"
-#~ msgstr "Prova a cercare un'altra parola chiave"
-
-#~ msgid "props.placeholder"
-#~ msgstr "props.placeholder"

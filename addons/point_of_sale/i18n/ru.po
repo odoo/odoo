@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 06:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -65,8 +65,8 @@ msgstr "%(name)s ВОЗВРАТ"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Метод оплаты изменен с %(old_pm)s на %(new_pm)s и сумма с %(old_amount)s на %"
-"(new_amount)s"
+"Метод оплаты изменен с %(old_pm)s на %(new_pm)s и сумма с %(old_amount)s на "
+"%(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -302,14 +302,14 @@ msgstr "Джинсы с 5 карманами из хлопкового дени�
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -335,47 +335,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Редактировать"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Редактировать"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>Здравствуйте, %(client_name)s!<br/>Ваш чек %(is_invoiced)s с "
 "POS              %(pos_name)s от %(company_name)s на сумму %(amount)s. </p>"
@@ -398,8 +404,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -4022,11 +4029,6 @@ msgid "Followers (Partners)"
 msgstr "Подписчики"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Шрифт, отличный значок, например. к.-а.-задачи"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5328,6 +5330,11 @@ msgid "Margins & Costs"
 msgstr "Маржа и затраты"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6210,8 +6217,8 @@ msgstr "Дополнительные продукты:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -10088,19 +10095,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11426,8 +11433,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11837,376 +11844,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s POS оплата %(partner)s в %(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s с %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s без налога"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Кассовый аппарат</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Статьи из журнала</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Платежи по счетам, представляющие собой агрегированные и разделенные "
-#~ "банками платежи."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Журнал учета, используемый для создания счетов."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Бухгалтерский журнал, используемый для проводки записей в журнале POS-"
-#~ "сеансов и оплаты POS-счетов."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Сумма к остатку"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "При попытке закрыть сеанс произошла ошибка.\n"
-#~ "Вы будете перенаправлены в бэкэнд, чтобы вручную закрыть сессию."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Банковские платежи"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Разница до закрытия"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Кассовый журнал"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr ""
-#~ "Обнаружено расхождение при подсчете наличности (убыток) – при закрытии"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr ""
-#~ "Обнаружено расхождение при подсчете наличности (прибыль) – при закрытии"
-
-#~ msgid "Cash register"
-#~ msgstr "Кассовый аппарат"
-
-#~ msgid "Close Session"
-#~ msgstr "Закрытие сессии"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Мастер закрытия сеанса"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Разница закрытия в %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Ошибка закрытия сеанса"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Объедините %(payment_method)s POS-платежи с %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Дебиторская задолженность по умолчанию (PoS)"
-
-#~ msgid "Destination account"
-#~ msgstr "Счет назначения"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Учетная запись назначения доступна только для чтения"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Разница на момент закрытия сессии PoS"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Разница между теоретическим итоговым балансом и реальным итоговым "
-#~ "балансом."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Конечный остаток"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Принудительное закрытие сеанса"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "При использовании этого способа оплаты приходится устанавливать клиента и "
-#~ "разделять записи в журнале для каждого клиента. Это может замедлить "
-#~ "процесс закрытия."
-
-#~ msgid "From invoice payments"
-#~ msgstr "От оплаты счетов-фактур"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Имеет контроль наличности"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Идентификация клиента"
-
-#~ msgid "Information message"
-#~ msgstr "Информационное сообщение"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Посреднический счет, используемый для неопознанных клиентов."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Журнал счетов"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Оплата счета-фактуры за %(order)s (%(account_move)s) с использованием %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Выставлен счет"
-
-#~ msgid "Journal Items"
-#~ msgstr "Статьи из журнала"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Денежные средства на закрытие последней сессии"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Необходим счет убытков для следующих журналов, чтобы отразить потерянную "
-#~ "сумму: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Необходим счет прибыли для следующих журналов для проводки полученной "
-#~ "суммы: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Недоступно"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Начальный баланс, суммированный со всеми кассовыми операциями."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Перейдите в журнал %s и определите счет убытков. Этот счет будет "
-#~ "использоваться для учета денежных разниц."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Перейдите в журнал %s и определите счет прибыли. Этот счет будет "
-#~ "использоваться для учета денежных разниц."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Скидка с %(original_price)s до %(discounted_price)s"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Связанная сессия: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Сторнирование записи закрытия POS %(entry)s для ордера %(order)s из "
-#~ "сессии %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Запись в журнале сеанса"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Начальный баланс"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Журнал счета должен быть в той же валюте, что и журнал продаж или валюта "
-#~ "компании, если она не установлена."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Сессия уже была закрыта другим пользователем. Все продажи, завершенные за "
-#~ "это время, были сохранены в спасательной сессии, которую можно "
-#~ "просмотреть в любое время и отправить в бухгалтерию с панели Point of "
-#~ "Sale."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Теоретический конечный баланс"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Существует разница между суммами в проводках и суммами в заказах, "
-#~ "возможно, это связано с налогами или изменениями в бухгалтерских "
-#~ "конфигурациях."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "В этой сессии нет кассового аппарата."
-
-#~ msgid "Transaction"
-#~ msgstr "Транзакция"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Невозможно закрыть и подтвердить сессию.\n"
-#~ "Пожалуйста, установите соответствующий налоговый счет в каждой строке "
-#~ "перераспределения следующих налогов:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Вы не можете закрыть кассовый аппарат, если счета-фактуры не "
-#~ "опубликованы.\n"
-#~ "Счета-фактуры: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Вы включили опцию \"Определить клиента\" для метода оплаты %"
-#~ "(payment_method)s, но заказ %(order)s не содержит клиента."
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Проверьте подключение к Интернету, затем попробуйте синхронизировать "
-#~ "снова, нажав на красную кнопку wifi (в правом верхнем углу экрана)."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Пожалуйста, распечатайте счет из бэкэнда"
-
-#~ msgid "Thank you."
-#~ msgstr "Спасибо."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Не удалось отправить заказ на сервер из-за неизвестной ошибки"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Заказ был синхронизирован ранее. Пожалуйста, сделайте счет из бэкэнда для "
-#~ "заказа: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "При получении вашего заказа сервер обнаружил ошибку."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Чтобы удалить товар, убедитесь, что все сессии POS закрыты.\n"
-#~ "\n"
-#~ "Удаление товара из активной сессии – это как вырвать бургер у клиента из "
-#~ "рук: повсюду полетят кетчуп и майонез!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Невозможно синхронизировать заказ"
-
-#~ msgid "Welcome."
-#~ msgstr "Добро пожаловать."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr ""
-#~ "<span class=\"oe_inline\"><b>Пропустить экран предварительного просмотра</"
-#~ "b></span>"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Стандартный чек"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "IP-адрес принтера Epson"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "IP-адрес локальной сети принтера чеков Epson или его серийный номер, если "
-#~ "в настройках принтера включена опция «Автоматическое обновление "
-#~ "сертификата»."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Печать стандартного чека"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Печать полного чека"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Печать чека"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Печать стандартного чека без цен. Можно использовать для подарков."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Пропустить экран предварительного просмотра"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Экран квитанции будет пропущен, если квитанция может быть напечатана "
-#~ "автоматически."
-
-#~ msgid "Website Messages"
-#~ msgstr "Веб-сайт сообщения"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общений с сайта"
-
-#~ msgid "Info"
-#~ msgstr "Информация"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Последнее изменение подготовки"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Последнее напечатанное состояние заказа"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Заказ устарел"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Торговая точка"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Этот заказ был изменен на другом устройстве. Если вы редактировали строки "
-#~ "заказа, убедитесь, что ваши правки не будут перезаписаны.\n"
-#~ "\n"
-#~ "Заказ будет отправлен на сервер с последними изменениями, внесенными на "
-#~ "этом устройстве."

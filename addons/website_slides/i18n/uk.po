@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 23:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -229,8 +229,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
+"name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -254,8 +254,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -279,11 +279,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -408,11 +408,10 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -426,305 +425,306 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
-msgstr "<i class=\"fa fa-arrow-right\"/> Розпочати навчання"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> Статистика"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Lessons</span>"
-msgstr ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Уроки</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-msgid "<i class=\"fa fa-check me-1\"/>Completed"
-msgstr "<i class=\"fa fa-check me-1\"/>Завершено"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_card
-msgid "<i class=\"fa fa-check\" aria-hidden=\"true\"/> Completed"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-check\"/> Completed"
-msgstr "<i class=\"fa fa-check\"/> Завершено"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Завантаження...</b>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-msgstr ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-cloud-upload me-1\"/>Add Content"
-msgstr "<i class=\"fa fa-cloud-upload me-1\"/>Додати вміст"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments\"/> Comments"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
-msgstr ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Повний екрсн</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-eraser me-1\"/>Clear filters"
-msgstr "<i class=\"fa fa-eraser me-1\"/>Очистити фільтри"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> This document is private."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> Цей документ приватний."
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-msgstr ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-msgstr ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-msgstr ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-msgstr ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-msgstr ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-msgstr ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
-msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr "<i class=\"fa fa-flag text-warning\"/> Вікторина"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
-msgid "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
-msgstr "<i class=\"fa fa-flag-checkered text-warning\"/>Вікторина"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-folder-o me-1\"/><span>Add Section</span>"
-msgstr "<i class=\"fa fa-folder-o me-1\"/><span>Додати розділ</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
-msgstr "<i class=\"fa fa-folder-o me-1\"/>Додати розділ"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> Про"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/> Курс"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
-"to course</span>"
-msgstr ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Повернутися до курсу</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-msgid ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Course Locked</span>"
-msgstr ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Курс заблоковано</span>"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
-"Content</span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">Add Content</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
 "block\">Додати вміст</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-plus me-1\"/><span>Add Content</span>"
-msgstr "<i class=\"fa fa-plus me-1\"/><span>Додати вміст</span>"
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/><span>Add Content</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/><span>Додати вміст</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+msgid "<i class=\"oi me-1\" data-icon=\"check\"/>Completed"
+msgstr "<i class=\"oi me-1\" data-icon=\"check\"/>Завершено"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Add Content"
+msgstr "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Додати вміст"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>All Courses"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>Усі курси"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/><span>Add Section</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/><span>Додати розділ</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/>Add a section"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/>Додати розділ"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Clear filters"
+msgstr "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Очистити фільтри"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+msgid ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"          My Courses"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Додати запитання</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Додати вікторину</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
-msgstr ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Prev</span>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Попередній перегляд</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
+msgstr ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Повний екрсн</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Поділитися</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Share"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Поділитися"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Quiz"
+msgstr "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Вікторина"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi oi-filled\" data-icon=\"forum\"/> Comments"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Loading...</b>"
+msgstr ""
+"<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Завантаження...</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
+msgid "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Quiz"
+msgstr "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Вікторина"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi\" data-icon=\"arrow_forward\"/> Start Learning"
+msgstr "<i class=\"oi\" data-icon=\"arrow_forward\"/> Розпочати навчання"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Statistics"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> Статистика"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+msgid "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> Completed"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "<i class=\"oi\" data-icon=\"check\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> Завершено"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">Share</"
 "span>"
 msgstr ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block "
 "ms-2\">Поділитися</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> Поділитися"
+msgid "<i class=\"oi\" data-icon=\"family_history\"/> Share"
+msgstr "<i class=\"oi\" data-icon=\"family_history\"/> Поділитися"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"home\"/> About"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> Про"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"oi\" data-icon=\"home\"/> Course"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> Курс"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Back to course</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Повернутися до курсу</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+msgid ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Course Locked</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Курс заблоковано</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Exit Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Вийти з повного екрану</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"          My Courses"
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lessons</span>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Уроки</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"oi oi-arrow-right me-1\"/>All Courses"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>Усі курси"
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Share"
+msgstr ""
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Поділитися"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Prev</span>"
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> This document is private."
 msgstr ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Попередній перегляд</span>"
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> Цей документ приватний."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>You are enrolled</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>You are enrolled</small>"
 msgstr ""
 
 #. module: website_slides
@@ -741,15 +741,16 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> Completed</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> Completed</span></small>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
 
@@ -782,17 +783,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Start now</span><i "
-"class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"class=\"oi d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">Далі</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Далі</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -802,8 +803,8 @@ msgstr "<span class=\"fw-normal\">Останнє оновлення:</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi oi-"
-"arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: website_slides
@@ -833,7 +834,7 @@ msgstr "<span class=\"o_stat_text\">Вбудовані перегляди</span>
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                        Create a Google Project and Get a Key"
 msgstr ""
 
@@ -906,42 +907,46 @@ msgstr "<span class=\"text-muted\">Частини інформатики</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 msgstr ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -949,13 +954,13 @@ msgstr ""
 msgid ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 msgstr ""
 
@@ -1410,7 +1415,8 @@ msgid ""
 "All the courses you attend will appear here. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> Start Learning\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> "
+"Start Learning\n"
 "                        </a>"
 msgstr ""
 
@@ -3180,11 +3186,6 @@ msgid "Followers (Partners)"
 msgstr "Підписники (Партнери)"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
-
-#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
@@ -3580,8 +3581,8 @@ msgstr "Джерело зображення"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "Неможливо відправити електронні листи. Виберіть спершу «Шаблон спільного "
 "доступу до каналу» для курсів %(course_names)s"
@@ -3590,8 +3591,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 "Неможливо відправити електронні листи. Виберіть спершу «Поділитися шаблоном» "
 "для курсів %(course_names)s"
@@ -4150,6 +4151,11 @@ msgid "Mark the correct answer by checking the <b>correct</b> mark."
 msgstr "Позначайте правильні відповіді, позначивши <b>правильно</b>."
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Members"
 msgstr "Учасники"
@@ -4320,8 +4326,8 @@ msgstr "Новий курс"
 msgid ""
 "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
 msgstr ""
-"Новий {{ object.slide_category }} опубліковано на "
-"{{ object.channel_id.name }}"
+"Новий {{ object.slide_category }} опубліковано на {{ object.channel_id."
+"name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5514,8 +5520,8 @@ msgstr "Slide / Partner decorated m2m"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
-msgid "Slide Icon fa-class"
-msgstr "Знак слайду fa-class"
+msgid "Slide Icon oi-class"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -7181,9 +7187,3 @@ msgstr "{{ user.name }} поділився з вами {{ object.slide_category 
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">Без категорії</span>"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на сайті"

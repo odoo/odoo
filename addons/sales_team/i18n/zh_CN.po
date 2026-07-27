@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 14:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -40,36 +40,48 @@ msgstr "%(user_names)s 已在其他团队内（%(team_names)s）。"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"group\" "
+"title=\"Sales Team\"/>"
+msgstr ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"group\" title=\"销售"
+"团队\"/>"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-users\" title=\"Sales Team\"/>"
-msgstr "<i class=\"d-none d-md-block fa fa-users\" title=\"销售团队\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
-"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Email\" title=\"Email\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
-msgid "<i class=\"fa fa-fw me-1 fa-users text-primary\" title=\"Sales Team\"/>"
+msgid ""
+"<i class=\"oi oi-fw oi-filled me-1 text-primary\" data-icon=\"group\" "
+"title=\"Sales Team\"/>"
 msgstr ""
 
 #. module: sales_team
@@ -302,7 +314,8 @@ msgstr "ID"
 msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
-msgstr "如果是真的，用户可以属于几个销售团队。否则，成员资格只限于一个销售团队。"
+msgstr ""
+"如果是真的，用户可以属于几个销售团队。否则，成员资格只限于一个销售团队。"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -616,7 +629,8 @@ msgstr ""
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
-msgstr "这些代表了您必须做的不同类别的事情（例如 \"打电话 \"或 \"准备会议\"）。"
+msgstr ""
+"这些代表了您必须做的不同类别的事情（例如 \"打电话 \"或 \"准备会议\"）。"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -720,8 +734,8 @@ msgstr "在多个团队工作？"
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that %"
-"(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that "
+"%(duplicates)s already exist(s)."
 msgstr "您试图创建重复的会员资格。我们发现%(duplicates)s已经存在。"
 
 #. module: sales_team

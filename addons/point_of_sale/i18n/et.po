@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 00:33+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/"
@@ -316,14 +316,14 @@ msgstr "5-taskuga puuvillased teksad"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -349,47 +349,53 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Muuda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Muuda"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
 "<p>Lugupeetud %(client_name)s,<br/> Siin on teie arve%(is_invoiced)s "
 "tellimusel %(pos_name)s summas %(amount)s ettevõttelt %(company_name)s.</p>"
@@ -412,8 +418,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
@@ -4017,11 +4024,6 @@ msgid "Followers (Partners)"
 msgstr "Jälgijad (partnerid)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon nt. fa-tasks"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5311,6 +5313,11 @@ msgid "Margins & Costs"
 msgstr "Marginaalid ja kulud"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6191,8 +6198,8 @@ msgstr "Valikulised tooted:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 
 #. module: point_of_sale
@@ -10042,19 +10049,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11146,8 +11153,8 @@ msgid ""
 "the form view in studio if no PoS order exist"
 msgstr ""
 "Te ei saa: kui PoS tellimust pole, ei saa Te luua taustaliidese kaudu pos-"
-"tellimust või tühistada hinnakirja, luua pythoni testis vormitööriistaga "
-"pos.order või muuta vormivaadet Studioga."
+"tellimust või tühistada hinnakirja, luua pythoni testis vormitööriistaga pos."
+"order või muuta vormivaadet Studioga."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11380,8 +11387,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11791,335 +11798,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s POS payment of %(partner)s in %(session)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s  maksustamata"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Kassa</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Andmiku kanderead</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr "Kontomaksed, mis esindavad koondmakseid ja panga osamakseid."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Arvede koostamiseks kasutatud raamatupidamisandmik."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Raamatupidamise andmik, mida kasutatakse POS-seansi kannete ja "
-#~ "kassatšekkide maksete kirjendamiseks."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Amount to balance"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "Seansi sulgemisel ilmnes viga.\n"
-#~ "Seansi käsitsi sulgemiseks suunatakse teid lõppu tagasi.."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Pangamaksed"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Enne erinevuse sulgemist"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Sularaha andmik"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Loendamisel täheldatud rahaerinevus (Kahjum)"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Loendamise ajal täheldatud rahaerinevus (Kasum)"
-
-#~ msgid "Cash register"
-#~ msgstr "Kassaaparaat"
-
-#~ msgid "Close Session"
-#~ msgstr "Sulge sessioon"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Close Session Wizard"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Sulgemisel erinevus %(payment_method)s(%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Viga sulgemisel"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Ühenda %(payment_method)s kassa maksmised %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Vaikimisi laekumiste konto (PoS)"
-
-#~ msgid "Destination account"
-#~ msgstr "Sihtkoha konto"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Sihtkoha konto on kirjutuskaitstud"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Erinevus PoS-seansi lõpetamisel"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr "Erinevus teoreetilise lõppbilansi ja tegeliku lõppbilansi vahel."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Lõppsaldo"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Sundige programm sulgema "
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Selle makseviisi kasutamisel kliendi määramine kohustuslik ja jagades "
-#~ "andmikukirjed iga kliendi jaoks. See võib aeglustada sulgemisprotsessi."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Arvete tasumisest"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Omab sularaha kontrolli"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Tuvastage klient"
-
-#~ msgid "Information message"
-#~ msgstr "Informatiivne sõnum"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Vahekonto, mida kasutatakse tundmatute klientide jaoks."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Müügiarvete andmik"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Arve maksmine tellimusel %(order)s(%(account_move)s) kasutades %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "On arvel"
-
-#~ msgid "Journal Items"
-#~ msgstr "Andmike kanderead"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Last Session Closing Cash"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-
-#~ msgid "Not available"
-#~ msgstr "Pole saadaval"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Algsaldo summeeritakse kõikidele sularahatehingutele."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Palun mine %s registrile ja määra Kahjumikonto. Antud kontot kasutatakse "
-#~ "registreerimaks sularahavahe."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Palun mine %s registrile ja määra Kasumikonto. Antud kontot kasutatakse "
-#~ "registreerimaks sularaha erinevus."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Allahindlus %(original_price)s -> %(discounted_price)s"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Seotud sessioon: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Sessiooni Andmiku Kanne"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Algsaldo"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Arve andmik peab olema samas vääringus kui müügipäevik või ettevõtte "
-#~ "valuuta, kui see pole määratud."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Seanss on juba suletud teise kasutaja poolt. Kõik vahepeal lõpetatud "
-#~ "müügitehingud on salvestatud pääste seanssi, mida saab igal ajal üle "
-#~ "vaadata ja raamatupidamisse edastada müügipunkti juhtpaneelilt."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Teoreetiline Lõppsaldo"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Postitatavate ja tellimuste summade vahel on erinevus, tõenäoliselt on "
-#~ "selle põhjuseks maksud või raamatupidamise seadistuste muudatused."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Sellel sessioonil puudub kassaaparaat."
-
-#~ msgid "Transaction"
-#~ msgstr "Tehing"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Seanssi ei saa sulgeda ega kinnitada.\n"
-#~ "Palun määrake järgmiste maksude igale jaotuse reale vastav maksukonto:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Te ei saa POS´i sulgeda kui arved ei ole postitatud.\n"
-#~ "Arved: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Olete võimaldanud \"Tuvastaja kliendi\" valiku %(payment_method)s "
-#~ "maksemeetodile, aga tellimusel %(order)s puudub klient."
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Kontrollige Interneti-ühendust ja proovige uuesti sünkroonida, klõpsates "
-#~ "punasel wifi nupul (ekraani paremas ülanurgas)."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Palun printige arve taustprogrammist"
-
-#~ msgid "Thank you."
-#~ msgstr "Aitäh."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr "Tellimust ei saanud serverile saata tundmatu tõrke tõttu"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Tellimus on varem sünkroonitud. Palun tehke arve tellimuse "
-#~ "taustaprogrammist:"
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Teie tellimuse kättesaamisel ilmnes serveris viga."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Veenduge, et kõik sessioonid on suletud enne toote kustutamist.\n"
-#~ "\n"
-#~ "Toote kustutamine sessiooni ajal oleks nagu võtta hamburger kliendi "
-#~ "hambust."
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Tellimusi ei saa sünkroniseerida"
-
-#~ msgid "Welcome."
-#~ msgstr "Tere tulemast."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr "<span class=\"oe_inline\"><b>Jäta eelvaate ekraan vahele</b></span>"
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Tavaline tšekk"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Epson printeri IP aadress"
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Prindi tavaline tšekk"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Prindi täielik kviitung"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Prindi Kviitung"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Prindi pilet ilma hinnata. Sobilik kingitusteks."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Jäta eelvaade vahele"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr ""
-#~ "Kui kviitungit saab automaatselt printida, jäetakse kviitungiekraan "
-#~ "vahele."
-
-#~ msgid "Website Messages"
-#~ msgstr "Veebilehe sõnumid"
-
-#~ msgid "Website communication history"
-#~ msgstr "Veebilehe suhtluse ajalugu"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Viimane ettevalmistuse muudatus"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Viimane printimise staatus tellimusel"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Kassa"

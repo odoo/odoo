@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 02:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -42,23 +42,23 @@ msgstr "# Продукты"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s со скидкой %(discount)s %% %(discount_type)s и дополнительной "
 "платой %(surcharge)s.\n"
-"Пример: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Пример: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date (%"
-"(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date "
+"(%(start_date)s)"
 msgstr ""
-"%(item_name)s: дата окончания (%(end_date)s) должна быть позже даты начала (%"
-"(start_date)s)"
+"%(item_name)s: дата окончания (%(end_date)s) должна быть позже даты начала "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -256,20 +256,20 @@ msgstr "<b>Совет: хотите округлить до 9,99?</b>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Валюта\" title=\"Валюта\"/"
-">"
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Валюта\" "
+"title=\"Валюта\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -1016,8 +1016,8 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %"
-"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 "
+"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
@@ -1875,13 +1875,6 @@ msgid "Followers (Partners)"
 msgstr "Подписчики"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Шрифт, отличный значок, например. к.-а.-задачи"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to "
@@ -2615,6 +2608,13 @@ msgid "Material"
 msgstr "Материал"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Макс. Маржа"
@@ -2986,8 +2986,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute %"
-"(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "На изделии %(product)s нельзя преобразовать атрибут %(attribute_src)s в "
 "атрибут %(attribute_dest)s."
@@ -4269,11 +4269,11 @@ msgstr "Артикул «%s» уже существует."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product %"
-"(product)s."
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
-"Атрибут %(attribute)s должен иметь хотя бы одно значение для продукта %"
-"(product)s."
+"Атрибут %(attribute)s должен иметь хотя бы одно значение для продукта "
+"%(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4316,8 +4316,8 @@ msgstr "Тип дисплея, используемый в конфигурат�
 #, fuzzy
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
-"(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
+"\"%(id)s\""
 msgstr ""
 "Существующий товар имеет другое значение атрибута. «%(imported_values)s» не "
 "эквивалентно «%(existing_values)s» для «%(external_id)s», «%(id)s»"
@@ -4416,8 +4416,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Значение %(value)s не определено для атрибута %(attribute)s на продукте %"
-"(product)s."
+"Значение %(value)s не определено для атрибута %(attribute)s на продукте "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -5236,8 +5236,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
 "Вы не можете изменить продукт значения %(value)s, установленного на продукте "
 "%(product)s."
@@ -5246,11 +5246,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
-"Вы не можете изменить значение %(value)s, установленное на изделии %"
-"(product)s."
+"Вы не можете изменить значение %(value)s, установленное на изделии "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -5597,33 +5597,3 @@ msgstr "в"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "XLSX"
-
-#~ msgid "Attached To"
-#~ msgstr "Прикрепить к"
-
-#~ msgid "Creation"
-#~ msgstr "Создать"
-
-#~ msgid "Document"
-#~ msgstr "Документ"
-
-#~ msgid "History"
-#~ msgstr "История"
-
-#~ msgid "Image is a link"
-#~ msgstr "Изображение является ссылкой"
-
-#~ msgid "on"
-#~ msgstr "вкл"
-
-#~ msgid "<strong>Qty: </strong>"
-#~ msgstr "<strong>Кол-во: </strong>"
-
-#~ msgid "Eco-friendly Wooden Chair"
-#~ msgstr "Экологически чистый деревянный стул"
-
-#~ msgid "Package Type A"
-#~ msgstr "Тип упаковки A"
-
-#~ msgid "Price:"
-#~ msgstr "Цена:"

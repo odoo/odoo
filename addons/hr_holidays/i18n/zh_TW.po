@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 03:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -315,13 +315,13 @@ msgid ""
 "                    <p>I'm requesting a Time Off. I would appreciate if you "
 "could approve it whenever possible!</p>\n"
 "                    <ul>\n"
-"                        <li>Time Type: <t t-"
-"out=\"object.work_entry_type_id.name\"/></li>\n"
+"                        <li>Time Type: <t t-out=\"object.work_entry_type_id."
+"name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Reason: <t t-"
-"out=\"object.name\"/></li>\n"
+"                        <li t-if=\"object.name\">Reason: <t t-out=\"object."
+"name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
@@ -330,27 +330,33 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
-msgid "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
-msgstr "<i class=\"fa fa-long-arrow-right\" title=\"至\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<i class=\"fa fa-paperclip\" title=\"Attachments\"/>"
+msgid "<i class=\"oi\" data-icon=\"attach_file\" title=\"Attachments\"/>"
 msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "<i class=\"oi\" data-icon=\"east\" title=\"to\"/>"
+msgstr "<i class=\"oi\" data-icon=\"east\" title=\"至\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -595,8 +601,8 @@ msgstr "今日缺勤"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "According to your working schedule you are expected to work %(days)s days in "
-"this period, but %(nb_days)s days will be used because this leave %"
-"(work_entry_type_name)s can only be taken by days."
+"this period, but %(nb_days)s days will be used because this leave "
+"%(work_entry_type_name)s can only be taken by days."
 msgstr ""
 
 #. module: hr_holidays
@@ -1045,8 +1051,8 @@ msgstr "已批准的假期申請"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"Approved time off cannot be modified (%(employee)s: %(date_from)s to %"
-"(date_to)s)."
+"Approved time off cannot be modified (%(employee)s: %(date_from)s to "
+"%(date_to)s)."
 msgstr ""
 
 #. module: hr_holidays
@@ -1964,8 +1970,8 @@ msgstr "結束日期"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee_departure.py:0
 msgid ""
-"End date has been updated because the employee will leave the company on %"
-"(departure_date)s."
+"End date has been updated because the employee will leave the company on "
+"%(departure_date)s."
 msgstr "結束日期已更新，因為員工將於 %(departure_date)s 離開公司。"
 
 #. module: hr_holidays
@@ -2024,12 +2030,6 @@ msgstr "關注人"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "關注人（業務夥伴）"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖示，例如，fa-task"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -2233,9 +2233,8 @@ msgstr "小時圖示顯示"
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.new_timeoff_request_template
 msgid ""
-"I'm requesting {{ object.duration_display }} of "
-"{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
-"{{ object.request_date_to }}"
+"I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id."
+"name }} from {{ object.request_date_from }} to {{ object.request_date_to }}"
 msgstr ""
 
 #. module: hr_holidays
@@ -2574,6 +2573,12 @@ msgstr "強制日"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_month__3
 msgid "March"
 msgstr "三月"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__max_leaves
@@ -3819,8 +3824,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"The total negative allocation within this validity period cannot exceed %"
-"(max)s %(unit)s."
+"The total negative allocation within this validity period cannot exceed "
+"%(max)s %(unit)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -5262,24 +5267,3 @@ msgstr "驗證"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr ""
-
-#~ msgid "There is no valid allocation to cover that request."
-#~ msgstr "沒有足夠的有效分配休假去滿足該申請。"
-
-#~ msgid "Require Supporting Document"
-#~ msgstr "需要證明文件"
-
-#~ msgid "This modification is not allowed in the current state."
-#~ msgstr "本狀態不允許此修改."
-
-#~ msgid "Pending Requests"
-#~ msgstr "待處理請求"
-
-#~ msgid "Website Messages"
-#~ msgstr "網站資訊"
-
-#~ msgid "Website communication history"
-#~ msgstr "網站溝通記錄"
-
-#~ msgid "<span class=\"mx-2\">up to</span>"
-#~ msgstr "<span class=\"mx-2\">直至</span>"

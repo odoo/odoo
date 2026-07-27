@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 09:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -799,23 +799,20 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-"
-"to:info@yourcompany.example.com\" title=\"Send an "
-"email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
+"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mail-"
-"to:info@ihrunternehmen.beispiel.com\" title=\"Send an "
-"email\">info@ihrunternehmen.beispiel.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-to:info@ihrunternehmen.beispiel."
+"com\" title=\"Send an email\">info@ihrunternehmen.beispiel.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" "
-"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
+"com\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" "
-"href=\"mailto:info@yourcompany.example.com\">info@ihrunternehmen.beispiel.com</"
-"a>"
+"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
+"com\">info@ihrunternehmen.beispiel.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -1112,74 +1109,88 @@ msgid "<head> and </body>"
 msgstr "<head> und </body>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+"<i class=\"oi oi-1x oi-fw i-filled me-1\" data-icon=\"phone\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
 "small></span>"
 msgstr ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.header_text_element
+msgid ""
+"<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>\n"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
+"small></span>"
+msgstr ""
+"<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>\n"
 "                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</"
 "small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>͏"
-msgstr "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>͏"
+msgid "<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>͏"
+msgstr "<i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"phone\"/>͏"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_kanban_view
-msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"URL\"/>"
-msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"URL\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" title=\"URL\"/"
+">"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
-msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-info-circle me-1\"/>\n"
-"                                Supported formats for social share images "
-"are PNG, JPG, WEBP, or GIF."
-msgstr ""
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" title=\"URL\"/"
+">"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">A password is required to "
 "access this page.</span>"
 msgstr ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Für den Zugriff auf diese "
 "Seite ist ein Passwort erforderlich.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
 msgstr ""
-"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"<i class=\"oi oi-2x\" data-icon=\"lock\"/><br/>\n"
 "                            <span class=\"mt-1\">Falsches Passwort</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"info\"/>\n"
+"                                Supported formats for social share images "
+"are PNG, JPG, WEBP, or GIF."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-danger\" data-"
+"icon=\"circle\" title=\"Offline\"/>"
+msgstr ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-danger\" data-"
+"icon=\"circle\" title=\"Offline\"/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-success\" data-"
+"icon=\"circle\" title=\"Connected\"/>"
+msgstr ""
+"<i class=\"oi oi-filled oi-fw o_button_icon text-success\" data-"
+"icon=\"circle\" title=\"Connected\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_badge
@@ -1443,32 +1454,34 @@ msgstr "<p>Angehängte Dateien: </p>"
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"attach_money\"/>\n"
 "                        Low Price Guarantee\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-"
-"stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"shopping_basket\"/>\n"
 "                        30 Days Online Returns\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/"
-">\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"local_shipping\"/>\n"
 "                        Standard Shipping\n"
 "                    </small>"
 msgstr ""
 "<small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-usd fa-stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"attach_money\"/>\n"
 "                        Tiefpreisgarantie\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-shopping-basket fa-"
-"stack me-1\"/>\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"shopping_basket\"/>\n"
 "                        30-Tage-Online-Rückgabe\n"
 "                    </small>\n"
 "                    <small class=\"d-flex align-items-center\">\n"
-"                        <i class=\"fa fa-1x fa-fw fa-truck fa-stack me-1\"/"
-">\n"
+"                        <i class=\"oi oi-1x oi-fw oi-stack me-1\" data-"
+"icon=\"local_shipping\"/>\n"
 "                        Standardversand\n"
 "                    </small>"
 
@@ -1658,12 +1671,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small>\n"
-"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            <i class=\"oi oi-1x oi-fw oi-filled me-1\" data-"
+"icon=\"mail\"/>\n"
 "                            info@yourcompany.example.com\n"
 "                        </small>"
 msgstr ""
 "<small>\n"
-"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            <i class=\"oi oi-1x oi-fw oi-filled me-1\" data-"
+"icon=\"mail\"/>\n"
 "                            info@ihrunternehmen.beispiel.com\n"
 "                        </small>"
 
@@ -1675,10 +1690,10 @@ msgstr "<small>Kostenlose Rücksendung und Standardversand</small>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"<small><i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"mail\"/> "
 "info@yourcompany.example.com</small>"
 msgstr ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"<small><i class=\"oi oi-1x oi-fw oi-filled me-1\" data-icon=\"mail\"/> "
 "info@ihrunternehmen.beispiel.com</small>"
 
 #. module: website
@@ -2476,16 +2491,16 @@ msgid ""
 "<span invisible=\"website_language_count &lt; 2\">Website visitors see the "
 "version matching their browser language, or the default if unavailable.</"
 "span>\n"
-"                                <span invisible=\"website_language_count "
-"&gt;= 2\">Install multiple languages to enable translation across your "
-"website.</span>"
+"                                <span invisible=\"website_language_count &gt;"
+"= 2\">Install multiple languages to enable translation across your website.</"
+"span>"
 msgstr ""
 "<span invisible=\"website_language_count &lt; 2\">Website-Besucher sehen die "
 "Version, die ihrer Browsersprache entspricht, oder die Standardversion, "
 "falls diese nicht verfügbar ist.</span>\n"
-"                                <span invisible=\"website_language_count "
-"&gt;= 2\">Installieren Sie mehrere Sprachen, um Übersetzungen auf Ihrer "
-"gesamten Website zu ermöglichen.</span>"
+"                                <span invisible=\"website_language_count &gt;"
+"= 2\">Installieren Sie mehrere Sprachen, um Übersetzungen auf Ihrer gesamten "
+"Website zu ermöglichen.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_big_number
@@ -3285,8 +3300,8 @@ msgid ""
 "Add 3rd-party service domains <em>(\"www.example.com\" or \"example.com\")</"
 "em>, one per line."
 msgstr ""
-"Fügen Sie Domains für Dienste von Drittanbietern hinzu "
-"<em>(„www.beispiel.com“ oder „beispiel.com“)</em>, eine pro Zeile."
+"Fügen Sie Domains für Dienste von Drittanbietern hinzu <em>(„www.beispiel."
+"com“ oder „beispiel.com“)</em>, eine pro Zeile."
 
 #. module: website
 #. odoo-javascript
@@ -3610,8 +3625,8 @@ msgid ""
 "Add your own title or leave empty to use \"%(defaultTitle)s\". Your page "
 "title should contain max 65 characters."
 msgstr ""
-"Fügen Sie Ihren eigenen Titel hinzu oder lassen Sie das Feld leer, um „%"
-"(defaultTitle)s“ zu verwenden. Ihr Seitentitel sollte maximal 65 Zeichen "
+"Fügen Sie Ihren eigenen Titel hinzu oder lassen Sie das Feld leer, um "
+"„%(defaultTitle)s“ zu verwenden. Ihr Seitentitel sollte maximal 65 Zeichen "
 "enthalten."
 
 #. module: website
@@ -8242,8 +8257,8 @@ msgstr "Geben Sie Ihr Geburtsjahr ein"
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Entered date or time is not correct! It must be %(start)s (%(format)s)."
 msgstr ""
-"Das eingegebene Datum oder die angegebene Uhrzeit ist nicht korrekt! Muss %"
-"(start)s (%(format)s) sein."
+"Das eingegebene Datum oder die angegebene Uhrzeit ist nicht korrekt! Muss "
+"%(start)s (%(format)s) sein."
 
 #. module: website
 #. odoo-javascript
@@ -8268,8 +8283,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s (%"
-"(format)s)."
+"Entered date or time is not correct! It must be before %(start)s "
+"(%(format)s)."
 msgstr ""
 "Das eingegebene Datum oder die angegebene Uhrzeit ist nicht korrekt! Muss "
 "vor %(start)s (%(format)s) liegen."
@@ -8307,8 +8322,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and %"
-"(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and "
+"%(end)s (%(format)s)."
 msgstr ""
 "Das eingegebene Datum oder die angegebene Uhrzeit ist nicht korrekt! Darf "
 "nicht zwischen %(start)s und %(end)s (%(format)s) liegen."
@@ -10311,6 +10326,11 @@ msgid "Icon"
 msgstr "Icon"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_configurator_feature__icon_class
+msgid "Icon Class"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_card
 #: model_terms:ir.ui.view,arch_db:website.s_features_image
 #: model_terms:ir.ui.view,arch_db:website.s_image_features
@@ -10322,6 +10342,7 @@ msgstr "Symbolliste"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/icon_list_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Icons"
 msgstr "Symbole"
 
@@ -11075,8 +11096,8 @@ msgstr "Intuitives System"
 #: code:addons/website/static/src/core/website_map_service.js:0
 msgid "Invalid API Key. The following error was returned by Google: %(error)s"
 msgstr ""
-"Ungültiger API-Schlüssel. Der folgende Fehler wurde von Google gemeldet: %"
-"(error)s"
+"Ungültiger API-Schlüssel. Der folgende Fehler wurde von Google gemeldet: "
+"%(error)s"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__invalid_locators
@@ -15920,6 +15941,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Rounded"
 msgstr "Abgerundet"
 
@@ -16666,6 +16688,12 @@ msgstr "Websiteübergreifende Kundenkonten"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Shared Link Auth"
 msgstr "Geteilter Link zur Authentifizierung"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+msgid "Sharp"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
@@ -17994,8 +18022,8 @@ msgstr "Der Name der Instagram-Seite ist nicht gültig"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid ""
-"The URL “%(url)s“ is contained in the “%(field)s” of the following “%"
-"(model)s”"
+"The URL “%(url)s“ is contained in the “%(field)s” of the following "
+"“%(model)s”"
 msgstr ""
 "Diese URL „%(url)s“ ist in Feldern vom Typ „%(field)s“ folgender Modelle "
 "enthalten: „%(model)s“"
@@ -18097,8 +18125,8 @@ msgstr "Die folgende Domain ist nicht gültig:"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %"
-"(allowedMimeTypesLabels)s."
+"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): "
+"%(allowedMimeTypesLabels)s."
 msgstr ""
 
 #. module: website
@@ -18235,8 +18263,8 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 msgid ""
 "The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: %"
-"(transferred_settings)s. Note that these settings are still present on the "
+"settings were copied from the old default website to the new one: "
+"%(transferred_settings)s. Note that these settings are still present on the "
 "old default website."
 msgstr ""
 
@@ -21134,15 +21162,14 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing "
-"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
-"chat on our website. Our dedicated team is available 24/7 to assist with any "
-"inquiries or issues."
+"You can reach our customer support team by emailing info@yourcompany.example."
+"com, calling +1 555-555-5556, or using the live chat on our website. Our "
+"dedicated team is available 24/7 to assist with any inquiries or issues."
 msgstr ""
-"Sie können unser Kundenserviceteam per E-Mail an "
-"info@ihrunternehmen.beispiel.com, telefonisch unter +1 555-555-5556 oder "
-"über den Livechat auf unserer Website erreichen. Unser engagiertes Team ist "
-"rund um die Uhr für Sie da und hilft Ihnen bei allen Fragen und Problemen."
+"Sie können unser Kundenserviceteam per E-Mail an info@ihrunternehmen."
+"beispiel.com, telefonisch unter +1 555-555-5556 oder über den Livechat auf "
+"unserer Website erreichen. Unser engagiertes Team ist rund um die Uhr für "
+"Sie da und hilft Ihnen bei allen Fragen und Problemen."
 
 #. module: website
 #. odoo-python
@@ -21239,9 +21266,9 @@ msgid ""
 "if you reject or discard those cookies."
 msgstr ""
 "Sie können die Verwendung von Cookies durch Dritte verweigern und zwar auf "
-"der <a class=\"o_translate_inline\" href=\"https://"
-"optout.networkadvertising.org/?c=1\" rel=\"nofollow\">Verweigerungsseite der "
-"Netzwerk-Werbeinitiative</a>.\n"
+"der <a class=\"o_translate_inline\" href=\"https://optout.networkadvertising."
+"org/?c=1\" rel=\"nofollow\">Verweigerungsseite der Netzwerk-Werbeinitiative</"
+"a>.\n"
 "                                                Die Website funktioniert "
 "auch dann, wenn Sie diese Cookies ablehnen oder verwerfen."
 
@@ -23191,1272 +23218,3 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Was wir bieten"
-
-#~ msgid ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">Read More <i class=\"fa fa-"
-#~ "angle-right\" role=\"img\"/></a>"
-#~ msgstr ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">Mehr erfahren <i class=\"fa fa-"
-#~ "angle-right\" role=\"img\"/></a>"
-
-#~ msgid ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">See our case studies <i "
-#~ "class=\"fa fa-long-arrow-right ms-2\"/></a>"
-#~ msgstr ""
-#~ "<a class=\"o_translate_inline\" href=\"#\">Unsere Fallstudien ansehen <i "
-#~ "class=\"fa fa-long-arrow-right ms-2\"/></a>"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  24/7 toll-free "
-#~ "support"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  kostenloser 24/7-"
-#~ "Support"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Access all modules"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Auf alle Module "
-#~ "zugreifen"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Account management"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Kontenverwaltung"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  All modules &amp; "
-#~ "features"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Alle Module &amp; "
-#~ "Funktionen"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Complete CRM for "
-#~ "any team"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Vollständiges CRM "
-#~ "für jedes Team"
-
-#~ msgid "<i class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  E-Mail-Support"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Limited "
-#~ "customization"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Eingeschränkte "
-#~ "Anpassung"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Sales &amp; "
-#~ "marketing for 2"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Verkauf &amp; "
-#~ "Marketing für 2"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Unlimited CRM "
-#~ "support"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Uneingeschränkter "
-#~ "CRM-Support"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Unlimited "
-#~ "customization"
-#~ msgstr ""
-#~ "<i class=\"fa fa-check text-success\" role=\"img\"/>  Uneingeschränkte "
-#~ "Anpassung"
-
-#~ msgid "<i class=\"fa fa-clock-o\"/> Sale ends in"
-#~ msgstr "<i class=\"fa fa-clock-o\"/> Sale endet in"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-building-o\" role=\"presentation\"/>\n"
-#~ "                        Office"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-building-o\" role=\"presentation\"/>\n"
-#~ "                        Büro"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
-#~ "                      yourcompany@example.com\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                       +32(0)499 123 456\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                      Brussels, Belgium"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
-#~ "                      ihrunternehmen@beispiel.de\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                       +49(0)171 123 456 52\n"
-#~ "                    <br/>\n"
-#~ "                    <br/>\n"
-#~ "                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
-#~ "role=\"img\"/>\n"
-#~ "                      Berlin, Deutschland"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"presentation\"/>\n"
-#~ "                        Email"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"presentation\"/>\n"
-#~ "                        E-Mail"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> What's "
-#~ "new ?"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> Was "
-#~ "gibt es Neues?"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-phone\" role=\"presentation\"/>\n"
-#~ "                        Phone"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-phone\" role=\"presentation\"/>\n"
-#~ "                        Telefon"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-times text-danger\" role=\"img\"/>  No customization"
-#~ msgstr ""
-#~ "<i class=\"fa fa-times text-danger\" role=\"img\"/>  Keine Anpassung"
-
-#~ msgid "<i class=\"fa fa-times text-danger\" role=\"img\"/>  No support"
-#~ msgstr "<i class=\"fa fa-times text-danger\" role=\"img\"/>  Kein Support"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
-#~ "                            <b>Events</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-calendar fa-fw me-2\"/>\n"
-#~ "                            <b>Veranstaltungen</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>About us</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-eye fa-fw me-2\"/>\n"
-#~ "                            <b>Über uns</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                            <b>Partners</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-group fa-fw me-2\"/>\n"
-#~ "                            <b>Partner</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Services</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-handshake-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Services</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
-#~ "                            <b>Help center</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
-#~ "                            <b>Hilfezentrum</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
-#~ "                            <b>Guides</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-map-o fa-fw me-2\"/>\n"
-#~ "                            <b>Leitfäden</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Our blog</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-newspaper-o fa-fw me-2\"/"
-#~ ">\n"
-#~ "                            <b>Unser Blog</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
-#~ "                            <b>Customers</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-star-o fa-fw me-2\"/>\n"
-#~ "                            <b>Kunden</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
-#~ "                            <b>Products</b>"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_little_icons_icon fa fa-tags fa-fw me-2\"/>\n"
-#~ "                            <b>Produkte</b>"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> Contact us"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/> "
-#~ "Kontaktieren Sie uns"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Free returns"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Kostenlose "
-#~ "Rücksendung"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> "
-#~ "Pickup in store"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2\"/> Im "
-#~ "Geschäft abholen"
-
-#~ msgid ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> Express "
-#~ "delivery"
-#~ msgstr ""
-#~ "<i class=\"s_mega_menu_thumbnails_icon fa fa-truck me-2\"/> "
-#~ "Expresslieferung"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  24/7 Support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  24/7-Support"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Access all modules"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  Zugriff auf alle Module"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  All modules &amp; features"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check-circle-o\"/>  Alle Module &amp; Funktionen"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Complete CRM for any team"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check-circle-o\"/>  Vollständiges CRM für jedes Team"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Email support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  E-Mail-Support"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Limited Customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check-circle-o\"/>  Eingeschränkte Personalisierung"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  PaaS Access"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  PaaS-Zugriff"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Unlimited CRM support"
-#~ msgstr "<span class=\"fa fa-check-circle-o\"/>  Unbegrenzter CRM-Support"
-
-#~ msgid "<span class=\"fa fa-check-circle-o\"/>  Unlimited customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check-circle-o\"/>  Uneingeschränkte Personalisierung"
-
-#~ msgid ""
-#~ "<span class=\"s_badge badge text-bg-secondary o_animable\" data-"
-#~ "name=\"Badge\" data-vxml=\"001\">\n"
-#~ "        <i class=\"fa fa-fw fa-folder o_not-animable\"/>Category\n"
-#~ "    </span>"
-#~ msgstr ""
-#~ "<span class=\"s_badge badge text-bg-secondary o_animable\" data-"
-#~ "name=\"Badge\" data-vxml=\"001\">\n"
-#~ "        <i class=\"fa fa-fw fa-folder o_not-animable\"/>Kategorie\n"
-#~ "    </span>"
-
-#~ msgid ""
-#~ "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr "Weiterlesen <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid ""
-#~ "Discover more <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr ""
-#~ "Mehr entdecken <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid "Explore <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-#~ msgstr "<i class=\"fa fa-long-arrow-right\" role=\"img\"/> entdecken"
-
-#~ msgid "See All <i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-#~ msgstr ""
-#~ "Alle <i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/> anzeigen"
-
-#~ msgid "Start Now <span class=\"fa fa-angle-right ms-2\"/>"
-#~ msgstr "Jetzt starten <span class=\"fa fa-angle-right ms-2\"/>"
-
-#~ msgid "Start saving  <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-#~ msgstr "Jetzt sparen <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-
-#~ msgid ""
-#~ "In this mode, you can only translate texts. To change the structure of "
-#~ "the page, you must edit the master page.\n"
-#~ "            Each modification on the master page is automatically applied "
-#~ "to all translated versions."
-#~ msgstr ""
-#~ "In diesem Modus können Sie nur Texte übersetzen. Um die Struktur der "
-#~ "Seite zu ändern, müssen Sie die Master-Seite bearbeiten.\n"
-#~ "            Jede Änderung der Master-Seite wird automatisch auf alle "
-#~ "übersetzten Versionen angewendet."
-
-#~ msgid ""
-#~ "<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
-#~ "Company name</span>"
-#~ msgstr ""
-#~ "<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
-#~ "Unternehmensname</span>"
-
-#~ msgid "Donation Button"
-#~ msgstr "„Spende“-Schaltfläche"
-
-#~ msgid "4 steps"
-#~ msgstr "4 Schritten"
-
-#~ msgid "<b>Add</b> the selected image."
-#~ msgstr "<b>Fügen Sie</b> das ausgewählte Bild <b>hinzu</b>."
-
-#~ msgid "<b>Click Edit</b> dropdown"
-#~ msgstr "<b>Klicken Sie auf das Bearbeitungsmenü</b>"
-
-#~ msgid "<b>Click Edit</b> to start designing your homepage."
-#~ msgstr ""
-#~ "<b>Klicken Sie auf Bearbeiten</b>, um mit der Gestaltung Ihrer Homepage "
-#~ "zu beginnen."
-
-#~ msgid "<b>Click on a snippet</b> to access its options menu."
-#~ msgstr ""
-#~ "<b>Klicken Sie auf ein Snippet</b>, um dessen Optionsmenü aufzurufen."
-
-#~ msgid "<b>Click on a text</b> to start editing it."
-#~ msgstr "<b>Klicken Sie auf einen Text</b>, um ihn zu bearbeiten."
-
-#~ msgid "<b>Click</b> on this column to access its options."
-#~ msgstr "<b>Klicken Sie auf</b> diese Spalte, um ihre Optionen aufzurufen."
-
-#~ msgid "<b>Click</b> on this header to configure it."
-#~ msgstr "<b>Klicken Sie</b> auf diese Kopfzeile, um sie zu konfigurieren."
-
-#~ msgid "<b>Click</b> on this option to change the %s of the block."
-#~ msgstr "<b>Klicken Sie</b> auf diese Option, um %s des Bausteins zu ändern."
-
-#~ msgid ""
-#~ "<b>Customize</b> any block through this menu. Try to change the "
-#~ "background color of this block."
-#~ msgstr ""
-#~ "<b>Passen Sie</b> einen beliebigen Block über dieses Menü <b>an</b>. "
-#~ "Versuchen Sie, die Hintergrundfarbe dieses Blocks zu ändern."
-
-#~ msgid ""
-#~ "<b>Customize</b> any block through this menu. Try to change the "
-#~ "background image of this block."
-#~ msgstr ""
-#~ "<b>Passen Sie</b> einen beliebigen Block über dieses Menü <b>an</b>. "
-#~ "Versuchen Sie, das Hintergrundbild dieses Blocks zu ändern."
-
-#~ msgid ""
-#~ "<b>Double click on an image</b> to change it with one of your choice."
-#~ msgstr ""
-#~ "<b>Doppelklicken Sie auf ein Bild</b>, um es durch ein Bild Ihrer Wahl zu "
-#~ "ersetzen."
-
-#~ msgid "<b>Select</b> a %s."
-#~ msgstr "<b>Wählen Sie</b> eine %s."
-
-#~ msgid "<b>Select</b> a Color Palette."
-#~ msgstr "<b>Wählen Sie</b> eine Farbpalette <b>aus</b>."
-
-#~ msgid "<b>Slide</b> this button to change the %s padding"
-#~ msgstr ""
-#~ "<b>Schieben Sie</b> diese Schaltfläche, um die Auffüllung %s zu ändern"
-
-#~ msgid "<b>Slide</b> this button to change the column size."
-#~ msgstr ""
-#~ "<b>Schieben Sie</b> diese Schaltfläche, um die Spaltengröße zu ändern."
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Weiter</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Weiter</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Next</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Weiter</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Previous</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                            <span class=\"visually-hidden\">Zurück</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                        <span class=\"visually-hidden\">Zurück</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                    <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                    <span class=\"visually-hidden\">Zurück</span>"
-
-#~ msgid ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Previous</span>"
-#~ msgstr ""
-#~ "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-#~ "                <span class=\"visually-hidden\">Zurück</span>"
-
-#~ msgid ""
-#~ "<strong>100+</strong><br/>\n"
-#~ "            Happy customers"
-#~ msgstr ""
-#~ "<strong>Über 100</strong><br/>\n"
-#~ "            Zufriedene Kunden"
-
-#~ msgid "A PUNCHY HEADLINE"
-#~ msgstr "EINE AUSSAGEKRÄFTIGE ÜBERSCHRIFT"
-
-#~ msgid "About"
-#~ msgstr "Über"
-
-#~ msgid "About Me"
-#~ msgstr "Über mich"
-
-#~ msgid ""
-#~ "Achieve holistic health with personalized nutritional advice that "
-#~ "complements your workouts, promoting overall well-being."
-#~ msgstr ""
-#~ "Erzielen Sie eine ganzheitliche Gesundheit mit personalisierten "
-#~ "Ernährungsempfehlungen, die Ihr Training ergänzen und das allgemeine "
-#~ "Wohlbefinden fördern."
-
-#~ msgid "Activating the last features."
-#~ msgstr "Aktivierung der letzten Funktionen."
-
-#~ msgid "Activating your %s."
-#~ msgstr "Aktivierung %s."
-
-#~ msgid "Adding features."
-#~ msgstr "Hinzufügen von Funktionen."
-
-#~ msgid ""
-#~ "Adjust volume, skip tracks, answer calls, and activate voice assistants "
-#~ "with a simple tap, keeping your hands free and your focus on what matters "
-#~ "most."
-#~ msgstr ""
-#~ "Stellen Sie die Lautstärke ein, überspringen Sie Titel, nehmen Sie Anrufe "
-#~ "entgegen und aktivieren Sie Sprachassistenten mit einem einfachen "
-#~ "Fingertipp, damit Sie die Hände frei haben und sich auf das Wesentliche "
-#~ "konzentrieren können."
-
-#~ msgid "All You Can Eat"
-#~ msgstr "All You Can Eat"
-
-#~ msgid "All-Day Comfort"
-#~ msgstr "Ganztägiger Komfort"
-
-#~ msgid "Amazing Sound Quality"
-#~ msgstr "Erstaunliche Tonqualität"
-
-#~ msgid "Backend"
-#~ msgstr "Backend"
-
-#~ msgid "Basic"
-#~ msgstr "Basic"
-
-#~ msgid "Beef Carpaccio, Filet Mignon 8oz and Cheesecake"
-#~ msgstr "Rindercarpaccio, Filet Mignon 8oz und Käsekuchen"
-
-#~ msgid "Book your table today"
-#~ msgstr "Buchen Sie Ihren Tisch heute"
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to it. That "
-#~ "way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "Stellen Sie vor dem Löschen sicher, dass Sie alle Links, die darauf "
-#~ "verweisen, aktualisieren. Auf diese Weise werden Ihre Kunden nicht auf "
-#~ "die wenig bekannte 404-Fehlerseite gelangen."
-
-#~ msgid ""
-#~ "But before deleting, make sure you update all links referring to them. "
-#~ "That way, your customers won't bump into the not-so-famous 404 error page."
-#~ msgstr ""
-#~ "Stellen Sie vor dem Löschen sicher, dass Sie alle Links, die darauf "
-#~ "verweisen, aktualisieren. Auf diese Weise werden Ihre Kunden nicht auf "
-#~ "die wenig bekannte 404-Fehlerseite gelangen."
-
-#~ msgid ""
-#~ "By Crafting unique and compelling brand identities that leave a lasting "
-#~ "impact."
-#~ msgstr ""
-#~ "Durch die Gestaltung einzigartiger und überzeugender Markenidentitäten, "
-#~ "die einen bleibenden Eindruck hinterlassen."
-
-#~ msgid "Carousel indicator"
-#~ msgstr "Karussellindikator"
-
-#~ msgid "Choose"
-#~ msgstr "Wählen Sie"
-
-#~ msgid "Click here to go back to block tab."
-#~ msgstr "Klicken Sie hier, um zum Blockreiter zurückzukehren."
-
-#~ msgid "Click on the <b>%s</b> building block."
-#~ msgstr "Klicken Sie auf den Baustein <b>%s</b>."
-
-#~ msgid "Click on the <b>%s</b> category."
-#~ msgstr "Klicken Sie auf die Kategorie <b>%s</b>."
-
-#~ msgid "Clients"
-#~ msgstr "Kunden"
-
-#~ msgid "Coming Soon"
-#~ msgstr "Coming Soon"
-
-#~ msgid "Configuring your %s."
-#~ msgstr "Konfiguration %s."
-
-#~ msgid "Consulting"
-#~ msgstr "Beratung"
-
-#~ msgid ""
-#~ "Contact us today to embark on your path to a healthier, more vibrant you. "
-#~ "Your fitness journey begins here."
-#~ msgstr ""
-#~ "Nehmen Sie noch heute Kontakt mit uns auf, um Ihren Weg zu einem "
-#~ "gesünderen, lebendigeren Leben zu beginnen. Ihre Fitnessreise beginnt "
-#~ "hier."
-
-#~ msgid "Crafting Your Digital Success Story"
-#~ msgstr "Gestaltung Ihrer digitalen Erfolgsgeschichte"
-
-#~ msgid "Crystal Clear Sound"
-#~ msgstr "Kristallklarer Sound"
-
-#~ msgid "Designed to provide an immersive audio experience on the go."
-#~ msgstr ""
-#~ "Entwickelt, um auch unterwegs ein beeindruckendes Klangerlebnis zu bieten."
-
-#~ msgid "Detect"
-#~ msgstr "Ermitteln Sie es"
-
-#~ msgid "Digital Consulting Expertise"
-#~ msgstr "Digitale Beratungskompetenz"
-
-#~ msgid "Discover New <strong>Opportunities</strong>"
-#~ msgstr "Entdecken Sie neue <strong>Chancen</strong>"
-
-#~ msgid "Discover Our Univers"
-#~ msgstr "Entdecken Sie unser Universum"
-
-#~ msgid ""
-#~ "Discover our comprehensive marketing service designed to amplify your "
-#~ "brand's reach and impact."
-#~ msgstr ""
-#~ "Entdecken Sie unseren umfassenden Marketingservice, mit dem Sie die "
-#~ "Reichweite und Wirkung Ihrer Marke steigern können."
-
-#~ msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
-#~ msgstr ""
-#~ "Ziehen Sie den Baustein <b>%s</b> und platzieren Sie ihn am unteren Rand "
-#~ "der Seite."
-
-#~ msgid "EchoTunes Wireless Earbuds"
-#~ msgstr "Kabellose Köpfhörer von EchoTunes"
-
-#~ msgid ""
-#~ "EchoTunes comes with customizable ear tip sizes that provide a secure and "
-#~ "comfortable fit."
-#~ msgstr ""
-#~ "EchoTunes wird mit anpassbaren Ohrstöpselgrößen geliefert, die einen "
-#~ "sicheren und bequemen Sitz gewährleisten."
-
-#~ msgid "Elevate Your Audio Journey Today"
-#~ msgstr "Verbessern Sie Ihre Audioreise noch heute"
-
-#~ msgid "Elevate Your Brand With Us"
-#~ msgstr "Bauen Sie Ihre Marke mit uns aus"
-
-#~ msgid ""
-#~ "Embark on a journey through time as we share the story of our humble "
-#~ "beginnings. What started as a simple idea in a garage has evolved into an "
-#~ "innovative force in the industry."
-#~ msgstr ""
-#~ "Begeben Sie sich auf eine Reise durch die Zeit, während wir die "
-#~ "Geschichte unserer bescheidenen Anfänge erzählen. Was mit einer einfachen "
-#~ "Idee in einer Garage begann, hat sich zu einer innovativen Kraft in der "
-#~ "Branche entwickelt."
-
-#~ msgid ""
-#~ "Empowering your business through strategic digital insights and expertise."
-#~ msgstr ""
-#~ "Wir unterstützen Ihr Unternehmen durch strategische digitale Erkenntnisse "
-#~ "und Fachwissen."
-
-#~ msgid "Enabling your %s."
-#~ msgstr "Aktivierung %s."
-
-#~ msgid "Enhance Your <strong>Experience</strong>"
-#~ msgstr "Verbessern Sie Ihr <strong>Erlebnis</strong>"
-
-#~ msgid "Every Friday From 6PM to 7PM !"
-#~ msgstr "Jeden Freitag von 18:00 bis 19:00 Uhr!"
-
-#~ msgid ""
-#~ "Experience a digital transformation like never before with our range of "
-#~ "innovative solutions, designed to illuminate your brand's potential."
-#~ msgstr ""
-#~ "Erleben Sie eine digitale Transformation wie nie zuvor – mit unserem "
-#~ "Angebot an innovativen Lösungen, die das Potenzial Ihrer Marke zum "
-#~ "Vorschein bringen."
-
-#~ msgid ""
-#~ "Experience the power of our software without breaking the bank – choose a "
-#~ "plan that suits you best and start unlocking its full potential today."
-#~ msgstr ""
-#~ "Erleben Sie die Leistungsfähigkeit unserer Software, ohne Ihr Budget zu "
-#~ "sprengen – wählen Sie den für Sie passenden Tarif und schöpfen Sie das "
-#~ "volle Potenzial noch heute aus."
-
-#~ msgid "Experienced fullstack developer."
-#~ msgstr "Erfahrener Fullstack-Entwickler."
-
-#~ msgid ""
-#~ "Experienced in effective project management, adept at leading cross-"
-#~ "functional teams and delivering successful outcomes with a strategic "
-#~ "approach."
-#~ msgstr ""
-#~ "Erfahren im effektiven Projektmanagement, versiert in der Leitung "
-#~ "funktionsübergreifender Teams und in der Erzielung erfolgreicher "
-#~ "Ergebnisse mit einem strategischen Ansatz."
-
-#~ msgid ""
-#~ "Explore our captivating gallery, a visual journey showcasing our finest "
-#~ "work and creative projects. Immerse yourself in a collection of images "
-#~ "that capture the essence of our craftsmanship, innovation, and dedication "
-#~ "to excellence."
-#~ msgstr ""
-#~ "Entdecken Sie unsere fesselnde Galerie, eine visuelle Reise, die unsere "
-#~ "besten Arbeiten und kreativen Projekte zeigt. Tauchen Sie ein in eine "
-#~ "Sammlung von Bildern, die die Essenz unserer Handwerkskunst, Innovation "
-#~ "und unseres Engagements für Spitzenleistungen einfangen."
-
-#~ msgid ""
-#~ "Founder and chief visionary, Tony is the driving force behind the "
-#~ "company. He loves to keep his hands full by participating in the "
-#~ "development of the software, marketing, and customer experience "
-#~ "strategies."
-#~ msgstr ""
-#~ "Als Gründer und Chefvisionär ist Tony die treibende Kraft hinter dem "
-#~ "Unternehmen. Er liebt es, alle Hände voll zu tun zu haben, indem er sich "
-#~ "an der Entwicklung der Software, der Marketing- und "
-#~ "Kundenerfahrungsstrategien beteiligt."
-
-#~ msgid ""
-#~ "Founder, Tony is the driving force behind the company. He loves to keep "
-#~ "his hands full by participating in the development of the software, "
-#~ "marketing, and UX strategies."
-#~ msgstr ""
-#~ "Als Gründer ist Tony die treibende Kraft hinter dem Unternehmen. Er liebt "
-#~ "es, alle Hände voll zu tun zu haben, indem er sich an der Entwicklung der "
-#~ "Software, der Marketing- und Kundenerfahrungsstrategien beteiligt."
-
-#~ msgid ""
-#~ "Founder, Tony is the driving force behind the company. He loves to keep "
-#~ "his hands full by participating in the development of the software, "
-#~ "marketing, and customer experience."
-#~ msgstr ""
-#~ "Als Gründer ist Tony die treibende Kraft hinter dem Unternehmen. Er liebt "
-#~ "es, alle Hände voll zu tun zu haben, indem er sich an der Entwicklung der "
-#~ "Software, dem Marketings und der Kundenerfahrung beteiligt."
-
-#~ msgid ""
-#~ "From SEO to social media, we create campaigns that not only get you "
-#~ "noticed but also drive engagement and conversions."
-#~ msgstr ""
-#~ "Von SEO bis hin zu sozialen Medien erstellen wir Kampagnen, die nicht nur "
-#~ "für Aufmerksamkeit sorgen, sondern auch für Interaktion und Gesprächstoff."
-
-#~ msgid ""
-#~ "From revitalizing your visual identity to realigning your messaging for "
-#~ "the digital landscape, we'll guide you through a strategic process that "
-#~ "ensures your brand remains relevant and resonates with your audience."
-#~ msgstr ""
-#~ "Von der Neubelebung Ihrer visuellen Identität bis hin zur Anpassung Ihrer "
-#~ "Botschaften an die digitale Landschaft führen wir Sie durch einen "
-#~ "strategischen Prozess, der sicherstellt, dass Ihre Marke relevant bleibt "
-#~ "und bei Ihrem Publikum Anklang findet."
-
-#~ msgid "Frontend"
-#~ msgstr "Frontend"
-
-#~ msgid "Go to the Theme tab"
-#~ msgstr "Gehen Sie zum Designmotiv-Reiter"
-
-#~ msgid "Good job! It's time to <b>Save</b> your work."
-#~ msgstr "Gute Arbeit! Es ist Zeit, Ihre Arbeit <b>zu speichern</b>."
-
-#~ msgid ""
-#~ "Great stories are <b>for everyone</b> even when only written <b>for just "
-#~ "one person</b>. If you try to write with a wide, general audience in "
-#~ "mind, your story will sound fake and lack emotion. No one will be "
-#~ "interested. Write for one person. If it’s genuine for the one, it’s "
-#~ "genuine for the rest."
-#~ msgstr ""
-#~ "Großartige Geschichten sind <b>für jeden</b>, auch wenn sie nur <b>für "
-#~ "eine Person</b> geschrieben werden. Wenn Sie versuchen, mit Blick auf ein "
-#~ "breites, allgemeines Publikum zu schreiben, wird Ihre Geschichte unecht "
-#~ "klingen und es wird ihr an Emotionen fehlen. Niemand wird interessiert "
-#~ "sein. Schreiben Sie für eine Person. Wenn es für die eine Person echt "
-#~ "ist, ist es auch für den Rest echt."
-
-#~ msgid ""
-#~ "Great stories have a <b>personality</b>. Consider telling a great story "
-#~ "that provides personality. Writing a story with personality for potential "
-#~ "clients will assist with making a relationship connection. This shows up "
-#~ "in small quirks like word choices or phrases. Write from your point of "
-#~ "view, not from someone else's experience."
-#~ msgstr ""
-#~ "Großartige Geschichten haben eine <b>Persönlichkeit</b>. Erwägen Sie, "
-#~ "eine großartige Geschichte zu erzählen, die Persönlichkeit hat. Das "
-#~ "Schreiben einer Geschichte mit Persönlichkeit für potenzielle Kunden "
-#~ "hilft dabei, eine Beziehungsverbindung herzustellen. Dies zeigt sich in "
-#~ "kleinen Macken wie Wortwahl oder Phrasen. Schreiben Sie aus Ihrer Sicht, "
-#~ "nicht aus der Erfahrung eines anderen."
-
-#~ msgid "Growth Rate"
-#~ msgstr "Wachstumsrate"
-
-#~ msgid "Happy Hour"
-#~ msgstr "Happy Hour"
-
-#~ msgid "Hello, I'm Tony Fred"
-#~ msgstr "Guten Tag, ich bin Tony Fred"
-
-#~ msgid ""
-#~ "I'm a fullstack developer with a background in management. My analytical "
-#~ "skills, coupled with effective communication, enable me to lead cross-"
-#~ "functional teams to success."
-#~ msgstr ""
-#~ "Ich bin ein Fullstack-Entwickler mit einem Hintergrund im Management. "
-#~ "Meine analytischen Fähigkeiten, gepaart mit effektiver Kommunikation, "
-#~ "ermöglichen es mir, funktionsübergreifende Teams zum Erfolg zu führen."
-
-#~ msgid "Installing your %s."
-#~ msgstr "Installation %s."
-
-#~ msgid "Integrating your %s."
-#~ msgstr "Integration %s."
-
-#~ msgid "Intuitive Touch Controls"
-#~ msgstr "Intuitive Tippschaltung"
-
-#~ msgid "It will be gone forever!"
-#~ msgstr "Sie wird für immer gehen!"
-
-#~ msgid ""
-#~ "It's time to elevate your fitness journey with coaching that's as unique "
-#~ "as you are. Choose your path, embrace the guidance, and transform your "
-#~ "life."
-#~ msgstr ""
-#~ "Es ist an der Zeit, Ihre Fitnessreise mit einem Coaching zu verbessern, "
-#~ "das so einzigartig ist wie Sie selbst. Wählen Sie Ihren Weg, nehmen Sie "
-#~ "die Anleitung an und verändern Sie Ihr Leben."
-
-#~ msgid ""
-#~ "Join us for a remarkable dining experience that blends exquisite flavors "
-#~ "with a warm ambiance."
-#~ msgstr ""
-#~ "Freuen Sie sich auf ein außergewöhnliches kulinarisches Erlebnis, bei dem "
-#~ "sich exquisite Aromen mit einem warmen Ambiente verbinden."
-
-#~ msgid "Landing Pages"
-#~ msgstr "Landingpages"
-
-#~ msgid ""
-#~ "Let's collaborate to create innovative solutions that stand out in the "
-#~ "digital landscape. Reach out today and let's build something "
-#~ "extraordinary together."
-#~ msgstr ""
-#~ "Lassen Sie uns zusammenarbeiten, um innovative Lösungen zu entwickeln, "
-#~ "die in der digitalen Landschaft herausragen. Kontaktieren Sie uns noch "
-#~ "heute und lassen Sie uns gemeinsam etwas Außergewöhnliches schaffen."
-
-#~ msgid "Let's do it"
-#~ msgstr "Los geht's!"
-
-#~ msgid "Let's go!"
-#~ msgstr "Los geht's!"
-
-#~ msgid ""
-#~ "Let's turn your vision into reality. Contact us today to set your brand "
-#~ "on the path to digital excellence with us."
-#~ msgstr ""
-#~ "Lassen Sie uns Ihre Vision in die Realität umsetzen. Kontaktieren Sie uns "
-#~ "noch heute, um Ihre Marke mit uns auf den Weg zu digitaler Exzellenz zu "
-#~ "bringen."
-
-#~ msgid "Management"
-#~ msgstr "Verwaltung"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid ""
-#~ "Mastering frontend craftsmanship with expertise in HTML, CSS, and "
-#~ "JavaScript to craft captivating and responsive user experiences."
-#~ msgstr ""
-#~ "Beherrschung des Frontend-Handwerks mit Fachkenntnissen in HTML, CSS und "
-#~ "JavaScript, um fesselnde und reaktionsschnelle Benutzererlebnisse zu "
-#~ "schaffen."
-
-#~ msgid "Mediterranean buffet of starters, main dishes and desserts"
-#~ msgstr "Mediterranes Buffet mit Vorspeisen, Hauptgerichten und Desserts"
-
-#~ msgid "Meet The Team"
-#~ msgstr "Das Team kennenlernen"
-
-#~ msgid "Menu One"
-#~ msgstr "Menü eins"
-
-#~ msgid "Menu Two"
-#~ msgstr "Menü zwei"
-
-#~ msgid ""
-#~ "Mich loves taking on challenges. With his multi-year experience as "
-#~ "Commercial Director in the software industry, Mich has helped the company "
-#~ "to get where it is today."
-#~ msgstr ""
-#~ "Mich liebt es, Herausforderungen anzunehmen. Mit seiner mehrjährigen "
-#~ "Erfahrung als kaufmännischer Leiter in der Softwarebranche hat Mich das "
-#~ "Unternehmen dorthin gebracht, wo es heute steht."
-
-#~ msgid "Multi Website Published Mixin"
-#~ msgstr "Multi-Website veröffentlicht Mixin"
-
-#~ msgid "My Skills"
-#~ msgstr "Meine Kompetenzen"
-
-#~ msgid "Nutritional Guidance"
-#~ msgstr "Ernährungsberatung"
-
-#~ msgid "OR"
-#~ msgstr "ODER"
-
-#~ msgid "On-the-Go Charging"
-#~ msgstr "Laden unterwegs"
-
-#~ msgid "Our Approach"
-#~ msgstr "Unser Ansatz"
-
-#~ msgid ""
-#~ "Our Coaching combines personalized fitness plans with mindfulness "
-#~ "practices, ensuring you achieve harmony in your body and peace in your "
-#~ "mind."
-#~ msgstr ""
-#~ "Unser Coaching kombiniert personalisierte Fitnesspläne mit "
-#~ "Achtsamkeitspraktiken, um sicherzustellen, dass Sie Harmonie in Ihrem "
-#~ "Körper und Frieden in Ihrem Geist erreichen."
-
-#~ msgid "Our Goals"
-#~ msgstr "Unsere Ziele"
-
-#~ msgid "Our Menus"
-#~ msgstr "Unsere Speisekarte"
-
-#~ msgid "Our Mission"
-#~ msgstr "Unsere Mission"
-
-#~ msgid "Our Offer"
-#~ msgstr "Unser Angebot"
-
-#~ msgid "Our Offices"
-#~ msgstr "Unsere Büros"
-
-#~ msgid "Our Story"
-#~ msgstr "Unsere Geschichte"
-
-#~ msgid "Our Values"
-#~ msgstr "Unsere Werte"
-
-#~ msgid ""
-#~ "Our experienced fitness coaches design workouts that align with your "
-#~ "goals, fitness level, and preferences."
-#~ msgstr ""
-#~ "Unsere erfahrenen Fitnesstrainer entwickeln Workouts, die auf Ihre Ziele, "
-#~ "Ihr Fitnessniveau und Ihre Vorlieben abgestimmt sind."
-
-#~ msgid ""
-#~ "Our mission is to create transformative experiences and foster growth, "
-#~ "driven by a relentless pursuit of innovation and a commitment to "
-#~ "exceeding expectations."
-#~ msgstr ""
-#~ "Unsere Mission ist es, lebensverändernde Erfahrungen zu schaffen und "
-#~ "Wachstum zu fördern, angetrieben von einem unermüdlichen Streben nach "
-#~ "Innovation und dem Engagement, Erwartungen zu übertreffen."
-
-#~ msgid ""
-#~ "Our seasoned consultants provide tailored guidance, leveraging their deep "
-#~ "industry knowledge to analyze your current strategies, identify "
-#~ "opportunities, and formulate data-driven recommendations."
-#~ msgstr ""
-#~ "Unsere erfahrenen Berater bieten maßgeschneiderte Beratung und nutzen "
-#~ "ihre fundierten Branchenkenntnisse, um Ihre aktuellen Strategien zu "
-#~ "analysieren, Chancen zu erkennen und datengestützte Empfehlungen zu "
-#~ "formulieren."
-
-#~ msgid ""
-#~ "Our software plans are designed to cater to a variety of needs, ensuring "
-#~ "that you find the perfect fit for your requirements. From individual "
-#~ "users to businesses of all sizes, we offer pricing options that provide "
-#~ "exceptional value without compromising on features or performance."
-#~ msgstr ""
-#~ "Unsere Software-Tarife sind so konzipiert, dass sie eine Vielzahl von "
-#~ "Bedürfnissen abdecken, damit Sie die perfekte Lösung für Ihre "
-#~ "Anforderungen finden. Von Einzelanwendern bis hin zu Unternehmen jeder "
-#~ "Größe bieten wir Preisoptionen, die ein außergewöhnliches Preis-Leistungs-"
-#~ "Verhältnis bieten, ohne Kompromisse bei Funktionen oder Leistung "
-#~ "einzugehen."
-
-#~ msgid ""
-#~ "Our values shape our culture, influence our decisions, and guide us in "
-#~ "providing exceptional service. They reflect our dedication to integrity, "
-#~ "collaboration, and client satisfaction."
-#~ msgstr ""
-#~ "Unsere Werte prägen unsere Kultur, beeinflussen unsere Entscheidungen und "
-#~ "leiten uns bei der Erbringung außergewöhnlicher Dienstleistungen. Sie "
-#~ "spiegeln unser Engagement für Integrität, Zusammenarbeit und "
-#~ "Kundenzufriedenheit wider."
-
-#~ msgid "Personalized Fitness"
-#~ msgstr "Personalisierte Fitness"
-
-#~ msgid "Personalized Workouts"
-#~ msgstr "Personalisierte Workouts"
-
-#~ msgid "Pricing Plans"
-#~ msgstr "Preispläne"
-
-#~ msgid ""
-#~ "Proficient in backend development, specializing in Python, Django, and "
-#~ "database management to create efficient and scalable solutions."
-#~ msgstr ""
-#~ "Erfahren in der Backend-Entwicklung, spezialisiert auf Python, Django und "
-#~ "Datenbankverwaltung zur Erstellung effizienter und skalierbarer Lösungen."
-
-#~ msgid "Progress Tracking"
-#~ msgstr "Fortschrittskontrolle"
-
-#~ msgid "Public User"
-#~ msgstr "Öffentlicher Benutzer"
-
-#~ msgid "Punycode Domain"
-#~ msgstr "Domain von Punycode"
-
-#~ msgid "Questions?"
-#~ msgstr "Fragen?"
-
-#~ msgid "Ready to Embrace Your Fitness Journey?"
-#~ msgstr "Bereit für Ihre Fitnessreise?"
-
-#~ msgid "Ready to bring your digital vision to life?"
-#~ msgstr "Bereit für die Belebung Ihrer digitalen Vision?"
-
-#~ msgid "Ready to build the"
-#~ msgstr "Bereit für Ihre"
-
-#~ msgid "Ready to embark on a journey of digital transformation?"
-#~ msgstr "Bereit für das Abenteuer der digitalen Transformation?"
-
-#~ msgid ""
-#~ "Ready to embark on your auditory adventure? Order your EchoTunes Wireless "
-#~ "Earbuds today and let the symphony begin."
-#~ msgstr ""
-#~ "Sind Sie bereit für Ihr auditives Abenteuer? Bestellen Sie noch heute "
-#~ "Ihre kabellosen Kopfhörer von EchoTunes und lassen Sie die Sinfonie "
-#~ "beginnen."
-
-#~ msgid "Ready to make these web pages disappear into thin air? Are you sure?"
-#~ msgstr ""
-#~ "Sind Sie bereit, diese Webseiten vollständig zu löschen? Sind Sie sich "
-#~ "sicher?"
-
-#~ msgid "Ready to make this web page disappear into thin air? Are you sure?"
-#~ msgstr ""
-#~ "Sind Sie bereit, diese Webseite vollständig zu löschen? Sind Sie sich "
-#~ "sicher?"
-
-#~ msgid "Rebranding"
-#~ msgstr "Rebranding"
-
-#~ msgid "Record Rule"
-#~ msgstr "Datensatzregel"
-
-#~ msgid "Secure and Comfortable Fit"
-#~ msgstr "Sichere und komfortable Passform"
-
-#~ msgid "Setting up your %s."
-#~ msgstr "Einrichtung %s."
-
-#~ msgid ""
-#~ "Step into our past and witness the transformation of a simple idea into "
-#~ "an innovative force. Our journey, born in a garage, reflects the power of "
-#~ "passion and hard work."
-#~ msgstr ""
-#~ "Tauchen Sie in unsere Vergangenheit ein und werden Sie Zeuge der "
-#~ "Umwandlung einer einfachen Idee in eine innovative Wirkung. Unser Weg, "
-#~ "der in einer Garage begann, spiegelt die Kraft von Leidenschaft und "
-#~ "harter Arbeit wider."
-
-#~ msgid "Strategic Marketing Solutions"
-#~ msgstr "Strategische Marketinglösungen"
-
-#~ msgid "Strength Training:"
-#~ msgstr "Krafttraining:"
-
-#~ msgid "Team spotlight"
-#~ msgstr "Fokus auf Team"
-
-#~ msgid ""
-#~ "The compact charging case offers convenient on-the-go charging with a "
-#~ "battery life that lasts up to 17h, you can enjoy your favorite tunes "
-#~ "without interruption."
-#~ msgstr ""
-#~ "Das kompakte Ladeetui ermöglicht bequemes Aufladen unterwegs. Mit einer "
-#~ "Akkulaufzeit von bis zu 17 Stunden können Sie Ihre Lieblingsmusik ohne "
-#~ "Unterbrechung genießen."
-
-#~ msgid ""
-#~ "This coaching program offers specialized strength-focused workouts, "
-#~ "nutrition guidance, and expert coaching. Elevate your fitness level and "
-#~ "achieve feats you never thought possible."
-#~ msgstr ""
-#~ "Dieses Trainingsprogramm bietet spezielle Krafttrainings, "
-#~ "Ernährungsberatung und fachkundige Betreuung. Steigern Sie Ihr "
-#~ "Fitnessniveau und erreichen Sie Leistungen, die Sie nie für möglich "
-#~ "gehalten hätten."
-
-#~ msgid "To what purpose?"
-#~ msgstr "Zu welchem Zweck?"
-
-#~ msgid "Transform Your Brand"
-#~ msgstr "Transformation Ihrer Marke"
-
-#~ msgid "Upload"
-#~ msgstr "Hochladen"
-
-#~ msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
-#~ msgstr "Gemüsesalat, Beef Burger und Mango-Eiscreme"
-
-#~ msgid "View more themes"
-#~ msgstr "Weitere Designmotive anzeigen"
-
-#~ msgid "We Are Coming Soon"
-#~ msgstr "Coming Soon"
-
-#~ msgid "We Are Down for Maintenance"
-#~ msgstr "Wir sind wegen Wartungsarbeiten außer Betrieb"
-
-#~ msgid ""
-#~ "We believe that every fitness journey is unique. Our approach begins with "
-#~ "understanding your fitness aspirations, your current lifestyle, and any "
-#~ "challenges you face."
-#~ msgstr ""
-#~ "Wir glauben, dass jede Fitnessreise einzigartig ist. Unsere "
-#~ "Herangehensweise beginnt damit, dass wir Ihre Fitnesswünsche, Ihren "
-#~ "derzeitigen Lebensstil und alle Herausforderungen, denen Sie "
-#~ "gegenüberstehen, verstehen."
-
-#~ msgid "We found these links:"
-#~ msgstr "Wir haben folgende Links gefunden:"
-
-#~ msgid ""
-#~ "We monitor your progress meticulously, adjusting your plan as needed to "
-#~ "ensure continuous improvement and results."
-#~ msgstr ""
-#~ "Wir überwachen Ihre Fortschritte genau und passen Ihren Plan bei Bedarf "
-#~ "an, um kontinuierliche Verbesserungen und Ergebnisse zu garantieren."
-
-#~ msgid "We'll set you up and running in"
-#~ msgstr "Wir zeigen Ihnen, wie es geht, in nur"
-
-#~ msgid ""
-#~ "We're driven by the aspiration to redefine industry standards, to exceed "
-#~ "the expectations of our clients, and to foster a culture of continuous "
-#~ "growth."
-#~ msgstr ""
-#~ "Unser Ziel ist es, Branchenstandards neu zu definieren, die Erwartungen "
-#~ "unserer Kunden zu übertreffen und eine Kultur des kontinuierlichen "
-#~ "Wachstums zu fördern."
-
-#~ msgid "Website Domain should be unique."
-#~ msgstr "Websitedomain sollte eindeutig sein."
-
-#~ msgid "Weight Loss Transformation"
-#~ msgstr "Gewichtsverlust"
-
-#~ msgid ""
-#~ "Welcome to our comprehensive range of Tailored Fitness Coaching Services, "
-#~ "with personalized workouts, customized nutrition plans, and unwavering "
-#~ "support, we're committed to helping you achieve lasting results that "
-#~ "align with your aspirations."
-#~ msgstr ""
-#~ "Willkommen bei unserem umfassenden Angebot an maßgeschneiderten Services "
-#~ "für Fitness-Coachings. Mit personalisierten Workouts, maßgeschneiderten "
-#~ "Ernährungsplänen und unermüdlicher Unterstützung helfen wir Ihnen, "
-#~ "dauerhafte Ergebnisse zu erzielen, die Ihren Zielen entsprechen."
-
-#~ msgid "Wellness Coaching"
-#~ msgstr "Wellness-Coaching"
-
-#~ msgid "What Makes Me Proud"
-#~ msgstr "Worauf ich stolz bin"
-
-#~ msgid "Wireless Freedom"
-#~ msgstr "Kabellose Freiheit"
-
-#~ msgid ""
-#~ "With personalized fitness plans, tailored nutrition guidance, and "
-#~ "consistent support, you'll shed unwanted pounds while building healthy "
-#~ "habits that last."
-#~ msgstr ""
-#~ "Mit personalisierten Fitnessplänen, maßgeschneiderter Ernährungsberatung "
-#~ "und konstanter Unterstützung werden Sie unerwünschte Pfunde los, während "
-#~ "Sie gesunde Gewohnheiten entwickeln, die von Dauer sind."
-
-#~ msgid ""
-#~ "Your brand is your story. We help you tell it through cohesive visual "
-#~ "identity and messaging that resonates with your audience."
-#~ msgstr ""
-#~ "Ihre Marke ist Ihre Geschichte. Wir helfen Ihnen, sie durch eine "
-#~ "kohärente visuelle Identität und eine Botschaft zu erzählen, die bei "
-#~ "Ihrem Publikum ankommt."
-
-#~ msgid "a Color Palette"
-#~ msgstr "eine Farbpalette"
-
-#~ msgid "a new image"
-#~ msgstr "ein neues Bild"
-
-#~ msgid "blog"
-#~ msgstr "Ihres Blogs"
-
-#~ msgid "develop the brand"
-#~ msgstr "meine Marke zu entwickeln"
-
-#~ msgid "e-learning platform"
-#~ msgstr "Ihrer E-Learning-Plattform"
-
-#~ msgid "e.g. /my-awesome-page"
-#~ msgstr "z. B. /meine-fantastische-Seite"
-
-#~ msgid "e.g. /your-website-page"
-#~ msgstr "z. B. /ihre-webseite"
-
-#~ msgid "forum"
-#~ msgstr "Ihres Forums"
-
-#~ msgid "from Logo"
-#~ msgstr "aus Ihrem Logo"
-
-#~ msgid "get leads"
-#~ msgstr "Leads zu erzeugen"
-
-#~ msgid "inform customers"
-#~ msgstr "meine Kunden zu informieren"
-
-#~ msgid "online appointment system"
-#~ msgstr "Ihres Systems für Online-Termine"
-
-#~ msgid "online store"
-#~ msgstr "Ihres Online-Shops"
-
-#~ msgid "perfect website?"
-#~ msgstr "perfekte Website?"
-
-#~ msgid "recruitment platform"
-#~ msgstr "Ihrer Bewerbungsplattform"
-
-#~ msgid "schedule appointments"
-#~ msgstr "Termine zu planen"
-
-#~ msgid "sell more"
-#~ msgstr "mehr zu verkaufen"
-
-#~ msgid "with the main objective to"
-#~ msgstr "mit dem Hauptziel,"
-
-#~ msgid ""
-#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
-#~ "px-0 o_translate_inline\">Cookie Policy</a>"
-#~ msgstr ""
-#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
-#~ "px-0 o_translate_inline\">Cookie-Richtlinie</a>"
-
-#~ msgid ""
-#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
-#~ "experience on this website.</span>\n"
-#~ "                                            <a href=\"/cookie-policy\" "
-#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-#~ "o_translate_inline\">Cookie Policy</a>"
-#~ msgstr ""
-#~ "<span class=\"pe-1\">Wir verwenden Cookies auf dieser Website, um Ihnen "
-#~ "ein besseres Nutzererlebnis zu bieten.</span>\n"
-#~ "                                            <a href=\"/cookie-policy\" "
-#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-#~ "o_translate_inline\">Cookie-Richtlinien</a>"
-
-#~ msgid "The language of the keyword and related keywords."
-#~ msgstr "Die Sprache des Schlagworts und der verwandten Schlagwörter."
-
-#~ msgid "Translate the whole content with AI"
-#~ msgstr "Den gesamten Inhalt mit KI übersetzen"
-
-#~ msgid "Google Analytics"
-#~ msgstr "Google Analytics"
-
-#~ msgid "How to get my Measurement ID"
-#~ msgstr "Wie erhalte ich meine Mess-ID"
-
-#~ msgid "Measurement ID or Tag"
-#~ msgstr "Mess-ID oder Stichwort"
-
-#~ msgid "Track visits using Google Analytics or Google Tag Manager"
-#~ msgstr ""
-#~ "Analysieren Sie Besucherzahlen mit Google Analytics oder Google Tag "
-#~ "Manager."
-
-#~ msgid "UTM Campaign"
-#~ msgstr "UTM-Kampagne"
-
-#~ msgid "UTM Medium"
-#~ msgstr "UTM-Medium"
-
-#~ msgid "UTM Source"
-#~ msgstr "UTM-Quelle"
-
-#~ msgid "Add predefined error message"
-#~ msgstr "Vordefinierte Fehlermeldung hinzufügen"

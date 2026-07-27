@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 23:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -90,48 +90,36 @@ msgstr ""
 "자신감을 줍니다.</em>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
-msgstr "<i class=\"fa fa-ban me-2\"/>품절"
+#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
+msgid ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"location_on\" title=\"Location\"/"
+">"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
-msgstr "<i class=\"fa fa-caret-left me-2\"/><small>이전</small>"
+msgid "<i class=\"oi me-2\" data-icon=\"arrow_left\"/><small>Previous</small>"
+msgstr "<i class=\"oi me-2\" data-icon=\"arrow_left\"/><small>이전</small>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid "<i class=\"oi me-2\" data-icon=\"block\"/>Sold Out"
+msgstr "<i class=\"oi me-2\" data-icon=\"block\"/>품절"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
-msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>등록됨"
+msgid "<i class=\"oi me-2\" data-icon=\"check\" role=\"img\"/>Registered"
+msgstr "<i class=\"oi me-2\" data-icon=\"check\" role=\"img\"/>등록됨"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr "<i class=\"fa fa-check me-2\"/>등록됨"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-msgid ""
-"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
-"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
-msgstr ""
-"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"설정\" title=\"행사 티"
-"켓 설정\"/><em>티켓 설정</em>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
-msgstr "<i class=\"fa fa-map-marker\" title=\"위치\"/> 온라인 행사"
+msgid "<i class=\"oi me-2\" data-icon=\"check\"/>Registered"
+msgstr "<i class=\"oi me-2\" data-icon=\"check\"/>등록됨"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -155,13 +143,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.navbar
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
 msgid ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                <span>All Events</span>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"settings\" role=\"img\" aria-"
+"label=\"Configure\" title=\"Configure event tickets\"/><em>Configure "
+"Tickets</em>"
 msgstr ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                <span>모든 행사</span>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"settings\" role=\"img\" aria-"
+"label=\"설정\" title=\"행사 티켓 설정\"/><em>티켓 설정</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
@@ -169,6 +158,21 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"calendar_today\" "
 "role=\"presentation\"/>August 23, 2025"
 msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_backward\"/>\n"
+"                <span>All Events</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"chevron_backward\"/>\n"
+"                <span>모든 행사</span>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid ""
+"<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/> Online event"
+msgstr "<i class=\"oi\" data-icon=\"location_on\" title=\"위치\"/> 온라인 행사"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -187,13 +191,8 @@ msgstr "<small class=\"text-muted\">캘린더에 추가:</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-msgid "<small>Next</small><i class=\"fa fa-caret-right ms-2\"/>"
-msgstr "<small>다음</small><i class=\"fa fa-caret-right ms-2\"/>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
-msgstr "<span class=\"fa fa-plus me-1\"/> 행사 만들기"
+msgid "<small>Next</small><i class=\"oi ms-2\" data-icon=\"arrow_right\"/>"
+msgstr "<small>다음</small><i class=\"oi ms-2\" data-icon=\"arrow_right\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_entry_preview_data
@@ -261,11 +260,16 @@ msgstr ""
 "class=\"o_countdown_metric\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Create an Event"
+msgstr "<span class=\"oi me-1\" data-icon=\"add\"/> 행사 만들기"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold "
-"Out\n"
+"                                        <i class=\"oi me-2\" data-"
+"icon=\"block\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
 
@@ -782,8 +786,8 @@ msgstr "행사 정보"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
-msgstr "행사 정보 <i class=\"fa fa-chevron-right\"/>"
+msgid "Event Info <i class=\"oi\" data-icon=\"chevron_right\"/>"
+msgstr "행사 정보 <i class=\"oi\" data-icon=\"chevron_right\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
@@ -961,8 +965,8 @@ msgstr "바닥글 표시"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
-msgstr "티켓 예매 <i class=\"fa fa-chevron-right\"/>"
+msgid "Get Tickets <i class=\"oi\" data-icon=\"chevron_right\"/>"
+msgstr "티켓 예매 <i class=\"oi\" data-icon=\"chevron_right\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1124,8 +1128,8 @@ msgstr "온라인 가입"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
-msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
-msgstr "온라인 가입 <i class=\"ms-1 fa fa-globe\"/>"
+msgid "Join online <i class=\"oi ms-1\" data-icon=\"public\"/>"
+msgstr "온라인 가입 <i class=\"oi ms-1\" data-icon=\"public\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
@@ -2026,24 +2030,3 @@ msgstr "w-100"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "w-100 py-sm-3 mt-sm-2"
 msgstr "w-100 py-sm-3 mt-sm-2"
-
-#~ msgid "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-#~ msgstr "등록 <i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
-
-#~ msgid ""
-#~ "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-#~ msgstr ""
-#~ "등록 <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-
-#~ msgid ""
-#~ "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
-#~ "class=\"text-danger\">\n"
-#~ "                                        <i class=\"fa fa-ban me-2\"/>Sold "
-#~ "Out\n"
-#~ "                                    </span>"
-#~ msgstr ""
-#~ "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
-#~ "class=\"text-danger\">\n"
-#~ "                                        <i class=\"fa fa-ban me-2\"/>판매 "
-#~ "완료\n"
-#~ "                                    </span>"

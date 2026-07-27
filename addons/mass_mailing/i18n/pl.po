@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 01:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
@@ -343,13 +343,13 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> "
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
 "Contacts\n"
 "                                    </span>"
 msgstr ""
 "<br/>\n"
 "<span class=\"text-muted\">\n"
-"<i class=\"fa fa-envelope-o\"/>Kontakty\n"
+"<i class=\"oi\" data-icon=\"mail\"/>Kontakty\n"
 "</span>"
 
 #. module: mass_mailing
@@ -574,73 +574,77 @@ msgstr ""
 "wydajnością</font>"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
-msgstr "<i class=\"fa fa-bar-chart\"/>Porównaj wersję"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-1\" title=\"Recipient Model\" aria-"
-"hidden=\"true\"/>"
+"<i class=\"oi me-1\" data-icon=\"crisis_alert\" title=\"Recipient Model\" "
+"aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/"
-"Opportunity\"/>"
+"<i class=\"oi me-2\" data-icon=\"crisis_alert\" role=\"img\" aria-"
+"label=\"Lead/Opportunity\"/>"
 msgstr ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/Okazja\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-copy\"/> Create an Alternative"
-msgstr "<i class=\"fa fa-copy\"/>Utwórz alternatywę"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope text-primary me-2\" title=\"E-mail\"/>"
+msgid ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" title=\"E-"
+"mail\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/>Wyślij to jako zwycięzcę"
+msgid "<i class=\"oi oi-filled\" data-icon=\"mail\"/> Send this as winner"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"mail\"/>Wyślij to jako zwycięzcę"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Wyślij wygranego teraz\n"
 "                                                </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign "
 "totals"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "Suma wszystkich wartości procentowych dla tej kampanii A/B wynosi"
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
-msgid "<i class=\"oi oi-arrow-right\"></i> Configure Opt-out Reasons"
-msgstr "<i class=\"oi oi-arrow-right\"></i> Skonfiguruj powody wypisania się"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"text-muted fa fa-paper-plane-o me-1\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-muted me-1\" data-icon=\"send\" aria-hidden=\"true\"/>\n"
 "                                    <span class=\"text-muted "
 "fs-5\">Mailings</span>"
 msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Compare Version"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/>Porównaj wersję"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"content_copy\"/> Create an Alternative"
+msgstr "<i class=\"oi\" data-icon=\"content_copy\"/>Utwórz alternatywę"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "<i class=\"oi\" data-icon=\"east\"></i> Configure Opt-out Reasons"
+msgstr ""
+"<i class=\"oi\" data-icon=\"east\"></i> Skonfiguruj powody wypisania się"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -651,15 +655,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Aby śledzić odpowiedzi, "
 "adres ten musi należeć do tej bazy danych.\n"
 "                                                </small>"
@@ -683,42 +687,6 @@ msgstr "<span class=\"display-4-fs\">2</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
 msgid "<span class=\"display-4-fs\">3</span>"
 msgstr "<span class=\"display-4-fs\">3</span>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
-msgid ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>What We Offer"
-msgstr ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>Co oferujemy"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-msgstr ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>Next Batch</span>"
-msgstr ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-"
-"label=\"Zaplanowana data\"/>\n"
-"                                        <span>Następna partia</span>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
-msgstr ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Data "
-"wysłania\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -811,6 +779,44 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
 msgstr "<span class=\"o_stat_text\">Otwarty odbiorca</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>Next Batch</span>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Zaplanowana data\"/>\n"
+"                                        <span>Następna partia</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">Co oferujemy"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Sent date\"/>"
+msgstr ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Data wysłania\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_button
@@ -1256,8 +1262,8 @@ msgstr "<u>Poniedziałek</u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr "<u>Odśwież <i class=\"fa fa-refresh ms-1\"/></u>"
+msgid "<u>Refresh <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
+msgstr "<u>Odśwież <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
@@ -1884,11 +1890,11 @@ msgstr "Żądanie usunięcia z listy zablokowanych przez portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
-"Wniosek o usunięcie z listy zablokowanych z portalu mailingowego %"
-"(mailing_link)s (dokument %(record_link)s)"
+"Wniosek o usunięcie z listy zablokowanych z portalu mailingowego "
+"%(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1900,11 +1906,11 @@ msgstr "Żądanie zablokowania z portalu"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
-"Żądanie blokady z portalu mailingowego %(mailing_link)s(dokument%"
-"(record_link)s )"
+"Żądanie blokady z portalu mailingowego "
+"%(mailing_link)s(dokument%(record_link)s )"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1923,8 +1929,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Żądanie zablokowania z linku rezygnacji z subskrypcji mailingu %"
-"(mailing_link)s(dokument %(record_link)s)"
+"Żądanie zablokowania z linku rezygnacji z subskrypcji mailingu "
+"%(mailing_link)s(dokument %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3371,11 +3377,6 @@ msgid "Font Family"
 msgstr "Grupa czcionek"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikona Font awesome np. fa-tasks"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
 msgstr "Stopki"
@@ -4483,6 +4484,11 @@ msgstr "Techniczne aspekty masowego mailingu"
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "Masowe wysyłki"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -6320,8 +6326,8 @@ msgstr "Dziennik testów"
 msgid ""
 "Test email sent to %(success)s recipient(s), could not send to %(failed)s."
 msgstr ""
-"Wiadomość testowa wysłana do %(success)s odbiorców, nie można wysłać do %"
-"(failed)s."
+"Wiadomość testowa wysłana do %(success)s odbiorców, nie można wysłać do "
+"%(failed)s."
 
 #. module: mass_mailing
 #. odoo-python
@@ -7451,283 +7457,3 @@ msgstr "✽  Makarony"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr "✽  Pizze"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Curated "
-#~ "Industry Insights"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Wybrane "
-#~ "informacje branżowe"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Expert Tips "
-#~ "&amp; How-Tos"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Porady "
-#~ "ekspertów &amp; Poradniki"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/>  Guides &amp; "
-#~ "Resources"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-o-color-1\" role=\"img\"/"
-#~ ">  Przewodniki&amp; Zasoby"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Access all "
-#~ "modules"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Dostęp do "
-#~ "wszystkich modułów"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Account "
-#~ "management"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Zarządzanie kontem"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Complete CRM for "
-#~ "any team"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Kompletny system "
-#~ "CRM dla każdego zespołu"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Email support"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Pomoc techniczna "
-#~ "przez e-mail"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Limited "
-#~ "customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Ograniczone "
-#~ "możliwości dostosowania"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/>  Sales &amp; "
-#~ "marketing for 2"
-#~ msgstr ""
-#~ "<span class=\"fa fa-check text-success\" role=\"img\"/> Sprzedaż &amp; "
-#~ "marketing dla 2"
-
-#~ msgid "<span class=\"fa fa-fw fa-folder\"/>Category"
-#~ msgstr "<span class=\"fa fa-fw fa-folder\"/>Kategoria"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  What do you want "
-#~ "to promote&amp;nbsp;?"
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-info-circle\" role=\"img\"/>  Co chcesz "
-#~ "promować&amp;nbsp;?"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/"
-#~ ">  Huge holiday sale savings. Don't miss out."
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/"
-#~ ">  Ogromne świąteczne rabaty. Nie przegap tej okazji."
-
-#~ msgid ""
-#~ "<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/"
-#~ ">  <strong>Special Offers</strong>. Complimentary care packs included "
-#~ "with every sofa."
-#~ msgstr ""
-#~ "<span class=\"fa fa-fw fa-tag\" contenteditable=\"false\"/"
-#~ ">  <strong>Oferty specjalne</strong>. Do każdej sofy dołączamy bezpłatny "
-#~ "zestaw pielęgnacyjny."
-
-#~ msgid ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No customization"
-#~ msgstr ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/> Brak możliwości "
-#~ "dostosowania"
-
-#~ msgid "<span class=\"fa fa-times text-danger\" role=\"img\"/>  No support"
-#~ msgstr ""
-#~ "<span class=\"fa fa-times text-danger\" role=\"img\"/> Brak wsparcia"
-
-#~ msgid ""
-#~ "<span class=\"fa fa-user me-2\" contenteditable=\"false\"/>My "
-#~ "Account<span class=\"fa fa-chevron-right ms-2\" contenteditable=\"false\"/"
-#~ ">"
-#~ msgstr ""
-#~ "<span class=\"fa fa-user me-2\" contenteditable=\"false\"/>Moje "
-#~ "konto<span class=\"fa fa-chevron-right ms-2\" contenteditable=\"false\"/>"
-
-#~ msgid ""
-#~ "Continue reading <span class=\"fa fa-long-arrow-right align-middle ms-1\"/"
-#~ ">"
-#~ msgstr ""
-#~ "Czytaj dalej <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-
-#~ msgid ""
-#~ "Discover more <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-#~ msgstr ""
-#~ "Dowiedz się więcej <span class=\"fa fa-long-arrow-right align-middle "
-#~ "ms-1\"/>"
-
-#~ msgid "See more <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-#~ msgstr "Zobacz więcej <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-
-#~ msgid "# Favorite Filters"
-#~ msgstr "# Ulubione filtry"
-
-#~ msgid "<span name=\"canceled_text\">emails have been cancelled.</span>"
-#~ msgstr "<span name=\"canceled_text\">E-maile zostały anulowane.</span>"
-
-#~ msgid "<span name=\"failed_text\">emails failed.</span>"
-#~ msgstr "<span name=\"failed_text\">Wysyłanie nie powiodło się.</span>"
-
-#~ msgid "<span name=\"process_text\">emails are being processed.</span>"
-#~ msgstr "<span name=\"process_text\">e-maile są przetwarzane.</span>"
-
-#~ msgid ""
-#~ "<span name=\"scheduled_text\">emails are in queue and will be sent soon.</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span name=\"scheduled_text\">e-maile są w kolejce i zostaną wysłane "
-#~ "wkrótce.</span>"
-
-#~ msgid "<span name=\"sent\">emails have been sent.</span>"
-#~ msgstr "<span name=\"sent\">wiadomości e-mail zostały wysłane.</span>"
-
-#~ msgid ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">There wasn't "
-#~ "enough recipients given to this mailing. </span>\n"
-#~ "                            </strong>"
-#~ msgstr ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">Nie ma "
-#~ "wystarczającej liczby odbiorców dla tej wysyłki.</span>\n"
-#~ "                            </strong>"
-
-#~ msgid "Domain field"
-#~ msgstr "Pole domeny"
-
-#~ msgid "Favorite Filter"
-#~ msgstr "Filtr Ulubionych"
-
-#~ msgid "Favorite Filters"
-#~ msgstr "Filtry ulubione"
-
-#~ msgid "Favorite filter domain"
-#~ msgstr "Domena filtra Ulubionych"
-
-#~ msgid "Filter Name"
-#~ msgstr "Nazwa filtra"
-
-#~ msgid "Filters saved by me"
-#~ msgstr "Zapisane przeze mnie filtry"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Pełny Ekran"
-
-#~ msgid "Mailing Favorite Filter"
-#~ msgstr "Filtr ulubionych wiadomości"
-
-#~ msgid "Mailing List Contacts"
-#~ msgstr "Kontakty na liście mailingowej"
-
-#~ msgid "Model field"
-#~ msgstr "Pole modelu"
-
-#~ msgid "My Filters"
-#~ msgstr "Moje filtry"
-
-#~ msgid "No saved filter yet!"
-#~ msgstr "Nie ma jeszcze zapisanego filtra!"
-
-#~ msgid "Open Recipient"
-#~ msgstr "Otwarty odbiorca"
-
-#~ msgid "Please provide a name for the filter"
-#~ msgstr "Podaj nazwę filtra"
-
-#~ msgid "Preview & Test"
-#~ msgstr "Podgląd i testowanie"
-
-#~ msgid "Reload a favorite filter"
-#~ msgstr "Przeładuj ulubiony filtr"
-
-#~ msgid "Remove from Favorites"
-#~ msgstr "Usuń z ulubionych"
-
-#~ msgid "Save as Favorite Filter"
-#~ msgstr "Zapisz jako ulubiony filtr"
-
-#~ msgid "Save as favorite"
-#~ msgstr "Zapisz jako ulubione"
-
-#~ msgid "Send Test"
-#~ msgstr "Test wysyłania"
-
-#~ msgid "Send test to"
-#~ msgstr "Wyślij test do"
-
-#~ msgid ""
-#~ "The saved filter targets different recipients and is incompatible with "
-#~ "this mailing."
-#~ msgstr ""
-#~ "Zapisany filtr jest skierowany do innych odbiorców i jest niekompatybilny "
-#~ "z tym mailingiem."
-
-#~ msgid ""
-#~ "While designing the mailing, you can define the rules to filter "
-#~ "recipients.\n"
-#~ "                To save the same criteria for future use, you can add it "
-#~ "to the favorite list\n"
-#~ "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></"
-#~ "i> icon next to \"Recipients\"."
-#~ msgstr ""
-#~ "Podczas projektowania mailingu można zdefiniować reguły filtrowania "
-#~ "odbiorców.\n"
-#~ "Aby zapisać te same kryteria do wykorzystania w przyszłości, można dodać "
-#~ "je do listy ulubionych\n"
-#~ "klikając ikonę <i class=\"fa fa-floppy-o text-warning\"></i> obok "
-#~ "\"Odbiorcy\"."
-
-#~ msgid "e.g. \"VIP Customers\""
-#~ msgstr "np. \"Klienci VIP\""
-
-#~ msgid "email1@example.com, email2@example.com"
-#~ msgstr ""
-#~ "email1@example.com\n"
-#~ "email2@example.com"
-
-#~ msgid "Add Contacts to Mailing List"
-#~ msgstr "Dodawanie kontaktów do listy mailingowej"
-
-#~ msgid "Add Contacts to a Mailing List"
-#~ msgstr "Dodaj kontakty do listy mailingowej"
-
-#~ msgid "Select a list..."
-#~ msgstr "Wybierz listę..."
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia komunikacji"
-
-#~ msgid "Heading 1"
-#~ msgstr "Nagłówek 1"
-
-#~ msgid "Heading 2"
-#~ msgstr "Nagłówek 2"
-
-#~ msgid "Heading 3"
-#~ msgstr "Nagłówek 3"
-
-#~ msgid "Primary Button"
-#~ msgstr "Przycisk główny"
-
-#~ msgid "Secondary Button"
-#~ msgstr "Przycisk dodatkowy"

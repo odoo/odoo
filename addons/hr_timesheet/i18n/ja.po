@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-21 02:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -101,8 +101,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
-"(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project "
+"'%(project_name)s' linked to the timesheet."
 msgstr ""
 "'%(missing_plan_names)s' 分析プラン、タイムシートにリンクされたプロジェクト "
 "'%(project_name)s' で必要。"
@@ -126,28 +126,23 @@ msgstr "2時間"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-clock-o\" title=\"Timesheets\" "
-"invisible=\"stat_success_rate\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
-"text-success\" title=\"On Due\" invisible=\"not stat_success_rate or "
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"schedule\" "
+"title=\"Timesheets\" invisible=\"stat_success_rate\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-success\" "
+"data-icon=\"schedule\" title=\"On Due\" invisible=\"not stat_success_rate or "
 "stat_success_rate &gt;= 80\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
-"text-warning\" title=\"Warning\" invisible=\"not stat_success_rate or "
-"stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
-"text-danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
-"stat_success_rate &lt;= 100\"/>"
+"                            <i class=\"oi oi-fw o_button_icon text-warning\" "
+"data-icon=\"schedule\" title=\"Warning\" invisible=\"not stat_success_rate "
+"or stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-danger\" "
+"data-icon=\"schedule\" title=\"Over Due\" invisible=\"not stat_success_rate "
+"or stat_success_rate &lt;= 100\"/>"
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
-msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr "<i class=\"fa fa-print\"/>詳細を見る"
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_kanban_inherit
-msgid "<span class=\"fa fa-fw fa-clock-o me-1\" title=\"Time\"/>"
-msgstr ""
+msgid "<i class=\"oi\" data-icon=\"print\"/> View Details"
+msgstr "<i class=\"oi\" data-icon=\"print\"/>詳細を見る"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_public_view_form
@@ -155,6 +150,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
 msgstr "<span class=\"o_stat_text\">タイムシート</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_kanban_inherit
+msgid "<span class=\"oi oi-fw me-1\" data-icon=\"schedule\" title=\"Time\"/>"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -1290,8 +1290,8 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"タイムシート機能を使用するには、プロジェクト用の分析勘定が必要です。 計画 '%"
-"(plan_name)s' で勘定科目を設定するか、タイムシート機能をオフにして下さい。"
+"タイムシート機能を使用するには、プロジェクト用の分析勘定が必要です。 計画 "
+"'%(plan_name)s' で勘定科目を設定するか、タイムシート機能をオフにして下さい。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1492,15 +1492,3 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold ms-1\">Sub-tasks</span>"
 msgstr ""
-
-#~ msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
-#~ msgstr "(%(sign)s%(hours)s: 残%(minutes)s)"
-
-#~ msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-#~ msgstr "<span style=\"margin-right: 15px;\">合計 (日)</span>"
-
-#~ msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
-#~ msgstr "<span style=\"margin-right: 15px;\">合計 (時間)</span>"
-
-#~ msgid "Research and Development/New Portal System"
-#~ msgstr "研究開発/新ポータルシステム"

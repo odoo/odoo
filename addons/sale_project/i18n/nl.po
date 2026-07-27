@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 05:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -51,36 +51,6 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"De "
-"verkooporder voor dit project is geannuleerd. We raden aan om de "
-"verkooporderregel bij te werken of dit project te annuleren in lijn met de "
-"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
-">"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"De "
-"verkooporder voor deze taak is geannuleerd. We raden aan om de "
-"verkooporderregel bij te werken of deze taak te annuleren in lijn met de "
-"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
-">"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            <span class=\"o_stat_value\">0</span> Sales "
 "Order\n"
@@ -118,6 +88,36 @@ msgstr "<span class=\"o_stat_text\">Klantenweergave</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Verkooporder</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"De "
+"verkooporder voor dit project is geannuleerd. We raden aan om de "
+"verkooporderregel bij te werken of dit project te annuleren in lijn met de "
+"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
+">"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"De "
+"verkooporder voor deze taak is geannuleerd. We raden aan om de "
+"verkooporderregel bij te werken of deze taak te annuleren in lijn met de "
+"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
+">"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -992,52 +992,3 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
-
-#~ msgid ""
-#~ "A project must be defined on the quotation %(order)s or on the form of "
-#~ "products creating a task on order.\n"
-#~ "The following product need a project in which to put its task: %"
-#~ "(product_name)s"
-#~ msgstr ""
-#~ "Er moet een project gedefinieerd zijn op de offerte %(order)s of op het "
-#~ "formulier van producten die een taak op de order aanmaken. Het volgende "
-#~ "product heeft een project nodig waarin de taak geplaatst moet worden: %"
-#~ "(product_name)s"
-
-#~ msgid "Create a customer invoice"
-#~ msgstr "Maak een klantfactuur"
-
-#~ msgid "Create a vendor bill"
-#~ msgstr "Maak een leveranciersfactuur"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your customers."
-#~ msgstr ""
-#~ "Maak facturen, registreer betalingen en volg communicatie met je klanten "
-#~ "op."
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your vendors."
-#~ msgstr ""
-#~ "Maak facturen, registreer betalingen en volg communicatie met je "
-#~ "leveranciers op."
-
-#~ msgid "Create Sales Order"
-#~ msgstr "Maak verkooporder"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "Inkomsten (Tijd & materiaal)"
-
-#~ msgid "Timesheets (Non-Billable)"
-#~ msgstr "Urenstaten (Niet factureerbaar)"
-
-#~ msgid "Timesheets (Manual) "
-#~ msgstr "Urenstaten (Handmatig) "
-
-#~ msgid "Timesheets (Milestones)"
-#~ msgstr "Urenstaten (Mijlpalen)"
-
-#~ msgid "Timesheets (Time & Materials)"
-#~ msgstr "Urenstaten (Tijd & Materialen)"

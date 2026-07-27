@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-20 13:01+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -298,13 +298,13 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> "
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
 "Contacts\n"
 "                                    </span>"
 msgstr ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">\n"
-"                                        <i class=\"fa fa-envelope-o\"/> "
+"                                        <i class=\"oi\" data-icon=\"mail\"/> "
 "Контакти\n"
 "                                    </span>"
 
@@ -509,47 +509,40 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-bar-chart\"/> Compare Version"
-msgstr "<i class=\"fa fa-bar-chart\"/> Порівняйте версії"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-1\" title=\"Recipient Model\" aria-"
-"hidden=\"true\"/>"
+"<i class=\"oi me-1\" data-icon=\"crisis_alert\" title=\"Recipient Model\" "
+"aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid ""
-"<i class=\"fa fa-bullseye me-2\" role=\"img\" aria-label=\"Lead/"
-"Opportunity\"/>"
+"<i class=\"oi me-2\" data-icon=\"crisis_alert\" role=\"img\" aria-"
+"label=\"Lead/Opportunity\"/>"
 msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-copy\"/> Create an Alternative"
-msgstr "<i class=\"fa fa-copy\"/> Створіть альтернативу"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
+msgid ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/> Надіслати це як переможцю"
+msgid "<i class=\"oi oi-filled\" data-icon=\"mail\"/> Send this as winner"
+msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/> Надіслати це як переможцю"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Send Winner Now\n"
 "                                                </span>"
 msgstr ""
-"<i class=\"fa fa-envelope\"/><span name=\"ab_test_auto\">\n"
+"<i class=\"oi oi-filled\" data-icon=\"mail\"/><span name=\"ab_test_auto\">\n"
 "                                                    Надіслати переможця "
 "зараз\n"
 "                                                </span>"
@@ -557,24 +550,34 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign "
 "totals"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-danger\" data-icon=\"warning\" aria-hidden=\"true\"/>\n"
 "                        Сума всіх відсотків цієї кампанії A/B"
-
-#. module: mass_mailing
-#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
-msgid "<i class=\"oi oi-arrow-right\"></i> Configure Opt-out Reasons"
-msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid ""
-"<i class=\"text-muted fa fa-paper-plane-o me-1\" aria-hidden=\"true\"/>\n"
+"<i class=\"oi text-muted me-1\" data-icon=\"send\" aria-hidden=\"true\"/>\n"
 "                                    <span class=\"text-muted "
 "fs-5\">Mailings</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Compare Version"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> Порівняйте версії"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "<i class=\"oi\" data-icon=\"content_copy\"/> Create an Alternative"
+msgstr "<i class=\"oi\" data-icon=\"content_copy\"/> Створіть альтернативу"
+
+#. module: mass_mailing
+#: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
+msgid "<i class=\"oi\" data-icon=\"east\"></i> Configure Opt-out Reasons"
 msgstr ""
 
 #. module: mass_mailing
@@ -586,15 +589,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
+"contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Щоб відстежувати "
 "відповіді, ця адреса має належати до цієї бази даних.\n"
 "                                                </small>"
@@ -617,36 +620,6 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
 msgid "<span class=\"display-4-fs\">3</span>"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
-msgid ""
-"<span class=\"fa fa-asterisk me-2\" contenteditable=\"false\"/>What We Offer"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-msgstr ""
-"<span class=\"fa fa-hourglass-half me-2 small my-auto\" aria-"
-"label=\"Scheduled date\"/>"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-hourglass-o me-2 small my-auto\" aria-label=\"Scheduled "
-"date\"/>\n"
-"                                        <span>Next Batch</span>"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
-msgid ""
-"<span class=\"fa fa-paper-plane me-2 small my-auto\" aria-label=\"Sent "
-"date\"/>"
 msgstr ""
 
 #. module: mass_mailing
@@ -732,6 +705,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
 msgstr "<span class=\"o_stat_text\">Відкрити одержувача</span>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+msgstr ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_bottom\" aria-"
+"label=\"Scheduled date\"/>"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi me-2 small my-auto\" data-icon=\"hourglass_empty\" aria-"
+"label=\"Scheduled date\"/>\n"
+"                                        <span>Next Batch</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+msgid ""
+"<span class=\"oi oi-filled me-2 small my-auto\" data-icon=\"send\" aria-"
+"label=\"Sent date\"/>"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_button
@@ -1146,8 +1150,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr "<u>Оновити <i class=\"fa fa-refresh ms-1\"/></u>"
+msgid "<u>Refresh <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
+msgstr "<u>Оновити <i class=\"oi ms-1\" data-icon=\"refresh\"/></u>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
@@ -1762,8 +1766,8 @@ msgstr "Запит на видалення чорного списку з пор
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
 "Запит на видалення чорного списку розсилки з порталу %(mailing_link)s "
 "(документ %(record_link)s)"
@@ -1778,11 +1782,11 @@ msgstr "Запит із списку блокування з порталу"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document %"
-"(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document "
+"%(record_link)s)"
 msgstr ""
-"Запит чорного списку з порталу розсилки %(mailing_link)s (документ %"
-"(record_link)s)"
+"Запит чорного списку з порталу розсилки %(mailing_link)s (документ "
+"%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3226,11 +3230,6 @@ msgid "Font Family"
 msgstr "Набір шрифтів"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
 msgstr "Футери"
@@ -4303,6 +4302,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "Масові розсилки"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -7200,125 +7204,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr ""
-
-#~ msgid "# Favorite Filters"
-#~ msgstr "К-сть збережених фільтрів"
-
-#~ msgid "<span name=\"process_text\">emails are being processed.</span>"
-#~ msgstr "<span name=\"process_text\">електронні листи обробляються.</span>"
-
-#~ msgid ""
-#~ "<span name=\"scheduled_text\">emails are in queue and will be sent soon.</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span name=\"scheduled_text\">електронні листи в черзі та будуть "
-#~ "надіслані пізніше.</span>"
-
-#~ msgid "<span name=\"sent\">emails have been sent.</span>"
-#~ msgstr "<span name=\"sent\">електронні листи надіслано.</span>"
-
-#~ msgid ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">There wasn't "
-#~ "enough recipients given to this mailing. </span>\n"
-#~ "                            </strong>"
-#~ msgstr ""
-#~ "<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
-#~ "ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
-#~ "canceled != 0\">\n"
-#~ "                                <span name=\"ab_test_text\">Недостатньо "
-#~ "одержувачів цього листування. </span>\n"
-#~ "                            </strong>"
-
-#~ msgid "Domain field"
-#~ msgstr "Поле домену"
-
-#~ msgid "Favorite Filter"
-#~ msgstr "Улюблений фільтр"
-
-#~ msgid "Favorite Filters"
-#~ msgstr "Улюблені фільтри"
-
-#~ msgid "Favorite filter domain"
-#~ msgstr "Домен улюбленого фільтру"
-
-#~ msgid "Filter Name"
-#~ msgstr "Назва фільтру"
-
-#~ msgid "Filters saved by me"
-#~ msgstr "Фільтри збережені мною"
-
-#~ msgid "Fullscreen"
-#~ msgstr "На повний екран"
-
-#~ msgid "Mailing List Contacts"
-#~ msgstr "Контакти списку розсилки"
-
-#~ msgid "Model field"
-#~ msgstr "Поле моделі"
-
-#~ msgid "My Filters"
-#~ msgstr "Мої фільтри"
-
-#~ msgid "No saved filter yet!"
-#~ msgstr "Ще немає збережених фільтрів!"
-
-#~ msgid "Open Recipient"
-#~ msgstr "Відкрити одержувача"
-
-#~ msgid "Please provide a name for the filter"
-#~ msgstr "Надайте назву для філтру"
-
-#~ msgid "Reload a favorite filter"
-#~ msgstr "Перезавантажте улюблений фільтр"
-
-#~ msgid "Remove from Favorites"
-#~ msgstr "Видалити з вибраного"
-
-#~ msgid "Save as Favorite Filter"
-#~ msgstr "Зберегти як улюблений фільтр"
-
-#~ msgid ""
-#~ "The saved filter targets different recipients and is incompatible with "
-#~ "this mailing."
-#~ msgstr ""
-#~ "Збережений фільтр націлений на різних одержувачів і несумісний із цією "
-#~ "розсилкою."
-
-#~ msgid ""
-#~ "While designing the mailing, you can define the rules to filter "
-#~ "recipients.\n"
-#~ "                To save the same criteria for future use, you can add it "
-#~ "to the favorite list\n"
-#~ "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></"
-#~ "i> icon next to \"Recipients\"."
-#~ msgstr ""
-#~ "Під час створення розсилки ви можете визначити правила фільтрації "
-#~ "одержувачів.\n"
-#~ "                Щоб зберегти ті самі критерії для подальшого "
-#~ "використання, ви можете додати його до списку вибраного\n"
-#~ "                натиснувши іконку <i class=\"fa fa-floppy-o text-"
-#~ "warning\"></i> біля \"Одержувачів\"."
-
-#~ msgid "e.g. \"VIP Customers\""
-#~ msgstr "напр. \"VIP клієнти\""
-
-#~ msgid "Add Contacts to Mailing List"
-#~ msgstr "Додати контакти до списку розсилки"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на сайті"
-
-#~ msgid "Heading 1"
-#~ msgstr "Заголовок 1"
-
-#~ msgid "Heading 2"
-#~ msgstr "Заголовок 2"
-
-#~ msgid "Heading 3"
-#~ msgstr "Заголовок 3"

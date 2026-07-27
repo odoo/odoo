@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:11+0000\n"
 "PO-Revision-Date: 2026-06-21 17:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -65,8 +65,8 @@ msgstr "# 조회수"
 msgid ""
 "%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s"
 msgstr ""
-"%(link_start)s 카르마를 받는 방법을 알아보려면 가이드를 확인해 보세요: %"
-"(link_end)s"
+"%(link_start)s 카르마를 받는 방법을 알아보려면 가이드를 확인해 보세요: "
+"%(link_end)s"
 
 #. module: website_forum
 #. odoo-javascript
@@ -422,12 +422,12 @@ msgstr "<b>이미 대기 중인 게시물이 있습니다.</b><br/>"
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
 msgid ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy o-text-gold ms-2\" "
-"role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
+"                    <span class=\"oi oi-filled o-text-gold ms-2\" data-"
+"icon=\"trophy\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
 "<b>|</b>\n"
-"                    <span class=\"fa fa-trophy o-text-gold ms-2\" "
-"role=\"img\" aria-label=\"금배지\" title=\"금배지\"/>"
+"                    <span class=\"oi oi-filled o-text-gold ms-2\" data-"
+"icon=\"trophy\" role=\"img\" aria-label=\"금배지\" title=\"금배지\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -435,242 +435,255 @@ msgid "<br/>by"
 msgstr "<br/>작성자"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"fa fa-angle-left me-2\"/>Back to All Posts"
-msgstr "<i class=\"fa fa-angle-left me-2\"/>모든 게시물로 돌아가기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
-msgid "<i class=\"fa fa-arrow-right\"/> Go To Forums"
-msgstr "<i class=\"fa fa-arrow-right\"/> 포럼으로 이동"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
-msgid "<i class=\"fa fa-bug me-1\"/>Filter Tool"
-msgstr "<i class=\"fa fa-bug me-1\"/>필터 도구"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
-msgid ""
-"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"Downvote\"/>"
-msgstr ""
-"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"반대투표\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.vote
-msgid ""
-"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"Upvote\"/>"
-msgstr ""
-"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"찬성투표\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr "<i class=\"fa fa-check fa-fw me-1\"/>수락"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
-msgid ""
-"<i class=\"fa fa-check fa-fw me-1\"/>Be less specific in your wording for a "
-"wider search result."
-msgstr ""
-"<i class=\"fa fa-check fa-fw me-1\"/>더 폭넓은 검색 결과를 얻으려면 검색어를 "
-"덜 구체적으로 작성하세요."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
-msgid "<i class=\"fa fa-check fa-fw me-1\"/>Check your spelling and try again."
-msgstr ""
-"<i class=\"fa fa-check fa-fw me-1\"/>철자를 확인하고 다시 시도해 주세요."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
-msgid ""
-"<i class=\"fa fa-check fa-fw me-1\"/>Try searching for one or two words."
-msgstr "<i class=\"fa fa-check fa-fw me-1\"/>한두 개의 단어로 검색해 보세요."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
-msgid "<i class=\"fa fa-check me-1\"/>Solved"
-msgstr "<i class=\"fa fa-check me-1\"/>해결 완료"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
-msgid "<i class=\"fa fa-check\"/> Accept"
-msgstr "<i class=\"fa fa-check\"/> 수락"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid ""
-"<i class=\"fa fa-check\"/> How to configure TPS and TVQ's canadian taxes?"
-msgstr ""
-"<i class=\"fa fa-check\"/> TPS 및 TVQ의 캐나다 세금을 구성하는 방법은 무엇입"
-"니까?"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-check\"/><span class=\"ms-2\">Accept</span>"
-msgstr "<i class=\"fa fa-check\"/><span class=\"ms-2\">수락</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
-msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
-msgstr "<i class=\"fa fa-comments-o me-1\" title=\"게시판\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
-msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr "<i class=\"fa fa-eye me-1\" title=\"조회수\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-flag\"/> Country"
-msgstr "<i class=\"fa fa-flag\"/> 국가"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-font\"/> Text"
-msgstr "<i class=\"fa fa-font\"/> 텍스트"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
-msgid "<i class=\"fa fa-fw fa-check me-1\"/>Following"
-msgstr "<i class=\"fa fa-fw fa-check me-1\"/>팔로잉"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
-msgid "<i class=\"fa fa-info-circle fa-fw\"/> About this forum"
-msgstr "<i class=\"fa fa-info-circle fa-fw\"/> 게시판 정보"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_display
-msgid ""
-"<i class=\"fa fa-pencil\"/>\n"
-"                                Edit<span class=\"d-none d-lg-inline\"> your "
-"answer</span>"
-msgstr ""
-"<i class=\"fa fa-pencil\"/>\n"
-"                                <span class=\"d-none d-lg-inline\"> 답변</"
-"span> 수정하기"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.display_post
-msgid ""
-"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
-"                0"
-msgstr ""
-"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
-"                0"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-#: model_terms:ir.ui.view,arch_db:website_forum.post_display
-msgid "<i class=\"fa fa-reply me-1\"/>Reply"
-msgstr "<i class=\"fa fa-reply me-1\"/>댓글"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_display
-msgid ""
-"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"Share\"/>"
-msgstr ""
-"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" title=\"공유\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
-msgid "<i class=\"fa fa-shield fa-fw opacity-50\"/> Badges"
-msgstr "<i class=\"fa fa-shield fa-fw opacity-50\"/> 배지"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid ""
-"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
-"label=\"Negative votes\" title=\"Negative votes\"/>"
+msgid "<i class=\"oi d-inline-block\" data-icon=\"east\"/> Go to Forums"
 msgstr ""
-"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-label=\"부"
-"정적 투표\" title=\"부정적 투표\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive "
-"votes\" title=\"Positive votes\"/>"
-msgstr ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive "
-"votes\" title=\"Positive votes\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
-msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr "<i class=\"fa fa-times fa-fw me-1\"/>거부"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid ""
-"<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
-"solve my tax computation problem in Canada? Thanks!"
-msgstr ""
-"<i class=\"fa fa-times\"/> 안녕하세요, 캐나다에서 세금 계산 문제를 해결하는 "
-"데 도움을 받을 수 있나요? 감사합니다."
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
-msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr "<i class=\"fa fa-times\"/> 거부"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Offensive</span>"
-msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">모욕</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Reject</span>"
-msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">거부</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<i class=\"fa fa-user\"/> User"
-msgstr "<i class=\"fa fa-user\"/> 사용자"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
-msgid "<i class=\"fa fa-users fa-fw opacity-50\"/> People"
-msgstr "<i class=\"fa fa-users fa-fw opacity-50\"/> 사용자"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-msgid "<i class=\"oi oi-arrow-right d-inline-block\"/> Go to Forums"
-msgstr "<i class=\"oi oi-arrow-right d-inline-block\"/> 게시판으로 이동하기"
+"<i class=\"oi d-inline-block\" data-icon=\"east\"/> 게시판으로 이동하기"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid ""
-"<i class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
-"list"
+"<i class=\"oi display-inline-block\" data-icon=\"east\"/> Return to "
+"questions list"
 msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post
+msgid ""
+"<i class=\"oi me-1 d-lg-none\" data-icon=\"reply\"/>\n"
+"                0"
+msgstr ""
+"<i class=\"oi me-1 d-lg-none\" data-icon=\"reply\"/>\n"
+"                0"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
+msgid "<i class=\"oi me-1\" data-icon=\"bug_report\"/>Filter Tool"
+msgstr "<i class=\"oi me-1\" data-icon=\"bug_report\"/>필터 도구"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<i class=\"oi me-1\" data-icon=\"check\"/>Solved"
+msgstr "<i class=\"oi me-1\" data-icon=\"check\"/>해결 완료"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"oi me-1\" data-icon=\"forum\" title=\"Forum\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"forum\" title=\"게시판\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid "<i class=\"oi me-1\" data-icon=\"reply\"/>Reply"
+msgstr "<i class=\"oi me-1\" data-icon=\"reply\"/>댓글"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+msgid "<i class=\"oi me-1\" data-icon=\"visibility\" title=\"Views\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"visibility\" title=\"조회수\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"keyboard_arrow_left\"/>Back to All Posts"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"keyboard_arrow_left\"/>모든 게시물로 돌아가"
+"기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"oi oi-filled oi-fw opacity-50\" data-icon=\"group\"/> People"
+msgstr ""
+"<i class=\"oi oi-filled oi-fw opacity-50\" data-icon=\"group\"/> 사용자"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"oi oi-filled text-danger ms-3\" data-icon=\"thumb_down\" "
+"role=\"img\" aria-label=\"Negative votes\" title=\"Negative votes\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-danger ms-3\" data-icon=\"thumb_down\" "
+"role=\"img\" aria-label=\"부정적 투표\" title=\"부정적 투표\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
+msgid ""
+"<i class=\"oi oi-filled text-success\" data-icon=\"thumb_up\" role=\"img\" "
+"aria-label=\"Positive votes\" title=\"Positive votes\"/>"
+msgstr ""
+"<i class=\"oi oi-filled text-success\" data-icon=\"thumb_up\" role=\"img\" "
+"aria-label=\"Positive votes\" title=\"Positive votes\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"edit\"/>\n"
+"                                Edit<span class=\"d-none d-lg-inline\"> your "
+"answer</span>"
+msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"edit\"/>\n"
+"                                <span class=\"d-none d-lg-inline\"> 답변</"
+"span> 수정하기"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"oi oi-filled\" data-icon=\"flag\"/> Country"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"flag\"/> 국가"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"oi oi-filled\" data-icon=\"person\"/> User"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"person\"/> 사용자"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Accept"
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>수락"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Be less specific in your "
+"wording for a wider search result."
+msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>더 폭넓은 검색 결과를 얻으려"
+"면 검색어를 덜 구체적으로 작성하세요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Check your spelling and try "
+"again."
+msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>철자를 확인하고 다시 시도해 "
+"주세요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
+msgid "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Following"
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>팔로잉"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
+msgid ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Try searching for one or two "
+"words."
+msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>한두 개의 단어로 검색해 보세"
+"요."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<i class=\"oi oi-fw me-1\" data-icon=\"close\"/>Reject"
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"close\"/>거부"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
+msgid "<i class=\"oi oi-fw opacity-50\" data-icon=\"security\"/> Badges"
+msgstr "<i class=\"oi oi-fw opacity-50\" data-icon=\"security\"/> 배지"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
+#: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
+msgid "<i class=\"oi oi-fw\" data-icon=\"info\"/> About this forum"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"info\"/> 게시판 정보"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"oi\" data-icon=\"arrow_drop_down\" data-bs-toggle=\"tooltip\" "
+"data-bs-placement=\"top\" title=\"Downvote\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"arrow_drop_down\" data-bs-toggle=\"tooltip\" "
+"data-bs-placement=\"top\" title=\"반대투표\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.vote
+msgid ""
+"<i class=\"oi\" data-icon=\"arrow_drop_up\" data-bs-toggle=\"tooltip\" data-"
+"bs-placement=\"top\" title=\"Upvote\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"arrow_drop_up\" data-bs-toggle=\"tooltip\" data-"
+"bs-placement=\"top\" title=\"찬성투표\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_votes
+msgid "<i class=\"oi\" data-icon=\"arrow_forward\"/> Go To Forums"
+msgstr "<i class=\"oi\" data-icon=\"arrow_forward\"/> 포럼으로 이동"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"oi\" data-icon=\"check\"/> Accept"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> 수락"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<i class=\"oi\" data-icon=\"check\"/> How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
+"<i class=\"oi\" data-icon=\"check\"/> TPS 및 TVQ의 캐나다 세금을 구성하는 방"
+"법은 무엇입니까?"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"oi\" data-icon=\"check\"/><span class=\"ms-2\">Accept</span>"
+msgstr "<i class=\"oi\" data-icon=\"check\"/><span class=\"ms-2\">수락</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"<i class=\"oi\" data-icon=\"close\"/> Good morning to all! Please, can "
+"someone help solve my tax computation problem in Canada? Thanks!"
+msgstr ""
+"<i class=\"oi\" data-icon=\"close\"/> 안녕하세요, 캐나다에서 세금 계산 문제"
+"를 해결하는 데 도움을 받을 수 있나요? 감사합니다."
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "<i class=\"oi\" data-icon=\"close\"/> Reject"
+msgstr "<i class=\"oi\" data-icon=\"close\"/> 거부"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid ""
+"<i class=\"oi\" data-icon=\"close\"/><span class=\"ms-2\">Offensive</span>"
+msgstr "<i class=\"oi\" data-icon=\"close\"/><span class=\"ms-2\">모욕</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"oi\" data-icon=\"close\"/><span class=\"ms-2\">Reject</span>"
+msgstr "<i class=\"oi\" data-icon=\"close\"/><span class=\"ms-2\">거부</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_display
+msgid ""
+"<i class=\"oi\" data-icon=\"family_history\" data-bs-toggle=\"tooltip\" data-"
+"bs-placement=\"top\" title=\"Share\"/>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"family_history\" data-bs-toggle=\"tooltip\" data-"
+"bs-placement=\"top\" title=\"공유\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid ""
-"<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"<i class=\"oi\" data-icon=\"more_horiz\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
 msgstr ""
-"<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"<i class=\"oi\" data-icon=\"more_horiz\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<i class=\"oi\" data-icon=\"text_fields\"/> Text"
+msgstr "<i class=\"oi\" data-icon=\"text_fields\"/> 텍스트"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -686,24 +699,6 @@ msgstr "<small>(모두 보기)</small>"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 msgid "<span class=\"badge bg-dark me-1\">Last post:</span>"
 msgstr "<span class=\"badge bg-dark me-1\">최근 게시물:</span>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid ""
-"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
-"label=\"Bronze badge\" title=\"Bronze badge\"/>"
-msgstr ""
-"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-label=\"동"
-"배지\" title=\"동배지\"/>"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.contact
-msgid ""
-"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
-"label=\"Silver badge\" title=\"Silver badge\"/>"
-msgstr ""
-"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-label=\"은"
-"배지\" title=\"은배지\"/>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -770,11 +765,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
-"<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-lightbulb-"
-"o\"/> Tip:</span>"
+"<span class=\"form-text small text-muted me-1\"><i class=\"oi\" data-"
+"icon=\"lightbulb\"/> Tip:</span>"
 msgstr ""
-"<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-lightbulb-"
-"o\"/> 팁:</span>"
+"<span class=\"form-text small text-muted me-1\"><i class=\"oi\" data-"
+"icon=\"lightbulb\"/> 팁:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -791,6 +786,24 @@ msgstr "<span class=\"o_stat_text\"><br/>웹사이트</span>로 이동"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "<span class=\"o_stat_text\">Posts</span>"
 msgstr "<span class=\"o_stat_text\">게시물</span>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"oi oi-filled o-text-bronze ms-2\" data-icon=\"trophy\" "
+"role=\"img\" aria-label=\"Bronze badge\" title=\"Bronze badge\"/>"
+msgstr ""
+"<span class=\"oi oi-filled o-text-bronze ms-2\" data-icon=\"trophy\" "
+"role=\"img\" aria-label=\"동배지\" title=\"동배지\"/>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.contact
+msgid ""
+"<span class=\"oi oi-filled o-text-silver ms-2\" data-icon=\"trophy\" "
+"role=\"img\" aria-label=\"Silver badge\" title=\"Silver badge\"/>"
+msgstr ""
+"<span class=\"oi oi-filled o-text-silver ms-2\" data-icon=\"trophy\" "
+"role=\"img\" aria-label=\"은배지\" title=\"은배지\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_activities
@@ -1798,10 +1811,10 @@ msgstr "계몽가"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "Example\n"
-"                            <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"oi\" data-icon=\"help\"/>"
 msgstr ""
 "예제\n"
-"                            <i class=\"fa fa-question-circle\"/>"
+"                            <i class=\"oi\" data-icon=\"help\"/>"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3780,8 +3793,8 @@ msgstr "화면"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
-msgid "View my answer <i class=\"oi oi-arrow-right ms-1\"/>"
-msgstr "내 답변 보기 <i class=\"oi oi-arrow-right ms-1\"/>"
+msgid "View my answer <i class=\"oi ms-1\" data-icon=\"east\"/>"
+msgstr "내 답변 보기 <i class=\"oi ms-1\" data-icon=\"east\"/>"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views
@@ -4317,36 +4330,3 @@ msgstr "툴팁으로 귀하의 이력을 볼 수 있습니다"
 #: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 msgid "your email..."
 msgstr "귀하의 이메일..."
-
-#~ msgid "Click here to accept this answer."
-#~ msgstr "이 답변을 채택하려면 여기를 클릭하십시오."
-
-#~ msgid "Click to post your answer."
-#~ msgstr "답변을 게시하려면 클릭하십시오."
-
-#~ msgid "Click to post your question."
-#~ msgstr "질문을 게시하려면 클릭하십시오."
-
-#~ msgid "Click to reply."
-#~ msgstr "클릭하여 답글 작성하기"
-
-#~ msgid "Create a new post in this forum by clicking on the button."
-#~ msgstr "버튼을 클릭하여 이 게시판에 새 게시물을 작성합니다."
-
-#~ msgid "Give your post title."
-#~ msgstr "글 제목을 입력합니다."
-
-#~ msgid "Insert tags related to your question."
-#~ msgstr "질문과 관련된 태그를 삽입하십시오."
-
-#~ msgid "Put your answer here."
-#~ msgstr "여기에 답을 넣으십시오."
-
-#~ msgid "Put your question here."
-#~ msgstr "여기에 질문을 넣으십시오."
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-19 18:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -30,30 +30,30 @@ msgid "%(card_campaign_name)s Mailings"
 msgstr "%(card_campaign_name)s E-Postalar"
 
 #. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"mouse\" aria-label=\"Clicks\" role=\"img\" "
+"title=\"Clicks\"/>"
+msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"mouse\" aria-label=\"Clicks\" role=\"img\" "
+"title=\"Clicks\"/>"
+
+#. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
+msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_linkedin_share_composer
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"<i class=\"oi\" data-icon=\"warning\"/>\n"
 "                    <span>We were not able to get an authorization to post "
 "in your stead.</span>"
 msgstr ""
-
-#. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid ""
-"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
-"title=\"Clicks\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
-"title=\"Clicks\"/>"
-
-#. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
-"title=\"Shares\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
-"title=\"Shares\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -456,11 +456,6 @@ msgid "Followers (Partners)"
 msgstr "Takipçiler (İş ortakları)"
 
 #. module: marketing_card
-#: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Yazı tipi harika simgesi ör. fa-görevler"
-
-#. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
 msgstr "Geometrik"
@@ -678,6 +673,11 @@ msgid "Mass Mailing"
 msgstr "Toplu E-Posta"
 
 #. module: marketing_card
+#: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_error
 msgid "Message Delivery error"
 msgstr "Mesaj Teslim hatası"
@@ -802,8 +802,8 @@ msgid ""
 msgstr ""
 "Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
 "Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir yer tutucu ifade olmalıdır, örneğin "
-"{{ object.partner_id.lang }}."
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id."
+"lang }}."
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -1285,9 +1285,3 @@ msgstr "Örn. Örnek Konuşma"
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Why people should share on their network?"
 msgstr "Örn. İnsanlar neden ağlarında paylaşımda bulunmalı?"
-
-#~ msgid "Website Messages"
-#~ msgstr "Websitesi Mesajları"
-
-#~ msgid "Website communication history"
-#~ msgstr "Websitesi iletişim geçmişi"

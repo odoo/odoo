@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-21 05:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -46,23 +46,23 @@ msgstr "# Produkte"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s mit einem Rabatt von %(discount)s %% %(discount_type)s und einer "
 "Zusatzgebühr von %(surcharge)s \n"
-"Beispiel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
-"(total_amount)s"
+"Beispiel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date (%"
-"(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date "
+"(%(start_date)s)"
 msgstr ""
-"%(item_name)s: Enddatum (%(end_date)s) sollte größer sein als Startdatum (%"
-"(start_date)s)"
+"%(item_name)s: Enddatum (%(end_date)s) sollte größer sein als Startdatum "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -145,8 +145,8 @@ msgstr "- %(amount)s Preisnachlass"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Barcode „%(barcode)s“ bereits dem/den Produkt(en) zugeordnet: %"
-"(product_list)s"
+"- Barcode „%(barcode)s“ bereits dem/den Produkt(en) zugeordnet: "
+"%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -253,19 +253,19 @@ msgstr "<b>Tipp: Möchten Sie auf 9,99 runden?</b>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"<i class=\"oi mx-2 oe_edit_only\" data-icon=\"east\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 
 #. module: product
@@ -996,8 +996,8 @@ msgstr "Stuhlkombination"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %"
-"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 "
+"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
@@ -1839,13 +1839,6 @@ msgid "Followers (Partners)"
 msgstr "Follower (Partner)"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
-#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome-Icon, z. B. fa-tasks"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to "
@@ -2558,6 +2551,13 @@ msgid "Material"
 msgstr "Material"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Max. Marge"
@@ -2919,8 +2919,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute %"
-"(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute "
+"%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "Für das Produkt %(product)s können Sie das Attribut %(attribute_src)s nicht "
 "in das Attribut %(attribute_dest)s umwandeln."
@@ -4178,11 +4178,11 @@ msgstr "Die Referenz „%s“ existiert bereits."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product %"
-"(product)s."
+"The attribute %(attribute)s must have at least one value for the product "
+"%(product)s."
 msgstr ""
-"Das Attribut %(attribute)s muss mindestens einen Wert für das Produkt %"
-"(product)s haben."
+"Das Attribut %(attribute)s muss mindestens einen Wert für das Produkt "
+"%(product)s haben."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4223,8 +4223,8 @@ msgstr "Der Anzeigetyp, der im Produktkonfigurator verwendet wird."
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
-"(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
+"\"%(id)s\""
 msgstr ""
 "Das Ausgangsprodukt hat einen anderen Attributwert. „%(imported_values)s“ "
 "entspricht nicht „%(existing_values)s“ für „%(external_id)s“ und „%(id)s“."
@@ -4330,8 +4330,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Der Wert %(value)s ist für das Attribut %(attribute)s des Produkts %"
-"(product)s nicht definiert."
+"Der Wert %(value)s ist für das Attribut %(attribute)s des Produkts "
+"%(product)s nicht definiert."
 
 #. module: product
 #. odoo-python
@@ -5137,21 +5137,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the product of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
-"Sie können das Produkt des auf Produkt %(product)s eingestellten Wertes %"
-"(value)s nicht ändern."
+"Sie können das Produkt des auf Produkt %(product)s eingestellten Wertes "
+"%(value)s nicht ändern."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product %"
-"(product)s."
+"You cannot change the value of the value %(value)s set on product "
+"%(product)s."
 msgstr ""
-"Sie können den Wert des auf Produkt %(product)s eingestellten Wertes %"
-"(value)s nicht ändern."
+"Sie können den Wert des auf Produkt %(product)s eingestellten Wertes "
+"%(value)s nicht ändern."
 
 #. module: product
 #. odoo-python
@@ -5498,36 +5498,3 @@ msgstr "bis"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
-
-#~ msgid "Attached To"
-#~ msgstr "Angehängt an"
-
-#~ msgid "Creation"
-#~ msgstr "Erstellung"
-
-#~ msgid "Document"
-#~ msgstr "Dokument"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "Image is a link"
-#~ msgstr "Bild ist ein Link"
-
-#~ msgid "on"
-#~ msgstr "am"
-
-#~ msgid "<strong>Qty: </strong>"
-#~ msgstr "<strong>Menge</strong>"
-
-#~ msgid "Eco-friendly Wooden Chair"
-#~ msgstr "Umweltfreundlicher Holzstuhl"
-
-#~ msgid "Package Type A"
-#~ msgstr "Pakettyp A"
-
-#~ msgid "On hand:"
-#~ msgstr "Vorrätig:"
-
-#~ msgid "Price:"
-#~ msgstr "Preis:"

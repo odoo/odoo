@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-18 21:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
@@ -310,14 +310,14 @@ msgstr "Blugi cu 5 buzunare din denim de bumbac.."
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
+"name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id."
+"name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.company_id.partner_id."
+"tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
+"lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -343,50 +343,56 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
-msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-inline-flex oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"This setting is common to "
+"all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"Această setare este comună "
+"<i class=\"oi me-1\" data-icon=\"info\" title=\"Această setare este comună "
 "tuturor PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Editează"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
 msgid ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"<i class=\"oi\" data-icon=\"payments\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
-msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Editează"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt "
+"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
+"%(company_name)s. </p>"
 msgstr ""
-"<p>Dragă %(client_name)s,<br/>Aici este bonul tău %(is_invoiced)spentru %"
-"(pos_name)s în valoare de %(amount)s de la %(company_name)s. </p>"
+"<p>Dragă %(client_name)s,<br/>Aici este bonul tău %(is_invoiced)spentru "
+"%(pos_name)s în valoare de %(amount)s de la %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
@@ -406,13 +412,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"This setting is common to all PoS.\" pos-data-"
+"toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Coduri de bare</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Această setare este comună pentru toate PoS-urile.\" pos-data-"
-"toggle=\"tooltip\"/>"
+"                                    <i class=\"oi oi-filled me-1\" data-"
+"icon=\"info\" title=\"Această setare este comună pentru toate PoS-urile.\" "
+"pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
@@ -4053,11 +4060,6 @@ msgid "Followers (Partners)"
 msgstr "Urmăritori (Parteneri)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
-
-#. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
 msgstr ""
@@ -5362,6 +5364,11 @@ msgid "Margins & Costs"
 msgstr "Marje și costuri"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Maximum Exceeded"
@@ -6247,8 +6254,8 @@ msgstr "Produse opționale:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart "
-"(e.g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart (e."
+"g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Produsele opționale sunt sugerate atunci când clienții adaugă articole în "
 "coș (de exemplu, adăugarea unui burger sugerează băuturi reci sau cartofi "
@@ -6962,8 +6969,8 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Vă rugăm să definiți contul de venituri pentru acest produs: '%(product)s' "
-"(id:%(id)d)."
+"Vă rugăm să definiți contul de venituri pentru acest produs: "
+"'%(product)s' (id:%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9659,8 +9666,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "Suma liniilor dvs. de plată trebuie rotunjită pentru a valida tranzacția.\n"
-"Precizia de rotunjire este %(rounding)s, așa că ar trebui să setați %"
-"(expectedAmount)s ca sumă de plată în loc de %(paidAmount)s."
+"Precizia de rotunjire este %(rounding)s, așa că ar trebui să setați "
+"%(expectedAmount)s ca sumă de plată în loc de %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10174,19 +10181,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
-"to continue with Full Synchronization?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading all products may slow down the Point of Sale. Do you "
+"want to continue with Full Synchronization?"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid ""
-"There are %(count)s products available for this PoS (configured limit: %"
-"(limit)s). Loading this many products will severely slow down the system and "
-"may cause it to crash or become unresponsive. It is strongly recommended to "
-"use Limited Synchronization instead. Do you still want to proceed?"
+"There are %(count)s products available for this PoS (configured limit: "
+"%(limit)s). Loading this many products will severely slow down the system "
+"and may cause it to crash or become unresponsive. It is strongly recommended "
+"to use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11543,8 +11550,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_price_inclusion_wizard.py:0
 msgid ""
-"You want to sell a product at %(price_incl)s using tax \"%(tax_name)s\" (%"
-"(amount_type_label)s)"
+"You want to sell a product at %(price_incl)s using tax "
+"\"%(tax_name)s\" (%(amount_type_label)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11956,399 +11963,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-#~ msgstr "%(payment_method)s plata POS de %(partner)s in %(session)s"
-
-#~ msgid "%(title)s %(product_name)s with %(taxes)s"
-#~ msgstr "%(title)s %(product_name)s cu %(taxes)s"
-
-#~ msgid "%s untaxed"
-#~ msgstr "%s fără taxe"
-
-#~ msgid "<span class=\"o_stat_text\">Cash Register</span>"
-#~ msgstr "<span class=\"o_stat_text\">Casă de marcat</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Items</span>"
-#~ msgstr "<span class=\"o_stat_text\">Elemente jurnal</span>"
-
-#~ msgid "Account payments representing aggregated and bank split payments."
-#~ msgstr ""
-#~ "Plățile contabile reprezintă plățile agregate și împărțite la bancă."
-
-#~ msgid "Accounting journal used to create invoices."
-#~ msgstr "Jurnalul contabil utilizat la crearea facturilor."
-
-#~ msgid ""
-#~ "Accounting journal used to post POS session journal entries and POS "
-#~ "invoice payments."
-#~ msgstr ""
-#~ "Jurnalul contabil utilizat pentru a posta intrările jurnalului sesiunii "
-#~ "PoS și plățile facturilor PoS."
-
-#~ msgid "Amount to balance"
-#~ msgstr "Suma de echilibrat"
-
-#~ msgid ""
-#~ "An error has occurred when trying to close the session.\n"
-#~ "You will be redirected to the back-end to manually close the session."
-#~ msgstr ""
-#~ "A apărut o eroare la încercarea de a închide sesiunea.\n"
-#~ "Veți fi redirecționat către back-end pentru a închide manual sesiunea."
-
-#~ msgid "Bank Payments"
-#~ msgstr "Plăți bancare"
-
-#~ msgid "Before Closing Difference"
-#~ msgstr "Diferența înainte de închidere"
-
-#~ msgid "Cash Journal"
-#~ msgstr "Jurnal de numerar"
-
-#~ msgid "Cash difference observed during the counting (Loss) - closing"
-#~ msgstr "Diferență de numerar observată la numărare (Pierdere) - închidere"
-
-#~ msgid "Cash difference observed during the counting (Profit) - closing"
-#~ msgstr "Diferență de numerar observată la numărare (Profit) - închidere"
-
-#~ msgid "Cash register"
-#~ msgstr "Casă de marcat"
-
-#~ msgid "Close Session"
-#~ msgstr "Închideți sesiunea"
-
-#~ msgid "Close Session Wizard"
-#~ msgstr "Închideți asistentul de sesiune"
-
-#~ msgid "Closing difference in %(payment_method)s (%(session)s)"
-#~ msgstr "Diferența de închidere în %(payment_method)s (%(session)s)"
-
-#~ msgid "Closing session error"
-#~ msgstr "Eroare la închiderea sesiunii"
-
-#~ msgid "Combine %(payment_method)s POS payments from %(session)s"
-#~ msgstr "Combinați %(payment_method)s plăți POS din %(session)s"
-
-#~ msgid "Default Account Receivable (PoS)"
-#~ msgstr "Conturi de creanță (PoS) implicite"
-
-#~ msgid "Default POS Receivable Account"
-#~ msgstr "Cont de încasări POS implicit"
-
-#~ msgid "Destination account"
-#~ msgstr "Contul destinație"
-
-#~ msgid "Destination account is readonly"
-#~ msgstr "Contul destinație este doar pentru citire"
-
-#~ msgid "Difference at closing PoS session"
-#~ msgstr "Diferența la închiderea sesiunii PoS"
-
-#~ msgid ""
-#~ "Difference between the theoretical closing balance and the real closing "
-#~ "balance."
-#~ msgstr ""
-#~ "Diferența dintre soldul de închidere teoretic și soldul de închidere real."
-
-#~ msgid "Ending Balance"
-#~ msgstr "Sold final"
-
-#~ msgid "Force Close Session"
-#~ msgstr "Închide sesiunea forțat"
-
-#~ msgid ""
-#~ "Forces to set a customer when using this payment method and splits the "
-#~ "journal entries for each customer. It could slow down the closing process."
-#~ msgstr ""
-#~ "Împingeți să setați un client când utilizați acest mod de plată și "
-#~ "împarteți înregistrările jurnal pentru fiecare client. Acest lucru ar "
-#~ "putea încetini procesul de închidere."
-
-#~ msgid "From invoice payments"
-#~ msgstr "Din încasarea facturii"
-
-#~ msgid "Has Cash Control"
-#~ msgstr "Are control al numerarului"
-
-#~ msgid "Identify Customer"
-#~ msgstr "Identificare client"
-
-#~ msgid "Information message"
-#~ msgstr "Mesaj de informare"
-
-#~ msgid "Intermediary account used for unidentified customers."
-#~ msgstr "Cont intermediar utilizat pentru clienți neidentificați."
-
-#~ msgid "Invoice Journal"
-#~ msgstr "Jurnal facturi"
-
-#~ msgid ""
-#~ "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-#~ msgstr ""
-#~ "Plata facturii pentru %(order)s (%(account_move)s) folosind %"
-#~ "(payment_method)s"
-
-#~ msgid "Is Invoiced"
-#~ msgstr "Este Facturat"
-
-#~ msgid "Journal Items"
-#~ msgstr "Elemente jurnal"
-
-#~ msgid "Last Session Closing Cash"
-#~ msgstr "Închiderea Numerarului din Ultima Sesiune"
-
-#~ msgid ""
-#~ "Need loss account for the following journals to post the lost amount: %s\n"
-#~ msgstr ""
-#~ "Este necesar un cont de pierdere pentru următoarele jurnale pentru a "
-#~ "posta suma pierdută: %s\n"
-
-#~ msgid ""
-#~ "Need profit account for the following journals to post the gained amount: "
-#~ "%s"
-#~ msgstr ""
-#~ "Este necesar un cont de profit pentru următoarele jurnale pentru a posta "
-#~ "suma castigată: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Nu este disponibil"
-
-#~ msgid "Opening balance summed to all cash transactions."
-#~ msgstr "Soldul de deschidere adunat la toate tranzacțiile cu numerar."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Loss Account. This account will "
-#~ "be used to record cash difference."
-#~ msgstr ""
-#~ "Vă rugăm să accesați %s jurnalul și definiți un Cont de Pierderi. Acest "
-#~ "cont va fi utilizat pentru a înregistra diferența de numerar."
-
-#~ msgid ""
-#~ "Please go on the %s journal and define a Profit Account. This account "
-#~ "will be used to record cash difference."
-#~ msgstr ""
-#~ "Vă rugăm să accesați %s jurnalul si să definiți un Cont de Profit. Acest "
-#~ "cont va fi utilizat pentru a înregistra diferența de numerar."
-
-#~ msgid "Price discount from %(original_price)s to %(discounted_price)s"
-#~ msgstr "Reducere de preț de la %(original_price)s la %(discounted_price)s"
-
-#~ msgid "Refresh customer display"
-#~ msgstr "Reîmprospătează afișajul pentru clienți"
-
-#~ msgid "Related Session: %(link)s"
-#~ msgstr "Sesiune asociată: %(link)s"
-
-#~ msgid ""
-#~ "Reversal of POS closing entry %(entry)s for order %(order)s from session %"
-#~ "(session)s"
-#~ msgstr ""
-#~ "Reversarea înregistrării de închidere POS %(entry)s pentru comanda %"
-#~ "(order)s din sesiunea %(session)s"
-
-#~ msgid "Session Journal Entry"
-#~ msgstr "Notă contabilă Sesiune"
-
-#~ msgid "Starting Balance"
-#~ msgstr "Sold inițial"
-
-#~ msgid ""
-#~ "The invoice journal must be in the same currency as the Sales Journal or "
-#~ "the company currency if that is not set."
-#~ msgstr ""
-#~ "Jurnalul de facturare trebuie să fie în aceeași monedă ca Jurnalul de "
-#~ "vânzări sau moneda companiei dacă aceasta nu este setată."
-
-#~ msgid ""
-#~ "The session has been already closed by another User. All sales completed "
-#~ "in the meantime have been saved in a Rescue Session, which can be "
-#~ "reviewed anytime and posted to Accounting from Point of Sale's dashboard."
-#~ msgstr ""
-#~ "Sesiunea a fost deja închisă de un alt utilizator. Toate vânzările "
-#~ "efectuate între timp au fost salvate într-o sesiune de recuperare, care "
-#~ "poate fi revizuită oricând și postată în contabilitate din tabloul de "
-#~ "bord al Punctului de Vânzare."
-
-#~ msgid "Theoretical Closing Balance"
-#~ msgstr "Sold teoretic de închidere"
-
-#~ msgid ""
-#~ "There is a difference between the amounts to post and the amounts of the "
-#~ "orders, it is probably caused by taxes or accounting configurations "
-#~ "changes."
-#~ msgstr ""
-#~ "Există o diferență între sumele de postat și sumele comenzilor, probabil "
-#~ "cauzată de taxe sau modificări ale configurațiilor contabile."
-
-#~ msgid "There is no cash register in this session."
-#~ msgstr "Nu există casier în această sesiune."
-
-#~ msgid ""
-#~ "To enable invoice creation, please add a journal for it in the settings."
-#~ msgstr ""
-#~ "Pentru a activa crearea facturilor, vă rugăm să adăugați un jurnal pentru "
-#~ "acesta în setări."
-
-#~ msgid "Transaction"
-#~ msgstr "Tranzacție"
-
-#~ msgid ""
-#~ "Unable to close and validate the session.\n"
-#~ "Please set corresponding tax account in each repartition line of the "
-#~ "following taxes: \n"
-#~ "%s"
-#~ msgstr ""
-#~ "Imposibil de închis și de validat sesiunea.\n"
-#~ "Vă rugăm să setați contul fiscal corespunzător în fiecare linie de "
-#~ "partiție din următoarele impozite: \n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You cannot close the POS when invoices are not posted.\n"
-#~ "Invoices: %s"
-#~ msgstr ""
-#~ "Nu puteți închide PoS-ul când facturile nu sunt postate.\n"
-#~ "Facturi: %s"
-
-#~ msgid ""
-#~ "You have enabled the \"Identify Customer\" option for %(payment_method)s "
-#~ "payment method,but the order %(order)s does not contain a customer."
-#~ msgstr ""
-#~ "Ați activat opțiunea \"Identificați clientul\" pentru metoda de plată %"
-#~ "(payment_method)s, dar comanda %(order)s nu conține un client."
-
-#~ msgid "Link copied to clipboard"
-#~ msgstr "Legătura copiată în clipboard"
-
-#~ msgid ""
-#~ "Check the internet connection then try to sync again by clicking on the "
-#~ "red wifi button (upper right of the screen)."
-#~ msgstr ""
-#~ "Verificați conexiunea la internet, apoi încercați să sincronizați din nou "
-#~ "făcând clic pe butonul roșu wi-fi (dreapta sus a ecranului)."
-
-#~ msgid ""
-#~ "Hold up! Archiving products while POS sessions are active is like pulling "
-#~ "a plate mid-meal.\n"
-#~ "Make sure to close all sessions first to avoid any issues."
-#~ msgstr ""
-#~ "Stai puțin! Arhivarea produselor în timp ce sesiunile POS sunt active "
-#~ "este ca tragerea unei farfurii la mijlocul mesei.\n"
-#~ "Asigurați-vă că închideți mai întâi toate sesiunile pentru a evita orice "
-#~ "problemă."
-
-#~ msgid "Please print the invoice from the backend"
-#~ msgstr "Vă rugăm să imprimați factura din backend"
-
-#~ msgid "Thank you."
-#~ msgstr "Vă mulțumim."
-
-#~ msgid "The order could not be sent to the server due to an unknown error"
-#~ msgstr ""
-#~ "Comanda nu a putut fi trimisă la server din cauza unei erori necunoscute"
-
-#~ msgid ""
-#~ "The order has been synchronized earlier. Please make the invoice from the "
-#~ "backend for the order: "
-#~ msgstr ""
-#~ "Comanda a fost sincronizată anterior. Vă rugăm să faceți factura din "
-#~ "backend pentru comandă: "
-
-#~ msgid "The server encountered an error while receiving your order."
-#~ msgstr "Serverul a întâlnit o eroare în timp ce primea comanda."
-
-#~ msgid ""
-#~ "To delete a product, make sure all point of sale sessions are closed.\n"
-#~ "\n"
-#~ "Deleting a product available in a session would be like attempting to "
-#~ "snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as "
-#~ "ketchup and mayo go flying everywhere!"
-#~ msgstr ""
-#~ "Pentru a șterge un produs, asigurați-vă că toate sesiunile de punct de "
-#~ "vânzare sunt închise.\n"
-#~ "\n"
-#~ "Ștergerea unui produs disponibil într-o sesiune ar fi ca și cum ați "
-#~ "încerca să smulgeți un hamburger din mâna unui client în timp ce mușcă; "
-#~ "va urma haos, ketchup și maioneză vor zbura peste tot!"
-
-#~ msgid "Unable to sync order"
-#~ msgstr "Imposibil de sincronizat comanda"
-
-#~ msgid "Welcome."
-#~ msgstr "Bun venit."
-
-#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-#~ msgstr ""
-#~ "<span class=\"oe_inline\"><b>Săriți peste previzualizare </b></span>"
-
-#~ msgid "A request is still being processed in the background. Please wait."
-#~ msgstr "O cerere este încă procesată în fundal. Vă rugăm să așteptați."
-
-#~ msgid "Basic Receipt"
-#~ msgstr "Bon simplu"
-
-#~ msgid "Epson Printer IP Address"
-#~ msgstr "Adresă IP imprimantă Epson"
-
-#~ msgid ""
-#~ "Local IP address of an Epson receipt printer, or its serial number if the "
-#~ "'Automatic Certificate Update' option is enabled in the printer settings."
-#~ msgstr ""
-#~ "Adresa IP locală a unei imprimante de chitanțe Epson sau numărul său de "
-#~ "serie dacă opțiunea 'Actualizare automată certificat' este activată în "
-#~ "setările imprimantei."
-
-#~ msgid "Print Basic Receipt"
-#~ msgstr "Tipărește bon simplu"
-
-#~ msgid "Print Full Receipt"
-#~ msgstr "Tipărește bon complet"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Tipăriți bon"
-
-#~ msgid "Print basic ticket without prices. Can be used for gifts."
-#~ msgstr "Tipărește bon simplu fără prețuri. Poate fi folosit pentru cadouri."
-
-#~ msgid "Skip Preview Screen"
-#~ msgstr "Omite Previzualizare Ecran"
-
-#~ msgid ""
-#~ "The receipt screen will be skipped if the receipt can be printed "
-#~ "automatically."
-#~ msgstr "Ecranul bonului va fi omis dacă bonul poate fi tipărit automat."
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"
-
-#~ msgid "Info"
-#~ msgstr "Informații"
-
-#~ msgid "Last preparation change"
-#~ msgstr "Ultima modificare de pregătire"
-
-#~ msgid "Last printed state of the order"
-#~ msgstr "Ultima stare tipărită a comenzii"
-
-#~ msgid "Order Outdated"
-#~ msgstr "Comandă depășită"
-
-#~ msgid "Point Of Sale"
-#~ msgstr "Punct de vânzare"
-
-#~ msgid ""
-#~ "The order has been modified on another device. If you have modified "
-#~ "existing order lines, check that your changes have not been overwritten.\n"
-#~ "\n"
-#~ "The order will be sent to the server with the last changes made on this "
-#~ "device."
-#~ msgstr ""
-#~ "Comanda a fost modificată pe un alt dispozitiv. Dacă ați modificat "
-#~ "liniile de comandă existente, verificați dacă modificările dvs. nu au "
-#~ "fost suprascrise.\n"
-#~ "\n"
-#~ "Comanda va fi trimisă către server cu ultimele modificări efectuate pe "
-#~ "acest dispozitiv."

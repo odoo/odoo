@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:10+0000\n"
 "PO-Revision-Date: 2026-06-20 01:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -51,36 +51,6 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            <span class=\"o_stat_value\">0</span> Sales "
 "Order\n"
@@ -118,6 +88,36 @@ msgstr "<span class=\"o_stat_text\">顧客ビュー</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -978,64 +978,3 @@ msgstr "delivered_manual"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
 msgstr "sale_line_id"
-
-#~ msgid ""
-#~ "A project must be defined on the quotation %(order)s or on the form of "
-#~ "products creating a task on order.\n"
-#~ "The following product need a project in which to put its task: %"
-#~ "(product_name)s"
-#~ msgstr ""
-#~ "プロジェクトは、見積書またはオーダ%(order)sでタスクを作成するプロダクトの"
-#~ "フォーム上で定義する必要があります。\n"
-#~ "以下のプロダクトには、タスクを配置するプロジェクトが必要です: %"
-#~ "(product_name)s"
-
-#~ msgid "Create a customer invoice"
-#~ msgstr "顧客請求書を作成"
-
-#~ msgid "Create a vendor bill"
-#~ msgstr "仕入先請求書を作成"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your customers."
-#~ msgstr ""
-#~ "請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したり"
-#~ "します。"
-
-#~ msgid ""
-#~ "Create invoices, register payments and keep track of the discussions with "
-#~ "your vendors."
-#~ msgstr ""
-#~ "請求書を作成したり、支払を登録したり、仕入先とのコミュニケーションを管理し"
-#~ "たりします。"
-
-#~ msgid "%(name)s's Real Margins"
-#~ msgstr "%(name)sの実績利益率"
-
-#~ msgid "Create Sales Order"
-#~ msgstr "販売オーダを作成"
-
-#~ msgid "Real Margin"
-#~ msgstr "実績マージン"
-
-#~ msgid "Real Margins"
-#~ msgstr "実績マージン"
-
-#~ msgid "Revenues (Time & Material)"
-#~ msgstr "収益(時間・材料費)"
-
-#~ msgid "Timesheets (Fixed Price)"
-#~ msgstr "タイムシート (定額)"
-
-#~ msgid "Timesheets (Non-Billable)"
-#~ msgstr "タイムシート(非請求対象)"
-
-#~ msgid "Timesheets (Manual) "
-#~ msgstr "タイムシート (手動) "
-
-#~ msgid "Timesheets (Milestones)"
-#~ msgstr "タイムシート (マイルストン)"
-
-#~ msgid "Timesheets (Time & Materials)"
-#~ msgstr "タイムシート (時間・資材)"

@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-26 19:09+0000\n"
 "PO-Revision-Date: 2026-06-20 01:43+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -107,27 +107,30 @@ msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgid ""
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" "
+"title=\"Actions\"/>"
 msgstr ""
-"<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Toimenpiteet\"/>"
+"<i class=\"oi oi-2x text-primary\" data-icon=\"arrow_forward\" "
+"title=\"Toimenpiteet\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<i class=\"fa fa-info-circle\"/> The default target record getter will work "
-"out-of-the-box for any webhook coming from another Odoo instance."
+"<i class=\"oi\" data-icon=\"info\"/> The default target record getter will "
+"work out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> Oletuskohdetietueen hakija toimii heti, kun "
-"kyseessä on toisesta Odoo-instanssista tuleva webhook."
+"<i class=\"oi\" data-icon=\"info\"/> Oletuskohdetietueen hakija toimii heti, "
+"kun kyseessä on toisesta Odoo-instanssista tuleva webhook."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<i class=\"fa fa-warning\"/> Automation rules triggered by UI changes will "
-"be executed <em>every time</em> the watched fields change, <em>whether you "
-"save or not</em>."
+"<i class=\"oi\" data-icon=\"warning\"/> Automation rules triggered by UI "
+"changes will be executed <em>every time</em> the watched fields change, "
+"<em>whether you save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> Käyttöliittymämuutosten käynnistämät "
+"<i class=\"oi\" data-icon=\"warning\"/> Käyttöliittymämuutosten käynnistämät "
 "automaatiosäännöt suoritetaan <em>aina, kun</em> seurattavat kentät "
 "muuttuvat, <em>riippumatta siitä, tallennatko vai et</em>."
 
@@ -391,11 +394,6 @@ msgid "Following child actions have warnings: %(children)s"
 msgstr "Seuraavilla alisteisilla toiminnoilla on varoituksia: %(children)s"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -kuvake, esim. fa-tasks"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 msgid "Has Mail Thread"
 msgstr "On sähköpostin ketju"
@@ -516,6 +514,11 @@ msgstr ""
 "keskusteluominaisuus, voidaan käyttää."
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_error
 msgid "Message Delivery error"
 msgstr "Ongelma viestin toimituksessa"
@@ -544,11 +547,11 @@ msgstr "Mallin nimi"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule %"
-"(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
 msgstr ""
-"Toiminnon %(action_name)s mallin on vastattava automaattisen säännön %"
-"(rule_name)s mallia."
+"Toiminnon %(action_name)s mallin on vastattava automaattisen säännön "
+"%(rule_name)s mallia."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -835,11 +838,11 @@ msgstr "Toimien kohdemalli %(action_names)s eroaa sääntömallista."
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
-"(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
-"Laukaisinta \"%(trigger_value)s\" %(trigger_label)s voidaan käyttää vain \"%"
-"(state_value)s\" toimintatyypissä"
+"Laukaisinta \"%(trigger_value)s\" %(trigger_label)s voidaan käyttää vain "
+"\"%(state_value)s\" toimintatyypissä"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -1053,9 +1056,3 @@ msgstr "ei määritelty toimintaa..."
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
 msgstr "polku"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun viestit"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"

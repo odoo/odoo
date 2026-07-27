@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-22 00:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -159,17 +159,17 @@ msgstr ""
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -196,16 +196,16 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
+"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- 我们使用公司的标志创建调查（处理多公司案例）。 -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
+"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
+"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    认证：<t t-out=\"object.survey_id.display_name or ''\">反"
 "馈表</t>\n"
@@ -224,8 +224,8 @@ msgstr ""
 "''\">家具制作</strong>\n"
 "                    证书\n"
 "                </p>\n"
-"                <p>祝贺您通过测试！您的得分为<strong t-"
-"out=\"object.scoring_percentage\"/>%！</p>\n"
+"                <p>祝贺您通过测试！您的得分为<strong t-out=\"object."
+"scoring_percentage\"/>%！</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -261,8 +261,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object."
+"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -313,82 +313,86 @@ msgstr ""
 "            "
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
-msgid "<i class=\"fa fa-bar-chart\" aria-hidden=\"true\"/> Results"
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" title=\"箭头"
+"\"/>"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
-msgid ""
-"<i class=\"fa fa-check fa-fw ms-auto text-success\" aria-label=\"Correct\" "
-"role=\"img\"/>"
+#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
+msgid "<i class=\"oi oi-filled me-2\" data-icon=\"delete\"/>Remove filters"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
-msgid "<i class=\"fa fa-edit me-2\" aria-hidden=\"true\"/>Edit the survey"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
-"pass this assessment because no question is configured to give any points."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> 目前还无法通过该评估，因为没有任何"
-"问题可以给分。"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
-msgid ""
-"<i class=\"fa fa-fw fa-bar-chart me-2\" aria-hidden=\"true\"/>Review answers"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid ""
-"<i class=\"fa fa-fw fa-bars\" aria-hidden=\"true\"/><span class=\"d-none d-"
-"lg-inline ms-2\">Answers</span>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid ""
-"<i class=\"fa fa-fw fa-trophy\" aria-hidden=\"true\"/><span class=\"d-none d-"
-"lg-inline ms-2\">Stats</span>"
+"<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/>Edit "
+"the survey"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid ""
-"<i class=\"fa fa-fw fa-trophy\" aria-hidden=\"true\"/>Download certification"
+"<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
+">Review answers"
 msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
-msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\"/>"
-msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭头图标\" title=\"箭头"
-"\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
 msgid ""
-"<i class=\"fa fa-times fa-fw ms-auto text-danger\" aria-label=\"Incorrect\" "
-"role=\"img\"/>"
+"<i class=\"oi oi-fw ms-auto text-danger\" data-icon=\"close\" aria-"
+"label=\"Incorrect\" role=\"img\"/>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "<i class=\"fa fa-trash me-2\"/>Remove filters"
+#: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
+msgid ""
+"<i class=\"oi oi-fw ms-auto text-success\" data-icon=\"check\" aria-"
+"label=\"Correct\" role=\"img\"/>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
+"><span class=\"d-none d-lg-inline ms-2\">Stats</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
+msgid ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
+">Download certification"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Survey"
-msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>前往调查"
+msgid "<i class=\"oi oi-fw\" data-icon=\"east\"/>Go to Survey"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"east\"/>前往调查"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"menu\" aria-hidden=\"true\"/><span "
+"class=\"d-none d-lg-inline ms-2\">Answers</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
+msgid "<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> Results"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> It is currently not possible to pass "
+"this assessment because no question is configured to give any points."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> 目前还无法通过该评估，因为没有任何问"
+"题可以给分。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -483,7 +487,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid ""
 "<span class=\"o_survey_session_navigation_next_label\">Start</span>\n"
-"                        <i class=\"oi oi-chevron-right\" aria-"
+"                        <i class=\"oi\" data-icon=\"chevron_forward\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
 
@@ -547,8 +551,8 @@ msgstr "<span invisible=\"not is_scored_question\">积分</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid ""
 "<span>\n"
-"                        <i class=\"fa fa-info-circle me-2\" aria-"
-"hidden=\"true\"/>\n"
+"                        <i class=\"oi oi-filled me-2\" data-icon=\"info\" "
+"aria-hidden=\"true\"/>\n"
 "                        The session will begin automatically when the host "
 "starts.\n"
 "                    </span>"
@@ -1841,12 +1845,6 @@ msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
-#: model:ir.model.fields,help:survey.field_survey_user_input__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome图标，例如：fa-tasks"
-
-#. module: survey
 #: model:survey.survey,title:survey.survey_demo_food_preferences
 msgid "Food Preferences"
 msgstr "食物偏好"
@@ -2624,6 +2622,12 @@ msgstr "现场实时分享问题，为简报会增添趣味"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Mandatory Answer"
 msgstr "必答问题"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
+#: model:ir.model.fields,help:survey.field_survey_user_input__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
@@ -5359,12 +5363,3 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr "⚠️ 该问题位于某些或所有触发器之前，可以跳过。"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "minutes"
-#~ msgstr "分钟"

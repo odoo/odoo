@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-22 00:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/mail/"
@@ -69,8 +69,8 @@ msgstr ""
 "            </p><p>\n"
 "                Om je te beschermen tegen spam en antwoordlussen, blokkeert "
 "Odoo automatisch e-mails\n"
-"                die naar je gateway komen voorbij een drempel van <b>%"
-"(threshold)i</b> e-mails elke <b>%(minutes)i</b>\n"
+"                die naar je gateway komen voorbij een drempel van "
+"<b>%(threshold)i</b> e-mails elke <b>%(minutes)i</b>\n"
 "                minuten. Als er adressen zijn waarvan je heel vaak updates "
 "moet ontvangen,\n"
 "                kan je ze echter hieronder toevoegen en Odoo zal ze "
@@ -124,8 +124,8 @@ msgid ""
 "%(author)s's poll %(strong_tag_start)s\"%(question)s\"%(strong_tag_end)s has "
 "closed."
 msgstr ""
-"De poll %(strong_tag_start)s\"%(question)s\"%(strong_tag_end)s van %"
-"(author)s is gesloten."
+"De poll %(strong_tag_start)s\"%(question)s\"%(strong_tag_end)s van "
+"%(author)s is gesloten."
 
 #. module: mail
 #. odoo-javascript
@@ -306,10 +306,10 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
-"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people%"
-"(new_line)s%(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
-"(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
-"(bold_start)s:emoji:%(bold_end)s to insert an emoji"
+"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple "
+"people%(new_line)s%(bold_start)s/command%(bold_end)s to run a "
+"command%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned "
+"response%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
 
 #. module: mail
@@ -385,11 +385,11 @@ msgstr "%(user1)s, %(user2)s en anderen zijn aan het typen ..."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
-"(strong_end)s channel."
+"%(user_name)s has invited you to the "
+"%(strong_start)s%(channel_name)s%(strong_end)s channel."
 msgstr ""
-"%(user_name)s heeft je uitgenodigd voor het kanaal %(strong_start)s%"
-"(channel_name)s%(strong_end)s."
+"%(user_name)s heeft je uitgenodigd voor het kanaal "
+"%(strong_start)s%(channel_name)s%(strong_end)s."
 
 #. module: mail
 #. odoo-python
@@ -675,93 +675,96 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid ""
-"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
-"title=\"to\"/>"
+"<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
+"out_of_office_from\" title=\"to\"/>"
 msgstr ""
-"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
-"title=\"to\"/>"
+"<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
+"out_of_office_from\" title=\"to\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-calendar\" title=\"Due date\"/>"
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
+"title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
-msgid "<i class=\"fa fa-check\"/> Done"
-msgstr "<i class=\"fa fa-check\"/> Voltooid"
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Assigned to\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Note\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Role\" "
+"aria-label=\"Role\" style=\"font-size: 12px;\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
 msgid ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
-"title=\"Steps count\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"Steps count\" title=\"Steps count\"/>"
 msgstr ""
-"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Aantal "
-"stappen\" title=\"Aantal stappen\"/>"
+"<i class=\"oi oi-fw me-2\" data-icon=\"settings_applications\" role=\"img\" "
+"aria-label=\"Aantal stappen\" title=\"Aantal stappen\"/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
+msgid "<i class=\"oi\" data-icon=\"check\"/> Done"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> Voltooid"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"To "
+"Assign\" aria-label=\"To Assign\" style=\"font-size: 12px;\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "<i class=\"oi\" data-icon=\"label\" title=\"Summary\"/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"login\" role=\"img\"/> Join"
+msgstr "<i class=\"oi\" data-icon=\"login\" role=\"img\"/> Deelnemen"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+msgid "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> Leave"
+msgstr "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> Verlaten"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "<i class=\"oi\" data-icon=\"oi_odoo\" title=\"Link to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
-msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr "<i class=\"fa fa-globe\" aria-label=\"URL document\"/>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-hourglass-end\" role=\"img\" title=\"To Assign\" aria-"
-"label=\"To Assign\" style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr "<i class=\"fa fa-sign-in\" role=\"img\"/> Deelnemen"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr "<i class=\"fa fa-sign-out\" role=\"img\"/> Verlaten"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-sticky-note pt-1\" title=\"Note\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-tag\" title=\"Summary\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-user mb-2\" title=\"Assigned to\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid ""
-"<i class=\"fa fa-users mb-2\" role=\"img\" title=\"Role\" aria-"
-"label=\"Role\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid ""
-"<i class=\"fa fa-users\" role=\"img\" title=\"Role\" aria-label=\"Role\" "
-"style=\"font-size: 12px;\"/>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
-msgid "<i class=\"oi oi-odoo\" title=\"Link to\"/>"
-msgstr ""
+msgid "<i class=\"oi\" data-icon=\"public\" aria-label=\"Document url\"/>"
+msgstr "<i class=\"oi\" data-icon=\"public\" aria-label=\"URL document\"/>"
 
 #. module: mail
 #. odoo-javascript
@@ -1751,23 +1754,23 @@ msgstr "Alias"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
+"%(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan %"
-"(alias_model_name)s (%(matching_id)s) en gebruikt door de %(parent_name)s %"
-"(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan "
+"%(alias_model_name)s (%(matching_id)s) en gebruikt door de %(parent_name)s "
+"%(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is already linked with "
+"%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan %"
-"(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan "
+"%(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1931,8 +1934,8 @@ msgstr "Er is een fout opgetreden bij het verzenden van een e-mail"
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email on “%(record_name)s”"
 msgstr ""
-"Er is een fout opgetreden bij het verzenden van een e-mail op “%"
-"(record_name)s”"
+"Er is een fout opgetreden bij het verzenden van een e-mail op "
+"“%(record_name)s”"
 
 #. module: mail
 #. odoo-javascript
@@ -2042,11 +2045,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid ""
-"Are you sure you want to remove %(member_name)s from the members of '%"
-"(channel_name)s'?"
+"Are you sure you want to remove %(member_name)s from the members of "
+"'%(channel_name)s'?"
 msgstr ""
-"Weet je zeker dat je %(member_name)s wilt verwijderen uit de leden van '%"
-"(channel_name)s'?"
+"Weet je zeker dat je %(member_name)s wilt verwijderen uit de leden van "
+"'%(channel_name)s'?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -2482,8 +2485,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Geblokkeerd door verwijdering van portaalaccount %(portal_user_name)s door %"
-"(user_name)s (#%(user_id)s)"
+"Geblokkeerd door verwijdering van portaalaccount %(portal_user_name)s door "
+"%(user_name)s (#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -2586,11 +2589,11 @@ msgstr "Bounce-e-mails moeten uniek zijn"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid ""
-"Bounce/Catchall '%(matching_alias_name)s' is already used by %"
-"(document_name)s. Choose another alias or change it on the other document."
+"Bounce/Catchall '%(matching_alias_name)s' is already used by "
+"%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' wordt al gebruikt door %"
-"(document_name)s. Kies een andere alias of wijzig deze in het andere "
+"Bounce/Catchall '%(matching_alias_name)s' wordt al gebruikt door "
+"%(document_name)s. Kies een andere alias of wijzig deze in het andere "
 "document."
 
 #. module: mail
@@ -2868,8 +2871,8 @@ msgstr "Standaardantwoord"
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
 msgid ""
 "Canned response that will automatically be substituted with longer content "
-"in your messages. Type '::' followed by the name of your shortcut "
-"(e.g. ::hello) to use in your messages."
+"in your messages. Type '::' followed by the name of your shortcut (e.g. ::"
+"hello) to use in your messages."
 msgstr ""
 "Standaardantwoord dat automatisch wordt vervangen door langere inhoud in je "
 "berichten. Typ :: gevolgd door de naam van je snelkoppeling (bv. ::hallo) om "
@@ -2885,8 +2888,8 @@ msgstr "Standaardantwoorden"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
 msgstr ""
-"De geautoriseerde groep van het subkanaal kan niet worden gewijzigd: %"
-"(channels)s."
+"De geautoriseerde groep van het subkanaal kan niet worden gewijzigd: "
+"%(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2903,8 +2906,8 @@ msgid ""
 "Cannot change the active state of the following channels: %(channels)s. You "
 "must be the owner or a system administrator to change it."
 msgstr ""
-"De actieve status van de volgende kanalen kan niet worden gewijzigd: %"
-"(channels)s. Je moet de eigenaar of een systeembeheerder zijn om dit te "
+"De actieve status van de volgende kanalen kan niet worden gewijzigd: "
+"%(channels)s. Je moet de eigenaar of een systeembeheerder zijn om dit te "
 "kunnen wijzigen."
 
 #. module: mail
@@ -2918,8 +2921,8 @@ msgstr "Kan het kanaaltype niet wijzigen van: %(channel_names)s"
 #: code:addons/mail/models/mail_poll_option.py:0
 msgid "Cannot change the poll linked to the following options: %(options)s."
 msgstr ""
-"De poll die gekoppeld is aan de volgende opties kan niet worden gewijzigd: %"
-"(options)s."
+"De poll die gekoppeld is aan de volgende opties kan niet worden gewijzigd: "
+"%(options)s."
 
 #. module: mail
 #. odoo-python
@@ -5488,8 +5491,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
-"Het is niet gelukt om de inline_template-sjabloon te renderen: %"
-"(template_txt)s\n"
+"Het is niet gelukt om de inline_template-sjabloon te renderen: "
+"%(template_txt)s\n"
 "Foutgegevens: %(error)s"
 
 #. module: mail
@@ -5596,8 +5599,8 @@ msgid ""
 msgstr ""
 "Veld dat wordt gebruikt om het bijbehorende model te koppelen aan het "
 "subtype, wanneer automatische aanmelding wordt gebruikt op het bijbehorende "
-"model. Dit veld wordt gebruikt om om "
-"getattr(related_document.relation_field) te berekenen."
+"model. Dit veld wordt gebruikt om om getattr(related_document."
+"relation_field) te berekenen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__template_fs
@@ -5751,18 +5754,6 @@ msgid "Following"
 msgstr "Volgend"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
-#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
-#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
-#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
-#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
-#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon bijv. fa-tasks"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
@@ -5807,12 +5798,12 @@ msgstr "Gedurende 8 uur"
 #: model:ir.model.fields,help:mail.field_ir_cron__value
 msgid ""
 "For Python expressions, this field may hold a Python expression that can use "
-"the same values as for the code field on the server action,e.g. "
-"`env.user.name` to set the current user's name as the value or `record.id` "
-"to set the ID of the record on which the action is run.\n"
+"the same values as for the code field on the server action,e.g. `env.user."
+"name` to set the current user's name as the value or `record.id` to set the "
+"ID of the record on which the action is run.\n"
 "\n"
-"For Static values, the value will be used directly without evaluation, "
-"e.g.`42` or `My custom name` or the selected record."
+"For Static values, the value will be used directly without evaluation, e.g."
+"`42` or `My custom name` or the selected record."
 msgstr ""
 "Voor Python-expressies kan dit veld een Python-expressie bevatten die "
 "dezelfde waarden kan gebruiken als voor het codeveld op de serveractie, "
@@ -7013,8 +7004,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Ongeldige bron sjabloon of weergave referentie %(svalue)s, is eerder %"
-"(model)s"
+"Ongeldige bron sjabloon of weergave referentie %(svalue)s, is eerder "
+"%(model)s"
 
 #. module: mail
 #. odoo-python
@@ -8032,11 +8023,11 @@ msgstr "Mailbox onbeschikbaar - %s"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Mailing or posting with a source should not be called with an empty %"
-"(source_type)s"
+"Mailing or posting with a source should not be called with an empty "
+"%(source_type)s"
 msgstr ""
-"Mailen of posten met een bron mag niet worden aangeroepen met een lege %"
-"(source_type)s"
+"Mailen of posten met een bron mag niet worden aangeroepen met een lege "
+"%(source_type)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -8132,6 +8123,18 @@ msgstr "Gemarkeerd als ongelezen"
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
 msgstr "Sjabloon voor massamailing: '%(name)s' (ID: %(record_id)s)"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_ir_actions_server__activity_type_icon
+#: model:ir.model.fields,help:mail.field_ir_cron__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
+#: model:ir.model.fields,help:mail.field_mail_activity_type__icon
+#: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
+#: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_call_artifact__media_id
@@ -9008,8 +9011,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"No responsible or role specified for %(activity_type_name)s: %"
-"(activity_summary)s.%(error_detail)s"
+"No responsible or role specified for %(activity_type_name)s: "
+"%(activity_summary)s.%(error_detail)s"
 msgstr ""
 
 #. module: mail
@@ -9223,8 +9226,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive attachments records as a list of IDs (received %"
-"(aids)s)"
+"Notification should receive attachments records as a list of IDs (received "
+"%(aids)s)"
 msgstr ""
 "De melding moet bijlagenrecords ontvangen als een lijst van ID's (%(aids)s "
 "ontvangen)"
@@ -9233,8 +9236,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive partners given as a list of IDs (received %"
-"(pids)s)"
+"Notification should receive partners given as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
 "De melding moet partners ontvangen als een lijst van ID's (%(pids)s "
 "ontvangen)"
@@ -9604,8 +9607,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"Only messages type comment can have their content updated on model "
-"'discuss.channel'"
+"Only messages type comment can have their content updated on model 'discuss."
+"channel'"
 msgstr ""
 "Enkel berichten van het type commentaar kunnen hun inhoud laten bijwerken op "
 "het model 'discuss.channel'"
@@ -10539,8 +10542,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Het posten van een bericht moet bijlagen ontvangen als een lijst of tuples (%"
-"(aids)s ontvangen)"
+"Het posten van een bericht moet bijlagen ontvangen als een lijst of tuples "
+"(%(aids)s ontvangen)"
 
 #. module: mail
 #. odoo-python
@@ -10564,11 +10567,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Posting a message should receive partners as a list of IDs (received %"
-"(pids)s)"
+"Posting a message should receive partners as a list of IDs (received "
+"%(pids)s)"
 msgstr ""
-"Het posten van een bericht moet partners ontvangen als een lijst van ID's (%"
-"(pids)s ontvangen)"
+"Het posten van een bericht moet partners ontvangen als een lijst van ID's "
+"(%(pids)s ontvangen)"
 
 #. module: mail
 #. odoo-python
@@ -10608,14 +10611,15 @@ msgstr "Presentatie Audio"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
-"(close_cancel)s%(close_em)s, %(open_samp)s%(save_keyboard_shortcut)s%"
-"(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+"Press %(open_samp)sESC%(close_samp)s %(open_em)sto "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
+"%(open_samp)s%(save_keyboard_shortcut)s%(close_samp)s %(open_em)sto "
+"%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "Druk op %(open_samp)sESC%(close_samp)s %(open_em)som %(open_cancel)ste "
-"annuleren%(close_cancel)s%(close_em)s, %(open_samp)s%"
-"(save_keyboard_shortcut)s%(close_samp)s %(open_em)som %(open_save)sop te "
-"slaan%(close_save)s%(close_em)s"
+"annuleren%(close_cancel)s%(close_em)s, "
+"%(open_samp)s%(save_keyboard_shortcut)s%(close_samp)s %(open_em)som "
+"%(open_save)sop te slaan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -10728,8 +10732,8 @@ msgid ""
 "tab, we recommend installing our %(anchor_start)sextension%(anchor_end)s."
 msgstr ""
 "Push-to-talk werkt alleen wanneer dit tabblad open is. Om het buiten dit "
-"tabblad te gebruiken, raden we aan onze %(anchor_start)sextensie%"
-"(anchor_end)s te installeren."
+"tabblad te gebruiken, raden we aan onze "
+"%(anchor_start)sextensie%(anchor_end)s te installeren."
 
 #. module: mail
 #. odoo-javascript
@@ -12847,11 +12851,11 @@ msgstr "Sjabloonnaam niet geïdentificeerd"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Template rendering should only be called with a list of IDs. Received “%"
-"(res_ids)s” instead."
+"Template rendering should only be called with a list of IDs. Received "
+"“%(res_ids)s” instead."
 msgstr ""
-"Sjabloonweergave mag alleen woorden aangeroepen met een lijst van ID's. “%"
-"(res_ids)s” ontvangen in de plaats."
+"Sjabloonweergave mag alleen woorden aangeroepen met een lijst van ID's. "
+"“%(res_ids)s” ontvangen in de plaats."
 
 #. module: mail
 #. odoo-python
@@ -12946,12 +12950,12 @@ msgstr "De activiteit kan niet worden gestart:"
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
 "The activity type \"%(activity_type_name)s\" is not compatible with the plan "
-"\"%(plan_name)s\" because it is limited to the model \"%"
-"(activity_type_model)s\"."
+"\"%(plan_name)s\" because it is limited to the model "
+"\"%(activity_type_model)s\"."
 msgstr ""
 "Het activiteitstype \"%(activity_type_name)s\" is niet compatibel met het "
-"plan \"%(plan_name)s\" omdat het beperkt is tot het model \"%"
-"(activity_type_model)s\"."
+"plan \"%(plan_name)s\" omdat het beperkt is tot het model "
+"\"%(activity_type_model)s\"."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_category_name_unique
@@ -13049,15 +13053,15 @@ msgstr "Het onderstaande bericht kon niet worden geaccepteerd door het adres"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "                 Only %(contact_description)s are allowed to contact it.<br /"
 "><br />\n"
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Het onderstaande bericht kon niet worden aanvaard door het adres %"
-"(alias_display_name)s.\n"
+"Het onderstaande bericht kon niet worden aanvaard door het adres "
+"%(alias_display_name)s.\n"
 "                 Enkel %(contact_description)s mogen er contact mee opnemen."
 "<br /><br />\n"
 "                 Zorg ervoor dat je het juiste adres gebruikt of neem "
@@ -13067,12 +13071,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %"
-"(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Het onderstaande bericht kon niet worden aanvaard door het adres %"
-"(alias_display_name)s.\n"
+"Het onderstaande bericht kon niet worden aanvaard door het adres "
+"%(alias_display_name)s.\n"
 "Probeer het later opnieuw of neem contact op met %(company_name)s."
 
 #. module: mail
@@ -13178,11 +13182,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid ""
-"The role '%(role_name)s' is not supported for the channel type '%"
-"(channel_type)s'."
+"The role '%(role_name)s' is not supported for the channel type "
+"'%(channel_type)s'."
 msgstr ""
-"De rol '%(role_name)s' wordt niet ondersteund voor het kanaaltype '%"
-"(channel_type)s'."
+"De rol '%(role_name)s' wordt niet ondersteund voor het kanaaltype "
+"'%(channel_type)s'."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__channel_role
@@ -13494,8 +13498,8 @@ msgstr "Deze week"
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Deze waarden worden niet ondersteund als opties bij het weergeven: %"
-"(param_names)s"
+"Deze waarden worden niet ondersteund als opties bij het weergeven: "
+"%(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -13503,8 +13507,8 @@ msgstr ""
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Deze waarden worden niet ondersteund bij het posten of melden: %"
-"(param_names)s"
+"Deze waarden worden niet ondersteund bij het posten of melden: "
+"%(param_names)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -14344,8 +14348,8 @@ msgstr "Een Outlook server gebruiken"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid ""
-"Use canned responses to quickly insert prewritten messages with "
-"<i>::shortcut</i>. You can edit the text before sending."
+"Use canned responses to quickly insert prewritten messages with <i>::"
+"shortcut</i>. You can edit the text before sending."
 msgstr ""
 "Gebruik standaardantwoorden om snel vooraf geschreven berichten in te voegen "
 "met <i>::shortcut.</i> Je kunt de tekst bewerken voordat je deze verstuurt."
@@ -14438,8 +14442,8 @@ msgstr ""
 "componist\n"
 "'email_outgoing': gegenereerd door een mailing\n"
 "'melding': gegenereerd door systeem, b.v. berichten volgen\n"
-"'auto_comment': gegenereerd door een geautomatiseerd meldingsmechanisme, "
-"b.v. erkenning\n"
+"'auto_comment': gegenereerd door een geautomatiseerd meldingsmechanisme, b."
+"v. erkenning\n"
 "'user_notification': gegenereerd voor een specifieke ontvanger"
 
 #. module: mail
@@ -14662,8 +14666,8 @@ msgid ""
 msgstr ""
 "Waarde %(allowed_domains)s voor `mail.catchall.domain.allowed` kan niet "
 "worden gevalideerd.\n"
-"Het moet een door komma's gescheiden lijst van domeinen zijn, b.v. "
-"voorbeeld.com, voorbeeld.org."
+"Het moet een door komma's gescheiden lijst van domeinen zijn, b.v. voorbeeld."
+"com, voorbeeld.org."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__evaluation_type
@@ -14885,8 +14889,8 @@ msgstr "Waarschuwing"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
 "We konden geen alias %(alias_name)s maken omdat domein %(alias_domain_name)s "
@@ -14897,8 +14901,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain %"
-"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain "
+"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
 "We konden geen alias %(alias_name)s maken omdat domein %(alias_domain_name)s "
@@ -15356,8 +15360,8 @@ msgstr ""
 msgid ""
 "You do not have the rights to change the read-only state of: %(channels)s."
 msgstr ""
-"Je hebt niet voldoende rechten om de alleen-lezen-status te wijzigen van: %"
-"(channels)s."
+"Je hebt niet voldoende rechten om de alleen-lezen-status te wijzigen van: "
+"%(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -15727,8 +15731,8 @@ msgstr "bijv. \"Welkom e-mail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, "
-"{{ object.name }}\""
+"bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, {{ object."
+"name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -16231,344 +16235,3 @@ msgstr "“%(member_name)s” in “%(channel_name)s”"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
-
-#~ msgid "Search for a GIF"
-#~ msgstr "Zoek naar een GIF"
-
-#~ msgid "(from"
-#~ msgstr "(van"
-
-#~ msgid ""
-#~ "<p>Channels make it easy to organize information across different topics "
-#~ "and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
-#~ "marketing, product XYZ, after work party, etc).</p>"
-#~ msgstr ""
-#~ "<p>Kanalen maken het gemakkelijk om informatie over verschillende "
-#~ "onderwerpen en groepen te organiseren.</p> <p>Probeer <b>je eerste kanaal "
-#~ "</b> aan te maken (bijvoorbeeld verkoop, marketing, product XYZ, after "
-#~ "work feestje, enz). </p>"
-
-#~ msgid "<p>Create a channel here.</p>"
-#~ msgstr "<p>Maak hier een kanaal aan.</p>"
-
-#~ msgid "<p>Create a public or private channel.</p>"
-#~ msgstr "<p>Maak een openbaar of privé kanaal aan.</p>"
-
-#~ msgid ""
-#~ "Add a Tenor GIF API key to enable GIFs support. https://"
-#~ "developers.google.com/tenor/guides/quickstart#setup"
-#~ msgstr ""
-#~ "Voeg een Tenor GIF API key toe om de ondersteuning van GIFs te activeren. "
-#~ "https://developers.google.com/tenor/guides/quickstart#setup"
-
-#~ msgid "Add or join a channel"
-#~ msgstr "Voeg een kanaal toe of word lid"
-
-#~ msgid "Bookmark important messages"
-#~ msgstr "Voeg bladwijzers toe aan belangrijke berichten"
-
-#~ msgid "Come here often? Install the app for quick and easy access!"
-#~ msgstr ""
-#~ "Kom je hier vaker? Installeer de app voor snelle en gemakkelijke toegang!"
-
-#~ msgid "Deleted document"
-#~ msgstr "Verwijderd document"
-
-#~ msgid "Direct Messages"
-#~ msgstr "Privéberichten"
-
-#~ msgid "Exit Fullscreen"
-#~ msgstr "Volledig scherm verlaten"
-
-#~ msgid "History"
-#~ msgstr "Geschiedenis"
-
-#~ msgid "If you want to use Tenor API to share GIFs in conversations."
-#~ msgstr "Als je Tenor API wilt gebruiken om GIF's te delen in gesprekken."
-
-#~ msgid "Install"
-#~ msgstr "Installeren"
-
-#~ msgid "Install Odoo"
-#~ msgstr "Installeer Odoo"
-
-#~ msgid "Messages marked as read will appear in the history."
-#~ msgstr "Berichten gemarkeerd als gelezen worden getoond in de geschiedenis."
-
-#~ msgid "New Message"
-#~ msgstr "Nieuw bericht"
-
-#~ msgid "New messages will appear here."
-#~ msgstr "Nieuwe berichten verschijnen hier."
-
-#~ msgid "No conversation yet..."
-#~ msgstr "Nog geen conversatie..."
-
-#~ msgid "No history messages"
-#~ msgstr "Geen berichtengeschiedenis"
-
-#~ msgid "No thread found."
-#~ msgstr "Geen draad gevonden."
-
-#~ msgid "Quick search"
-#~ msgstr "Snel zoeken"
-
-#~ msgid "Quick search…"
-#~ msgstr "Snel zoeken…"
-
-#~ msgid "Remove all bookmarks"
-#~ msgstr "Alle bladwijzers verwijderen"
-
-#~ msgid "Save messages here to easily keep track of them."
-#~ msgstr "Sla berichten hier op om ze eenvoudig terug te vinden."
-
-#~ msgid "Share GIFs in your conversations using the Tenor API"
-#~ msgstr "Deel GIF's in je gesprekken met de Tenor API"
-
-#~ msgid "Start a conversation"
-#~ msgstr "Start een gesprek"
-
-#~ msgid "Tenor API key"
-#~ msgstr "Tenor API key"
-
-#~ msgid "Thread has unread messages"
-#~ msgstr "Thread bevat ongelezen berichten"
-
-#~ msgid "Use Tenor API"
-#~ msgstr "Tenor API gebruiken"
-
-#~ msgid "View or join channels"
-#~ msgstr "Kanalen bekijken of eraan deelnemen"
-
-#~ msgid ""
-#~ "The Tax Identification Number. Values here will be validated based on the "
-#~ "country format. You can use '/' to indicate that the partner is not "
-#~ "subject to tax."
-#~ msgstr ""
-#~ "Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
-#~ "landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
-#~ "belastingplichtig is."
-
-#~ msgid "Create a poll"
-#~ msgstr "Poll aanmaken"
-
-#~ msgid "Default user"
-#~ msgstr "Standaard gebruiker"
-
-#~ msgid "Drop Files here"
-#~ msgstr "Bestanden hier neerzetten"
-
-#~ msgid "Insert a Canned response"
-#~ msgstr "Voeg een standaardantwoord in"
-
-#~ msgid "Linked to"
-#~ msgstr "Gekoppeld aan"
-
-#~ msgid ""
-#~ "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
-#~ "%(error_detail)s"
-#~ msgstr ""
-#~ "Geen verantwoordelijke opgegeven voor %(activity_type_name)s.%"
-#~ "(activity_summary)s.%(error_detail)s"
-
-#~ msgid "Option Label"
-#~ msgstr "Optielabel"
-
-#~ msgid "Start a poll"
-#~ msgstr "Start een poll"
-
-#~ msgid "Unassigned"
-#~ msgstr "Niet toegewezen"
-
-#~ msgid "Uploaded"
-#~ msgstr "Geupload"
-
-#~ msgid ""
-#~ "When selecting \"Default user\" assignment, you must specify a "
-#~ "responsible."
-#~ msgstr ""
-#~ "Wanneer je de toewijzing \"Standaardgebruiker\" selecteert, moet je een "
-#~ "verantwoordelijke opgeven."
-
-#~ msgid "%(name)s <%(email)s>"
-#~ msgstr "%(name)s <%(email)s>"
-
-#~ msgid ""
-#~ "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
-#~ "someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple "
-#~ "people%(new_line)s%(bold_start)s#channel%(bold_end)s to link a channel%"
-#~ "(new_line)s%(bold_start)s/command%(bold_end)s to run a command%"
-#~ "(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned "
-#~ "response%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji"
-#~ msgstr ""
-#~ "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s om iemand te "
-#~ "vermelden%(new_line)s%(bold_start)s@role%(bold_end)s om meerdere mensen "
-#~ "op de hoogte te brengen%(new_line)s%(bold_start)s#channel%(bold_end)s om "
-#~ "een kanaal te linken%(new_line)s%(bold_start)s/command%(bold_end)s om een "
-#~ "command te doen%(new_line)s%(bold_start)s::shortcut%(bold_end)s om een "
-#~ "standaardantwoord in te voegen%(new_line)s%(bold_start)s:emoji:%"
-#~ "(bold_end)s om een emoji in te voegen"
-
-#~ msgid ""
-#~ "%(open_tag_1)swith%(close_tag_1)s %(open_tag_2)s%(company_name)s%"
-#~ "(close_tag_2)s"
-#~ msgstr ""
-#~ "%(open_tag_1)smet%(close_tag_1)s %(open_tag_2)s%(company_name)s%"
-#~ "(close_tag_2)s"
-
-#~ msgid ""
-#~ "<p><b>Write a message</b> to the members of the channel here.</p> <p>You "
-#~ "can notify someone with <i>'@'</i> or link another channel with <i>'#'</"
-#~ "i>. Start your message with <i>'/'</i> to get the list of possible "
-#~ "commands.</p>"
-#~ msgstr ""
-#~ "<p><b>Schrijf een bericht</b> aan de leden van het kanaal hier.</p> <p>Je "
-#~ "kunt iemand berichten met <i>'@'</i> of een ander kanaal linken met "
-#~ "<i>'#'</i>. Begin je bericht met <i>'/'</i> om een lijst met mogelijke "
-#~ "commando's te ontvangen.</p>"
-
-#~ msgid "Activity Settings"
-#~ msgstr "Activiteitsinstellingen"
-
-#~ msgid "Activity type"
-#~ msgstr "Activiteitstype"
-
-#~ msgid "Comma-separated ids of recipient partners"
-#~ msgstr "Door komma's gescheiden ids van de ontvangers"
-
-#~ msgid ""
-#~ "Comma-separated ids of recipient partners (placeholders may be used here)"
-#~ msgstr ""
-#~ "Door komma's gescheiden ids van de ontvangers (placeholders kunnen hier "
-#~ "worden gebruikt)"
-
-#~ msgid "Copy Link"
-#~ msgstr "Link kopiëren"
-
-#~ msgid "Created"
-#~ msgstr "Aangemaakt"
-
-#~ msgid "Default Type"
-#~ msgstr "Standaardtype"
-
-#~ msgid "Default deadline for the activities..."
-#~ msgstr "Standaarddeadline voor de activiteiten ..."
-
-#~ msgid "Feedback:"
-#~ msgstr "Feedback:"
-
-#~ msgid "Hide sidebar"
-#~ msgstr "Zijbalk verbergen"
-
-#~ msgid "Join call"
-#~ msgstr "Deelnemen aan gesprek"
-
-#~ msgid "Meeting - %(date)s"
-#~ msgstr "Vergadering - %(date)s"
-
-#~ msgid "Next Activity"
-#~ msgstr "Volgende activiteit"
-
-#~ msgid "No one else is here."
-#~ msgstr "Er is niemand anders."
-
-#~ msgid "Notify everyone"
-#~ msgstr "Iedereen melden"
-
-#~ msgid "Ongoing call"
-#~ msgstr "Lopend gesprek"
-
-#~ msgid "Original note:"
-#~ msgstr "Originele notitie:"
-
-#~ msgid "Push-to-talk"
-#~ msgstr "Push-to-talk"
-
-#~ msgid "Search for a channel..."
-#~ msgstr "Zoek een kanaal..."
-
-#~ msgid "Show sidebar"
-#~ msgstr "Toon zijbalk"
-
-#~ msgid "Stop camera"
-#~ msgstr "Camera stoppen"
-
-#~ msgid "Upload Avatar"
-#~ msgstr "Upload avatar"
-
-#~ msgid ""
-#~ "You cannot delete those groups, as the Whole Company group is required by "
-#~ "other modules."
-#~ msgstr ""
-#~ "Je kunt deze groep niet verwijderen omdat deze groep nodig is voor andere "
-#~ "modules."
-
-#~ msgid "You have been invited to #%s"
-#~ msgstr "Je bent uitgenodigd voor #%s"
-
-#~ msgid "“%s”"
-#~ msgstr "“%s”"
-
-#~ msgid "Apply"
-#~ msgstr "Toepassen"
-
-#~ msgid "Edit Subscription of %(name)s"
-#~ msgstr "Bewerk abonnement van %(name)s"
-
-#~ msgid "Edit subscription"
-#~ msgstr "Bewerken aanmelding"
-
-#~ msgid "The duration of voice messages is limited to 1 minute."
-#~ msgstr "De duur van gesproken berichten is beperkt tot 1 minuut."
-
-#~ msgid "The subscription preferences were successfully applied."
-#~ msgstr "De aanmeldingsvoorkeuren zijn succesvol toegepast."
-
-#~ msgid "An error occurred while fetching messages."
-#~ msgstr "Er is een fout opgetreden bij het ophalen van berichten."
-
-#~ msgid "Apply a privacy blur to your surroundings."
-#~ msgstr "Pas een privacyvervaging toe op je omgeving."
-
-#~ msgid "Auto-focus speaker"
-#~ msgstr "Autofocus luidspreker"
-
-#~ msgid "Automatically enlarge the person currently speaking."
-#~ msgstr "Vergroot automatisch de persoon die op dat moment aan het woord is."
-
-#~ msgid "Blur video background"
-#~ msgstr "Video-achtergrond vervagen"
-
-#~ msgid "Clear Search"
-#~ msgstr "Zoekopdracht verwijderen"
-
-#~ msgid "Click here to retry"
-#~ msgstr "Klik hier om opnieuw te proberen"
-
-#~ msgid "Enable Push-to-talk"
-#~ msgstr "Push-to-talk inschakelen"
-
-#~ msgid "Hide participants who have turned off their camera."
-#~ msgstr "Verberg deelnemers die hun camera hebben uitgeschakeld."
-
-#~ msgid "Log RTC events"
-#~ msgstr "Log RTC-evenementen"
-
-#~ msgid "Save detailed RTC connection logs for troubleshooting."
-#~ msgstr ""
-#~ "Sla gedetailleerde RTC-verbindingslogboeken op voor probleemoplossing."
-
-#~ msgid "Search Sub Channels"
-#~ msgstr "Subkanalen zoeken"
-
-#~ msgid "Search in progress"
-#~ msgstr "Zoeken wordt uitgevoerd"
-
-#~ msgid "Show video participants only"
-#~ msgstr "Alleen videodeelnemers weergeven"
-
-#~ msgid "The conversation is empty."
-#~ msgstr "Het gesprek is leeg."
-
-#~ msgid "Search button"
-#~ msgstr "Zoekknop"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-07-26 19:08+0000\n"
 "PO-Revision-Date: 2026-06-21 20:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -229,8 +229,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
+"name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -254,8 +254,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -279,11 +279,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-"
-"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
+"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-"
-"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object."
+"channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -408,11 +408,10 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
-"radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: {{object.user_id.company_id."
+"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -426,310 +425,310 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"fa fa-arrow-right\"/> Start Learning"
-msgstr "<i class=\"fa fa-arrow-right\"/> 開始學習"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> 統計資料"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid ""
-"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Lessons</span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">Add Content</span>"
 msgstr ""
-"<i class=\"fa fa-bars\"/> <span class=\"d-none d-md-inline-block ms-1\">課節"
-"</span>"
+"<i class=\"oi me-1\" data-icon=\"add\"/> <span class=\"d-none d-md-inline-"
+"block\">加入內容</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"oi me-1\" data-icon=\"add\"/><span>Add Content</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/> <span>加入內容</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
-msgid "<i class=\"fa fa-check me-1\"/>Completed"
-msgstr "<i class=\"fa fa-check me-1\"/> 完成"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_card
-msgid "<i class=\"fa fa-check\" aria-hidden=\"true\"/> Completed"
-msgstr "<i class=\"fa fa-check\" aria-hidden=\"true\"/> 已完成"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
-msgid "<i class=\"fa fa-check\"/> Completed"
-msgstr "<i class=\"fa fa-check\"/> 完成"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
-msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>載入中⋯</b>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
-msgstr ""
-"<i class=\"fa fa-clock-o me-2\" aria-label=\"時長\" role=\"img\" title=\"時長"
-"\"/>"
+msgid "<i class=\"oi me-1\" data-icon=\"check\"/>Completed"
+msgstr "<i class=\"oi me-1\" data-icon=\"check\"/> 完成"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-cloud-upload me-1\"/>Add Content"
-msgstr "<i class=\"fa fa-cloud-upload me-1\"/> 加入內容"
+msgid "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/>Add Content"
+msgstr "<i class=\"oi me-1\" data-icon=\"cloud_upload\"/> 加入內容"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments\"/> Comments"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
-msgstr ""
-"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
-"                <span class=\"d-none d-xl-inline-block\">全螢幕</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-eraser me-1\"/>Clear filters"
-msgstr "<i class=\"fa fa-eraser me-1\"/> 清除篩選"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> This document is private."
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"注意\" "
-"title=\"注意\"/> 這是私人文件。"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
-"title=\"Views\"/>"
-msgstr ""
-"<i class=\"fa fa-eye me-2\" aria-label=\"瀏覽次數\" role=\"img\" title=\"瀏覽"
-"次數\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
-"title=\"Article\"/>"
-msgstr ""
-"<i class=\"fa fa-file-code-o me-2\" aria-label=\"文章\" role=\"img\" "
-"title=\"文章\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
-"title=\"Infographic\"/>"
-msgstr ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"資訊圖\" role=\"img\" "
-"title=\"資訊圖\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
-"title=\"Document\"/>"
-msgstr ""
-"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"文件\" role=\"img\" "
-"title=\"文件\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
-"title=\"Video\"/>"
-msgstr ""
-"<i class=\"fa fa-file-video-o me-2\" aria-label=\"影片\" role=\"img\" "
-"title=\"影片\"/>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
-">"
-msgstr ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"測驗\" role=\"img\" title=\"測驗\"/"
-">"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
-msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
-msgstr "<i class=\"fa fa-flag text-warning\"/> 測驗"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
-msgid "<i class=\"fa fa-flag-checkered text-warning\"/>Quiz"
-msgstr "<i class=\"fa fa-flag-checkered text-warning\"/> 測驗"
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>All Courses"
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/> 所有課程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-folder-o me-1\"/><span>Add Section</span>"
-msgstr "<i class=\"fa fa-folder-o me-1\"/> <span>新增章節</span>"
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/><span>Add Section</span>"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/> <span>新增章節</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
-msgstr "<i class=\"fa fa-folder-o me-1\"/> 新增章節"
+msgid "<i class=\"oi me-1\" data-icon=\"folder\"/>Add a section"
+msgstr "<i class=\"oi me-1\" data-icon=\"folder\"/> 新增章節"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/>Clear filters"
+msgstr "<i class=\"oi me-1\" data-icon=\"ink_eraser\"/> 清除篩選"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"網站\"/>"
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr "<i class=\"oi me-1\" data-icon=\"public\" title=\"網站\"/>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> 關於"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/> 課程"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
 msgid ""
-"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
-"to course</span>"
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"          My Courses"
 msgstr ""
-"<i class=\"fa fa-home\"/> <span class=\"d-none d-md-inline-block ms-1\">返回"
-"課程</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_join
-msgid ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>Course Locked</span>"
-msgstr ""
-"<i class=\"fa fa-lock\"/>\n"
-"                        <span>課程被鎖定</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
-"Content</span>"
-msgstr ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">加入"
-"內容</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
-msgid "<i class=\"fa fa-plus me-1\"/><span>Add Content</span>"
-msgstr "<i class=\"fa fa-plus me-1\"/> <span>加入內容</span>"
+"<i class=\"oi me-2 text-muted\" data-icon=\"label\"/>\n"
+"          我的課程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>加入問題</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
 msgid ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-2\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"add\"/>\n"
 "            <span>加入測驗</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid ""
-"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
-msgstr ""
-"<i class=\"fa fa-question me-2\" aria-label=\"問題數目\" role=\"img\" "
-"title=\"問題數目\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">Prev</span>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"chevron_backward\"/> <span class=\"d-none d-"
+"sm-inline-block\">上一個</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"code\" aria-label=\"文章\" role=\"img\" "
+"title=\"文章\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"help\" aria-label=\"問題數目\" role=\"img\" "
+"title=\"問題數目\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"Infographic\" "
+"role=\"img\" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"image\" aria-label=\"資訊圖\" role=\"img\" "
+"title=\"資訊圖\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"movie\" aria-label=\"影片\" role=\"img\" "
+"title=\"影片\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"Document\" "
+"role=\"img\" title=\"Document\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"picture_as_pdf\" aria-label=\"文件\" "
+"role=\"img\" title=\"文件\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"Duration\" "
+"role=\"img\" title=\"Duration\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" aria-label=\"時長\" role=\"img\" "
+"title=\"時長\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"Views\" "
+"role=\"img\" title=\"Views\"/>"
+msgstr ""
+"<i class=\"oi me-2\" data-icon=\"visibility\" aria-label=\"瀏覽次數\" "
+"role=\"img\" title=\"瀏覽次數\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
+msgstr ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"desktop_windows\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">全螢幕</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"<i class=\"oi me-xl-2 my-1\" data-icon=\"family_history\"/>\n"
 "                <span class=\"d-none d-xl-inline-block\">分享</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
-"                                            Share"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"Quiz\" "
+"role=\"img\" title=\"Quiz\"/>"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"分享\" title=\"分享\"/>\n"
-"                                            分享"
+"<i class=\"oi oi-filled me-2\" data-icon=\"flag\" aria-label=\"測驗\" "
+"role=\"img\" title=\"測驗\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> Quiz"
+msgstr "<i class=\"oi oi-filled text-warning\" data-icon=\"flag\"/> 測驗"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi oi-filled\" data-icon=\"forum\"/> Comments"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>Loading...</b>"
+msgstr "<i class=\"oi oi-spin me-2\" data-icon=\"autorenew\"/><b>載入中⋯</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
+msgid "<i class=\"oi text-warning\" data-icon=\"sports_score\"/>Quiz"
+msgstr "<i class=\"oi text-warning\" data-icon=\"sports_score\"/> 測驗"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "<i class=\"oi\" data-icon=\"arrow_forward\"/> Start Learning"
+msgstr "<i class=\"oi\" data-icon=\"arrow_forward\"/> 開始學習"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"bar_chart\"/> Statistics"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\"/> 統計資料"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+msgid "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\" aria-hidden=\"true\"/> 已完成"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_my
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "<i class=\"oi\" data-icon=\"check\"/> Completed"
+msgstr "<i class=\"oi\" data-icon=\"check\"/> 完成"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">Share</"
 "span>"
 msgstr ""
-"<i class=\"fa fa-share-alt\"/>\n"
+"<i class=\"oi\" data-icon=\"family_history\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">分享</"
 "span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
-msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> 分享"
+msgid "<i class=\"oi\" data-icon=\"family_history\"/> Share"
+msgstr "<i class=\"oi\" data-icon=\"family_history\"/> 分享"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"oi\" data-icon=\"home\"/> About"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> 關於"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"oi\" data-icon=\"home\"/> Course"
+msgstr "<i class=\"oi\" data-icon=\"home\"/> 課程"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"<i class=\"oi\" data-icon=\"home\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Back to course</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"home\"/> <span class=\"d-none d-md-inline-block "
+"ms-1\">返回課程</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_join
+msgid ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>Course Locked</span>"
+msgstr ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        <span>課程被鎖定</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"oi\" data-icon=\"logout\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Exit Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-sign-out\"/> <span class=\"d-none d-md-inline-block ms-1\">"
-"離開全螢幕</span>"
+"<i class=\"oi\" data-icon=\"logout\"/> <span class=\"d-none d-md-inline-"
+"block ms-1\">離開全螢幕</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_tags
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"          My Courses"
+"<i class=\"oi\" data-icon=\"menu\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lessons</span>"
 msgstr ""
-"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
-"          我的課程"
+"<i class=\"oi\" data-icon=\"menu\"/> <span class=\"d-none d-md-inline-block "
+"ms-1\">課節</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
-msgid "<i class=\"oi oi-arrow-right me-1\"/>All Courses"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/> 所有課程"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">Prev</span>"
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Share"
 msgstr ""
-"<i class=\"oi oi-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
-"block\">上一個</span>"
+"<i class=\"oi\" data-icon=\"share\" aria-label=\"分享\" title=\"分享\"/>\n"
+"                                            分享"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"Attention\" "
+"title=\"Attention\"/> This document is private."
+msgstr ""
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" aria-label=\"注意\" "
+"title=\"注意\"/> 這是私人文件。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>You are enrolled</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>You are enrolled</small>"
 msgstr ""
-"<small class=\"text-muted d-none d-md-inline\"><i class=\"fa fa-check me-1\" "
-"role=\"img\"/>你已註冊參加</small>"
+"<small class=\"text-muted d-none d-md-inline\"><i class=\"oi me-1\" data-"
+"icon=\"check\" role=\"img\"/>你已註冊參加</small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -745,21 +744,23 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> Completed</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> Completed</span></small>"
 msgstr ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
-"check\"/> 已完成</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"oi\" data-"
+"icon=\"check\"/> 已完成</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
 "<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
-"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                            <i class=\"oi oi-filled oi-fw\" data-"
+"icon=\"flag\"/> 10 xp\n"
 "                        </span>"
 
 #. module: website_slides
@@ -795,19 +796,19 @@ msgstr "<span class=\"badge text-bg-success fw-normal m-1\">預覽</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Start now</span><i "
-"class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"class=\"oi d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">立即開始</span><i class=\"oi "
-"oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"d-md-none\" data-icon=\"east\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">下一個</span> <i class=\"oi oi-"
-"chevron-right ms-2\"/>"
+"<span class=\"d-none d-sm-inline-block\">下一個</span> <i class=\"oi ms-2\" "
+"data-icon=\"chevron_forward\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -817,11 +818,11 @@ msgstr "<span class=\"fw-normal\">最後更新：</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 msgid ""
-"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi oi-"
-"arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 msgstr ""
-"<span class=\"me-2 d-none d-md-inline\">繼續</span><i class=\"oi oi-arrow-"
-"right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">繼續</span><i class=\"oi\" data-"
+"icon=\"east\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -850,10 +851,10 @@ msgstr "<span class=\"o_stat_text\">嵌入檢視</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                        Create a Google Project and Get a Key"
 msgstr ""
-"<span class=\"oi oi-arrow-right\"/>\n"
+"<span class=\"oi\" data-icon=\"east\"/>\n"
 "                                        建立 Google 專案項目並獲取密鑰"
 
 #. module: website_slides
@@ -931,41 +932,44 @@ msgstr "<span class=\"text-muted\">計算機科學的部分</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
-"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
-"span>\n"
+"label=\"First slide\" role=\"button\"><i class=\"oi\" data-"
+"icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
 "mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
-"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"role=\"button\"><i class=\"oi oi-filled\" data-icon=\"arrow_circle_left\"/></"
+"span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
 "sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
-"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"class=\"oi oi-filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 msgstr ""
 "<span id=\"first\" class=\"me-1 me-sm-2\" title=\"第一頁\" aria-label=\"第一"
-"頁\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
+"頁\" role=\"button\"><i class=\"oi\" data-icon=\"skip_previous\"/></span>\n"
 "                                        <span id=\"previous\" class=\"mx-1 "
-"mx-sm-2\" title=\"上頁\" aria-label=\"上頁\" role=\"button\"><i class=\"fa "
-"fa-arrow-circle-left\"/></span>\n"
+"mx-sm-2\" title=\"上頁\" aria-label=\"上頁\" role=\"button\"><i class=\"oi "
+"oi-filled\" data-icon=\"arrow_circle_left\"/></span>\n"
 "                                        <span id=\"next\" class=\"mx-1 mx-"
-"sm-2\" title=\"下頁\" aria-label=\"下頁\" role=\"button\"><i class=\"fa fa-"
-"arrow-circle-right\"/></span>\n"
+"sm-2\" title=\"下頁\" aria-label=\"下頁\" role=\"button\"><i class=\"oi oi-"
+"filled\" data-icon=\"arrow_circle_right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-"
 "sm-2\" title=\"最後一頁\" aria-label=\"最後一頁\" role=\"button\"><i "
-"class=\"fa fa-step-forward\"/></span>"
+"class=\"oi\" data-icon=\"skip_next\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
 "aria-label=\"Fullscreen\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"全螢幕檢視\" aria-"
 "label=\"全螢幕\" role=\"button\">\n"
-"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"open_with\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -973,24 +977,24 @@ msgstr ""
 msgid ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
 "label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 msgstr ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"縮小\" aria-"
 "label=\"縮小\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_out\"/>\n"
 "                                        </span>\n"
 "                                        <span id=\"zoomin\" class=\"d-"
 "inline\" title=\"放大\" aria-label=\"放大\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/"
-">\n"
+"                                            <i class=\"oi\" data-"
+"icon=\"zoom_in\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1439,13 +1443,15 @@ msgid ""
 "All the courses you attend will appear here. <br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> Start Learning\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> "
+"Start Learning\n"
 "                        </a>"
 msgstr ""
 "你參加的所有課程，會在此處顯示。<br/>\n"
 "                        <a href=\"/slides/\" class=\"btn-link "
 "o_translate_inline\">\n"
-"                            <i class=\"fa fa-arrow-right\"/> 開始學習\n"
+"                            <i class=\"oi\" data-icon=\"arrow_forward\"/> 開"
+"始學習\n"
 "                        </a>"
 
 #. module: website_slides
@@ -3191,11 +3197,6 @@ msgid "Followers (Partners)"
 msgstr "關注人（業務夥伴）"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖示，例如，fa-task"
-
-#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
@@ -3587,16 +3588,16 @@ msgstr "圖片來源"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
 msgstr "未能發送電郵。請先選擇「頻道分享範本」給課程 %(course_names)s 使用。"
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses %"
-"(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr "未能發送電郵。請先選擇「分享範本」給課程 %(course_names)s 使用。"
 
 #. module: website_slides
@@ -4144,6 +4145,11 @@ msgid "Mark the correct answer by checking the <b>correct</b> mark."
 msgstr "<b>通過檢查正確的</b>標記來標記正確的答案。"
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Members"
 msgstr "成員"
@@ -4592,8 +4598,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
-"{{ object.partner_id.lang }}。"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ object."
+"partner_id.lang }}。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4658,8 +4664,8 @@ msgid ""
 "Please %(a_login_open)slogin%(a_login_close)s or %(a_signup_open)screate an "
 "account%(a_signup_close)s to vote for this lesson"
 msgstr ""
-"請 %(a_login_open)s登入%(a_login_close)s 或 %(a_signup_open)s建立一個帳戶%"
-"(a_signup_close)s，以為此課堂投票。"
+"請 %(a_login_open)s登入%(a_login_close)s 或 %(a_signup_open)s建立一個帳"
+"戶%(a_signup_close)s，以為此課堂投票。"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5505,8 +5511,8 @@ msgstr "投影片 / 合作夥伴裝飾 m2m"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
-msgid "Slide Icon fa-class"
-msgstr "投影片圖示fa-class"
+msgid "Slide Icon oi-class"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -7118,9 +7124,3 @@ msgstr "{{ user.name }} 向你分享了 {{ object.slide_category }}！"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└ <span class=\"ms-1\">未分類</span>"
-
-#~ msgid "Website Messages"
-#~ msgstr "網站資訊"
-
-#~ msgid "Website communication history"
-#~ msgstr "網站溝通記錄"
