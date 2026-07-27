@@ -1,17 +1,36 @@
-import { Component, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillStart,
+    signal,
+    types,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { delay } from "@web/core/utils/concurrency";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useVisible } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { ConnectionAbortedError, rpc } from "@web/core/network/rpc";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
+import { useVisible } from "@mail/utils/common/hooks";
+
+// Past this delay, open the dropdown with a loading indicator if followers are still loading.
+export const FOLLOWERS_OPEN_MAX_WAIT = 200;
+const LOAD_MORE_LIMIT = 20;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem, Follower };
 
+    followersFullyLoaded = signal(false);
+    /** @type {ReturnType<typeof signal<ReturnType<typeof rpc> | undefined>>} */
+    pendingFollowersRequest = signal(undefined);
     loadMoreRef = signal.ref();
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -23,11 +42,63 @@ export class FollowerList extends Component {
             onFollowerChanged: types.function([]).optional(),
             thread: types.instanceOf(this.store["mail.thread"]),
         });
+        this.LOAD_MORE_LIMIT = LOAD_MORE_LIMIT;
+        this.followerListView = this.store.FollowerListView.insert({
+            id: uniqueId("follower_list_view_"),
+        });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
-                this.props.thread.loadMoreFollowers();
+                this.loadFollowers();
             }
         });
+        onWillStart(() => Promise.race([this.loadFollowers(), delay(FOLLOWERS_OPEN_MAX_WAIT)]));
+        onWillDestroy(() => {
+            this.pendingFollowersRequest()?.abort();
+            this.followerListView.delete();
+        });
+    }
+
+    /**
+     * Fetches and appends the next page of followers.
+     *
+     * Follower records are normalized in the global store, while their ordered
+     * relation remains scoped to this `FollowerListView`.
+     */
+    async loadFollowers() {
+        const { abortSignal } = this.scope;
+        if (
+            !this.props.thread.id ||
+            abortSignal.aborted ||
+            this.pendingFollowersRequest() ||
+            this.followersFullyLoaded()
+        ) {
+            return;
+        }
+        const request = rpc("/mail/thread/followers", {
+            thread_id: this.props.thread.id,
+            thread_model: this.props.thread.model,
+            offset: this.followerListView.followers.length,
+            // Fetch one extra follower to show Load more only when another page exists.
+            limit: this.LOAD_MORE_LIMIT + 1,
+        });
+        this.pendingFollowersRequest.set(request);
+        try {
+            const { follower_ids, store_data } = await request;
+            if (abortSignal.aborted || this.pendingFollowersRequest() !== request) {
+                return;
+            }
+            this.store.insert(store_data);
+            this.followersFullyLoaded.set(follower_ids.length <= this.LOAD_MORE_LIMIT);
+            this.followerListView.followers.add(...follower_ids.slice(0, this.LOAD_MORE_LIMIT));
+        } catch (error) {
+            if (!(error instanceof ConnectionAbortedError)) {
+                throw error;
+            }
+        } finally {
+            if (this.pendingFollowersRequest() === request) {
+                this.pendingFollowersRequest.set(undefined);
+            }
+        }
     }
 
     onClickAddFollowers() {
