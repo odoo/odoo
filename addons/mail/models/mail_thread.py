@@ -2937,6 +2937,7 @@ class MailThread(models.AbstractModel):
             add_context=render_values,
         )
 
+        # TDE NOTE: check for improved batch post with view
         return self._message_log_batch(
             bodies=bodies,
             message_type=message_type,
@@ -2958,9 +2959,9 @@ class MailThread(models.AbstractModel):
             {self.id: body}, subject=subject,
             author_id=author_id, email_from=email_from,
             message_type=message_type,
-            partner_ids=partner_ids,
-            attachment_ids=attachment_ids,
-            tracking_values=tracking_values,
+            partner_ids={self.id: partner_ids},
+            attachment_ids={self.id: attachment_ids},
+            tracking_values={self.id: tracking_values},
         )
 
     def _message_log_batch(self, bodies, subject=False,
@@ -2977,15 +2978,22 @@ class MailThread(models.AbstractModel):
         access rights are already granted to avoid privilege escalation.
 
         :param bodies: dict {record_id: body}
-        :param list partner_ids: optional partners, not used in any notification
-          mechanism. This is mainly used to link a log to a specific customer
-          like SMS or WhatsApp log;
+        :param dict partner_ids: a per-record dict of optional partners, not used
+          in any notification mechanism. This is mainly used to link a log to a
+          specific customer like SMS or WhatsApp log;
+        :param dict attachment_ids: a per-record dict of valid 'attachment_ids'
+          command;
+        :param dict tracking_values: a per-record dict of well formed tracking_values;
         :return: created messages (as sudo)
         """
         # protect against side-effect prone usage
-        if len(self) > 1 and (attachment_ids or tracking_values):
-            raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
-        if message_type != 'tracking' and tracking_values:
+        if attachment_ids and not isinstance(attachment_ids, dict):
+            raise ValueError(_('Batch log cannot support attachments that is not a per-document dict'))
+        if partner_ids and not isinstance(partner_ids, dict):
+            raise ValueError(_('Batch log cannot support recipients that is not a per-document dict'))
+        if tracking_values and not isinstance(tracking_values, dict):
+            raise ValueError(_('Batch log cannot support tracking values that is not a per-document dict'))
+        if message_type != 'tracking' and tracking_values and any(vals for vals in tracking_values.values()):
             raise ValueError(_('Posting with tracking should be done using tracking message type'))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
@@ -2999,25 +3007,27 @@ class MailThread(models.AbstractModel):
             'record_alias_domain_id': False,
             'record_company_id': False,
             # content
-            'attachment_ids': attachment_ids,
             'message_type': message_type,
             'is_internal': True,
             'subject': subject,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'tracking_values': tracking_values,
             # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
-            'partner_ids': partner_ids,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, author_id=author_id)[False],
         }
-
-        values_list = [dict(base_message_values,
-                            res_id=record.id,
-                            body=escape(bodies.get(record.id, '')))
-                       for record in self]
-        if tracking_values:  # generate trackings in body so that 'body' is reliable in msg_vals
-            values_list[0]['body'] = self._message_compute_body_with_trackings(values_list[0]['body'], tracking_values)
+        values_list = [dict(
+            base_message_values,
+            res_id=record.id,
+            attachment_ids=(attachment_ids or {}).get(record.id, False),
+            body=escape(bodies.get(record.id, '')),
+            partner_ids=(partner_ids or {}).get(record.id, False),
+            tracking_values=(tracking_values or {}).get(record.id, False),
+        ) for record in self]
+        for values in values_list:
+            # generate trackings in body so that 'body' is reliable in msg_vals
+            if record_tracking_values := values.get('tracking_values'):
+                values['body'] = self._message_compute_body_with_trackings(values['body'], record_tracking_values)
         return self.sudo()._message_create(values_list)
 
     def set_message_pin(self, message_id, pinned):
