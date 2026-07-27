@@ -302,12 +302,12 @@ export class TourService {
      * @param {number} [options.stepDelay=0] - Delay between each tour step.
      * @param {number} [options.showPointerDuration=0] - Duration to show the pointer on each step.
      * @param {boolean} [options.debug=false] - Enables debug mode for the tour.
-     * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
+     * @param {boolean} [options.redirect=true] - Whether to redirect to `options.url` if necessary.
      */
     async startTour(name, options = {}) {
         this.removePointer();
         this.removeTourRecorder();
-        const tour = await this.getTour(name, options);
+        await this.getTour(name, options);
 
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
@@ -328,8 +328,8 @@ export class TourService {
         tourState.setCurrentTour(name);
         tourState.setCurrentIndex(0);
 
-        if (tourConfig.mode === "manual" && tour.url && tourConfig.redirect) {
-            redirect(tour.url);
+        if (tourConfig.url && tourConfig.redirect) {
+            redirect(tourConfig.url);
         } else {
             await this.resumeTour();
         }
