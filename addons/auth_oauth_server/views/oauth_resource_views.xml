@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="oauth_resource_view_form" model="ir.ui.view">
+        <field name="name">oauth.resource.form</field>
+        <field name="model">oauth.resource</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="label"/>
+                    </group>
+                    <group string="Allowed Groups">
+                        <field name="allowed_group_ids" nolabel="1" colspan="2" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="oauth_resource_view_list" model="ir.ui.view">
+        <field name="name">oauth.resource.list</field>
+        <field name="model">oauth.resource</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false">
+                <field name="name"/>
+                <field name="label"/>
+                <field name="allowed_group_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="oauth_resource_view_search" model="ir.ui.view">
+        <field name="name">oauth.resource.search</field>
+        <field name="model">oauth.resource</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="label"/>
+                <field name="allowed_group_ids"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="oauth_resource_action" model="ir.actions.act_window">
+        <field name="name">OAuth Resources</field>
+        <field name="res_model">oauth.resource</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No resource is available yet</p>
+            <p>
+                A resource is declared by an installed module. You can choose which access
+                groups are allowed to use OAuth under it.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="oauth_resource_menu" name="Resources"
+        parent="auth_oauth_server_base.oauth_root_menu" action="oauth_resource_action" sequence="5"/>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="oauth_token_view_list" model="ir.ui.view">
+        <field name="name">oauth.token.list</field>
+        <field name="model">oauth.token</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="user_id"/>
+                <field name="client_id"/>
+                <field name="scope"/>
+                <button name="action_remove" type="object" string="Remove"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="oauth_token_view_search" model="ir.ui.view">
+        <field name="name">oauth.token.search</field>
+        <field name="model">oauth.token</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <field name="client_id"/>
+                <group>
+                    <filter name="group_by_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_client" string="Client" context="{'group_by': 'client_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="oauth_token_action" model="ir.actions.act_window">
+        <field name="name">OAuth Tokens</field>
+        <field name="res_model">oauth.token</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No tokens have been granted yet</p>
+            <p>
+                A token is granted when a user consents to a service accessing a their DB
+                on their behalf.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="oauth_token_menu" name="Tokens"
+        parent="auth_oauth_server_base.oauth_root_menu" action="oauth_token_action" sequence="20"/>
+</odoo>

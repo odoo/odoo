@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Standalone copy of web.login_layout rather than an inherit of it: the website module
+         replaces web.login_layout's body with website.layout, which only renders when the endpoint
+         declares `website=True` (it reads `website` out of the render values). A `primary` inherit
+         would NOT escape that - a primary view is built from its parent's *combined* arch, so the
+         website extension is baked into the copy too. The OAuth endpoints must stay
+         website-agnostic, so this branches off web.frontend_layout directly. -->
+    <template id="oauth_layout" name="OAuth Layout">
+        <t t-set="head">
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+        </t>
+        <t t-call="web.layout" head="head" html_data="{'style': 'height: 100%;'}" body_classname.f="bg-100">
+            <div class="container py-5">
+                <div class="card border-0 mx-auto bg-100" style="max-width: 320px;">
+                    <div class="card-body">
+                        <div class="text-center pb-3 border-bottom mb-4">
+                            <img src="/web/binary/company_logo" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                        </div>
+                        <t t-out="0"/>
+                        <div class="text-center small mt-4 pt-3 border-top">
+                            <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
