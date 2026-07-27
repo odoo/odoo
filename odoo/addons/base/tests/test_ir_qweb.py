@@ -11,7 +11,6 @@ from odoo.tests.common import BaseCase, TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.models.ir_qweb import QWebError, render as mock_render
 from odoo.tools import file_open, misc, mute_logger
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, MissingError
 
 unsafe_eval = eval
@@ -916,7 +915,7 @@ class TestQWebBasic(TransactionCase):
                 <div bibi="{&#34;a&#34;: &#34;string&#34;, &#34;b&#34;: 1}">1</div>
                 <div toto="a&#39;b&#34;c">2</div>
             """
-        values = {'json': json_scriptsafe, 'bibi': dict(a='string', b=1), 'toto': "a'b\"c"}
+        values = {'bibi': dict(a='string', b=1), 'toto': "a'b\"c"}
         rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 

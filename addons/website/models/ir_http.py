@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 import functools
+import json
 import logging
 import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
@@ -14,7 +15,6 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -424,7 +424,7 @@ class IrHttp(models.AbstractModel):
             if not self.env.website.cookies_bar:
                 # Cookies bar is disabled on this website
                 return True
-            accepted_cookie_types = json_scriptsafe.loads(request.cookies.get('website_cookies_bar', '{}'))
+            accepted_cookie_types = json.loads(request.cookies.get('website_cookies_bar', '{}'))
 
             # pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
             # In that case we delete that cookie and let the user choose again.

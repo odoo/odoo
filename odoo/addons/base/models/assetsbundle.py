@@ -1,6 +1,7 @@
 import functools
 import hashlib
 import io
+import json
 import logging
 import os
 import re
@@ -17,7 +18,6 @@ from odoo.api import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import OrderedSet, misc, profiler
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, BINARY_EXTENSIONS
-from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
 
 _logger = logging.getLogger(__name__)

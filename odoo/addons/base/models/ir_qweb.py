@@ -356,6 +356,7 @@ import ast
 import fnmatch
 import glob
 import io
+import json as _json
 import logging
 import math
 import pprint
@@ -367,6 +368,8 @@ import token
 import tokenize
 import traceback
 import warnings
+
+import markupsafe
 import werkzeug
 
 from markupsafe import Markup, escape
@@ -387,7 +390,7 @@ from urllib.parse import unquote_plus
 from odoo import api, models, tools
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
+from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import (
     _BLACKLIST,
@@ -676,7 +679,30 @@ class QwebContent:
         return Markup(self).__rmod__(other)
 
 
-class QwebJSON(json.JSON):
+JSON_SCRIPTSAFE_MAPPER = {
+    '&': r'\u0026',
+    '<': r'\u003c',
+    '>': r'\u003e',
+    '\u2028': r'\u2028',
+    '\u2029': r'\u2029'
+}
+
+
+class _ScriptSafe(str):
+    __slots__ = ()
+
+    def __html__(self):
+        # replacement can be done straight in the serialised JSON as the
+        # problematic characters are not JSON metacharacters (and can thus
+        # only occur in strings)
+        return markupsafe.Markup(re.sub(
+            r'[<>&\u2028\u2029]',
+            lambda m: JSON_SCRIPTSAFE_MAPPER[m[0]],
+            self,
+        ))
+
+
+class QwebJSON:
 
     def default(self, obj):
         if isinstance(obj, Mapping):
@@ -686,10 +712,39 @@ class QwebJSON(json.JSON):
         return obj
 
     def dumps(self, *args, **kwargs):
+        """ JSON used as JS in HTML (script tags) is problematic: <script>
+        tags are a special context which only waits for </script> but doesn't
+        interpret anything else, this means standard htmlescaping does not
+        work (it breaks double quotes, and e.g. `<` will become `&lt;` *in
+        the resulting JSON/JS* not just inside the page).
+
+        However, failing to escape embedded json means the json strings could
+        contains `</script>` and thus become XSS vector.
+
+        The solution turns out to be very simple: use JSON-level unicode
+        escapes for HTML-unsafe characters (e.g. "<" -> "\u003C". This removes
+        the XSS issue without breaking the json, and there is no difference to
+        the end result once it's been parsed back from JSON. So it will work
+        properly even for HTML attributes or raw text.
+
+        Also handle U+2028 and U+2029 the same way just in case as these are
+        interpreted as newlines in javascript but not in JSON, which could
+        lead to oddities and issues.
+
+        .. warning::
+
+            except inside <script> elements, this should be escaped following
+            the normal rules of the containing format
+
+        Cf https://code.djangoproject.com/ticket/17419#comment:27
+        """
         prev_default = kwargs.pop('default', self.default)
-        return super().dumps(*args, **kwargs, default=(
+        return _ScriptSafe(_json.dumps(*args, **kwargs, default=(
             lambda obj: prev_default(str(obj) if isinstance(obj, QwebContent) else obj)
-        ))
+        )))
+
+    def loads(self, *args, **kwargs):
+        return _json.loads(*args, **kwargs)
 
 
 qwebJSON = QwebJSON()
@@ -1199,7 +1254,7 @@ class IrQweb(models.AbstractModel):
                 """, 0)]
 
         code_lines = []
-        json_options = json.scriptsafe.loads(json.scriptsafe.dumps(options, default=str))
+        json_options = _json.loads(_json.dumps(options, default=str))
         code_lines.append(f'template_options = {pprint.pformat(json_options, indent=4)}')
         code_lines.append('code = None')
         code_lines.append('template_functions = {}')
