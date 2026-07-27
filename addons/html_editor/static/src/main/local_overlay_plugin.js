@@ -15,7 +15,7 @@ export class LocalOverlayPlugin extends Plugin {
     static shared = ["makeLocalOverlay", "createElement"];
 
     setup() {
-        this.localOverlayContainer = this.config.localOverlayContainers?.ref.el;
+        this.localOverlayContainer = this.config.localOverlayContainers?.ref();
         this.localOverlays = new Set();
     }
 

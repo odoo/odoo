@@ -5,13 +5,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import {
-    useBus,
-    useChildRef,
-    useForwardRefToParent,
-    useOwnedDialogs,
-    useService,
-} from "@web/core/utils/hooks";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SIZES } from "@web/core/ui/ui_service";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
@@ -200,7 +194,6 @@ export function useSpecialData(loadFn) {
 export const many2XAutocompleteProps = {
     activeActions: t.object(),
     autoSelect: t.boolean().optional(),
-    autocomplete_container: t.function().optional(),
     autofocus: t.boolean().optional(),
     context: t.object().optional({}),
     createAction: t.function().optional(),
@@ -236,7 +229,6 @@ export class Many2XAutocomplete extends Component {
         this.offlinePlugin = plugin(OfflinePlugin);
         this.uiService = useService("ui");
 
-        useForwardRefToParent(this.autocompleteContainerRef, "autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
         this.keepLast = new KeepLast();
@@ -722,7 +714,7 @@ export class X2ManyFieldDialog extends Component {
 
         useBus(this.record.model.bus, "update", () => render(this, true));
 
-        this.modalRef = useChildRef();
+        this.modalRef = signal.ref();
 
         const reload = () => this.record.load();
 
@@ -753,21 +745,21 @@ export class X2ManyFieldDialog extends Component {
                     let elementToFocus;
                     if (isInEdition) {
                         for (const id of autofocusFieldIds) {
-                            elementToFocus = this.modalRef.el.querySelector(`#${id}`);
+                            elementToFocus = this.modalRef().querySelector(`#${id}`);
                             if (elementToFocus) {
                                 break;
                             }
                         }
                         elementToFocus =
                             elementToFocus ||
-                            this.modalRef.el.querySelector(".o_field_widget input");
+                            this.modalRef().querySelector(".o_field_widget input");
                     } else {
-                        elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
+                        elementToFocus = this.modalRef().querySelector("button.btn-primary");
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
                     } else {
-                        this.modalRef.el.focus();
+                        this.modalRef().focus();
                     }
                 },
                 () => [this.record.isInEdition]
@@ -820,7 +812,7 @@ export class X2ManyFieldDialog extends Component {
     }
 
     save({ saveAndNew }) {
-        return executeButtonCallback(this.modalRef.el, async () => {
+        return executeButtonCallback(this.modalRef(), async () => {
             if (await this.record.checkValidity({ displayNotification: true })) {
                 await this.props.save(this.record);
                 if (saveAndNew) {

@@ -1,4 +1,4 @@
-import { Component, props, proxy, t, useEffect } from "@odoo/owl";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import {
     useInputBuilderComponent,
     useBuilderComponent,
@@ -8,7 +8,6 @@ import {
 import { BuilderComponent } from "./builder_component";
 import { BuilderNumberInputBase } from "@html_builder/core/building_blocks/builder_number_input_base";
 import { textInputBasePassthroughProps } from "./builder_input_base";
-import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 
 export class BuilderNumberInput extends Component {
@@ -75,7 +74,7 @@ export class BuilderNumberInput extends Component {
         useEffect(() => {
             this.state.showUnit = state.value?.length > 0;
         });
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
     }
 

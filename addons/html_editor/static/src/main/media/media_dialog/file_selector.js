@@ -238,7 +238,7 @@ export class FileSelector extends Component {
                     };
                 }
             },
-            () => [this.props.modalRef.el?.querySelector("main.modal-body")]
+            () => [this.props.modalRef()?.querySelector("main.modal-body")]
         );
 
         useLayoutEffect(
@@ -447,7 +447,7 @@ export class FileSelector extends Component {
      */
     updateScroll() {
         const loadMoreTop = this.loadMoreButtonRef().getBoundingClientRect().top;
-        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
+        const modalEl = this.props.modalRef().querySelector("main.modal-body");
         const modalBottom = modalEl.getBoundingClientRect().bottom;
         this.state.canScrollAttachments = loadMoreTop >= modalBottom;
         this.loadMoreButtonRef().classList.remove("o_hide_loading");
@@ -461,7 +461,7 @@ export class FileSelector extends Component {
      */
     isAttachmentHidden(attachmentEl) {
         const attachmentBottom = Math.round(attachmentEl.getBoundingClientRect().bottom);
-        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
+        const modalEl = this.props.modalRef().querySelector("main.modal-body");
         const modalBottom = modalEl.getBoundingClientRect().bottom;
         return attachmentBottom > modalBottom;
     }

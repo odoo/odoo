@@ -1119,8 +1119,9 @@ export function useVisibilityObserver(contentRef, callback) {
 export function useInputDebouncedCommit(ref) {
     const comp = useComponent();
     return useDebounced(() => {
-        const normalizedDisplayValue = comp.commit(ref.el.value);
-        ref.el.value = normalizedDisplayValue;
+        const el = resolveRefEl(ref);
+        const normalizedDisplayValue = comp.commit(el.value);
+        el.value = normalizedDisplayValue;
     }, 550);
     // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
     // fired. Some additional delay by the browser may add another ~5-10ms.

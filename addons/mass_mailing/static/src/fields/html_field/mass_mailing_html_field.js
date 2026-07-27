@@ -19,7 +19,7 @@ import {
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -90,8 +90,8 @@ export class MassMailingHtmlField extends HtmlField {
         this.updateActiveTheme();
         this.updateThemeSelector();
 
-        this.iframeRef = useChildRef();
-        this.iframeWrapperRef = useChildRef();
+        this.iframeRef = signal.ref();
+        this.iframeWrapperRef = signal.ref();
 
         onWillUpdateProps((nextProps) => {
             if (
@@ -348,7 +348,7 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     onFocus() {
-        this.activeElement = this.iframeWrapperRef.el;
+        this.activeElement = this.iframeWrapperRef();
     }
 
     /**
@@ -369,8 +369,8 @@ export class MassMailingHtmlField extends HtmlField {
         if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
             this.activeElement = undefined;
             this.onBlur();
-        } else if (this.iframeWrapperRef.el.contains(ev.target)) {
-            this.activeElement = this.iframeWrapperRef.el;
+        } else if (this.iframeWrapperRef().contains(ev.target)) {
+            this.activeElement = this.iframeWrapperRef();
         }
     }
 

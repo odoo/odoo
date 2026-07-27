@@ -20,7 +20,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
@@ -71,7 +71,8 @@ export const dropdownProps = {
         )
         .optional(),
 
-    menuRef: t.function().optional(), // to be used with useChildRef
+    /** Ref filled with the menu element, @see signal.ref */
+    menuRef: t.signal(t.ref()).optional(() => signal.ref()),
     disabled: t.boolean().optional(false),
     holdOnHover: t.boolean().optional(false),
     focusToggleOnClosed: t.boolean().optional(true),
@@ -107,11 +108,9 @@ export class Dropdown extends Component {
     props = useProps(dropdownProps);
 
     setup() {
-        // The menu element lives in the popover/bottom sheet, which now fills an
-        // Owl 3 signal ref. Keep forwarding it to the legacy `menuRef` prop for
-        // parents still using `useChildRef()`.
-        this.menuRef = signal.ref();
-        useForwardRefToParent(this.menuRef, "menuRef");
+        // The menu element lives in the popover/bottom sheet, which fills this
+        // ref. It is either owned by the parent (`menuRef` prop) or local.
+        this.menuRef = this.props.menuRef;
 
         this.state = this.props.state || useDropdownState();
         this.nesting = useDropdownNesting(this.state);

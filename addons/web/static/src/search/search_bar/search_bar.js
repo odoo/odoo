@@ -2,7 +2,7 @@ import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
@@ -84,7 +84,7 @@ export class SearchBar extends Component {
         this.items = proxy([]);
         this.subItems = {};
 
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         this.setupFacetNavigation();
         this.inputDropdownState = useDropdownState();
         this.inputDropdownNavOptions = this.getDropdownNavigation();
@@ -559,7 +559,7 @@ export class SearchBar extends Component {
 
         return {
             virtualFocus: true,
-            getItems: () => this.menuRef.el?.querySelectorAll(":scope .o-dropdown-item") ?? [],
+            getItems: () => this.menuRef()?.querySelectorAll(":scope .o-dropdown-item") ?? [],
             isNavigationAvailable: ({ navigator, target }) =>
                 this.inputDropdownState.isOpen &&
                 (this.facetContainerRef()?.contains(target) || navigator.contains(target)),

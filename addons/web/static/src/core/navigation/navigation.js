@@ -444,19 +444,12 @@ export function useNavigation(containerRef, options = {}) {
     // element" in a single place so all accepted input forms work:
     //   - string  → already converted above via the compat `useRef`, read `.el`
     //               (original pre-migration behavior);
-    //   - ref-like object/callable → anything exposing an `el` accessor, read
-    //               `.el` (covers Owl 2 refs, `useRef` and `useChildRef`). Note
-    //               `useChildRef` returns a *callable* that is also ref-like, so
-    //               we must NOT call it: invoking it would reset its internal
-    //               value and corrupt the ref;
-    //   - bare function → an Owl 3 native ref (signal) that has no `el`
-    //               accessor, called to get the element.
-    // The `el` check first ensures ref-like callables go through the `.el` path
-    // (original behavior); only genuine signals fall through to being called.
+    //   - object ref (Owl 2 refs, `useRef`) → read `.el`;
+    //   - function → an Owl 3 native ref (signal), called to get the element.
     // The optional chaining keeps this null-safe (a ref can be undefined before
     // mount), so it can never throw "Cannot read properties of undefined".
-    // Remove the function branch once every caller passes a native signal ref.
-    const isSignal = typeof containerRef === "function" && !("el" in containerRef);
+    // Remove the `.el` branch once every caller passes a native signal ref.
+    const isSignal = typeof containerRef === "function";
     const getContainerEl = () => (isSignal ? containerRef() : containerRef?.el);
 
     const newOptions = { ...options };

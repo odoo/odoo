@@ -2,7 +2,7 @@ import { render, useSubEnv } from "@web/owl2/utils";
 import { Component, onMounted, onWillDestroy, props, signal, t } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
-import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
+import { useSpellCheck } from "@web/core/utils/hooks";
 import { LocalOverlayContainer } from "./local_overlay_container";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -43,7 +43,7 @@ export class Wysiwyg extends Component {
     contentRef = signal.ref();
 
     setup() {
-        this.overlayRef = useChildRef();
+        this.overlayRef = signal.ref();
         useSubEnv({
             localOverlayContainerKey: uniqueId("wysiwyg"),
         });

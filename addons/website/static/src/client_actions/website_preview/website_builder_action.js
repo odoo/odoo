@@ -22,7 +22,7 @@ import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
-import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
+import { useService, useBus } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -114,7 +114,7 @@ export class WebsiteBuilderClientAction extends Component {
         });
         onWillDestroy(disposeToggleMobileEffect);
 
-        this.overlayRef = useChildRef();
+        this.overlayRef = signal.ref();
         useSubEnv({
             localOverlayContainerKey: uniqueId("website"),
         });

@@ -53,7 +53,7 @@ export class Builder extends Component {
         installSnippetModule: t.function().optional(),
         snippetsName: t.string(),
         toggleMobile: t.function(),
-        overlayRef: t.function(),
+        overlayRef: t.signal(t.ref()),
         iframeLoaded: t.object(),
         isMobile: t.boolean(),
         Plugins: t.array().optional(),

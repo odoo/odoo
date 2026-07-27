@@ -10,7 +10,7 @@ Object.assign(dialogProps, {
 patch(Dialog.prototype, {
     onClick(event) {
         // Click outside the modal content
-        if (this.props.backdrop && event.target === this.modalRef.el) {
+        if (this.props.backdrop && event.target === this.modalRef()) {
             this.dismiss();
         }
         // Click on a button inside the modal body or on an element with the 'close-dialog' class

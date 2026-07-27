@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { useService, useChildRef } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
@@ -40,7 +40,7 @@ export class MediaDialog extends Component {
         this.size = "xl";
         this.contentClass = "o_select_media_dialog h-100";
         this.title = _t("Select a media");
-        this.modalRef = useChildRef();
+        this.modalRef = signal.ref();
 
         this.orm = useService("orm");
         this.notificationService = useService("notification");

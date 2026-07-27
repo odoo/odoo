@@ -6,7 +6,6 @@ import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { useChildRef } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class AlignSelector extends Component {
@@ -25,7 +24,7 @@ export class AlignSelector extends Component {
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.alignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);

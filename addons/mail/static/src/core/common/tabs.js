@@ -1,7 +1,6 @@
 import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
 import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class Tabs extends Component {
     static template = "mail.Tabs";
@@ -10,14 +9,12 @@ export class Tabs extends Component {
         this.props = props({
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
-            ref: t.function([t.object({ el: t.any().optional() })]).optional(),
+            ref: t.signal(t.ref()).optional(() => signal.ref()),
         });
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
         this.navRef = signal();
-        this.rootRef = signal();
         this.scrollState = useScrollState(this.navRef);
-        useForwardRefToParent(this.rootRef, "ref");
         useChildSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,

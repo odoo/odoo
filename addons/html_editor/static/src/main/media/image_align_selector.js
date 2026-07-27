@@ -6,7 +6,6 @@ import {
 import { Component, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useChildRef } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class ImageAlignSelector extends Component {
@@ -24,7 +23,7 @@ export class ImageAlignSelector extends Component {
 
     setup() {
         this.state = proxy(this.props.getDisplay());
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);

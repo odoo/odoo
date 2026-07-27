@@ -139,6 +139,7 @@ class BuilderContainer extends Component {
     containerRef = signal.ref();
     websitePreviewRef = signal.ref();
     iframeRef = signal.ref();
+    overlayRef = signal.ref();
 
     setup() {
         this.state = proxy({ isMobile: false, isEditing: false, showSidebar: true });
@@ -180,7 +181,7 @@ class BuilderContainer extends Component {
             toggleMobile: () => {
                 this.state.isMobile = !this.state.isMobile;
             },
-            overlayRef: () => {},
+            overlayRef: this.overlayRef,
             editableSelector: this.props.editableSelector,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,

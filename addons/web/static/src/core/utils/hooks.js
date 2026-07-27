@@ -1,13 +1,4 @@
-import {
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    proxy,
-    t,
-    toRaw,
-    useProps,
-    useScope,
-} from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -233,74 +224,6 @@ export function useSpellCheck({ refName, ref } = {}) {
     );
 }
 
-/**
- * @typedef {Function} ForwardRef
- * @property {HTMLElement | undefined} el
- */
-
-/**
- * Use a ref that was forwarded by a child @see useForwardRefToParent
- *
- * @returns {ForwardRef} a ref that can be called to set its value to that of a
- *  child ref, but can otherwise be used as a normal ref object
- */
-export function useChildRef() {
-    let value;
-    function ref(v) {
-        value = v;
-    }
-    // Define `el` eagerly (rather than on the first assignment) so that the ref
-    // is recognizable as a ref-like object (`"el" in ref` is always true) even
-    // before it has been forwarded a child ref. The forwarded value may be a
-    // legacy ref object (`.el`) or an Owl 3 signal ref (a zero-arg callable);
-    // `resolveRefEl` reads either form, and returns undefined before mount (or
-    // while detached) instead of throwing.
-    Object.defineProperty(ref, "el", {
-        get() {
-            return resolveRefEl(value);
-        },
-    });
-    return ref;
-}
-/**
- * Forwards a ref to the parent by calling the corresponding ForwardRef received
- * as prop. @see useChildRef
- *
- * Accepts either:
- *  - a string `refName` (legacy Owl 2): a ref is created with `useRef(refName)`
- *    (tied to the compat `t-custom-ref`) and forwarded to the prop of the same
- *    name;
- *  - an Owl 3 signal ref together with the prop name to forward it to: the
- *    signal is forwarded as-is (the child already owns it via `t-ref`) and
- *    returned unchanged.
- *
- * @overload
- * @param {string} refName name of the ref to create, forward and return
- * @returns {Ref} the ref that is forwarded to the parent
- *
- * @overload
- * @param {(() => HTMLElement | null) | Ref} ref an Owl 3 signal ref (or legacy
- *  ref object) to forward as-is
- * @param {string} propName name of the prop to forward the ref to
- * @returns {(() => HTMLElement | null) | Ref} the same ref, unchanged
- */
-export function useForwardRefToParent(refOrName, propName) {
-    const compProps = useProps();
-    // Legacy: a string refName creates a (compat) ref and forwards it under the
-    // same prop name.
-    if (typeof refOrName === "string") {
-        const ref = useRef(refOrName);
-        if (compProps[refOrName]) {
-            compProps[refOrName](ref);
-        }
-        return ref;
-    }
-    // Owl 3: forward the given signal/ref as-is to the named prop.
-    if (compProps[propName]) {
-        compProps[propName](refOrName);
-    }
-    return refOrName;
-}
 /**
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.

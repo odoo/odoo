@@ -8,7 +8,7 @@ import { Component, proxy, signal } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
-import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -215,7 +215,7 @@ export class SwitchCompanyMenu extends Component {
             this.companySelector.reset();
         });
 
-        this.containerRef = useChildRef();
+        this.containerRef = signal.ref();
         this.navigationOptions = {
             shouldFocusChildInput: false,
             hotkeys: {
@@ -324,10 +324,10 @@ export class SwitchCompanyMenu extends Component {
                 this.searchInputRef().focus();
             }
 
-            if (this.containerRef.el) {
+            if (this.containerRef()) {
                 // Fixes the container width so it doesn't change when searching.
-                const currentWidth = this.containerRef.el.getBoundingClientRect().width;
-                this.containerRef.el.style.width = currentWidth + "px";
+                const currentWidth = this.containerRef().getBoundingClientRect().width;
+                this.containerRef().style.width = currentWidth + "px";
             }
         } else {
             this.resetState();

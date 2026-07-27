@@ -1,6 +1,5 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
-import { useChildRef } from "@web/core/utils/hooks";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 
 // TODO: we probably don't need it anymore after merging html_builder
@@ -15,7 +14,7 @@ export class UrlAutoComplete extends Component {
     static components = { AutoCompleteWithPages };
 
     setup() {
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
     }
 
     get dropdownClass() {
@@ -85,7 +84,7 @@ export class UrlAutoComplete extends Component {
     }
 
     onSelect(value) {
-        this.inputRef.value = value;
+        this.inputRef().value = value;
         this.props.targetDropdown.value = value;
         this.props.options.urlChosen?.();
     }
