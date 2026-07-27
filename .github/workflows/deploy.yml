@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            ccd /home/ubuntu/odoo
+            cd /home/ubuntu/odoo
 
             # Pull specifically from the production branch
             git pull origin production
