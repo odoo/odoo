@@ -413,7 +413,12 @@ a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed {
 
 a.o-discuss-mention {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
-    cursor: default !important;
+}
+
+.o-mail-Composer-html, .o_mail_composer_message {
+    a.o_mail_redirect, a.o-discuss-mention {
+        pointer-events: none;
+    }
 }
 
 .o-discuss-inCallIcon {

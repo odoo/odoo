@@ -334,7 +334,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                     if (suggestion.isSpecial) {
                         return {
                             ...suggestion,
-                            group: 3,
+                            group: 4,
                             optionTemplate: "mail.Composer.suggestionSpecial",
                             classList,
                         };
@@ -350,7 +350,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         };
                     }
                     return {
-                        group: 1,
+                        group: suggestion.main_user_id?.share === false ? 1 : 3,
                         label:
                             thread?.getPersonaName(suggestion) ||
                             suggestion.displayName ||
