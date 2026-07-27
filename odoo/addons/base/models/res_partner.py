@@ -984,7 +984,7 @@ class ResPartner(models.Model):
             to_write = {}
             # commercial fields from commercial partner
             if cp_id:
-                to_write = self.browse(cp_id)._convert_fields_to_values(self._commercial_fields())
+                to_write = self.sudo().browse(cp_id)._convert_fields_to_values(self._commercial_fields())
             # address fields from parent
             if add_id:
                 parent = self.browse(add_id)
