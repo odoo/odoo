@@ -69,18 +69,18 @@ test("opening the dropdown waits for followers, up to a limit when it is slow", 
     await advanceTime(FOLLOWERS_OPEN_MAX_WAIT - 1);
     await waitForNone(".o-mail-Followers-dropdown");
     await advanceTime(1);
-    await waitFor(".o-mail-Followers-dropdown [role='status']:text('Loading...'):count(1)");
-    await waitFor(".o-mail-Followers-dropdown .dropdown-item:text('Follow'):count(1)");
-    await waitFor(".o-mail-Followers-dropdown .dropdown-item:text('Add Followers'):count(1)");
+    await waitFor(".o-mail-FollowerList-list :text('Loading...'):count(1)");
+    await waitFor(".o-mail-Followers-dropdown button[title='Follow']:count(1)");
+    await waitFor(".o-mail-Followers-dropdown button[title='Add Followers']:count(1)");
     await waitFor(
         ".o-mail-Followers-dropdown input[placeholder='Search by name or email']:focus:count(1)"
     );
     await waitForNone(".o-mail-Follower");
-    await waitForNone(".dropdown-item:text('No Followers')");
+    await waitForNone(".o-mail-Followers-dropdown :text('No Followers')");
     unfreezeTime();
     followersDeferred.resolve();
     await waitFor(".o-mail-Follower:count(20)");
-    await waitForNone(".o-mail-Followers-dropdown [role='status']:text('Loading...')");
+    await waitForNone(".o-mail-FollowerList-list :text('Loading...')");
 });
 
 test('click on "add followers" button', async () => {
@@ -124,7 +124,7 @@ test('click on "add followers" button', async () => {
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await contains("a:text('Add Followers'):count(1)").click();
+    await contains("button[title='Add Followers']:text('Add'):count(1)").click();
     await waitForNone(".o-mail-Followers-dropdown");
     await expect.waitForSteps(["action:open_view"]);
     await waitFor(".o-mail-Followers-counter:text('2'):count(1)");
@@ -152,6 +152,7 @@ test("click on remove follower", async () => {
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(1)");
+    await contains(".o-mail-Follower:eq(0)").hover();
     await contains("[title='Remove this follower']:count(1)").click();
     await waitForNone(".o-mail-Follower");
     await waitFor(".o-mail-Followers-dropdown:count(1)");
@@ -214,10 +215,10 @@ test("Load 20 followers at once", async () => {
     await contains("button[title='Show Followers']:text('60'):enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(20)");
     await waitFor(".o-mail-Followers-dropdown:has(:text('Load more')):count(1)");
-    await scroll(".o-mail-Followers-dropdown", "bottom");
+    await scroll(".o-mail-FollowerList-list", "bottom");
     await waitFor(".o-mail-Follower:count(40)");
     await tick(); // give enough time for the useVisible hook to register load more as hidden
-    await scroll(".o-mail-Followers-dropdown", "bottom");
+    await scroll(".o-mail-FollowerList-list", "bottom");
     await waitFor(".o-mail-Follower:count(59)");
     await waitForNone(".o-mail-Followers-dropdown:has(:text('Load more'))");
 });
@@ -239,19 +240,21 @@ test("Search followers list by name or email", async () => {
     // Search is visible when the thread has otherFollowersCount > 20 followers.
     await contains("button[title='Show Followers']:text('21'):enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(20)");
+    await waitFor("input[placeholder='Search by name or email']:focus:count(1)");
     await insertText("input[placeholder='Search by name or email']", "Partner9");
-    await waitFor(".o-mail-Follower:text('Partner9'):count(1)");
+    await waitFor(".o-mail-Follower:has(:text('Partner9')):count(1)");
     await contains("[title='Clear']:count(1)").click();
     await waitFor(".o-mail-Follower:count(20)");
     await insertText("input[placeholder='Search by name or email']", "partner9@example.com");
-    await waitFor(".o-mail-Follower:text('Partner9'):count(1)");
+    await waitFor(".o-mail-Follower:has(:text('Partner9')):count(1)");
     await contains("[title='Clear']:count(1)").click();
     await waitFor(".o-mail-Follower:count(20)");
     await insertText("input[placeholder='Search by name or email']", "Armstrong");
-    await waitFor(".dropdown-item.disabled:text('No Matching Followers'):count(1)");
+    await waitFor(".o-mail-FollowerList-list :text('No Matching Followers'):count(1)");
     await contains("[title='Clear']:count(1)").click();
     await waitFor(".o-mail-Follower:count(20)");
     // Search is hidden when the thread has otherFollowersCount <= 20 followers.
+    await contains(".o-mail-Follower:has(:text('Partner0'))").hover();
     await contains(
         ".o-mail-Follower:has(:text('Partner0')) [title='Remove this follower']:count(1)"
     ).click();
@@ -305,17 +308,18 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
-    await waitFor("a:text('Add Followers'):count(1)");
+    await waitFor("button[title='Add Followers']:text('Add'):count(1)");
+    await contains(".o-mail-Follower:eq(0)").hover();
     await mailContains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
     });
 });
 
-test('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
+test('Show "No Followers" if there are no followers and user does not have write access', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ hasWriteAccess: false });
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
-    await waitFor("div.disabled:text('No Followers'):count(1)");
+    await waitFor(".o-mail-FollowerList-list :text('No Followers'):count(1)");
 });
