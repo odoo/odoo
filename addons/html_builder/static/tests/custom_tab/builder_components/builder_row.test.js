@@ -118,30 +118,88 @@ test("reconnects lines across mixed levels", async () => {
 
     const labelEls = queryAll(".options-container .hb-row-label");
     const rowEls = queryAll(".options-container .hb-row");
-    const rects = [
-        { top: 0, bottom: 40 },
-        { top: 40, bottom: 80 },
-        { top: 80, bottom: 120 },
-        { top: 120, bottom: 160 },
-        { top: 160, bottom: 200 },
-        { top: 200, bottom: 240 },
-        { top: 240, bottom: 280 },
-        { top: 280, bottom: 320 },
-        { top: 320, bottom: 360 },
-        { top: 360, bottom: 400 },
-        { top: 400, bottom: 440 },
-        { top: 440, bottom: 480 },
-    ];
+    const rowRects = Array.from({ length: 12 }, (_, index) => ({
+        top: index * 32,
+        bottom: (index + 1) * 32,
+    }));
+    const labelRects = rowRects.map(({ top, bottom }) => ({ top: top + 4, bottom }));
+    rowEls.forEach((rowEl, index) => {
+        rowEl.getBoundingClientRect = () => rowRects[index];
+    });
     labelEls.forEach((labelEl, index) => {
-        labelEl.getBoundingClientRect = () => rects[index];
+        labelEl.getBoundingClientRect = () => labelRects[index];
     });
     refreshSublevelLines(rowEls[10]);
     await animationFrame();
 
+    const labelCenters = labelRects.map(({ top, bottom }) => top + (bottom - top) / 2);
     const offsets = labelEls.map((labelEl) =>
         labelEl.style.getPropertyValue("--o-hb-row-sublevel-top")
     );
-    expect(offsets).toEqual(["", "", "", "-40px", "", "", "", "", "", "", "-80px", "-200px"]);
+    expect(offsets).toEqual([
+        "",
+        "",
+        "",
+        `${labelCenters[1] - rowRects[3].top}px`,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        `${labelCenters[7] - rowRects[10].top}px`,
+        `${labelCenters[5] - rowRects[11].top}px`,
+    ]);
+});
+
+test("aligns sublevel lines around a tall same-level row", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <div class="options-container">
+                    <BuilderRow label="'Base option'">Base</BuilderRow>
+                    <BuilderRow label="'Regular'" level="1">Regular</BuilderRow>
+                    <BuilderRow label="'Tall'" level="1"><div style="height: 80px;">Tall</div></BuilderRow>
+                    <BuilderRow label="'Regular'" level="1">Regular</BuilderRow>
+                </div>`;
+        }
+    );
+
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await waitFor(".options-container .hb-row-label");
+
+    const labelEls = queryAll(".options-container .hb-row-label");
+    const rowEls = queryAll(".options-container .hb-row");
+    const rowRects = [
+        { top: 0, bottom: 32 },
+        { top: 32, bottom: 64 },
+        { top: 64, bottom: 144 },
+        { top: 144, bottom: 176 },
+    ];
+    const labelRects = [
+        { top: 4, bottom: 32 },
+        { top: 36, bottom: 64 },
+        { top: 96, bottom: 112 },
+        { top: 148, bottom: 176 },
+    ];
+    rowEls.forEach((rowEl, index) => {
+        rowEl.getBoundingClientRect = () => rowRects[index];
+    });
+    labelEls.forEach((labelEl, index) => {
+        labelEl.getBoundingClientRect = () => labelRects[index];
+    });
+    refreshSublevelLines(rowEls[2]);
+    await animationFrame();
+
+    const labelCenters = labelRects.map(({ top, bottom }) => top + (bottom - top) / 2);
+    expect(
+        labelEls.map((labelEl) => labelEl.style.getPropertyValue("--o-hb-row-sublevel-top"))
+    ).toEqual(["", "", "", `${labelCenters[2] - rowRects[3].top}px`]);
+    expect(
+        labelEls.map((labelEl) => labelEl.style.getPropertyValue("--o-hb-row-sublevel-center"))
+    ).toEqual(["", "", `${labelCenters[2] - rowRects[2].top}px`, ""]);
 });
 
 /* ================= Collapse template ================= */
