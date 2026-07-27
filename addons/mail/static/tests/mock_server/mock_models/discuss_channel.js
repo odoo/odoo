@@ -579,6 +579,14 @@ export class DiscussChannel extends models.ServerModel {
         res.one("parent_id", "_store_message_fields");
     }
 
+    _get_last_messages() {
+        return this.env["mail.message"].browse(
+            this.filter((channel) => channel.message_ids.length).map((channel) =>
+                Math.max(...channel.message_ids)
+            )
+        );
+    }
+
     _member_based_naming_channel_types() {
         return ["group"];
     }
