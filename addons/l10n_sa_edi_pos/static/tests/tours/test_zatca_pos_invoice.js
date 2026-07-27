@@ -54,14 +54,7 @@ registry.category("web_tour.tours").add("ZATCA_blocks_settle_due_and_sale_on_sam
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.settleCustomerAccount(
-                "AAAA Generic Partner",
-                "23.0",
-                "TSJ/2026/",
-                "",
-                false,
-                false
-            ),
+            PartnerList.settleCustomerAccount("AAAA Generic Partner", "23.0", "TSJ/"),
             ProductScreen.addOrderline("Whiteboard Pen"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
