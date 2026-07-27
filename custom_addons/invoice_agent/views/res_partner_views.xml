@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit res.partner form to add AI Invoice Stats -->
+    <record id="view_partner_form_ai" model="ir.ui.view">
+        <field name="name">res.partner.form.ai.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Invoicing" name="ai_invoicing_page"
+                      invisible="not is_company">
+                    <group string="AI Extraction Statistics">
+                        <group>
+                            <field name="ai_invoice_count" widget="statinfo"/>
+                        </group>
+                        <group>
+                            <field name="ai_avg_confidence" widget="statinfo"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

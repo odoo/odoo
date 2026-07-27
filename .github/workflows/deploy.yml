@@ -28,7 +28,9 @@ jobs:
 
             # Pull specifically from the production branch
             git pull origin production
-
             docker system prune -f
             docker compose down
             docker compose up -d
+
+            # Run upgrade on all databases across all modules
+            docker compose exec -T odoo odoo -u all -d all --stop-after-init

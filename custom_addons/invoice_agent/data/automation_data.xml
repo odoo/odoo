@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================
+             base.automation: Auto-flag low-confidence bills
+             
+             Trigger: on_create_or_write when ai_confidence changes
+             Filter domain: confidence < 0.8 AND confidence is not null
+             Action: Execute Python Code that:
+               1. Posts a message (chatter log) warning of low confidence
+               2. Sets ai_extraction_status to 'extracted' (so it appears in queue)
+               3. Sets ai_review_required = True
+             
+             The eval context provides:
+               - env: current Odoo environment
+               - record: single record being processed
+               - records: all records matching the trigger
+               - log: function to write to ir.logging
+               - UserError: exception class
+               - _logger: restricted logger
+             
+             Why on_create_or_write instead of on_write:
+               on_create_or_write catches BOTH new records AND updates,
+               which is what we want since ai_confidence is set after
+               the extraction pipeline runs (an update to existing record).
+             
+             Why trigger_field_ids is empty:
+               Empty means "trigger on any field change." We rely on the
+               filter_domain to narrow down to low-confidence records.
+             ============================================================ -->
+        <record id="automation_low_confidence_flag" model="base.automation">
+            <field name="name">AI: Flag Low-Confidence Bills</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="filter_domain">[('ai_confidence', '<', 0.8), ('ai_confidence', '!=', False)]</field>
+            <field name="action_server_ids" eval="[(0, 0, {
+                'name': 'Flag Low-Confidence Bill',
+                'model_id': ref('account.model_account_move'),
+                'state': 'code',
+                'code': """
+# This code runs for every low-confidence bill found by the automation.
+# The 'record' variable is the single account.move being processed.
+#
+# Available variables in safe_eval context:
+#   env      : Odoo environment (sudoed)
+#   model    : account.move model
+#   record   : the specific account.move record
+#   records  : all matching records
+#   log(msg) : write to ir.logging
+#   _logger  : restricted Python logger
+#   UserError: exception class
+#   time, datetime, dateutil: Python libraries
+
+_logger.info(
+    'AI Low-Confidence Flag: %s (confidence=%.0f%%)',
+    record.display_name,
+    record.ai_confidence * 100 if record.ai_confidence else 0,
+)
+
+# Post a message in the chatter
+record.message_post(
+    body=(
+        '⚠️ <b>Low AI Extraction Confidence</b><br/>'
+        'Confidence: <b>%.0f%%</b><br/>'
+        'This bill requires manual review before posting.'
+    ) % (record.ai_confidence * 100 if record.ai_confidence else 0),
+    subject='Low AI Confidence: %s' % record.display_name,
+)
+
+# Ensure the bill appears in the AI Agent Queue
+# (Don't overwrite 'validated' or 'failed' — only flag if it's still 'extracted')
+if record.ai_extraction_status == 'extracted':
+    record.write({
+        'ai_review_required': True,
+    })
+                """,
+            })]/>
+        </record>
+
+        <!-- ============================================================
+             ir.cron: Retry stuck extractions every 30 minutes
+             
+             This cron calls account.move._cron_retry_stuck_extractions()
+             which finds bills stuck in 'processing' state for > 1 hour
+             and resets them to 'pending'.
+             
+             Key fields:
+               - interval_number=30, interval_type='minutes': runs every 30 min
+               - numbercall=-1: repeats indefinitely (never stops)
+               - active=True: enabled on install
+               - state='code': runs Python code
+               - code: the Python expression to execute (calls the model method)
+             
+             The ir.cron model uses _inherits from ir.actions.server,
+             so it delegates to the server action's fields.
+             ============================================================ -->
+        <record id="cron_retry_stuck_extractions" model="ir.cron">
+            <field name="name">AI: Retry Stuck Extractions</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_retry_stuck_extractions()</field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="priority">5</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+    </data>
+</odoo>

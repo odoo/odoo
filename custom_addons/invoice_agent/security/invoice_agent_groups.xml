@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         Module Category for Invoice Agent
+         ============================================================ -->
+    <record id="module_category_invoice_agent" model="ir.module.category">
+        <field name="name">Invoice Agent</field>
+        <field name="description">AI-powered invoice extraction and review agent</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- ============================================================
+         Group: Agent Reviewer
+         - Can view AI extraction fields on bills
+         - Can review and validate extracted data
+         - Implies account.group_account_invoice (sees invoices)
+         ============================================================ -->
+    <record id="group_invoice_agent_user" model="res.groups">
+        <field name="name">Agent Reviewer</field>
+        <field name="category_id" ref="module_category_invoice_agent"/>
+        <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="comment">Can view AI extraction fields, review and validate extracted bills.</field>
+    </record>
+
+    <!-- ============================================================
+         Group: Agent Manager
+         - Can re-run AI extraction
+         - Can approve/reject extractions
+         - Can configure journal AI settings
+         - Implies Agent Reviewer
+         ============================================================ -->
+    <record id="group_invoice_agent_manager" model="res.groups">
+        <field name="name">Agent Manager</field>
+        <field name="category_id" ref="module_category_invoice_agent"/>
+        <field name="implied_ids" eval="[(4, ref('group_invoice_agent_user'))]"/>
+        <field name="comment">Can re-run extraction, approve/reject, configure journal AI settings.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

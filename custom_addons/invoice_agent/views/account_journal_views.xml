@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit account.journal form to add AI Agent configuration -->
+    <record id="view_account_journal_form_ai" model="ir.ui.view">
+        <field name="name">account.journal.form.ai.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Agent" name="ai_agent_page"
+                      invisible="type not in ('purchase', 'sale', 'general')">
+                    <group name="ai_agent_settings">
+                        <group string="AI Extraction Settings">
+                            <field name="ai_agent_enabled"/>
+                            <field name="ai_min_confidence" widget="float" options="{'min': 0.0, 'max': 1.0, 'step': 0.01}"/>
+                            <field name="ai_auto_post"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
