@@ -6,6 +6,7 @@ export class EventSlotCalendarMultiSelectionButtons extends MultiSelectionButton
     static template = "event.EventSlotCalendarMultiSelectionButtons";
 
     setup() {
+        super.setup();
         this.uiService = useService("ui");
     }
 };
