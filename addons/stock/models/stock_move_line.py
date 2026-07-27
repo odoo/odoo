@@ -579,6 +579,10 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.is_scrap
 
+    def _get_lot_partner(self):
+        self.ensure_one()
+        return self.picking_partner_id
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
@@ -694,6 +698,10 @@ class StockMoveLine(models.Model):
                 if moves_to_check:
                     moves_to_check_pack.update(moves_to_check)
             ml_ids_to_ignore.add(ml.id)
+
+            if ml.lot_id and ml.move_id.picking_id.picking_type_id.code == 'outgoing':
+                if partner := ml.move_id.picking_id._get_lot_partner():
+                    ml.lot_id.sudo().partner_ids |= partner
 
         if not self.env.context.get('ignore_dest_packages'):
             mls_todo.result_package_id._apply_dest_to_package()
