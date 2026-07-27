@@ -1,10 +1,13 @@
-# this model represents a single field extraction result for an invoice or journal entry, linked to the parent account.move record. It stores the field name, extracted value, and confidence score for that specific field.
+# this model represents a single field extraction result for an invoice or journal entry,
+# linked to the parent account.move record. It stores the field name, extracted value,
+# and confidence score for that specific field.
 from odoo import fields, models
 
 
 class InvoiceAgentExtractionLine(models.Model):
     _name = 'invoice.agent.extraction.line'
     _description = 'Invoice Agent Per-Field Extraction Line'
+
     # the many-to-one relationship to the parent account.move record
     move_id = fields.Many2one(
         comodel_name='account.move',
@@ -27,6 +30,16 @@ class InvoiceAgentExtractionLine(models.Model):
         string='Field Confidence',
         digits=(3, 2),
     )
+    # company_id is needed for multi-company record rules
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        related='move_id.company_id',
+        string='Company',
+        store=True,
+        readonly=True,
+        help="Company from the parent account.move, used for multi-company access control.",
+    )
+
     # SQL constraint to ensure field confidence is within valid range
     _sql_constraints = [
         (

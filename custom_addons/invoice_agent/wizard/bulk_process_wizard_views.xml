@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_agent_bulk_process_form" model="ir.ui.view">
+        <field name="name">invoice.agent.bulk.process.form</field>
+        <field name="model">invoice.agent.bulk.process</field>
+        <field name="arch" type="xml">
+            <form string="Re-Run AI Extraction">
+                <group>
+                    <group string="Bills to Process">
+                        <field name="move_ids" nolabel="1" readonly="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_process" string="Re-Run Extraction"
+                            type="object" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bulk_reextraction_wizard" model="ir.actions.act_window">
+        <field name="name">Re-Run AI Extraction</field>
+        <field name="res_model">invoice.agent.bulk.process</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,kanban</field>
+    </record>
+</odoo>

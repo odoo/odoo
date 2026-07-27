@@ -8,10 +8,14 @@
         <field name="model">account.move</field>
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="0">
+            <kanban class="o_kanban_mobile" sample="0" default_group_by="ai_extraction_status">
                 <progressbar field="ai_extraction_status"
                              colors='{"pending": "info", "extracted": "warning", "validated": "success", "failed": "danger"}'
                              sum_field="amount_total"/>
+                <!-- Declare fields so they're available in the template -->
+                <field name="ai_extraction_status"/>
+                <field name="ai_confidence"/>
+                <field name="ai_needs_review"/>
                 <templates>
                     <t t-name="card">
                         <div class="d-flex flex-column h-100">
@@ -32,20 +36,25 @@
                                 <field name="name"/> · <field name="invoice_date" class="text-nowrap"/>
                             </div>
 
-                            <!-- Amount total row -->
+                            <!-- Amount total + confidence progress -->
                             <div class="d-flex align-items-center justify-content-between mt-auto pt-2 border-top">
                                 <div class="h5 mb-0">
                                     <field name="amount_total" widget="monetary"/>
                                 </div>
-                                <field name="ai_confidence" widget="progressbar" class="w-50"/>
+                                <div class="w-50 ms-2">
+                                    <field name="ai_confidence" widget="progressbar"/>
+                                </div>
                             </div>
 
-                            <!-- Needs review badge -->
-                            <t t-if="record.ai_needs_review.raw_value">
-                                <div class="mt-1 text-end">
-                                    <span class="badge bg-danger">Needs Review</span>
-                                </div>
-                            </t>
+                            <!-- Confidence badge -->
+                            <div class="mt-1 text-end">
+                                <t t-if="record.ai_confidence.raw_value < 0.8">
+                                    <span class="badge text-bg-warning">Low Confidence</span>
+                                </t>
+                                <t t-if="record.ai_needs_review.raw_value">
+                                    <span class="badge text-bg-danger">Needs Review</span>
+                                </t>
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -78,6 +87,7 @@
                 <field name="ai_needs_review" optional="show"/>
                 <field name="ai_review_required" optional="hide"/>
                 <field name="ai_source_sale_order_id" optional="hide"/>
+                <field name="ai_amount_variance" optional="hide"/>
             </list>
         </field>
     </record>
@@ -101,13 +111,14 @@
                 <field name="journal_id"/>
 
                 <separator/>
-                <!-- Filters -->
+                <!-- Status filters -->
                 <filter string="Pending" name="pending" domain="[('ai_extraction_status', '=', 'pending')]"/>
                 <filter string="Extracted" name="extracted" domain="[('ai_extraction_status', '=', 'extracted')]"/>
                 <filter string="Validated" name="validated" domain="[('ai_extraction_status', '=', 'validated')]"/>
                 <filter string="Failed" name="failed" domain="[('ai_extraction_status', '=', 'failed')]"/>
 
                 <separator/>
+                <!-- Quality filters -->
                 <filter string="Low Confidence" name="low_confidence"
                         domain="[('ai_confidence', '<', 0.8), ('ai_confidence', '!=', False)]"/>
                 <filter string="Needs Review" name="needs_review"
@@ -120,7 +131,7 @@
                             context="{'group_by': 'ai_extraction_status'}"/>
                     <filter string="Partner" name="group_by_partner"
                             context="{'group_by': 'partner_id'}"/>
-                    <filter string="Variance" name="group_by_variance"
+                    <filter string="Needs Review" name="group_by_needs_review"
                             context="{'group_by': 'ai_needs_review'}"/>
                     <filter string="Invoice Date" name="group_by_invoice_date"
                             context="{'group_by': 'invoice_date'}"/>
@@ -131,12 +142,13 @@
 
     <!-- ============================================================
          Action Window — AI Agent Queue
+         Shows bills that have been processed by AI (status != pending)
          ============================================================ -->
     <record id="action_ai_agent_queue" model="ir.actions.act_window">
         <field name="name">AI Agent Queue</field>
         <field name="res_model">account.move</field>
         <field name="view_mode">kanban,list,form</field>
-        <field name="domain">[('ai_extraction_status', '!=', 'pending')]</field>
+        <field name="domain">[('ai_extraction_status', 'in', ('extracted', 'validated', 'failed'))]</field>
         <field name="context">{'search_default_needs_review': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -149,9 +161,7 @@
         </field>
     </record>
 
-    <!-- ============================================================
-         Action Window View Ref overrides for AI Queue
-         ============================================================ -->
+    <!-- Explicit view references so the window uses our custom views -->
     <record id="action_ai_agent_queue_view_kanban" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_ai_agent_queue"/>
         <field name="sequence" eval="1"/>
@@ -174,12 +184,27 @@
     </record>
 
     <!-- ============================================================
-         Menu Item — under Invoicing
+         Menu Item — under Invoicing > Vendors
          ============================================================ -->
     <menuitem id="menu_ai_agent_queue"
               name="AI Agent Queue"
-              parent="account.menu_finance"
+              parent="account.menu_finance_payables"
               action="action_ai_agent_queue"
-              sequence="50"
+              sequence="15"
               groups="account.group_account_invoice,account.group_account_readonly"/>
+
+    <!-- ============================================================
+         Bulk Re-Extraction Wizard Binding
+         Places the wizard in the Action menu for list/kanban views
+         ============================================================ -->
+    <record id="action_bulk_reextraction" model="ir.actions.act_window">
+        <field name="name">Re-Run AI Extraction</field>
+        <field name="res_model">invoice.agent.bulk.process</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
+        <field name="context">{'default_move_ids': active_ids}</field>
+    </record>
 </odoo>
