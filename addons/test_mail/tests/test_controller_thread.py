@@ -3,7 +3,7 @@ import base64
 import json
 
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
-from odoo.tests import tagged
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 
@@ -217,3 +217,108 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(len(mail), 1)
         header = literal_eval(mail.headers)
         self.assertEqual(header.get('X-Msg-Cc-Add'), ','.join(partner_cc.mapped('email_formatted')))
+
+
+@tagged("mail_controller")
+class TestFollowersController(MailControllerThreadCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_public_record = (
+            cls.env["mail.test.access.public"]
+            .with_context(
+                mail_create_nosubscribe=True,
+            )
+            .create({"name": "Test Followers"})
+        )
+        cls.partners = cls.env["res.partner"].create(
+            [
+                {"name": "Zebra", "email": "zebra@example.com"},
+                {"name": "Alpha", "email": "first@example.com"},
+                {"name": "Alpha", "email": "second@example.com"},
+                {"name": "Bravo", "email": "unique@example.com"},
+            ],
+        )
+        # Reverse the Alpha partners so the tie-break must use follower IDs.
+        cls.followers = cls.env["mail.followers"].create(
+            [
+                {
+                    "res_model": cls.test_public_record._name,
+                    "res_id": cls.test_public_record.id,
+                    "partner_id": partner.id,
+                }
+                for partner in (
+                    cls.partners[0],
+                    cls.partners[2],
+                    cls.partners[1],
+                    cls.partners[3],
+                )
+            ],
+        )
+        cls.self_follower = cls.env["mail.followers"].create(
+            {
+                "res_model": cls.test_public_record._name,
+                "res_id": cls.test_public_record.id,
+                "partner_id": cls.user_employee.partner_id.id,
+            },
+        )
+        cls.expected_follower_ids = [
+            cls.followers[1].id,
+            cls.followers[2].id,
+            cls.followers[3].id,
+            cls.followers[0].id,
+        ]
+
+    def _fetch_followers(self, thread=None, **kwargs):
+        thread = self.test_public_record if thread is None else thread
+        return self.make_jsonrpc_request(
+            "/mail/thread/followers",
+            {
+                "thread_model": thread._name,
+                "thread_id": thread.id,
+                **kwargs,
+            },
+        )
+
+    @mute_logger("odoo.http")
+    def test_thread_followers_access(self):
+        restricted = self.env["mail.test.access"].create(
+            {"name": "Restricted", "access": "admin"},
+        )
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.assertTrue(self._fetch_followers()["follower_ids"])
+        with self.assertRaises(JsonRpcException, msg="werkzeug.exceptions.NotFound"):
+            self._fetch_followers(restricted)
+        missing_thread = self.test_public_record.browse(self.test_public_record.id)
+        missing_thread.unlink()
+        with self.assertRaises(JsonRpcException, msg="werkzeug.exceptions.NotFound"):
+            self._fetch_followers(missing_thread)
+
+    def test_thread_followers_name_id_order(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.assertEqual(
+            self._fetch_followers()["follower_ids"], self.expected_follower_ids,
+        )
+
+    def test_thread_followers_offset(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        for offset, expected_ids, has_count in (
+            (0, self.expected_follower_ids[:2], True),
+            (2, self.expected_follower_ids[2:], False),
+            (3, self.expected_follower_ids[3:], True),
+            (4, [], True),
+        ):
+            with self.subTest(offset=offset):
+                result = self._fetch_followers(offset=offset, limit=2)
+                self.assertEqual(result["follower_ids"], expected_ids)
+                thread_data = result["store_data"].get("mail.thread", [{}])[0]
+                if has_count:
+                    self.assertEqual(thread_data["followersCount"], 5)
+                else:
+                    self.assertNotIn("followersCount", thread_data)
+
+    def test_thread_followers_excludes_current_user(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        result = self._fetch_followers()
+        self.assertNotIn(self.self_follower.id, result["follower_ids"])

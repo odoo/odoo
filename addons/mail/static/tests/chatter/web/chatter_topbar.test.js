@@ -115,8 +115,8 @@ test("rendering with multiple partner followers", async () => {
     await click(".o-mail-Followers-button");
     await waitFor(".o-mail-Followers-dropdown:count(1)");
     await waitFor(".o-mail-Follower:count(2)");
-    await waitFor(".o-mail-Follower:eq(0):text('Jean Michang'):count(1)");
-    await waitFor(".o-mail-Follower:eq(1):text('Eden Hazard'):count(1)");
+    await waitFor(".o-mail-Follower:eq(0):text('Eden Hazard'):count(1)");
+    await waitFor(".o-mail-Follower:eq(1):text('Jean Michang'):count(1)");
 });
 
 test("log note toggling", async () => {

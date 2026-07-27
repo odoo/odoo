@@ -113,13 +113,13 @@ test("click on remove follower", async () => {
     await waitFor(".o-mail-Followers-dropdown:count(1)");
 });
 
-test("Load 100 followers at once", async () => {
+test("Load 20 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        range(210).map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
+        range(60).map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        range(210).map((i) => ({
+        range(60).map((i) => ({
             is_active: true,
             partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
             res_id: partnerIds[0],
@@ -128,15 +128,14 @@ test("Load 100 followers at once", async () => {
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await waitFor("button[title='Show Followers']:text('210'):count(1)");
-    await click("[title='Show Followers']");
-    await waitFor(".o-mail-Follower:count(100)");
+    await click("button[title='Show Followers']:text('60')");
+    await waitFor(".o-mail-Follower:count(20)");
     await waitFor(".o-mail-Followers-dropdown:has(:text('Load more')):count(1)");
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await waitFor(".o-mail-Follower:count(200)");
+    await waitFor(".o-mail-Follower:count(40)");
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await waitFor(".o-mail-Follower:count(209)");
+    await waitFor(".o-mail-Follower:count(59)");
     await waitForNone(".o-mail-Followers-dropdown:has(:text('Load more'))");
 });
 

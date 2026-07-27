@@ -1,17 +1,32 @@
-import { Component, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillStart,
+    signal,
+    types,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useVisible } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { ConnectionAbortedError, rpc } from "@web/core/network/rpc";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
+import { useVisible } from "@mail/utils/common/hooks";
+
+const LOAD_MORE_LIMIT = 20;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem, Follower };
 
+    followersFullyLoaded = signal(false);
     loadMoreRef = signal.ref();
+    scope = useScope();
+    isLoadingFollowers = false;
 
     setup() {
         super.setup();
@@ -23,11 +38,61 @@ export class FollowerList extends Component {
             onFollowerChanged: types.function([]).optional(),
             thread: types.instanceOf(this.store["mail.thread"]),
         });
+        this.LOAD_MORE_LIMIT = LOAD_MORE_LIMIT;
+        this.followerListView = this.store.FollowerListView.insert({
+            id: uniqueId("follower_list_view_"),
+            thread: this.props.thread,
+        });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
-                this.props.thread.loadMoreFollowers();
+                this.loadFollowers({ abortSignal: this.scope.abortSignal });
             }
         });
+        onWillStart(({ abortSignal }) => this.loadFollowers({ abortSignal }));
+        onWillDestroy(() => this.followerListView.delete());
+    }
+
+    /**
+     * Fetches and appends the next page of followers.
+     *
+     * Follower records are normalized in the global store, while their ordered
+     * relation remains scoped to this `FollowerListView`.
+     * @param {Object} [options]
+     * @param {AbortSignal} [options.abortSignal] Signal used to cancel the RPC when
+     * the component owning this `FollowerListView` is destroyed while the request is still in flight.
+     */
+    loadFollowers({ abortSignal }) {
+        if (abortSignal.aborted || this.isLoadingFollowers || this.followersFullyLoaded()) {
+            return;
+        }
+        this.isLoadingFollowers = true;
+        const request = rpc("/mail/thread/followers", {
+            thread_id: this.props.thread.id,
+            thread_model: this.props.thread.model,
+            offset: this.followerListView.followers.length,
+            // Fetch one extra follower to show Load more only when another page exists.
+            limit: this.LOAD_MORE_LIMIT + 1,
+        });
+        const abortRequest = () => request.abort();
+        abortSignal.addEventListener("abort", abortRequest, { once: true });
+        return request
+            .then(({ follower_ids, store_data }) => {
+                if (abortSignal.aborted) {
+                    return;
+                }
+                this.store.insert(store_data);
+                this.followersFullyLoaded.set(follower_ids.length <= this.LOAD_MORE_LIMIT);
+                this.followerListView.followers.add(...follower_ids.slice(0, this.LOAD_MORE_LIMIT));
+            })
+            .catch((error) => {
+                if (!(error instanceof ConnectionAbortedError)) {
+                    throw error;
+                }
+            })
+            .finally(() => {
+                abortSignal.removeEventListener("abort", abortRequest);
+                this.isLoadingFollowers = false;
+            });
     }
 
     onClickAddFollowers() {
