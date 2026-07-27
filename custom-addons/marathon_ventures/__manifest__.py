@@ -151,6 +151,7 @@
             'marathon_ventures/static/src/scss/mv_related_tab.scss',
             'marathon_ventures/static/src/js/related_tab/mv_related_tab.js',
             'marathon_ventures/static/src/js/related_tab/mv_related_tab.xml',
+            'marathon_ventures/static/src/js/toast_on_save/mv_toast_on_save.js',
         ],
     },
     'installable': True,

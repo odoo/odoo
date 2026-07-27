@@ -22,5 +22,5 @@ class MvTrafficVideoAsset(models.Model):
 
     # === SF Custom Fields ===
     deal = fields.Many2one(string='Deal', comodel_name='mv.deal', ondelete='set null')  # SF: Deal__c
-    traffic = fields.Many2one(string='Traffic', comodel_name='mv.traffic', ondelete='set null')  # SF: Traffic__c
+    traffic = fields.Many2one(string='Traffic Instructions', comodel_name='mv.traffic', ondelete='set null')  # SF: Traffic__c
     video_asset = fields.Many2one(string='Video Asset', comodel_name='mv.video_file', ondelete='set null')  # SF: Video_Asset__c

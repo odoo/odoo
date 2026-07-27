@@ -73,7 +73,7 @@
             <group>
               <field name="brands" required="1"
                      placeholder="Select brand..."/>
-              <field name="contact" placeholder="Select contact..."/>
+              <field name="contact" placeholder="Select contact..." required="1"/>
             </group>
             <group>
               <field name="campaign" placeholder="e.g., 2Q26 :30 spot"/>
@@ -93,7 +93,7 @@
             </group>
             <group>
               <field name="min_sep" string="Minimum Separation"
-                     class="mv-highlight"/>
+                     class="mv-highlight" required="1"/>
             </group>
           </group>
 
@@ -103,18 +103,21 @@
               <field name="network_deal_number"/>
             </group>
             <group>
-              <field name="product_code"/>
+              <field name="product_code" required="1"/>
             </group>
             <group>
-              <field name="access_code" />
+              <field name="access_code" required="1" />
             </group>
           </group>
           <group col="3" name="grp_nwtwork_details" class="mv-essentials-grid">
             <group>
-              <field name="client_code"/>
+              <field name="client_code" required="1"/>
             </group>
             <group>
-              <field name="estimate"/>
+              <field name="estimate" required="1"/>
+            </group>
+            <group>
+              <field name="pi"/>
             </group>
             <group>
               <field name="create_uid" readonly="1"/>
@@ -175,7 +178,6 @@
               <field name="ratings_year"       readonly="1"/>
               <field name="ratings_quarter"    readonly="1"/>
               <field name="e_i_friendly"/>
-              <field name="pi"/>
               <field name="priority"/>
               <field name="revised"/>
               <field name="test_pp"/>

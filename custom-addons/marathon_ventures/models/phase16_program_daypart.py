@@ -69,6 +69,31 @@ class MvProgramDaypart(models.Model):
         compute='_compute_time_range', store=True,
     )
 
+    # Days of the week this daypart runs on. Same Many2many target as
+    # mv.schedules.days_allowed so the codes line up 1:1 - the Units
+    # Grid can copy this straight onto a row when the planner picks
+    # this daypart. Default M-F set via _default_days_allowed_ids.
+    days_allowed_ids = fields.Many2many(
+        comodel_name='mv.days_allowed.tag',
+        relation='mv_program_daypart_days_allowed_rel',
+        column1='daypart_id', column2='tag_id',
+        string='Days Allowed',
+        default=lambda self: self._default_days_allowed_ids(),
+    )
+
+    @api.model
+    def _default_days_allowed_ids(self):
+        """Mon..Fri as the sensible business default. Falls back to
+        an empty set if the seed data hasn't loaded yet (shouldn't
+        happen post-install but guard anyway)."""
+        Tag = self.env['mv.days_allowed.tag']
+        try:
+            return [(6, 0, Tag.search([
+                ('code', 'in', ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']),
+            ]).ids)]
+        except Exception:
+            return [(6, 0, [])]
+
     _sql_constraints = [
         (
             'name_program_uniq',

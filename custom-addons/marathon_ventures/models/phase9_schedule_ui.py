@@ -70,9 +70,9 @@ class MvScheduleUiPhase9(models.Model):
             rec.show_advanced_schedule = not rec.show_advanced_schedule
         return False
 
-    def action_cancel_schedule(self):
-        action = self.env['ir.actions.act_window']._for_xml_id(
-            'marathon_ventures.action_mv_schedules'
-        )
-        action['target'] = 'current'
-        return action
+    # NOTE: action_cancel_schedule was previously overridden here to
+    # redirect to the schedules list view. That override completely
+    # masked phase1_schedule.action_cancel_schedule which actually
+    # flips status -> 'canceled'. Removing the override so clicking
+    # the "Cancel Schedule" button cancels the record in place; the
+    # user stays on the form and sees the status change to Canceled.

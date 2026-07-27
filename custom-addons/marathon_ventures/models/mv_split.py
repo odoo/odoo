@@ -33,7 +33,7 @@ class MvSplit(models.Model):
     spot_name = fields.Char(string='Spot Name', size=120)  # SF: Spot_Name__c
     start_date = fields.Date(string='Start Date')  # SF: Start_Date__c
     start_time = fields.Float(string='Start Time')  # SF: Start_Time__c | SF Time stored as Float HH.MM
-    traffic = fields.Many2one(string='Traffic', comodel_name='mv.traffic', ondelete='cascade', required=True)  # SF: Traffic__c
+    traffic = fields.Many2one(string='Traffic Instructions', comodel_name='mv.traffic', ondelete='cascade', required=True)  # SF: Traffic__c
     video_file = fields.Many2one(string='Video File', comodel_name='mv.video_file', ondelete='set null')  # SF: Video_File__c
     x800_number = fields.Char(string='800 Number', size=18)  # SF: X800_Number__c
 

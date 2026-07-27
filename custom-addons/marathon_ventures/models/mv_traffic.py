@@ -13,9 +13,9 @@ _logger = logging.getLogger(__name__)
 
 class MvTraffic(models.Model):
     _name = 'mv.traffic'
-    _description = 'Traffic'
+    _description = 'Traffic Instructions'
     # === Identification ===
-    name = fields.Char(string='Traffic Name', default=lambda self: self.env['ir.sequence'].next_by_code('mv.traffic.name') or 'New', copy=False, readonly=True)
+    name = fields.Char(string='Traffic Instructions Name', default=lambda self: self.env['ir.sequence'].next_by_code('mv.traffic.name') or 'New', copy=False, readonly=True)
     sf_external_id = fields.Char(string='SF External ID', index=True, copy=False)
     sf_legacy_data = fields.Json(string='SF Legacy Payload')
 

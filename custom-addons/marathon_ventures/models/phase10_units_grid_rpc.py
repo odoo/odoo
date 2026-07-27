@@ -116,13 +116,27 @@ def _guess_daypart(start, end):
 
 def _program_daypart_payload(program):
     """Return the program's custom dayparts serialised for the
-    frontend: [{value, label, start, end, range}]. Empty list when
-    the program has none configured (or program is falsy) so the
-    grid falls back to DAYPART_DEFAULT_TIMES."""
+    frontend: [{value, label, start, end, range, days_bits}].
+    Empty list when the program has none configured (or program is
+    falsy) so the grid falls back to DAYPART_DEFAULT_TIMES.
+
+    `days_bits` is a 7-char string ("1111100" for M-F etc.) computed
+    from the daypart's days_allowed_ids. The Units Grid uses it to
+    overwrite the row's days_mask when this daypart is selected, so
+    the planner doesn't have to re-tick the day checkboxes.
+    """
     if not program or not getattr(program, 'daypart_ids', None):
         return []
     out = []
     for dp in program.daypart_ids:
+        # Every program daypart has a days_allowed_ids many2many.
+        # Reuse the existing _days_bits_from_allowed helper so the
+        # bit ordering matches the schedule signature grouping.
+        days_bits = '0000000'
+        try:
+            days_bits = _days_bits_from_allowed(dp.days_allowed_ids)
+        except Exception:
+            pass
         out.append({
             'value': 'prog_%d' % dp.id,   # prefix avoids clashes with
                                           # the hardcoded DAYPART keys
@@ -130,6 +144,7 @@ def _program_daypart_payload(program):
             'start': dp.start_time or None,
             'end':   dp.end_time   or None,
             'range': dp.time_range or '',
+            'days_bits': days_bits,
         })
     return out
 

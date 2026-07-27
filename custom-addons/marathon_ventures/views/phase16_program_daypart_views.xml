@@ -13,6 +13,8 @@
                 <field name="start_time"/>
                 <field name="end_time"/>
                 <field name="time_range" readonly="1"/>
+                <field name="days_allowed_ids" widget="many2many_tags"
+                       options="{'no_create': True}"/>
             </list>
         </field>
     </record>
@@ -28,6 +30,9 @@
                         <field name="start_time"/>
                         <field name="end_time"/>
                         <field name="time_range" readonly="1"/>
+                        <field name="days_allowed_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
                     </group>
                 </sheet>
             </form>
@@ -49,6 +54,9 @@
                             <field name="start_time"/>
                             <field name="end_time"/>
                             <field name="time_range" readonly="1"/>
+                            <field name="days_allowed_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
                         </list>
                     </field>
                 </page>

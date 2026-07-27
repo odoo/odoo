@@ -516,7 +516,20 @@ export class MvUnitsGrid extends Component {
     onDaypartChange(row, ev) {
         if (row._is_ltc_preview) { ev.target.value = row.daypart; return; }
         const value = ev.target.value;
-        const opt = DAYPART_OPTIONS.find((d) => d.value === value) || DAYPART_OPTIONS[0];
+        // Look up in this.dayparts (which may include program-defined
+        // dayparts like "prog_5" alongside the hardcoded DAYPART_OPTIONS)
+        // before falling back to the hardcoded list.
+        const opt = (this.dayparts || DAYPART_OPTIONS).find((d) => d.value === value)
+            || DAYPART_OPTIONS.find((d) => d.value === value)
+            || DAYPART_OPTIONS[0];
+        // Debug: open DevTools -> Console. When picking a daypart,
+        // you should see the picked option including start/end and
+        // days_bits (for program dayparts). If days_bits is missing
+        // the payload isn't shipping it - restart Odoo + upgrade.
+        // eslint-disable-next-line no-console
+        console.log("[UnitsGrid] daypart picked:", value,
+            "-> opt:", opt,
+            "row.days_mask before:", row.days_mask && row.days_mask.slice());
         row.daypart = opt.value;
         row.daypart_label = opt.label;
         row.time_range = opt.range;
@@ -531,6 +544,16 @@ export class MvUnitsGrid extends Component {
             row.end_time   = opt.end;
             upd.start_time = opt.start;
             upd.end_time   = opt.end;
+        }
+        // Program-defined dayparts carry a days_bits string (e.g.
+        // "1111100" for M-F). When the planner picks one, auto-fill
+        // the row's day checkboxes so the Days Allowed matches the
+        // daypart's configured days. The planner can still edit them
+        // afterwards - we just prime the checkboxes.
+        if (typeof opt.days_bits === "string" && /^[01]{7}$/.test(opt.days_bits)) {
+            const mask = opt.days_bits.split("").map((c) => c === "1");
+            row.days_mask = mask;
+            upd.days_mask = mask.slice();
         }
         this._markDirty();
     }

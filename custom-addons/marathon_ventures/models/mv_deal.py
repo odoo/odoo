@@ -67,7 +67,7 @@ class MvDeal(models.Model):
     max_day = fields.Char(string='Max/Day', size=18)  # SF: Max_Day__c
     max_sep = fields.Integer(string='Max Sep', help='Use Brand Separation. If not on paperwork, enter 30 min.')  # SF: Max_Sep__c
     merit_street_media_2025 = fields.Char(string='Merit Street Media 2025', compute='_compute_merit_street_media_2025', store=True)  # SF: Merit_Street_Media_2025__c
-    min_sep = fields.Selection(string='Min Sep', selection=[('v_15', '15'), ('v_20', '20'), ('v_5', '5'), ('v_25', '25'), ('v_30', '30'), ('v_60', '60'), ('v_10', '10'), ('v_45', '45')], help='Uses Brand Separation. If not on paperwork, enter 15 min.')  # SF: Min_Sep__c
+    min_sep = fields.Selection(string='Min Sep', selection=[('v_15', '15'), ('v_20', '20'), ('v_5', '5'), ('v_25', '25'), ('v_30', '30'), ('v_35', '35'), ('v_60', '60'), ('v_10', '10'), ('v_45', '45')], help='Uses Brand Separation. If not on paperwork, enter 15 min.')  # SF: Min_Sep__c
     network_deal_number = fields.Char(string='Network Deal Number', size=30, index=True, help='Deal number in Network\'s paper work, in Network\'s records.  Equals 1 if the PI campaign is no longer airing on the network.')  # SF: Network_Deal_Number__c
     pi = fields.Boolean(string='PI')  # SF: PI__c
     priority = fields.Boolean(string='Priority')  # SF: Priority__c

@@ -4,7 +4,7 @@
     <field name="name">mv.traffic.list</field>
     <field name="model">mv.traffic</field>
     <field name="arch" type="xml">
-      <list string="Traffic">
+      <list string="Traffic Instructions">
         <field name="name"/>
         <field name="access_code"/>
         <field name="advertiser"/>
@@ -21,7 +21,7 @@
     <field name="name">mv.traffic.form</field>
     <field name="model">mv.traffic</field>
     <field name="arch" type="xml">
-      <form string="Traffic">
+      <form string="Traffic Instructions">
         <sheet>
           <div class="oe_title">
             <label for="name"/>
@@ -68,7 +68,7 @@
     <field name="name">mv.traffic.search</field>
     <field name="model">mv.traffic</field>
     <field name="arch" type="xml">
-      <search string="Traffic">
+      <search string="Traffic Instructions">
         <field name="name"/>
         <field name="sf_external_id"/>
       </search>
@@ -76,10 +76,10 @@
   </record>
 
   <record id="action_mv_traffic" model="ir.actions.act_window">
-    <field name="name">Traffic</field>
+    <field name="name">Traffic Instructions</field>
     <field name="res_model">mv.traffic</field>
     <field name="view_mode">list,form</field>
   </record>
 
-  <menuitem id="menu_mv_traffic" name="Traffic" parent="menu_mv_sales_ops" action="action_mv_traffic"/>
+  <menuitem id="menu_mv_traffic" name="Traffic Instructions" parent="menu_mv_sales_ops" action="action_mv_traffic"/>
 </odoo>
