@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="oauth_client_view_form" model="ir.ui.view">
+        <field name="name">oauth.client.form</field>
+        <field name="model">oauth.client</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="client_name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="client_id"/>
+                            <field name="client_type"/>
+                        </group>
+                        <group>
+                            <field name="resource_id"/>
+                        </group>
+                    </group>
+                    <group string="Redirect URIs">
+                        <field name="redirect_uris" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="oauth_client_view_search" model="ir.ui.view">
+        <field name="name">oauth.client.search</field>
+        <field name="model">oauth.client</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="client_name"/>
+                <field name="client_id"/>
+                <field name="resource_id"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="oauth_client_action" model="ir.actions.act_window">
+        <field name="name">OAuth Clients</field>
+        <field name="res_model">oauth.client</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Register a client</p>
+            <p>
+                A client registered here can generate access tokens through OAuth.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="oauth_root_menu" name="OAuth" groups="base.group_system" sequence="100"/>
+    <menuitem id="oauth_client_menu" name="Clients"
+        parent="oauth_root_menu" action="oauth_client_action" sequence="10"/>
+</odoo>

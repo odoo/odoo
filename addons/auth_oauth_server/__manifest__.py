@@ -1,0 +1,14 @@
+{
+    'name': 'OAuth 2.1 Authorization Server',
+    'category': 'Technical',
+    'summary': 'Turns this Odoo database into a generic OAuth 2.1 Authorization Server',
+    'author': 'Odoo S.A.',
+    'depends': ['base', 'web', 'auth_oauth_server_base'],
+    'data': [
+        'security/ir.access.csv',
+        'views/oauth_consent_templates.xml',
+        'views/oauth_resource_views.xml',
+        'views/oauth_token_views.xml',
+    ],
+    'license': 'LGPL-3',
+}
