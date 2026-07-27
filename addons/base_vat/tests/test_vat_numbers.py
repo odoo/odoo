@@ -245,6 +245,35 @@ class TestStructure(TransactionCase):
             with self.assertRaises(ValidationError):
                 test_partner.vat = tin
 
+    def test_vat_ca(self):
+        test_partner = self.env['res.partner'].create({
+            "name": "CA Company",
+            "country_id": self.env.ref('base.ca').id,
+        })
+
+        # the plain 9 digit business number, and the same number with each of
+        # the program identifiers that the tax authority issues
+        for bn in ['123456782', '123456782RT0001', '123456782RP0001',
+                   '123456782RC0001', '123456782RM0001']:
+            test_partner.vat = bn
+
+        # separators and lower case are accepted and removed on save
+        test_partner.vat = '123 456 782 RT 0001'
+        self.assertEqual(test_partner.vat, '123456782RT0001')
+        test_partner.vat = '123456782rt0001'
+        self.assertEqual(test_partner.vat, '123456782RT0001')
+
+        msg = "The VAT number.*does not seem to be valid"
+        for bn in [
+            '123456789',         # wrong check digit
+            '123456789RT0001',   # wrong check digit on the business number
+            '12345678',          # too short
+            '123456782XX0001',   # unknown program identifier
+            '123456782RT001',    # reference number too short
+        ]:
+            with self.assertRaisesRegex(ValidationError, msg):
+                test_partner.write({'vat': bn})
+
     def test_vat_do(self):
         test_partner = self.env["res.partner"].create({"name": "DO Company", "country_id": self.env.ref("base.do").id})
         # Valid do vat
