@@ -56,7 +56,7 @@
                                 <t t-if="is_view_active('website_sale.product_tags')">
                                     <div class="col-lg-6">
                                         <table class="table">
-                                            <t t-if="product.product_variant_ids.all_product_tag_ids">
+                                            <t t-if="product.product_variant_ids.all_product_tag_ids.filtered('visible_on_ecommerce')">
                                                 <tr>
                                                     <th class="text-start" t-att-colspan="2">
                                                         <span>Tags</span>
