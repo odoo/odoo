@@ -25,9 +25,9 @@
                                 domain="
                                     [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
                                         if payment_type == 'outbound' else
-                                    [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
+                                    [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('company_id', '=', company_id)]"
                                     nolabel="1" colspan="2">
-                                <list name="existing_checks">
+                                <list name="existing_checks" create="false">
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="name" />
