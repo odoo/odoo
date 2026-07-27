@@ -212,10 +212,6 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         return self.pos_config_id.preview_self_order_app()
 
-    def update_access_tokens(self):
-        self.ensure_one()
-        self.pos_config_id._update_access_token()
-
     @api.depends('pos_self_ordering_mode')
     def _compute_pos_pricelist_id(self):
         super()._compute_pos_pricelist_id()
