@@ -1,3 +1,4 @@
+
 # Invoice Agent — Design & Architecture
 
 ## 1. Core Accounting Mechanics: `account.move` & `account.move.line`

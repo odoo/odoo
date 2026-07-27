@@ -25,6 +25,7 @@ jobs:
           port: 22
           script: |
             ccd /home/ubuntu/odoo
+
             # Pull specifically from the production branch
             git pull origin production
             docker system prune -f
