@@ -164,7 +164,14 @@ class Manager(Thread):
         last_check_time = time.time()
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
-        schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
+
+        # Odoo weekly code update
+        weekday = upgrade.get_update_day(self.identifier)
+        _logger.info("Scheduled weekly code update on %s", weekday)
+        every = schedule.every()
+        every.start_day = weekday
+        every.unit = "weeks"
+        every.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)

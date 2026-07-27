@@ -26,6 +26,25 @@ def get_last_stable_odoo_version():
     return "saas-19.2"
 
 
+def get_update_day(serial_number):
+    """This method provides the day of the week to run Odoo upgrade on.
+    The day is based on the rpi serial number and allows to roll out updates
+    progressively, while leaving a possibility to fix issues before the next update
+    for part of our iot boxes.
+    """
+    update_days = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
+    sn_sum = sum(serial_number.encode("utf-8"))
+    return update_days[sn_sum % 7]
+
+
 @toggleable
 def check_git_branch():
     """Checkout the IoT Box code to the last stable Odoo branch"""
