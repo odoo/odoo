@@ -535,7 +535,7 @@ describe("media dialod video", () => {
             // QWeb templates rendered during unit test store src in data-src
             // @see: addons/web/static/tests/_framework/mock_templates.hoot.js :: replaceAttributes()
             expect(iframe.dataset.src).toBe(
-                "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&fs=0&loop=1&mute=1&rel=0&start=83"
+                "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&fs=0&loop=1&mute=1&playlist=dQw4w9WgXcQ&rel=0&start=83"
             );
             // In order to test the media dialog edition, we need to provide a real src for the iframe;
             // otherwise the media dialog won't recognize the existing video as valid.

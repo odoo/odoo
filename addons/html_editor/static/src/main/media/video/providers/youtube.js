@@ -13,6 +13,7 @@ export class Youtube extends AbstractThirdPartyVideo {
         autoplay: { default: false, type: BooleanInt, params: ["autoplay"] },
         muted: { default: false, type: BooleanInt, params: ["mute"] },
         loop: { default: false, type: BooleanInt, params: ["loop"] },
+        playlist: { default: "", type: String, params: ["playlist"] },
         hideControls: { default: false, type: BooleanInt, params: ["controls"], reversed: true },
         hideFullscreen: { default: false, type: BooleanInt, params: ["fs"], reversed: true },
         isVertical: { default: false, type: Boolean },
@@ -29,6 +30,9 @@ export class Youtube extends AbstractThirdPartyVideo {
      */
     static getEmbedUrl(videoId, options = {}) {
         const noCookie = options.noCookie ? "-nocookie" : "";
+        if (options.loop) {
+            options.playlist = videoId; // Required for looping iframe embeds
+        }
         const params = encodeOptionsToParams(options, Youtube.optionsConfig);
         return `https://www.youtube${noCookie}.com/embed/${videoId}${params ? "?" + params : ""}`;
     }

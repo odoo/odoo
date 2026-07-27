@@ -27,6 +27,7 @@ const convertOptionValueToUrlParam = (value, optionConfig) => {
             return convertedValue;
         }
         case Number:
+        case String:
             return value.toString();
     }
     console.warn(`Unsupported option type: ${type}, returning raw option value.`);
@@ -53,6 +54,8 @@ const parseParams = (paramValue, optionConfig) => {
         }
         case Number:
             return parseInt(paramValue);
+        case String:
+            return paramValue.toString();
     }
     console.warn(`Unsupported option type: ${type}, returning raw param value.`);
     return paramValue;
