@@ -19,19 +19,19 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-counter:text('0')");
-    await contains("[title='Show Followers'] [data-icon='person']");
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Follow')");
+    await click("button[title='Show Followers'] [data-icon='person']");
+    await click("button[title='Follow']:text('Follow') [data-icon='person']");
     await contains(".o-mail-Followers-counter:text('1')");
-    await contains("[title='Show Followers'] .oi-filled[data-icon='person']");
-    await click("[title='Show Followers']");
+    await click("button[title='Show Followers'] .oi-filled[data-icon='person']");
     await contains(".o-mail-Followers-dropdown");
-    await click("[title='Edit Notification Preferences']");
+    await click(
+        "button[title='Edit Notification Preferences']:text('Notifications') [data-icon='notifications']"
+    );
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Unfollow')");
+    await click("button[title='Show Followers']");
+    await click("button[title='Unfollow']:text('Unfollow') .oi-filled[data-icon='person']");
     await contains(".o-mail-Followers-counter:text('0')");
-    await contains("[title='Show Followers'] [data-icon='person']");
+    await contains("button[title='Show Followers'] [data-icon='person']");
 });
 
 test("following during a slow RPC should not reload another record opened via the pager", async () => {
@@ -53,8 +53,8 @@ test("following during a slow RPC should not reload another record opened via th
         resIds: [partnerId_1, partnerId_2],
     });
     await expect.waitForSteps([`read ${partnerId_1}`]);
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Follow')");
+    await click("button[title='Show Followers']");
+    await click("button[title='Follow']:text('Follow')");
     await expect.waitForSteps(["subscribe"]);
     // Switch to the second record while the subscribe RPC of the first is still pending.
     await pagerNext();
