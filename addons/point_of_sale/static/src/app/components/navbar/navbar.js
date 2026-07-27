@@ -1,22 +1,21 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { OrderTrackerDropdown } from "@point_of_sale/app/components/order_tracker_dropdown/order_tracker_dropdown";
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
+import { BurgerMenuDialog } from "@point_of_sale/app/components/navbar/burger_menu/burger_menu_dialog";
 import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
 import { isPrivateIp } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+export { BurgerMenuDialog };
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -25,8 +24,6 @@ export class Navbar extends Component {
         CashierName,
         SaleDetailsButton,
         Input,
-        Dropdown,
-        DropdownItem,
         OrderTabs,
         OrderTrackerDropdown,
     };
@@ -38,7 +35,6 @@ export class Navbar extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
@@ -87,6 +83,13 @@ export class Navbar extends Component {
             body: this.pos.lnaState.message,
             size: "sm",
             backdrop: true,
+        });
+    }
+
+    openBurgerMenu() {
+        this.dialog.add(BurgerMenuDialog, {
+            openCustomerDisplay: this.openCustomerDisplay.bind(this),
+            openLnaPopup: this.openLnaPopup.bind(this),
         });
     }
 
@@ -154,17 +157,7 @@ export class Navbar extends Component {
         return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }
     onClickScan() {
-        if (!this.pos.scanning) {
-            const screenName = this.pos.router.currentScreen();
-            if (["ProductScreen", "TicketScreen"].includes(screenName)) {
-                const params =
-                    screenName === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
-                this.pos.navigate(screenName, params);
-            }
-        }
-        this.pos.ticket_screen_mobile_pane = this.pos.scanning ? "left" : "right";
-        this.pos.mobile_pane = "right";
-        this.pos.scanning = !this.pos.scanning;
+        this.pos.toggleScanning();
     }
     get showCashMoveButton() {
         return this.pos.showCashMoveButton;
@@ -173,32 +166,14 @@ export class Navbar extends Component {
         return this.pos.getOpenOrders().filter((order) => !order.table_id);
     }
 
-    get appUrl() {
-        return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
-            this.pos.config.display_name
-        )}&path=${encodeURIComponent(`pos/ui/${this.pos.config.id}`)}`;
-    }
-
     openCustomerDisplay() {
         this.dialog.add(QrCodeCustomerDisplay, {
             customerDisplayURL: this.pos.customerDisplayUrl,
         });
     }
 
-    get showCreateProductButton() {
-        return this.pos.hasProductCreationAccess;
-    }
-
-    get showPrinterButton() {
-        return this.pos.config.other_devices && this.pos.config.receipt_printer_ids.length > 1;
-    }
-
     get shouldDisplayPresetTime() {
         return this.pos.getOrder()?.preset_id?.use_timing;
-    }
-
-    async showSaleDetails() {
-        await this.pos.ticketPrinter.printSaleDetailsReceipt();
     }
 
     async openPresetTiming() {

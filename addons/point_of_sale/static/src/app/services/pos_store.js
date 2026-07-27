@@ -3211,6 +3211,20 @@ export class PosStore extends WithLazyGetterTrap {
             cancel: () => {},
         });
     }
+
+    toggleScanning() {
+        if (!this.scanning) {
+            const screenName = this.router.currentScreen();
+            if (["ProductScreen", "TicketScreen"].includes(screenName)) {
+                const params =
+                    screenName === "ProductScreen" ? { orderUuid: this.getOrder().uuid } : {};
+                this.navigate(screenName, params);
+            }
+        }
+        this.ticket_screen_mobile_pane = this.scanning ? "left" : "right";
+        this.mobile_pane = "right";
+        this.scanning = !this.scanning;
+    }
 }
 
 export const posService = {

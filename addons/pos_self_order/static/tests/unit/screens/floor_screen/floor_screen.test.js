@@ -11,8 +11,8 @@ test("PosResGetQRtest", async () => {
     unpatchSelf();
     await setupAndMountPosApp({ set_tip_after_payment: false });
     if (PosUiUtils.isMobile()) {
-        await contains(".pos-rightheader .dropdown-toggle").click();
-        await contains(".pos-burger-menu-items i.oi-fw[data-icon='qr_code']").click();
+        await contains(".pos-rightheader button:has([data-icon='menu'])").click();
+        await contains(".o_pos_burger_menu_buttons button:has([data-icon='qr_code'])").click();
     } else {
         await contains(".floor-screen .qr-order-button").click();
     }
