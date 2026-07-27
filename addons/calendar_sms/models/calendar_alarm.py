@@ -8,7 +8,7 @@ class CalendarAlarm(models.Model):
     _inherit = 'calendar.alarm'
 
     alarm_type = fields.Selection(selection_add=[
-        ('sms', 'SMS Text Message')
+        ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
     sms_template_id = fields.Many2one(
         'sms.template', string="SMS Template",
