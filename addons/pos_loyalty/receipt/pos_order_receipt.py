@@ -9,6 +9,9 @@ class PosOrderReceipt(models.AbstractModel):
     _inherit = 'pos.order.receipt'
     _description = 'Point of Sale Order Receipt Generator'
 
+    def _is_item_count_excluded_line(self, line):
+        return super()._is_item_count_excluded_line(line) or line.is_reward_line
+
     def order_receipt_generate_data(self, basic_receipt=False):
         data = super().order_receipt_generate_data(basic_receipt)
         loyalties, new_coupons = [], []

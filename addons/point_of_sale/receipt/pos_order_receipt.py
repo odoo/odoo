@@ -190,6 +190,18 @@ class PosOrderReceipt(models.AbstractModel):
     def _order_receipt_generate_cashier_name(self):
         return self.user_id.name.split(' ')[0] if self.user_id else ''
 
+    # Used to override inside `pos_loyalty`
+    def _is_item_count_excluded_line(self, line):
+        return bool(line.combo_line_ids)
+
+    def _get_total_item_count(self):
+        total = sum(
+            line.qty if line.product_id.uom_id.is_pos_groupable else 1
+            for line in self.lines
+            if not self._is_item_count_excluded_line(line)
+        )
+        return int(total) if total.is_integer() else total
+
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
@@ -220,6 +232,7 @@ class PosOrderReceipt(models.AbstractModel):
                     [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
                     for p in tip_percentage
                 ] if tip_percentage else False,
+                'total_item_count': self._get_total_item_count(),
             },
         }
 
