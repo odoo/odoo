@@ -88,7 +88,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         if hide_fullscreen:
             params['fs'] = 0
         yt_extra = platform_match[1] or ''
-        embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
+        embed_url = f'https://www.youtube{yt_extra}.com/embed/{video_id}'
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
         if autoplay:
@@ -105,7 +105,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             url_params = parse_qs(groups['params'])
             if 'h' in url_params:
                 params['h'] = url_params['h'][0]
-        embed_url = f'//player.vimeo.com/video/{video_id}'
+        embed_url = f'https://player.vimeo.com/video/{video_id}'
     elif platform == 'dailymotion':
         params['autoplay'] = autoplay and 1 or 0
         if autoplay:
@@ -116,11 +116,11 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['ui-logo'] = 0
         if hide_dm_share:
             params['sharing-enable'] = 0
-        embed_url = f'//www.dailymotion.com/embed/video/{video_id}'
+        embed_url = f'https://www.dailymotion.com/embed/video/{video_id}'
     elif platform == 'instagram':
-        embed_url = f'//www.instagram.com/p/{video_id}/embed/'
+        embed_url = f'https://www.instagram.com/p/{video_id}/embed/'
     elif platform == 'youku':
-        embed_url = f'//player.youku.com/embed/{video_id}'
+        embed_url = f'https://player.youku.com/embed/{video_id}'
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
