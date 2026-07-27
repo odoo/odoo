@@ -864,40 +864,67 @@ class AccountMoveLine(models.Model):
         date_from = self.env.context.get('date_from')
         date_to = self.env.context['date_to']
         current_date = self.env.context.get('cta_date_to') or date_to
-        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to, current_date=current_date)
+
+        historical, report_window_average, full_fiscalyear_average, current = self.env['res.currency']._get_parsed_rates(
+            self.env.companies - self.env.company, date_from, date_to, current_date=current_date
+        )
+
         raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
+
         raw_rates_table = SQL(
             """(
                 SELECT %(historical)s::jsonb AS historical,
-                       %(average)s::jsonb AS average,
+                       %(report_window_average)s::jsonb AS report_window_average,
+                       %(full_fiscalyear_average)s::jsonb AS full_fiscalyear_average,
                        %(current)s::jsonb AS current
             )""",
             historical=json.dumps(historical),
-            average=json.dumps(average),
+            report_window_average=json.dumps(report_window_average),
+            full_fiscalyear_average=json.dumps(full_fiscalyear_average),
             current=json.dumps(current),
         )
+
         cta_alias = table._make_alias(currency_translation)
         if currency_translation == 'cta':
             conversion_table = SQL(
                 """(
-                    SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
-                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN (
-                                    SELECT interval_elem->>'rate'
-                                      FROM jsonb_array_elements(
-                                          COALESCE((%(average)s->>(%(base_line_company)s::text))::jsonb, '[]'::jsonb)
-                                      ) AS interval_elem
-                                     WHERE interval_elem->>'date_from' <= (%(base_line_date)s::text)
-                                       AND interval_elem->>'date_to' >= (%(base_line_date)s::text)
-                                     LIMIT 1
-                                )
-                                ELSE %(current)s->>(%(base_line_company)s::text)
-                           END::numeric AS rate
+                    SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN ((%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text))::numeric
+                        WHEN %(base_line_account_type)s = 'equity_retained' THEN (
+                            SELECT CASE
+                                     WHEN (%(base_line_date)s::text) = matched.date_to THEN matched.rate
+                                     ELSE COALESCE(matched.prev_rate, matched.rate)
+                                   END
+                              FROM (
+                                  SELECT rate_interval->>'date_from' AS date_from,
+                                         rate_interval->>'date_to' AS date_to,
+                                         (rate_interval->>'rate')::numeric AS rate,
+                                         LAG((rate_interval->>'rate')::numeric) OVER (ORDER BY interval_idx) AS prev_rate
+                                    FROM jsonb_array_elements(
+                                        COALESCE((%(full_fiscalyear_average)s->>(%(base_line_company)s::text))::jsonb, '[]'::jsonb)
+                                    ) WITH ORDINALITY AS t(rate_interval, interval_idx)
+                              ) AS matched
+                             WHERE matched.date_from <= (%(base_line_date)s::text)
+                               AND matched.date_to >= (%(base_line_date)s::text)
+                             LIMIT 1
+                        )
+                        WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN (
+                            SELECT (interval_elem->>'rate')::numeric
+                              FROM jsonb_array_elements(
+                                  COALESCE((%(report_window_average)s->>(%(base_line_company)s::text))::jsonb, '[]'::jsonb)
+                              ) AS interval_elem
+                             WHERE interval_elem->>'date_from' <= (%(base_line_date)s::text)
+                               AND interval_elem->>'date_to' >= (%(base_line_date)s::text)
+                             LIMIT 1
+                        )
+                        ELSE (%(current)s->>(%(base_line_company)s::text))::numeric
+                   END AS rate
                 )""",
                 base_line_date=table.date,
                 base_line_company=table.company_id,
                 base_line_account_type=table.account_id.account_type,
                 historical=raw_rates_alias.historical,
-                average=raw_rates_alias.average,
+                report_window_average=raw_rates_alias.report_window_average,
+                full_fiscalyear_average=raw_rates_alias.full_fiscalyear_average,
                 current=raw_rates_alias.current,
             )
         else:

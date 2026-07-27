@@ -106,27 +106,32 @@ class ResCurrency(models.Model):
         else:
             if fetch_from < cached_min:
                 for company_id, rate_date, rate in self._get_raw_rates(companies, fetch_from, cached_min):
-                    historical[company_id][str(rate_date)] = rate
+                    historical.setdefault(company_id, {})[str(rate_date)] = rate
                 new_min = fetch_from
             if fetch_to > cached_max:
                 for company_id, rate_date, rate in self._get_raw_rates(companies, cached_max, fetch_to):
-                    historical[company_id][str(rate_date)] = rate
+                    historical.setdefault(company_id, {})[str(rate_date)] = rate
                 new_max = fetch_to
 
         if new_min != cached_min or new_max != cached_max:
             raw_cache[companies] = (new_min, new_max, historical)
 
-        current = {company_id: date2rate[current_date] for company_id, date2rate in historical.items()}
-        average = self._get_fiscalyear_average_rates(companies, historical, date_from, date_to) if currency_translation == 'cta' else {}
+        current = {company_id: date2rate.get(current_date, 1.0) for company_id, date2rate in historical.items()}
 
-        return historical, average, current
+        if currency_translation == 'cta':
+            full_fiscalyear_average = self._get_fiscalyear_average_rates(companies, historical, None, date_to)
+            report_window_average = full_fiscalyear_average if not date_from else self._get_fiscalyear_average_rates(companies, historical, date_from, date_to)
+        else:
+            report_window_average = full_fiscalyear_average = {}
+
+        return historical, report_window_average, full_fiscalyear_average, current
 
     def _get_fiscalyear_average_rates(self, companies, historical, date_from, date_to):
         """ Per company, a list of {date_from, date_to, rate} intervals giving the
             average rate to apply to a P&L move dated within that interval.
         """
         if date_from:
-            # date_from is set (for example, a bounded report column - even one whose window straddles a fiscal year-end,
+            # date_from is set (for example, a bounded report column - even one whose window is crossed by a fiscal year-end,
             #  e.g., a custom Nov-Feb range): the whole window is treated as ONE period with one average.
             single_window = [(date_from, date_to)]
             average = {}
@@ -136,7 +141,7 @@ class ResCurrency(models.Model):
                     average[company.id] = self._average_rate_intervals(date2rate, single_window, date_from, date_to)
             return average
 
-        # date_from is empty (e.g., initial balance scopes reaching back to "the beginning"): split per fiscal year.
+        # date_from is empty (e.g., initial balance): split per fiscal year.
         custom_fiscal_years = self._prefetch_custom_fiscal_years(companies)
         boundaries_cache = self.env.cr.cache.setdefault('res_currency_fiscalyear_boundaries', {})
         average = {}
@@ -145,7 +150,7 @@ class ResCurrency(models.Model):
             if not date2rate:
                 continue
             window_start = min(date2rate)
-            boundaries = self._get_fiscalyear_boundaries(company, custom_fiscal_years[company.id], window_start, date_to, boundaries_cache)
+            boundaries = self._get_boundaries(company, custom_fiscal_years[company.id], window_start, date_to, boundaries_cache)
             average[company.id] = self._average_rate_intervals(date2rate, boundaries, window_start, date_to)
 
         return average
@@ -162,18 +167,18 @@ class ResCurrency(models.Model):
         while bucket_start < nb_dates:
             while boundaries[boundary_idx][1] < sorted_dates[bucket_start]:
                 boundary_idx += 1
-            fiscalyear_date_to = boundaries[boundary_idx][1]
+            boundary_date_to = boundaries[boundary_idx][1]
 
             bucket_end = bucket_start
             rate_sum = 0.0
-            while bucket_end < nb_dates and sorted_dates[bucket_end] <= fiscalyear_date_to:
+            while bucket_end < nb_dates and sorted_dates[bucket_end] <= boundary_date_to:
                 rate_sum += date2rate[sorted_dates[bucket_end]]
                 bucket_end += 1
 
             nb_days_in_bucket = bucket_end - bucket_start
             intervals.append({
                 'date_from': sorted_dates[bucket_start],
-                'date_to': sorted_dates[bucket_end - 1],
+                'date_to': boundary_date_to,
                 'rate': rate_sum / nb_days_in_bucket,
             })
             bucket_start = bucket_end
@@ -181,7 +186,7 @@ class ResCurrency(models.Model):
         return intervals
 
     @api.model
-    def _get_fiscalyear_boundaries(self, company, custom_records, window_start, window_end, boundaries_cache):
+    def _get_boundaries(self, company, custom_records, window_start, window_end, boundaries_cache):
         cache_entry = boundaries_cache.setdefault(company.id, {'min': None, 'max': None, 'boundaries': []})
 
         def fiscalyear_covering(date_str):
