@@ -324,6 +324,32 @@ export class Message extends Component {
         return this.props.message;
     }
 
+    get showTextVisually() {
+        return (
+            !this.message.linkPreviewSquash &&
+            (this.message.hasTextContent ||
+                this.message.subtype_id?.description ||
+                this.message.isEmpty)
+        );
+    }
+
+    get bodyAttClass() {
+        const isNoteVisual = this.message.isNote || this.message.message_type === "notification";
+        return {
+            "p-1": isNoteVisual,
+            "fs-1": !this.isEditing && !this.env.inChatter && this.message.onlyEmojis,
+            "mb-0": !isNoteVisual,
+            "py-2": !isNoteVisual && !this.isEditing && this.showTextVisually,
+            "pt-2 pb-1": !isNoteVisual && this.isEditing,
+            "o-note": isNoteVisual,
+            "o-rounded-bubble": this.props.squashed,
+            "align-self-start o-rounded-end-bubble o-rounded-bottom-bubble":
+                !this.isEditing && !isNoteVisual && !this.props.squashed,
+            "flex-grow-1": this.isEditing,
+            o_track: this.message.message_type === "tracking",
+        };
+    }
+
     /** Max amount of quick actions, including "..." */
     get quickActionCount() {
         if (isMobileOS()) {
