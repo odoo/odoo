@@ -1,6 +1,5 @@
 # Invoice Agent
 
-<<<<<<< HEAD
 An Odoo 19 addon that turns a scanned supplier invoice into a draft `account.move`.
 
 Pipeline: scan → OCR (Tesseract) → extraction (Claude, structured outputs) → RAG validation
@@ -19,7 +18,7 @@ It **extends core accounting** (`account.move`, `account.move.line`, `account.jo
 
 Docker on AWS EC2 (`me-south-1`), deployed by GitHub Actions. See `infra/runbook.md` for the
 live environment's instance ID, Elastic IP, and the SSH command that works.
-=======
+
 AI-powered invoice extraction module for Odoo 19.
 
 ## Features
@@ -105,4 +104,3 @@ odoo-bin -c odoo.conf -d dev --test-tags /invoice_agent --stop-after-init
 Update module after changes:
 ```bash
 odoo-bin -c odoo.conf -d dev -u invoice_agent --stop-after-init
->>>>>>> docs/posting-flow
