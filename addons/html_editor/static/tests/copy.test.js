@@ -112,6 +112,222 @@ describe("range not collapsed", () => {
         );
     });
 
+    test("should adjust the copied table width based on the remaining columns", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table style="width: 1000px;">
+                    <colgroup>
+                        <col style="width: 200px;">
+                        <col style="width: 250px;">
+                        <col style="width: 300px;">
+                        <col style="width: 250px;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>[1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>6]</td>
+                            <td>7</td>
+                            <td>8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `),
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table style="width: 1000px;" class="o_selected_table">
+                    <colgroup>
+                        <col style="width: 200px;">
+                        <col style="width: 250px;">
+                        <col style="width: 300px;">
+                        <col style="width: 250px;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">[1</td>
+                            <td class="o_selected_td">2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">5</td>
+                            <td class="o_selected_td">6]</td>
+                            <td>7</td>
+                            <td>8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            unformat(`
+                <table style="width: 450px;" class="o_selected_table">
+                    <colgroup>
+                        <col style="width: 200px;">
+                        <col style="width: 250px;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">1</td>
+                            <td class="o_selected_td">2</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">5</td>
+                            <td class="o_selected_td">6</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+    });
+
+    test("should preserve a valid table structure when copying a partially selected table with rowspans and colspans", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>[1</td>
+                            <td colspan="2">2</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">3</td>
+                            <td>4]</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `),
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">[1</td>
+                            <td colspan="2" class="o_selected_td">2</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="o_selected_td">3</td>
+                            <td class="o_selected_td">4]</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">1</td>
+                            <td colspan="2" class="o_selected_td">2</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="o_selected_td">3</td>
+                            <td class="o_selected_td">4</td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+    });
+
+    test("should adapt table structure when copying a partially selected table with rowspans", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2">1</td>
+                            <td>2</td>
+                            <td rowspan="2">3</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">4</td>
+                        </tr>
+                        <tr>
+                            <td>[5</td>
+                            <td>6]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `),
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2">1</td>
+                            <td>2</td>
+                            <td rowspan="2">3</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="o_selected_td">4</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">[5</td>
+                            <td class="o_selected_td">6]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td rowspan="2" class="o_selected_td">4</td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">5</td>
+                            <td class="o_selected_td">6</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+    });
+
     test("should wrap the selected text with clones of ancestors up to a block element to keep styles (1)", async () => {
         await setupEditor(
             '<p>[<span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span>]</p>'

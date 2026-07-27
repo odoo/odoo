@@ -1875,20 +1875,118 @@ export class TablePlugin extends Plugin {
                 (table.parentElement && !!closestElement(table.parentElement, ".o_selected_td")) ||
                 getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
             if (!isTableFullySelected) {
-                for (const td of tableClone.querySelectorAll(":is(td, th):not(.o_selected_td)")) {
-                    if (closestElement(td, "table") === tableClone) {
-                        // ignore nested
-                        td.remove();
+                const rows = [...tableClone.rows];
+                const grid = this.buildTableGrid(tableClone) || [];
+
+                // Phase 1: find which columns hold a selected cell, and which
+                // rows have a selected cell (their own, or via an incoming
+                // rowSpan). Rows with none are dropped right away.
+                const cellMeta = new Map(); // cell -> { rowIndex, columnIndex, colSpan, rowSpan, isSelected }
+                const keptColumns = new Set();
+                const rowSurvives = [];
+                for (const [rowIndex, gridRow] of grid.entries()) {
+                    let hasSelection = false;
+                    for (const [columnIndex, cell] of (gridRow || []).entries()) {
+                        if (!cell) {
+                            continue;
+                        }
+                        let meta = cellMeta.get(cell);
+                        if (!meta) {
+                            meta = {
+                                rowIndex,
+                                columnIndex,
+                                colSpan: cell.colSpan || 1,
+                                rowSpan: cell.rowSpan || 1,
+                                isSelected: cell.classList.contains("o_selected_td"),
+                            };
+                            cellMeta.set(cell, meta);
+                        }
+                        if (meta.isSelected) {
+                            hasSelection = true;
+                            keptColumns.add(columnIndex);
+                        }
+                    }
+                    rowSurvives[rowIndex] = hasSelection;
+                    if (!hasSelection) {
+                        rows[rowIndex]?.remove();
                     }
                 }
-                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
-                    (row) => !row.querySelector("td, th")
-                );
-                for (const tr of trsWithoutTd) {
-                    if (closestElement(tr, "table") === tableClone) {
-                        // ignore nested
-                        tr.remove();
+
+                // Phase 2: keep only the selected part of each surviving cell
+                // by updating its spans. Cells that are no longer needed are
+                // removed, while unselected cells that must remain for the
+                // layout are emptied.
+                for (const [cell, meta] of cellMeta) {
+                    if (!rowSurvives[meta.rowIndex]) {
+                        continue;
                     }
+                    let keptColSpan = 0;
+                    for (let i = 0; i < meta.colSpan; i++) {
+                        if (keptColumns.has(meta.columnIndex + i)) {
+                            keptColSpan++;
+                        }
+                    }
+                    if (!keptColSpan) {
+                        cell.remove();
+                        continue;
+                    }
+                    let keptRowSpan = 0;
+                    for (let i = 0; i < meta.rowSpan; i++) {
+                        if (rowSurvives[meta.rowIndex + i]) {
+                            keptRowSpan++;
+                        }
+                    }
+                    keptColSpan > 1
+                        ? (cell.colSpan = keptColSpan)
+                        : cell.removeAttribute("colspan");
+                    keptRowSpan > 1
+                        ? (cell.rowSpan = keptRowSpan)
+                        : cell.removeAttribute("rowspan");
+                    if (!meta.isSelected) {
+                        cell.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
+                    }
+                }
+
+                // Phase 3: a kept column whose covering cell was dropped along
+                // with its row leaves a hole: fill it with an empty cell.
+                const sortedKeptColumns = [...keptColumns].sort((a, b) => a - b);
+                for (const [rowIndex, row] of rows.entries()) {
+                    if (!rowSurvives[rowIndex]) {
+                        continue;
+                    }
+                    for (const columnIndex of sortedKeptColumns) {
+                        const originCell = grid[rowIndex]?.[columnIndex];
+                        if (originCell && tableClone.contains(originCell)) {
+                            continue;
+                        }
+                        const newCell = this.document.createElement(originCell?.tagName || "td");
+                        newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                        const nextCell = [...row.cells].find(
+                            (other) => cellMeta.get(other).columnIndex > columnIndex
+                        );
+                        nextCell ? nextCell.before(newCell) : row.append(newCell);
+                        cellMeta.set(newCell, {
+                            rowIndex,
+                            columnIndex,
+                            colSpan: 1,
+                            rowSpan: 1,
+                            isSelected: false,
+                        });
+                    }
+                }
+
+                const colGroup = tableClone.querySelector(":scope > colgroup");
+                if (colGroup) {
+                    const originalCols = [...table.querySelector(":scope > colgroup").children];
+                    let width = 0;
+                    for (const [index, col] of [...colGroup.children].entries()) {
+                        if (keptColumns.has(index)) {
+                            width += parseFloat(getComputedStyle(originalCols[index]).width) || 0;
+                        } else {
+                            col.remove();
+                        }
+                    }
+                    tableClone.style.width = `${width}px`;
                 }
             }
             // If it is fully selected, clone the whole table rather than
