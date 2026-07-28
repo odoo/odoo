@@ -1,0 +1,51 @@
+.s_coconuts_boxes {
+
+    .card {
+        // Image
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        // Overlay
+        .card-img-overlay {
+            z-index: 2;
+            &.s_coconuts_boxes_img_overlay_top {
+                bottom: auto;
+            }
+            &.s_coconuts_boxes_img_overlay_center {
+                top: 50%;
+                bottom: auto;
+                transform: translateY(-50%);
+            }
+            &.s_coconuts_boxes_img_overlay_bottom {
+                top: auto;
+            }
+        }
+    }
+
+    // Layout
+    &.s_coconuts_boxes_square,
+    &.s_coconuts_boxes_portrait,
+    &.s_coconuts_boxes_landscape {
+        .card::before {
+            content: '';
+            display: block;
+        }
+        .card-img {
+            @include o-position-absolute(0, 0, auto, 0);
+        }
+    }
+
+    &.s_coconuts_boxes_landscape {
+        .card::before { padding-top: 50%; }
+    }
+
+    &.s_coconuts_boxes_square {
+        .card::before { padding-top: 100%; }
+    }
+
+    &.s_coconuts_boxes_portrait {
+        .card::before { padding-top: 150%; }
+    }
+}
