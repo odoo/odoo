@@ -192,3 +192,14 @@ class TestCrlibreClient(TransactionCase):
             result = self.client.gen_xml_nc({'clave': '5' * 50})
         self.assertEqual(result, xml)
         self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_nc')
+
+    def test_gen_xml_te_decodes_base64(self):
+        import base64
+        xml = '<TiqueteElectronico>ok</TiqueteElectronico>'
+        payload = {'status': 'ok',
+                   'resp': {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.gen_xml_te({'clave': '5' * 50})
+        self.assertEqual(result, xml)
+        self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_te')

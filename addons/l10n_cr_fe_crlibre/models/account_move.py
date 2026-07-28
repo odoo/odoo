@@ -270,7 +270,7 @@ class AccountMove(models.Model):
             detalles = self._l10n_cr_fe_build_detalles()
             genxml_params = self._l10n_cr_fe_build_genxml_params(
                 clave_res['clave'], clave_res['consecutivo'], detalles)
-            gen_xml_action = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]['gen_xml_action']
+            gen_xml_action = self._l10n_cr_fe_get_tipo_documento_info()['gen_xml_action']
             xml = getattr(client, gen_xml_action)(genxml_params)
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
