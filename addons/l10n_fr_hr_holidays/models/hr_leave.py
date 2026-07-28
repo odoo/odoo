@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
@@ -19,7 +20,8 @@ class HrLeave(models.Model):
         return self.employee_id and \
                self.company_id.country_id.code == 'FR' and \
                self.resource_calendar_id != self.company_id.resource_calendar_id and \
-               self.holiday_status_id == self.company_id._get_fr_reference_leave_type()
+               self.holiday_status_id == self.company_id._get_fr_reference_leave_type() and \
+               self.is_part_time(self.employee_id)
 
     def _get_fr_date_from_to(self, date_from, date_to):
         self.ensure_one()
@@ -115,3 +117,13 @@ class HrLeave(models.Model):
             return super()._get_duration(resource_calendar=(resource_calendar or self.company_id.resource_calendar_id))
         else:
             return super()._get_duration(resource_calendar)
+
+    def is_part_time(self, employee):
+        self.ensure_one()
+        hours_per_week = sum(self.resource_calendar_id.attendance_ids.mapped('duration_hours'))
+        if self.resource_calendar_id.two_weeks_calendar:
+            hours_per_week /= 2
+        company_hours_per_week = sum(self.company_id.resource_calendar_id.attendance_ids.mapped('duration_hours'))
+        if self.company_id.resource_calendar_id.two_weeks_calendar:
+            company_hours_per_week /= 2
+        return float_compare(hours_per_week, company_hours_per_week, 2) == -1
