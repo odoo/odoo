@@ -20,3 +20,33 @@ class TestAccountMoveFeFields(TransactionCase):
         keys = [key for key, _label in field.selection]
         self.assertEqual(
             keys, ['draft', 'generado', 'enviado', 'aceptado', 'rechazado', 'error'])
+
+    def test_nota_credito_fields_exist_with_defaults(self):
+        partner = self.env['res.partner'].create({'name': 'Cliente NC Fields'})
+        credit_note = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'partner_id': partner.id,
+        })
+        self.assertFalse(credit_note.l10n_cr_fe_fecha_emision)
+        self.assertFalse(credit_note.l10n_cr_fe_motivo)
+        self.assertFalse(credit_note.l10n_cr_fe_codigo_referencia)
+        self.assertFalse(credit_note.l10n_cr_fe_razon)
+
+    def test_motivo_selection_maps_to_expected_codigo_referencia(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_MOTIVO_CODIGO_MAP
+        self.assertEqual(L10N_CR_FE_MOTIVO_CODIGO_MAP, {
+            'anulacion_total': '01',
+            'correccion_monto': '02',
+            'devolucion_mercancia': '06',
+            'referencia_otro_documento': '04',
+            'otros': '99',
+        })
+
+    def test_tipo_documento_map_has_fe_and_nc(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_TIPO_DOCUMENTO
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_invoice']['clave'], 'FE')
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_invoice']['consecutivo_codigo'], '01')
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_invoice']['gen_xml_action'], 'gen_xml_fe')
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['clave'], 'NC')
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['consecutivo_codigo'], '03')
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['gen_xml_action'], 'gen_xml_nc')

@@ -181,3 +181,14 @@ class TestCrlibreClient(TransactionCase):
             result = self.client.consultar_estado('tok', '5' * 50, 'stag')
         self.assertEqual(result['ind_estado'], 'desconocido')
         self.assertIsNone(result['respuesta_xml'])
+
+    def test_gen_xml_nc_decodes_base64(self):
+        import base64
+        xml = '<NotaCreditoElectronica>ok</NotaCreditoElectronica>'
+        payload = {'status': 'ok',
+                   'resp': {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.gen_xml_nc({'clave': '5' * 50})
+        self.assertEqual(result, xml)
+        self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_nc')
