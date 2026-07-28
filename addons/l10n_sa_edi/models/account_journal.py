@@ -101,22 +101,6 @@ class AccountJournal(models.Model):
         self.ensure_one()
         return self.sudo().l10n_sa_production_csid_json
 
-    def _l10n_sa_api_onboard_sanity_checks(self):
-        """
-            Perform a sanity check to validate that the journal is ready to be onboarded
-        """
-
-        # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
-        # Make sure there are no opened invoices with the journal's existing sequence
-        has_stuck_moves = self.env['l10n_sa_edi.document'].search(
-            [
-                ('journal_id', '=', self.id),
-                ('l10n_sa_chain_index', '!=', 0),
-                ('state', '=', 'to_send')
-            ], limit=1)
-        if has_stuck_moves:
-            raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
-
     # ====== CSR Generation =======
 
     def _l10n_sa_csr_required_fields(self):
@@ -184,10 +168,6 @@ class AccountJournal(models.Model):
                 3.  Get the Production CSID
         """
         self.ensure_one()
-        # we want to perform sanity checks to ensure that the journal is ready to be onboarded
-        # If the check fails, we do not want to revoke the existing PCSID because the user might still need it to post hanging invoices
-        self._l10n_sa_api_onboard_sanity_checks()
-
         try:
             # If the company does not have a private key, we generate it.
             # The private key is used to generate the CSR but also to sign the invoices
