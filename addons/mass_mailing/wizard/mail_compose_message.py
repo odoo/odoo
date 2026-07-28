@@ -46,7 +46,7 @@ class MailComposeMessage(models.TransientModel):
                 if mail_values.get('body_html'):
                     body = self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout',
                                 {'body': mail_values['body_html']},
-                                minimal_qcontext=True, raise_if_not_found=False)
+                                minimal_qcontext=True, raise_if_not_found=False, preserve_comments=True)
                     if body:
                         mail_values['body_html'] = body
 
