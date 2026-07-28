@@ -23,7 +23,7 @@ export class FilterableSelectionField extends SelectionField {
             options = options.filter((option) => {
                 return (
                     option[0] === this.props.record.data[this.props.name] ||
-                    this.props.record.data[this.props.whitelist_fname].includes(option[0])
+                    (this.props.record.data[this.props.whitelist_fname] || []).includes(option[0])
                 );
             });
         } else if (this.props.whitelisted_values) {
