@@ -11,7 +11,9 @@ class StockPicking(models.Model):
         "Number of subcontracting PO Source", compute='_compute_subcontracting_source_purchase_count',
         help="Number of subcontracting Purchase Order Source")
 
-    @api.depends('move_ids.move_dest_ids.raw_material_production_id')
+    @api.depends('move_ids.location_dest_id',
+                 'move_ids.reference_ids.move_ids.is_subcontract',
+                 'move_ids.reference_ids.move_ids.purchase_line_id')
     def _compute_subcontracting_source_purchase_count(self):
         for picking in self:
             picking.subcontracting_source_purchase_count = len(picking._get_subcontracting_source_purchase())
@@ -38,8 +40,9 @@ class StockPicking(models.Model):
     def _get_subcontracting_source_purchase(self):
         if self.show_subcontracting_details_visible:
             return self.env['purchase.order']
-        moves_subcontracted = self.reference_ids.move_ids.filtered(lambda m: m.is_subcontract)
-        return moves_subcontracted.purchase_line_id.order_id
+        resupply_moves = self.move_ids.filtered(lambda m: m.location_dest_id.is_subcontract())
+        related_subcontract_moves = resupply_moves.reference_ids.move_ids.filtered(lambda m: m.is_subcontract)
+        return related_subcontract_moves.purchase_line_id.order_id
 
     def _get_subcontract_mo_confirmation_ctx(self):
         res = super()._get_subcontract_mo_confirmation_ctx()
