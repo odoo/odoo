@@ -224,14 +224,17 @@ class StockRule(models.Model):
         if not company_id:
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         final_location_id = False
+        location_id = self.location_src_id.id
         location_dest_id = self.location_dest_id.id
+        if move_to_copy.location_dest_id and move_to_copy.location_dest_id._child_of(self.location_src_id):
+            location_id = move_to_copy.location_dest_id.id
         if move_to_copy.forecasted_location_id and not move_to_copy.location_dest_id._child_of(move_to_copy.forecasted_location_id):
             final_location_id = move_to_copy.forecasted_location_id.id
         if move_to_copy.forecasted_location_id and move_to_copy.forecasted_location_id._child_of(self.location_dest_id):
             location_dest_id = move_to_copy.forecasted_location_id.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
-            'location_id': move_to_copy.location_dest_id.id,
+            'location_id': location_id,
             'location_dest_id': location_dest_id,
             'forecasted_location_id': final_location_id,
             'rule_id': self.id,
