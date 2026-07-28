@@ -28,6 +28,11 @@ L10N_CR_FE_TIPO_DOCUMENTO = {
     'out_refund': {'clave': 'NC', 'consecutivo_codigo': '03', 'gen_xml_action': 'gen_xml_nc'},
 }
 
+# Tiquete Electronico (TE): comparte move_type 'out_invoice' con Factura, asi que
+# no puede tener su propia entrada en L10N_CR_FE_TIPO_DOCUMENTO (indexado por
+# move_type). Se resuelve aparte en _l10n_cr_fe_get_tipo_documento_info().
+L10N_CR_FE_TIPO_DOCUMENTO_TE = {'clave': 'TE', 'consecutivo_codigo': '04', 'gen_xml_action': 'gen_xml_te'}
+
 # Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
 # de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
 L10N_CR_FE_MOTIVO_NC = [
@@ -79,6 +84,10 @@ class AccountMove(models.Model):
     l10n_cr_fe_codigo_referencia = fields.Selection(
         L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
     l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
+    l10n_cr_fe_es_tiquete = fields.Boolean(
+        string="Consumidor final (Tiquete Electrónico)",
+        help="Si está marcado, este comprobante se emite ante Hacienda como Tiquete "
+             "Electrónico (sin identificar al receptor) en vez de Factura Electrónica.")
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -93,6 +102,12 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_get_config(self):
         self.ensure_one()
         return self.env['l10n_cr.fe.config']._get_for_company(self.company_id)
+
+    def _l10n_cr_fe_get_tipo_documento_info(self):
+        self.ensure_one()
+        if self.move_type == 'out_invoice' and self.l10n_cr_fe_es_tiquete:
+            return L10N_CR_FE_TIPO_DOCUMENTO_TE
+        return L10N_CR_FE_TIPO_DOCUMENTO.get(self.move_type)
 
     def _l10n_cr_fe_build_detalles(self):
         self.ensure_one()
@@ -138,7 +153,7 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_build_clave_params(self):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
-        tipo_doc = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]
+        tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
         return {
             'tipoDocumento': tipo_doc['clave'],
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',

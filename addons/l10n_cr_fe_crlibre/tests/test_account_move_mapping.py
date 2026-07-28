@@ -196,3 +196,22 @@ class TestAccountMoveMapping(TransactionCase):
         detalles = self.invoice._l10n_cr_fe_build_detalles()
         params = self.invoice._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
         self.assertNotIn('informacion_referencia', params)
+
+    def test_build_clave_params_tiquete_uses_te(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_es_tiquete': True,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = invoice._l10n_cr_fe_build_clave_params()
+        self.assertEqual(params['tipoDocumento'], 'TE')
+        self.assertEqual(len(params['consecutivo']), 10)
+
+    def test_get_tipo_documento_info_returns_fe_when_not_tiquete(self):
+        info = self.invoice._l10n_cr_fe_get_tipo_documento_info()
+        self.assertEqual(info['clave'], 'FE')
