@@ -162,13 +162,16 @@ class ThreadController(StoreController):
         auth="user",
         replica=True,
     )
-    def mail_thread_followers(self, thread_model, thread_id, exclude_ids=None, limit=20):
+    def mail_thread_followers(
+        self, thread_model, thread_id, exclude_ids=None, limit=20, search_term=None,
+    ):
         """This method returns a page of followers sorted by name and then by id,
         excluding the ones already known client-side (see `ListLoader`).
         :param thread_model: Model on which we are currently working.
         :param thread_id: ID of the document whose followers are fetched.
         :param exclude_ids: IDs of the followers already fetched.
         :param limit: Maximum number of followers to fetch.
+        :param search_term: Term used to filter followers by name or email.
         :return: Follower data and IDs. If exclude_ids is empty or len(followers) < limit, returns:
             followersCount: including the current user, to update the global thread count.
         :rtype: dict
@@ -181,6 +184,11 @@ class ThreadController(StoreController):
             & Domain("res_model", "=", thread_model)
         )
         domain = thread_domain & Domain("partner_id", "!=", request.env.user.partner_id.id)
+        if search_term:
+            domain &= (
+                Domain("name", "ilike", search_term)
+                | Domain("email", "ilike", search_term)
+            )
         if exclude_ids:
             domain &= Domain("id", "not in", exclude_ids)
         followers = request.env["mail.followers"].search_fetch(

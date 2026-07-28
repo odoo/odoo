@@ -852,12 +852,21 @@ async function mail_thread_followers(request) {
     /** @type {import("mock_models").MailFollowers} */
     const MailFollowers = this.env["mail.followers"];
 
-    const { thread_id, thread_model, exclude_ids, limit = 20 } = await parseRequestParams(request);
+    const {
+        thread_id,
+        thread_model,
+        exclude_ids,
+        limit = 20,
+        search_term,
+    } = await parseRequestParams(request);
     const threadDomain = [
         ["res_id", "=", thread_id],
         ["res_model", "=", thread_model],
     ];
     const domain = [...threadDomain, ["partner_id", "!=", this.env.user.partner_id]];
+    if (search_term) {
+        domain.push("|", ["name", "ilike", search_term], ["email", "ilike", search_term]);
+    }
     if (exclude_ids?.length) {
         domain.push(["id", "not in", exclude_ids]);
     }
