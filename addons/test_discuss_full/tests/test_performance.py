@@ -149,6 +149,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch res_groups (group_ids)
     #       - fetch im_livechat_channel
+    #         [enterprise] search im_livechat_channel_im_user (livechat_channel_has_agents)
     #   25: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
@@ -1753,6 +1754,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_lang_id": self.channel_livechat_1.livechat_lang_id.id,
+                "livechat_channel_has_agents": True,
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_channel_member_history_ids": self.channel_livechat_1.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
@@ -1789,6 +1791,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_lang_id": self.channel_livechat_2.livechat_lang_id.id,
+                "livechat_channel_has_agents": True,
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_channel_member_history_ids": self.channel_livechat_2.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
