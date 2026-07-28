@@ -526,7 +526,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         product = move_raw.product_id
         expected_quantity = move_raw.product_uom_qty
         current_quantity = move_raw.quantity
-        replenish_mo_cost, _dummy_bom_cost, _dummy_real_cost = self._compute_cost_sums(replenishments)
+        replenish_mo_cost, replenish_bom_cost, _dummy_real_cost = self._compute_cost_sums(replenishments)
         replenish_quantity = sum(rep.get('summary', {}).get('quantity', 0.0) for rep in replenishments)
         mo_quantity = current_quantity if production.state == 'done' else expected_quantity
         missing_quantity = mo_quantity - replenish_quantity
@@ -535,8 +535,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         real_cost = currency.round(self._get_component_real_cost(move_raw, current_quantity if move_raw.picked else 0))
         if production.bom_id:
             if move_raw.bom_line_id:
-                qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
-                bom_cost = currency.round(self._get_component_real_cost(move_raw, move_raw.bom_line_id.product_qty * qty_in_bom_uom / production.bom_id.product_qty))
+                bom_cost = currency.round(replenish_bom_cost)
             else:
                 bom_cost = False
         else:
@@ -721,12 +720,20 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if resupply_data:
                 mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company), fields.Date.today())
                 to_order_line['summary']['mo_cost'] = mo_cost
-                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.Datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
                 to_order_line['summary']['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
-                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._format_receipt_date('unavailable')
+            if move_raw.bom_line_id and move_raw.bom_line_id.child_bom_id:
+                # todo: move _get_bom_data to bom model for consistency
+                to_order_line['summary']['bom_cost'] = self.env['report.mrp.report_bom_structure']._get_bom_data(
+                    bom=move_raw.bom_line_id.child_bom_id,
+                    warehouse=move_raw.warehouse_id,
+                    line_qty=bom_missing_quantity,
+                    bom_line=move_raw.bom_line_id,
+                )['bom_cost']
+            else:
+                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
             to_order_line['summary']['unit_cost'] = currency.round(to_order_line['summary']['mo_cost'] / missing_quantity)
 
             if self._is_production_started(production):
