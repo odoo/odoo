@@ -35,13 +35,16 @@ patch(ProductCatalogKanbanRecord.prototype, {
         const productPackagingQty =
             Math.floor(parseFloat(formatFloat(this.productCatalogData.quantity / packaging.qty))) + 1;
         this.productCatalogData.quantity = productPackagingQty * packaging.qty;
-        const price = await rpc("/product/catalog/update_order_line_info", {
-            order_id: this.env.orderId,
-            product_id: this.env.productId,
-            product_packaging_id: packaging.id,
-            product_packaging_qty: productPackagingQty,
-            res_model: this.env.orderResModel,
-        });
+        this._pendingUpdate = this._pendingUpdate.then(() =>
+            rpc("/product/catalog/update_order_line_info", {
+                order_id: this.env.orderId,
+                product_id: this.env.productId,
+                product_packaging_id: packaging.id,
+                product_packaging_qty: productPackagingQty,
+                res_model: this.env.orderResModel,
+            })
+        );
+        const price = await this._pendingUpdate;
         this.productCatalogData.price = parseFloat(price);
     },
 });
