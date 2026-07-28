@@ -1024,3 +1024,45 @@ test(`doesn't autosave when a x2many is in openned (visibility change) 2`, async
     expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(0);
     expect.verifySteps(["web_save"]);
 });
+
+test(`urgent save without changes preserves subsequent save commands`, async () => {
+    // Urgent save can be triggered by attachment downloads, not only when closing the browser tab.
+    // When triggered before any changes are done, it should not impact subsequent saves.
+    Partner._fields.child_ids = fields.One2many({
+        string: "one2many field",
+        relation: "partner",
+        default: [
+            [4, 1],
+            [4, 2],
+        ],
+    });
+    const commands = [
+        [
+            [4, 1],
+            [4, 2],
+        ],
+        [[3, 1]],
+    ];
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].child_ids).toEqual(commands.shift());
+        expect.step("web_save");
+    });
+    await mountViewInDialog({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="expertise"/>
+                <field name="child_ids" widget="many2many_tags"/>
+            </form>
+        `,
+    });
+    expect(`span.o_tag`).toHaveCount(2);
+    await unload();
+    await animationFrame();
+    await contains(`.oi-close`).click();
+    expect(`span.o_tag`).toHaveCount(1);
+    await contains(`.o_form_button_save`).click();
+    expect(`span.o_tag`).toHaveCount(1);
+    expect.verifySteps(["web_save", "web_save"]);
+});
