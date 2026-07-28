@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import datetime, timedelta
-from collections import defaultdict
 from calendar import monthrange
+from collections import defaultdict
+from datetime import datetime, timedelta
+from itertools import chain
 
 from odoo import api, models, fields
 from odoo.tools import format_date
@@ -135,9 +135,17 @@ class HrExportWorkEntries(models.TransientModel):
         )
         lines = [(5, 0, 0)]
         for employee_id, contract_dict in contracts_by_employee.items():
+<<<<<<< 09c3956b15998be10bb06fdb2816038da5e6bfc3
             contracts = self.env['hr.version']
             for contract_list in contract_dict.values():
                 contracts |= contract_list
+||||||| e9cfa0fd65d234bcff8130a2c790cd80ee443595
+            contracts = self.env['hr.version'].browse([c.id for c in contract_dict.values()])
+=======
+            contracts = self.env['hr.version'].browse(
+                list(chain.from_iterable(c.ids for c in contract_dict.values())),
+            )
+>>>>>>> 6fda65b770bd835a365e1f54427bb9dd6335ffa1
             work_entries_vals = contracts.generate_work_entries(period_start, period_stop)
             if work_entries_vals:
                 lines.append((0, 0, {
