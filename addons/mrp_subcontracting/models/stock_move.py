@@ -308,3 +308,10 @@ class StockMove(models.Model):
         if self.move_dest_ids.raw_material_production_id.subcontractor_id:
             return []
         return super()._get_production_assignation_domain()
+
+    def _should_use_production_origin(self):
+        """Keep the subcontracting receipt as the source document,
+        since the subcontracting MO is only an implementation artifact."""
+        if self.raw_material_production_id.subcontractor_id:
+            return False
+        return super()._should_use_production_origin()
