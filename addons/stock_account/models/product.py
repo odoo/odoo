@@ -407,6 +407,41 @@ class ProductProduct(models.Model):
             value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
         return std_price_by_product_id, value_by_product_id
 
+    def _get_qty_available_at_dates(self, date_by_product_id, from_date):
+        """ Return {product_id: qty_available at its own date}, in one pass.
+
+        Same formula as `_compute_quantities_dict` in the past: the current quants minus the
+        moves done since
+        todo: check owner
+        """
+        products = self.browse(date_by_product_id)
+        domain_quant, domain_move_in, domain_move_out = products._get_domain_locations()
+        domain_quant &= Domain('product_id', 'in', products.ids)
+        domain_move = Domain('product_id', 'in', products.ids) & Domain('state', '=', 'done') & Domain('date', '>', from_date)
+        if 'owners' in self.env.context:
+            owners = self.env.context['owners']
+            domain_quant &= Domain('owner_id', 'in', owners) if owners else Domain('owner_id', '=', False)
+            domain_move &= Domain('move_line_ids.owner_id', 'in', owners) if owners else Domain('move_line_ids.owner_id', '=', False)
+
+        qty_by_product_id = defaultdict(float)
+        for product, quantity in self.env['stock.quant'].with_context(active_test=False)._read_group(
+                domain_quant, ['product_id'], ['quantity:sum']):
+            qty_by_product_id[product.id] = quantity
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        for sign, domain_location in ((-1.0, domain_move_in), (1.0, domain_move_out)):
+            #for move_ids in split_every(10000, Move.search(domain_move & domain_location).ids)
+            for move_ids in split_every(50000, Move.search(domain_move & domain_location).ids):
+                moves = Move.browse(move_ids)
+                moves.fetch(['product_id', 'date', 'product_uom', 'quantity'])
+                for move in moves:
+                    if move.date > date_by_product_id[move.product_id.id]:
+                        qty_by_product_id[move.product_id.id] += sign * move.product_uom._compute_quantity(
+                            move.quantity, move.product_id.uom_id)
+                Move.invalidate_model()
+
+        return {product.id: product.uom_id.round(qty_by_product_id[product.id]) for product in products}
+
     def _run_average_batch(self, at_date=None, lot=None, force_recompute=False):
         std_price_by_product_id = {}
         value_by_product_id = {}
@@ -441,17 +476,15 @@ class ProductProduct(models.Model):
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
-        product_ids_by_manual_value_date = defaultdict(list)
-        if not lot:
-            for manual_value in last_manual_value_by_product.values():
-                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+        anchor_qty_by_product_id = {} if lot else self._get_qty_available_at_dates(
+            {mv.product_id.id: mv.date for mv in last_manual_value_by_product.values()}, oldest_manual_value)
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+                quantity = anchor_qty_by_product_id.get(product.id, 0.0)
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -470,7 +503,7 @@ class ProductProduct(models.Model):
             self._get_moves_with_manual_value(product_ids=self.ids)
 
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
+        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'state', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
         product, valuation_from_date = False, False
@@ -498,7 +531,11 @@ class ProductProduct(models.Model):
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                if move.product_id.id in std_price_by_product_id:
+                    average_cost = std_price_by_product_id[move.product_id.id]
+                else:
+                    valued_qty = move._get_valued_qty()
+                    average_cost = move.value / valued_qty if valued_qty else 0
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.is_in or move.is_dropship:
                     in_qty = move._get_valued_qty()
