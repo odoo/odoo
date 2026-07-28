@@ -1733,6 +1733,71 @@ class DiscussChannel(models.Model):
         )
         return sub_channel
 
+    def _move_messages(self, messages, notify_source=False, notify_destination=True):
+        """Move ``messages`` from this channel to ``self`` and sync clients.
+
+        ``messages`` must already be the resolved set of messages to move; the
+        caller (controller) is responsible for validating the input and the
+        destination. Returns a store payload for the caller's client.
+        """
+        self.ensure_one()
+        source = messages.channel_id
+        source.ensure_one()
+        moved_ids = set(messages.ids)
+        for message in messages:
+            vals = {"res_id": self.id}
+            parent = message.parent_id
+            # Clear the parent link when the parent is not moved along and is
+            # not already in the destination, to keep threading consistent.
+            if parent and parent.id not in moved_ids and parent.res_id != self.id:
+                vals["parent_id"] = False
+            # sudo: mail.message - access is validated by the calling controller.
+            message.sudo().write(vals)
+        # sudo: ir.attachment - moved along with the messages they belong to.
+        attachments = messages.sudo().attachment_ids.filtered(
+            lambda a: a.res_model == "discuss.channel"
+        )
+        attachments.write({"res_id": self.id})
+        source._post_move_notice(self, messages, notify_source, notify_destination)
+        # Remove the moved messages from clients viewing the source channel.
+        source._bus_send("mail.message/delete", {"message_ids": messages.ids})
+        # Push the moved messages to clients viewing the destination channel.
+        Store(bus_channel=self).add(messages, "_store_message_fields").add(
+            self, "_store_channel_fields"
+        )
+        # Return the destination and moved messages for the caller's client.
+        return (
+            Store()
+            .add(messages, "_store_message_fields")
+            .add(self, "_store_channel_fields")
+            ._build_result()
+        )
+
+    def _post_move_notice(self, destination, moved_messages, notify_source, notify_destination):
+        """Post automated notices in the destination and/or source channels."""
+        self.ensure_one()
+        count = len(moved_messages)
+        if notify_destination:
+            body = Markup('<div class="o_mail_notification">%s</div>') % _(
+                "%(user)s moved %(count)s message(s) here from %(from_channel)s.",
+                user=self.env.user.display_name,
+                count=count,
+                from_channel=self.display_name,
+            )
+            destination.message_post(
+                body=body, message_type="notification", subtype_xmlid="mail.mt_comment"
+            )
+        if notify_source:
+            body = Markup('<div class="o_mail_notification">%s</div>') % _(
+                "%(user)s moved %(count)s message(s) to %(destination)s.",
+                user=self.env.user.display_name,
+                count=count,
+                destination=destination.display_name,
+            )
+            self.message_post(
+                body=body, message_type="notification", subtype_xmlid="mail.mt_comment"
+            )
+
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
         messages = self.env["mail.message"]

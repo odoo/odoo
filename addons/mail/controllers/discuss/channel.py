@@ -4,7 +4,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -314,6 +314,62 @@ class ChannelController(http.Controller):
         channel.parent_channel_id.message_post(body=body, subtype_xmlid="mail.mt_comment")
         # sudo: discuss.channel - skipping ACL for users who created the thread
         channel.sudo().unlink()
+
+    @mail_route("/discuss/messages/move", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_messages_move(
+        self,
+        message_ids,
+        target_channel_id,
+        scope="only",
+        new_topic_name=False,
+        target_sub_channel_id=False,
+        notify_new=True,
+        notify_old=False,
+    ):
+        if not message_ids:
+            raise NotFound()
+        anchor = request.env["mail.message"].browse(sorted(message_ids)[0])
+        source_channel = anchor.channel_id
+        # The user must be able to write to both the source and the destination.
+        if not source_channel or not source_channel.is_editable:
+            raise AccessError(self.env._("You cannot move messages from this channel."))
+        target_channel = request.env["discuss.channel"].search([("id", "=", target_channel_id)])
+        if not target_channel or not target_channel.is_editable:
+            raise AccessError(self.env._("You cannot move messages to this channel."))
+        # Resolve the destination (channel, existing thread or a new one).
+        if target_sub_channel_id:
+            destination = request.env["discuss.channel"].search([("id", "=", target_sub_channel_id)])
+            if not destination or destination.parent_channel_id != target_channel:
+                raise NotFound()
+        elif new_topic_name and new_topic_name.strip():
+            if target_channel.parent_channel_id:
+                raise UserError(self.env._("Cannot create a thread under another thread."))
+            destination = target_channel._create_sub_channel(name=new_topic_name.strip())
+        else:
+            destination = target_channel
+        if destination == source_channel:
+            raise UserError(self.env._("The messages already belong to the selected destination."))
+        # Resolve the messages to move for the requested scope.
+        if scope == "only":
+            messages = anchor
+        elif scope in ("following", "all"):
+            domain = [
+                ("model", "=", "discuss.channel"),
+                ("res_id", "=", source_channel.id),
+                ("message_type", "=", "comment"),
+            ]
+            if scope == "following":
+                domain.append(("id", ">=", anchor.id))
+            messages = request.env["mail.message"].search(domain, order="id asc") | anchor
+        else:
+            raise UserError(self.env._("Invalid move scope: %(scope)s", scope=scope))
+        return {
+            "store_data": destination._move_messages(
+                messages,
+                notify_source=notify_old,
+                notify_destination=notify_new,
+            ),
+        }
 
     @mail_route("/discuss/channel/remove_member", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_remove_member(self, member_id):
