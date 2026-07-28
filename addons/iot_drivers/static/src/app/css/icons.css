@@ -1,0 +1,48 @@
+/* Minimal subset of odoo/addons/web/static/src/webclient/icons.scss's ".oi" rules.
+ * The IoT Box runs without a database, so Odoo's SCSS asset bundling
+ * (web.icons_fonts) is unavailable here: this is a hand-written CSS
+ * equivalent for the classes actually used under iot_drivers/static/src/app.
+ */
+
+.oi {
+    display: inline-block;
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-size: 1em;
+    font-weight: 400 !important;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    vertical-align: -11.5%;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: 'liga';
+}
+
+.oi::before {
+    content: attr(data-icon);
+    display: inline-block;
+    transform: scale(1.214285);
+}
+
+.oi.oi-filled[data-icon]:not([data-icon=""])::before {
+    content: attr(data-icon) "_f";
+}
+
+.oi-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.oi-2x {
+    font-size: 2em;
+}
+
+.oi-sm {
+    font-size: 0.8em;
+    vertical-align: 0;
+}
