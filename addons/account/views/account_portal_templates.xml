@@ -292,7 +292,7 @@
 
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
-            <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_format">
+            <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_formats">
                 <div class="col-12 d-none d-xl-block">
                     <small class="form-text text-muted">
                         You can choose how you want us to send your invoices, and with which electronic format.
