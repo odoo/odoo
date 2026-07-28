@@ -682,12 +682,13 @@ class Website(models.CachedModel):
         Prepare and return configurator_snippets by fetching theme snippets and
         inserting addon snippets at their intended positions.
         """
+        theme_info = self.env['ir.module.module']._get_manifest(theme_name)
         configurator_snippets = {
             **get_manifest('website')['configurator_snippets'],
-            **get_manifest(theme_name).get('configurator_snippets', {}),
+            **theme_info.get('configurator_snippets', {}),
         }
         configurator_snippets_addons = {
-            **get_manifest(theme_name).get('configurator_snippets_addons', {}),
+            **theme_info.get('configurator_snippets_addons', {}),
         }
 
         if not configurator_snippets_addons:
@@ -762,7 +763,7 @@ class Website(models.CachedModel):
         manifests = {
             theme_name: manifest
             for theme_name in client_themes
-            if (manifest := get_manifest(theme_name))
+            if (manifest := Module._get_manifest(theme_name))
         }
         theme_catalog = {
             theme_name: manifest.get('description', '')
@@ -1072,7 +1073,7 @@ class Website(models.CachedModel):
                 el.attrib['data-snippet'] = snippet
 
                 # Theme specific customizations for non-website snippets
-                theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
+                theme_customizations = theme._get_manifest(theme_name).get('theme_customizations', {})
                 customizations = theme_customizations.get(snippet, {})
 
                 # Configure non-website snippet with defaults and theme-level customizations.

@@ -8,7 +8,6 @@ import werkzeug
 from odoo import api, fields, models
 from odoo.exceptions import MissingError
 from odoo.http import request
-from odoo.modules import Manifest
 from odoo.tools import SQL, split_every
 from odoo.tools.constants import PREFETCH_MAX
 
@@ -84,16 +83,15 @@ class IrModuleModule(models.Model):
             if module.name.startswith('theme_') and vals.get('state') == 'installed':
                 _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
 
-                if module.state in ['to install', 'to upgrade']:
+                if module.state == 'to install':
                     websites_to_update = module._theme_get_stream_website_ids()
+                elif module.state == 'to upgrade':
+                    websites_to_update = module._theme_get_websites_to_load()
+                else:
+                    websites_to_update = self.env['website']
 
-                    if module.state == 'to upgrade' and request:
-                        Website = self.env['website']
-                        website = request.env.website
-                        websites_to_update = website if website in websites_to_update else Website
-
-                    for website in websites_to_update:
-                        module._theme_load(website)
+                for website in websites_to_update:
+                    module._theme_load(website)
 
         return super(IrModuleModule, self).write(vals)
 
@@ -361,18 +359,33 @@ class IrModuleModule(models.Model):
                 websites |= website
         return websites
 
+    def _theme_get_websites_to_load(self):
+        """
+            Websites in self's stream onto which the theme should be (re)loaded
+
+            :return: recordset of websites ``website``
+        """
+        websites = self._theme_get_stream_website_ids()
+        if request:
+            website = request.env.website
+            return website if website in websites else self.env['website']
+        return websites
+
     def _theme_upgrade_upstream(self):
         """ Upgrade the upstream dependencies of a theme, and install it if necessary. """
         if not self.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
+        self.sudo()._button_immediate_function(lambda theme: theme._theme_install_or_upgrade())
 
-        def install_or_upgrade(theme):
-            if theme.state != 'installed':
-                theme.button_install()
-            themes = theme + theme._theme_get_upstream()
-            themes.filtered(lambda m: m.state == 'installed').button_upgrade()
+    def _theme_install_or_upgrade(self):
+        if self.state != 'installed':
+            self.button_install()
+        (self + self._theme_get_upstream()).filtered(
+            lambda m: m.state == 'installed'
+        )._theme_upgrade_themes()
 
-        self.sudo()._button_immediate_function(install_or_upgrade)
+    def _theme_upgrade_themes(self):
+        self.button_upgrade()
 
     @api.model
     def _theme_remove(self, website):
@@ -454,7 +467,7 @@ class IrModuleModule(models.Model):
         ], order='name')
 
         for theme in themes:
-            terp = self.get_module_info(theme.name)
+            terp = theme._get_manifest()
             images = terp.get('images', [])
             image_paths = ['/%s/%s' % (theme.name, image) for image in images]
             if all(image_path in existing_urls for image_path in image_paths):
@@ -575,6 +588,9 @@ class IrModuleModule(models.Model):
     # New page templates
     # ----------------------------------------------------------------
 
+    def _get_manifest(self, module_name=None):
+        return self.get_module_info(module_name or self.name)
+
     @api.model
     def _create_model_data(self, views):
         """ Creates model data records for newly created view records.
@@ -673,7 +689,7 @@ class IrModuleModule(models.Model):
             return set(items)
 
         create_count = 0
-        manifest = Manifest.for_addon(self.name)
+        manifest = self._get_manifest()
 
         # ------------------------------------------------------------
         # Configurator
@@ -703,7 +719,7 @@ class IrModuleModule(models.Model):
         if theme and theme.name != self.name:
             # Another module is being installed after the theme was selected.
             # Only include the theme addon snippets targeting this module.
-            theme_manifest = Manifest.for_addon(theme.name)
+            theme_manifest = self._get_manifest(theme.name)
             if theme_manifest:
                 theme_addons = theme_manifest.get('configurator_snippets_addons', {})
                 addons = {self.name: theme_addons.get(self.name, {})}
@@ -773,7 +789,7 @@ class IrModuleModule(models.Model):
     def _generate_primary_page_templates(self):
         """ Generates page templates based on manifest entries. """
         View = self.env['ir.ui.view']
-        manifest = Manifest.for_addon(self.name)
+        manifest = self._get_manifest()
         templates = manifest['new_page_templates']
 
         # TODO Find a way to create theme and other module's template patches
