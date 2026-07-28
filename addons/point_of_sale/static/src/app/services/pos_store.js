@@ -56,7 +56,7 @@ export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
     orderReceiptComponent = OrderReceipt;
-    feedbackScreenAutoSkipDelay = 5000;
+    feedbackScreenAutoSkipDelay = 1500;
 
     static excludedLazyGetters = [
         "defaultPage",
