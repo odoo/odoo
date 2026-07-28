@@ -84,6 +84,7 @@ import { DomObserverPlugin } from "./core/dom_observer_plugin";
 import { LegacyIconMigrationPlugin } from "./main/legacy_icon_migration_plugin";
 import { TableBorderPlugin } from "./main/table/table_border_plugin";
 import { ContrastPlugin } from "./main/font/contrast_plugin";
+import { EmbeddedWhiteboardPlugin } from "./others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin";
 
 export const CORE_PLUGINS = [
     LegacyCompatibilityPlugin,
@@ -179,6 +180,8 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedVideoPlugin,
     CaptionPlugin,
     SyntaxHighlightingPlugin,
+    // TODO make it an opt-in plugin ?
+    EmbeddedWhiteboardPlugin,
 ];
 
 export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [VideoPlugin];
