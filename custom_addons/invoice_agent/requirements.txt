@@ -1,0 +1,12 @@
+# Invoice Agent — extra Python dependencies beyond Odoo's built-in requirements
+# These are installed as a separate pip layer for Docker layer caching.
+#
+# NOTE: The invoice_agent addon currently uses Odoo standard models only.
+# These packages are declared here so the Docker layer is ready when the
+# extraction pipeline is wired in — no rebuild needed.
+
+# Anthropic Claude API client — used for structured-output extraction from OCR text
+anthropic>=0.70.0
+
+# Tesseract OCR Python wrapper — runs the local tesseract binary
+pytesseract>=0.3.10

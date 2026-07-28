@@ -44,37 +44,37 @@ select = [
     "YTT",        # flake8-2020
 ]
 ignore = [
-    "C408",       # unnecessary-collection-call
-    "C420",       # unnecessary-dict-comprehension-for-iterable
-    "C901",       # complex-structure
-    "E266",       # multiple-leading-hashes-for-block-comment
-    "E501",       # line-too-long
-    "E713",       # not-in-test
-    "EM102",      # f-string-in-exception
-    "FA100",      # future-rewritable-type-annotation
-    "PGH003",     # blanket-type-ignore
-    "PIE790",     # unnecessary-placeholder
-    "PIE808",     # unnecessary-range-start
-    "PLC2701",    # import-private-name
-    "PLW2901",    # redefined-loop-name
-    "RUF001",     # ambiguous-unicode-character-string
-    "RUF005",     # collection-literal-concatenation
-    "RUF012",     # mutable-class-default
-    "RUF067",     # non-empty-init-module
-    "RUF100",     # unused-noqa
-    "SIM102",     # collapsible-if
-    "SIM108",     # if-else-block-instead-of-if-exp
-    "SIM117",     # multiple-with-statements
-    "TID252",     # relative-imports
-    "TRY003",     # raise-vanilla-args
-    "TRY300",     # try-consider-else
-    "TRY400",     # error-instead-of-exception
-    "UP031",      # printf-string-formatting
+    "unnecessary-collection-call",       # unnecessary-collection-call
+    "unnecessary-dict-comprehension-for-iterable",       # unnecessary-dict-comprehension-for-iterable
+    "complex-structure",       # complex-structure
+    "multiple-leading-hashes-for-block-comment",       # multiple-leading-hashes-for-block-comment
+    "line-too-long",       # line-too-long
+    "not-in-test",       # not-in-test
+    "f-string-in-exception",      # f-string-in-exception
+    "future-rewritable-type-annotation",      # future-rewritable-type-annotation
+    "blanket-type-ignore",     # blanket-type-ignore
+    "unnecessary-placeholder",     # unnecessary-placeholder
+    "unnecessary-range-start",     # unnecessary-range-start
+    "import-private-name",    # import-private-name
+    "redefined-loop-name",    # redefined-loop-name
+    "ambiguous-unicode-character-string",     # ambiguous-unicode-character-string
+    "collection-literal-concatenation",     # collection-literal-concatenation
+    "mutable-class-default",     # mutable-class-default
+    "non-empty-init-module",     # non-empty-init-module
+    "unused-noqa",     # unused-noqa
+    "collapsible-if",     # collapsible-if
+    "if-else-block-instead-of-if-exp",     # if-else-block-instead-of-if-exp
+    "multiple-with-statements",     # multiple-with-statements
+    "relative-imports",     # relative-imports
+    "raise-vanilla-args",     # raise-vanilla-args
+    "try-consider-else",     # try-consider-else
+    "error-instead-of-exception",     # error-instead-of-exception
+    "printf-string-formatting",      # printf-string-formatting
 ]
 
 [lint.per-file-ignores]
 "**/__init__.py" = [
-    "F401",       # unused-import
+    "unused-import",       # unused-import
 ]
 
 [lint.isort]
