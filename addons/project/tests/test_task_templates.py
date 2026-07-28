@@ -56,6 +56,53 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         child_task = task.child_ids
         self.assertEqual(child_task.partner_id, self.partner_3, "The child of the created task should have the same partner as the project.")
 
+    def test_create_from_template_subtask_keeps_own_project(self):
+        """
+        Sub-tasks of a template set in another project than the template should keep their project,
+        while the ones in the template's project should follow the created task's project.
+        """
+        other_project, target_project = self.env["project.project"].create([
+            {"name": "Other Project"},
+            {"name": "Target Project"},
+        ])
+        sub_in_other_project, sub_in_template_project = self.env["project.task"].create([
+            {
+                "name": "Sub-task in other project",
+                "parent_id": self.template_task.id,
+                "project_id": other_project.id,
+                "sequence": 1,
+            },
+            {
+                "name": "Sub-task in template project",
+                "parent_id": self.template_task.id,
+                "project_id": self.project_with_templates.id,
+                "sequence": 2,
+            },
+        ])
+        sub_without_project = self.env["project.task"].create({
+            "name": "Sub-task of template without project",
+            "parent_id": self.template_task_without_project.id,
+            "project_id": other_project.id,
+        })
+        task = self.env["project.task"].browse(
+            self.template_task.with_context(default_project_id=target_project.id).action_create_from_template()
+        )
+        self.assertEqual(task.project_id, target_project)
+        child_projects = {child.name: child.project_id for child in task.child_ids}
+        self.assertEqual(child_projects[sub_in_other_project.name], other_project,
+            "A sub-task set in another project than the template should keep its project.")
+        self.assertEqual(child_projects[sub_in_template_project.name], target_project,
+            "A sub-task in the template's project should follow the created task's project.")
+        self.assertEqual(child_projects[self.child_task.name], target_project,
+            "A sub-task without its own project should follow the created task's project.")
+        task = self.env["project.task"].browse(
+            self.template_task_without_project.with_context(default_project_id=target_project.id).action_create_from_template()
+        )
+        self.assertEqual(task.project_id, target_project)
+        self.assertEqual(task.child_ids.project_id, other_project,
+            "A sub-task of a template without project should keep its own project.")
+        self.assertEqual(task.child_ids.name, sub_without_project.name)
+
     def test_copy_template(self):
         """
         A copy of a template should be a template
