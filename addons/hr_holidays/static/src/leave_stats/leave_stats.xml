@@ -18,7 +18,7 @@
                         </t>
                         <t t-if="record_leave.unit_of_measure == 'day'"> days</t>
                     </p>
-                    <p t-if="record_leave.remaining_leaves > 0" class="text-muted mb-2">
+                    <p t-if="record_leave.raw_remaining_leaves > 0" class="text-muted mb-2">
                         ( <t t-out="record_leave.remaining_leaves" class="mx-1"/>
                         <t t-if="record_leave.unit_of_measure == 'day'"> days</t> remaining )
                     </p>

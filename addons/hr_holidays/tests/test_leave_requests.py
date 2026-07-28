@@ -1522,18 +1522,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             The purpose is to test whether the timezone is
             taken into account when requesting a leave.
         """
-        self.user_hrmanager.tz = 'Asia/Hong_Kong'  # UTC +08:00
+        self.user_employee.tz = 'Asia/Hong_Kong'  # UTC +08:00
         context = {
             # `date_from/to` in UTC to simulate client values
             'default_date_from': '2024-03-27 23:00:00',
             'default_date_to': '2024-03-28 08:00:00',
-            'leave_skip_state_check': True,
+            'default_employee_id': self.employee_emp.id,
         }
-        leave_form = Form(self.env['hr.leave'].with_user(self.user_hrmanager).with_context(context))
-        leave_form.employee_id = self.employee_emp
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_employee).with_context(context))
         leave_form.work_entry_type_id = self.holidays_type_3
         leave = leave_form.save()
-
         self.assertEqual(leave.number_of_days, 1.0)
 
     def test_filter_time_off_type_multiple_employees(self):
