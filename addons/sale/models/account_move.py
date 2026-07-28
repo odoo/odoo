@@ -205,3 +205,29 @@ class AccountMove(models.Model):
                 ) for sale_order in sale_orders
             )
             move.partner_credit += max(amount_total_currency - amount_to_invoice_currency, 0.0)
+
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
+        # A down payment offsets by construction the very lines it was computed from, so
+        # the aggregated raw total of a fully deducted final invoice must be exactly zero.
+        # But a down payment line can only hold a 'price_unit' rounded to the 'Product
+        # Price' decimal precision, while the product lines it offsets are aggregated from
+        # their raw amounts. When a product subtotal falls on a half cent, that residual is
+        # amplified by round_globally into a full cent, which lands on the largest base line
+        # and can even flip the final invoice into a credit note.
+        # The product amounts have already been invoiced - and rounded - on the down payment
+        # invoice, so target those rounded amounts rather than the raw ones.
+        if (
+            base_line.get('special_type') != 'down_payment'
+            and self.is_invoice(include_receipts=True)
+            and any(
+                line.display_type == 'product' and line.sale_line_ids.filtered('is_downpayment')
+                for line in self.invoice_line_ids
+            )
+        ):
+            probe = dict(base_line)
+            self.env['account.tax']._add_tax_details_in_base_line(probe, self.company_id)
+            base_line['manual_total_excluded_currency'] = base_line['currency_id'].round(
+                probe['tax_details']['raw_total_excluded_currency']
+            )
+        return base_line
