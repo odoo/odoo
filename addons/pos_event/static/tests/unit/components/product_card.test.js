@@ -6,7 +6,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("totalTicketSeats: tickets with seats_max=0 show unlimited when event not limited", async () => {
+test("totalAvailableSeats: tickets with seats_max=0 show unlimited when event not limited", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const event = store.models["event.event"].get(2);
@@ -23,10 +23,10 @@ test("totalTicketSeats: tickets with seats_max=0 show unlimited when event not l
         },
     });
     // When ticket has seats_max=0 and event is not limited, should return 0 (unlimited)
-    expect(comp.totalTicketSeats).toBe(0);
+    expect(comp.totalAvailableSeats).toBe(0);
 });
 
-test("totalTicketSeats: tickets with seats_max=0 respect event limit when event is limited", async () => {
+test("totalAvailableSeats: tickets with seats_max=0 respect event limit when event is limited", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const event = store.models["event.event"].get(3);
@@ -44,10 +44,10 @@ test("totalTicketSeats: tickets with seats_max=0 respect event limit when event 
     });
     // When ticket has seats_max=0 but event is limited, should use event's seats_available
     // This ensures it doesn't show as "Sold out" (-1) but shows available seats
-    expect(comp.totalTicketSeats).toBe(5);
+    expect(comp.totalAvailableSeats).toBe(5);
 });
 
-test("totalTicketSeats: tickets with seats_max=0 show sold out only when event has no seats available", async () => {
+test("totalAvailableSeats: tickets with seats_max=0 show sold out only when event has no seats available", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const event = store.models["event.event"].get(4);
@@ -64,10 +64,10 @@ test("totalTicketSeats: tickets with seats_max=0 show sold out only when event h
         },
     });
     // When event has no seats available, should return -1 (sold out)
-    expect(comp.totalTicketSeats).toBe(-1);
+    expect(comp.totalAvailableSeats).toBe(-1);
 });
 
-test("totalTicketSeats: tickets with seats_max>0 work normally", async () => {
+test("totalAvailableSeats: tickets with seats_max>0 work normally", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const event = store.models["event.event"].get(5);
@@ -82,5 +82,5 @@ test("totalTicketSeats: tickets with seats_max>0 work normally", async () => {
         },
     });
     // Normal case: should sum ticket seats_available
-    expect(comp.totalTicketSeats).toBe(3);
+    expect(comp.totalAvailableSeats).toBe(3);
 });
