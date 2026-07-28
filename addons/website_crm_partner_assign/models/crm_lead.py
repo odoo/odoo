@@ -43,9 +43,15 @@ class CrmLead(models.Model):
 
     def _get_partner_email_update(self):
         self.ensure_one()
-        if self.env.user.has_group('base.group_portal') and self.partner_id.user_id:
+        if 'lead_no_partner_update' in self.env.context:
             return False
         return super()._get_partner_email_update()
+
+    def _get_partner_phone_update(self):
+        self.ensure_one()
+        if 'lead_no_partner_update' in self.env.context:
+            return False
+        return super()._get_partner_phone_update()
 
     def write(self, vals):
         if self.env.user.has_group('base.group_portal') and not self.env.su:
@@ -280,7 +286,7 @@ class CrmLead(models.Model):
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
             raise UserError(_("Not allowed to update the following field(s) : %s.") % ", ".join([key for key in values if not key in fields]))
-        return self.sudo().write(values)
+        return self.sudo().with_context(lead_no_partner_update=True).write(values)
 
     @api.model
     def create_opp_portal(self, values):
