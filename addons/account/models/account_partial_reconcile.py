@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
 from collections import defaultdict
-from datetime import date
+from datetime import timedelta
 import json
 
 class AccountPartialReconcile(models.Model):
@@ -241,6 +241,8 @@ class AccountPartialReconcile(models.Model):
                         * partial:          The account.partial.reconcile record.
                         * percentage:       The reconciled percentage represented by the partial.
                         * payment_rate:     The applied rate of this partial.
+                        * settlement_date:  The date at which the reconciled amount has been paid. Used as
+                                            accounting date of the cash basis entry.
         '''
         tax_cash_basis_values_per_move = {}
 
@@ -297,8 +299,10 @@ class AccountPartialReconcile(models.Model):
                     rate_amount = source_line.balance
                     rate_amount_currency = source_line.amount_currency
                     payment_date = move.date
+                    settlement_date = partial.max_date
                 else:
                     payment_date = counterpart_line.date
+                    settlement_date = payment_date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
@@ -339,6 +343,7 @@ class AccountPartialReconcile(models.Model):
                     'percentage': percentage,
                     'payment_rate': payment_rate,
                     'both_move_posted': partial.debit_move_id.move_id.state == 'posted' and partial.credit_move_id.move_id.state == 'posted',
+                    'settlement_date': settlement_date,
                     'counterpart_move': counterpart_move,
                 }
 
@@ -524,7 +529,6 @@ class AccountPartialReconcile(models.Model):
         :return: The newly created journal entries.
         '''
         tax_cash_basis_values_per_move = self._collect_tax_cash_basis_values()
-        today = fields.Date.context_today(self)
 
         moves_to_create_and_post = []
         moves_to_create_in_draft = []
@@ -540,7 +544,7 @@ class AccountPartialReconcile(models.Model):
                 # Init the journal entry.
                 journal = partial.company_id.tax_cash_basis_journal_id
                 lock_date = move.company_id._get_user_fiscal_lock_date(journal)
-                move_date = partial.max_date if partial.max_date > lock_date else today
+                move_date = max(partial_values['settlement_date'], lock_date + timedelta(days=1))
                 move_vals = {
                     'move_type': 'entry',
                     'date': move_date,
