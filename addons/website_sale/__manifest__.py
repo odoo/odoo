@@ -77,6 +77,8 @@
         "templates/snippets/snippets.xml",
         "templates/snippets/product_snippet_template_data.xml",
         "templates/snippets/s_add_to_cart.xml",
+        "templates/snippets/s_product_search.xml",
+        "templates/snippets/s_product_search_block.xml",
         "templates/snippets/s_donation.xml",
         "templates/snippets/s_dynamic_snippet_products.xml",
         "templates/snippets/s_dynamic_snippet_categories.xml",
@@ -120,6 +122,8 @@
             "website_sale/static/src/scss/website_sale_wishlist.options.scss",
             "website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss",
             "website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml",
+            "website_sale/static/src/snippets/s_product_search/000.scss",
+            "website_sale/static/src/snippets/s_product_search/000.xml",
             "website/static/lib/multirange/multirange_custom.scss",
             "sale/static/src/scss/sale_portal.scss",
             "website_sale/static/src/scss/product_configurator.scss",
@@ -175,6 +179,8 @@
         "website.website_builder_assets": [
             "website_sale/static/src/website_builder/**/*",
             "website_sale/static/src/js/website_sale_utils.js",
+            "website_sale/static/src/snippets/s_product_search/000.xml",
+            "website_sale/static/src/snippets/s_product_search/product_search_utils.js",
             ("remove", "website_sale/static/src/**/*.edit.*"),
         ],
         "website.assets_wysiwyg": [

@@ -147,7 +147,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return []
 
     def _get_shop_domain(
-        self, search, category, attribute_value_dict, search_in_description=True, tags=None
+        self,
+        search,
+        category,
+        attribute_value_dict,
+        search_in_description=True,
+        tags=None,
+        ribbon=None,
     ):
         domains = [self.env.website.sale_product_domain()]
         if search:
@@ -179,6 +185,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 Domain.OR([
                     Domain("product_tag_ids", "in", tags),
                     Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
+                ])
+            )
+
+        if ribbon:
+            domains.append(
+                Domain.OR([
+                    Domain("website_ribbon_id", "=", ribbon),
+                    Domain("product_variant_ids.variant_ribbon_id", "=", ribbon),
                 ])
             )
 
@@ -220,6 +234,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         category=None,
         attribute_value_dict=None,
         tags=None,
+        ribbon=None,
         min_price=0.0,
         max_price=0.0,
         conversion_rate=1,
@@ -229,6 +244,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "allowFuzzy": not post.get("noFuzzy"),
             "category": str(category.id) if category else None,
             "tags": tags,
+            "ribbon": ribbon,
             "min_price": min_price / conversion_rate,
             "max_price": max_price / conversion_rate,
             "attribute_value_dict": attribute_value_dict,
@@ -259,6 +275,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         max_price,
         order=None,
         tags=None,
+        ribbon=None,
         on_sale=None,
         in_stock=None,
         **_kwargs,
@@ -269,6 +286,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "max_price": max_price,
             "order": order,
             "tags": tags,
+            "ribbon": ribbon,
             "on_sale": on_sale,
             "in_stock": in_stock,
             **request.session.get("attribute_value_params", {}),
@@ -310,6 +328,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         min_price=0.0,
         max_price=0.0,
         tags="",
+        ribbon=None,
         on_sale=None,
         in_stock=None,
         **post,
@@ -340,6 +359,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             max_price = float(max_price)
         except ValueError:
             max_price = 0
+
+        try:
+            ribbon = int(ribbon) if ribbon else None
+        except ValueError:
+            ribbon = None
+        post["ribbon"] = ribbon
 
         website_domain = website.website_domain()
 
@@ -456,6 +481,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             category,
             attribute_value_dict,
             tags=tags if filter_by_tags_enabled else None,
+            ribbon=ribbon,
         )
         shop_query = request.env["product.template"]._search(shop_domain)
 

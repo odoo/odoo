@@ -1279,6 +1279,7 @@ class ProductTemplate(models.Model):
         domains = [website.sale_product_domain()]
         category = options.get("category")
         tags = options.get("tags")
+        ribbon = options.get("ribbon")
         min_price = options.get("min_price")
         max_price = options.get("max_price")
         attribute_value_dict = options.get("attribute_value_dict")
@@ -1296,6 +1297,13 @@ class ProductTemplate(models.Model):
                 Domain.OR([
                     Domain("product_tag_ids", "in", tags),
                     Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
+                ])
+            )
+        if ribbon:
+            domains.append(
+                Domain.OR([
+                    Domain("website_ribbon_id", "=", ribbon),
+                    Domain("product_variant_ids.variant_ribbon_id", "=", ribbon),
                 ])
             )
         if min_price:
