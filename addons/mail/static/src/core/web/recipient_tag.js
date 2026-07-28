@@ -19,7 +19,7 @@ export class RecipientTag extends Component {
             id: types.string(),
             name: types.string(),
             onDelete: types.function([]).optional(),
-            resId: types.number().optional(),
+            resId: types.or([types.number(), types.literal(false)]).optional(),
             text: types.string(),
             tooltip: types.string(),
             updateRecipient: types.function([types.string(), types.number()]),
