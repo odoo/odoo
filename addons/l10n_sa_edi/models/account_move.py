@@ -238,7 +238,7 @@ class AccountMove(models.Model):
             return
 
         if not response_data.get("excepted"):
-            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
+            self.journal_id.sudo().l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
 
         self.with_context(no_new_invoice=True).message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
