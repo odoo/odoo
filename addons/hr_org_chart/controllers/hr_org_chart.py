@@ -56,7 +56,7 @@ class HrOrgChartController(http.Controller):
         current_parent = new_parent if new_parent_id is not None else current.parent_id
         max_level = (kw.get('context')['max_level'] or self._managers_level) + 1
         while current_parent and current != current_parent and employee.sudo() != current_parent and len(ancestors) < max_level:
-            current = current_parent
+            current = current_parent.sudo()
             current_parent = current.parent_id if current != employee or not new_parent else new_parent
             if current_parent in ancestors:
                 break
