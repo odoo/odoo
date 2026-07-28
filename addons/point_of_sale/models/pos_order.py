@@ -11,6 +11,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import (
+    SQL,
     float_compare,
     float_is_zero,
     float_repr,
@@ -1123,15 +1124,22 @@ class PosOrder(models.Model):
         if state_filter == 'cancelled':
             state_domain = Domain('state', '=', 'cancel')
         else:
-            state_domain = Domain('state', '!=', 'draft') & Domain('state', '!=', 'cancel')
-        default_domain = state_domain & Domain('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids)
-        real_domain = Domain(domain) & default_domain
-        orders = self.search(real_domain, limit=limit, offset=offset, order='create_date desc')
-        # We clean here the orders that does not have the same currency.
-        # As we cannot use currency_id in the domain (because it is not a stored field),
-        # we must do it after the search.
-        orders = orders.filtered(lambda order: order.currency_id == pos_config.currency_id)
-        orderlines = self.env['pos.order.line'].search(['|', ('refunded_orderline_id.order_id', 'in', orders.ids), ('order_id', 'in', orders.ids)])
+            state_domain = Domain('state', 'not in', ['cancel', 'draft'])
+        order_domain = state_domain & Domain(domain) & Domain([
+            ('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids),
+            ('config_id.currency_id', '=', pos_config.currency_id.id)
+        ])
+        orders = self.search(order_domain, limit=limit, offset=offset, order='create_date desc')
+        PosOrderLineModel = self.env['pos.order.line']
+        line_queries = [
+            PosOrderLineModel._search([('order_id', 'in', orders.ids)]),
+            PosOrderLineModel._search([('refunded_orderline_id.order_id', 'in', orders.ids)]),
+        ]
+        orderlines = PosOrderLineModel.browse(
+            row[0] for row in self.env.execute_query(
+                SQL(' UNION ').join(line_query.subselect() for line_query in line_queries)
+            )
+        )
 
         # We will return to the frontend the ids and the date of their last modification
         # so that it can compare to the last time it fetched the orders and can ask to fetch
@@ -1139,13 +1147,20 @@ class PosOrder(models.Model):
         # The date of their last modification is either the last time one of its orderline has changed,
         # or the last time a refunded orderline related to it has changed.
         orders_info = {order.id: order.write_date for order in orders}
-        for orderline in orderlines:
-            key_order = orderline.order_id.id if orderline.order_id in orders \
-                            else orderline.refunded_orderline_id.order_id.id
-            if orders_info[key_order] < orderline.write_date:
-                orders_info[key_order] = orderline.write_date
-        totalCount = self.search_count(real_domain)
-        return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
+        for line in orderlines:
+            affected_order_id = line.order_id.id
+            if affected_order_id not in orders_info:
+                affected_order_id = line.refunded_orderline_id.order_id.id
+
+            orders_info[affected_order_id] = max(
+                orders_info[affected_order_id],
+                line.write_date,
+            )
+
+        return {
+            'ordersInfo': list(orders_info.items()),
+            'totalCount': self.search_count(order_domain),
+        }
 
     def _should_send_to_preparation(self):
         """
