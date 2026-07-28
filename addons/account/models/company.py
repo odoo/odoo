@@ -771,6 +771,9 @@ class ResCompany(models.Model):
     def write(self, vals):
         self._validate_locks(vals)
 
+        if 'fiscalyear_last_day' in vals or 'fiscalyear_last_month' in vals:
+            self.env.cr.cache.pop('res_currency_fiscalyear_boundaries', None)
+
         self.env['res.company'].invalidate_model(fnames=[f'user_{field}' for field in LOCK_DATE_FIELDS if field in vals])
 
         # Reflect the change on accounts
