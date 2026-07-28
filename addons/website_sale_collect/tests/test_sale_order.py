@@ -6,7 +6,9 @@ from odoo.fields import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
+from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
+from odoo.addons.website_sale.controllers.delivery import Delivery
 
 
 @tagged('post_install', '-at_install')
@@ -16,6 +18,7 @@ class TestSaleOrder(ClickAndCollectCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.product_2 = cls._create_product()
+        cls.Controller = Delivery()
 
     def test_warehouse_is_updated_when_changing_delivery_line(self):
         self.warehouse_2 = self._create_warehouse()
@@ -188,3 +191,37 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.assertEqual(
             new_so.picking_ids.message_partner_ids, new_so.picking_ids.partner_id.parent_id
         )
+
+    def test_so_confirmation_preserves_selected_pickup_location(self):
+        """Ensure pickup location is not reset when calling shop/confirm_order route."""
+        with MockRequest(self.env, website=self.website):
+            order = self.website.sale_get_order(force_create=True)
+            order.partner_id.write({
+                "street": "215 Vine St",
+                "city": "Scranton",
+                "zip": "18503",
+                "state_id": self.env["res.country.state"].search([
+                    ("code", "=", "PA"), ("country_id", "=", self.env.ref("base.us").id),
+                ]).id,
+                "country_id": self.env.ref("base.us").id,
+                "phone": "+1 555-555-5555",
+                "email": "test@example.com",
+            })
+            order.order_line = [
+                Command.create({
+                    "product_id": self.product.id,
+                    "product_uom_qty": 1.0,
+                }),
+            ]
+            order._set_delivery_method(self.in_store_dm)
+            order._set_pickup_location(json.dumps({
+                "id": self.warehouse.id,
+                "name": self.warehouse.partner_id.name,
+                "street": "New test street",
+                "zip_code": self.warehouse.partner_id.zip,
+                "city": "New test city",
+                "state": self.warehouse.partner_id.state_id.code,
+                "country_code": self.warehouse.partner_id.country_code,
+            }))
+            self.Controller.shop_confirm_order()
+        self.assertTrue(order.pickup_location_data)
