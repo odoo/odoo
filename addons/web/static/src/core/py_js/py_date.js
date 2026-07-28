@@ -324,7 +324,7 @@ export class PyDate {
     }
 }
 
-export class PyDateTime {
+export class PyDateTime extends PyDate {
     /**
      * @returns {PyDateTime}
      */
@@ -398,9 +398,7 @@ export class PyDateTime {
      * @param {integer} microsecond
      */
     constructor(year, month, day, hour, minute, second, microsecond) {
-        this.year = year;
-        this.month = month; // 1-indexed => 1 = january, 2 = february, ...
-        this.day = day; // 1-indexed => 1 = first day of month, ...
+        super(year, month, day);
         this.hour = hour;
         this.minute = minute;
         this.second = second;
@@ -434,9 +432,7 @@ export class PyDateTime {
             return false;
         }
         return (
-            this.year === other.year &&
-            this.month === other.month &&
-            this.day === other.day &&
+            super.isEqual(other) &&
             this.hour === other.hour &&
             this.minute === other.minute &&
             this.second === other.second &&
@@ -449,14 +445,8 @@ export class PyDateTime {
      * @returns {string}
      */
     strftime(format) {
-        return format.replace(/%([A-Za-z])/g, (m, c) => {
+        return format.replace(/%([A-Za-z])/g, (match, c) => {
             switch (c) {
-                case "Y":
-                    return fmt4(this.year);
-                case "m":
-                    return fmt2(this.month);
-                case "d":
-                    return fmt2(this.day);
                 case "H":
                     return fmt2(this.hour);
                 case "M":
@@ -464,7 +454,7 @@ export class PyDateTime {
                 case "S":
                     return fmt2(this.second);
             }
-            throw new ValueError(`No known conversion for ${m}`);
+            return super.strftime(match);
         });
     }
 
@@ -480,7 +470,7 @@ export class PyDateTime {
      * @returns {string}
      */
     toJSON() {
-        return this.strftime("%Y-%m-%d %H:%M:%S");
+        return `${super.toJSON()} ${this.strftime("%H:%M:%S")}`;
     }
 
     /**
@@ -500,7 +490,7 @@ export class PyDateTime {
     }
 }
 
-export class PyTime extends PyDate {
+export class PyTime {
     /**
      * @param  {...any} args
      * @returns {PyTime}
@@ -514,11 +504,6 @@ export class PyTime extends PyDate {
     }
 
     constructor(hour, minute, second) {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth();
-        const day = now.getDate();
-        super(year, month, day);
         this.hour = hour;
         this.minute = minute;
         this.second = second;
@@ -531,12 +516,6 @@ export class PyTime extends PyDate {
     strftime(format) {
         return format.replace(/%([A-Za-z])/g, (m, c) => {
             switch (c) {
-                case "Y":
-                    return fmt4(this.year);
-                case "m":
-                    return fmt2(this.month + 1);
-                case "d":
-                    return fmt2(this.day);
                 case "H":
                     return fmt2(this.hour);
                 case "M":
@@ -628,7 +607,7 @@ export class PyRelativeDelta {
      * @returns {PyDateTime|PyDate}
      */
     static add(date, delta) {
-        if (!(date instanceof PyDate || date instanceof PyDateTime)) {
+        if (!(date instanceof PyDate)) {
             throw new NotSupportedError();
         }
 
@@ -674,7 +653,9 @@ export class PyRelativeDelta {
         // then we look at the actual time values held by the computed date.
         const hasTime = Boolean(temp.hour || temp.minute || temp.second || temp.microsecond);
         const returnDate =
-            !hasTime && date instanceof PyDate ? new PyDate(temp.year, temp.month, temp.day) : temp;
+            !hasTime && !(date instanceof PyDateTime)
+                ? new PyDate(temp.year, temp.month, temp.day)
+                : temp;
 
         // Final pass: target the wanted day of the week (if necessary)
         if (delta.weekday !== null) {
