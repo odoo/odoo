@@ -96,6 +96,11 @@ def mock_requests_request(method, url, *args, **kwargs):
                 "InvoiceNumber": "",
             }
 
+    elif method == 'GET' and re.fullmatch(r'/(einvoice|earchive)/(sale|invoices)/[\w-]+/pdf', url):
+        # Outbound PDF retrieval: e-invoice sales use "sale", e-archive uses "invoices".
+        with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
+            response = b64encode(pdf.read()).decode()
+
     elif method == 'GET' and '/einvoice/Purchase' in url:
         if '/xml' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.xml', 'rb') as xml:
@@ -232,6 +237,20 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         invoice._l10n_tr_nilvera_get_submitted_document_status()
 
         self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'succeed')
+
+    @patch_nilvera_request
+    def test_get_pdf_earchive(self, mocked_request):
+        # E-archive PDF retrieval must use the "invoices" resource, not the e-invoice "sale" one.
+        _, invoice = self._generate_invoice_xml(self.earchive_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = 'succeed'
+
+        invoice.l10n_tr_nilvera_get_pdf()
+
+        mocked_request.assert_any_call(
+            'GET',
+            f'/earchive/invoices/{invoice.l10n_tr_nilvera_uuid}/pdf',
+        )
+        self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
 
     @patch_nilvera_request
     def test_fetch_invalid_status(self):
