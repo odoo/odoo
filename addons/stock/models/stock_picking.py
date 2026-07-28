@@ -68,10 +68,6 @@ class StockPickingType(models.Model):
     print_label = fields.Boolean(
         'Generate Shipping Labels', compute="_compute_print_label", store=True, readonly=False,
         help="Check this box if you want to generate shipping label in this operation.")
-    # TODO: delete this field `show_operations`
-    show_operations = fields.Boolean(
-        'Show Detailed Operations', default=False,
-        help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     reservation_method = fields.Selection(
         [('at_confirm', 'At Confirmation'), ('manual', 'Manually'), ('by_date', 'Before scheduled date')],
         'Reservation Method', required=True, default='at_confirm',
@@ -672,8 +668,6 @@ class StockPicking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
-    # TODO: delete this field `show_operations`
-    show_operations = fields.Boolean(related='picking_type_id.show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
     products_availability = fields.Char(

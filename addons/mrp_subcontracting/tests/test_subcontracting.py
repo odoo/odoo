@@ -678,7 +678,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             self.assertEqual(prod_qty, self.env['stock.quant']._gather(product, production_location).quantity)
 
         in_pck_type = self.env.ref('stock.picking_type_in')
-        in_pck_type.write({'show_operations': True})
 
         finished = self.env['product.product'].create({'name': 'Finished Product', 'is_storable': True})
         component = self.env['product.product'].create([{'name': 'Component', 'is_storable': True}])
