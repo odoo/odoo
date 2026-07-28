@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
 
         line_domain = Domain.custom(
             to_sql=lambda table: SQL('%s < %s', table.qty_delivered, table.product_uom_qty),
-        )
+        ) & Domain([('product_id.product_tmpl_id.type', '!=', 'service')])
         return Domain('state', '=', 'sale') & Domain('order_line', effective_operator, line_domain)
 
     #=== CRUD METHODS ===#

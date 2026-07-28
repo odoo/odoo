@@ -63,3 +63,12 @@ class TestSaleOrder(WebsiteSaleCommon):
             self.cart.website_id,
             invoice.website_id,
         )
+
+    def test_is_unfulfilled_excludes_service_products(self):
+        """Check that orders containing only service products or fully delivered physical products
+        are not considered unfulfilled."""
+        self.cart.action_confirm()
+        self.assertIn(self.cart, self.env['sale.order'].search([('is_unfulfilled', '=', True)]))
+        # deliver all storable products
+        self.cart.order_line.filtered(lambda l: l.product_id.type != 'service').qty_delivered = 5.0
+        self.assertNotIn(self.cart, self.env['sale.order'].search([('is_unfulfilled', '=', True)]))
