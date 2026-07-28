@@ -112,7 +112,9 @@ class LivechatController(http.Controller):
 
         chatbot_script = operator_info['chatbot_script']
         is_chatbot_script = operator_info['operator_model'] == 'chatbot.script'
-        non_persisted_channel_params, persisted_channel_params = self._process_extra_channel_params(**kwargs)
+        non_persisted_channel_params, persisted_channel_params = self._process_extra_channel_params(
+            livechat_channel=livechat_channel, **kwargs
+        )
 
         if not persisted:
             channel_id = -1  # only one temporary thread at a time, id does not matter.
