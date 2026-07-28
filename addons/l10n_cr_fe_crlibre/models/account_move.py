@@ -85,7 +85,7 @@ class AccountMove(models.Model):
         L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
     l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
     l10n_cr_fe_es_tiquete = fields.Boolean(
-        string="Consumidor final (Tiquete Electrónico)",
+        string="Consumidor final (Tiquete Electrónico)", copy=False,
         help="Si está marcado, este comprobante se emite ante Hacienda como Tiquete "
              "Electrónico (sin identificar al receptor) en vez de Factura Electrónica.")
     l10n_cr_fe_state = fields.Selection(
@@ -204,7 +204,7 @@ class AccountMove(models.Model):
         config = self._l10n_cr_fe_get_config()
         fecha = fields.Datetime.context_timestamp(self, datetime.now())
 
-        if not self.l10n_cr_fe_es_tiquete and not self.partner_id.vat:
+        if self._l10n_cr_fe_get_tipo_documento_info() != L10N_CR_FE_TIPO_DOCUMENTO_TE and not self.partner_id.vat:
             raise UserError(
                 _("El cliente '%s' no tiene cédula/identificación configurada. Hacienda "
                   "rechaza los comprobantes si el receptor no tiene un número de "
@@ -233,7 +233,7 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
             **resumen,
         }
-        if self.l10n_cr_fe_es_tiquete:
+        if self._l10n_cr_fe_get_tipo_documento_info() == L10N_CR_FE_TIPO_DOCUMENTO_TE:
             params['omitir_receptor'] = 'true'
         else:
             params['receptor_nombre'] = self.partner_id.name or ''
@@ -282,7 +282,7 @@ class AccountMove(models.Model):
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
             xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-            if self.l10n_cr_fe_es_tiquete:
+            if self._l10n_cr_fe_get_tipo_documento_info() == L10N_CR_FE_TIPO_DOCUMENTO_TE:
                 receptor_tipo, receptor_num = '', ''
             else:
                 receptor_tipo = self.partner_id.l10n_cr_fe_identification_type or '01'
