@@ -34,11 +34,13 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
         self.assertEqual(len(self.main_pos_config.advanced_employee_ids), 1)
         self.assertEqual(self.main_pos_config.advanced_employee_ids.company_id, self.main_pos_config.company_id)
         advanced_employee = self.main_pos_config.advanced_employee_ids
+        advanced_employee.action_archive()
 
-        # Test that the previously employee is used
+        # Test that the previously created employee is used, even if it is archived
         self.main_pos_config.with_context(from_settings_view=True).write({
             'advanced_employee_ids': [],
         })
-        self.assertEqual(len(self.main_pos_config.advanced_employee_ids), 1)
-        self.assertEqual(self.main_pos_config.advanced_employee_ids.company_id, self.main_pos_config.company_id)
-        self.assertEqual(self.main_pos_config.advanced_employee_ids, advanced_employee)
+        advanced_employees = self.main_pos_config.with_context(active_test=False).advanced_employee_ids
+        self.assertEqual(len(advanced_employees), 1)
+        self.assertEqual(advanced_employees.company_id, self.main_pos_config.company_id)
+        self.assertEqual(advanced_employees, advanced_employee)
