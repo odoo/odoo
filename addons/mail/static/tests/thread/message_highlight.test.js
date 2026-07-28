@@ -7,7 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
+import { Message } from "@mail/core/common/message";
 import { describe, test } from "@odoo/hoot";
 import { advanceTime, tick, waitFor } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
@@ -59,11 +59,11 @@ test("can highlight message (slow ref registration)", async () => {
     }
     await pyEnv["discuss.channel"].set_message_pin(channelId, middleMessageId, true);
     const { promise: refRegistered, resolve: resolveRefRegistration } = Promise.withResolvers();
-    patchWithCleanup(UseForwardRefsToParent.prototype, {
-        async registerRef(...args) {
+    patchWithCleanup(Message.prototype, {
+        async registerMessageEl(...args) {
             // Ensure scroll is made even when messages are mounted later.
             await refRegistered;
-            return super.registerRef(...args);
+            return super.registerMessageEl(...args);
         },
     });
     await start();

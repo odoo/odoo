@@ -21,7 +21,7 @@
         t-att-class="{'o-active': this.isActive, 'bg-transparent text-muted opacity-75': !this.isActive}"
         t-att-title="this.props.title"
         t-on-click="this.onClick"
-        t-ref="this.rootRef"
+        t-ref="this.props.headerEls"
         t-att-data-header-id="this.props.id"
     >
         <t t-call-slot="default"/>

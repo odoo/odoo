@@ -1,6 +1,6 @@
 import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
-import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, props, signal, t, useEffect, xml } from "@odoo/owl";
+import { useScrollState } from "@mail/utils/common/hooks";
+import { Component, props, Resource, signal, t, useEffect, xml } from "@odoo/owl";
 
 export class Tabs extends Component {
     static template = "mail.Tabs";
@@ -12,22 +12,34 @@ export class Tabs extends Component {
             ref: t.signal(t.ref()).optional(() => signal.ref()),
         });
         this.activeHeaderId = signal(this.props.initialTabId);
-        this.headerRefs = useChildRefs();
+        /** Header elements, each `TabHeader` binding its own with `t-ref`. */
+        this.headerEls = new Resource({
+            name: "tabHeaders",
+            validation: t.instanceOf(HTMLElement),
+        });
         this.navRef = signal();
         this.scrollState = useScrollState(this.navRef);
         useChildSubEnv({
             tabsContext: {
-                headerRefs: this.headerRefs,
+                headerEls: this.headerEls,
                 isActive: (id) => this.activeHeaderId() === id,
                 setActiveTab: (id) => this.activeHeaderId.set(id),
             },
         });
         useEffect(() => {
             const headerEls = this.navRef()?.children;
-            if (!this.headerRefs.has(this.activeHeaderId()) && headerEls?.length) {
+            if (!this.hasHeader(this.activeHeaderId()) && headerEls?.length) {
                 this.activeHeaderId.set(headerEls[0].dataset.headerId);
             }
         });
+    }
+
+    /**
+     * @param {string|number} id
+     * @returns {boolean} whether a header with the given id is currently mounted
+     */
+    hasHeader(id) {
+        return this.headerEls.items().some((el) => el.dataset.headerId === String(id));
     }
 
     /**
@@ -51,12 +63,10 @@ export class InternalTabHeader extends Component {
     setup() {
         super.setup(...arguments);
         this.props = props({
-            headerRefs: t.instanceOf(Map),
+            headerEls: t.instanceOf(Resource),
             id: t.or([t.string(), t.number()]),
             title: t.string().optional(),
         });
-        this.rootRef = signal();
-        useForwardRefsToParent("headerRefs", (props) => props.id, this.rootRef);
     }
 
     onClick() {
@@ -70,13 +80,13 @@ export class InternalTabHeader extends Component {
 
 /**
  * Owl doesn’t support dynamic slot names (`t-set-slot`). Tabs therefore define
- * two static slots: one for the headers and one for the content. To manage header
- * refs internally, we use `useForwardRefsToParent`. `TabHeader` is a thin wrapper
- * around `InternalTabHeader` that forwards these refs while keeping the external
- * API simple.
+ * two static slots: one for the headers and one for the content. To gather header
+ * elements internally, `Tabs` owns a resource that each header binds with `t-ref`.
+ * `TabHeader` is a thin wrapper around `InternalTabHeader` that forwards this
+ * resource while keeping the external API simple.
  */
 export class TabHeader extends Component {
-    static template = xml`<InternalTabHeader id="this.props.id" title="this.props.title" headerRefs="this.env.tabsContext.headerRefs"><t t-call-slot="default"/></InternalTabHeader>`;
+    static template = xml`<InternalTabHeader id="this.props.id" title="this.props.title" headerEls="this.env.tabsContext.headerEls"><t t-call-slot="default"/></InternalTabHeader>`;
     static components = { InternalTabHeader };
 
     setup() {

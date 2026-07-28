@@ -3,12 +3,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/model/export";
-import {
-    useChildRefs,
-    useMessageSelection,
-    useOnChange,
-    useVisible,
-} from "@mail/utils/common/hooks";
+import { useMessageSelection, useOnChange, useVisible } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
 import {
@@ -20,6 +15,7 @@ import {
     onWillUnmount,
     props,
     proxy,
+    Resource,
     signal,
     t,
     untrack,
@@ -62,9 +58,13 @@ export class Thread extends Component {
         this.onWheel = this.onWheel.bind(this);
         // bound once so `onParentMessageClick` is a stable (props.static) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
-        this.messageRefs = useChildRefs();
+        /** Message elements, each `Message`/`NotificationMessage` adding its own. */
+        this.messageEls = new Resource({
+            name: "messageEls",
+            validation: t.instanceOf(HTMLElement),
+        });
         useOnChange(
-            () => [this.messageRefs.size],
+            () => [this.messageEls.items().length],
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
@@ -230,9 +230,9 @@ export class Thread extends Component {
                 if (!this.props.jumpToNewMessage) {
                     return;
                 }
-                const el = this.messageRefs.get(
+                const el = this.getMessageEl(
                     this.channel?.self_member_id.new_message_separator_ui - 1
-                )?.();
+                );
                 if (el) {
                     el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
                         behavior: "instant",
@@ -262,6 +262,14 @@ export class Thread extends Component {
 
     get channel() {
         return this.props.thread.channel;
+    }
+
+    /**
+     * @param {number} messageId
+     * @returns {HTMLElement|undefined} element of the message, if it is mounted
+     */
+    getMessageEl(messageId) {
+        return this.messageEls.items().find((el) => el.dataset.messageId === String(messageId));
     }
 
     computeJumpPresentPosition() {
@@ -490,7 +498,7 @@ export class Thread extends Component {
         if (!firstNewerMessage) {
             return false;
         }
-        const firstNewestMessageEl = this.messageRefs.get(firstNewerMessage.id)?.();
+        const firstNewestMessageEl = this.getMessageEl(firstNewerMessage.id);
         if (!firstNewestMessageEl) {
             return false;
         }
@@ -699,7 +707,7 @@ export class Thread extends Component {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
         }
-        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.();
+        const el = this.getMessageEl(this.messageHighlight.highlightedMessageId);
         if (el) {
             this.scrollingToHighlight = true;
             await this.messageHighlight.startupPromise;

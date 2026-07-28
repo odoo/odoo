@@ -954,56 +954,6 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
 }
 
 /**
- * Hook that gathers the signal refs of many children, each child saving its own
- * ref under an id of its choice.
- * @see useForwardRefsToParent
- */
-export function useChildRefs() {
-    /** @type {Map<any, import("@odoo/owl").Signal<Element>>} */
-    const map = new Map();
-    return proxy(map);
-}
-
-export class UseForwardRefsToParent {
-    /**
-     * @param {string} propName
-     * @param {(any) => any} getRefIdFn
-     * @param {import("@odoo/owl").Signal<Element>} ref
-     */
-    constructor(propName, getRefIdFn, ref) {
-        const compProps = props();
-        this.ref = ref;
-        // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
-        // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
-        useLayoutEffect(
-            (map, key) => {
-                if (map) {
-                    this.registerRef(map, key);
-                    return () => map.delete(key);
-                }
-            },
-            () => [compProps[propName], getRefIdFn(compProps)]
-        );
-    }
-
-    registerRef(map, key) {
-        map.set(key, this.ref);
-    }
-}
-
-/**
- * Hook that saves the `ref` of a child in the `useChildRefs()` map of its parent,
- * under an id of the child's choice.
- *
- * @param {string} propName name of prop that contains a `useChildRefs()` object
- * @param {(Props) => any} getRefIdFn function whose evaluation returns the key in `useChildRefs()` object to save the `ref`, with props passed as param.
- * @param {import("@odoo/owl").Signal<Element>} ref the `ref` that is saved in `useChildRefs()` at key from `getRefIdFn` function evaluation
- */
-export function useForwardRefsToParent(propName, getRefIdFn, ref) {
-    new UseForwardRefsToParent(propName, getRefIdFn, ref);
-}
-
-/**
  * @template {readonly any[]} [T=any[]]
  * @param {(...deps: T) => void} callback
  * @param {Object} [options]

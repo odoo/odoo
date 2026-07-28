@@ -4,6 +4,7 @@
     <t t-name="mail.Message">
         <t t-set="dummy" t-value="this.computeActions()"/>
         <div class="o-mail-Message position-relative rounded-0 bg-inherit"
+            t-att-data-message-id="this.message.id"
             t-att-data-bookmarked="this.message.is_bookmarked"
             t-att-data-persistent="this.message.persistent"
             t-att-class="this.attClass"
