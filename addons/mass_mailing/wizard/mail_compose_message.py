@@ -45,7 +45,8 @@ class MailComposeMessage(models.TransientModel):
                     'mass_mailing.mass_mailing_mail_layout',
                     {'body': mail_values['body_html'], 'mailing_style': Markup(f'<style>{styles}</style>')},
                     minimal_qcontext=True,
-                    raise_if_not_found=False
+                    raise_if_not_found=False,
+                    preserve_comments=True,
                 )
                 if body:
                     mail_values['body_html'] = body
