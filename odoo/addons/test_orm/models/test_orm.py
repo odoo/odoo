@@ -2020,7 +2020,7 @@ class TestOrmPrecomputeRequired(models.Model):
     _name = 'test_orm.precompute.required'
     _description = 'a model with precomputed required fields'
 
-    partner_id = fields.Many2one('res.partner', required=True)
+    partner_id = fields.Many2one('test_orm.partner', required=True)
     name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)
 
 

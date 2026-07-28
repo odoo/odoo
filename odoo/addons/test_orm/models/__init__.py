@@ -4,6 +4,7 @@ from . import (
     test_action_bindings,
     test_config,
     test_domain_expression,
+    test_fields,
     test_inherits,
     test_ir_qweb_fields,
     test_orm,
