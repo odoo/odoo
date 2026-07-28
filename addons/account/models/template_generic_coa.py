@@ -30,10 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         :rtype: dict[(str, int), dict]
         """
-        return {
-            self.env.company.id: {
+        company_data = {
                 'anglo_saxon_accounting': True,
-                'account_fiscal_country_id': 'base.us',
                 'bank_account_code_prefix': '1014',
                 'cash_account_code_prefix': '1015',
                 'transfer_account_code_prefix': '1017',
@@ -50,7 +48,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'stock_valuation',
                 'account_production_wip_account_id': 'wip',
                 'account_production_wip_overhead_account_id': 'cost_of_production',
-            },
+            }
+        if not self.env.company.account_fiscal_country_id:
+            company_data.update({'account_fiscal_country_id': 'base.us'})
+
+        return {
+            self.env.company.id: company_data,
         }
 
     @template('generic_coa', 'account.account')
