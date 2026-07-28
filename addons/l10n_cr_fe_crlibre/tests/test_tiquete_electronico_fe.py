@@ -82,3 +82,23 @@ class TestTiqueteElectronicoFe(TransactionCase):
             for p in patchers:
                 p.stop()
         self.assertEqual(tiquete.l10n_cr_fe_state, 'enviado')
+
+    def test_action_post_blocks_credit_note_on_tiquete_original(self):
+        tiquete = self._create_tiquete()
+        tiquete.write({'l10n_cr_fe_clave': '5' * 50, 'l10n_cr_fe_state': 'aceptado'})
+        credit_note = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'reversed_entry_id': tiquete.id,
+            'l10n_cr_fe_motivo': 'devolucion_mercancia',
+            'l10n_cr_fe_codigo_referencia': '06',
+            'l10n_cr_fe_razon': 'Prueba',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        credit_note.action_post()
+        self.assertEqual(credit_note.state, 'posted')
+        self.assertEqual(credit_note.l10n_cr_fe_state, 'error')
