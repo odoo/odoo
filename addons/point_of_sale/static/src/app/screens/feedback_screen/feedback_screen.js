@@ -45,7 +45,7 @@ export class FeedbackScreen extends Component {
             this.state.loading = false;
             this.timeout = setTimeout(() => {
                 this.goNext();
-            }, 5000);
+            }, 1500);
         }
     }
 
