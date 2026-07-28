@@ -92,7 +92,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 })],
         })
         so.action_confirm()
-        so.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        so.picking_ids.move_ids.write({'quantity': 0.5, 'picked': True})
         so.picking_ids.button_validate()
 
         invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
