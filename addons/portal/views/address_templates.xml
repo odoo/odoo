@@ -70,18 +70,18 @@
                     t-set="can_be_edited"
                     t-value="address._can_be_edited_by_current_customer()"
                 />
+                <t t-set="is_user_address" t-value="address == env.user.partner_id"/>
                 <t t-set="selected" t-value="address == selected_address"/>
-                <t t-call="portal.address_card"
+                <!-- Edition of main address should go through dedicated page -->
+                <t
+                    t-call="portal.address_card"
+                    address_update_url="is_user_address and '/my/account?redirect=/my/addresses'"
                     contact="address"
                     can_be_edited="can_be_edited"
+                    is_user_address="is_user_address"
                     selected="selected"
-                    show_removal="can_be_edited and not selected and not is_user_address">
-                    <t t-set="is_user_address" t-value="address == env.user.partner_id"/>
-                    <t t-if="is_user_address">
-                        <!-- Edition of main address should go through dedicated page -->
-                        <t t-set="address_update_url" t-valuef="/my/account?redirect=/my/addresses"/>
-                    </t>
-                </t>
+                    show_removal="can_be_edited and not selected and not is_user_address"
+                />
             </t>
         </div>
     </template>
