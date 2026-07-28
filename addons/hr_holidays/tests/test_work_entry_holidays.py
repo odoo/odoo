@@ -16,7 +16,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 
 @tagged('work_entry')
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
+class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

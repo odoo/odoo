@@ -6,14 +6,10 @@ import { formatFloatTime } from "@web/views/fields/formatters";
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
-import { ColorPickerField } from "@web/views/fields/color_picker/color_picker_field";
 const { DateTime } = luxon;
 
 export class LeaveStatsComponent extends Component {
     static template = "hr_holidays.LeaveStatsComponent";
-    static components = {
-        ColorPickerField,
-    };
     static props = { ...standardWidgetProps };
 
     setup() {
@@ -112,7 +108,7 @@ export class LeaveStatsComponent extends Component {
     }
 
     async action_department_leaves() {
-        if (!this.state.departmentLeavesIds) {
+        if (!this.state.departmentLeavesIds.length) {
             return;
         }
         return this.action.doAction({
@@ -158,6 +154,7 @@ export class LeaveStatsComponent extends Component {
                     leaves_approved: format(vals.leaves_approved),
                     max_leaves: format(vals.max_leaves),
                     remaining_leaves: format(vals.remaining_leaves),
+                    raw_remaining_leaves: vals.remaining_leaves,
                 };
             });
     }
