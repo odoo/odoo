@@ -18,7 +18,7 @@ patch(PosStore.prototype, {
             }
             // Get the payment interface
             const paymentMethod = paymentLine.payment_method_id;
-            const paymentInterface = paymentMethod?.payment_terminal;
+            const paymentInterface = paymentMethod?.payment_interface;
 
             // Update payment status based on callback
             if (payload.success) {
