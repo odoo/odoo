@@ -759,6 +759,10 @@ class Website(models.Model):
             view.arch_fs = False
 
         website = self.get_current_website()
+        menu = self.env['website.menu'].search([
+            ('url', 'in', [page_url, page_url.lstrip("/")]),
+            ('website_id', '=', website.id),
+        ], limit=1)
         if ispage:
             default_page_values = {
                 'url': page_url,
@@ -766,6 +770,11 @@ class Website(models.Model):
                 'view_id': view.id,
                 'track': True,
             }
+            # To link the page with the menus having the same URL as the the page
+            if menu.exists():
+                default_page_values.update({'menu_ids': menu.ids})
+                result['menu_id'] = menu.id
+                add_menu = False
             if page_values:
                 default_page_values.update(page_values)
             page = self.env['website.page'].create(default_page_values)
