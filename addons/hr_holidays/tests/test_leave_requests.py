@@ -1155,6 +1155,22 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leave.with_user(self.user_employee_id)._action_user_cancel('Cancel leave')
             self.assertFalse(leave.meeting_id.active)
 
+    def test_mandatory_supporting_document(self):
+        leave_type_validation = self.env['hr.leave.type'].create({
+            'name': 'Test Time off with support document (HR Validation)',
+            'support_document': True,
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+        })
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Leave without doc',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': leave_type_validation.id,
+            'request_date_from': fields.Date.today() + timedelta(days=1),
+            'request_date_to': fields.Date.today() + timedelta(days=1),
+            'supported_attachment_ids': [(6, 0, [])],
+        })
+
     def test_create_support_document_in_the_past(self):
         with freeze_time('2022-10-19'):
             self.env['hr.leave'].with_user(self.user_employee_id).create({
