@@ -793,12 +793,15 @@ async function mail_thread_get_followers(request) {
     /** @type {import("mock_models").MailFollowers} */
     const MailFollowers = this.env["mail.followers"];
 
-    const { thread_id, thread_model, offset = 0 } = await parseRequestParams(request);
+    const { thread_id, thread_model, offset = 0, search_term } = await parseRequestParams(request);
     const threadDomain = [
         ["res_id", "=", thread_id],
         ["res_model", "=", thread_model],
     ];
     const domain = [...threadDomain, ["partner_id", "!=", this.env.user.partner_id]];
+    if (search_term) {
+        domain.push("|", ["name", "ilike", search_term], ["email", "ilike", search_term]);
+    }
     const limit = 20;
     const followerIds = MailFollowers.search(
         domain,

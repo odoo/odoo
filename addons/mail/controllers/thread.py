@@ -148,12 +148,13 @@ class ThreadController(StoreController):
         }
 
     @mail_route("/mail/thread/get_followers", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_get_followers(self, thread_model, thread_id, offset=0):
+    def mail_thread_get_followers(self, thread_model, thread_id, offset=0, search_term=None):
         """This method returns a page of followers sorted by name and then by id
         to keep offset pagination stable when followers have the same name.
         :param thread_model: Model on which we are currently working.
         :param thread_id: ID of the document whose followers are fetched.
         :param offset: Number of sorted followers already fetched.
+        :param search_term: Term used to filter followers by name or email.
         :return: Follower data and IDs. If offset is 0 or len(followers) < limit, also returns:
             followersCount: including the current user, to update the global thread count.
             followers_count: excluding the current user, for load more requests.
@@ -165,6 +166,11 @@ class ThreadController(StoreController):
             & Domain("res_model", "=", thread_model)
         )
         domain = thread_domain & Domain("partner_id", "!=", request.env.user.partner_id.id)
+        if search_term:
+            domain &= (
+                Domain("name", "ilike", search_term)
+                | Domain("email", "ilike", search_term)
+            )
         limit = 20
         followers = request.env["mail.followers"].search_fetch(
             domain, offset=offset, limit=limit, order="name ASC, id ASC",
