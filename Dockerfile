@@ -41,8 +41,18 @@ RUN apt-get update \
 # enforcement (externally-managed-environment). We are the image builder;
 # we know what we're doing.
 COPY custom_addons/invoice_agent/requirements.txt /tmp/invoice_agent_requirements.txt
+# --ignore-installed: Odoo 19 ships typing_extensions 4.10.0 as a system
+# package (deb, not pip). Anthropic pulls typing-extensions>=4.14 and pip
+# tries to uninstall the system version, which fails because deb packages
+# don't have pip RECORD files. --ignore-installed tells pip to just overlay
+# the new version without touching the old package metadata.
 RUN if [ -s /tmp/invoice_agent_requirements.txt ]; then \
-    pip install --break-system-packages --no-cache-dir -r /tmp/invoice_agent_requirements.txt; \
+    pip cache purge 2>/dev/null || true; \
+    pip install --break-system-packages --no-cache-dir \
+    --ignore-installed \
+    --default-timeout=300 --retries=5 \
+    --no-input \
+    -r /tmp/invoice_agent_requirements.txt; \
     fi \
     && rm -f /tmp/invoice_agent_requirements.txt
 
