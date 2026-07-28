@@ -169,10 +169,9 @@ class SaleOrderLine(models.Model):
                 '&',
                     ('timesheet_invoice_id.state', '=', 'cancel'),
                     ('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy')]
-        if refund_account_moves:
-            credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
-            timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
-        domain = expression.AND([domain, timesheet_domain])
+        if not refund_account_moves:
+            # Total delivered quantity in scope regardless of invoicing status if there was a refund.
+            domain = expression.AND([domain, timesheet_domain])
         if start_date:
             domain = expression.AND([domain, [('date', '>=', start_date)]])
         if end_date:
@@ -180,16 +179,22 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            invoice_lines_to_calculate = line._get_invoice_lines().filtered(lambda inv: inv.move_id in refund_account_moves or inv.move_id.reversed_entry_id in refund_account_moves)
             qty_to_invoice = mapping.get(line.id, 0.0)
+
+            # Net quantity already invoiced, based only on POSTED invoices/credit
+            # notes for this line — credit notes reduce it regardless of which invoice they
+            # reversed or whether those hours have since been re-invoiced.
+            invoiced_qty = 0.0
             if refund_account_moves:
-                invoiced_qty = 0.0
-                for invoice_line in invoice_lines_to_calculate:
+                for invoice_line in line._get_invoice_lines():
+                    if invoice_line.move_id.state != 'posted':
+                        continue
                     qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     if invoice_line.move_id.move_type == 'out_invoice':
                         invoiced_qty += qty
                     elif invoice_line.move_id.move_type == 'out_refund':
                         invoiced_qty -= qty
+
                 qty_to_invoice -= invoiced_qty
 
             if qty_to_invoice:

@@ -1463,6 +1463,23 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
     def test_partial_refund_timesheet_qty_to_invoice(self):
         """When a delivered-timesheet invoice line is partially refunded, the next invoice must
         only include the remaining non-invoiced hours."""
+        def _invoice(sale_order):
+            wizard = self.env['sale.advance.payment.inv'].with_context(
+                active_model='sale.order',
+                active_ids=sale_order.ids,
+                default_journal_id=self.company_data['default_journal_sale'].id,
+            ).create({})
+            return self.env['account.move'].browse(
+                wizard.create_invoices().get('res_id', []))
+
+        def _log_time(so_line, hours, name):
+            self.env['account.analytic.line'].create({
+                'name': name,
+                'project_id': so_line.task_id.project_id.id,
+                'task_id': so_line.task_id.id,
+                'unit_amount': hours,
+                'employee_id': self.employee_user.id,
+            })
 
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -1478,13 +1495,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         so_line = sale_order.order_line[0]
         sale_order.action_confirm()
-        self.env['account.analytic.line'].create({
-            'name': 'Timesheet 20h',
-            'project_id': so_line.task_id.project_id.id,
-            'task_id': so_line.task_id.id,
-            'unit_amount': 20.0,
-            'employee_id': self.employee_user.id,
-        })
+        _log_time(so_line, 20.0, 'Timesheet 20h')
         invoice = sale_order._create_invoices()[0]
         invoice.action_post()
         self.assertEqual(so_line.qty_invoiced, 20.0)
@@ -1502,25 +1513,22 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         credit_note.action_post()
         self.assertEqual(so_line.qty_invoiced, 9.0)
 
-        self.env['account.analytic.line'].create({
-            'name': 'Timesheet 5h',
-            'project_id': so_line.task_id.project_id.id,
-            'task_id': so_line.task_id.id,
-            'unit_amount': 5.0,
-            'employee_id': self.employee_user.id,
-        })
-
-        context = {
-            'active_model': 'sale.order',
-            'active_ids': sale_order.ids,
-            'default_journal_id': self.company_data['default_journal_sale'].id
-        }
-        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
-        invoice_dict = wizard.create_invoices()
-        new_invoice = self.env['account.move'].browse(invoice_dict.get('res_id', []))
+        _log_time(so_line, 5.0, 'Timesheet 5h')
+        new_invoice = _invoice(sale_order)
         self.assertEqual(len(new_invoice.invoice_line_ids), 1)
         self.assertEqual(new_invoice.invoice_line_ids.quantity, 16.0)
         self.assertEqual(so_line.timesheet_ids.timesheet_invoice_id, new_invoice, "All timesheets should be linked to the newly created invoice")
+        new_invoice.action_post()
+
+        _log_time(so_line, 3.0, 'Timesheet 3h')
+        self.assertEqual(so_line.qty_delivered, 28.0)
+        self.assertEqual(so_line.qty_invoiced, 25.0)
+        third_invoice = _invoice(sale_order)
+        self.assertEqual(
+        third_invoice.move_type, 'out_invoice',
+        "3 h of new work must produce an INVOICE, not a credit note "
+        "(got %s)" % third_invoice.move_type)
+        self.assertEqual(third_invoice.invoice_line_ids.quantity, 3.0)
 
     def test_portal_sale_order_timesheet_visibility(self):
         """
