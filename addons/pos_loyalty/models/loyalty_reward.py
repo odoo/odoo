@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
-from odoo.fields import Domain
-
-import ast
 import json
+
+from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class LoyaltyReward(models.Model):
     _name = 'loyalty.reward'
     _inherit = ['loyalty.reward', 'pos.load.mixin']
+
+    discount_pos_category_id = fields.Many2one(
+        string="Discounted PoS Categories", comodel_name='pos.category',
+        help="Restricts reward for selected PoS categories"
+    )
 
     def _get_discount_product_values(self):
         res = super()._get_discount_product_values()
@@ -40,13 +43,20 @@ class LoyaltyReward(models.Model):
         return ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                 'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
                 'discount_max_amount', 'discount_line_product_id', 'reward_product_id',
-                'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain']
+                'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain', 'discount_pos_category_id']
 
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         for reward in read_records:
-            reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
+            domain = self._replace_ilike_with_in(reward['reward_product_domain'])
+            if self.discount_pos_category_id:
+                pos_category_ids = self.discount_pos_category_id._get_descendants()
+                if domain is Domain.TRUE:
+                    domain = Domain('pos_categ_ids', 'in', pos_category_ids.ids)
+                else:
+                    domain = Domain.OR([domain, Domain('pos_categ_ids', 'in', pos_category_ids.ids)])
+            reward['reward_product_domain'] = domain
         return read_records
 
     def _get_reward_product_domain_fields(self, config):
