@@ -51,7 +51,7 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
-    feedbackScreenAutoSkipDelay = 1000;
+    feedbackScreenAutoSkipDelay = 1500;
 
     static excludedLazyGetters = [
         "defaultPage",
