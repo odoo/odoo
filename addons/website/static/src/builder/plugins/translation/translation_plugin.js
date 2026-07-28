@@ -125,6 +125,7 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
+        this.test = 0;
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
