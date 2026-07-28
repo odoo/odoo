@@ -1180,6 +1180,12 @@ test("click on a button type='unarchive' to unarchive a record in a column", asy
 test.tags("desktop");
 test("kanban with an action id as on_create attrs", async () => {
     mockService("action", {
+        async loadAction(action) {
+            expect.step(`loadAction ${action}`);
+            return {
+                type: "ir.actions.client",
+            };
+        },
         doAction(action, options) {
             // simplified flow in this test: simulate a target new action which
             // creates a record and closes itself
@@ -1213,6 +1219,7 @@ test("kanban with an action id as on_create attrs", async () => {
         "get_views",
         "web_search_read",
         "has_group",
+        "loadAction some.action",
         "doAction some.action",
         "web_search_read",
     ]);
@@ -1232,7 +1239,7 @@ test("Open new card in form view, without reloading the kanban view", async () =
             res_model: "partner",
             type: "ir.actions.act_window",
             target: "new",
-            views: [["create_view_ref", "form"]],
+            views: [[16, "form"]],
         },
     ]);
     Partner._views = {
@@ -1248,7 +1255,7 @@ test("Open new card in form view, without reloading the kanban view", async () =
             <form>
                 <field name="foo"/>
             </form>`,
-        "form,create_view_ref": `
+        "form,16": `
             <form>
                 <field name="foo"/>
                 <footer>
@@ -9194,7 +9201,7 @@ test("[Offline] disable new button even if previously visited (on_create)", asyn
                 </templates>
             </kanban>`,
         "form,false": `<form><field name="foo"/></form>`,
-        "form,create_view_ref": `
+        "form,16": `
             <form>
                 <field name="foo"/>
                 <footer>
@@ -9221,7 +9228,7 @@ test("[Offline] disable new button even if previously visited (on_create)", asyn
             res_model: "partner",
             type: "ir.actions.act_window",
             target: "new",
-            views: [["create_view_ref", "form"]],
+            views: [[16, "form"]],
         },
     ]);
 
@@ -9257,4 +9264,48 @@ test("widgets in kanban view: verify immediate autosave", async () => {
 
     await contains(".o_field_boolean_toggle input").click();
     expect.verifySteps(["web_save"]);
+});
+
+test("Expect expand_content icon when on_create is an action and opens dialog on click", async () => {
+    defineActions([
+        {
+            id: 1,
+            xml_id: "some.action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        },
+    ]);
+
+    Partner._views = {
+        kanban: `
+            <kanban on_create="some.action">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        form: `
+            <form>
+                <field name="foo" class="my-expanded-form-field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+    });
+
+    await createKanbanRecord();
+
+    expect("[data-icon='expand_content']").toHaveCount(1);
+    await click("[data-icon='expand_content']");
+
+    expect(".modal").toHaveCount(1);
+    expect(".modal .o_form_view").toHaveCount(1);
+    expect(".modal .my-expanded-form-field").toHaveCount(1);
 });

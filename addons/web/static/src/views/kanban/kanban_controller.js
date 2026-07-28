@@ -23,6 +23,7 @@ import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/rela
 import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
 import {
@@ -458,7 +459,18 @@ export class KanbanController extends Component {
                     }
                 },
             };
-            await this.actionService.doAction(onCreate, options);
+            const action = await this.actionService.loadAction(onCreate, options.additionalContext);
+            const [viewId] = action.views?.find(([, type]) => type === "form") || [];
+            if (action.type === "ir.actions.act_window" && viewId !== undefined) {
+                await this.dialog.add(FormViewDialog, {
+                    title: action.name,
+                    resModel: action.res_model,
+                    context: action.context,
+                    viewId,
+                }, options);
+            } else {
+                await this.actionService.doAction(onCreate, options);
+            }
         } else {
             await this.props.createRecord();
         }
