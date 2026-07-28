@@ -53,27 +53,20 @@ class LoyaltyProgram(models.Model):
 
     def _compute_pos_order_count(self):
         query = """
-                WITH reward_to_orders_count AS (
-                 SELECT reward.id                    AS lr_id,
-                        COUNT(DISTINCT pos_order.id) AS orders_count
-                   FROM pos_order_line line
-                   JOIN pos_order ON line.order_id = pos_order.id
-                   JOIN loyalty_reward reward ON line.reward_id = reward.id
-               GROUP BY lr_id
-              ),
-              program_to_reward AS (
-                 SELECT reward.id  AS reward_id,
-                        program.id AS program_id
-                   FROM loyalty_program program
-                   JOIN loyalty_reward reward ON reward.program_id = program.id
-                  WHERE program.id = ANY (%s)
-              )
-       SELECT program_to_reward.program_id,
-              SUM(reward_to_orders_count.orders_count)
-         FROM program_to_reward
-    LEFT JOIN reward_to_orders_count ON reward_to_orders_count.lr_id = program_to_reward.reward_id
-     GROUP BY program_to_reward.program_id
-                """
+            WITH reward_to_orders_count AS (
+                  SELECT reward.id                     AS lr_id,
+                         reward.program_id             AS program_id,
+                         COUNT(DISTINCT line.order_id) AS orders_count
+                    FROM loyalty_reward reward
+               LEFT JOIN pos_order_line line ON line.reward_id = reward.id
+                   WHERE reward.program_id = ANY (%s)
+                GROUP BY lr_id, program_id
+            )
+              SELECT program_id,
+                     SUM(orders_count)
+                FROM reward_to_orders_count
+            GROUP BY program_id
+        """
         self._cr.execute(query, (self.ids,))
         res = self._cr.dictfetchall()
         res = {k['program_id']: k['sum'] for k in res}
