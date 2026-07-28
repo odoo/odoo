@@ -2,6 +2,7 @@
 
 from . import models
 from . import tools
+from . import demo
 
 
 def uninstall_hook(env):
