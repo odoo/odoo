@@ -69,3 +69,16 @@ class TestTiqueteElectronicoFe(TransactionCase):
         self.assertEqual(tiquete.l10n_cr_fe_state, 'enviado')
         self.assertEqual(tiquete.l10n_cr_fe_clave, '8' * 50)
         self.assertIn('firmada', tiquete.l10n_cr_fe_xml_firmado)
+
+    def test_action_post_sends_tiquete_without_partner_vat(self):
+        self.partner.vat = False
+        tiquete = self._create_tiquete()
+        patchers = self._patch_full_success()
+        for p in patchers:
+            p.start()
+        try:
+            tiquete.action_post()
+        finally:
+            for p in patchers:
+                p.stop()
+        self.assertEqual(tiquete.l10n_cr_fe_state, 'enviado')

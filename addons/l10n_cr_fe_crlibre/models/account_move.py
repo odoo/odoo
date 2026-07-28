@@ -204,7 +204,7 @@ class AccountMove(models.Model):
         config = self._l10n_cr_fe_get_config()
         fecha = fields.Datetime.context_timestamp(self, datetime.now())
 
-        if not self.partner_id.vat:
+        if not self.l10n_cr_fe_es_tiquete and not self.partner_id.vat:
             raise UserError(
                 _("El cliente '%s' no tiene cédula/identificación configurada. Hacienda "
                   "rechaza los comprobantes si el receptor no tiene un número de "
@@ -226,9 +226,6 @@ class AccountMove(models.Model):
             'emisor_distrito': config.district,
             'emisor_otras_senas': config.address_detail,
             'emisor_email': config.email,
-            'receptor_nombre': self.partner_id.name or '',
-            'receptor_tipo_identif': self.partner_id.l10n_cr_fe_identification_type or '01',
-            'receptor_num_identif': self.partner_id.vat.replace('-', '').strip(),
             'condicion_venta': '01',
             'medios_pago': json.dumps(medios_pago),
             'cod_moneda': self.currency_id.name or 'CRC',
@@ -236,6 +233,12 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
             **resumen,
         }
+        if self.l10n_cr_fe_es_tiquete:
+            params['omitir_receptor'] = 'true'
+        else:
+            params['receptor_nombre'] = self.partner_id.name or ''
+            params['receptor_tipo_identif'] = self.partner_id.l10n_cr_fe_identification_type or '01'
+            params['receptor_num_identif'] = self.partner_id.vat.replace('-', '').strip()
         if self.move_type == 'out_refund':
             original = self.reversed_entry_id
             params['informacion_referencia'] = json.dumps([{
@@ -275,11 +278,15 @@ class AccountMove(models.Model):
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
             xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+            if self.l10n_cr_fe_es_tiquete:
+                receptor_tipo, receptor_num = '', ''
+            else:
+                receptor_tipo = self.partner_id.l10n_cr_fe_identification_type or '01'
+                receptor_num = self.partner_id.vat.replace('-', '').strip()
             client.send_fe(
                 token=token, clave=clave_res['clave'], fecha_iso=genxml_params['fecha_emision'],
                 emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
-                receptor_num=self.partner_id.vat.replace('-', '').strip(),
+                receptor_tipo=receptor_tipo, receptor_num=receptor_num,
                 xml_firmado=xml_firmado, environment=config.environment)
         except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
