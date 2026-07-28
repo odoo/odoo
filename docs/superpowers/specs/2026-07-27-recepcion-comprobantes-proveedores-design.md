@@ -68,6 +68,39 @@ def gen_xml_mr(self, params):
     return base64.b64decode(resp['xml']).decode('utf-8')
 ```
 
+### 2.3-bis Corrección verificada durante la escritura del plan: el envío usa una acción distinta
+
+Al preparar el plan de implementación se investigó `send.php`/`module.php` con el mismo rigor usado para `gen_xml_mr` — y se encontró que el envío del Mensaje Receptor **no reutiliza la acción genérica `send`/`json`** que usa `client.send_fe()` (la que sí sirve, sin cambios, para FE/NC/TE). Existe una acción dedicada `sendMensaje` (`send.php:53`, función `sendMensaje()`), con un parámetro adicional **obligatorio** que la acción genérica no tiene: `consecutivoReceptor` (el consecutivo propio del Mensaje Receptor, el mismo valor que ya va dentro del XML como `<NumeroConsecutivoReceptor>`). Además, a diferencia de la acción genérica (donde `recp_tipoIdentificacion`/`recp_numeroIdentificacion` son opcionales), en `sendMensaje` son **obligatorios** — y aquí sí tienen valor real: el "receptor" de la acción de envío es el **proveedor** (emisor de la factura original), tomado de `self.partner_id` del `in_invoice`, exactamente como ya se arma `receptor_tipo`/`receptor_num` para una Factura normal.
+
+Esto obliga a un método nuevo en el cliente, en vez de reutilizar `send_fe`:
+
+```python
+def send_mr(self, token, clave, fecha_iso, emisor_tipo, emisor_num,
+            receptor_tipo, receptor_num, consecutivo_receptor, xml_firmado, environment):
+    resp = self._call('send', 'sendMensaje', {
+        'token': token,
+        'clave': clave,
+        'fecha': fecha_iso,
+        'emi_tipoIdentificacion': emisor_tipo,
+        'emi_numeroIdentificacion': emisor_num,
+        'recp_tipoIdentificacion': receptor_tipo,
+        'recp_numeroIdentificacion': receptor_num,
+        'consecutivoReceptor': consecutivo_receptor,
+        'comprobanteXml': base64.b64encode(xml_firmado.encode('utf-8')).decode('ascii'),
+        'client_id': self._CLIENT_ID_BY_ENVIRONMENT[environment],
+    })
+    if not isinstance(resp, dict) or 'httpStatus' not in resp:
+        raise CrlibreApiError("Respuesta inesperada de 'send/sendMensaje': %s" % resp)
+    http_status = resp['httpStatus']
+    if http_status not in (200, 202):
+        raise CrlibreApiError("Hacienda rechazó el envío (HTTP %s): %s" % (http_status, resp.get('text')))
+    return {'http_status': http_status, 'raw': resp.get('text') or []}
+```
+
+`clave` aquí es **nuestra propia clave** del Mensaje Receptor (la generada vía `get_clave` con tipoDocumento `CCE`/`CPCE`/`RCE`) — la misma que usan `get_clave`/`gen_xml_mr`/`sign_xml`. No confundir con `l10n_cr_fe_proveedor_clave` (la clave de la factura original, que solo viaja como dato dentro del cuerpo del XML, en el campo `clave` que recibe `genXMLMr()`).
+
+(Nota aparte, no accionable en este proyecto: existe también una tercera acción `sendTE` dedicada a Tiquete Electrónico, con su propio listado de parámetros — nuestra implementación de TE ya construida usa la acción genérica `send`/`json` en su lugar, y fue verificada manualmente como aceptada por Hacienda en sandbox. Funciona; no se toca.)
+
 ### 2.4 Asistente: cargar factura de proveedor
 
 Un wizard nuevo (`l10n_cr.fe.proveedor.upload`, `TransientModel`) donde el usuario sube el archivo XML recibido por correo. Al procesarlo:
@@ -86,7 +119,7 @@ Sobre esa factura de proveedor en borrador:
 - **Aceptar parcial**: el usuario edita cantidades o quita líneas del borrador antes de confirmar — mismo mecanismo de selección/edición ya construido para Nota de Crédito parcial. `l10n_cr_fe_mr_motivo` es obligatorio. El monto total y el monto de impuesto que se reportan a Hacienda en el Mensaje Receptor salen de lo que quede en la factura tras el ajuste (Hacienda no recibe el detalle línea por línea de esta decisión — el `genXMLMr` real solo lleva un monto total agregado).
 - **Rechazar**: `l10n_cr_fe_mr_decision = 'rechazado'`, `l10n_cr_fe_mr_motivo` obligatorio, no se contabiliza el `in_invoice` (queda cancelado/sin confirmar).
 
-Al confirmar cualquiera de las tres, se dispara el envío del Mensaje Receptor (mismo patrón que `_l10n_cr_fe_generate_and_send`, generalizado): construir params → `get_clave` (con el `consecutivo_codigo` de la decisión) → `gen_xml_mr` → firmar → `send_fe` (sin cambios) → guardar clave/estado.
+Al confirmar cualquiera de las tres, se dispara el envío del Mensaje Receptor (mismo patrón que `_l10n_cr_fe_generate_and_send`, generalizado con una rama para `move_type == 'in_invoice'`): construir params → `get_clave` (con el `consecutivo_codigo` de la decisión) → `gen_xml_mr` → firmar → `send_mr` (ver 2.3-bis — no `send_fe`) → guardar clave/estado.
 
 ### 2.6 Reutilización de vistas/acciones existentes
 
