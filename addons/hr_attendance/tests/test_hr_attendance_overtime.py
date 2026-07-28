@@ -11,6 +11,12 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
+        def set_calendar_and_tz(employee, tz):
+            employee.resource_calendar_id = cls.env['resource.calendar'].create({
+                'name': f'Default Calendar ({tz})',
+                'tz': tz,
+            })
+
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
@@ -40,16 +46,19 @@ class TestHrAttendanceOvertime(TransactionCase):
             'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
         })
+        set_calendar_and_tz(cls.jpn_employee, 'Asia/Tokyo')
         cls.honolulu_employee = cls.env['hr.employee'].create({
             'name': 'Susan',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
         })
+        set_calendar_and_tz(cls.honolulu_employee, 'Pacific/Honolulu')
         cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
         })
+        set_calendar_and_tz(cls.europe_employee, 'Europe/Brussels')
         cls.calendar_flex_40h = cls.env['resource.calendar'].create({
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
