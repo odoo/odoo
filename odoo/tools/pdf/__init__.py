@@ -154,14 +154,11 @@ def fill_form_fields_pdf(writer, form_fields):
     pypdf_version = parse_version(pypdf.__version__)
     if pypdf_version >= parse_version('3.13.0'):
         catalog = writer._root_object
-        if "/Fields" not in catalog.get('/AcroForm'):
-            catalog.update({
-                NameObject("/AcroForm"): writer._add_object(
-                    DictionaryObject({
-                        NameObject("/Fields"): ArrayObject()
-                    })
-                )
-            })
+        acroform = catalog.get("/AcroForm").get_object()
+        if "/Fields" not in acroform:
+            acroform[NameObject("/Fields")] = ArrayObject()
+        if "/DR" not in acroform:
+            acroform[NameObject("/DR")] = DictionaryObject()
 
     for page in writer.pages:
         writer.update_page_form_field_values(page, form_fields)
