@@ -40,6 +40,13 @@ export const WORKER_STATE = Object.freeze({
     CONNECTING: "CONNECTING",
 });
 const MAXIMUM_RECONNECT_DELAY = 120000;
+// Don't wait to reconnect: keep-alive shouldn't be noticed, and the closing
+// handshake was aborted because the client explicitly tried to connect while
+// the socket was stuck in the closing state.
+const IMMEDIATE_RECONNECT_CLOSE_CODES = [
+    WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
+    WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED,
+];
 
 /**
  * This class regroups the logic necessary in order for the
@@ -322,7 +329,15 @@ export class WebsocketWorker {
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
         this.firstSubscribeDeferred = new Deferred();
+        if (IMMEDIATE_RECONNECT_CLOSE_CODES.includes(code)) {
+            this.connectRetryDelay = 0;
+        }
         if (this.isReconnecting) {
+            if (code === WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED) {
+                // This close was triggered manually by `_start`, which discards
+                // the socket right after: nothing else will retry to connect.
+                this._retryConnectionWithDelay();
+            }
             // Connection was not established but the close event was
             // triggered anyway. Let the onWebsocketError method handle
             // this case.
@@ -341,17 +356,6 @@ export class WebsocketWorker {
         // WebSocket was not closed cleanly, let's try to reconnect.
         this.broadcast("reconnecting", { closeCode: code });
         this.isReconnecting = true;
-        if (
-            [
-                WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
-                WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED,
-            ].includes(code)
-        ) {
-            // Don't wait to reconnect: keep-alive shouldn't be noticed, and the
-            // closing handshake was aborted because the client explicitly tried
-            // to connect while the socket was stuck in the closing state.
-            this.connectRetryDelay = 0;
-        }
         if (code === WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED) {
             this.isWaitingForNewUID = true;
         }
@@ -441,6 +445,7 @@ export class WebsocketWorker {
      * herd problem.
      */
     _retryConnectionWithDelay() {
+        clearTimeout(this.connectTimeout);
         this.connectRetryDelay =
             Math.min(this.connectRetryDelay, MAXIMUM_RECONNECT_DELAY) +
             this.RECONNECT_JITTER * Math.random();
