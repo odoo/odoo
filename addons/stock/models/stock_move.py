@@ -2127,8 +2127,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             moves_to_assign = moves_to_assign.filtered(
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
-        moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
-        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
             if not force_qty:
