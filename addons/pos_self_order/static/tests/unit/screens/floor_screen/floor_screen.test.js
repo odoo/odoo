@@ -1,0 +1,22 @@
+import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { setupAndMountPosApp } from "@point_of_sale/../tests/unit/utils";
+import { test, waitFor } from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
+import { unpatchSelf } from "@pos_self_order/app/services/data_service";
+import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
+
+definePosModels();
+
+test("PosResGetQRtest", async () => {
+    unpatchSelf();
+    await setupAndMountPosApp({ set_tip_after_payment: false });
+    if (PosUiUtils.isMobile()) {
+        await contains(".pos-rightheader .dropdown-toggle").click();
+        await contains(".pos-burger-menu-items i.oi-fw[data-icon='qr_code']").click();
+    } else {
+        await contains(".floor-screen .qr-order-button").click();
+    }
+    await waitFor(
+        ".modal-body p:contains(Enable QR menu in the Restaurant settings to get QR codes for free on tables.)"
+    );
+});
