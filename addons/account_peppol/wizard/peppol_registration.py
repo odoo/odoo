@@ -6,7 +6,7 @@ except ImportError:
     phonenumbers = None
 
 from odoo import _, api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -58,6 +58,12 @@ class PeppolRegistration(models.TransientModel):
         compute='_compute_edi_user_id',
     )
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
+    peppol_eas = fields.Selection(
+        selection='_get_peppol_eas_selection',
+        compute="_compute_peppol_eas",
+        inverse="_inverse_peppol_eas",
+        readonly=False, required=True, store=False,
+    )
     peppol_warnings = fields.Json(
         string="Peppol warnings",
         compute="_compute_peppol_warnings",
@@ -68,7 +74,6 @@ class PeppolRegistration(models.TransientModel):
         required=True,
     )
     phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
-    peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
         string='Register as a receiver',
@@ -79,7 +84,6 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
-
     @api.onchange('peppol_endpoint')
     def _onchange_peppol_endpoint(self):
         for wizard in self:
@@ -201,9 +205,23 @@ class PeppolRegistration(models.TransientModel):
             wizard.smp_registration = not is_company_on_peppol  # Register on smp if not on Peppol
             wizard.peppol_external_provider = external_provider
 
+    @api.depends("company_id.peppol_eas")
+    def _compute_peppol_eas(self):
+        for wizard in self:
+            if wizard.company_id._peppol_is_french_company():
+                wizard.peppol_eas = "0225"
+            else:
+                wizard.peppol_eas = wizard.company_id.peppol_eas
+
+    def _inverse_peppol_eas(self):
+        for wizard in self:
+            wizard.company_id.peppol_eas = wizard.peppol_eas
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+    def _get_peppol_eas_selection(self):
+        return self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
 
     def _ensure_mandatory_fields(self):
         if self.use_parent_connection:
@@ -219,6 +237,31 @@ class PeppolRegistration(models.TransientModel):
             and self.peppol_endpoint == self.parent_company_id.peppol_endpoint
         ):
             raise ValidationError(_("Peppol ID should be different from main company."))
+
+    def _ensure_pdp_not_sent_through_peppol(self):
+        self.ensure_one()
+        if self.peppol_eas != '0225':
+            return
+        pdp_module = self.env['ir.module.module']._get('l10n_fr_pdp')
+
+        if pdp_module:
+            redirect_action = pdp_module._get_records_action()
+            redirect_button_text = self.env._("Install module")
+            message = self.env._(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).",
+            )
+        else:
+            redirect_action = self.env.ref('base.action_view_base_module_update').id
+            message = self.env._(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).\n"
+                "The module was not found. Please update the available apps first.",
+            )
+            redirect_button_text = self.env._("Update Apps List")
+        raise RedirectWarning(
+                message=message,
+                action=redirect_action,
+                button_text=redirect_button_text,
+            )
 
     def _action_open_peppol_form(self, reopen=True):
         view = self.env.ref('account_peppol.peppol_registration_form').sudo()
@@ -264,7 +307,11 @@ class PeppolRegistration(models.TransientModel):
 
     def button_register_peppol_participant(self):
         self.ensure_one()
+        # self.peppol_eas resets due to the compute function, so we need to assign it to the company's EAS value.
+        if self.peppol_eas != self.company_id.peppol_eas:
+            self.peppol_eas = self.company_id.peppol_eas
         self._ensure_mandatory_fields()
+        self._ensure_pdp_not_sent_through_peppol()
 
         if self.use_parent_connection:
             self.company_id.write({
