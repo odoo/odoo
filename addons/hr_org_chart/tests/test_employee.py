@@ -15,6 +15,7 @@ class TestEmployee(TestHrCommon):
             {'name': 'Paul'},
             {'name': 'Pierre'},
         ])
+        cls.res_users_hr_officer.groups_id = [(4, cls.env.ref('hr_payroll.group_hr_payroll_user').id)]
 
     def test_is_subordinate(self):
         self.res_users_hr_officer.employee_id = self.employee_georges
