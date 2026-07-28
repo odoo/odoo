@@ -27,11 +27,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'ITAX_19',
                 'account_purchase_tax_id': 'OTAX_19',
+                'deferred_expense_account_id': 'account_110820',
                 'expense_account_id': 'account_410235',
                 'income_account_id': 'account_310115',
                 'receivable_account_id': 'account_110310',
                 'payable_account_id': 'account_210210',
+                'downpayment_account_id': 'account_310140',
+                'withholding_tax_base_account_id': 'account_210715',
                 'account_stock_valuation_id': 'account_110612',
+                'account_production_wip_account_id': 'account_110660',
+                'account_production_wip_overhead_account_id': 'account_410255',
             },
         }
 

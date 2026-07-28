@@ -30,11 +30,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_co_tax_1',
                 'default_cash_difference_income_account_id': 'co_puc_428000',
                 'default_cash_difference_expense_account_id': 'co_puc_532000',
+                'deferred_expense_account_id': 'co_puc_170500',
+                'deferred_revenue_account_id': 'co_puc_270505',
                 'expense_account_id': 'co_puc_610000',
-                'income_account_id': 'co_puc_417500',
+                'income_account_id': 'co_puc_413500',
                 'receivable_account_id': 'co_puc_130500',
                 'payable_account_id': 'co_puc_220500',
+                'downpayment_account_id': 'co_puc_280500',
+                'withholding_tax_base_account_id': 'co_puc_236500',
                 'account_stock_valuation_id': 'co_puc_140500',
+                'account_production_wip_account_id': 'co_puc_141000',
+                'account_production_wip_overhead_account_id': 'co_puc_730000',
             },
         }
 
