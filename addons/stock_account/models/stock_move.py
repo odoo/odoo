@@ -331,9 +331,10 @@ class StockMove(models.Model):
                     continue
                 if correction_quantity:
                     previous_qty = move.quantity - correction_quantity
-                    ratio = correction_quantity / previous_qty if previous_qty else 0
-                    move.value += ratio * move.value
-                    continue
+                    if previous_qty:
+                        ratio = correction_quantity / previous_qty
+                        move.value += ratio * move.value
+                        continue
                 if move.product_id.lot_valuated:
                     value = 0.0
                     for move_line in move.move_line_ids:
