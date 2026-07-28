@@ -122,7 +122,7 @@ class Survey(models.Model):
         ('scoring_with_answers_after_page', 'Scoring with answers after each page'),
         ('scoring_with_answers', 'Scoring with answers at the end'),
         ('scoring_without_answers', 'Scoring without answers')],
-        string='Scoring', required=True, store=True, readonly=False, compute='_compute_scoring_type', precompute=True)
+        string='Scoring', required=True, store=True, readonly=False, compute='_compute_scoring_type', inverse='_inverse_scoring_type', precompute=True)
     scoring_success_min = fields.Float('Required Score (%)', default=80.0)
     scoring_max_obtainable = fields.Float('Maximum obtainable score', compute='_compute_scoring_max_obtainable')
     # attendees context: attempts and time limitation
@@ -354,6 +354,10 @@ class Survey(models.Model):
                 survey.scoring_type = 'scoring_without_answers'
             elif not survey.scoring_type:
                 survey.scoring_type = 'no_scoring'
+
+    @api.onchange('scoring_type')
+    def _inverse_scoring_type(self):
+        self.filtered(lambda r: r.scoring_type == 'no_scoring').scoring_success_min = 0
 
     @api.onchange('survey_type')
     def _onchange_survey_type(self):
