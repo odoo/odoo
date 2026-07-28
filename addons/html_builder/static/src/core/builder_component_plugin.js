@@ -16,6 +16,7 @@ import { BuilderRange } from "./building_blocks/builder_range";
 import { BuilderContext } from "./building_blocks/builder_context";
 import { BasicMany2Many } from "./building_blocks/basic_many2many";
 import { BuilderMany2Many } from "./building_blocks/builder_many2many";
+import { BuilderMultiSelect } from "./building_blocks/builder_multi_select";
 import { BuilderOptionsSection } from "./building_blocks/builder_options_section";
 import { BuilderMany2One } from "./building_blocks/builder_many2one";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
@@ -55,6 +56,7 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderColorPicker,
             BuilderSelect,
             BuilderSelectItem,
+            BuilderMultiSelect,
             BuilderCheckbox,
             BasicMany2Many,
             BuilderMany2Many,
