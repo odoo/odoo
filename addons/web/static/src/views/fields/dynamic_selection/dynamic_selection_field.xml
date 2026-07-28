@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DynamicSelectionField">
+        <t t-if="props.readonly">
+            <span class="o_field_widget text-truncate" t-esc="selectedLabel" />
+        </t>
+        <t t-else="">
+            <select class="o_input o_field_widget form-select"
+                    t-on-change="onChange"
+                    t-att-id="props.id">
+                <option value=""></option>
+                <t t-foreach="state.options" t-as="option" t-key="option[0]">
+                    <option t-att-value="option[0]" 
+                            t-att-selected="option[0] === props.record.data.value">
+                        <t t-esc="option[1]"/>
+                    </option>
+                </t>
+            </select>
+        </t>
+    </t>
+
+</templates>
