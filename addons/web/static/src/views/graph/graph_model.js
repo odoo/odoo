@@ -110,6 +110,8 @@ export class GraphModel extends Model {
             if (metaData.mode === "line") {
                 metaData.cumulated =
                     "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
+            } else if (metaData.mode === "bar") {
+                metaData.showEmpty = context.graph_show_empty || metaData.showEmpty;
             }
         }
 
@@ -245,7 +247,7 @@ export class GraphModel extends Model {
      * @returns {Object[]}
      */
     _getProcessedDataPoints() {
-        const { groupBy, mode, order } = this.metaData;
+        const { groupBy, mode, order, showEmpty } = this.metaData;
         let processedDataPoints = [];
         if (mode === "line") {
             processedDataPoints = this.dataPoints.filter(
@@ -256,7 +258,9 @@ export class GraphModel extends Model {
                 (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0
             );
         } else {
-            processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+            const nonEmptyPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+            this.metaData.hasEmpty = nonEmptyPoints.length < this.dataPoints.length;
+            processedDataPoints = showEmpty ? this.dataPoints : nonEmptyPoints;
         }
 
         if (order !== null && mode !== "pie" && groupBy.length > 0) {
