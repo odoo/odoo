@@ -13,7 +13,23 @@ export class EmployeeFormController extends FormController {
         this.pendingNewContract = null;
     }
 
-    async onWillSaveRecord(record, changes) {
+    get modelParams() {
+        const params = super.modelParams;
+        params.hooks.onRecordChanged = this.onRecordChanged.bind(this);
+        return params;
+    }
+
+    /**
+     * Called on the client side every time the record is updated (i.e. every
+     * time a field value changes), not only on save. `changes` holds the
+     * record's current pending diff, so we only act when contract_date_end
+     * is actually part of it.
+     */
+    async onRecordChanged(record, changes) {
+        if (!("contract_date_end" in changes)) {
+            return;
+        }
+
         const contractDateStart = record.data.contract_date_start;
         const contractDateEnd = record.data.contract_date_end;
         const previousContractDateStart = record._values?.contract_date_start;
@@ -21,13 +37,13 @@ export class EmployeeFormController extends FormController {
         const hasDeparture = record.data.departure_id;
 
         if (
-            previousContractDateStart !== contractDateStart 
+            previousContractDateStart !== contractDateStart
             || previousContractDateEnd === contractDateEnd
             || !contractDateEnd
             || hasDeparture
             || record._skipContractEndDialog
         ) {
-            return true;
+            return;
         }
 
         return new Promise((resolve) => {
@@ -35,41 +51,61 @@ export class EmployeeFormController extends FormController {
                 record: record,
             }, {
                 onClose: (result) => {
-                    switch (result?.reason) {
-                        case "correction":
-                            changes.fixed_term = true;
-                            break;
-                        case "end_collaboration":
-                                this.actionService.doAction(result.action, {
-                                    onClose: async () => {
-                                        await record.model.load();
-                                    },
-                                });
-                            break;
-                        case "new_contract": {
-                            const newContractDateStart = contractDateEnd.plus({ days: 1 });
-                            let newContractDateEnd = false;
-                            if (previousContractDateEnd && contractDateEnd < previousContractDateEnd) {
-                                newContractDateEnd = previousContractDateEnd;
-                            }
-                            this.pendingNewContract = {
-                                date_version: serializeDate(newContractDateStart),
-                                contract_date_start: serializeDate(newContractDateStart),
-                                contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
-                                contract_template_id: result.contractTemplateId,
-                            };
-                            break;
-                        }
-                        case "discard":
-                        default: {
-                            changes.contract_date_end = previousContractDateEnd ? serializeDate(previousContractDateEnd) : false;
-                            break;
-                        }
-                    }
-                    resolve(true);
+                    // Resolve immediately so the *current* record.update() call
+                    // (the one that triggered this onRecordChanged) can unwind.
+                    // Any follow-up mutation on the record must happen afterwards,
+                    // as a separate update() call, or it gets silently dropped
+                    // because the record doesn't support reentrant updates.
+                    resolve();
+                    setTimeout(() => {
+                        this._applyContractEndDialogResult(record, result, {
+                            contractDateEnd,
+                            previousContractDateEnd,
+                        });
+                    }, 0);
                 },
             });
         });
+    }
+
+    async _applyContractEndDialogResult(record, result, { contractDateEnd, previousContractDateEnd }) {
+        switch (result?.reason) {
+            case "correction":
+                await record.update({ fixed_term: true });
+                break;
+            case "end_collaboration":
+                this.actionService.doAction(result.action, {
+                    onClose: async () => {
+                        await record.model.load();
+                    },
+                });
+                break;
+            case "new_contract": {
+                const newContractDateStart = contractDateEnd.plus({ days: 1 });
+                let newContractDateEnd = false;
+                if (previousContractDateEnd && contractDateEnd < previousContractDateEnd) {
+                    newContractDateEnd = previousContractDateEnd;
+                }
+                this.pendingNewContract = {
+                    date_version: serializeDate(newContractDateStart),
+                    contract_date_start: serializeDate(newContractDateStart),
+                    contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
+                    contract_template_id: result.contractTemplateId,
+                };
+                break;
+            }
+            case "discard":
+            default: {
+                // Revert to the last saved value. This makes contract_date_end
+                // match previousContractDateEnd again, so the guard in
+                // onRecordChanged short-circuits on the re-entrant call this
+                // triggers, and the dialog won't reopen.
+                await record.update({
+                    contract_date_end: previousContractDateEnd || false,
+                });
+                break;
+            }
+        }
     }
 
     async onRecordSaved(record, changes) {
