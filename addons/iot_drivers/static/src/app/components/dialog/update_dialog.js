@@ -44,7 +44,7 @@ export class UpdateDialog extends Component {
             btnName="'Update'">
             <t t-set-slot="body">
                 <div class="alert alert-info" role="alert">
-                    The IoT Box is automatically updated <b>every Monday</b> at midnight. 
+                    The IoT Box is automatically updated <b>once a week</b>.
                 </div>
                 If you are experiencing issues that may have been fixed since the last update, you can manually trigger an update here.
             </t>
