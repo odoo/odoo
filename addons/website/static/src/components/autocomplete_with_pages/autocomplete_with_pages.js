@@ -153,7 +153,7 @@ export class AutoCompleteWithPages extends AutoComplete {
      */
     close() {
         this.props.onInput({
-            inputValue: this.inputRef.el.value,
+            inputValue: this.targetDropdown.value,
         });
         super.close();
     }
