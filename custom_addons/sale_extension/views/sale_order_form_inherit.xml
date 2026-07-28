@@ -1,0 +1,123 @@
+<odoo>
+    <data> 
+        <record id="view_order_form_inherit_item" model="ir.ui.view">
+            <field name="name">sale.view_order_form.inherit.item_delivery_time</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']//form//field[@name='tax_id']" position="before">
+                    <field name="item_delivery_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_real" model="ir.ui.view">
+            <field name="name">sale.view_order_form.inherit.delivery_time</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="delivery_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_print_button" model="ir.ui.view">
+            <field name="name">sale.order.form.print.button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button name="print_quotation_report"
+                        string="Imprimir Presupuesto"
+                        type="object"
+                        class="btn btn-secondary"
+                        icon="fa-print"
+                        invisible="quotation_status == 'order_note'"/>
+
+                <button name="print_ordernote_report" 
+                        string="Imprimir Nota de Pedido"
+                        type="object"
+                        class="btn btn-secondary"
+                        icon="fa-print"
+                        invisible="quotation_status != 'order_note'"
+                />
+                <!-- <field name="quotation_status"/> -->
+            </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_order_form_inherit_hide_fields" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.fields</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='other_information']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='delivery_date']" position="after">
+                    <div class="o_td_label">
+                        <label for="delivery_method" string="Lugar de entrega"/>
+                    </div>
+                    <field name="delivery_method" nolabel="1" on_change="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <div class="o_td_label">
+                        <label for="discount" string="Descuento"/>
+                    </div>
+                    <field name="discount" readonly="1" nolabel="1" on_change="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_preview_sale_order']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_hide_optional_products" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.optional_products</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_order_template_id']" position="replace">
+                </xpath>
+                <xpath expr="//page[@name='optional_products']" position="replace">
+                    <page name="optional_products" string="Optional Products" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder" model="ir.ui.view">
+            <field name="active" eval="False"/>
+        </record>
+
+        <!--templates-->
+
+        <template id="report_saleorder_document_inherit_delivery_date" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@id='informations']" position="before">
+                <div class ="row">
+                    <div class="col-6">
+                        <strong>Fecha de Entrega:</strong>
+                        <div t-field="doc.delivery_date"/>
+                    </div>
+                    <div class="col-6">
+                        <strong>Lugar de entrega:</strong>
+                        <div t-field="doc.delivery_method"/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

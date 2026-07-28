@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="prevent_model_view_form" model="ir.ui.view">
+        <field name="name">prevent.model.view.form</field>
+        <field name="model">prevent.model</field>
+        <field name="arch" type="xml">
+            <form string="Prevent Auto Save" edit="true" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="auto_save_prevent_all"/>
+                        </group>
+                        <group>
+                            <field name="auto_save_prevent"/>
+                        </group>
+                        <field name="model_ids"
+                               string="Select Model"
+                               invisible="not auto_save_prevent">
+                            <list editable="bottom">
+                                <field name="model_id"/>
+                                <field name="model_description"/>
+                                <field name="model"/>
+                                <field name="prevent_id" column_invisible="1"/>
+                            </list>
+                            <form>
+                                <field name="model_id"/>
+                                <field name="model_description"/>
+                                <field name="model"/>
+                                <field name="prevent_id" column_invisible="1"/>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="prevent_model_view_action" model="ir.actions.act_window">
+        <field name="name">Prevent Auto Save</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">prevent.model</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="limit">1</field>
+        <field name="res_id" ref="prevent_model_1"/>
+        <field name="domain">[('id', '=', 1)]</field>
+    </record>
+
+    <record id="prevent_model_view_action_2" model="ir.actions.act_window.view">
+        <field eval="10" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="prevent_model_view_form"/>
+        <field name="act_window_id" ref="prevent_model_view_action"/>
+    </record>
+
+    <menuitem id="auto_save_menu"
+              name="Prevent Auto Save"
+              parent="base.menu_administration"
+              action="prevent_model_view_action"/>
+
+</odoo>
