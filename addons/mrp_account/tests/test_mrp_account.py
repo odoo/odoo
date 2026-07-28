@@ -216,6 +216,46 @@ class TestMrpAccount(TestBomPriceCommon):
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 677.08)
 
+    def test_mo_overview_unit_cost_extra_component_after_unlock(self):
+        """When a component is added to an unlocked done MO, its move must be correctly
+        valued and its unit_cost in the overview must reflect the product's standard_price.
+        """
+        extra_product = self.env['product.product'].create({
+            'name': 'Extra Component C3',
+            'is_storable': True,
+            'standard_price': 5.0,
+        })
+        mo = self._create_mo(self.bom_1, 1)
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        mo.action_toggle_is_locked()
+
+        overview_before = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        mo_cost_before = overview_before['data']['summary']['mo_cost']
+
+        extra_move = self.env['stock.move'].create({
+            'product_id': extra_product.id,
+            'product_uom': extra_product.uom_id.id,
+            'quantity': 1.0,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.prod_location.id,
+            'raw_material_production_id': mo.id,
+            'additional': True,
+            'state': 'done',
+        })
+        self.assertEqual(extra_move.value, extra_product.standard_price, "extra move must be valued at standard_price * qty")
+
+        overview_after = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        mo_cost_after = overview_after['data']['summary']['mo_cost']
+        self.assertAlmostEqual(mo_cost_after, mo_cost_before + extra_product.standard_price, places=2,
+            msg="mo_cost must increase by the extra component's standard_price")
+        components = overview_after['data']['components']
+        extra_comp = next((c for c in components if c['summary']['product_id'] == extra_product.id), None)
+        self.assertIsNotNone(extra_comp, "Extra component should appear in the overview")
+        self.assertEqual(extra_comp['summary']['unit_cost'], extra_product.standard_price)
+
     def test_mrp_user_without_account_permissions_can_create_bom(self):
         mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user')
         mo_1 = self._create_mo(self.bom_1, 1)
