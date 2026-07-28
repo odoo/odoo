@@ -1427,6 +1427,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._recompute_taxes()
         order_sudo._recompute_prices()
+<<<<<<< eaa75ae3ac212b15f1773f03e3f4f6244fbc3f06
+||||||| 427d398880c381981e088f7001f855a10d1cd581
+        if order_sudo.carrier_id:
+            order_sudo._set_delivery_method(order_sudo.carrier_id)
+=======
+        if order_sudo.carrier_id:
+            order_sudo.with_context(
+                keep_pickup_location=True,
+            )._set_delivery_method(order_sudo.carrier_id)
+>>>>>>> 6b850c5fc2e6ae8c29e1989b03f3f74af6bd47ba
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
