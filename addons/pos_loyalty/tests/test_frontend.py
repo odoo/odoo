@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
-from unittest import skip
 from unittest.mock import patch
 from freezegun import freeze_time
 
@@ -1226,7 +1225,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyaltyTour7")
 
-    @skip('Skip for fast merge, task (6221973) created to be reintroduced later')
     def test_discount_with_reward_product_domain(self):
         self.env['loyalty.program'].search([]).write({'active': False})
 
