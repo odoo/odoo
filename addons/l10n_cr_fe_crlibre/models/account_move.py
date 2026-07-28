@@ -19,16 +19,66 @@ L10N_CR_FE_TARIFA_IVA_CODES = {
     13: '08',
 }
 
+# Qué tipo de comprobante Hacienda genera este módulo, por move_type de Odoo.
+# 'clave': valor de tipoDocumento para el endpoint w=clave.
+# 'consecutivo_codigo': prefijo de 2 dígitos del consecutivo (Anexo v4.4: 01=FE, 03=NC).
+# 'gen_xml_action': método de CrlibreFeClient a invocar para generar el XML.
+L10N_CR_FE_TIPO_DOCUMENTO = {
+    'out_invoice': {'clave': 'FE', 'consecutivo_codigo': '01', 'gen_xml_action': 'gen_xml_fe'},
+    'out_refund': {'clave': 'NC', 'consecutivo_codigo': '03', 'gen_xml_action': 'gen_xml_nc'},
+}
+
+# Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
+# de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
+L10N_CR_FE_MOTIVO_NC = [
+    ('anulacion_total', "Anulación total"),
+    ('correccion_monto', "Corrección de monto, precio, cantidad o descuento"),
+    ('devolucion_mercancia', "Devolución de mercancía"),
+    ('referencia_otro_documento', "Referencia a otro documento"),
+    ('otros', "Otros"),
+]
+
+L10N_CR_FE_MOTIVO_CODIGO_MAP = {
+    'anulacion_total': '01',
+    'correccion_monto': '02',
+    'devolucion_mercancia': '06',
+    'referencia_otro_documento': '04',
+    'otros': '99',
+}
+
+# Catálogo completo de "Código de referencia" de Hacienda v4.4 (CodigoReferenciaType
+# en NotaCreditoElectronica_V4.4.xsd), para selección avanzada por usuarios contables.
+L10N_CR_FE_CODIGO_REFERENCIA = [
+    ('01', "01 - Anula documento de referencia"),
+    ('02', "02 - Corrige texto de documento de referencia"),
+    ('04', "04 - Referencia a otro documento"),
+    ('05', "05 - Sustituye comprobante provisional por contingencia"),
+    ('06', "06 - Devolución de mercancía"),
+    ('07', "07 - Sustituye comprobante electrónico"),
+    ('08', "08 - Factura Endosada"),
+    ('09', "09 - Nota de crédito financiera"),
+    ('10', "10 - Nota de débito financiera"),
+    ('11', "11 - Proveedor No Domiciliado"),
+    ('12', "12 - Crédito por exoneración posterior a la facturación"),
+    ('99', "99 - Otros"),
+]
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_cr_fe_clave = fields.Char(string="Clave FE", readonly=True, copy=False)
     l10n_cr_fe_consecutivo = fields.Char(string="Consecutivo FE", readonly=True, copy=False)
+    l10n_cr_fe_fecha_emision = fields.Char(string="Fecha de emisión FE", readonly=True, copy=False)
     l10n_cr_fe_xml = fields.Text(string="XML FE", readonly=True, copy=False)
     l10n_cr_fe_xml_firmado = fields.Text(string="XML Firmado FE", readonly=True, copy=False)
     l10n_cr_fe_respuesta_xml = fields.Text(string="Respuesta Hacienda", readonly=True, copy=False)
     l10n_cr_fe_motivo_rechazo = fields.Char(string="Motivo de rechazo", readonly=True, copy=False)
+    l10n_cr_fe_motivo = fields.Selection(
+        L10N_CR_FE_MOTIVO_NC, string="Motivo de la nota de crédito", copy=False)
+    l10n_cr_fe_codigo_referencia = fields.Selection(
+        L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
+    l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -88,12 +138,13 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_build_clave_params(self):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
+        tipo_doc = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]
         return {
-            'tipoDocumento': 'FE',
+            'tipoDocumento': tipo_doc['clave'],
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
             'cedula': config.identification_number,
             'situacion': 'normal',
-            'consecutivo': config._l10n_cr_fe_next_consecutivo(),
+            'consecutivo': config._l10n_cr_fe_next_consecutivo(tipo_doc['consecutivo_codigo']),
             'codigoSeguridad': str(random.randint(0, 99999999)).zfill(8),
             'sucursal': config.branch_number,
             'terminal': config.terminal_number,
@@ -146,7 +197,7 @@ class AccountMove(models.Model):
 
         resumen = self._l10n_cr_fe_build_resumen_totals(detalles)
         medios_pago = [{'tipoMedioPago': '01', 'totalMedioPago': resumen['total_comprobante']}]
-        return {
+        params = {
             'clave': clave,
             'proveedor_sistemas': config.identification_number,
             'codigo_actividad_emisor': config.economic_activity_code,
@@ -170,16 +221,33 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
             **resumen,
         }
+        if self.move_type == 'out_refund':
+            original = self.reversed_entry_id
+            params['informacion_referencia'] = json.dumps([{
+                'tipoDoc': '01',  # Factura electrónica (catálogo TipoDocReferenciaType)
+                'numero': original.l10n_cr_fe_clave,
+                'fechaEmision': original.l10n_cr_fe_fecha_emision,
+                'codigo': self.l10n_cr_fe_codigo_referencia,
+                'razon': self.l10n_cr_fe_razon or '',
+            }])
+        return params
 
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
-        if self.move_type != 'out_invoice':
+        if self.move_type not in L10N_CR_FE_TIPO_DOCUMENTO:
             return
         if not self.partner_id:
-            raise UserError(_("La factura no tiene cliente (receptor)."))
+            raise UserError(_("El comprobante no tiene cliente (receptor)."))
 
         client = self.env['l10n_cr.fe.client']
         try:
+            if self.move_type == 'out_refund':
+                original = self.reversed_entry_id
+                if not original or original.l10n_cr_fe_state != 'aceptado':
+                    raise UserError(_(
+                        "No se puede generar la nota de crédito: la factura original "
+                        "aún no ha sido aceptada por Hacienda."))
+
             config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
@@ -187,16 +255,16 @@ class AccountMove(models.Model):
             detalles = self._l10n_cr_fe_build_detalles()
             genxml_params = self._l10n_cr_fe_build_genxml_params(
                 clave_res['clave'], clave_res['consecutivo'], detalles)
-            xml = client.gen_xml_fe(genxml_params)
+            gen_xml_action = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]['gen_xml_action']
+            xml = getattr(client, gen_xml_action)(genxml_params)
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
             xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-            fecha_iso = fields.Datetime.context_timestamp(self, datetime.now()).strftime('%Y-%m-%dT%H:%M:%S-06:00')
             client.send_fe(
-                token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                token=token, clave=clave_res['clave'], fecha_iso=genxml_params['fecha_emision'],
                 emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                receptor_tipo='01',
-                receptor_num=(self.partner_id.vat or '').replace('-', '') or '000000000',
+                receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
+                receptor_num=self.partner_id.vat.replace('-', '').strip(),
                 xml_firmado=xml_firmado, environment=config.environment)
         except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
@@ -206,6 +274,7 @@ class AccountMove(models.Model):
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
+            'l10n_cr_fe_fecha_emision': genxml_params['fecha_emision'],
             'l10n_cr_fe_xml': xml,
             'l10n_cr_fe_xml_firmado': xml_firmado,
             'l10n_cr_fe_state': 'enviado',
@@ -289,6 +358,6 @@ class AccountMove(models.Model):
     def action_post(self):
         res = super().action_post()
         for move in self:
-            if move.move_type == 'out_invoice':
+            if move.move_type in L10N_CR_FE_TIPO_DOCUMENTO:
                 move._l10n_cr_fe_generate_and_send()
         return res

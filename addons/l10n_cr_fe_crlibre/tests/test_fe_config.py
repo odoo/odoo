@@ -57,10 +57,21 @@ class TestFeConfig(TransactionCase):
             self.config.with_user(plain_user).read(['hacienda_password'])
 
     def test_next_consecutivo_has_no_gaps(self):
-        first = self.config._l10n_cr_fe_next_consecutivo()
-        second = self.config._l10n_cr_fe_next_consecutivo()
+        first = self.config._l10n_cr_fe_next_consecutivo('01')
+        second = self.config._l10n_cr_fe_next_consecutivo('01')
         self.assertEqual(len(first), 10)
         self.assertEqual(int(second), int(first) + 1)
+
+    def test_next_consecutivo_independent_per_tipo_documento(self):
+        first_fe = self.config._l10n_cr_fe_next_consecutivo('01')
+        first_nc = self.config._l10n_cr_fe_next_consecutivo('03')
+        second_fe = self.config._l10n_cr_fe_next_consecutivo('01')
+        second_nc = self.config._l10n_cr_fe_next_consecutivo('03')
+        # Cada tipo de documento tiene su propio correlativo, independiente entre sí
+        self.assertEqual(first_fe, '0000000001')
+        self.assertEqual(first_nc, '0000000001')
+        self.assertEqual(second_fe, '0000000002')
+        self.assertEqual(second_nc, '0000000002')
 
     def test_next_consecutivo_independent_per_company(self):
         other_company = self.env['res.company'].create({'name': 'Otra Empresa FE'})
@@ -72,15 +83,43 @@ class TestFeConfig(TransactionCase):
             'province': '1', 'canton': '01', 'district': '01', 'neighborhood': '01',
             'address_detail': 'x', 'email': 'x@x.cr',
         })
-        first_this = self.config._l10n_cr_fe_next_consecutivo()
-        first_other = other_config._l10n_cr_fe_next_consecutivo()
-        second_this = self.config._l10n_cr_fe_next_consecutivo()
-        second_other = other_config._l10n_cr_fe_next_consecutivo()
+        first_this = self.config._l10n_cr_fe_next_consecutivo('01')
+        first_other = other_config._l10n_cr_fe_next_consecutivo('01')
+        second_this = self.config._l10n_cr_fe_next_consecutivo('01')
+        second_other = other_config._l10n_cr_fe_next_consecutivo('01')
         # Each company's sequence is independent, starting from 1
         self.assertEqual(first_this, '0000000001')
         self.assertEqual(first_other, '0000000001')
         self.assertEqual(second_this, '0000000002')
         self.assertEqual(second_other, '0000000002')
+
+    def test_next_consecutivo_seeds_from_legacy_fe_sequence(self):
+        # Empresa que ya emitia FE antes de que se separara el consecutivo por
+        # tipo de documento: su secuencia vieja ya iba en 19.
+        self.env['ir.sequence'].sudo().create({
+            'name': 'Consecutivo FE (legado)',
+            'code': 'l10n_cr_fe.consecutivo.fe.%s' % self.company.id,
+            'company_id': self.company.id,
+            'padding': 10,
+            'number_increment': 1,
+            'implementation': 'no_gap',
+            'number_next': 19,
+        })
+        first_fe = self.config._l10n_cr_fe_next_consecutivo('01')
+        self.assertEqual(first_fe, '0000000019')
+
+    def test_next_consecutivo_nc_ignores_legacy_fe_sequence(self):
+        self.env['ir.sequence'].sudo().create({
+            'name': 'Consecutivo FE (legado)',
+            'code': 'l10n_cr_fe.consecutivo.fe.%s' % self.company.id,
+            'company_id': self.company.id,
+            'padding': 10,
+            'number_increment': 1,
+            'implementation': 'no_gap',
+            'number_next': 19,
+        })
+        first_nc = self.config._l10n_cr_fe_next_consecutivo('03')
+        self.assertEqual(first_nc, '0000000001')
 
     def test_ensure_certificate_uploaded_registers_and_uploads(self):
         self.config.certificate_file = base64.b64encode(b'contenido-p12')
