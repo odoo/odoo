@@ -715,16 +715,13 @@ export class PivotModel extends Model {
      * @returns {Promise}
      */
     async toggleMeasure(fieldName) {
+        await Promise.resolve(this.race.getCurrentProm());
         const metaData = this._buildMetaData();
         this.nextActiveMeasures = this.nextActiveMeasures || metaData.activeMeasures;
         metaData.activeMeasures = this.nextActiveMeasures;
         const index = metaData.activeMeasures.indexOf(fieldName);
         if (index !== -1) {
-            // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information (but still, we need
-            // to wait in case there is a pending load)
             metaData.activeMeasures.splice(index, 1);
-            await Promise.resolve(this.race.getCurrentProm());
             this.metaData = metaData;
         } else {
             metaData.activeMeasures.push(fieldName);
