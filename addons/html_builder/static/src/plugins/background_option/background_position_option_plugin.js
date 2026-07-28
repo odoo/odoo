@@ -25,6 +25,7 @@ export class BackgroundPositionOptionPlugin extends Plugin {
             BackgroundTypeAction,
             SetBackgroundSizeAction,
             BackgroundPositionOverlayAction,
+            BackgroundZoomSliderAction,
         },
     };
 
@@ -52,20 +53,35 @@ export class BackgroundPositionOptionPlugin extends Plugin {
                 y: Math.round(bgRect.height - renderRatio * naturalHeight),
             };
         }
-
-        let [width, height] = editingElStyle.backgroundSize.split(" ");
+        const bgSize = editingElStyle.backgroundSize.split(",")[0].trim();
+        const [width, height] = bgSize.split(" ");
         if (width === "auto" && (height === "auto" || !height)) {
             return {
-                x: bgRect.width - naturalWidth,
-                y: bgRect.height - naturalHeight,
+                x: Math.round(bgRect.width - naturalWidth),
+                y: Math.round(bgRect.height - naturalHeight),
             };
         }
         // At least one of width or height is not auto, so we can use it to
         // calculate the other if it's not set.
-        [width, height] = [parseInt(width), parseInt(height)];
+        const parseBgSize = (val, maxDim) => {
+            if (!val || val === "auto") {
+                return null;
+            }
+            if (val.endsWith("%")) {
+                return (parseFloat(val) / 100) * maxDim;
+            }
+            return parseFloat(val);
+        };
+        const parsedWidth = parseBgSize(width, bgRect.width);
+        const parsedHeight = parseBgSize(height, bgRect.height);
+
         return {
-            x: bgRect.width - (width || (height * naturalWidth) / naturalHeight),
-            y: bgRect.height - (height || (width * naturalHeight) / naturalWidth),
+            x: Math.round(
+                bgRect.width - (parsedWidth || (parsedHeight * naturalWidth) / naturalHeight)
+            ),
+            y: Math.round(
+                bgRect.height - (parsedHeight || (parsedWidth * naturalHeight) / naturalWidth)
+            ),
         };
     }
 }
@@ -75,16 +91,26 @@ export class BackgroundTypeAction extends BuilderAction {
     apply({ editingElement, value }) {
         editingElement.classList.toggle("o_bg_img_opt_repeat", value === "repeat-pattern");
         editingElement.style.setProperty("background-position", "");
-        editingElement.style.setProperty(
-            "background-size",
-            value !== "repeat-pattern" ? "" : "100px, cover"
-        );
+        let bgSize = "";
+        if (value === "repeat-pattern") {
+            bgSize = "100px, cover";
+        } else if (value === "zoom") {
+            bgSize = "150%";
+        }
+        editingElement.style.setProperty("background-size", bgSize);
     }
     isApplied({ editingElement, value }) {
         const bgRepeat = getComputedStyle(editingElement).backgroundRepeat;
         const repeatLayers = bgRepeat.split(",").map((s) => s.trim());
         const isRepeating = repeatLayers.every((r) => r === "repeat");
-        return value === "repeat-pattern" ? isRepeating : !isRepeating;
+        if (value === "repeat-pattern") {
+            return isRepeating;
+        }
+        const bgSize = getComputedStyle(editingElement).backgroundSize;
+        if (value === "zoom") {
+            return !isRepeating && bgSize.includes("%");
+        }
+        return !isRepeating && !bgSize.includes("%");
     }
 }
 
@@ -164,6 +190,18 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
         if (bgPosition) {
             editingElement.style.backgroundPosition = bgPosition;
         }
+    }
+}
+
+export class BackgroundZoomSliderAction extends BuilderAction {
+    static id = "backgroundZoomSlider";
+    getValue({ editingElement }) {
+        return (
+            editingElement.style.backgroundSize || getComputedStyle(editingElement).backgroundSize
+        );
+    }
+    apply({ editingElement, value }) {
+        editingElement.style.setProperty("background-size", value);
     }
 }
 
