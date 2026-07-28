@@ -1843,7 +1843,7 @@ class AccountMove(models.Model):
                     base_lines=base_lines,
                     currency=move.currency_id,
                     company=move.company_id,
-                    cash_rounding=move.invoice_cash_rounding_id,
+                    cash_rounding=move.sudo().invoice_cash_rounding_id,
                 )
                 move.tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
