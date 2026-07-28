@@ -703,11 +703,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             {'name': f'Test_{idx}'}
             for idx in range(10)
         ])
+        partner_ids = self.partner_admin.ids
 
-        with self.assertQueryCount(admin=3, employee=2):
+        with self.assertQueryCount(admin=4, employee=3):
             records._message_log_with_view(
                 'test_mail.mail_template_simple_test',
-                render_values={'partner': self.customer.with_env(self.env)}
+                render_values={'partner': self.customer.with_env(self.env)},
+                partner_ids={rec.id: partner_ids for rec in records},
             )
 
     @users('admin', 'employee')
