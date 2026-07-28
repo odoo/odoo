@@ -61,7 +61,7 @@ class TestMassMailing(models.TransientModel):
                 'body_html': self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout', {
                     'body': full_body,
                     'mailing_style': Markup(f'<style>{styles}</style>'),
-                }, minimal_qcontext=True),
+                }, minimal_qcontext=True, preserve_comments=True),
                 'is_notification': False,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
