@@ -14,7 +14,7 @@ import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, computed, props, proxy, signal, t, useApp } from "@odoo/owl";
+import { Component, computed, props, proxy, Resource, signal, t, useApp } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -30,11 +30,7 @@ import { getOrigin } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import {
-    MessageSelectionState,
-    useForwardRefsToParent,
-    useLongPress,
-} from "@mail/utils/common/hooks";
+import { MessageSelectionState, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
@@ -86,7 +82,7 @@ export class Message extends Component {
             isFirstMessage: t.boolean().optional(),
             isReadOnly: t.boolean().optional(),
             message: t.instanceOf(this.store["mail.message"].Class),
-            messageRefs: t.instanceOf(Map).optional(),
+            messageEls: t.instanceOf(Resource).optional(() => new Resource()),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
             previousMessage: t.instanceOf(this.store["mail.message"].Class).optional(),
@@ -125,7 +121,19 @@ export class Message extends Component {
                 predicate: () => !this.isEditing,
             });
         }
-        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
+        // The root element is registered in the collection of message elements
+        // owned by the parent (usually `Thread`), so that it can e.g. scroll to a
+        // given message. It cannot bind the resource with `t-ref` directly, as an
+        // element only supports a single `t-ref` and `rootRef` is needed locally.
+        useLayoutEffect(
+            (messageEls, el) => {
+                if (el) {
+                    this.registerMessageEl(messageEls, el);
+                    return () => messageEls.delete(el);
+                }
+            },
+            () => [this.props.messageEls, this.rootRef()]
+        );
         this.messageBody = signal.ref(HTMLDivElement);
         this.messageContentRef = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
@@ -242,6 +250,17 @@ export class Message extends Component {
                 resolveRefEl(this.messageBody),
             ]
         );
+    }
+
+    /**
+     * Kept as a method so that tests can delay the registration, i.e. simulate
+     * a message whose element is registered after being mounted.
+     *
+     * @param {import("@odoo/owl").Resource<HTMLElement>} messageEls
+     * @param {HTMLElement} el
+     */
+    registerMessageEl(messageEls, el) {
+        messageEls.add(el);
     }
 
     get messageActionsParams() {

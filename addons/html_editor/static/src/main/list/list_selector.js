@@ -6,7 +6,6 @@ import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { useChildRef } from "@web/core/utils/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -22,7 +21,7 @@ export class ListSelector extends Component {
     listSelector = signal.ref();
 
     setup() {
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.listSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);

@@ -1,5 +1,5 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -21,7 +21,7 @@ export class LanguageSelector extends Component {
         this.state = proxy({
             languages: [],
         });
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         onWillStart(() => {
             if (user.userId) {

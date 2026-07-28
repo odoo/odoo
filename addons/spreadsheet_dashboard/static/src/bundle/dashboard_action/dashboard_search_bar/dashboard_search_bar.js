@@ -2,7 +2,7 @@ import { Component, signal, status, proxy } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
-import { useService, useChildRef, useAutofocus } from "@web/core/utils/hooks";
+import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { fuzzyTest, fuzzyLookup } from "@web/core/utils/search";
@@ -58,7 +58,7 @@ export class DashboardSearchBar extends Component {
         this.searchBarDropdownMenu = useDropdownState();
         this.inputDropdownState = useDropdownState();
         this.inputDropdownNavOptions = this.getDropdownNavigation();
-        this.menuRef = useChildRef();
+        this.menuRef = signal.ref();
     }
 
     closeFilterValueDropdown() {
@@ -355,7 +355,7 @@ export class DashboardSearchBar extends Component {
 
         return {
             virtualFocus: true,
-            getItems: () => this.menuRef.el?.querySelectorAll(":scope .o-dropdown-item") ?? [],
+            getItems: () => this.menuRef()?.querySelectorAll(":scope .o-dropdown-item") ?? [],
             isNavigationAvailable: ({ navigator, target }) => this.inputDropdownState.isOpen,
             onUpdated: (navigator) => (this.navigator = navigator),
             hotkeys: {

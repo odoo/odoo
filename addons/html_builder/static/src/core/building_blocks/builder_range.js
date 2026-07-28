@@ -1,6 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
-import { useChildRef } from "@web/core/utils/hooks";
+import { Component, props, signal, t } from "@odoo/owl";
 import {
     useActionInfo,
     useBuilderComponent,
@@ -87,7 +86,7 @@ export class BuilderRange extends Component {
         }
 
         if (this.props.withNumberInput) {
-            this.inputRefNumber = useChildRef();
+            this.inputRefNumber = signal.ref();
             this.debouncedCommitNumberValue = useInputDebouncedCommit(this.inputRefNumber);
         }
 
@@ -118,7 +117,7 @@ export class BuilderRange extends Component {
                 } else {
                     ratio = this.convertToRatio(value);
                 }
-                this.inputRefNumber.el.value = ratio;
+                this.inputRefNumber().value = ratio;
                 // Syncronize the values of range and text inputs during preview
                 this.inputRefRange.el.value = value || this.min;
                 this.state.value = this.parseDisplayValue(value);

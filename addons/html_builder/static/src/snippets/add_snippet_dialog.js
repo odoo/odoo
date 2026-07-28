@@ -8,7 +8,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
@@ -35,7 +35,7 @@ export class AddSnippetDialog extends Component {
     setup() {
         useAutofocus({ ref: this.autofocusRef });
         this.hotkeyService = useService("hotkey");
-        this.modalRef = useChildRef();
+        this.modalRef = signal.ref();
         this.state = proxy({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
@@ -203,7 +203,7 @@ export class AddSnippetDialog extends Component {
         }
         const [, lastTabableElInIframe] = getFirstAndLastTabableElements(ev.currentTarget);
         if (hotkey === "tab" && lastTabableElInIframe === ev.target) {
-            const [firstTabableElInDialog] = getFirstAndLastTabableElements(this.modalRef.el);
+            const [firstTabableElInDialog] = getFirstAndLastTabableElements(this.modalRef());
             firstTabableElInDialog.focus();
             ev.preventDefault();
             ev.stopPropagation();

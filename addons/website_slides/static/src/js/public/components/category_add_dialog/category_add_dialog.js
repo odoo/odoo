@@ -27,7 +27,7 @@ export class CategoryAddDialog extends ConfirmationDialog {
                 return;
             }
             this.lastInputValue = this.inputRef().value;
-            return this.props.confirm({ formEl: this.modalRef.el.querySelector("form") });
+            return this.props.confirm({ formEl: this.modalRef().querySelector("form") });
         });
     }
 }

@@ -17,7 +17,7 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
         const onClickClipboardButton = async (ev) => {
             ev.preventDefault();
             const clipboardButtonEl = ev.currentTarget;
-            const secretSpan = this.modalRef.el.querySelector("span[name='secret']");
+            const secretSpan = this.modalRef().querySelector("span[name='secret']");
             browser.navigator.clipboard.writeText(secretSpan.textContent).then(() => {
                 this.tooltip.open(clipboardButtonEl, { tooltip: _t("Copied!") });
                 setTimeout(this.tooltip.close, 800);
@@ -31,7 +31,7 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
                         clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
                 }
             },
-            () => [this.modalRef.el?.querySelector("#collapseTotpSecret .o_clipboard_button")]
+            () => [this.modalRef()?.querySelector("#collapseTotpSecret .o_clipboard_button")]
         );
     }
 }

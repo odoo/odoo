@@ -20,10 +20,7 @@ export function useCustomDropzone(
 
     // Transitional shim: accept both an Owl 3 signal ref (call it to get the
     // element) and a legacy `.el` ref object. Remove once all callers pass a signal.
-    // Note: `useChildRef()` returns a *function* with an `.el` getter, so we must
-    // probe `.el` first and only fall back to calling the ref when no `.el` is
-    // exposed at all (true signal refs).
-    const getTargetEl = () => ("el" in targetRef ? targetRef.el : targetRef());
+    const getTargetEl = () => (typeof targetRef === "function" ? targetRef() : targetRef.el);
 
     let dragCount = 0;
     let hasTarget = false;

@@ -1,7 +1,7 @@
 import { useChildSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
-import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
@@ -46,7 +46,7 @@ export const dialogProps = {
     size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("lg"),
     technical: t.boolean().optional(true),
     title: t.string().optional("Odoo"),
-    modalRef: t.function().optional(),
+    modalRef: t.signal(t.ref()).optional(() => signal.ref()),
     slots: t.object({
         default: t.object(), // Content is not optional
         header: t.object().optional(),
@@ -62,11 +62,10 @@ export class Dialog extends Component {
     // overridden.
     static props = dialogProps;
     props = useProps(this.constructor.props);
-    modalRef = signal.ref();
+    modalRef = this.props.modalRef;
 
     setup() {
         this.uiService = useService("ui");
-        useForwardRefToParent(this.modalRef, "modalRef");
         useActiveElement(this.modalRef);
         this.data = proxy(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());

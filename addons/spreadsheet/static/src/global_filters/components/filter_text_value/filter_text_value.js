@@ -1,8 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
-import { useChildRef } from "@web/core/utils/hooks";
+import { Component, props, signal, t } from "@odoo/owl";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -21,18 +20,18 @@ export class TextFilterValue extends Component {
     });
 
     setup() {
-        this.inputRef = useChildRef();
+        this.inputRef = signal.ref();
         useLayoutEffect(
             () => {
-                if (this.props.options.length && this.inputRef.el) {
+                if (this.props.options.length && this.inputRef()) {
                     // if there are options restricting the possible values,
                     // we prevent the user from typing free-text by setting the maxlength to 0
-                    this.inputRef.el.setAttribute("maxlength", 0);
+                    this.inputRef().setAttribute("maxlength", 0);
                 } else {
-                    this.inputRef.el.removeAttribute("maxlength");
+                    this.inputRef().removeAttribute("maxlength");
                 }
             },
-            () => [this.props.options.length, this.inputRef.el]
+            () => [this.props.options.length, this.inputRef()]
         );
     }
 
@@ -73,7 +72,7 @@ export class TextFilterValue extends Component {
             if (!this.props.value?.includes(value)) {
                 this.props.onValueChanged([...this.props.value, value]);
             }
-            this.inputRef.el.value = "";
+            this.inputRef().value = "";
         }
     }
 }

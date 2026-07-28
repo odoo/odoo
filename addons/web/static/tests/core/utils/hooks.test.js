@@ -37,8 +37,6 @@ import {
     useAutofocus,
     useBackButton,
     useBus,
-    useChildRef,
-    useForwardRefToParent,
     useOwnedDialogs,
     useService,
     useSpellCheck,
@@ -623,67 +621,52 @@ describe("useSpellCheck", () => {
     });
 });
 
-describe("useChildRef and useForwardRefToParent", () => {
+describe("parent-owned signal ref", () => {
     test("simple usecase", async () => {
-        let childRef;
-        let parentRef;
-
         class Child extends Component {
-            static template = xml`<span t-ref="this.someRef" class="my_span">Hello</span>`;
-            someRef = signal.ref();
-            setup() {
-                childRef = useForwardRefToParent(this.someRef, "someRef");
-            }
+            static template = xml`<span t-ref="this.props.someRef" class="my_span">Hello</span>`;
+            props = useProps({ someRef: t.signal(t.ref()).optional(() => signal.ref()) });
         }
 
         class Parent extends Component {
             static template = xml`<div><Child someRef="this.someRef"/></div>`;
             static components = { Child };
-            setup() {
-                this.someRef = useChildRef();
-                parentRef = this.someRef;
-            }
+            someRef = signal.ref();
         }
 
-        await mountWithCleanup(Parent);
-        expect(childRef()).toBe(queryOne(".my_span"));
-        expect(parentRef.el).toBe(queryOne(".my_span"));
+        const parent = await mountWithCleanup(Parent);
+        expect(parent.someRef()).toBe(queryOne(".my_span"));
     });
 
     test("in a conditional child", async () => {
         class Child extends Component {
-            static template = xml`<span t-ref="this.someRef" class="my_span">Hello</span>`;
-            someRef = signal.ref();
-            setup() {
-                useForwardRefToParent(this.someRef, "someRef");
-            }
+            static template = xml`<span t-ref="this.props.someRef" class="my_span">Hello</span>`;
+            props = useProps({ someRef: t.signal(t.ref()).optional(() => signal.ref()) });
         }
 
         class Parent extends Component {
             static template = xml`<div><Child t-if="this.state.hasChild" someRef="this.someRef"/></div>`;
             static components = { Child };
-            setup() {
-                this.someRef = useChildRef();
-                this.state = proxy({ hasChild: true });
-            }
+            someRef = signal.ref();
+            state = proxy({ hasChild: true });
         }
 
         const parentComponent = await mountWithCleanup(Parent);
 
         expect(".my_span").toHaveCount(1);
-        expect(parentComponent.someRef.el).toBe(queryOne(".my_span"));
+        expect(parentComponent.someRef()).toBe(queryOne(".my_span"));
 
         parentComponent.state.hasChild = false;
         await animationFrame();
 
         expect(".my_span").toHaveCount(0);
-        expect(parentComponent.someRef.el).toBe(null);
+        expect(parentComponent.someRef()).toBe(null);
 
         parentComponent.state.hasChild = true;
         await animationFrame();
 
         expect(".my_span").toHaveCount(1);
-        expect(parentComponent.someRef.el).toBe(queryOne(".my_span"));
+        expect(parentComponent.someRef()).toBe(queryOne(".my_span"));
     });
 });
 

@@ -1,5 +1,4 @@
-import { Component, signal } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export class EmbeddedComponentToolbar extends Component {
     static props = {
@@ -11,7 +10,7 @@ export class EmbeddedComponentToolbar extends Component {
 
 export class EmbeddedComponentToolbarButton extends Component {
     static props = {
-        buttonRef: { type: Function, optional: true },
+        buttonRef: { type: Function, optional: true }, // signal ref owned by the parent
         hidden: { type: Boolean, optional: true },
         icon: { type: String, optional: true },
         icon_class: { type: String, optional: true },
@@ -22,9 +21,8 @@ export class EmbeddedComponentToolbarButton extends Component {
     };
     static template = "html_editor.EmbeddedComponentToolbarButton";
 
-    buttonRef = signal.ref();
-
-    setup() {
-        useForwardRefToParent(this.buttonRef, "buttonRef");
-    }
+    buttonRef = useProps.static(
+        "buttonRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 }

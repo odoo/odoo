@@ -1,6 +1,5 @@
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useChildRef } from "@web/core/utils/hooks";
 import { Component, props, proxy, t } from "@odoo/owl";
 
 const NO_OP = () => {};
@@ -28,7 +27,7 @@ export class WebsiteDialog extends Component {
         this.state = proxy({
             disabled: false,
         });
-        this.modalRef = useChildRef();
+        this.modalRef = this.props.modalRef;
     }
     /**
      * Disables the buttons of the dialog when a click is made.

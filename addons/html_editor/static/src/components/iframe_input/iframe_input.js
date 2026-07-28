@@ -1,11 +1,10 @@
-import { Component, onMounted, onWillDestroy, signal, useEffect } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, onMounted, onWillDestroy, signal, useEffect, useProps, t } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 
 export class IframeInput extends Component {
     static template = "html_editor.IframeInput";
     static props = {
-        // refs (DOM access)
+        // refs (DOM access): signal refs owned by the parent
         iframeRef: { type: Function, optional: true },
         inputRef: { type: Function, optional: true },
 
@@ -26,11 +25,12 @@ export class IframeInput extends Component {
         onKeydown: { type: Function, optional: true },
     };
 
-    iframeRef = signal.ref();
+    iframeRef = useProps.static(
+        "iframeRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     setup() {
-        useForwardRefToParent(this.iframeRef, "iframeRef");
-
         onMounted(() => {
             this.iframeEl = this.iframeRef();
 
@@ -81,7 +81,7 @@ export class IframeInput extends Component {
 
                 iframeDoc.body.appendChild(this.input);
                 this._bindInputEvents();
-                this.props.inputRef?.({ el: this.input });
+                this.props.inputRef?.set(this.input);
             };
 
             if (this.iframeEl.contentDocument.readyState === "complete") {

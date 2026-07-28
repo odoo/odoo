@@ -23,13 +23,13 @@
                     <div t-if="msg.threadAsFirstUnread?.eq(this.props.thread) and (prevMsg or this.channel?.markedAsUnread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bold z-1 px-2">
                         <div class="o-mail-Thread-newMessageLine flex-grow-1 border border-danger rounded-start-3 opacity-100 shadow-sm my-1"/><span class="o-ps-1_5 pe-1 bg-danger o-text-white rounded text-uppercase shadow-sm o-xxsmaller">New</span>
                     </div>
-                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" messageRefs="this.messageRefs" thread="this.props.thread"/>
+                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" messageEls="this.messageEls" thread="this.props.thread"/>
                     <Message
                         t-elif="!msg.isNotification"
                         className="this.getMessageClassName(msg)"
                         message="msg"
                         messageSelection="this.messageSelection"
-                        messageRefs="this.messageRefs"
+                        messageEls="this.messageEls"
                         previousMessage="prevMsg"
                         squashed="this.isSquashed(msg, prevMsg)"
                         onParentMessageClick="this.onParentMessageClick"

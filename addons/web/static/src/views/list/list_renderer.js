@@ -8,7 +8,7 @@ import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
@@ -154,7 +154,6 @@ export class ListRenderer extends Component {
         onMounted(() => window.addEventListener("click", onGlobalClick, { capture: true }));
         onWillUnmount(() => window.removeEventListener("click", onGlobalClick, { capture: true }));
         this.tableRef = signal.ref();
-        this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;
 
         this.longTouchTimer = null;
