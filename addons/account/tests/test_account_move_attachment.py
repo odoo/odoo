@@ -8,7 +8,11 @@ class TestAccountMoveAttachment(HttpCase):
     def test_preserving_manually_added_attachments(self):
         """ Preserve attachments manually added (not coming from emails) to an invoice """
         self.authenticate("admin", "admin")
-
+        self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'code': 'TEST',
+            'type': 'sale',
+        })
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
         })
