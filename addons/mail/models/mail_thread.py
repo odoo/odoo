@@ -641,6 +641,8 @@ class MailThread(models.AbstractModel):
             bodies = self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
             authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
 
+        bodies_by_author = defaultdict(dict)
+        tracking_values_by_author = defaultdict(dict)
         for record in self:
             changes, tracking_values = trackings.get(record.id, (None, None))
             if not changes:
@@ -664,12 +666,16 @@ class MailThread(models.AbstractModel):
                     tracking_values=tracking_values,
                 )
             elif tracking_values:
-                record._message_log(
-                    body=body,
-                    author_id=author_id,
-                    message_type="tracking",
-                    tracking_values=tracking_values,
-                )
+                bodies_by_author[author_id][record.id] = body
+                tracking_values_by_author[author_id][record.id] = tracking_values
+
+        for author_id, record_bodies in bodies_by_author.items():
+            self.browse(record_bodies.keys())._message_log_batch(
+                bodies=record_bodies,
+                author_id=author_id,
+                message_type="tracking",
+                tracking_values=tracking_values_by_author[author_id],
+            )
 
     def _track_log_get_default_body(self, track_init_values: ValuesType) -> str | Markup:
         """Get a default log message content based on tracked and updated fields.
@@ -2959,8 +2965,8 @@ class MailThread(models.AbstractModel):
             author_id=author_id, email_from=email_from,
             message_type=message_type,
             partner_ids=partner_ids,
-            attachment_ids=attachment_ids,
-            tracking_values=tracking_values,
+            attachment_ids={self.id: attachment_ids} if attachment_ids else False,
+            tracking_values={self.id: tracking_values} if tracking_values else False,
         )
 
     def _message_log_batch(self, bodies, subject=False,
@@ -2980,11 +2986,12 @@ class MailThread(models.AbstractModel):
         :param list partner_ids: optional partners, not used in any notification
           mechanism. This is mainly used to link a log to a specific customer
           like SMS or WhatsApp log;
+        :param dict attachment_ids: optional dict {record_id: list of
+          attachment ids}, linked to each record's own message;
+        :param dict tracking_values: optional dict {record_id: list of tracking
+          values}, rendered into each record's own body;
         :return: created messages (as sudo)
         """
-        # protect against side-effect prone usage
-        if len(self) > 1 and (attachment_ids or tracking_values):
-            raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
         if message_type != 'tracking' and tracking_values:
             raise ValueError(_('Posting with tracking should be done using tracking message type'))
 
@@ -2999,12 +3006,10 @@ class MailThread(models.AbstractModel):
             'record_alias_domain_id': False,
             'record_company_id': False,
             # content
-            'attachment_ids': attachment_ids,
             'message_type': message_type,
             'is_internal': True,
             'subject': subject,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'tracking_values': tracking_values,
             # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
@@ -3012,13 +3017,22 @@ class MailThread(models.AbstractModel):
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, author_id=author_id)[False],
         }
 
-        values_list = [dict(base_message_values,
-                            res_id=record.id,
-                            body=escape(bodies.get(record.id, '')))
-                       for record in self]
-        if tracking_values:  # generate trackings in body so that 'body' is reliable in msg_vals
-            values_list[0]['body'] = self._message_compute_body_with_trackings(values_list[0]['body'], tracking_values)
-        return self.sudo()._message_create(values_list)
+        vals_list = []
+        for record in self:
+            body = escape(bodies.get(record.id, ''))
+            record_tracking_values = tracking_values.get(record.id) if tracking_values else False
+            if record_tracking_values:
+                body = self._message_compute_body_with_trackings(body, record_tracking_values)
+
+            vals_list.append({
+                **base_message_values,
+                'res_id': record.id,
+                'body': body,
+                'attachment_ids': attachment_ids.get(record.id) if attachment_ids else False,
+                'tracking_values': record_tracking_values,
+            })
+
+        return self.sudo()._message_create(vals_list)
 
     def set_message_pin(self, message_id, pinned):
         """(Un)pin a message on the thread.
