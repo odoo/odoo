@@ -1797,7 +1797,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo._recompute_taxes()
         order_sudo._recompute_prices()
         if order_sudo.carrier_id:
-            order_sudo._set_delivery_method(order_sudo.carrier_id)
+            order_sudo.with_context(
+                keep_pickup_location=True,
+            )._set_delivery_method(order_sudo.carrier_id)
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
