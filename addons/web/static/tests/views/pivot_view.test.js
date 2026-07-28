@@ -4014,3 +4014,41 @@ test("scroll position is restored when coming back to pivot view (mobile)", asyn
     expect(".o_content .o_pivot").toHaveCount(1);
     expect(".o_pivot_view").toHaveProperty("scrollTop", 200);
 });
+
+test("Measure from arch is not lost after update", async () => {
+    let readGroupCount = 0;
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        readGroupCount++;
+    });
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        searchViewArch: `
+                <search>
+                    <filter name="some_filter" string="Some Filter" domain="[('foo', '>', 10)]"/>
+                </search>`,
+        arch: `
+			<pivot>
+				<field name="product_id" type="measure"/>
+			</pivot>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(readGroupCount).toBe(2);
+    expect("td.o_pivot_cell_value:contains(2)").toHaveCount(1);
+
+    await contains(".o_pivot_buttons button.dropdown-toggle").click();
+    expect(".dropdown-menu .dropdown-item:contains(Product)").toHaveCount(1);
+
+    await contains(".dropdown-item:contains(Product)").click();
+    await contains(".dropdown-item:contains(Count)").click();
+    expect("td.o_pivot_cell_value:contains(4)").toHaveCount(1);
+    expect(readGroupCount).toBe(4);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Some Filter");
+    expect(readGroupCount).toBe(6);
+
+    await contains(".o_pivot_buttons button.dropdown-toggle").click();
+    expect(".dropdown-menu .dropdown-item:contains(Product)").toHaveCount(1);
+});
