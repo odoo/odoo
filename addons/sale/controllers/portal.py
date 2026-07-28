@@ -350,7 +350,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return {"error": self.env._("Invalid signature data.")}
 
         if not order_sudo._has_to_be_paid():
-            order_sudo._validate_order()
+            order_sudo.with_context(sale_include_signature=True)._validate_order()
 
         pdf = (
             self
