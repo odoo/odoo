@@ -1,18 +1,66 @@
-.git
-.github
-.claude
-.codex
-.agents
+# Version control
+.git/
+.gitattributes
+.gitignore
+.github/
+
+# Claude / AI agents
+.claude/
+.codex/
+.agents/
+AGENTS.md
+CLAUDE.md
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
-*.log
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
 venv/
-node_modules/
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.so
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs (not needed at runtime)
+doc/
+docs/
+*.md
+*.rst
+
+# Config templates (not the real config)
+config/
+.env
+.env.example
+docker-compose.yml
+
+# Odoo runtime (generated)
 odoo/filestore/
 odoo-db-data/
 odoo-web-data/
-dist/
-build/
-.pytest_cache/
-.ruff_cache/
+
+# Logs
+*.log
+/var/log/odoo/
+
+# Scripts (dev tools, not for the image)
+bashs/
+setup/
+
+# CI
+.github/

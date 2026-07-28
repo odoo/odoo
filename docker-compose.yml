@@ -1,46 +1,86 @@
+# =============================================================================
+# docker-compose.yml — Odoo 19 + Postgres 16 for invoice_agent
+#
+# Usage:
+#   cp .env.example .env   # fill in secrets
+#   docker compose up -d          # start
+#   docker compose down -v        # stop + delete named volumes (DESTRUCTIVE)
+#   docker compose logs -f        # tail logs
+# =============================================================================
+
 services:
   db:
     image: postgres:16
-    ports:
-      - "127.0.0.1:5432:5432"   # <-- ADD THIS LINE IF MISSING
-    restart: unless-stopped   # <-- Add this line
+    restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
 
   odoo:
     build:
       context: .
-    restart: unless-stopped   # <-- Add this line
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    env_file: .env
+    environment:
+      HOST: ${ODOO_DB_HOST:-db}
+      PORT: ${ODOO_DB_PORT:-5432}
+      USER: ${ODOO_DB_USER:-odoo}
+      PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
     ports:
       - "8069:8069"
-    environment:
-      HOST: db
-      PORT: 5432
-      USER: odoo
-      PASSWORD: odoo
+      - "8072:8072"
     volumes:
-      - .:/opt/odoo
-      # Mount our custom_addons (our own customization modules) into the
-      # container's custom_addons path (created in the Dockerfile).
-      # Listed on addons_path in docker/odoo.conf.
-      - ./custom_addons:/mnt/custom_addons
+      # Bind-mount custom_addons for live addon development.
+      # Changes to .py / .xml files in custom_addons/ are reflected
+      # on the container's filesystem instantly.
+      - ./custom_addons:/mnt/extra-addons
+      # Named volume: filestore survives container recreation
       - odoo-web-data:/var/lib/odoo
-    # No `reload`: it needs inotify, which cannot see Windows host writes through the
-    # bind mount and hangs boot watching ~620 addons. Restart the container after .py edits.
-    command: ["python", "odoo-bin", "-c", "/etc/odoo/odoo.conf", "--dev=qweb,werkzeug,xml"]
+    # --dev=reload enables hot-reload of Python files when running on Linux
+    # hosts (EC2, WSL2, native Linux). On Docker Desktop for Windows the
+    # bind-mount doesn't emit inotify events, so you must restart the
+    # container after .py edits:  docker compose restart odoo
+    command: odoo --dev=reload,qweb,werkzeug,xml
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
 
 volumes:
   odoo-db-data:
+    name: odoo-db-data
   odoo-web-data:
+    name: odoo-web-data
