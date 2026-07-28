@@ -252,11 +252,11 @@ class ProductProduct(models.Model):
                 products = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
                 # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
                 if cost_method == 'standard':
-                    std_prices, total_values = products._run_standard_batch(at_date=at_date)
+                    std_prices, total_values = products._run_standard(at_date=at_date)
                 elif cost_method == 'average':
                     std_prices, total_values = products._run_avco(at_date=at_date)
                 else:
-                    std_prices, total_values = products._run_fifo_batch(at_date=at_date)
+                    std_prices, total_values = products._run_fifo(at_date=at_date)
 
                 std_price_by_product_id.update(std_prices)
                 total_value_by_product_id.update(total_values)
@@ -323,11 +323,11 @@ class ProductProduct(models.Model):
     def _correct_inventory_valuation(self, from_date):
         def replay(products, cost_method, lot=False):
             if cost_method == 'standard':
-                products._run_standard_batch(at_date=from_date, correction=True)
+                products._run_standard(at_date=from_date, correction=True)
             elif cost_method == 'average':
                 products._run_avco(at_date=from_date, lot=lot, correction=True)
             else:
-                products._run_fifo_batch(at_date=from_date, lot=lot, correction=True)
+                products._run_fifo(at_date=from_date, lot=lot, correction=True)
 
         lot_valuated = self.filtered(lambda p: p.lot_valuated and p.cost_method != 'standard')
         for product in lot_valuated:
@@ -398,7 +398,7 @@ class ProductProduct(models.Model):
                     lambda q: q.lot_id and q.company_id == self.env.company and q.location_id.is_valued and q.quantity > 0
                 ).lot_id or [None]
             for lot in lots:
-                moves, remaining_qty = product._run_fifo_get_stack(lot=lot, allow_negative=True)
+                moves, remaining_qty = product._get_fifo_stack(lot=lot, allow_negative=True)
                 if not moves:
                     continue
                 sign = -1 if moves[0].is_out else 1
@@ -410,7 +410,7 @@ class ProductProduct(models.Model):
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
-    def _run_standard_batch(self, at_date=None, lot=None, correction=False):
+    def _run_standard(self, at_date=None, lot=None, correction=False):
         if at_date and correction and at_date != datetime.min:
             at_date = at_date - timedelta(seconds=1)
         std_price_by_product_id = {product.id: product.standard_price for product in self}
@@ -580,7 +580,7 @@ class ProductProduct(models.Model):
 
         return std_price_by_product_id, value_by_product_id
 
-    def _run_fifo_batch(self, at_date=None, lot=None, correction=False):
+    def _run_fifo(self, at_date=None, lot=None, correction=False):
         std_price_by_product_id = {}
         value_by_product_id = {}
         stack_by_product = defaultdict(list)
@@ -605,7 +605,7 @@ class ProductProduct(models.Model):
                     stack_by_product[product] = [FifoCandidate(quantity, quantity * std_price)]
                 continue
 
-            fifo_stack, qty_on_first_move = product._run_fifo_get_stack(lot=lot, at_date=at_date)
+            fifo_stack, qty_on_first_move = product._get_fifo_stack(lot=lot, at_date=at_date)
             value = 0
             for index, move in enumerate(fifo_stack):
                 if index == 0 and qty_on_first_move:
@@ -689,7 +689,7 @@ class ProductProduct(models.Model):
 
         return std_price_by_product_id, value_by_product_id
 
-    def _get_fifo_value(self, quantity, lot=None):
+    def _get_fifo_value(self, quantity, lot=None, stack_size_extra_qty=0):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
         self.ensure_one()
         if self.uom_id.compare(quantity, 0) <= 0:
@@ -697,7 +697,7 @@ class ProductProduct(models.Model):
             return quantity * std_price
 
         fifo_cost = 0
-        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot)
+        fifo_stack, qty_on_first_move = self._get_fifo_stack(lot=lot, stack_size_extra_qty=stack_size_extra_qty)
         last_move = False
         # Going up to get the quantity in the argument
         while quantity > 0 and fifo_stack:
@@ -728,11 +728,14 @@ class ProductProduct(models.Model):
                 fifo_cost += quantity * self.standard_price
         return fifo_cost
 
-    def _run_fifo_get_stack(self, lot=None, at_date=None, allow_negative=False):
+    def _get_fifo_stack(self, lot=None, at_date=None, allow_negative=False, stack_size_extra_qty=0):
         """ :param allow_negative: when the on hand is negative (oversold), build a stack of
             the outgoing moves that make up that shortage instead of returning an empty
             one. Only the re-costing/replay paths want this; a plain consumption does not,
             as it has nothing on hand to consume and extrapolates the price instead.
+        :param stack_size_extra_qty: quantity to add to the on-hand stack size, for when
+            ``qty_available`` no longer reflects the valuation moment (e.g. out moves
+            valued once done, or several moves validated together).
         """
         fifo_stack = []
         fifo_stack_size = 0
@@ -740,9 +743,7 @@ class ProductProduct(models.Model):
             fifo_stack_size = lot.product_qty
         else:
             fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
-        if self.env.context.get('fifo_qty_already_processed'):
-            # When validating multiple moves at the same time, the qty_available won't be up to date yet
-            fifo_stack_size -= self.env.context['fifo_qty_already_processed']
+        fifo_stack_size += stack_size_extra_qty
         if self.uom_id.is_zero(fifo_stack_size):
             return fifo_stack, 0
 
