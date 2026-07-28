@@ -316,3 +316,17 @@ class TestFollowersController(MailControllerThreadCommon):
         self.authenticate(self.user_employee.login, self.user_employee.login)
         result = self._fetch_followers()
         self.assertNotIn(self.followers[4].id, result["follower_ids"])
+        result = self._fetch_followers(search_term=self.partner_employee.email)
+        self.assertEqual(result["follower_ids"], [])
+
+    def test_thread_followers_search_name_email(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        for term, expected_ids in (
+            ("aLP", self.expected_follower_ids[:2]),
+            ("UNIQUE@", [self.followers[3].id]),
+            ("no-match", []),
+            ("", self.expected_follower_ids),
+        ):
+            with self.subTest(search_term=term):
+                result = self._fetch_followers(search_term=term)
+                self.assertEqual(result["follower_ids"], expected_ids)
