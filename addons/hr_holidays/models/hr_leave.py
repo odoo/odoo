@@ -649,7 +649,7 @@ class HrLeave(models.Model):
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
                 result[leave.id] = (0, 0)
                 continue
-            if leave.work_entry_type_id.count_days_as == 'calendar':
+            if leave.work_entry_type_id.count_days_as == 'calendar' and leave.employee_id:
                 start_date = leave.request_date_from
                 end_date = leave.request_date_to
                 include_public = leave.work_entry_type_id.include_public_holidays_in_duration
