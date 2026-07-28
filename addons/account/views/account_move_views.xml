@@ -1090,6 +1090,14 @@
                                            context="{'example_date': invoice_date, 'example_amount': tax_totals['total_amount_currency']}"
                                            placeholder="Payment Terms"
                                            options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
+                                    <i class="fa fa-arrow-right mx-3 text-muted"
+                                       invisible="not invoice_payment_term_id or not invoice_date_due"/>
+                                    <field name="invoice_date_due"
+                                           class="text-muted"
+                                           nolabel="1"
+                                           force_save="1"
+                                           readonly="1"
+                                           invisible="not invoice_payment_term_id or not invoice_date_due"/>
                                 </div>
                                 <field name="taxable_supply_date_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
                                 <field name="taxable_supply_date" invisible="not show_taxable_supply_date" readonly="state != 'draft'" options="{'placeholder_field': 'taxable_supply_date_placeholder'}"/>
