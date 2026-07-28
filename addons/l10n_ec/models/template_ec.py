@@ -38,12 +38,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'ec_expense_cash_difference',
                 'account_sale_tax_id': 'tax_vat_15_411_goods',
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
-                'expense_account_id': 'ec110307',
+                'deferred_expense_account_id': 'ec_other_downpayments',
+                'deferred_revenue_account_id': 'ec220901',
+                'expense_account_id': 'ec510102',
                 'income_account_id': 'ec410101',
                 'receivable_account_id': 'ec1102050101',
                 'payable_account_id': 'ec210301',
+                'downpayment_account_id': 'ec2110',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'ec110306',
+                'account_production_wip_account_id': 'ec110302',
+                'account_production_wip_overhead_account_id': 'ec51040801',
             },
         }
 
@@ -58,7 +63,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_ec_emission_address_id': self.env.company.partner_id.id,
             },
             'purchase': {
-                'default_account_id': 'ec52022816',
+                'default_account_id': 'ec510102',
             },
         }
 

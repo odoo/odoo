@@ -33,7 +33,9 @@ class AccountChartTemplate(models.AbstractModel):
         return additional
 
     @template('ar_base', 'res.company')
-    def _get_ar_base_res_company(self):
-        res = super()._get_ar_base_res_company()
-        res[self.env.company.id].update({'l10n_ar_tax_base_account_id': 'base_tax_account'})
-        return res
+    def _get_ar_base_withholding_res_company(self):
+        return {
+            self.env.company.id: {
+                'l10n_ar_tax_base_account_id': 'base_tax_account',
+            },
+        }

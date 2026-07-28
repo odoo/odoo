@@ -23,15 +23,20 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'uy_code_5302',
                 'account_journal_early_pay_discount_loss_account_id': 'uy_code_5303',
                 'account_journal_early_pay_discount_gain_account_id': 'uy_code_4303',
+                'account_discount_expense_allocation_id': 'uy_code_5303',
+                'account_discount_income_allocation_id': 'uy_code_4303',
                 'account_sale_tax_id': 'vat1',
                 'account_purchase_tax_id': 'vat4',
                 'deferred_expense_account_id': 'uy_code_11407',
                 'deferred_revenue_account_id': 'uy_code_21321',
                 'income_account_id': 'uy_code_4102',
-                'expense_account_id': 'uy_code_5100',
+                'expense_account_id': 'uy_code_5401',
                 'receivable_account_id': 'uy_code_11300',
                 'payable_account_id': 'uy_code_21100',
-                'account_stock_valuation_id': 'uy_code_11704',
+                'downpayment_account_id': 'uy_code_21301',
+                'account_stock_valuation_id': 'uy_code_11701',
+                'account_production_wip_account_id': 'uy_code_11703',
+                'account_production_wip_overhead_account_id': 'uy_code_11731',
             },
         }
 
@@ -47,6 +52,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "name": _("Purchases"),
                 "code": "0002",
                 "refund_sequence": False,
+                "default_account_id": 'uy_code_5401',
             },
         }
 
@@ -61,7 +67,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('uy', 'account.account')
     def _get_uy_account_account(self):
         return {
-            'uy_code_11704': {
+            'uy_code_11701': {
                 'account_stock_variation_id': 'uy_code_5401',
             },
             'uy_code_12401': {'asset_depreciation_account_id': 'uy_code_12420', 'asset_expense_account_id': 'uy_code_5500'},
