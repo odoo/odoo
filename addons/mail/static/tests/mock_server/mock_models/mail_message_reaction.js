@@ -31,7 +31,7 @@ export class MailMessageReaction extends models.ServerModel {
                     partners,
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),
-                sequence: Math.min(reactionGroup.map((reaction) => reaction.id)),
+                sequence: Math.min(...reactionGroup.map((reaction) => reaction.id)),
             };
             store.add("MessageReactions", data);
         }
