@@ -110,7 +110,7 @@ class StatusPage extends Component {
                     <h4 class="text-center mb-3">No Internet Connection</h4>
                     <hr/>
                     <p class="mb-3">
-                        Please connect your IoT Box to internet via an ethernet cable or connect to Wi-FI network<br/>
+                        Please connect your IoT Box to internet via an Ethernet cable or connect to Wi-Fi network<br/>
                         <a class="alert-link" t-out="this.accessPointSsid()" /><br/>
                         to configure a Wi-Fi connection on the IoT Box
                     </p>
@@ -140,7 +140,7 @@ class StatusPage extends Component {
                     <table class="table table-hover table-sm" t-if="this.data().network_interfaces.length > 0">
                         <tbody>
                             <tr t-foreach="this.data().network_interfaces" t-as="interface" t-key="interface.id">
-                                <td class="col-3"><i class="oi oi-fw me-1" t-att-data-icon="'interface.is_wifi ? 'wifi' : 'account_tree'"/><t t-out="interface.is_wifi ? interface.ssid : 'Ethernet'"/></td>
+                                <td class="col-3"><i class="oi oi-fw me-1" t-att-data-icon="interface.is_wifi ? 'wifi' : 'account_tree'"/><t t-out="interface.is_wifi ? interface.ssid : 'Ethernet'"/></td>
                                 <td class="col-3" t-out="interface.ip"/>
                             </tr>
                         </tbody>
@@ -150,13 +150,13 @@ class StatusPage extends Component {
                         <table class="table table-hover table-sm">
                             <tbody>
                                 <tr t-foreach="Object.keys(this.data().devices)" t-as="deviceType" t-key="deviceType">
-                                    <td class="device-type col-3">
+                                    <td class="device-type col-4">
                                         <i class="oi oi-fw me-1" t-att-data-icon="this.icons[deviceType]"/>
                                         <t t-out="deviceType.replaceAll('_', ' ') + (deviceType === 'unsupported' ? '' : 's')"/>
                                     </td>
                                     <td class="col-3">
                                         <ul>
-                                            <li t-foreach="this.data().devices[deviceType].slice(0, 10)" t-as="device" t-key="device.identifier">
+                                            <li class="one-line" t-foreach="this.data().devices[deviceType].slice(0, 10)" t-as="device" t-key="device.identifier">
                                                 <t t-out="device.name"/>
                                             </li>
                                             <li t-if="this.data().devices[deviceType].length > 10">...</li>
