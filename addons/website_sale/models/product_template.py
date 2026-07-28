@@ -137,7 +137,9 @@ class ProductTemplate(models.Model):
 
     website_size_x = fields.Integer(string="Size X", default=1)
     website_size_y = fields.Integer(string="Size Y", default=1)
-    website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
+    website_ribbon_id = fields.Many2one(
+        string="Ribbon", comodel_name="product.ribbon", index="btree_not_null"
+    )
     minimum_quantity = fields.Integer(string="Minimum Quantity")
     website_sequence = fields.Integer(
         string="Website Sequence",
@@ -1410,6 +1412,26 @@ class ProductTemplate(models.Model):
             docs |= variant.sudo().product_document_ids
         return docs.filtered(lambda d: d.attached_on_sale == "shown_on_product_page")
 
+    def _get_variant_filters_domain(self, tags=None, ribbon=None):  # noqa: PLR6301
+        """Return the domain matching the templates having the given tags and ribbon, either on the
+        template or on one of its variants."""
+        domains = []
+        if tags:
+            domains.append(
+                Domain.OR([
+                    Domain("product_tag_ids", "in", tags),
+                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
+                ])
+            )
+        if ribbon:
+            domains.append(
+                Domain.OR([
+                    Domain("website_ribbon_id", "=", ribbon),
+                    Domain("product_variant_ids.variant_ribbon_id", "=", ribbon),
+                ])
+            )
+        return Domain.AND(domains)
+
     def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
         return [
             [("attribute_line_ids.value_ids", "in", attribute_value_ids)]
@@ -1440,6 +1462,7 @@ class ProductTemplate(models.Model):
         domains = [website.sale_product_domain()]
         category = options.get("category")
         tags = options.get("tags")
+        ribbon = options.get("ribbon")
         min_price = options.get("min_price")
         max_price = options.get("max_price")
         attribute_value_dict = options.get("attribute_value_dict")
@@ -1453,12 +1476,7 @@ class ProductTemplate(models.Model):
             tags = {
                 tag_id for tag in tags.split(",") if (tag_id := self.env["ir.http"]._unslug(tag)[1])
             }
-            domains.append(
-                Domain.OR([
-                    Domain("product_tag_ids", "in", tags),
-                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
-                ])
-            )
+        domains.append(self._get_variant_filters_domain(tags=tags, ribbon=ribbon))
         if min_price:
             domains.append([("list_price", ">=", min_price)])
         if max_price:
