@@ -13,7 +13,15 @@ import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
  */
 
 /**
- * @typedef { import("@html_editor/core/dom_observer_plugin").SerializedMutation<"attributes"> } SerializedAttributesMutation
+ * @typedef { import("../core/dom_reference_map_plugin").NodeId } NodeId
+ * @typedef { import("../core/history_plugin").HistoryCommitData } HistoryCommitData
+ */
+
+/**
+ * @typedef { Object } StateChange
+ * @property { NodeId } nodeId
+ * @property { Object } previous
+ * @property { Object } next
  */
 
 /**
@@ -37,8 +45,19 @@ export class EmbeddedComponentPlugin extends Plugin {
     static shared = ["renderBlueprintToElement"];
     /** @type {import("plugins").EditorResources} */
     resources = {
+        history_commit_data_properties: ["embeddedStateChanges"],
+
         /** Handlers */
-        on_savepoint_restored_handlers: () => this.handleComponents(this.editable),
+        on_savepoint_restored_handlers: (savePoint) => {
+            /** @type { StateChange[] } */
+            const changes = savePoint.data.embeddedStateChanges;
+            if (changes?.length) {
+                this.applyStateChanges(changes);
+                this.pendingStateChanges.push(...changes);
+            }
+            this.handleComponents(this.editable);
+        },
+        on_will_reset_history_handlers: this.resetPendingStateChanges.bind(this),
         on_history_reset_handlers: () => this.handleComponents(this.editable),
         on_history_rebased_handlers: () => this.handleComponents(this.editable),
         on_committed_to_history_handlers: (commit) => {
@@ -47,6 +66,40 @@ export class EmbeddedComponentPlugin extends Plugin {
                     commit.data.mutations || []
                 ) || this.editable;
             this.handleComponents(root);
+            this.resetPendingStateChanges();
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            /** @type { StateChange[] } */
+            const changes = commit.data.embeddedStateChanges;
+            if (changes?.length) {
+                this.applyStateChanges(changes);
+            }
+        },
+        on_revert_history_commit_handlers: (commit) => {
+            /** @type { StateChange[] } */
+            const changes = commit.data.embeddedStateChanges;
+            if (changes?.length) {
+                this.applyStateChanges(changes, { reverse: true });
+            }
+        },
+        on_will_invalidate_pending_changes_handlers: () => {
+            /** @type { StateChange[] } */
+            const changes = [...this.pendingStateChanges];
+            this.resetPendingStateChanges();
+            this.applyStateChanges(changes, { reverse: true });
+        },
+        on_pending_changes_unstashed_handlers: (stashedCommit) => {
+            /** @type { StateChange[] } */
+            const changes = stashedCommit.data.embeddedStateChanges;
+            if (changes?.length) {
+                this.pendingStateChanges.push(...changes);
+            }
+        },
+        on_will_capture_history_changes_handlers: () => {
+            this.isCapturingHistoryChanges = true;
+        },
+        on_history_changes_captured_handlers: () => {
+            this.isCapturingHistoryChanges = false;
         },
 
         /** Processors */
@@ -55,16 +108,23 @@ export class EmbeddedComponentPlugin extends Plugin {
         before_sanitize_processors: this.preProcessSanitizedElem.bind(this),
         after_sanitize_processors: this.postProcessSanitizedElem.bind(this),
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
-        attributes_mutation_value_processors: this.processAttributesMutationValue.bind(this),
+        pending_history_commit_data_processors: this.processCommitData.bind(this),
+        save_point_history_commit_data_processors: this.processCommitData.bind(this),
 
         /** Predicates */
         is_mutation_savable_predicates: this.isMutationSavable.bind(this),
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.embeddedStateChanges?.length) {
+                return true;
+            }
+        },
 
         /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",
     };
 
     setup() {
+        this.resetPendingStateChanges();
         this.components = new Set();
         // map from node to component info
         this.nodeMap = new WeakMap();
@@ -85,6 +145,25 @@ export class EmbeddedComponentPlugin extends Plugin {
         // when on_editor_started_handlers are called.
     }
 
+    resetPendingStateChanges() {
+        /** @type {StateChange[]} */
+        this.pendingStateChanges = [];
+    }
+
+    /**
+     * Add the currently pending state changes to the given commit data and
+     * return it.
+     *
+     * @param {HistoryCommitData} data
+     * @returns {HistoryCommitData & {embeddedStateChanges: StateChange[]}}
+     */
+    processCommitData(data) {
+        return {
+            ...data,
+            embeddedStateChanges: [...this.pendingStateChanges],
+        };
+    }
+
     /**
      * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
      * @returns {boolean | undefined}
@@ -96,7 +175,7 @@ export class EmbeddedComponentPlugin extends Plugin {
             mutation.attributeName === "data-embedded-props"
         ) {
             // This attribute is determined independently for each user
-            // through `data-embedded-state` attribute mutations.
+            // through `embeddedStateChanges`.
             return false;
         }
     }
@@ -147,40 +226,6 @@ export class EmbeddedComponentPlugin extends Plugin {
         ];
     }
 
-    /**
-     * Apply an embedded state change received from `data-embedded-state`
-     * attribute. In some cases (undo/redo/revertCommitsUntil history operations),
-     * the attribute has to be set to a new value, computed by the
-     * stateChangeManager.
-     *
-     * @param { string } value
-     * @param { Object } options
-     * @param { SerializedAttributesMutation } options.mutation
-     * @param { boolean } [options.ensureNewMutations = false] whether the mutation is being used
-     *        to create a new commit and requires to ensure new mutations are generated
-     * @param { boolean } [options.wasReversed = false] whether the change was reversed
-     * @returns {string} new attribute value to set on the node, which might be unchanged
-     */
-    processAttributesMutationValue(
-        value,
-        { mutation, ensureNewMutations = false, wasReversed = false }
-    ) {
-        if (mutation.attributeName === "data-embedded-state") {
-            const attrState = wasReversed ? mutation.oldValue : value;
-            const target = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
-            // onStateChanged returns undefined if no change is needed for
-            // the attribute value
-            return (
-                this.getStateChangeManager(target)?.onStateChanged(attrState, {
-                    reverse: wasReversed,
-                    ensureNewMutations,
-                }) ?? value
-            );
-        } else {
-            return value;
-        }
-    }
-
     getStateChangeManager(host) {
         const embedding = this.getEmbedding(host);
         if (!("getStateChangeManager" in embedding)) {
@@ -189,6 +234,13 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
+                stageStateChange: (previous, next) => {
+                    this.pendingStateChanges.push({
+                        nodeId: this.dependencies.domReferenceMap.getNodeId(host),
+                        previous,
+                        next,
+                    });
+                },
                 commitStateChanges: () => this.dependencies.history.commit(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
@@ -196,6 +248,30 @@ export class EmbeddedComponentPlugin extends Plugin {
             this.hostToStateChangeManagerMap.set(host, stateChangeManager);
         }
         return this.hostToStateChangeManagerMap.get(host);
+    }
+
+    /**
+     * Apply (or revert if `reverse` is true) the given state changes.
+     *
+     * @param {StateChange[]} changes
+     * @param {Object} [options = {}]
+     * @param {boolean} [reverse = false]
+     */
+    applyStateChanges(changes, { reverse = false } = {}) {
+        for (const { nodeId, previous, next } of changes) {
+            const host = this.dependencies.domReferenceMap.getNodeById(nodeId);
+            const manager = host && this.getStateChangeManager(host);
+            if (manager) {
+                const { before, after } = manager.applyStateChange(
+                    reverse ? next : previous,
+                    reverse ? previous : next
+                );
+                const hasStateChanged = JSON.stringify(before) !== JSON.stringify(after);
+                if (this.isCapturingHistoryChanges && hasStateChanged) {
+                    this.pendingStateChanges.push({ nodeId, previous: before, next: after });
+                }
+            }
+        }
     }
 
     mountComponent(
@@ -346,7 +422,6 @@ export class EmbeddedComponentPlugin extends Plugin {
                 host.append(editableDescendant);
             }
             delete host.dataset.oeProtected;
-            delete host.dataset.embeddedState;
         });
         return clone;
     }
@@ -355,7 +430,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (elem?.nodeType !== Node.ELEMENT_NODE) {
             return elem;
         }
-        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+        for (const host of selectElements(elem, "[data-embedded-props]")) {
             if (host.dataset.embeddedProps) {
                 host.dataset.embeddedProps = encodeURIComponent(host.dataset.embeddedProps);
             }
@@ -370,7 +445,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (elem?.nodeType !== Node.ELEMENT_NODE) {
             return elem;
         }
-        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+        for (const host of selectElements(elem, "[data-embedded-props]")) {
             if (host.dataset.embeddedProps) {
                 host.dataset.embeddedProps = decodeURIComponent(host.dataset.embeddedProps);
             }
