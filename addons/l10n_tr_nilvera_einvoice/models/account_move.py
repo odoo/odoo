@@ -943,7 +943,7 @@ class AccountMove(models.Model):
                     client,
                     invoice,
                     invoice.l10n_tr_nilvera_uuid,
-                    document_category="Sale",
+                    document_category=invoice._l10n_tr_get_document_category(invoice.l10n_tr_nilvera_customer_status),
                     is_draft=invoice.l10n_tr_nilvera_send_status == 'draft_sent',
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
@@ -1050,7 +1050,7 @@ class AccountMove(models.Model):
                         client,
                         invoice,
                         invoice.l10n_tr_nilvera_uuid,
-                        document_category="Sale",
+                        document_category=invoice._l10n_tr_get_document_category(invoice.l10n_tr_nilvera_customer_status),
                         invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                     )
 
