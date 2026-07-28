@@ -270,6 +270,14 @@ class AccountMoveLine(models.Model):
     # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
     document_tax_mode = fields.Selection(related='move_id.document_tax_mode')
+    base_line_ids = fields.Many2many(
+        comodel_name='account.move.line',
+        relation='account_move_line_base_line_rel',
+        column1='tax_line_id',
+        column2='base_line_id',
+        string="Base Lines",
+        help="Base lines related to this move line.",
+    )
 
     # === Reconciliation fields === #
     amount_residual = fields.Monetary(

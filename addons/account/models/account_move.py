@@ -1648,6 +1648,7 @@ class AccountMove(models.Model):
             'sign': sign,
             'special_mode': False if is_invoice else 'total_excluded',
             'name': product_line.name,
+            'base_line_id': product_line.id,
         }
 
         computation_key = (product_line.extra_tax_data or {}).get('computation_key', '')

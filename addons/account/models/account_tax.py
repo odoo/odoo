@@ -3172,6 +3172,9 @@ class AccountTax(models.Model):
                     tax_line['tax_base_amount'] += sign * tax_data['base_amount']
                     tax_line['amount_currency'] += sign * tax_rep_data['tax_amount_currency']
                     tax_line['balance'] += sign * tax_rep_data['tax_amount']
+                    tax_line.setdefault('base_line_ids', [])
+                    if base_line.get('base_line_id'):
+                        tax_line['base_line_ids'].append(base_line['base_line_id'])
 
         # Remove tax lines having a zero amount.
         tax_lines_mapping = {
