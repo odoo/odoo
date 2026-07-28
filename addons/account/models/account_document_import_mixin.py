@@ -42,7 +42,11 @@ def rollbackable_transaction(cr):
     :raise: an Exception if an error was caught and the transaction was rolled back.
     """
     if not _can_commit():
-        yield
+        try:
+            yield
+        except Exception:
+            cr.rollback()
+            raise
         return
 
     # We start by committing so that if we do a rollback in the except block, we don't lose all the progress that
