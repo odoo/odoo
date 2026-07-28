@@ -1059,6 +1059,7 @@ $-transition-duration: 200ms;
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
+            width: 100%;
             float: none;
             display: block;
             max-height: none;
@@ -1246,6 +1247,7 @@ header {
         // TODO in master: remove the `#o_main_nav` selector.
         #o_main_nav,.o_main_nav {
             > .container {
+                position: relative;
                 // TODO: remove in master and add "align-items-center" in the XML.
                 align-items: center;
             }
@@ -1281,6 +1283,9 @@ header {
     header#top > nav:not(.o_header_mobile) {
         // TODO in master: remove the `#o_main_nav` selector.
         #o_main_nav, .o_main_nav {
+            > .container:first-child {
+                position: relative;
+            }
             .navbar-nav {
                 // TODO: remove in master and add "align-items-center" in the XML.
                 align-items: center;
@@ -1315,7 +1320,7 @@ header {
 
 // Mega menu
 .o_mega_menu {
-    width: 100%;
+    width: if(index(('sales_one', 'sales_four'), o-website-value('header-template')), 100vw, 100%);
     padding: 0;
     margin-top: 0 !important;
     border-radius: 0;
@@ -1331,11 +1336,17 @@ header {
     }
 }
 
-.dropdown-menu.o_mega_menu_container_size {
+.o_header_sales_four_top .dropdown-menu.o_mega_menu, .navbar:has(.o_header_sales_one_right_col) .dropdown-menu.o_mega_menu {
+    @include media-breakpoint-up(lg) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@mixin o-mega-menu-container-size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger'), $-header-template) {
-        $bp: if($-header-template == 'minimalist', md, lg);
-        @include media-breakpoint-up($bp) {
+        @include media-breakpoint-up(lg) {
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1348,6 +1359,31 @@ header {
         ));
     }
     @include make-container-max-widths($-mm-max-widths);
+}
+
+header:not(.o_header_sidebar) .navbar:not(.o_header_mobile) {
+    .o_mega_menu_toggle.show::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        z-index: 1000;
+        width: if(index(('sales_one', 'sales_four'), o-website-value('header-template')), 100vw, 100%);
+        @include media-breakpoint-up(lg) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+        height: var(--o-mega-menu-bridge-height);
+        background-color: rgba(125, 255, 125, 0.3); // temporary for debugging
+        cursor: auto;
+    }
+
+    .o_mega_menu_toggle.show:has(+ .o_mega_menu_container_size)::before {
+        @include o-mega-menu-container-size;
+    }
+}
+
+.dropdown-menu.o_mega_menu_container_size {
+    @include o-mega-menu-container-size;
 }
 
 // The design of some of the new mega menu templates required a column with
