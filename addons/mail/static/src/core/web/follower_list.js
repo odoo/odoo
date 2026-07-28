@@ -11,15 +11,16 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { SearchInput } from "@mail/core/common/search_input";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useSearch, useVisible } from "@mail/utils/common/hooks";
 
 let nextId = 0;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static components = { DropdownItem, Follower };
+    static components = { DropdownItem, Follower, SearchInput };
 
     loadMoreRef = signal.ref();
     scope = useScope();
@@ -38,13 +39,35 @@ export class FollowerList extends Component {
             id: ++nextId,
             thread: this.props.thread,
         });
+        this.search = useSearch({
+            fetch: async (term) => {
+                await this.followerListView.loadFollowers({
+                    abortSignal: this.scope.abortSignal,
+                    reset: true,
+                    searchTerm: term,
+                });
+                return this.followerListView.followers.length > 0;
+            },
+            isActive: () => this.search.searchTerm || this.search.searching,
+        });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
-                this.followerListView.loadFollowers({ abortSignal: this.scope.abortSignal });
+                this.followerListView.loadFollowers({
+                    abortSignal: this.scope.abortSignal,
+                    searchTerm: this.search.searchTerm,
+                });
             }
         });
         onWillStart(({ abortSignal }) => this.followerListView.loadFollowers({ abortSignal }));
         onWillDestroy(() => this.followerListView.delete());
+    }
+
+    onClearSearch() {
+        this.search.reset();
+        return this.followerListView.loadFollowers({
+            abortSignal: this.scope.abortSignal,
+            reset: true,
+        });
     }
 
     onClickAddFollowers() {
@@ -104,5 +127,11 @@ export class FollowerList extends Component {
             );
         }
         this.props.onFollowerChanged?.(thread);
+    }
+
+    get otherFollowersCount() {
+        return this.props.thread.selfFollower
+            ? this.props.thread.followersCount - 1
+            : this.props.thread.followersCount;
     }
 }
