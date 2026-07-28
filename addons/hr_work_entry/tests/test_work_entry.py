@@ -2,15 +2,15 @@
 
 from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
-
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import tagged
+from odoo.tests import common, Form
+
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
 
-@tagged('work_entry')
-@tagged('at_install', '-post_install')  # breaks post install
+@common.tagged('work_entry')
+@common.tagged('at_install', '-post_install')  # breaks post install
 class TestWorkEntry(TestWorkEntryBase):
 
     @classmethod
@@ -441,3 +441,19 @@ class TestWorkEntry(TestWorkEntryBase):
         work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
         self.assertEqual(len(work_entries_vals), 23, "23 attendance")
         self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    def test_export_work_entries_with_multiple_contract_versions(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Jimmy',
+            'wage': 5000.0,
+            'employee_type_id': self.env.ref('hr.contract_type_employee').id,
+            'date_version': date(2026, 1, 1),
+            'contract_date_start': date(2026, 1, 1),
+        })
+        employee.create_version({
+            'date_version': date(2026, 2, 1),
+        })
+        export = Form(self.env['hr.export.work.entries']).save().download_export()
+
+        self.assertTrue(export['url'])
+        self.assertEqual(export['name'], 'Download Export')
