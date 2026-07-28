@@ -61,7 +61,7 @@ class AccountTax(models.Model):
         if not (VAT or IGIC):
             return False
 
-        recargo_taxes = taxes.filtered(lambda tax: tax.l10n_es_type == 'recargo')
+        reagyp_taxes = taxes.filtered(lambda tax: tax.l10n_es_type == 'reagyp')
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
 
         regimen_key = None
@@ -74,10 +74,10 @@ class AccountTax(models.Model):
         elif VAT and special_regime == 'simplified':
             # simplified
             regimen_key = '20_iva'
-        elif VAT and special_regime == 'reagyp':
+        elif VAT and reagyp_taxes:
             # REAGYP
             regimen_key = '19_iva'
-        elif VAT and (recargo_taxes or special_regime == 'recargo'):
+        elif VAT and special_regime == 'recargo':
             # recargo
             regimen_key = '18_iva'
         else:
