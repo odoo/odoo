@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="point_of_sale.WarningDialog" t-inherit="web.WarningDialog" t-inherit-mode="extension">
         <xpath expr="//Dialog" position="attributes">
-            <attribute name="backdrop">props.backdrop || false</attribute>
+            <attribute name="backdrop">this.props.backdrop || false</attribute>
         </xpath>
     </t>
 </templates>

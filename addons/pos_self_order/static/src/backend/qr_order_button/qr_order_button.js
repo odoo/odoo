@@ -37,6 +37,7 @@ async function posQrStands(env, action) {
             message: _t(
                 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
             ),
+            backdrop: true,
         });
     }
     return action.params.next;
