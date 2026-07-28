@@ -180,6 +180,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_channel_id": self.livechat_channel.id,
                         "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
+                        "livechat_channel_has_agents": True,
                         "livechat_end_dt": False,
                         "livechat_lang_id": channel.livechat_lang_id.id,
                         "livechat_note": False,
@@ -355,6 +356,15 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
+<<<<<<< 7da6141a7256552f615b29104775934b10e13526
+||||||| 2a40286fdb7a2cfd1d1e811a96930b66596cb526
+                    "livechat_lang_id": False,
+                    "livechat_operator_id": self.operator.partner_id.id,
+=======
+                    "livechat_channel_has_agents": True,
+                    "livechat_lang_id": False,
+                    "livechat_operator_id": self.operator.partner_id.id,
+>>>>>>> a6ead62e88fdccca65fdcd7ddb7ac524e4dbab04
                     "member_count": 1,
                     "message_needaction_counter": 0,
                     "message_needaction_counter_bus_id": 0,
