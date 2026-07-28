@@ -1,4 +1,14 @@
-import { Component, onMounted, onPatched, props, signal, status, t, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    signal,
+    status,
+    t,
+    useListener,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallParticipantVideo extends Component {
@@ -22,6 +32,16 @@ export class CallParticipantVideo extends Component {
         });
         onMounted(() => this._update());
         onPatched(() => this._update());
+        onWillUnmount(() => {
+            if (this.root()) {
+                // A <video>/<audio> element with an active srcObject is kept alive by the
+                // browser even after being detached from the DOM, which retains this
+                // component (and everything it references) through the loadedmetadata
+                // listener. Clearing srcObject releases it for garbage collection.
+                this.root().srcObject = null;
+                this.root().load();
+            }
+        });
         useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
