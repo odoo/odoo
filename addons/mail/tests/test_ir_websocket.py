@@ -62,3 +62,19 @@ class TestIrWebsocket(WebsocketCase):
             except ws._exceptions.WebSocketTimeoutException:
                 timeout_occurred = True
             self.assertTrue(timeout_occurred)
+
+    def test_subscribe_discuss_category_without_token(self):
+        new_test_user(self.env, login="bob_user", groups="base.group_user")
+        session = self.authenticate("bob_user", "bob_user")
+        category = self.env["discuss.category"].create({"name": "favorites"})
+        websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
+        self.subscribe(
+            websocket,
+            [f"discuss.category_{category.id}"],
+            self.env["bus.bus"]._bus_last_id(),
+        )
+        category._bus_send("sanity_check", None)
+        self.trigger_notification_dispatching()
+        notifications = json.loads(websocket.recv())
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(notifications[0]["message"]["type"], "sanity_check")
