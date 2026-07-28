@@ -1,6 +1,7 @@
 import {
     contains as mailContains,
     defineMailModels,
+    insertText,
     openFormView,
     scroll,
     start,
@@ -136,6 +137,44 @@ test("Load 20 followers at once", async () => {
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await waitFor(".o-mail-Follower:count(59)");
     await waitForNone(".o-mail-Followers-dropdown:has(:text('Load more'))");
+});
+
+test("Search followers list by name or email", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(
+        range(21).map((i) => ({ email: `partner${i}@example.com`, name: `Partner${i}` }))
+    );
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    // Search is visible when the thread has otherFollowersCount > 20 followers.
+    await contains("button[title='Show Followers']:text('21'):enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await insertText("input[placeholder='Search by name or email']", "Partner9");
+    await waitFor(".o-mail-Follower:text('Partner9'):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await insertText("input[placeholder='Search by name or email']", "partner9@example.com");
+    await waitFor(".o-mail-Follower:text('Partner9'):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await insertText("input[placeholder='Search by name or email']", "Armstrong");
+    await waitFor(".dropdown-item.disabled:text('No Matching Followers'):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    // Search is hidden when the thread has otherFollowersCount <= 20 followers.
+    await contains(
+        ".o-mail-Follower:has(:text('Partner0')) [title='Remove this follower']:count(1)"
+    ).click();
+    await waitFor("button[title='Show Followers']:text('20'):enabled:count(1)");
+    await waitFor(".o-mail-Follower:count(19)");
+    await waitForNone("input[placeholder='Search by name or email']");
 });
 
 test("Load 100 recipients at once", async () => {
