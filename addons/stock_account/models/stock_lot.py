@@ -41,7 +41,7 @@ class StockLot(models.Model):
             elif valuated_product.cost_method == 'average':
                 lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False), force_recompute=True)[1][valuated_product.id] * qty_valued / qty_available
             else:
-                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo_batch(at_date=at_date, lot=lot.with_context(warehouse_id=False))[1].get(valuated_product.id, 0) * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(at_date=at_date, lot=lot.with_context(warehouse_id=False))[1].get(valuated_product.id, 0) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_valued if qty_valued else 0.0
 
     @api.model_create_multi
@@ -76,7 +76,7 @@ class StockLot(models.Model):
             elif lot.product_id.cost_method == 'average':
                 lot.standard_price = lot.product_id._run_avco(lot=lot, force_recompute=True)[0][lot.product_id.id]
             else:
-                lot.standard_price = lot.product_id._run_fifo_batch(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
+                lot.standard_price = lot.product_id._run_fifo(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
 
     def _change_standard_price(self, old_price):
         """Helper to create the stock valuation layers and the account moves

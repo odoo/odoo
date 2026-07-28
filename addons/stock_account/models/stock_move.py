@@ -329,7 +329,7 @@ class StockMove(models.Model):
                 product = move.product_id.with_company(move.company_id)
                 if product.cost_method != 'fifo':
                     continue
-                oversold_stack = product._run_fifo_get_stack(at_date=move.date - timedelta(seconds=1), allow_negative=True)[0]
+                oversold_stack = product._get_fifo_stack(at_date=move.date - timedelta(seconds=1), allow_negative=True)[0]
                 oversold_moves = self.env['stock.move'].concat(oversold_stack).filtered(lambda m: m.is_out)
                 if oversold_moves:
                     recompute_date = min(recompute_date, *oversold_moves.mapped('date'))
@@ -378,16 +378,15 @@ class StockMove(models.Model):
             if move.product_id.cost_method == 'fifo':
                 if not move.product_id.lot_valuated:
                     valued_qty = move._get_valued_qty()
-                    move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_already_processed[move.product_id])._get_fifo_value(valued_qty)
+                    move.value = - move.product_id._get_fifo_value(valued_qty, stack_size_extra_qty=-fifo_qty_already_processed[move.product_id])
                     fifo_qty_already_processed[move.product_id] += valued_qty
                 else:
                     value = 0.0
                     for move_line in move.move_line_ids:
                         ml_qty = move_line.quantity_product_uom
                         if move_line.lot_id:
-                            product = move.product_id.with_context(
-                                fifo_qty_already_processed=fifo_qty_already_processed[move_line.lot_id])
-                            value += product._get_fifo_value(ml_qty, lot=move_line.lot_id)
+                            value += move.product_id._get_fifo_value(
+                                ml_qty, lot=move_line.lot_id, stack_size_extra_qty=-fifo_qty_already_processed[move_line.lot_id])
                             fifo_qty_already_processed[move_line.lot_id] += ml_qty
                         else:
                             value += move.product_id.standard_price * ml_qty

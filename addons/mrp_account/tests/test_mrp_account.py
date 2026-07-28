@@ -249,7 +249,7 @@ class TestMrpAccount(TestBomPriceCommon):
             'additional': True,
             'state': 'done',
         })
-        self.assertEqual(extra_move.value, extra_product.standard_price, "extra move must be valued at standard_price * qty")
+        self.assertEqual(extra_move.value, -extra_product.standard_price, "extra move must be valued at standard_price * qty")
 
         overview_after = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         mo_cost_after = overview_after['data']['summary']['mo_cost']
