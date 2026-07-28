@@ -35,7 +35,18 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'p2107',
                 'income_account_id': 'p20011',
                 'l10n_in_withholding_account_id': 'p100595',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'p10031',
                 'tax_calculation_rounding_method': 'round_per_line',
+            },
+        }
+
+    @template('in', 'account.account')
+    def _get_be_account_account(self):
+        return {
+            'p10031': {
+                'account_stock_expense_id': 'p2121',
+                'account_stock_variation_id': 'p2123',
             },
         }
 
