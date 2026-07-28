@@ -1754,3 +1754,50 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(len(request.message_partner_ids), 2)
         self.assertIn(self.employee_emp.user_id.partner_id, message_partner_ids)
         self.assertIn(user_admin.partner_id, message_partner_ids)
+
+    @freeze_time("2026-05-25")
+    def test_prevent_duplicate_leave_meetings_and_resource_leaves(self):
+        """
+        Ensure changing an employee's working schedule does not duplicate
+        calendar events or resource time off records for an existing validated
+        full-day leave.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Manager Approval Time Off',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'manager',
+            'time_type': 'leave',
+        })
+        calendar_40h = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+        })
+        calendar_40h_copy = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+        })
+        self.employee_emp.resource_calendar_id = calendar_40h
+        leave = self.env['hr.leave'].create({
+            'name': 'Employee Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2026, 5, 27, 8, 0),
+            'request_date_to': datetime(2026, 5, 27, 17, 0),
+        })
+        leave.with_user(self.user_hrmanager).action_validate()
+        events = self.env['calendar.event'].search([('res_id', '=', leave.id)])
+        resource_time_off = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+        # Ensure initial validation creates a single calendar event and resource time off.
+        self.assertEqual(len(events), 1)
+        self.assertEqual(len(resource_time_off), 1)
+
+        self.employee_emp.resource_calendar_id = calendar_40h_copy
+        events = self.env['calendar.event'].search([('res_id', '=', leave.id)])
+        resource_time_off = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+        # Ensure changing the working schedule does not create duplicate records.
+        self.assertEqual(len(events), 1)
+        self.assertEqual(len(resource_time_off), 1)
