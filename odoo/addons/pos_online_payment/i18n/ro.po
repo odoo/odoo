@@ -1,0 +1,644 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_online_payment
+# 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Betty Keresztesi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "<strong>Error:</strong> The currency is missing or invalid."
+msgstr "<strong>Error:</strong> Moneda lipsește sau nu este valabilă."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid ""
+"<strong>Error:</strong> There was a problem during the payment process."
+msgstr ""
+"<strong>Error:</strong> A existat o problemă în timpul procesului de plată."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid ""
+"<strong>No suitable payment method could be found.</strong>\n"
+"                            <br/>\n"
+"                            If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>Nu a fost găsită nicio metodă de plată adecvată.</strong>\n"
+"                            <br/>\n"
+"                            Dacă credeți că este o eroare, vă rugăm să contactați administratorul site-ului."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid "A POS config cannot have more than one online payment method."
+msgstr ""
+"O configurație POS nu poate avea mai mult de o metodă de plată online."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "A payment option must be specified."
+msgstr "Trebuie specificată o opțiune de plată."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"A validation payment cannot be used for a Point of Sale online payment."
+msgstr ""
+"O plată de validare nu poate fi utilizată pentru o plată online la un punct "
+"de vânzare."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "All available providers"
+msgstr "Toți furnizorii disponibili"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"All payment providers configured for an online payment method must use the "
+"same currency as the Sales Journal, or the company currency if that is not "
+"set, of the POS config."
+msgstr ""
+"Toți furnizorii de servicii de plată configurați pentru o metodă de plată "
+"online trebuie să utilizeze aceeași monedă ca Jurnalul de vânzări sau moneda"
+" companiei, dacă aceasta nu este setată, din configurația POS."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
+msgid "Allowed Providers"
+msgstr "Furnizori permiși"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Amount"
+msgstr "Sumă"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Amount:"
+msgstr "Valoare:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Cancel payment"
+msgstr "Anulare plată"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr "Nu se poate crea o plată online POS fără o plată contabilă."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+"Nu se poate crea o plată POS cu o metodă de plată care nu este online și o "
+"plată contabilă online."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot edit a POS online payment essential data."
+msgstr "Nu se pot edita datele esențiale ale unei plăți online POS."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Could not create an online payment method (company_id=%d, pos_config_id=%d)"
+msgstr ""
+"Nu s-a putut crea o metodă de plată online (company_id=%d, pos_config_id=%d)"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
+msgid "Has An Online Payment Provider"
+msgstr "Are un furnizor de plăți online"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payment"
+msgstr "Plată online invalidă"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payments"
+msgstr "Plăți online invalide"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Invite your customer to scan the QR code to pay:"
+msgstr "Invitați-vă clientul să scaneze codul QR pentru a plăti:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invoice could not be generated"
+msgstr "Factura nu a putut fi generată"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
+msgid "Next online payment amount to pay"
+msgstr "Următoarea plată online suma de plată"
+
+#. module: pos_online_payment
+#: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
+msgid "Online"
+msgstr "Activ"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
+#, python-format
+msgid "Online Payment"
+msgstr "Plata online"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
+msgid "Online Payment Method"
+msgstr "Metoda de plată online"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
+msgid "Online accounting payment"
+msgstr "Plată contabilă online"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payment unavailable"
+msgstr "Plată online indisponibilă"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payments cannot have a negative amount (%s: %s)."
+msgstr "Plățile online nu pot avea o sumă negativă (%s: %s)."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order ID"
+msgstr "ID comandă"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Order ID:"
+msgstr "ID comandă:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order Reference"
+msgstr "Referință comandă"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order id:"
+msgstr "ID comandă:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order reference:"
+msgstr "Referință comandă:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Order saving issue"
+msgstr "Problemă de salvare a comenzii"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/account_payment.py:0
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__pos_order_id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__pos_order_id
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
+#, python-format
+msgid "POS Order"
+msgstr "Comandă POS"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "Payment Providers"
+msgstr "Furnizori de plată"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Tranzacție plată"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_account_payment
+msgid "Payments"
+msgstr "Plăți"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#, python-format
+msgid "Please scan the QR code to open the payment page"
+msgstr "Vă rugăm să scanați codul QR pentru a deschide pagina de plată"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurarea Punctului de Vânzare"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Comenzile Punctului de vânzare"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metode plată Punct de Vânzare"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Plăți Punct de Vânzare"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesiune Punct de vânzare"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Processed by"
+msgstr "Procesat de"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "QR Code to pay"
+msgstr "Cod QR pentru plată"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Scan to Pay"
+msgstr "Scanați pentru a plăti"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Server error"
+msgstr "Eroare server"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The POS online payment (tx.id=%d) could not be saved correctly"
+msgstr "Plata online POS (tx.id=%d) nu a putut fi salvată corect"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The POS online payment (tx.id=%d) could not be saved correctly because the "
+"online payment method could not be found"
+msgstr ""
+"Plata online POS (tx.id=%d) nu a putut fi salvată corect deoarece metoda de "
+"plată online nu a putut fi găsită"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The POS session is not opened."
+msgstr "Sesiunea POS nu este deschisă."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
+msgid "The Point of Sale order linked to the payment transaction"
+msgstr "Comanda punctului de vânzare asociată operațiunii de plată"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
+msgid "The Point of Sale order linked to this payment"
+msgstr "Comanda punctului de vânzare asociată acestei plăți"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The QR Code for paying could not be generated."
+msgstr "Codul QR pentru plată nu poate fi generat."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The amount to pay has changed. Please refresh the page."
+msgstr "Suma de plată s-a modificat. Vă rugăm să actualizați pagina."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The currency is invalid."
+msgstr "Moneda nu este valabilă."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The invoice could not be generated."
+msgstr "Factura nu poate fi generată."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr "Comanda a fost anulată."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The order has not been saved correctly on the server."
+msgstr "Comanda nu a fost salvată corect pe server."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_session.py:0
+#, python-format
+msgid "The partner of the POS online payment (id=%d) could not be found"
+msgstr "Partenerul plății online POS (id=%d) nu a putut fi găsit"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment provider is invalid."
+msgstr "Furnizorul de plăți este invalid."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"Plata ar trebui să fie directă, cu redirecționare, sau făcută cu un token."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment token is invalid."
+msgstr "Simbolul de plată este invalid."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The payment transaction (%d) has a negative amount."
+msgstr "Operațiunea de plată (%d) are o valoare negativă."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided order or access token is invalid."
+msgstr "Ordinul sau tokenul de acces furnizat nu este valabil."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided partner_id is different than expected."
+msgstr "Partner_id furnizat este diferit de cel așteptat."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The saved order could not be retrieved."
+msgstr "Comanda salvată nu a putut fi recuperată."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"The total amount of remaining online payments to execute (%s) doesn't "
+"correspond to the remaining unpaid amount of the order (%s)."
+msgstr ""
+"Suma totală a plăților online rămase de executat (%s) nu corespunde sumei "
+"rămase neplătite din comandă (%s)."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "There are online payments that were missing in your view."
+msgstr "Există plăți online care lipsesc în vizualizarea dvs."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order cannot be saved and therefore "
+"the online payment is not possible."
+msgstr ""
+"Există o problemă cu serverul. Comanda nu poate fi salvată și, prin urmare, "
+"plata online nu este posibilă."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved."
+msgstr ""
+"Există o problemă cu serverul. Starea plății comenzii online nu poate fi "
+"recuperată."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved. Are you sure there is no online payment for this order ?"
+msgstr ""
+"Există o problemă cu serverul. Starea plății online a comenzii nu poate fi "
+"recuperată. Sunteți sigur că nu există nicio plată online pentru această "
+"comandă?"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"There is no online payment method configured for this Point of Sale order."
+msgstr ""
+"Nu există nicio metodă de plată online configurată pentru această comandă la"
+" punctul de vânzare."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "There is nothing to pay for this order."
+msgstr "Nu trebuie să plătiți nimic pentru această comandă."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "There is nothing to pay."
+msgstr "Nu există nimic de plătit."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "To Pay"
+msgstr "De plătit"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid ""
+"To use an online payment method in a POS config, it must have at least one "
+"published payment provider supporting the currency of that POS config."
+msgstr ""
+"Pentru a utiliza o metodă de plată online într-o configurație POS, aceasta "
+"trebuie să aibă cel puțin un prestator de servicii de plată publicat care "
+"acceptă moneda acelei configurații POS."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "Tokenization is not available for logged out customers."
+msgstr "Tokenizarea nu este disponibilă pentru clienții deconectați."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Transaction Reference"
+msgstr "Referința tranzacției"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Try again"
+msgstr "Încearcă din nou"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
+msgid "Type"
+msgstr "Tip"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Updated online payments"
+msgstr "Plata online actualizată"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
+msgid ""
+"Use this payment method for online payments (payments made on a web page "
+"with online payment providers)"
+msgstr ""
+"Utilizați această metodă de plată pentru plăți online (plăți efectuate pe o "
+"pagină web cu furnizori de plăți online)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Da"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "You have not activated any"
+msgstr "Nu ați activat niciun"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "payment provider"
+msgstr "furnizor de plăți"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "to allow online payments."
+msgstr "să permită plățile online."

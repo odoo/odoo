@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.EmojiPicker">
+    <div class="o-EmojiPicker bg-view d-flex flex-column justify-content-center" t-att-class="{ 'align-items-center': emojis.length === 0 }" t-on-click="onClick" t-on-keydown="onKeydown">
+        <t t-if="emojis.length === 0">
+            <span class="o-EmojiPicker-empty">😵‍💫</span>
+            <span class="fs-5 text-muted">Failed to load emojis...</span>
+        </t>
+        <t t-else="">
+            <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
+                <span class="d-flex mx-1 w-100 rounded o-active">
+                    <t t-call="web.EmojiPicker.searchInput">
+                        <t t-if="props.state" t-set="localState" t-value="props.state"/>
+                        <t t-else="" t-set="localState" t-value="state"/>
+                    </t>
+                    <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
+                </span>
+            </div>
+            <t t-set="itemIndex" t-value="0"/>
+            <div class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1" t-att-class="getEmojis().length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
+                <t t-if="searchTerm and getEmojis().length === 0" class="d-flex flex-column">
+                    <span class="o-EmojiPicker-empty">😢</span>
+                    <span class="fs-5 text-muted">No emoji match your search</span>
+                </t>
+                <t t-if="recentEmojis.length > 0 and !searchTerm">
+                    <t t-call="web.EmojiPicker.section">
+                        <t t-set="category" t-value="recentCategory"/>
+                    </t>
+                    <t t-foreach="recentEmojis" t-as="emoji" t-key="'recent_' + emoji_index">
+                        <t t-call="web.EmojiPicker.emoji">
+                            <t t-set="emoji" t-value="emoji"/>
+                        </t>
+                        <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                    </t>
+                </t>
+                <t t-set="current" t-value=""/>
+                <t t-foreach="getEmojis()" t-as="emoji" t-key="emoji_index">
+                    <t t-if="!searchTerm and current !== emoji.category">
+                        <t t-set="current" t-value="emoji.category"/>
+                        <t t-set="category" t-value="categories.find(c => c.name === current)"/>
+                        <t t-call="web.EmojiPicker.section">
+                            <t t-set="category" t-value="category"/>
+                        </t>
+                    </t>
+                    <t t-elif="searchTerm" t-set="categorySortId" t-value="null"/>
+                    <t t-call="web.EmojiPicker.emoji">
+                        <t t-set="emoji" t-value="emoji"/>
+                    </t>
+                    <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                </t>
+            </div>
+            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center bg-100 overflow-auto border-top">
+                <t t-if="recentEmojis.length > 0" t-call="web.EmojiPicker.tab">
+                    <t t-set="category" t-value="recentCategory"/>
+                </t>
+                <t t-foreach="categories" t-as="category" t-key="category.sortId">
+                    <t t-call="web.EmojiPicker.tab">
+                        <t t-set="category" t-value="category"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+<t t-name="web.EmojiPicker.tab">
+    <span class="o-Emoji text-center p-1 cursor-pointer" t-att-class="{'o-active': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
+        <t t-esc="category.title"/>
+    </span>
+</t>
+
+<t t-name="web.EmojiPicker.section">
+    <span class="w-100 fs-7 p-2 position-sticky top-0 bg-view" t-att-data-category="category.sortId"><span class="o-EmojiPicker-sectionIcon" t-esc="category.title"/><span class="ms-2" t-esc="category.displayName"/></span>
+    <span class="o-EmojiPicker-category opacity-100 fs-7 py-2" t-att-data-category="category.sortId"/>
+</t>
+
+<t t-name="web.EmojiPicker.emoji">
+    <span class="o-Emoji cursor-pointer d-flex justify-content-center rounded" t-att-class="{ 'o-active': state.activeEmojiIndex === itemIndex, 'fs-2': !ui.isSmall, 'fs-1': ui.isSmall }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="recentCategory.sortId" t-on-click="selectEmoji">
+        <span t-esc="emoji.codepoints"/>
+    </span>
+</t>
+
+<t t-name="web.EmojiPicker.searchInput">
+    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for an emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0"/>
+</t>
+
+</templates>

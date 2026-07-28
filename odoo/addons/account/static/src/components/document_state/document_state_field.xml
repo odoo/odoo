@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account.DocumentStatePopover">
+        <div class="row m-2 mt-4 justify-content-between account_document_state_popover">
+            <span class="col-10" t-out="props.message" style="white-space: pre-wrap;"/>
+            <button class="col-2 btn p-0 account_document_state_popover_clone" t-on-click="() => props.copyText()">
+                <i class="fa fa-clone"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="account.DocumentState" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <span position="after">
+            <span t-if="message"> </span>
+            <a t-if="message"
+               t-on-click="(ev) => this.showMessagePopover(ev)"
+               class="fa fa-info-circle"/>
+        </span>
+    </t>
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="web.AttachDocument">
+        <button t-attf-class="btn o_attachment_button #{props.highlight ? 'btn-primary' : 'btn-secondary'}" t-on-click="() => this.triggerUpload()">
+            <span class="o_attach_document" t-esc="props.string"/>
+        </button>
+    </t>
+
+</template>

@@ -1,0 +1,53 @@
+{
+    "env": {
+        "browser": true,
+        "es2022": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "root": true,
+    "rules": {
+        "no-undef": "error",
+        "no-restricted-globals": ["error", "event", "self"],
+        "no-const-assign": ["error"],
+        "no-debugger": ["error"],
+        "no-dupe-class-members": ["error"],
+        "no-dupe-keys": ["error"],
+        "no-dupe-args": ["error"],
+        "no-dupe-else-if": ["error"],
+        "no-unsafe-negation": ["error"],
+        "no-duplicate-imports": ["error"],
+        "valid-typeof": ["error"],
+        "no-restricted-syntax": ["error", "PrivateIdentifier"],
+        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all" }]
+    },
+    "globals": {
+        "odoo": "readonly",
+        "$": "readonly",
+        "jQuery": "readonly",
+        "Chart": "readonly",
+        "fuzzy": "readonly",
+        "StackTrace": "readonly",
+        "QUnit": "readonly",
+        "luxon": "readonly",
+        "py": "readonly",
+        "FullCalendar": "readonly",
+        "globalThis": "readonly",
+        "ScrollSpy": "readonly",
+        "module": "readonly",
+        "chai": "readonly",
+        "describe": "readonly",
+        "it": "readonly",
+        "mocha": "readonly",
+        "DOMPurify": "readonly",
+
+        "Alert": "readonly",
+        "Collapse": "readonly",
+        "Dropdown": "readonly",
+        "Modal": "readonly",
+        "Offcanvas": "readonly",
+        "Popover": "readonly",
+        "Tooltip": "readonly"
+    }
+}

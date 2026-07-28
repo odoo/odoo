@@ -1,0 +1,107 @@
+/* Copyright 2014 Mozilla Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#PDFBug {
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(102, 102, 102, 1);
+  position: fixed;
+  top: 32px;
+  right: 0;
+  bottom: 0;
+  font-size: 10px;
+  padding: 0;
+  width: 300px;
+}
+#PDFBug .controls {
+  background: rgba(238, 238, 238, 1);
+  border-bottom: 1px solid rgba(102, 102, 102, 1);
+  padding: 3px;
+}
+#PDFBug .panels {
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+  position: absolute;
+  right: 0;
+  top: 27px;
+}
+#PDFBug .panels > div {
+  padding: 5px;
+}
+#PDFBug button.active {
+  font-weight: bold;
+}
+.debuggerShowText,
+.debuggerHideText:hover {
+  background-color: rgba(255, 255, 0, 1);
+}
+#PDFBug .stats {
+  font-family: courier;
+  font-size: 10px;
+  white-space: pre;
+}
+#PDFBug .stats .title {
+  font-weight: bold;
+}
+#PDFBug table {
+  font-size: 10px;
+  white-space: pre;
+}
+#PDFBug table.showText {
+  border-collapse: collapse;
+  text-align: center;
+}
+#PDFBug table.showText,
+#PDFBug table.showText tr,
+#PDFBug table.showText td {
+  border: 1px solid black;
+  padding: 1px;
+}
+#PDFBug table.showText td.advance {
+  color: grey;
+}
+
+#viewer.textLayer-visible .textLayer {
+  opacity: 1;
+}
+
+#viewer.textLayer-visible .canvasWrapper {
+  background-color: rgba(128, 255, 128, 1);
+}
+
+#viewer.textLayer-visible .canvasWrapper canvas {
+  mix-blend-mode: screen;
+}
+
+#viewer.textLayer-visible .textLayer span {
+  background-color: rgba(255, 255, 0, 0.1);
+  color: rgba(0, 0, 0, 1);
+  border: solid 1px rgba(255, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+#viewer.textLayer-visible .textLayer span[aria-owns] {
+  background-color: rgba(255, 0, 0, 0.3);
+}
+
+#viewer.textLayer-hover .textLayer span:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 1);
+}
+
+#viewer.textLayer-shadow .textLayer span {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 1);
+}

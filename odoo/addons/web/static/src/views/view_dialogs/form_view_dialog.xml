@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.FormViewDialog">
+    <Dialog size="props.size" title="props.title" withBodyPadding="false" modalRef="modalRef">
+      <View t-props="viewProps"/>
+      <t t-set-slot="footer">
+        <t t-if="props.preventEdit and props.preventCreate">
+          <button class="btn btn-primary" t-on-click="() => props.close()">Close</button>
+        </t>
+        <t t-else="">
+          <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Ok</button>
+        </t>
+      </t>
+    </Dialog>
+  </t>
+
+  <t t-name="web.FormViewDialog.ToMany.buttons" t-inherit="web.FormView.Buttons">
+    <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
+      <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save &amp; Close</button>
+      <button class="btn btn-primary o_form_button_save_new" t-on-click="() => this.saveButtonClicked({saveAndNew: true})" data-hotkey="n">Save &amp; New</button>
+    </xpath>
+  </t>
+
+  <t t-name="web.FormViewDialog.ToOne.buttons" t-inherit="web.FormView.Buttons">
+    <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
+      <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save &amp; Close</button>
+    </xpath>
+  </t>
+
+</templates>

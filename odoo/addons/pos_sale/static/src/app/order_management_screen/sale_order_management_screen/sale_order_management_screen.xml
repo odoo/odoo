@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_sale.SaleOrderManagementScreen">
+        <div class="order-management-screen screen h-100 bg-100 overflow-auto" t-att-class="{ 'd-none': !props.isShown }" t-ref="root">
+                <div class="rightpane">
+                    <div class="flex-container flex-container d-flex flex-column h-100">
+                        <SaleOrderManagementControlPanel
+                            onSearch.bind="onSearch"
+                            onPrevPage.bind="onPrevPage"
+                            onNextPage.bind="onNextPage" />
+                        <SaleOrderList
+                            onClickSaleOrder.bind="onClickSaleOrder"
+                            orders="orders"
+                            initHighlightedOrder="pos.orderManagement.selectedOrder" />
+                    </div>
+                </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,246 @@
+$text-color: #16171a;
+$text-color-secondary: #16171a;
+$text-muted: #3b4757;
+$progess-bar-background: #f5f5f5;
+
+div.o_employee_cv {
+    font-family: 'Roboto', sans-serif;  
+    color: $text-color-secondary;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    position: relative;
+
+    h1, h2, h3, h4, h5, h6  {
+        font-weight: bolder;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    p {
+        line-height: 1.5;
+    }
+
+    &:not(:last-child) .o_new_page {
+        page-break-after: always;
+    }
+
+    .o_sidebar {
+        color: #fff;
+        margin-top: -150px;
+        margin-left: 500px;
+        width: inherit;
+        display: inline-block;
+        max-width: 50%;
+        min-width: 50%;
+        box-sizing: border-box;
+        vertical-align: top;
+
+        a {
+            color: #fff;
+        }
+
+        .o_profile {
+            padding: 30px;
+            padding-top: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            color: #fff;
+        }
+
+        .o_profile_name {
+            font-size: 32px;
+            font-weight: bolder;
+            margin-bottom: 10px;
+        }
+
+        .o_profile_job {
+            color: rgba(256, 256, 256, 0.9);
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+        }
+
+        .o_profile_image {
+            margin-bottom: 15px;
+            width: 100px;
+            float: right;
+        }
+
+        .o_social {
+            list-style-type: none;
+            li {
+                margin-bottom: 15px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .o_sidebar_section {
+            padding: 15px;
+        }
+
+        .o_sidebar_title {
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .o_sidebar_education {
+            .o_sidebar_education_degree {
+                font-size: 14px;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            .o_sidebar_education_line {
+                margin-bottom: 15px;
+                overflow-wrap: break-word;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .o_sidebar_education_description {
+                color: rgba(256, 256, 256, 0.6);
+                font-weight: bold;
+                margin-bottom: 0px;
+                margin-top: 0;
+                font-size: 14px;
+            }
+
+            .o_sidebar_education_description_year {
+                color: rgba(256, 256, 256, 0.6);
+                font-weight: bold;
+                margin-bottom: 0px;
+            }
+        }
+
+        .o_sidebar_language {
+            .o_sidebar_language_level {
+                color: rgba(256, 256, 256, 0.6);
+            }
+        }
+            
+        .o_sidebar_list {
+            margin-bottom: 0;
+            li {
+                margin-bottom: 10px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    .o_company {
+        width: inherit;
+        display: inline-block;
+        max-width: 49%;
+        min-width: 49%;
+        box-sizing: border-box;
+        vertical-align: top;
+        padding-left: 30px;
+    }
+
+    .o_main_panel {
+        background: #fff;
+        max-width: 100%;
+        min-width: 100%;
+        display: inline-block;
+        padding: 5px 30px 0 30px;
+        box-sizing: border-box;
+        vertical-align: top;
+
+        .o_main_panel_title {
+            text-transform: uppercase;
+            font-size: 20px;
+            font-weight: bold;
+            position: relative;
+            margin-top: 0;
+            margin-bottom: 20px;
+
+            .o_main_panel_icon  {
+                width: 30px;
+                height: 30px;
+                margin-right: 8px;
+                display: inline-block;
+                color: #fff;
+                border-radius: 50%;
+                background-clip: padding-box;
+                text-align: center;
+                font-size: 16px;
+                position: relative;
+                top: -2px;
+                padding-top: 2px;
+                fa {
+                    font-size: 14px;
+                    margin-top: 6px;
+                }
+            }
+
+        }
+
+        .o_main_panel_resume_title {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0;
+            width: 100%;
+
+            .o_main_panel_resume_title_job {
+                display: inline-block;
+            }
+
+            .o_main_panel_resume_title_dates {
+                float: right;
+                white-space: nowrap;
+            }
+        }
+
+        .o_main_panel_resume_job {
+            color: $text-color;
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+
+        .o_main_panel_resume_year {
+            right: 0;
+            top: 0;
+            color: $text-muted;
+            position: static;
+            display: block;
+            margin-top: 5px;
+        }
+    }
+
+
+    .o_main_panel_skills {
+        .o_main_panel_skill_line {
+            &:not(:last-of-type) {
+                margin-bottom: 15px;
+            }
+        }
+
+        .o_main_panel_skill_name {
+            font-size: 14px;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        
+        
+        .o_main_panel_skill_progress_bar {
+            height: 12px;
+            background: $progess-bar-background;
+            border-radius: 2px;
+            background-clip: padding-box;
+        }
+    }
+}
+

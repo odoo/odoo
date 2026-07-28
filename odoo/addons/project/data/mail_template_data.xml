@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sample stage-related template -->
+        <record id="mail_template_data_project_task" model="mail.template">
+            <field name="name">Project: Request Acknowledgment</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">Reception of {{ object.name }}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Set this template on a project's stage to automate email when tasks reach stages</field>
+            <field name="body_html" type="html">
+<div>
+    Dear <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>
+    Thank you for your enquiry.<br />
+    If you have any questions, please let us know.
+    <br/><br/>
+    Thank you,
+    <t t-if="user.signature">
+        <br />
+        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
+</div>
+        </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail sent to request a rating for a task -->
+        <record id="rating_project_request_email_template" model="mail.template">
+            <field name="name">Project: Task Rating Request</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="active" eval="False"/>
+            <field name="subject">{{ object.project_id.company_id.name or user.env.company.name }}: Satisfaction Survey</field>
+            <field name="email_from">{{ (object._rating_get_operator().email_formatted if object._rating_get_operator() else user.email_formatted) }}</field>
+            <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
+            <field name="description">Set this template on a project stage to request feedback from your customers. Enable the "customer ratings" feature on the project</field>
+            <field name="body_html" type="html">
+<div>
+    <t t-set="access_token" t-value="object._rating_get_access_token()"/>
+    <t t-set="partner" t-value="object._rating_get_partner()"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
+    <tbody>
+        <tr><td valign="top" style="font-size: 13px;">
+            <t t-if="partner.name">
+                Hello <t t-out="partner.name or ''">Brandon Freeman</t>,<br/><br/>
+            </t>
+            <t t-else="">
+                Hello,<br/><br/>
+            </t>
+            Please take a moment to rate our services related to the <strong t-out="object.name or ''">Planning and budget</strong> task
+            <t t-if="object._rating_get_operator().name">
+                assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.<br/>
+            </t>
+            <t t-else="">
+                .<br/>
+            </t>
+        </td></tr>
+        <tr><td style="text-align: center;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                <tr><td style="font-size: 13px;">
+                    <strong>Tell us how you feel about our services</strong><br/>
+                    <span style="font-size: 12px; opacity: 0.5; color: #454748;">(click on one of these smileys)</span>
+                </td></tr>
+                <tr><td style="font-size: 13px;">
+                    <table style="width:100%;text-align:center;margin-top:2rem;">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/5">
+                                    <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/3">
+                                    <img alt="Okay" src="/rating/static/src/img/rating_3.png" title="Okay"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/1">
+                                    <img alt="Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Dissatisfied"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+            </table>
+        </td></tr>
+        <tr><td valign="top" style="font-size: 13px;">
+            We appreciate your feedback. It helps us improve continuously.
+            <t t-if="object.project_id.rating_status == 'stage'">
+                <br/><span style="margin: 0; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey has been sent because your task has been moved to the <b t-out="object.stage_id.name or ''">In progress</b> stage</span>
+            </t>
+            <t t-if="object.project_id.rating_status == 'periodic'">
+                <br/><span style="margin: 0; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey is sent <b t-out="object.project_id.rating_status_period or ''">weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
+            </t>
+        </td></tr>
+        <tr><td><br/>Best regards,</td></tr>
+        <tr><td>
+           <t t-out="object.project_id.company_id.name or ''">YourCompany</t>
+        </td></tr>
+        <tr><td style="opacity: 0.5;">
+            <t t-out="object.project_id.company_id.phone or ''">1 650-123-4567</t>
+            <t t-if="object.project_id.company_id.email">
+                | <a t-attf-href="mailto:{{ object.project_id.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.project_id.company_id.email or ''">info@yourcompany.com</a>
+            </t>
+            <t t-if="object.project_id.company_id.website">
+                | <a t-attf-href="{{ object.project_id.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.project_id.company_id.website or ''">http://www.example.com</a>
+            </t>
+        </td></tr>
+    </tbody>
+    </table>
+</div>
+            </field>
+            <field name="lang">{{ object._rating_get_partner().lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- You have been assigned email -->
+        <template id="project_message_user_assigned">
+<div>
+    Dear <t t-esc="assignee_name"/>,
+    <br/><br/>
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
+</div>
+        </template>
+    </data>
+</odoo>

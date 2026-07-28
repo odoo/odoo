@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
+            <t t-if="props.data.isBill">
+                <div>PRO FORMA</div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('receipt-change')]" position="attributes">
+            <attribute name="t-if">!props.data.isBill</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="props.data.isBill and props.data.set_tip_after_payment">
+                <div class="tip-form py-3">
+                    <div class="title text-center mt-3">For convenience, we are providing the following gratuity calculations:</div>
+                    <div class="percentage-options percentage-options d-flex flex-nowrap mt-3">
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>15%</div>
+                            <div class="amount">
+                                <t t-esc="props.formatCurrency(props.data.amount_total * 0.15)"></t>
+                            </div>
+                        </div>
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>20%</div>
+                            <div class="amount">
+                                <t t-esc="props.formatCurrency(props.data.amount_total * 0.20)"></t>
+                            </div>
+                        </div>
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>25%</div>
+                            <div class="amount">
+                                <t t-esc="props.formatCurrency(props.data.amount_total * 0.25)"></t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+    <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <t t-if="props.data.table">
+                at table <t t-esc="props.data.table" />
+            </t>
+            <t t-if="props.data.table and props.data.customer_count">
+                <div>Guests: <t t-esc="props.data.customer_count" /></div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

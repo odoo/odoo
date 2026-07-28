@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="sale_project.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension">
+        <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="before">
+            <ProjectRightSidePanelSection
+                name="'sales'"
+                show="!!state.data.sale_items?.data"
+                dataClassName="'py-3'"
+            >
+                <t t-set-slot="title">
+                    Sales
+                </t>
+                <span t-if="!state.data.sale_items.data.length" class="text-muted fst-italic">
+                    Track what you sold, delivered, and invoiced.
+                </span>
+                <table t-else="" class="table table-sm table-striped table-hover mb-0">
+                    <thead class="bg-100">
+                        <tr>
+                            <th>Sales Order Items</th>
+                            <th class="text-end">Sold</th>
+                            <th class="text-end">Delivered</th>
+                            <th class="text-end">Invoiced</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.sale_items.data" t-as="sale_item" t-key="sale_item.id">
+                            <t t-set="uom_name" t-value="sale_item.product_uom and sale_item.product_uom[1]"/>
+                            <td>
+                                <t t-set="sol_name" t-value="sale_item.display_name"/>
+                                <a t-if="sale_item.action" class="o_rightpanel_button" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                    <t t-esc="sol_name"/>
+                                </a>
+                                <t t-else="" t-esc="sol_name"/>
+                            </td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="o_rightpanel_nohover border-0" t-if="state.data.sale_items.total &gt; state.data.sale_items.data.length">
+                            <td class="py-3 border-bottom text-center" colspan="4">
+                                <a class="btn btn-link w-100" t-on-click="onLoadSalesOrderLinesClick">
+                                    Load more
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </ProjectRightSidePanelSection>
+        </xpath>
+    </t>
+
+</templates>

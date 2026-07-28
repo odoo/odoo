@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_method_form" model="ir.ui.view">
+        <field name="name">payment.method.form</field>
+        <field name="model">payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Payment Method">
+                <sheet>
+                    <field name="is_primary" invisible="True"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="code" readonly="id" groups="base.group_no_one"/>
+                        <field name="primary_payment_method_id" invisible="is_primary"/>
+                        <field name="active"/>
+                        <label for="supported_country_ids"/>
+                        <div>
+                            <field name="supported_country_ids"
+                                   class="oe_inline"
+                                   widget="many2many_tags"
+                                   readonly="1"
+                            />
+                            <span class="oe_inline text-muted" invisible="supported_country_ids">
+                                All countries are supported.
+                            </span>
+                        </div>
+                        <label for="supported_currency_ids"/>
+                        <div>
+                            <field name="supported_currency_ids"
+                                   class="oe_inline"
+                                   widget="many2many_tags"
+                                   readonly="1"
+                            />
+                            <span class="oe_inline text-muted" invisible="supported_currency_ids">
+                                All currencies are supported.
+                            </span>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Providers" name="providers">
+                            <field name="provider_ids" readonly="1">
+                                <tree decoration-muted="state == 'disabled'" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Brands" name="brands" invisible="not is_primary">
+                            <field name="brand_ids"/>
+                        </page>
+                        <page string="Configuration"
+                              name="configuration"
+                              groups="base.group_no_one"
+                        >
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fa fa-exclamation-triangle"/> These properties are set to
+                                match the behavior of providers and that of their integration with
+                                Odoo regarding this payment method. Any change may result in errors
+                                and should be tested on a test database first.
+                            </div>
+                            <group>
+                                <field name="support_tokenization"/>
+                                <field name="support_express_checkout"/>
+                                <field name="support_refund" />
+                                <field name="supported_country_ids"
+                                       widget="many2many_tags"
+                                       placeholder="Select countries. Leave empty to allow any."
+                                />
+                                <field name="supported_currency_ids"
+                                       widget="many2many_tags"
+                                       placeholder="Select currencies. Leave empty to allow any."
+                                />
+                                <field name="provider_ids"
+                                       string="Supported by"
+                                       widget="many2many_tags"
+                                />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_method_tree" model="ir.ui.view">
+        <field name="name">payment.method.tree</field>
+        <field name="model">payment.method</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="True" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="payment_method_kanban" model="ir.ui.view">
+        <field name="name">payment.method.kanban</field>
+        <field name="model">payment.method</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-end">
+                                        <field name="image" widget="image" class="oe_avatar"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+     <record id="payment_method_search" model="ir.ui.view">
+        <field name="name">payment.method.search</field>
+        <field name="model">payment.method</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name"/>
+                <filter name="available_pms"
+                        string="Available methods"
+                        domain="[('provider_ids.state', '!=', 'disabled')]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">payment.method</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_primary', '=', True)]</field>
+        <field name="context">{'active_test': False, 'search_default_available_pms': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No payment methods found for your payment providers.
+            </p>
+            <p>
+                <a type="action" class="text-primary" name="%(payment.action_payment_provider)d">
+                    <i class="oi oi-arrow-right me-1"/> Configure a payment provider
+                </a>
+            </p>
+        </field>
+    </record>
+
+</odoo>

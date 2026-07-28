@@ -1,0 +1,49 @@
+
+.s_product_list {
+    padding-top: 20px;
+
+    > div > .row:not(.o_grid_mode) > div {
+        height: 200px;
+    }
+
+    > div > .row > div {
+        position: relative;
+        margin-bottom: 20px; // without this style the columns go directly to the top of the bellow ones.
+
+        text-align: center;
+
+        a {
+            display: block;
+        }
+
+        img {
+            margin: auto;
+            max-height: 130px;
+            @include s-product-list-img-hook;
+        }
+
+        .s_product_list_item_link {
+            @include o-position-absolute($left: 10%, $bottom: 0, $right: 10%);
+
+            > .btn {
+                width: 100%;
+                padding: 5px !important;
+                @include font-size(16px);
+
+                @media only screen and (max-width : 1280px) { // FIXME
+                    font-size: 12px;
+                }
+
+                .fa {
+                    @include font-size(18px);
+                    padding-right: 5px;
+
+                    @media only screen and (max-width : 1024px) { // FIXME
+                        display: block;
+                        font-size: 25px;
+                    }
+                }
+            }
+        }
+    }
+}

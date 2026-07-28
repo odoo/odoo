@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <template id="ticket_validation_screen" inherit_id="point_of_sale.ticket_validation_screen">
+
+        <!-- We do not let the user create the invoice by then self. That is why we hide the "Get my Invoice" button -->
+        <xpath expr="//div[@id='get_my_invoice']" position="attributes">
+            <attribute name="t-if">pos_order.company_id.country_code != 'AR'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='get_my_invoice']/.." position="after">
+            <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'AR' and not pos_order.is_invoiced">Invoice not available. You can contact us for more info</h4>
+        </xpath>
+
+        <!-- If the user is NOT log in we should hide the partner form, this one lost functionality because the get my invoice button is not shown and then the partner info is never save. In they want they can sign up and fill data from there -->
+        <xpath expr="//div[hasclass('o_portal_details')]" position="attributes">
+            <attribute name="t-if">pos_order.company_id.country_code != 'AR'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='get_info_div']" position="attributes">
+            <attribute name="t-if">pos_order.company_id.country_code != 'AR'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='get_info_div']" position="after">
+                <t t-elif="pos_order.company_id.country_code == 'AR'">
+                    <h4> Please
+                    <a role="button" t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token" style="margin-top: -11px"> Sign in</a>
+                    in order to save your contact info</h4>
+                </t>
+        </xpath>
+
+    </template>
+
+</odoo>

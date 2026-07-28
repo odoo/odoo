@@ -1,0 +1,17 @@
+.o_tree_editor {
+    .o_tree_editor_node {
+        .o_tree_editor_node_control_panel > button {
+            opacity: .2;
+        }
+
+        &.o_hovered_button {
+            .o_tree_editor_node_control_panel > button {
+                opacity: .5;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

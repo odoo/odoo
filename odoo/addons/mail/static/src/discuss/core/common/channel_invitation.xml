@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.ChannelInvitation">
+        <ActionPanel title="title">
+            <div t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
+                <t t-if="store.user">
+                    <input class="o-discuss-ChannelInvitation-search border form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
+                    <div class="d-flex flex-column mx-0 py-2 overflow-auto">
+                        <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                            <div class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-3 py-1 btn" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                                <div class="d-flex align-items-center p-2">
+                                    <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0">
+                                        <img class="w-100 h-100 rounded o_object_fit_cover"
+                                            t-att-src="threadService.avatarUrl(selectablePartner, props.thread)"/>
+                                        <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle bg-view mt-n1 ms-n1'"/>
+                                    </div>
+                                </div>
+                                <t name="selectablePartnerDetail">
+                                    <span class="flex-grow-1 mx-2 text-truncate text-start fs-6" t-esc="selectablePartner.name"/>
+                                </t>
+                                <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="selectablePartner.in(state.selectedPartners) ? 'checked' : undefined"/>
+                            </div>
+                        </t>
+                        <div t-if="state.selectablePartners.length === 0">No user found that is not already a member of this channel.</div>
+                        <div t-if="state.searchResultCount > state.selectablePartners.length">
+                            Showing
+                            <t t-esc="state.selectablePartners.length"/>
+                            results out of
+                            <t t-esc="state.searchResultCount"/>
+                            . Narrow your search to see more choices.
+                        </div>
+                    </div>
+                    <div t-if="state.selectedPartners.length > 0" class="mt-3">
+                        <h4>Selected users:</h4>
+                        <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap gap-1 overflow-auto">
+                            <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
+                                <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                    <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-primary w-100" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                            <t t-esc="invitationButtonText"/>
+                        </button>
+                    </div>
+                </t>
+                <div t-if="props.thread.invitationLink" class="mt-3">
+                    <div class="input-group">
+                        <input class="border form-control" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <button class="btn btn-primary" t-on-click="onClickCopy">
+                            <i class="fa fa-copy"/>
+                        </button>
+                    </div>
+                    <div t-if="props.thread.accessRestrictedToGroupText" class="mt-2" t-esc="props.thread.accessRestrictedToGroupText"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+
+</templates>

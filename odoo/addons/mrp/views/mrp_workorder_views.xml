@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_production_work_order_search" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.search</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="production_id"/>
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+                <field name="finished_lot_id"/>
+                <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
+                <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
+                <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
+                <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
+                <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
+                <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Start Date" name="date_start_filter" date="date_start"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Work center" name="workcenter" domain="[]" context="{'group_by': 'workcenter_id'}"/>
+                    <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_mrp_routing_time" model="ir.actions.act_window">
+        <field name="name">Work Orders</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">graph,pivot,tree,form,gantt,calendar</field>
+        <field name="context">{'search_default_done': True}</field>
+        <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
+        <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Get statistics about the work orders duration related to this routing.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mrp_workorder_production_specific">
+        <field name="name">Work Orders</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
+        <field name="domain">[('production_id', '=', active_id)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_production_workorder_tree_editable_view">
+        <field name="name">mrp.production.work.order.tree.editable</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority" eval="100"/>
+        <field name="arch" type="xml">
+            <tree editable="bottom" multi_edit="1">
+                <header>
+                    <button name="button_start" type="object" string="Start" class="btn btn-success text-uppercase"/>
+                    <button name="button_pending" type="object" string="Pause" class="btn btn-warning text-uppercase"/>
+                    <button name="action_mark_as_done" type="object" string="Done" class="btn btn-danger text-uppercase"/>
+                </header>
+                <field name="consumption" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="is_produced" column_invisible="True"/>
+                <field name="is_user_working" column_invisible="True"/>
+                <field name="product_uom_id" readonly="0" column_invisible="True"/>
+                <field name="production_state" column_invisible="True"/>
+                <field name="production_bom_id" column_invisible="True"/>
+                <field name="qty_producing" column_invisible="True"/>
+                <field name="time_ids" column_invisible="True"/>
+                <field name="working_state" column_invisible="True"/>
+                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
+                <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
+                <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
+                <field name="product_id" optional="show"/>
+                <field name="qty_remaining" optional="show" string="Quantity Remaining"/>
+                <field name="qty_produced" optional="hide" string="Quantity Produced"/>
+                <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
+                <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
+                <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
+                <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
+                <field name="duration" widget="mrp_timer"
+                  invisible="production_state == 'draft'"
+                  readonly="is_user_working" sum="real duration"/>
+                <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
+                  column_invisible="parent and parent.state == 'draft'"
+                  invisible="production_state == 'draft'"/>
+                <button name="button_start" type="object" string="Start" class="btn-success"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working"/>
+                <button name="button_pending" type="object" string="Pause" class="btn-warning"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
+                <button name="button_finish" type="object" string="Done" class="btn-success"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
+                <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked'"/>
+                <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state != 'blocked'"/>
+                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
+                        title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
+                <field name="show_json_popover" column_invisible="True"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_view" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.tree</field>
+        <field name="model">mrp.workorder</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="sample">1</attribute>
+                <attribute name="editable"/>
+            </xpath>
+            <field name="workcenter_id" position="after">
+                <field name="production_id" optional="hide"/>
+            </field>
+            <field name="state" position="attributes">
+                <attribute name="invisible">production_state == 'draft'</attribute>
+                <attribute name="column_invisible">False</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit">
+        <field name="name">mrp.production.work.order.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <form string="Production Workcenter" delete="0" create="0">
+            <field name="is_user_working" invisible="1"/>
+            <field name="working_state" invisible="1"/>
+            <field name="production_state" invisible="1"/>
+            <header>
+                <field name="state" widget="statusbar" statusbar_visible="pending,waiting,ready,progress,done"/>
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="oi-arrows-v" invisible="scrap_count == 0">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="scrap_count"/></span>
+                            <span class="o_stat_text">Scraps</span>
+                        </div>
+                    </button>
+                </div>
+                <field name="company_id" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="finished_lot_id" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
+                    </group>
+                    <group>
+                        <field name="product_id" readonly="1"/>
+                        <field name="qty_production" readonly="1"/>
+                        <field name="finished_lot_id" readonly="1"/>
+                    </group>
+                </group>
+                <group>
+                    <group invisible="not date_start">
+                        <label for="date_start" string="Scheduled Date" invisible="state in ['progress', 'done', 'cancel']"/>
+                        <label for="date_start" string="Start Date" invisible="state not in ['progress', 'done', 'cancel']"/>
+                        <div class="oe_inline">
+                            <field name="is_planned" invisible="1"/>
+                            <field name="date_start" class="mr8 oe_inline" readonly="state in ['cancel', 'done']"/>
+                            <strong class="mr8 oe_inline">to</strong>
+                            <field name="date_finished" class="oe_inline" readonly="state in ['cancel', 'done']"/>
+                            <field name="show_json_popover" invisible="1"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" invisible="not show_json_popover"/>
+                        </div>
+                        <label for="duration_expected"/>
+                        <div class="o_row">
+                            <field name="duration_expected" widget="float_time" readonly="state in ['cancel', 'done']"/>
+                            <span>minutes</span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="production_id"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
+                        <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
+                            <tree editable="bottom">
+                                <field name="user_id"/>
+                                <field name="duration" widget="float_time" sum="Total duration" readonly="id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="workcenter_id" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="loss_id" string="Productivity" optional="show"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="duration" widget="float_time"/>
+                                        <field name="company_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="user_id"/>
+                                        <field name="workcenter_id"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="loss_id"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                </page>
+                <page string="Components" name="components">
+                    <field name="move_raw_ids" readonly="1">
+                        <tree>
+                            <field name="state" column_invisible="True"/>
+                            <field name="product_type" column_invisible="True"/>
+                            <field name="product_id" readonly="state == 'done'"/>
+                            <field name="product_qty" string="To Consume"/>
+                            <field name="quantity" string="Quantity"/>
+                            <field name="picked" string="Consumed"/>
+                            <field name="product_qty_available" string="On Hand" invisible="product_type != 'product'"/>
+                            <field name="product_virtual_available" string="Forecasted" invisible="product_type != 'product'"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Work Instruction" name="workorder_page_work_instruction" invisible="not worksheet and not worksheet_google_slide and not operation_note">
+                    <field name="worksheet_type" invisible="1"/>
+                    <field name="worksheet" widget="pdf_viewer" invisible="worksheet_type != 'pdf'"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" invisible="worksheet_type != 'google_slide'"/>
+                    <field name="operation_note" invisible="worksheet_type != 'text'"/>
+                </page>
+                <field name="allow_workorder_dependencies" invisible="1"/>
+                <page string="Blocked By" name="dependencies" invisible="not allow_workorder_dependencies">
+                    <field name="blocked_by_workorder_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
+                            <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                            <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
+                            <field name="date_start" readonly="1"/>
+                            <field name="date_finished" readonly="1"/>
+                            <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
+                            <field name="production_state" column_invisible="True"/>
+                            <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-info="state not in ('progress', 'done', 'cancel')"
+                                column_invisible="parent.state == 'draft'"
+                                invisible="production_state == 'draft'"/>
+                            <button class="oe_link float-end" string="View WorkOrder" name="action_open_wizard" type="object"/>
+                        </tree>
+                    </field>
+                </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mrp_production_workorder_form_view_filter" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.select</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Orders">
+                <field name="name" string="Work Order"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+                <field name="product_id"/>
+                <field name="finished_lot_id"/>
+                <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
+                <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending'), ('production_state', '!=', 'draft')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'pending'), ('production_state', '=', 'draft')]"/>
+                <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', current_date), ('state', '=', 'ready')]"
+                    help="Production started late"/>
+                <group expand="0" string="Group By">
+                    <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
+                    <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="scheduled_month" domain="[]" context="{'group_by': 'date_start'}"/>
+                </group>
+             </search>
+        </field>
+    </record>
+
+    <record id="workcenter_line_calendar" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.calendar</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <calendar date_stop="date_finished" date_start="date_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
+                <field name="workcenter_id" filters="1"/>
+                <field name="production_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="workcenter_line_graph" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.graph</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <graph string="Operations" stacked="0" sample="1">
+                <field name="production_id"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration_unit" type="measure"/>
+                <field name="duration_expected" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="workcenter_line_pivot" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.pivot</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <pivot string="Operations" sample="1">
+                <field name="date_start"/>
+                <field name="operation_id"/>
+                <field name="duration" type="measure" string="Duration (minutes)" widget="float_time"/>
+                <field name="duration_unit" type="measure" widget="float_time"/>
+                <field name="duration_expected" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="workcenter_line_gantt_production" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.gantt.production</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="production_id" create="0" delete="0"
+                progress="progress" plan="0"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
+                color="workcenter_id"
+                display_unavailability="0"
+                progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                sample="1"
+                form_view_id="%(mrp_production_workorder_form_view_inherit)d">
+
+                <field name="date_start"/>
+                <field name="state"/>
+                <field name="workcenter_id"/>
+                <field name="json_popover"/>
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row g-0">
+                            <div class="col">
+                                <ul class="ps-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong> <t t-esc="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="date_finished.toFormat('F')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_gantt" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.gantt</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="workcenter_id" create="0"
+                delete="0" sample="1"
+                progress="progress" plan="0"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
+                color="production_id"
+                display_unavailability="1"
+                progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                form_view_id="mrp_production_workorder_form_view_inherit">
+
+                <field name="date_start"/>
+                <field name="state"/>
+                <field name="workcenter_id"/>
+                <field name="json_popover"/>
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row g-0">
+                            <div class="col">
+                                <ul class="ps-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong><t t-esc="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong><t t-esc="date_finished.toFormat('F')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="workcenter_line_kanban">
+        <field name="name">mrp.production.work.order.kanban</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_mrp_workorder_kanban" create="0" sample="1">
+                <field name="name"/>
+                <field name="production_id"/>
+                <field name="state" readonly="1"/>
+                <field name="is_user_working"/>
+                <field name="working_user_ids"/>
+                <field name="last_working_user_id"/>
+                <field name="working_state"/>
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+                <field name="qty_remaining"/>
+                <field name="qty_production"/>
+                <field name="date_start"/>
+                <field name="production_date"/>
+                <field name="product_uom_id" force_save="1"/>
+                <field name="finished_lot_id"/>
+                <field name="operation_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_card_header o_kanban_record_top">
+                                <div class="o_kanban_workorder_title">
+                                    <h4 class="o_primary">
+                                        <span><t t-out="record.production_id.value"/></span> - <span><t t-out="record.name.value"/></span>
+                                    </h4>
+                                </div>
+                                <div class="o_kanban_workorder_date">
+                                    <h5><span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/></h5>
+                                </div>
+                                <div>
+                                    <h2 class="ml8">
+                                        <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
+                                            <t t-out="record.state.value"/>
+                                        </span>
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <h5 class="oe_kanban_bottom_left">
+                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/><t t-if="record.finished_lot_id.value">, </t></span><span t-if="record.finished_lot_id.value" t-out="record.finished_lot_id.value"/>
+                                </h5>
+                                <div class="o_kanban_workorder_status">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
+                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
+                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
+                                            <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
+                                            <t name="user_avatar" t-if="record.last_working_user_id.raw_value">
+                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.last_working_user_id.raw_value)" class="oe_kanban_avatar o_avatar rounded" alt="Avatar"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mrp_workorder_workcenter">
+        <field name="name">Work Orders Planning</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
+        <field name="view_id" ref="mrp_workorder_view_gantt"/>
+        <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mrp_workorder_production">
+        <field name="name">Work Orders Planning</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="domain">[('production_state','not in',('done','cancel'))]</field>
+        <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
+        <field name="view_id" ref="workcenter_line_gantt_production"/>
+        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_workorder_mrp_production_form">
+        <field name="name">Work Orders</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="mrp_production_workorder_form_view_inherit"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_workorder_todo">
+        <field name="name">Work Orders</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
+        <field name="view_id" ref="mrp.mrp_production_workorder_tree_view"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
+        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True, 'search_default_waiting': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
+    <record id="view_workcenter_load_pivot" model="ir.ui.view">
+        <field name="name">report.workcenter.load.pivot</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Center Loads" sample="1">
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+                <field name="workcenter_id" type="row"/>
+                <field name="production_date" type="row" interval="day"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_work_center_load_graph" model="ir.ui.view">
+        <field name="name">report.workcenter.load.graph</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <graph string="Work Center load" sample="1">
+                <field name="production_date" interval="day"/>
+                <field name="workcenter_id"/>
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_graph" model="ir.actions.act_window">
+        <field name="name">Work Center Loads</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id" ref="view_workcenter_load_pivot"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_work_center_load_graph"/>
+        <field name="act_window_id" ref="action_mrp_workcenter_load_report_graph"/>
+    </record>
+</odoo>

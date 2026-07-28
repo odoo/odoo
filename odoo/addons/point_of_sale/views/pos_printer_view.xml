@@ -1,0 +1,56 @@
+<odoo>
+    <record id="view_pos_printer_form" model="ir.ui.view">
+        <field name="name">Preparation Printer</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <form string="POS Printer">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="printer_type" widget="radio"/>
+                        <field name="proxy_ip" invisible="printer_type != 'iot'"/>
+                        <field name="product_categories_ids" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_printer_form" model="ir.actions.act_window">
+        <field name="name">Preparation Printers</field>
+        <field name="res_model">pos.printer</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new restaurant order printer
+            </p><p>
+            Order Printers are used by restaurants and bars to print the
+            order updates in the kitchen/bar when the waiter updates the order.
+            </p><p>
+            Each Order Printer has an IP Address that defines the IoT Box/Hardware
+            Proxy where the printer can be found, and a list of product categories.
+            An Order Printer will only print updates for products belonging to one of
+            its categories.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_pos_printer" model="ir.ui.view">
+        <field name="name">Preparation Printers</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <tree string="Preparation Printers">
+                <field name="name" />
+                <field name="proxy_ip" />
+                <field name="product_categories_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem
+        name="Preparation Printers"
+        id="point_of_sale.menu_pos_preparation_printer"
+        parent="point_of_sale.menu_point_of_sale"
+        action="action_pos_printer_form"
+        sequence="99" />
+</odoo>

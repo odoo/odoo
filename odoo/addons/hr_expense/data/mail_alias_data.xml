@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- default alias for expenses -->
+        <record id="mail_alias_expense" model="mail.alias">
+            <field name="alias_name">expense</field>
+            <field name="alias_model_id" ref="model_hr_expense"/>
+            <field name="alias_contact">employees</field>
+        </record>
+    </data>
+</odoo>

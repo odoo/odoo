@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="uom_uom_form_inherit_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">uom.uom.inherit.l10n_hu_edi</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_type']" position="after">
+                <field name="l10n_hu_edi_code" invisible="'HU' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

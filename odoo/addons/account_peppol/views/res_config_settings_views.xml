@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_peppol_install']" position="replace">
+                <div id="account_peppol">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <field name="account_peppol_proxy_state" invisible="1"/>
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    Peppol Details
+                                </span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                            </div>
+                            <div invisible="account_peppol_proxy_state != 'not_registered'">
+                                <div class="text-muted oe_inline">
+                                    Start sending and receiving documents via Peppol as soon as your registration is complete.
+                                </div>
+                                <div class="alert alert-warning mt-3"
+                                     role="alert"
+                                     invisible="not account_peppol_endpoint_warning">
+                                    <field name="account_peppol_endpoint_warning"/>
+                                </div>
+                                <div class="alert alert-warning mt-3"
+                                     colspan="2"
+                                     role="alert"
+                                     invisible="country_code != 'BE' or account_peppol_eas in (False, '0208')">
+                                    The recommended EAS code for Belgium is 0208. The Endpoint should be the Company Registry number.
+                                </div>
+                                <div class="pt-3">
+                                    <div class="row">
+                                        <label string="Peppol EAS"
+                                               for="account_peppol_eas"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="account_peppol_eas"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Peppol Endpoint"
+                                               for="account_peppol_eas"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="account_peppol_endpoint"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified')">
+                                <label string="Mobile Number"
+                                       for="account_peppol_phone_number"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="account_peppol_phone_number"
+                                       required="account_peppol_proxy_state == 'not_verified'"/>
+                            </div>
+                            <div class="row"
+                                 invisible="account_peppol_proxy_state in ('rejected', 'canceled', 'sent_verification')">
+                                <label string="Primary contact email"
+                                       for="account_peppol_contact_email"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="account_peppol_contact_email"/>
+                            </div>
+                            <div class="content-group pt-3"
+                                 invisible="account_peppol_proxy_state != 'not_registered'">
+                                <span>
+                                    I want to migrate my Peppol connection to Odoo (optional):
+                                </span>
+                                <div class="row mt-3">
+                                    <label string="Migration key"
+                                           for="account_peppol_migration_key"
+                                           class="col-lg-3 o_light_label"/>
+                                    <field name="account_peppol_migration_key"/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="content-group mt-3"
+                                     invisible="account_peppol_proxy_state in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification')">
+                                    <div class="row">
+                                        <label string="Incoming Invoices Journal"
+                                               for="account_peppol_purchase_journal_id"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="account_peppol_purchase_journal_id"
+                                               required="account_peppol_proxy_state not in ('rejected', 'canceled', 'not_verified', 'not_registered', 'sent_verification')"/>
+                                    </div>
+                                </div>
+                                <div class="content-group mt-3"
+                                     invisible="account_peppol_proxy_state != 'sent_verification'">
+                                    <span class="text-muted">
+                                        We sent a verification code to
+                                        <field name="account_peppol_phone_number"
+                                               nolabel="1"
+                                               readonly="account_peppol_proxy_state == 'sent_verification'"/>.
+                                    </span>
+                                    <div class="row mt-1 ps-3">
+                                        <field name="account_peppol_verification_code" widget="verification_code"/>
+                                    </div>
+                                </div>
+                                <div class="pt-3 pb-3"
+                                     invisible="account_peppol_proxy_state == 'not_registered'">
+                                    Application status:
+                                    <b>
+                                        <field name="account_peppol_proxy_state"
+                                               class="oe_inline"
+                                               readonly="1"
+                                               decoration-danger="account_peppol_proxy_state == 'rejected'"
+                                               decoration-info="account_peppol_proxy_state == 'active'"/>
+                                        <span class="text-info" invisible="not account_peppol_edi_mode == 'demo'"> (Demo)</span>
+                                        <span class="text-info" invisible="not account_peppol_edi_mode == 'test'"> (Test)</span>
+                                    </b>
+                                </div>
+                                <div invisible="account_peppol_proxy_state != 'pending'">
+                                    <p>
+                                        Your registration should be activated within a day.
+                                    </p>
+                                </div>
+                                <div invisible="account_peppol_proxy_state != 'rejected'">
+                                    <p>
+                                        The rejection reason has been sent to you via email.
+                                    </p>
+                                    <p>
+                                        Please do not hesitate to contact our support if you need further assistance.
+                                    </p>
+                                </div>
+                                <div invisible="account_peppol_proxy_state != 'active' or not account_peppol_migration_key">
+                                    Your migration key is:
+                                    <field name="account_peppol_migration_key"
+                                           nolabel="1"
+                                           readonly="account_peppol_proxy_state == 'active' and account_peppol_migration_key"/>
+                                </div>
+                                <div invisible="account_peppol_proxy_state != 'active'">
+                                    Your Peppol identification is:
+                                    <field name="account_peppol_edi_identification"
+                                           nolabel="1"/>
+                                </div>
+                                <div class="mt-4" invisible="account_peppol_proxy_state != 'not_registered'">
+                                    <field name="account_peppol_mode_constraint" invisible="1"/>
+                                    <field name="account_peppol_edi_mode" invisible="1"/>
+                                    <div class="mb-3" invisible="not account_peppol_edi_mode == 'prod'">
+                                        By clicking the button below I accept that Odoo may process my e-invoices.
+                                    </div>
+                                    <div class="mb-3" invisible="not account_peppol_edi_mode == 'test'">
+                                        Test mode allows registration of the user on the test Peppol network.
+                                        By clicking the button below I accept that Odoo may process my e-invoices.
+                                    </div>
+                                    <div class="mb-3" invisible="not account_peppol_edi_mode == 'demo'">
+                                        In demo mode sending and receiving invoices is simulated. There will be no communication with the Peppol network.
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-1 action_buttons" colspan="3">
+                                    <widget name="peppol_settings_buttons"
+                                            invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified', 'sent_verification', 'pending', 'manually_approved', 'active')"/>
+                                    <div class="mt-3"
+                                         invisible="account_peppol_proxy_state in ('not_registered', 'active', 'rejected', 'canceled')">
+                                        <button name="button_cancel_peppol_registration"
+                                                type="object"
+                                                string="Cancel registration"
+                                                class="btn btn-secondary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

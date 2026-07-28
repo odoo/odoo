@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Create Extra Mailing List for Demo -->
+        <record id="mailing_list_1" model="mailing.list">
+            <field name="name">Imported Contacts</field>
+            <field name="is_public">False</field>
+        </record>
+
+        <!-- Create Contacts -->
+        <record id="mass_mail_contact_1" model="mailing.contact">
+            <field name="name">Aristide Antario</field>
+            <field name="email">alexandre.antario@example.com</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+        <record id="mass_mail_contact_2" model="mailing.contact">
+            <field name="name">Beverly Bridge</field>
+            <field name="email">beverly.bridge@example.com</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+        <record id="mass_mail_contact_3" model="mailing.contact">
+            <field name="name">Carol Cartridge</field>
+            <field name="email">carol.cartridge@example.com</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+        <record id="mass_mail_contact_4" model="mailing.contact">
+            <field name="name">David Dawson</field>
+            <field name="email">david.dawson@example.com</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+        <record id="mass_mail_contact_5" model="mailing.contact">
+            <field name="name">Elsa Ericson</field>
+            <field name="email">elsa.ericson@example.com</field>
+            <field name="message_bounce">5</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+        <record id="mass_mail_contact_6" model="mailing.contact">
+            <field name="name">Franz Faubourg</field>
+            <field name="email">franz.faubourg@example.com</field>
+            <field name="list_ids" eval="[(5, 0, 0)]"/>
+        </record>
+    </data>
+</odoo>

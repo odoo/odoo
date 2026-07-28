@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRecord">
+        <div
+        role="article"
+        t-att-class="getRecordClasses()"
+        t-att-data-id="props.record.id"
+        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+        t-on-click="onGlobalClick"
+        t-ref="root">
+            <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
+            <t t-call="{{ this.constructor.menuTemplate }}"/>
+        </div>
+    </t>
+    <t t-name="web.KanbanRecordMenu">
+        <t t-if="showMenu">
+            <Dropdown class="'o_dropdown_kanban bg-transparent position-absolute end-0'"
+                      menuClass="'dropdown-menu'"
+                      togglerClass="'btn o-no-caret rounded-0'"
+                      position="'bottom-end'"
+                      title="'Dropdown menu'">
+                <t t-set-slot="toggler">
+                    <span class="fa fa-ellipsis-v"/>
+                </t>
+                <KanbanDropdownMenuWrapper>
+                    <t t-call="{{ templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+                </KanbanDropdownMenuWrapper>
+            </Dropdown>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+	xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022</cbc:CustomizationID>
+	<cbc:ID>INV/2017/00001</cbc:ID>
+	<cbc:IssueDate>2017-01-01</cbc:IssueDate>
+	<cbc:DueDate>2017-02-28</cbc:DueDate>
+	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+	<cbc:Note>test narration</cbc:Note>
+	<cbc:DocumentCurrencyCode>RSD</cbc:DocumentCurrencyCode>
+	<cac:InvoicePeriod>
+		<cbc:DescriptionCode>3</cbc:DescriptionCode>
+	</cac:InvoicePeriod>
+	<cac:OrderReference>
+		<cbc:ID>ref_move</cbc:ID>
+	</cac:OrderReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="9948">101134702</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Test RS Company</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Nikole Pašića 30a</cbc:StreetName>
+				<cbc:CityName>Niš</cbc:CityName>
+				<cbc:PostalZone>12000</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+					<cbc:Name>Serbia</cbc:Name>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>Test RS Company</cbc:RegistrationName>
+				<cbc:CompanyID>RS101134702</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:StreetName>Nikole Pašića 30a</cbc:StreetName>
+					<cbc:CityName>Niš</cbc:CityName>
+					<cbc:PostalZone>12000</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+						<cbc:Name>Serbia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Test RS Company</cbc:RegistrationName>
+				<cbc:CompanyID>87654321</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:StreetName>Nikole Pašića 30a</cbc:StreetName>
+					<cbc:CityName>Niš</cbc:CityName>
+					<cbc:PostalZone>12000</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+						<cbc:Name>Serbia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:ID>___ignore___</cbc:ID>
+				<cbc:Name>Test RS Company</cbc:Name>
+				<cbc:Telephone>+381 23 456 78 91</cbc:Telephone>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="9948">111032440</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Serbian Customer</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Balkanska ulica, 21</cbc:StreetName>
+				<cbc:CityName>Belgrade</cbc:CityName>
+				<cbc:PostalZone>101801</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+					<cbc:Name>Serbia</cbc:Name>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>Serbian Customer</cbc:RegistrationName>
+				<cbc:CompanyID>RS111032440</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:StreetName>Balkanska ulica, 21</cbc:StreetName>
+					<cbc:CityName>Belgrade</cbc:CityName>
+					<cbc:PostalZone>101801</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+						<cbc:Name>Serbia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Serbian Customer</cbc:RegistrationName>
+				<cbc:CompanyID>12345678</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:StreetName>Balkanska ulica, 21</cbc:StreetName>
+					<cbc:CityName>Belgrade</cbc:CityName>
+					<cbc:PostalZone>101801</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+						<cbc:Name>Serbia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:ID>___ignore___</cbc:ID>
+				<cbc:Name>Serbian Customer</cbc:Name>
+				<cbc:Telephone>+381 98 765 43 21</cbc:Telephone>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cac:Address>
+				<cbc:StreetName>Balkanska ulica, 21</cbc:StreetName>
+				<cbc:CityName>Belgrade</cbc:CityName>
+				<cbc:PostalZone>101801</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>RS</cbc:IdentificationCode>
+					<cbc:Name>Serbia</cbc:Name>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+		<cbc:PaymentDueDate>2017-02-28</cbc:PaymentDueDate>
+		<cbc:InstructionID>INV/2017/00001</cbc:InstructionID>
+		<cbc:PaymentID>INV/2017/00001</cbc:PaymentID>
+		<cac:PayeeFinancialAccount>
+			<cbc:ID>RS1234123456123456123456</cbc:ID>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:PaymentTerms>
+		<cbc:Note>Payment terms: 30% Advance End of Following Month</cbc:Note>
+	</cac:PaymentTerms>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="RSD">300.00</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="RSD">1500.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="RSD">300.00</cbc:TaxAmount>
+			<cbc:Percent>20.0</cbc:Percent>
+			<cac:TaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="RSD">1500.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="RSD">1500.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="RSD">1800.00</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="RSD">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="RSD">1800.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="RSD">500.00</cbc:LineExtensionAmount>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="RSD">100.00</cbc:TaxAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="RSD">500.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="RSD">100.00</cbc:TaxAmount>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxCategory>
+					<cbc:ID>S</cbc:ID>
+					<cbc:Percent>20.0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Description>product_a</cbc:Description>
+			<cbc:Name>product_a</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="RSD">500.0</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>2</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="DZN">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="RSD">1000.00</cbc:LineExtensionAmount>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="RSD">200.00</cbc:TaxAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="RSD">1000.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="RSD">200.00</cbc:TaxAmount>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxCategory>
+					<cbc:ID>S</cbc:ID>
+					<cbc:Percent>20.0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Description>product_b</cbc:Description>
+			<cbc:Name>product_b</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="RSD">1000.0</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

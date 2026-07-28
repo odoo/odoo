@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_l10n_my_edi">
+            <field name="name">account.move.send.form.inherit.l10n_my_edi</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account.account_move_send_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='warnings']" position="inside">
+                    <field name="l10n_my_edi_enable" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//div[@name='option_send_mail']" position='after'>
+                    <div name="option_l10n_my_edi_send" invisible="not l10n_my_edi_enable">
+                        <field name="l10n_my_edi_send_checkbox"/>
+                        <b>
+                            <label for="l10n_my_edi_send_checkbox"/>
+                        </b>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

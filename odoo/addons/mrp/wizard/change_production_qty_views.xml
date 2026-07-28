@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--  Change Product Quantity -->
+        <record id="view_change_production_qty_wizard" model="ir.ui.view">
+            <field name="name">Change Quantity To Produce</field>
+            <field name="model">change.production.qty</field>
+            <field name="arch" type="xml">
+                <form string="Change Product Qty">
+                    <group>
+                        <group>
+                            <label for="product_qty"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <span class="text-muted">Modifying the quantity to produce will also modify the quantities of components to consume for this manufacturing order.</span>
+                    <field name="mo_id" invisible="1"/>
+                    <footer>
+                        <button name="change_prod_qty" string="Set Quantity" data-hotkey="q"
+                            colspan="1" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_change_production_qty" model="ir.actions.act_window">
+            <field name="name">Change Quantity To Produce</field>
+            <field name="res_model">change.production.qty</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mail_notification_layout_with_responsible_signature_and_peppol"
+                  name="Mail: mail notification layout with responsible signature (user_id of the record) and Peppol advertisement"
+                  inherit_id="mail.mail_notification_layout_with_responsible_signature"
+                  primary="True">
+            <xpath expr="//t[hasclass('o_signature')]" position="after">
+                <div id="peppol_advertisement" t-if="peppol_info" style="font-size: 13px;">
+                    <t t-if="peppol_info['is_peppol_sent']">
+                        <p style="min-width: 590px;">
+                            PS: This invoice has also been <b style="color: $o-enterprise-action-color">sent on Peppol</b>.
+                        </p>
+                    </t>
+                    <t t-if="not peppol_info['is_peppol_sent']">
+                        <p style="min-width: 590px;">
+                            PS: <b style="color: $o-enterprise-action-color;">We did not send your invoice on Peppol.</b>
+                            <t t-if="peppol_info['peppol_country'] == 'BE'">
+                                In Belgium, electronic invoicing will be <u>mandatory as of January 2026</u>.
+                                <a target="_blank" href="https://finance.belgium.be/en/enterprises/vat/e-invoicing/mandatory-use-structured-electronic-invoices-2026" style="text-decoration: none;">
+                                    &#x1F517;
+                                </a>
+                            </t>
+                            <br/>
+                            If you need a Peppol compliant software, we recommend <a target="_blank" href="https://www.odoo.com/app/invoicing?utm_source=db&amp;utm_medium=email&amp;utm_campaign=einvoicing" style="color: $o-enterprise-color;">Odoo</a>.
+                        </p>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

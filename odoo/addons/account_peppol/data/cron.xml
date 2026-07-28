@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_peppol_get_new_documents" model="ir.cron">
+        <field name="name">PEPPOL: retrieve new documents</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_peppol_get_new_documents()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_peppol_get_message_status" model="ir.cron">
+        <field name="name">PEPPOL: update message status</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_peppol_get_message_status()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_peppol_get_participant_status" model="ir.cron">
+        <field name="name">PEPPOL: update participant status</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_peppol_get_participant_status()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

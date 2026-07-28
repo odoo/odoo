@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="product_product_view_form_add" model="ir.ui.view">
+    <field name="name">product.product.view.form.add</field>
+    <field name="model">product.product</field>
+    <field name="arch" type="xml">
+        <form js_class="website_new_content_form">
+            <group name="pricing">
+                <field name="website_url" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="currency_id" invisible='1'/>
+                <field name="cost_currency_id" invisible="1"/>
+                <field name="name" placeholder="e.g. Cheese Burger" string="Product Name"/>
+                <label for="list_price" class="mt-1"/>
+                <div name="Sales Price">
+                    <field name="list_price" class="oe_inline" widget='monetary'
+                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                    <field name="tax_string"/>
+                </div>
+                <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale', 'search_default_sale': 1}" options="{'create': false, 'create_edit': false}"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="product_product_action_add" model="ir.actions.act_window">
+    <field name="name">New Product</field>
+    <field name="res_model">product.product</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="view_id" ref="product_product_view_form_add"/>
+</record>
+
+</odoo>

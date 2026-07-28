@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_form_view_container')]/Layout" position="inside">
+            <t t-set-slot="control-panel-todo-name">
+                <t t-set="record" t-value="model.root"/>
+                <TodoEditableBreadcrumbName
+                    name="'name'"
+                    record="record"
+                    id="'name'"
+                />
+            </t>
+            <t t-set-slot="todo-mark-as-done-button">
+                <t t-set="record" t-value="model.root"/>
+                <TodoDoneCheckmark
+                    name="'state'"
+                    record="record"
+                    id="'state'"
+                    viewType="'form'"
+                />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

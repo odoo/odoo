@@ -1,0 +1,42 @@
+.o_kanban_view.o_event_kanban_view .o_kanban_renderer {
+    .o_kanban_record > div {
+        min-height: 140px;
+    }
+    .o_kanban_content {
+        .o_event_fontsize_09 {
+            font-size: .9rem;
+        }
+
+        .o_event_fontsize_20 {
+            font-size: 2rem;
+        }
+    }
+}
+
+.o_kanban_view.o_event_attendee_kanban_view .o_kanban_renderer {
+    @media (max-width: 768px) {
+        .o_event_registration_kanban {
+            min-height: 80px;
+        }
+    }
+    // Used to align the kanban buttons as fa-check and fa-undo don't have the same width
+    .o_event_registration_kanban .fa-undo {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+    .oe_kanban_card_ribbon {
+        // Used for "Group By"
+        div.row {
+            min-height: 95px;
+        }
+    }
+}
+
+.o_event_registration_view_tree {
+    .o_list_button > .o_btn_cancel_registration {
+        color: $danger;
+        &:hover {
+            color: darken($danger, $link-shade-percentage);
+        }
+    }
+}

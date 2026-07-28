@@ -1,0 +1,47 @@
+<odoo>
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <t groups="hr_recruitment.group_hr_recruitment_user">
+                        <field name="new_applicant_count"/>
+                        <field name="new_hired_employee"/>
+                        <field name="expected_employee"/>
+                    </t>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
+                    <t groups="hr_recruitment.group_hr_recruitment_user">
+                        <div t-if="record.new_applicant_count.raw_value > 0" class="row ml16">
+                            <div class="col">
+                                <a name="%(hr_applicant_action_from_department)d" type="action">
+                                    <field name="new_applicant_count"/> New Applicants
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                    <a role="menuitem" class="dropdown-item" name="%(action_hr_recruitment_report_filtered_department)d"
+                        type="action" groups="hr_recruitment.group_hr_recruitment_user">
+                        Recruitments
+                    </a>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_hr_department" model="ir.actions.act_window">
+        <field name="name">Departments</field>
+        <field name="res_model">hr.department</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hr_department" name="Departments"
+            parent="menu_hr_recruitment_config_employees" action="action_hr_department"/>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoDoneCheckmark">
+        <t t-if="!env.isSmall">
+            <a title="Mark as done"
+               t-on-click.stop="onDoneToggled"
+               t-on-mouseleave="actualizeDoneState"
+               t-on-mouseover="freezeDoneState"
+               t-attf-class="o_todo_done_button fa fa-lg fa-check-circle{{!stateDone.isDone ? '-o' : ' done_button_enabled'}}"/>
+        </t>
+        <t t-else="">
+            <a title="Mark as done"
+               t-on-click.stop="onDoneToggled"
+               t-attf-class="o_todo_done_button_mobile fa fa-lg fa-check-circle{{!stateDone.isDone ? '-o' : ' done_button_enabled'}}"/>
+        </t>
+    </t>
+
+</templates>

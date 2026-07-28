@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2OneAvatarField">
+        <div class="d-flex align-items-center gap-1" t-att-data-tooltip="props.record.data[props.name][1]">
+            <span class="o_avatar o_m2o_avatar">
+                <span t-if="props.record.data[props.name] === false and !props.readonly" class="o_avatar_empty o_m2o_avatar_empty"></span>
+                <img t-if="props.record.data[props.name] !== false"
+                     t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name][0]}}/avatar_128"
+                     class="rounded"
+                />
+            </span>
+            <Many2OneField t-props="many2OneProps"/>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanMany2OneAvatarField" t-inherit="web.Many2OneAvatarField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
+            <attribute name="class" separator=" " add="d-flex"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2o_avatar_empty')]" position="replace">
+            <t t-if="props.record.data[props.name] === false and props.isEditable">
+                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
+                   aria-label="Assign" class="o_quick_assign fa fa-user-plus btn-link d-flex align-items-center text-dark" role="button"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

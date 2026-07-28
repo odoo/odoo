@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="stock.ReceptionReportMain" class="o_action">
+        <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-always-buttons">
+                <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons">
+                    <div class="d-inline-block">
+                        <button t-on-click="onClickPrint" type="button" class="btn btn-primary" title="Print">Print</button>
+                        <button t-on-click="onClickAssignAll" class="btn btn-secondary ms-1" t-att-disabled="isAssignAllDisabled">Assign All</button>
+                        <button t-on-click="onClickPrintLabels" class="btn btn-secondary ms-1" t-att-disabled="isPrintLabelDisabled">Print Labels</button>
+                    </div>
+                </div>
+            </t>
+        </ControlPanel>
+        <div class="o_report_reception container-fluid justify-content-between">
+            <div class="o_report_reception_header my-4">
+                <h1>
+                    <t t-if="data.docs">
+                        <div t-foreach="data.docs" t-as="doc" t-key="doc.id">
+                            <a href="#" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-esc="doc.name"/>
+                            <span t-esc="doc.display_state" t-attf-class="ms-1 align-text-top badge rounded-pill bg-opacity-50 {{ doc.state == 'done' ? 'bg-success' : 'bg-info' }}"/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <span t-esc="data.reason"/>
+                    </t>
+                </h1>
+            </div>
+            <t t-if="hasContent">
+                <table class="table table-sm">
+                    <ReceptionReportTable
+                        t-foreach="state.sourcesToLines" t-as="source" t-key="source"
+                        index="source"
+                        scheduledDate="data.sources_to_formatted_scheduled_date[source]"
+                        lines="state.sourcesToLines[source]"
+                        source="data.sources_info[source]"
+                        showUom="data.show_uom"
+                        precision="data.precision"/>
+                </table>
+            </t>
+            <p t-else="">
+                No allocation need found.
+            </p>
+        </div>
+    </div>
+
+</templates>

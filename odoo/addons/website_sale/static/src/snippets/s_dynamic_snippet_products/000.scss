@@ -1,0 +1,90 @@
+// class name are dynamically added.
+// If you don't find it with a grep, don't consider it as useless without extra check.
+
+.s_product_product_centered {
+    .card {
+        overflow: visible;
+        margin-top: 6rem;
+        padding-top: 6rem;
+    }
+
+    .o_carousel_product_img_link {
+        max-width: 75%;
+        margin-top: -12rem;
+        left: 0;
+        right: 0;
+    }
+}
+
+.s_product_product_banner {
+    img {
+        max-height: 400px;
+    }
+}
+
+.s_product_product_horizontal_card img {
+    img {
+        height: 100%;
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .s_product_product_horizontal_card img {
+        height: 12rem;
+    }
+}
+
+.o_dynamic_product_hovered {
+    img {
+        transition: transform 250ms ease;
+    }
+    &:hover img {
+        transform: scale(1.15);
+    }
+}
+.o_carousel_multiple_rows {
+    .row {
+        padding: 1rem;
+    }
+}
+
+// Cover image
+img.o_img_product_cover {
+    object-fit: cover;
+}
+// Force the image to have a square ratio
+img.o_img_product_square {
+    aspect-ratio: 1 / 1;
+}
+
+.o_card_group {
+    > .row {
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+        > div {
+            padding: 0 !important;
+            &:first-child > .o_carousel_product_card{
+                border-left: $card-border-width solid $card-border-color !important;
+            }
+        }
+        &:first-child {
+            .o_carousel_product_card {
+                border-top: $card-border-width solid $card-border-color !important;
+            }
+            > div:first-child .o_carousel_product_card {
+                @include border-top-start-radius($border-radius-lg !important);
+            }
+            > div:last-child .o_carousel_product_card {
+                @include border-top-end-radius($border-radius-lg !important);
+            }
+        }
+        &:last-child {
+            > div:first-child .o_carousel_product_card {
+                @include border-bottom-start-radius($border-radius-lg !important);
+            }
+            > div:last-child .o_carousel_product_card {
+                @include border-bottom-end-radius($border-radius-lg !important);
+            }
+        }
+    }
+}

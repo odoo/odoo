@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CopyButton">
+        <button
+            class="text-nowrap"
+            t-ref="button"
+            t-att-disabled="props.disabled"
+            t-attf-class="btn btn-primary o_clipboard_button {{ props.className || '' }}"
+            t-on-click.stop="onClick"
+        >
+            <span class="fa fa-clipboard mx-1"/>
+            <span t-esc="props.copyText"/>
+        </button>
+    </t>
+
+</templates>

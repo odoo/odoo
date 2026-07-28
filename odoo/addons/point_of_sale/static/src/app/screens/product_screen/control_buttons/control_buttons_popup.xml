@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ControlButtonPopup">
+        <div class="popup popup-control-buttons d-flex flex-column">
+            <!-- When one of the buttons is clicked, close this popup. -->
+            <div class="control-buttons d-flex flex-column p-2" t-on-click="cancel">
+                <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                    <t t-component="cb.component" t-key="cb.name"/>
+                </t>
+            </div>
+            <footer class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="cancel">
+                    <t t-esc="props.cancelText" />
+                </div>
+            </footer>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <field name="display_qr_setting" invisible="1" />
+                <group string="EMV QR Configuration" invisible="not display_qr_setting">
+                    <field name="country_code" invisible="1" />
+                    <field name="proxy_type"/>
+                    <field name="proxy_value"/>
+                    <field name="include_reference"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+</odoo>

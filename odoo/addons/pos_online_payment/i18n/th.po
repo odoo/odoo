@@ -1,0 +1,635 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_online_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "<strong>Error:</strong> The currency is missing or invalid."
+msgstr "<strong>เกิดข้อผิดพลาด:</strong> สกุลเงินหายไปหรือไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid ""
+"<strong>Error:</strong> There was a problem during the payment process."
+msgstr "<strong>เกิดข้อผิดพลาด:</strong> เกิดปัญหาระหว่างขั้นตอนการชำระเงิน"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid ""
+"<strong>No suitable payment method could be found.</strong>\n"
+"                            <br/>\n"
+"                            If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>ไม่พบวิธีการชำระเงินที่เหมาะสม</strong>\n"
+"                            <br/>\n"
+"                            หากคุณเชื่อว่าเป็นข้อผิดพลาด โปรดติดต่อผู้ดูแลเว็บไซต์"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid "A POS config cannot have more than one online payment method."
+msgstr "การกำหนดค่า POS ไม่สามารถมีวิธีการชำระเงินออนไลน์มากกว่าหนึ่งวิธีได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "A payment option must be specified."
+msgstr "ต้องระบุตัวเลือกการชำระเงิน"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"A validation payment cannot be used for a Point of Sale online payment."
+msgstr "ไม่สามารถใช้การชำระเงินเพื่อยืนยันการชำระเงินออนไลน์การขายหน้าร้านได้"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "All available providers"
+msgstr "ผู้ให้บริการที่มีอยู่ทั้งหมด"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"All payment providers configured for an online payment method must use the "
+"same currency as the Sales Journal, or the company currency if that is not "
+"set, of the POS config."
+msgstr ""
+"ผู้ให้บริการการชำระเงินทั้งหมดที่กำหนดค่าสำหรับวิธีการชำระเงินออนไลน์ต้องใช้สกุลเงินเดียวกันกับสมุดรายวันการขาย"
+" หรือสกุลเงินของบริษัท หากไม่ได้ตั้งค่าการกำหนดค่า POS ไว้"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
+msgid "Allowed Providers"
+msgstr "ผู้ให้บริการที่ได้รับอนุญาต"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Amount"
+msgstr "จำนวน"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Amount:"
+msgstr "จำนวน"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Cancel payment"
+msgstr "ยกเลิกการชำระเงิน"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr "ไม่สามารถสร้างการชำระเงินออนไลน์ POS โดยไม่มีการชำระเงินทางบัญชีได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+"ไม่สามารถสร้างการชำระเงิน POS "
+"ด้วยวิธีการชำระเงินที่ไม่ใช่แบบออนไลน์และการชำระเงินทางบัญชีออนไลน์ได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot edit a POS online payment essential data."
+msgstr "ไม่สามารถแก้ไขข้อมูลสำคัญการชำระเงินออนไลน์ของ POS ได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Could not create an online payment method (company_id=%d, pos_config_id=%d)"
+msgstr ""
+"ไม่สามารถสร้างวิธีการชำระเงินออนไลน์ได้ (company_id=%d, pos_config_id=%d)"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
+msgid "Has An Online Payment Provider"
+msgstr "มีผู้ให้บริการชำระเงินออนไลน์"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payment"
+msgstr "การชำระเงินออนไลน์ไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invalid online payments"
+msgstr "การชำระเงินออนไลน์ไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Invite your customer to scan the QR code to pay:"
+msgstr "เชิญลูกค้าของคุณให้สแกนรหัส QR โค้ดเพื่อชำระเงิน:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Invoice could not be generated"
+msgstr "ไม่สามารถสร้างใบแจ้งหนี้ได้"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
+msgid "Next online payment amount to pay"
+msgstr "จำนวนเงินที่ต้องชำระออนไลน์ถัดไปที่ต้องชำระ"
+
+#. module: pos_online_payment
+#: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
+msgid "Online"
+msgstr "ออนไลน์"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
+#, python-format
+msgid "Online Payment"
+msgstr "ชำระเงินออนไลน์"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
+msgid "Online Payment Method"
+msgstr "วิธีการชำระเงินออนไลน์"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
+msgid "Online accounting payment"
+msgstr "การชำระเงินทางบัญชีออนไลน์"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payment unavailable"
+msgstr "ไม่สามารถชำระเงินออนไลน์ได้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Online payments cannot have a negative amount (%s: %s)."
+msgstr "การชำระเงินออนไลน์ไม่สามารถมีจำนวนเงินที่มีค่าเป็นลบได้ (%s: %s)"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order ID"
+msgstr "รหัสคำสั่งซื้อ"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Order ID:"
+msgstr "รหัสคำสั่งซื้อ:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Order Reference"
+msgstr "อ้างอิงคำสั่ง"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order id:"
+msgstr "รหัสคำสั่งซื้อ:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Order reference:"
+msgstr "อ้างอิงการสั่งซื้อ:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Order saving issue"
+msgstr "ปัญหาการบันทึกคำสั่งซื้อ"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/account_payment.py:0
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__pos_order_id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__pos_order_id
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
+#, python-format
+msgid "POS Order"
+msgstr "คำสั่งซื้อ POS"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "Payment Providers"
+msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_account_payment
+msgid "Payments"
+msgstr "การชำระเงิน"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#, python-format
+msgid "Please scan the QR code to open the payment page"
+msgstr "กรุณาสแกนรหัส QR โค้ดเพื่อเปิดหน้าชำระเงิน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "กำหนดค่าการขายหน้าร้าน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "คำสั่งขายหน้าร้าน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "วิธีการชำระเงินการขายหน้าร้าน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "การชำระเงินระบบขายหน้าร้าน"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_session
+msgid "Point of Sale Session"
+msgstr "เซสชั่นการขายหน้าร้าน"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Processed by"
+msgstr "ดำเนินการโดย"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "QR Code to pay"
+msgstr "QR โค้ดเพื่อชำระเงิน"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
+#, python-format
+msgid "Scan to Pay"
+msgstr "สแกนเพื่อชำระเงิน"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Server error"
+msgstr "เซิร์ฟเวอร์ผิดพลาด"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The POS online payment (tx.id=%d) could not be saved correctly"
+msgstr "ไม่สามารถบันทึกการชำระเงินออนไลน์ POS (tx.id=%d) ได้อย่างถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The POS online payment (tx.id=%d) could not be saved correctly because the "
+"online payment method could not be found"
+msgstr ""
+"ไม่สามารถบันทึกการชำระเงินออนไลน์ POS (tx.id=%d) ได้อย่างถูกต้อง "
+"เนื่องจากไม่พบวิธีการชำระเงินออนไลน์"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The POS session is not opened."
+msgstr "ไม่ได้เปิดเซสชัน POS"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
+msgid "The Point of Sale order linked to the payment transaction"
+msgstr "คำสั่งซื้อการขายหน้าร้านที่เชื่อมโยงกับธุรกรรมการชำระเงิน"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
+msgid "The Point of Sale order linked to this payment"
+msgstr "คำสั่งซื้อการขายหน้าร้านที่เชื่อมโยงกับการชำระเงินนี้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The QR Code for paying could not be generated."
+msgstr "ไม่สามารถสร้าง QR โค้ดสำหรับการชำระเงินได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The amount to pay has changed. Please refresh the page."
+msgstr "จำนวนเงินที่ต้องชำระได้มีการเปลี่ยนแปลง กรุณารีเฟรชหน้านี้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The currency is invalid."
+msgstr "สกุลเงินไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The invoice could not be generated."
+msgstr "ไม่สามารถสร้างใบแจ้งหนี้ได้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr "คำสั่งซื้อถูกยกเลิกแล้ว"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The order has not been saved correctly on the server."
+msgstr "คำสั่งซื้อไม่ได้รับการบันทึกอย่างถูกต้องบนเซิร์ฟเวอร์"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_session.py:0
+#, python-format
+msgid "The partner of the POS online payment (id=%d) could not be found"
+msgstr "ไม่พบพาร์ทเนอร์ของการชำระเงินออนไลน์ POS (id=%d)"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment provider is invalid."
+msgstr "ผู้ให้บริการชำระเงินไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"การชำระเงินควรเป็นการชำระเงินโดยตรง หรือมีการเปลี่ยนเส้นทาง "
+"หรือชำระด้วยโทเค็น"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The payment token is invalid."
+msgstr "โทเค็นการชำระเงินไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, python-format
+msgid "The payment transaction (%d) has a negative amount."
+msgstr "ธุรกรรมการชำระเงิน (%d) มีจำนวนเงินติดลบ"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided order or access token is invalid."
+msgstr "คำสั่งซื้อหรือโทเค็นการเข้าถึงที่ระบุไม่ถูกต้อง"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "The provided partner_id is different than expected."
+msgstr "Partner_id ที่ระบุแตกต่างจากที่คาดไว้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "The saved order could not be retrieved."
+msgstr "ไม่สามารถเรียกคืนคำสั่งซื้อที่บันทึกไว้ได้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"The total amount of remaining online payments to execute (%s) doesn't "
+"correspond to the remaining unpaid amount of the order (%s)."
+msgstr ""
+"จำนวนการชำระเงินออนไลน์ที่เหลืออยู่ในการดำเนินการ (%s) "
+"ไม่สอดคล้องกับจำนวนเงินที่ยังไม่ได้ชำระที่เหลืออยู่ของคำสั่งซื้อ (%s)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "There are online payments that were missing in your view."
+msgstr "มีการชำระเงินออนไลน์ที่ขาดหายไปในมุมมองของคุณ"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order cannot be saved and therefore "
+"the online payment is not possible."
+msgstr ""
+"เกิดปัญหากับเซิร์ฟเวอร์ ไม่สามารถบันทึกคำสั่งซื้อได้ "
+"ดังนั้นจึงไม่สามารถชำระเงินออนไลน์ได้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved."
+msgstr ""
+"เกิดปัญหากับเซิร์ฟเวอร์ "
+"ไม่สามารถเรียกคืนสถานะการชำระเงินสำหรับการสั่งซื้อออนไลน์ได้"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved. Are you sure there is no online payment for this order ?"
+msgstr ""
+"เกิดปัญหากับเซิร์ฟเวอร์ "
+"ไม่สามารถเรียกคืนสถานะการชำระเงินสำหรับการสั่งซื้อออนไลน์ได้ "
+"คุณแน่ใจหรือไม่ว่าไม่มีการชำระเงินออนไลน์สำหรับคำสั่งซื้อนี้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid ""
+"There is no online payment method configured for this Point of Sale order."
+msgstr ""
+"ไม่มีการกำหนดค่าวิธีการชำระเงินออนไลน์สำหรับคำสั่งซื้อการขายหน้าร้านนี้"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "There is nothing to pay for this order."
+msgstr "ไม่มีอะไรต้องจ่ายสำหรับการสั่งซื้อนี้"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "There is nothing to pay."
+msgstr "ไม่มีอะไรต้องชำระ"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "To Pay"
+msgstr "ที่จะจ่าย"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, python-format
+msgid ""
+"To use an online payment method in a POS config, it must have at least one "
+"published payment provider supporting the currency of that POS config."
+msgstr ""
+"หากต้องการใช้วิธีการชำระเงินออนไลน์ในการกำหนดค่า POS "
+"จะต้องมีผู้ให้บริการการชำระเงินที่เผยแพร่อย่างน้อยหนึ่งรายที่รองรับสกุลเงินของการกำหนดค่า"
+" POS นั้น"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, python-format
+msgid "Tokenization is not available for logged out customers."
+msgstr "การใช้งานโทเค็นไม่สามารถใช้งานได้สำหรับลูกค้าที่ออกจากระบบ"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Transaction Reference"
+msgstr "การอ้างอิงธุรกรรม"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Try again"
+msgstr "ลองอีกครั้ง"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Updated online payments"
+msgstr "อัปเดตการชำระเงินออนไลน์"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
+msgid ""
+"Use this payment method for online payments (payments made on a web page "
+"with online payment providers)"
+msgstr ""
+"ใช้วิธีการชำระเงินนี้สำหรับการชำระเงินออนไลน์ "
+"(ชำระเงินบนหน้าเว็บกับผู้ให้บริการชำระเงินออนไลน์)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "ใช่"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "You have not activated any"
+msgstr "คุณยังไม่ได้เปิดใช้งานใดๆ"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "payment provider"
+msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+msgid "to allow online payments."
+msgstr "เพื่อให้สามารถชำระเงินออนไลน์ได้"

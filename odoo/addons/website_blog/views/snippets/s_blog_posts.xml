@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Snippet -->
+<template id="s_blog_posts" name="Blog Posts">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_blog_posts'"/>
+        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley'"/>
+    </t>
+</template>
+
+<!-- Load-time templates (rendered in JS on page load) -->
+<!-- List layout -->
+<template id="dynamic_filter_template_blog_post_list" name="List layout">
+    <div t-foreach="records" t-as="data" class="d-flex mt-3 s_blog_posts_post" data-number-of-elements="2">
+        <t t-set="record" t-value="data['_record']"/>
+        <a class="s_blog_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-att-href="data['call_to_action_url']" t-att-title="'Read' + data['name']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="256"/>
+                <t t-set="_resize_width" t-value="256"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+            </t>
+        </a>
+        <div class="ps-2">
+            <a class="" t-att-title="'Read' + data['name']" t-att-href="data['call_to_action_url']">
+                <div class="s_blog_posts_post_title mb-1">
+                    <span t-if="is_sample" class="bg-primary text-uppercase px-1">Sample</span>
+                    <span t-field="record.name"/>
+                </div>
+            </a>
+            <div class="s_blog_posts_post_subtitle mb-1 d-none d-sm-block" t-field="record.subtitle"/>
+        </div>
+    </div>
+</template>
+<!-- Big picture layout -->
+<template id="dynamic_filter_template_blog_post_big_picture" name="Big picture layout">
+    <figure t-foreach="records" t-as="data" class="my-3 w-100 s_blog_posts_post" data-number-of-elements="3">
+        <t t-set="record" t-value="data['_record']"/>
+        <a class="s_blog_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-att-href="data['call_to_action_url']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
+            </t>
+
+            <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <div class="s_blog_posts_post_title text-white" t-field="record.name"/>
+                <div class="s_blog_posts_post_subtitle text-white" t-field="record.subtitle"/>
+            </figcaption>
+        </a>
+    </figure>
+</template>
+<!-- Horizontal layout -->
+<template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal layout">
+    <figure t-foreach="records" t-as="data" class="post s_blog_posts_post w-100" data-number-of-elements="3">
+        <t t-set="record" t-value="data['_record']"/>
+        <span t-if="is_sample" class="h5 float-end bg-primary text-uppercase rounded-circle px-2 py-2">Sample</span>
+        <figcaption>
+            <h4 class="mb0">
+                <a t-att-href="data['call_to_action_url']" t-field="record.name"/>
+            </h4>
+            <h5 class="mt0 mb4" t-field="record.post_date" t-options='{"format": "dd/MM"}'/>
+        </figcaption>
+        <a t-att-href="data['call_to_action_url']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="additionnal_classes" t-value="'thumb'"/>
+            </t>
+        </a>
+    </figure>
+</template>
+<!-- Card layout -->
+<template id="dynamic_filter_template_blog_post_card" name="Card layout">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post pb32 w-100" data-number-of-elements="3">
+        <t t-set="record" t-value="data['_record']"/>
+        <div class="card">
+            <a class="s_blog_posts_post_cover" t-att-href="data['call_to_action_url']">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="_resize_height" t-value="512"/>
+                    <t t-set="_resize_width" t-value="512"/>
+                    <t t-set="additionnal_classes" t-value="'thumb'"/>
+                </t>
+            </a>
+            <div class="card-body">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <a t-att-href="data['call_to_action_url']"><h4 class="mb-0" t-field="record.name"/></a>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <span class="text-muted mb-0" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+                <span class="text-muted mb-0">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                    <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Options -->
+<template id="s_blog_posts_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <t t-call="website_blog.s_dynamic_snippet_options_template">
+            <t t-set="snippet_name" t-value="'dynamic_snippet_blog_posts'"/>
+            <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_blog_posts'"/>
+        </t>
+    </xpath>
+    <xpath expr="//div[@data-js='layout_column']" position="attributes">
+        <attribute name="data-exclude" add=".s_blog_posts, .s_blog_posts_big_picture" separator=","/>
+    </xpath>
+</template>
+
+<template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
+    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'" string="Blog" data-no-preview="true" data-name="blog_opt" data-attribute-name="filterByBlogId">
+            <we-button data-select-data-attribute="-1">All blogs</we-button>
+            <!-- the blog list will be generated in js -->
+        </we-select>
+    </xpath>
+    <xpath expr="//we-select[@data-name='template_opt']" position="after">
+        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+                   string="Hover effect" class="o_we_sublevel_1 o_we_inline"
+                   data-no-widget-refresh="true" data-name="hover_effect_opt">
+            <we-button data-select-class="">None</we-button>
+            <we-button data-select-class="s_blog_posts_effect_marley">Marley</we-button>
+            <we-button data-select-class="s_blog_posts_effect_dexter">Dexter</we-button>
+            <we-button data-select-class="s_blog_posts_effect_chico">Silly-Chico</we-button>
+        </we-select>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<record id="website_blog.s_blog_posts_000_scss" model="ir.asset">
+    <field name="name">Blog posts 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_blog/static/src/snippets/s_blog_posts/000.scss</field>
+</record>
+
+<record id="website_blog.s_blog_posts_000_js" model="ir.asset">
+    <field name="name">Blog posts 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_blog/static/src/snippets/s_blog_posts/000.js</field>
+</record>
+
+</odoo>

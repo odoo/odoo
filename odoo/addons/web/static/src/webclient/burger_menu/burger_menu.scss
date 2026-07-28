@@ -1,0 +1,81 @@
+//------------------------------------------------------------------------------
+// Mobile Burger Menu
+//------------------------------------------------------------------------------
+
+.o_burger_menu {
+    width: 90%;
+    z-index: $zindex-tooltip + 10;
+    transition: transform .2s ease;
+
+    // Menu Toggle-Animations
+    transform: translateX(-100%);
+
+    &.burgerslide-enter, &.burgerslide-leave {
+        transform: translateX(0);
+    }
+
+    // ====== Top-Bar
+    .o_burger_menu_topbar {
+        min-height: $o-navbar-height;
+        background-color: $o-burger-topbar-bg;
+        color: $o-burger-topbar-color;
+        line-height: $o-navbar-height;
+        box-shadow: inset 0 -1px 0 $border-color;
+
+        .dropdown-toggle, .o_burger_menu_close {
+            padding: 0 $o-horizontal-padding;
+        }
+    }
+
+    // ====== Menu content container (both App's and User's entries)
+    .o_burger_menu_content {
+        &.o_burger_menu_app {
+            background-color: $o-burger-base-bg;
+        }
+
+        // Menu entries size and layout
+        ul {
+            li > div, li {
+                padding-left: $o-horizontal-padding;
+            }
+
+            // Handle menu text-indentation
+            li {
+                ul > li {
+                    &, > div {
+                        text-indent: .5em;
+                    }
+                    ul > li {
+                        &, > div {
+                            text-indent: 1em;
+                        }
+                    }
+                }
+
+                &:last-child {
+                    margin-bottom: map-get($map: $spacers, $key: 2);
+                }
+            }
+        }
+
+        li, button {
+            @include o-hover-text-color(rgba($o-burger-base-color, .8), $o-burger-base-color);
+        }
+
+        // ====== 'User Menu' spefic design rules
+        .o_user_menu_mobile .dropdown-divider {
+            margin-left: $dropdown-item-padding-x;
+            margin-right: $dropdown-item-padding-x;
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+// Design rules not scoped within the main component
+//------------------------------------------------------------------------------
+
+@include media-breakpoint-down(md) {
+    .o_debug_dropdown {
+        z-index: $zindex-tooltip + 10;
+    }
+}
