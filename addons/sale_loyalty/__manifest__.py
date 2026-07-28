@@ -21,8 +21,8 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "sale_loyalty/static/src/js/discount_menu_field.js",
-            "sale_loyalty/static/src/xml/discount_menu_field.xml",
+            "sale_loyalty/static/src/js/discount_menu_widget.js",
+            "sale_loyalty/static/src/xml/discount_menu_widget.xml",
         ]
     },
     "uninstall_hook": "uninstall_hook",

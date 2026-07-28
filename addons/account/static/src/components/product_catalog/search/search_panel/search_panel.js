@@ -4,12 +4,12 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import { useSubEnv } from "@web/owl2/utils";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { ProductCatalogSearchPanel } from "@product/product_catalog/product_catalog_search_panel";
 import { SectionRow } from "../section_row/section_row";
 
-export class AccountProductCatalogSearchPanel extends SearchPanel {
+export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel {
     static template = "account.ProductCatalogSearchPanel";
-    static components = { ...SearchPanel.components, SectionRow };
+    static components = { ...ProductCatalogSearchPanel.components, SectionRow };
 
     sectionTreeRef = signal.ref();
 
@@ -65,7 +65,9 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
             this._setSectionsState(sections);
             if (this.state.sections.length) {
-                this.setSelectedSection(this.state.sections[0].id);
+                // "No Section" (id: false), if present, is always first; select the last
+                // real section instead so the catalog doesn't default to "No Section".
+                this.setSelectedSection(this.state.sections[this.state.sections.length - 1].id);
             }
         });
 

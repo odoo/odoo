@@ -4,7 +4,7 @@ import { uuid } from "@web/core/utils/strings";
 
 import { ComboConfiguratorDialog } from "@sale/js/combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "@sale/js/models/product_combo";
-import { serializeComboItem } from "@sale/js/sale_utils";
+import { clearSelectedComboItems, serializeComboItem } from "@sale/js/sale_utils";
 
 /**
  * Fetch the combo configurator data for the provided combo line, and open the combo
@@ -59,14 +59,14 @@ export async function openComboConfigurator({
         combos: comboChoices,
         ...remainingData,
         company_id: saleOrder.company_id.id,
-        pricelist_id: saleOrder.pricelist_id.id,
+        pricelist_id: saleOrder.pricelist_id?.id,
         date: serializeDateTime(saleOrder.date_order),
         edit,
         save,
         discard,
         ...(edit && {
             deleteRecord: async () => {
-                await comboLineRecord.update({ selected_combo_items: "[]" });
+                await clearSelectedComboItems(comboLineRecord);
                 await saleOrder.order_line.delete(comboLineRecord);
             },
         }),

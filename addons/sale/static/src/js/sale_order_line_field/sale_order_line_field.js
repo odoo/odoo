@@ -13,7 +13,7 @@ import { registry } from "@web/core/registry";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 
 import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
-import { getSelectedComboItems } from "@sale/js/sale_utils";
+import { clearSelectedComboItems, getSelectedComboItems } from "@sale/js/sale_utils";
 import { useService } from "@web/core/utils/hooks";
 
 function getComboRecords(listRecords, record) {
@@ -270,7 +270,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     async onDeleteRecord(record) {
         if (this.isCombo(record)) {
-            await record.update({ selected_combo_items: "[]" });
+            await clearSelectedComboItems(record);
         }
         await super.onDeleteRecord(record);
     }

@@ -109,6 +109,16 @@ export async function getCustomPtavs(orm, saleOrderLine) {
 }
 
 /**
+ * Clear the selected combo items of the provided combo line, e.g. before deleting it, so that its
+ * (soon to be orphaned) combo item lines aren't left referencing it.
+ *
+ * @param comboLineRecord The combo line to clear.
+ */
+export async function clearSelectedComboItems(comboLineRecord) {
+    await comboLineRecord.update({ selected_combo_items: "[]" });
+}
+
+/**
  * Build the selected-combo-items payload for the provided combo line, from its linked lines.
  */
 export async function getSelectedComboItems(orm, comboLineRecord, edit) {

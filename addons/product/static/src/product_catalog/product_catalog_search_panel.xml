@@ -15,6 +15,8 @@
     <div class="o_catalog_search_panel_mobile">
         <button
             class="o_catalog_search_panel_toggle btn btn-secondary d-flex align-items-center gap-2"
+            title="Open filters"
+            aria-label="Open filters"
             t-on-click="() => this.openMobileDrawer()"
         >
             <i class="oi oi-lg oi-panel-right"/>
@@ -31,9 +33,12 @@
             <div class="o_catalog_search_panel_drawer bg-view d-flex flex-column">
                 <header class="d-flex align-items-center justify-content-between p-2 border-bottom">
                     <b>Filters</b>
-                    <button class="btn btn-sm" t-on-click="() => this.closeMobileDrawer()">
-                        <i class="fa fa-times"/>
-                    </button>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        aria-label="Close"
+                        t-on-click="() => this.closeMobileDrawer()"
+                    />
                 </header>
                 <div class="o_catalog_search_panel_content flex-grow-1 overflow-auto">
                     <t t-call="web.SearchPanelContent"/>

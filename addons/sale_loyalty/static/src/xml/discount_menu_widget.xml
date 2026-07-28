@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="sale_loyalty.DiscountMenuField" t-inherit="sale.DiscountMenuField" t-inherit-mode="extension">
+    <t t-name="sale_loyalty.DiscountMenuWidget" t-inherit="sale.DiscountMenuWidget" t-inherit-mode="extension">
         <xpath expr="//t[@t-set-slot='content']" position="inside">
             <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="() => this.openCouponWizard()">
                 Coupon Code

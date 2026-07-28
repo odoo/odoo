@@ -628,16 +628,16 @@
                                         name="collapse_composition"
                                         string="Hide Composition"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
-                                        readonly="1"
+
                                     />
                                     <field
                                         name="collapse_prices"
                                         string="Hide Prices"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
-                                        readonly="1"
+
                                     />
                                 </group>
-                                <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
+                                <div name="invoice_lines" invisible="1">
                                     <label for="invoice_lines"/>
                                     <field name="invoice_lines"/>
                                 </div>
@@ -910,9 +910,9 @@
                                 <templates>
                                     <t t-name="card" class="row g-0 ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
-                                            <aside t-if="record.product_id.value" class="col-auto p-1 pe-2 d-flex align-items-center">
+                                            <aside t-if="record.product_id.value" class="col-auto p-1 pe-2 d-flex align-items-start">
                                                 <span t-att-title="record.product_id.value" style="width: 38px; height: 38px;" class="d-inline-block flex-shrink-0">
-                                                    <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100 h-100'}"/>
+                                                    <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100 h-100 rounded'}"/>
                                                 </span>
                                             </aside>
                                             <main class="col">
@@ -958,7 +958,7 @@
                             string="Add"
                             name="action_add_from_catalog"
                             type="object"
-                            class="btn btn-primary w-100 d-sm-none"
+                            class="btn btn-primary w-100 d-md-none"
                             context="{'order_id': id, 'child_field': 'order_line'}"/>
                         <div
                             class="d-flex flex-fill d-print-none gap-1 my-2"
@@ -981,22 +981,17 @@
                                 disabled="1"
                                 invisible="not (locked or state == 'cancel')"
                             />
-                            <field name="id"
-                                widget="combo_menu"
-                                nolabel="1"
-                                class="mb-0 flex-grow-1 d-sm-none"/>
-                            <field name="id"
-                                widget="discount_menu"
-                                nolabel="1"
+                            <widget name="combo_menu"
+                                class="mb-0 flex-grow-1 d-md-none"/>
+                            <widget name="discount_menu"
                                 invisible="locked or state == 'cancel'"
-                                groups="sale.group_discount_per_so_line"
-                                class="mb-0 flex-grow-1 d-sm-none"/>
+                                class="mb-0 flex-grow-1 d-md-none"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4" class="order-1 order-lg-0">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-2 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
                                 <field name="extra_total_fields" widget="sale-extra-totals" nolabel="1" readonly="1"/>
                             </group>

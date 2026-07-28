@@ -1,15 +1,15 @@
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
 
-export class ComboMenuField extends Component {
-    static template = "sale.ComboMenuField";
+export class ComboMenuWidget extends Component {
+    static template = "sale.ComboMenuWidget";
     static components = { Dropdown, DropdownItem };
-    static props = { ...standardFieldProps };
+    static props = { ...standardWidgetProps };
 
     setup() {
         this.orm = useService("orm");
@@ -21,13 +21,9 @@ export class ComboMenuField extends Component {
             this.state.comboProducts = await this.orm.searchRead(
                 "product.product",
                 [["type", "=", "combo"]],
-                ["id", "display_name", "product_tmpl_id"],
+                ["id", "display_name"],
             );
         });
-    }
-
-    get saleOrder() {
-        return this.props.record.data;
     }
 
     get orderLineList() {
@@ -44,9 +40,8 @@ export class ComboMenuField extends Component {
     }
 }
 
-export const comboMenuFieldConfig = {
-    component: ComboMenuField,
-    supportedTypes: ["boolean", "char", "integer"],
+export const comboMenuWidget = {
+    component: ComboMenuWidget,
 };
 
-registry.category("fields").add("combo_menu", comboMenuFieldConfig);
+registry.category("view_widgets").add("combo_menu", comboMenuWidget);
