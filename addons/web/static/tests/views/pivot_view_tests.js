@@ -5869,4 +5869,65 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([`["properties.my_char"]`]);
         assert.strictEqual(getCurrentValues(target), "4,2,1");
     });
+
+    QUnit.test("Measure from arch is not lost after update", async function (assert) {
+        let readGroupCount = 0;
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="measure"/>
+                </pivot>`,
+            searchViewArch: `
+                <search>
+                    <filter name="some_filter" string="Some Filter" domain="[('foo', '>', 10)]"/>
+                </search>`,
+            mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    readGroupCount++;
+                }
+            },
+        });
+
+        assert.strictEqual(readGroupCount, 1, "should have done 1 rpc");
+        assert.containsOnce(
+            target,
+            "td.o_pivot_cell_value:contains(2)",
+            "should contain a pivot cell with the number of records with product"
+        );
+        await click(target.querySelector(".o_pivot_buttons button.dropdown-toggle"));
+
+        assert.containsOnce(
+            target,
+            ".o_pivot_buttons .dropdown-menu .dropdown-item:contains(Product)"
+        );
+
+        await click($(target).find(".o_pivot_buttons .dropdown-item:contains(Product)")[0]);
+        await click($(target).find(".o_pivot_buttons .dropdown-item:contains(Count)")[0]);
+
+        assert.containsOnce(
+            target,
+            "td.o_pivot_cell_value:contains(4)",
+            "should contain a pivot cell with the number of all records"
+        );
+        assert.strictEqual(readGroupCount, 2, "should have done 2 rpc");
+
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Some Filter");
+
+        assert.containsOnce(
+            target,
+            "td.o_pivot_cell_value:contains(2)",
+            "should contain a pivot cell with the number of remaining records"
+        );
+        assert.strictEqual(readGroupCount, 3, "should have done 3 rpcs");
+
+        await click(target.querySelector(".o_pivot_buttons button.dropdown-toggle"));
+        assert.containsOnce(
+            target,
+            ".o_pivot_buttons .dropdown-menu .dropdown-item:contains(Product)"
+        );
+    });
 });
