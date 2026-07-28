@@ -1908,7 +1908,7 @@ class AccountMove(models.Model):
                     base_lines=base_lines,
                     currency=move.currency_id,
                     company=move.company_id,
-                    cash_rounding=move.invoice_cash_rounding_id,
+                    cash_rounding=move.sudo().invoice_cash_rounding_id,
                 )
                 tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
@@ -2566,7 +2566,7 @@ class AccountMove(models.Model):
     @api.depends('invoice_cash_rounding_id.strategy', 'line_ids')
     def _compute_has_biggest_tax_cash_rounding_line(self):
         for move in self:
-            move.has_biggest_tax_cash_rounding_line = move.invoice_cash_rounding_id.strategy == 'biggest_tax' and any(line.display_type == 'rounding' for line in move.line_ids)
+            move.has_biggest_tax_cash_rounding_line = move.sudo().invoice_cash_rounding_id.strategy == 'biggest_tax' and any(line.display_type == 'rounding' for line in move.line_ids)
 
     # -------------------------------------------------------------------------
     # ALERTS
