@@ -185,7 +185,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
         order.payment_ids?.forEach((payment) => {
             if (
-                payment.payment_method_id.payment_method_type === "qr_code" &&
+                payment.payment_method_id.useBankQrCode &&
                 payment.getPaymentStatus() === "waiting"
             ) {
                 payment.setPaymentStatus("retry");
