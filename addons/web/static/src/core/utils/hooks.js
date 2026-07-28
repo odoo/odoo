@@ -3,6 +3,7 @@ import {
     onPatched,
     onWillUnmount,
     proxy,
+    signal,
     t,
     toRaw,
     useProps,
@@ -462,4 +463,26 @@ export function useBackButton(handler, shouldEnable) {
     onMounted(updateRegistration);
     onPatched(updateRegistration);
     onWillUnmount(unregister);
+}
+
+/**
+ * Creates a signal whose value is (re)read from the DOM after every render —
+ * on mount and on each patch.
+ *
+ * Prefer pure signal derivation (`computed`) whenever the value can be
+ * computed from other signals. Reach for this ONLY when the value can genuinely
+ * only be obtained from the rendered DOM (a measured size, the presence of a
+ * matched element, ...). It is inherently fragile: the signal refreshes when
+ * the owning component re-renders, so it can momentarily lag behind the DOM.
+ *
+ * @template T
+ * @param {() => T} readFromDom reads the derived value off the current DOM
+ * @returns {import("@odoo/owl").Signal<T>}
+ */
+export function useDomSignal(readFromDom) {
+    const value = signal(readFromDom());
+    const update = () => value.set(readFromDom());
+    onMounted(update);
+    onPatched(update);
+    return value;
 }
