@@ -22,6 +22,7 @@
                     <group>
                         <field name="l10n_cr_fe_clave"/>
                         <field name="l10n_cr_fe_consecutivo"/>
+                        <field name="l10n_cr_fe_es_tiquete" invisible="move_type != 'out_invoice'"/>
                         <field name="l10n_cr_fe_motivo_rechazo" invisible="l10n_cr_fe_state != 'rechazado'"/>
                         <field name="l10n_cr_fe_motivo" invisible="move_type != 'out_refund'"/>
                         <field name="l10n_cr_fe_codigo_referencia" invisible="move_type != 'out_refund'"/>

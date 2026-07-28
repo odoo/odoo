@@ -50,3 +50,17 @@ class TestAccountMoveFeFields(TransactionCase):
         self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['clave'], 'NC')
         self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['consecutivo_codigo'], '03')
         self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO['out_refund']['gen_xml_action'], 'gen_xml_nc')
+
+    def test_es_tiquete_field_defaults_false(self):
+        partner = self.env['res.partner'].create({'name': 'Cliente Tiquete Fields'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+        })
+        self.assertFalse(invoice.l10n_cr_fe_es_tiquete)
+
+    def test_tipo_documento_te_constant(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_TIPO_DOCUMENTO_TE
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO_TE, {
+            'clave': 'TE', 'consecutivo_codigo': '04', 'gen_xml_action': 'gen_xml_te',
+        })
