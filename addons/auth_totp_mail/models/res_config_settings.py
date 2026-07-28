@@ -16,6 +16,11 @@ class ResConfigSettings(models.TransientModel):
         string="Two-factor authentication enforcing policy",
         config_parameter='auth_totp.policy',
     )
+    auth_totp_grace_days = fields.Integer(
+        string='2FA enforcing grace days',
+        help="Allow for new users to have a grace period before enforcing 2FA",
+        config_parameter='auth_totp.mfa_grace_days',
+    )
 
     @api.onchange('auth_totp_enforce')
     def _onchange_auth_totp_enforce(self):
