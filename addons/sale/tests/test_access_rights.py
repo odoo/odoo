@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -169,3 +169,34 @@ class TestAccessRights(SaleCommon, MailCommon):
         )
         sale_order.action_confirm()
         self.assertTrue(sale_order.state == "sale")
+
+    def test_access_invoice_from_sale_order(self):
+        """ Test access rights on invoices created from sale orders when the current user has no
+        accounting access rights but is the default salesperson related to the created invoice.
+
+        Cash rounding can trigger access checks on accounting records; this test ensures
+        the salesperson retains read/write access via the default user_id relation.
+        """
+        # Enable cash rounding in the settings, create one and set it as default for invoices
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
+        rounding = self.env['account.cash.rounding'].create({
+            'name': 'rounding',
+        })
+        self.env['ir.default'].set('account.move', 'invoice_cash_rounding_id', rounding.id)
+        # Create a sale order as a salesperson that has no accounting access rights
+        sale_order = self.env['sale.order'].with_user(self.sale_user).create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        # Salesperson confirms the SO and creates the related invoice
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices().with_user(self.sale_user)
+        # Ensure cache is clear so that the user needs to access fields
+        rounding.invalidate_recordset(["strategy"])
+        # Ensure the salesperson can access the invoice even when a cash rounding is set
+        with Form(invoice) as form:
+            self.assertEqual(form.user_id, self.sale_user)
