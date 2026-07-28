@@ -183,8 +183,6 @@ class MrpWorkorder(models.Model):
             ids_by_state[wo.state].append(wo.id)
         wo_to_update = self.browse(ids_to_update)
         self.browse(ids_by_state.get('progress')).button_pending()
-        if state != 'done':
-            self.browse(ids_by_state.get('done')).write({'qty_produced': 0})
         if state == 'cancel':
             wo_to_update.action_cancel()
         elif state == 'done':
@@ -192,8 +190,7 @@ class MrpWorkorder(models.Model):
             for wo in wo_to_update:
                 if float_is_zero(wo.qty_produced, precision_digits=0):
                     wo.qty_produced = wo.qty_producing or wo.qty_to_produce
-                if not float_is_zero(wo.qty_produced, precision_digits=0):
-                    wo_to_done.add(wo.id)
+                wo_to_done.add(wo.id)
             wo_to_done = self.env['mrp.workorder'].browse(wo_to_done)
             return wo_to_done.with_context(check_create_backorder=True).action_mark_as_done()
         elif state == 'progress':
@@ -325,10 +322,7 @@ class MrpWorkorder(models.Model):
     @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production')
     def _compute_duration_expected(self):
         for workorder in self:
-            # Recompute the duration expected if the qty_producing has been changed:
-            # compare with the origin record if it happens during an onchange
-            if workorder.state not in ['done', 'cancel'] and (workorder.qty_producing != workorder.qty_production
-                or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing)):
+            if workorder.state not in ['done', 'cancel']:
                 workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'time_ids.loss_type', 'qty_produced')
