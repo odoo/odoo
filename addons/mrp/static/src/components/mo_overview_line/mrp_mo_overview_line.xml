@@ -32,7 +32,7 @@
         <td class="text-end" t-if="this.props.showOptions.receipts">
             <t t-if="this.data.receipt">
                 <span t-attf-class="{{ this.getColorClass(this.data.receipt.decorator) }}" t-out="this.data.receipt.display"/>
-                <a href="#" role="button" t-on-click.prevent="this.openForecast" title="Forecast Report" t-attf-class="oi oi-fw ms-1 {{this.getColorClass(data.receipt.decorator)}}" data-icon="area_chart"/>
+                <a href="#" role="button" t-on-click.prevent="this.openForecast" title="Forecast Report" t-attf-class="oi oi-fw ms-1 {{this.getColorClass(this.data.receipt.decorator)}}" data-icon="area_chart"/>
             </t>
         </td>
         <td class="text-end" t-if="this.props.showOptions.unitCosts" t-out="this.formatMonetary(this.data.unit_cost)"/>
