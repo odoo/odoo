@@ -411,3 +411,36 @@ class TestConsumptionWarning(common.TransactionCase):
                 self.assertEqual(move.quantity, 1.2, "Wrong quantity of the component was consumed.")
             else:
                 self.assertEqual(move.product_id, self.salt, "Foreign component in the MO.")
+
+    def test_no_consumption_warning_on_service_and_combo(self):
+        """Check that the consumption warning wizard will not appear
+        for product types service or combo."""
+        cooking_service, spice_combo = self.env['product.product'].create([
+            {'name': 'Cooking Service', 'type': 'service'},
+            {
+                'name': 'Seasonings',
+                'type': 'combo',
+                'combo_ids': self.env['product.combo'].create({
+                    'name': "Combo",
+                    'combo_item_ids': [
+                        Command.create({'product_id': self.salt.id}),
+                    ],
+                })
+            },
+        ])
+
+        self.soup_recipe.bom_line_ids.create([{
+            'product_id': cooking_service.id,
+            'product_qty': 3,
+            'bom_id': self.soup_recipe.id,
+        }, {
+            'product_id': spice_combo.id,
+            'product_qty': 1,
+            'bom_id': self.soup_recipe.id,
+        }])
+
+        mo = self._make_mo(self.soup_recipe, 5, self.uom_m3)
+        mo.action_confirm()
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
