@@ -215,3 +215,13 @@ class TestAccountMoveMapping(TransactionCase):
     def test_get_tipo_documento_info_returns_fe_when_not_tiquete(self):
         info = self.invoice._l10n_cr_fe_get_tipo_documento_info()
         self.assertEqual(info['clave'], 'FE')
+
+    def test_build_genxml_params_tiquete_without_vat_omits_receptor(self):
+        self.partner.vat = False
+        self.invoice.l10n_cr_fe_es_tiquete = True
+        detalles = self.invoice._l10n_cr_fe_build_detalles()
+        params = self.invoice._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
+        self.assertEqual(params['omitir_receptor'], 'true')
+        self.assertNotIn('receptor_nombre', params)
+        self.assertNotIn('receptor_tipo_identif', params)
+        self.assertNotIn('receptor_num_identif', params)
