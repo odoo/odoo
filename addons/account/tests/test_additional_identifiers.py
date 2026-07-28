@@ -45,14 +45,14 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
     def test_identifier_proxy_gln(self):
         """ Test the "proxy" field (compute/inverse on the JSON) behavior. """
         self.partner.global_location_number = '9780471117094'
-        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094'})
+        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094', 'FR_SIREN': ''})
         self.partner.global_location_number = False
-        self.assertFalse(self.partner.additional_identifiers)
+        self.assertEqual(self.partner.additional_identifiers, {'FR_SIREN': ''})
 
         self.partner._set_additional_identifier('EAN_GLN', '9780471117094')
-        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094'})
+        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094', 'FR_SIREN': ''})
         self.partner.global_location_number = ''
-        self.assertFalse(self.partner.additional_identifiers)
+        self.assertEqual(self.partner.additional_identifiers, {'FR_SIREN': ''})
 
         with self.assertRaisesRegex(ValidationError, "Invalid identifier: EAN/GLN."):
             self.partner.global_location_number = 'wrong_gln'
