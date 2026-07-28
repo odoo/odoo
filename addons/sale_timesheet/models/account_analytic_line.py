@@ -199,7 +199,7 @@ class AccountAnalyticLine(models.Model):
     def _hourly_cost(self):
         if self.project_id.pricing_type == 'employee_rate':
             mapping_entry = self._get_employee_mapping_entry()
-            if mapping_entry:
+            if mapping_entry and mapping_entry.is_cost_changed:
                 return mapping_entry.cost
         return super()._hourly_cost()
 

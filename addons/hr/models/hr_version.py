@@ -191,6 +191,11 @@ class HrVersion(models.Model):
                                        groups="hr.group_hr_manager")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1, copy=False)
 
+    hourly_cost = fields.Monetary(
+        string='Hourly Cost',
+        tracking=True,
+        help="Employee's hourly cost for this specific version."
+    )
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,

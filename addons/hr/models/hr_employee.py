@@ -258,7 +258,14 @@ class HrEmployee(models.Model):
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_user")
     structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
     employee_type_id = fields.Many2one(readonly=False, related='version_id.employee_type_id', inherited=True, groups="hr.group_hr_manager")
-    hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
+    hourly_cost = fields.Monetary(
+        string='Hourly Cost',
+        related="version_id.hourly_cost",
+        readonly=False,
+        inherited=True,
+        groups="hr.group_hr_user",
+        tracking=True
+    )
     nationality_country_code = fields.Char(
         string='Nationality',
         related='version_id.country_id.code',
@@ -2407,3 +2414,39 @@ class HrEmployee(models.Model):
                     "end": stop,
                 })
         return working_periods
+
+    def _get_hourly_cost_at_date(self, target_date):
+        """
+        Returns the specific hourly cost for this employee on a given date
+        based on their hr.version history (using date_version).
+        """
+        self.ensure_one()
+
+        if not target_date:
+            return self.hourly_cost or 0.0
+
+        version = self.env['hr.version'].search([
+            ('employee_id', '=', self.id),
+            ('date_version', '<=', target_date)
+        ], order='date_version desc', limit=1)
+
+        if version:
+            return version.hourly_cost
+        return 0.0
+
+    @api.model
+    def _get_historical_cost_sql(self, employee_alias, date_alias):
+        """
+        Returns the SQL snippet to calculate the historical hourly cost
+        for an employee at a specific date.
+        """
+        return f"""
+            COALESCE((
+                SELECT v.hourly_cost
+                FROM hr_version v
+                WHERE v.employee_id = {employee_alias}
+                  AND v.date_version <= {date_alias}
+                ORDER BY v.date_version DESC
+                LIMIT 1
+            ), 0.0)
+        """

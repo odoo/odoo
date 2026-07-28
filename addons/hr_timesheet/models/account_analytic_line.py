@@ -500,7 +500,7 @@ class AccountAnalyticLine(models.Model):
 
     def _hourly_cost(self):
         self.ensure_one()
-        return self.employee_id.hourly_cost or 0.0
+        return self.employee_id._get_hourly_cost_at_date(self.date) or 0.0
 
     def _get_report_base_filename(self):
         task_ids = self.task_id
