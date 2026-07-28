@@ -1,7 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
-    delay,
     fill,
     press,
     queryFirst,
@@ -832,11 +831,8 @@ describe("popover for file uploads", () => {
         };
 
         onRpc("/html_editor/attachment/add_data", async (request) => {
-            const { params } = await request.json();
-            await delay(100);
-            return {
-                name: params.name,
-            };
+            await request.json();
+            await new Promise((res) => false); // We do not want this to complete.
         });
         const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
