@@ -57,12 +57,15 @@ RUN if [ -s /tmp/invoice_agent_requirements.txt ]; then \
     && rm -f /tmp/invoice_agent_requirements.txt
 
 # --------------------------------------------------------------------------
-# Source code — this layer invalidates on every code change, as it should.
-# We copy the full repo so Odoo's addons path can resolve everything.
-# custom_addons is bind-mounted at runtime, so we don't COPY it here.
+# NO source COPY needed — the odoo:19 base image already has the complete
+# Odoo codebase at /opt/odoo. custom_addons is bind-mounted at runtime at
+# /mnt/extra-addons via docker-compose.yml. Adding a second COPY of the
+# entire repo would double the image size (6.6GB) for zero benefit and
+# causes "no space left on device" on smaller EC2 instances.
+#
+# For production, if you need a fully self-contained image, add:
+#   COPY custom_addons /mnt/extra-addons
 # --------------------------------------------------------------------------
-COPY . /opt/odoo
-RUN chown -R odoo:odoo /opt/odoo
 
 # Drop back to the odoo user (official image convention)
 USER odoo
