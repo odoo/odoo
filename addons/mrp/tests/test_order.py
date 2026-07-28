@@ -4162,7 +4162,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         self.assertEqual(production.workorder_ids.duration_expected, current_duration_expected + 10)
 
-        # One should not recompute the expected duration of a full production
+        # One should recompute the expected duration of a full production
         production = production.production_group_id.production_ids[-1]
 
         init_duration_expected = production.workorder_ids.duration_expected
@@ -4175,7 +4175,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         production.button_mark_done()
 
-        self.assertEqual(production.workorder_ids.duration_expected, round(init_duration_expected + 5, 2))
+        self.assertEqual(production.workorder_ids.duration_expected, round(init_duration_expected, 2))
 
     def test_multi_edit_start_date_wo(self):
         """
