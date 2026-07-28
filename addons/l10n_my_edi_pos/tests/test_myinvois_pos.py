@@ -166,6 +166,55 @@ class TestMyInvoisPoS(TestPoSCommon):
             self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '500.00')
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_consolidate_invoices_broken_sequence(self):
+        """
+        Create orders across two sessions to test broken sequence detection and refund line separation:
+        - Session A: order_1 (seq 1), order_2 (seq 2), 1 individually-invoiced (seq 3 = gap), order_4 (seq 4, isolated)
+          → 2 normal lines: [order_1, order_2] and [order_4]
+        - Session B: refund_5 and refund_6 (consecutive refunds, separate session)
+          → 1 refund line: [refund_5, refund_6]
+
+        Expected: 3 line items in the XML.
+        """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                order_1 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})  # seq 1
+                order_2 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})  # seq 2
+                # Seq 3: individually invoiced → creates a gap in the session sequence
+                self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'customer': self.invoicing_customer, 'is_invoiced': True})
+                order_4 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})  # seq 4 (isolated after gap)
+            # Session B: consecutive refund orders (no constraint since originals are not yet submitted)
+            with self.with_pos_session():
+                refund_5 = self._create_order({'pos_order_lines_ui_args': [{'product': self.product_one, 'quantity': -1.0, 'refunded_orderline_id': order_1.lines[0].id}]})
+                refund_6 = self._create_order({'pos_order_lines_ui_args': [{'product': self.product_one, 'quantity': -1.0, 'refunded_orderline_id': order_2.lines[0].id}]})
+
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+            })
+            wizard.button_consolidate_orders()
+
+            consolidated_invoice = (order_1 | order_4 | refund_5).consolidated_invoice_ids
+            self.assertEqual(len(consolidated_invoice), 1)
+            self.assertEqual(consolidated_invoice.linked_order_count, 5)  # 2 (normal batch) + 1 (isolated) + 2 (refunds)
+
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
+
+            invoice_lines = xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)
+            self.assertEqual(len(invoice_lines), 3, "Expected 3 line items: normal batch, isolated order, and refund batch")
+
+            # Line 1 (session A, seq 1-2): continuous normal orders, product_one=100 each → 200.00
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '200.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", f'{order_1.name}-{order_2.name}')
+            # Line 2 (session A, seq 4): isolated normal order after gap at seq 3
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '100.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", order_4.name)
+            # Line 3 (session B): consecutive refund orders, -100 each → -200.00
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[3]/cbc:LineExtensionAmount", '-200.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[3]/cac:Item/cbc:Name", f'{refund_5.name}-{refund_6.name}')
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_consolidate_invoices_from_multiple_configs(self):
         """ When consolidating from multiple configs at once, we expect one Consolidated Invoice per config. """
         with freeze_time("2025-01-01"):
@@ -498,10 +547,12 @@ class TestMyInvoisPoS(TestPoSCommon):
             consolidated_invoice = self.env['myinvois.document'].search([])
             consolidated_invoice.action_generate_xml_file()
             xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
-            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
-            # The refunded order and its refund has been excluded from the line.
-            self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '500.00')
-            self._assert_node_values(xml_tree, "cac:InvoiceLine/cac:Price/cbc:PriceAmount", '500.0')
+            # The refund is in a separate session, so it forms its own line rather than cancelling out.
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '600.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Price/cbc:PriceAmount", '600.0')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '-100.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Price/cbc:PriceAmount", '-100.0')
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_refund_order_partially(self):
@@ -528,9 +579,10 @@ class TestMyInvoisPoS(TestPoSCommon):
             consolidated_invoice = self.env['myinvois.document'].search([])
             consolidated_invoice.action_generate_xml_file()
             xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
-            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
-            # The refunded amount is removed from the line
-            self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '600.00')
+            # The refund is in a separate session, so it forms its own line.
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '700.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '-100.00')
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order', 'odoo.addons.point_of_sale.models.pos_session')
     def test_refund_constrains_consolidated_invoice(self):
