@@ -125,8 +125,11 @@ class StockLandedCost(models.Model):
                     continue
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
+                if line.move_id._is_in() and line.move_id.purchase_line_id:
+                    remaining_qty = line.move_id.purchase_line_id.qty_invoiced
+                else:
+                    remaining_qty = line.move_id.remaining_qty
 
-                remaining_qty = line.move_id.remaining_qty
                 move_vals['line_ids'] += line._create_accounting_entries(remaining_qty)
 
             # batch standard price computation avoid recompute quantity_svl at each iteration
