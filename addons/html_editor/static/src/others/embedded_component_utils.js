@@ -1,5 +1,4 @@
 import {
-    effect,
     onMounted,
     onPatched,
     onWillDestroy,
@@ -9,6 +8,7 @@ import {
     t,
     useProps,
     useScope,
+    immediateEffect,
 } from "@odoo/owl";
 import { useRootCreator } from "@web/core/utils/hooks";
 import { useEnv } from "@web/owl2/utils";
@@ -333,7 +333,6 @@ export class StateChangeManager {
      */
     constructor(config) {
         this.config = config;
-        this.effects = new WeakMap();
     }
     setup() {
         // Used to discard batch changes when a component is destroyed,
@@ -348,10 +347,11 @@ export class StateChangeManager {
      * handled differently when unmounted.
      */
     setupUnmounted() {
-        if (this.embeddedState) {
-            this.effects.get(this.embeddedState)();
-            this.effects.delete(this.embeddedState);
+        if (this.cleanupChangeStateEffect) {
+            this.cleanupChangeStateEffect();
+            this.cleanupChangeStateEffect = null;
         }
+        this.batchedChangeState = null;
         this.previousEmbeddedState = null;
         this.state = null;
         this.embeddedState = null;
@@ -375,14 +375,31 @@ export class StateChangeManager {
             this.embeddedState,
             embeddedStateProxyHandler(state, this)
         );
-        const onStateChanged = this.batchedChangeState();
-        const disposeEffect = effect(() => {
-            observeAllKeys(this.embeddedStateProxy);
-            onStateChanged();
-        });
-        this.effects.set(this.embeddedState, disposeEffect);
+        this.batchedChangeState = this.setupBatchedChangeState();
         this.isLiveComponent = true;
+        const startEffect = this.resetChangeStateEffect();
+        startEffect();
         return this.embeddedStateProxy;
+    }
+
+    resetChangeStateEffect() {
+        if (!this.isLiveComponent) {
+            return;
+        }
+        if (this.cleanupChangeStateEffect) {
+            this.cleanupChangeStateEffect();
+        }
+        let hasObservedOnce = false;
+        return () => {
+            this.cleanupChangeStateEffect = immediateEffect(() => {
+                observeAllKeys(this.embeddedState);
+                if (hasObservedOnce) {
+                    this.batchedChangeState();
+                } else {
+                    hasObservedOnce = true;
+                }
+            });
+        };
     }
 
     /**
@@ -420,7 +437,9 @@ export class StateChangeManager {
             // Update the embeddedState only if there is no pending change.
             // If there is a pending change, it will be updated when the
             // pending change is applied in `changeState`.
+            const startEffect = this.resetChangeStateEffect();
             this.assignDeepProxyCopy(this.embeddedState, sortedState);
+            startEffect();
         }
 
         return { before, after };
@@ -432,7 +451,7 @@ export class StateChangeManager {
      * as the component is destroyed.
      * @returns {Function} batched changeState
      */
-    batchedChangeState() {
+    setupBatchedChangeState() {
         let scheduled = false;
         const batchId = this.batchId;
         return async () => {
@@ -468,7 +487,9 @@ export class StateChangeManager {
         );
         const sortedState = sortedCopy(this.state);
         const next = JSON.stringify(sortedState);
+        const startEffect = this.resetChangeStateEffect();
         this.assignDeepProxyCopy(this.embeddedState, sortedState);
+        startEffect();
         if (previous !== next) {
             this.config.host.dataset.embeddedProps = JSON.stringify(
                 this.stateToEmbeddedProps(this.config.host, sortedState)
@@ -476,7 +497,6 @@ export class StateChangeManager {
             this.config.stageStateChange(JSON.parse(previous), JSON.parse(next));
             this.config.commitStateChanges();
         }
-        observeAllKeys(this.embeddedStateProxy);
     }
 
     /**
