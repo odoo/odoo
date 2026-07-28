@@ -12,7 +12,7 @@ from pprint import pformat
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
+from odoo.tools import SQL, float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
 import base64
@@ -1518,28 +1518,50 @@ class PosOrder(models.Model):
     def search_paid_order_ids(self, config_id, domain, limit, offset):
         """Search for 'paid' orders that satisfy the given domain, limit and offset."""
         pos_config = self.env['pos.config'].browse(config_id)
-        default_domain = Domain('state', '!=', 'draft') & Domain('state', '!=', 'cancel') & Domain('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids)
-        real_domain = Domain(domain) & default_domain
-        orders = self.search(real_domain, limit=limit, offset=offset, order='create_date desc')
-        # We clean here the orders that does not have the same currency.
-        # As we cannot use currency_id in the domain (because it is not a stored field),
-        # we must do it after the search.
-        orders = orders.filtered(lambda order: order.currency_id == pos_config.currency_id)
-        orderlines = self.env['pos.order.line'].search(['|', ('refunded_orderline_id.order_id', 'in', orders.ids), ('order_id', 'in', orders.ids)])
+        paid_order_domain = Domain(domain) & Domain([
+            ('state', 'not in', ['cancel', 'draft']),
+            ('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids),
+            ('config_id.currency_id', '=', pos_config.currency_id.id)
+        ])
+        orders = self.search(paid_order_domain, limit=limit, offset=offset, order='create_date desc')
+        PosOrderLineModel = self.env['pos.order.line']
+        line_queries = [
+            PosOrderLineModel._search([('order_id', 'in', orders.ids)]),
+            PosOrderLineModel._search([('refunded_orderline_id.order_id', 'in', orders.ids)]),
+        ]
+        orderlines = PosOrderLineModel.browse(
+            row[0] for row in self.env.execute_query(
+                SQL(' UNION ').join(line_query.subselect() for line_query in line_queries)
+            )
+        )
 
         # We will return to the frontend the ids and the date of their last modification
         # so that it can compare to the last time it fetched the orders and can ask to fetch
         # orders that are not up-to-date.
         # The date of their last modification is either the last time one of its orderline has changed,
         # or the last time a refunded orderline related to it has changed.
-        orders_info = defaultdict(lambda: datetime.min)
-        for orderline in orderlines:
-            key_order = orderline.order_id.id if orderline.order_id in orders \
-                            else orderline.refunded_orderline_id.order_id.id
-            if orders_info[key_order] < orderline.write_date:
-                orders_info[key_order] = orderline.write_date
-        totalCount = self.search_count(real_domain)
-        return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
+        latest_line_write_by_order = {}
+        selected_order_ids = set(orders.ids)
+        for line in orderlines:
+            affected_order_id = line.order_id.id
+            if affected_order_id not in selected_order_ids:
+                affected_order_id = line.refunded_orderline_id.order_id.id
+
+            latest_line_write_by_order[affected_order_id] = max(
+                latest_line_write_by_order.get(affected_order_id, datetime.min),
+                line.write_date,
+            )
+
+        # Orders are ordered by newest first from `orders`
+        orders_info = [
+            (order.id, latest_line_write_by_order[order.id])
+            for order in orders
+            if order.id in latest_line_write_by_order
+        ]
+        return {
+            'ordersInfo': orders_info,
+            'totalCount': self.search_count(paid_order_domain),
+        }
 
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
