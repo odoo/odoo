@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
@@ -643,6 +645,7 @@ class TestDevice(TestHttpBase):
     # FINGERPRINT
     # --------------------
 
+    @unittest.skip('Untrusted flag is only for DBSC mechanism')
     def test_check_untrusted_device_with_fingerprint(self):
         ICP = self.env['ir.config_parameter']
         ICP.set_bool('base.session_check_device', True)

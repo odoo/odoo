@@ -28,6 +28,7 @@ if typing.TYPE_CHECKING:
 
 
 _logger = logging.getLogger('odoo.http')
+_dbsc_logger = logging.getLogger('odoo.dbsc')
 
 
 DEFAULT_LANG = 'en_US'
@@ -74,7 +75,7 @@ DEVICE_ACTIVITY_UPDATE_FREQUENCY = 3600  # 1 hour
 
 # TODO: remove `84` length when v18.4 is deprecated
 # This will invalidate sessions generated with the old sid generator
-_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84,86}$')
+_base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84,86}(?:\.pkey)?$')
 _session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{42}$')
 
 
@@ -333,7 +334,8 @@ def get_device(session: Session, request: Request) -> Device:
         'last_activity': None,
         'country': geoip.country.name,
         'city': geoip.city.name,
-        'trusted': not session['_devices'],  # First device in a session is always trusted
+        # First device in a session is always trusted and only DBSC sessions can have untrusted devices
+        'trusted': not session['_devices'] or not session_store().get_dbsc_public_key(session),
     }
     session.is_dirty = True
     return new_device
@@ -553,6 +555,7 @@ class SessionStore:
         Meanwhile with a hard rotation the entire session id is changed, which
         is useful in cases such as logging the user out.
         """
+        dbsc_public_key = self.get_dbsc_public_key(session)
         if soft:
             # Multiple network requests can occur at the same time, all using the old session.
             # We don't want to create a new session for each request, it's better to reference the one already made.
@@ -581,6 +584,8 @@ class SessionStore:
         session.should_rotate = False
         session['create_time'] = time.time()
         self.save(session)
+        if dbsc_public_key:
+            self.make_dbsc_public_key(session, **dbsc_public_key)
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
         """ Remove expired session files older than the given lifetime. """
@@ -636,6 +641,15 @@ class SessionStore:
                 self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
                 del session['gc_previous_sessions']
                 self.save(session)
+
+    def make_dbsc_public_key(self, session: Session, **key_data) -> None:
+        pkey = self.session_cls(key_data, f'{session.sid}.pkey')
+        self.save(pkey)
+        _dbsc_logger.info("Public key created for session %s", session.sid[:8])
+
+    def get_dbsc_public_key(self, session: Session) -> Session | None:
+        pkey = self.get(f'{session.sid}.pkey')
+        return pkey if not pkey.is_new else None
 
 
 @functools.cache
