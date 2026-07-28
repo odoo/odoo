@@ -34,17 +34,20 @@ export class AccountMoveSendAttachmentsSelector extends Component {
                 ["id", "name", "mimetype"]
             );
 
+            const existingIds = new Set(this.attachments.map((a) => a.id));
             this.props.record.update({
                 [this.props.name]: this.attachments.concat(
-                    moveAttachments.map((attachment) => ({
-                        id: attachment.id,
-                        name: attachment.name,
-                        mimetype: attachment.mimetype,
-                        placeholder: false,
-                        manual: false,
-                        protect_from_deletion: true,
-                        skip: true,
-                    }))
+                    moveAttachments
+                        .filter((a) => !existingIds.has(a.id))
+                        .map((attachment) => ({
+                            id: attachment.id,
+                            name: attachment.name,
+                            mimetype: attachment.mimetype,
+                            placeholder: false,
+                            manual: false,
+                            protect_from_deletion: true,
+                            skip: true,
+                        }))
                 ),
             });
         });
