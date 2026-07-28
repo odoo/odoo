@@ -265,6 +265,10 @@ class AccountMove(models.Model):
                     raise UserError(_(
                         "No se puede generar la nota de crédito: la factura original "
                         "aún no ha sido aceptada por Hacienda."))
+                if original.l10n_cr_fe_es_tiquete:
+                    raise UserError(_(
+                        "No se puede generar una nota de crédito sobre un Tiquete "
+                        "Electrónico todavía — esta corrección no está soportada."))
 
             config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
