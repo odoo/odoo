@@ -30,8 +30,10 @@ export class FollowerListView extends Record {
      * @param {Object} options
      * @param {AbortSignal} options.abortSignal Signal used to cancel the RPC when
      * the component owning this view is destroyed while the request is still in flight.
+     * @param {boolean} [options.reset=false] Whether to replace the loaded followers.
+     * @param {string} [options.searchTerm] Term used to filter by name or email.
      */
-    loadFollowers({ abortSignal }) {
+    loadFollowers({ abortSignal, reset = false, searchTerm }) {
         if (this.isLoadingFollowers) {
             return;
         }
@@ -39,7 +41,8 @@ export class FollowerListView extends Record {
         const request = rpc("/mail/thread/get_followers", {
             thread_id: this.thread.id,
             thread_model: this.thread.model,
-            offset: this.followers.length,
+            offset: reset ? 0 : this.followers.length,
+            search_term: searchTerm,
         });
         const abortRequest = () => request.abort();
         abortSignal.addEventListener("abort", abortRequest, { once: true });
@@ -47,7 +50,11 @@ export class FollowerListView extends Record {
             .then(({ follower_ids, followers_count, store_data }) => {
                 this.store.insert(store_data);
                 this.followersCount = followers_count ?? this.followersCount;
-                this.followers.add(...follower_ids);
+                if (reset) {
+                    this.followers = follower_ids;
+                } else {
+                    this.followers.add(...follower_ids);
+                }
             })
             .catch((error) => {
                 if (!(error instanceof ConnectionAbortedError)) {
