@@ -42,6 +42,7 @@ class GoogleCalendarController(CalendarController):
             # Checking that user have already accepted Odoo to access his calendar !
             if not GoogleCal.is_authorized(request.env.user):
                 url = GoogleCal._google_authentication_url(from_url=kw.get('fromurl'))
+                _logger.info("Google Calendar synchronization needs user authorization. Redirecting to %s", url)
                 return {
                     "status": "need_auth",
                     "url": url
