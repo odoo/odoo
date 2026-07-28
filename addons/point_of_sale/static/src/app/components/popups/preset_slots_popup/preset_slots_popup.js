@@ -24,9 +24,9 @@ export class PresetSlotsPopup extends Component {
         });
 
         onWillStart(async () => {
-            for (const preset of this.timedPresets) {
-                await this.pos.syncPresetSlotAvaibility(preset);
-            }
+            await Promise.all(
+                this.timedPresets.map((preset) => this.pos.syncPresetSlotAvaibility(preset))
+            );
         });
     }
 
@@ -83,6 +83,9 @@ export class PresetSlotsPopup extends Component {
     }
 
     confirm(slot, preset) {
+        if (slot.isFull) {
+            return;
+        }
         this.props.getPayload({ slot, presetId: preset.id });
         this.props.close();
     }

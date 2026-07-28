@@ -1,6 +1,6 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
-from datetime import datetime, timedelta
+from datetime import timedelta
 from collections import defaultdict
 
 
@@ -67,9 +67,22 @@ class PosPreset(models.Model):
     def get_available_slots(self):
         self.ensure_one()
         usage = self._compute_slots_usage()
+        leaves = self._compute_slots_time_off()
         return {
             'usage_utc': usage,
+            'time_off': leaves,
         }
+
+    def _compute_slots_time_off(self):
+        now_tz = fields.Datetime.now()
+        plus_nine_days = now_tz + timedelta(days=9)
+        return self.env['resource.calendar.leaves'].search_read([
+            '|',
+            ('calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_id.calendar_id', '=', self.resource_calendar_id.id),
+            ('date_from', '<=', plus_nine_days),
+            ('date_to', '>=', now_tz),
+        ], ['id', 'date_from', 'date_to'])
 
     def _compute_slots_usage(self):
         usage = defaultdict(int)

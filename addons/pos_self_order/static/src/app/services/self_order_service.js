@@ -234,7 +234,7 @@ export class SelfOrder extends Reactive {
                 preset_id: this.currentOrder?.preset_id?.id,
             });
             const localUsage = orderUsageUTCtoLocalUtil(presetAvailabilities.usage_utc);
-            preset.computeAvailabilities(localUsage);
+            preset.computeAvailabilities(localUsage, presetAvailabilities.time_off);
         } catch {
             console.info("Offline mode, cannot update the slot avaibility");
         }
