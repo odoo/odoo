@@ -2293,6 +2293,9 @@ class MrpProduction(models.Model):
 
     def button_mark_done(self):
         for production in self:
+            if production.bom_id.continuous and self.env.context.get('last_qty_produced'):
+                production.qty_producing = self.env.context.get('last_qty_produced')
+                production.set_qty_producing()
             if production.product_tracking not in ['lot', 'serial']:
                 continue
             if production.lot_producing_ids:
