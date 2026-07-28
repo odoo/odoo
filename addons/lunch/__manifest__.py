@@ -21,6 +21,7 @@ If you want to save your employees' time and avoid them to always have coins in 
     'data': [
         'security/lunch_security.xml',
         'report/lunch_cashmove_report_views.xml',
+        'report/lunch_todays_order_report.xml',
         'views/lunch_templates.xml',
         'views/lunch_alert_views.xml',
         'views/lunch_cashmove_views.xml',
