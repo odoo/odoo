@@ -1228,6 +1228,51 @@ class TestPointOfSaleFlow(CommonPosTest):
             'Invoicing a manual refund (negative qty) must create a credit note (RINV), not a customer invoice.',
         )
 
+    def test_reversal_move_tax_base_amount_sign(self):
+        """When a POS order is invoiced after its session is closed, the reversal misc entry
+        created to unwind the corresponding portion of the closing entry must have consistent
+        signs on `balance` and `tax_base_amount` for every tax line. Otherwise any downstream
+        report reading `tax_base_amount` directly (Audit view, journal items XLSX export, etc.)
+        shows a base amount signed for the opposite direction than the tax leg, which is
+        confusing and, for tax returns computed from `tax_base_amount`, incorrect.
+        """
+        order_data = {
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_excl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 23},
+            ],
+        }
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        order, _ = self.create_backend_pos_order({**order_data, 'order_data': {'to_invoice': False}})
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+
+        order.partner_id = self.partner_jcb
+        order.action_pos_order_invoice()
+
+        reversal_move = self.env['account.move'].search(
+            [('reversed_pos_order_id', '=', order.id)], limit=1
+        )
+        self.assertTrue(reversal_move, "Invoicing after session close should create a reversal misc move")
+
+        tax_lines = reversal_move.line_ids.filtered(lambda l: l.display_type == 'tax')
+        self.assertTrue(tax_lines, "Reversal move should have at least one tax line")
+
+        for tax_line in tax_lines:
+            self.assertNotEqual(tax_line.balance, 0.0)
+            self.assertNotEqual(tax_line.tax_base_amount, 0.0)
+            self.assertEqual(
+                tax_line.balance > 0,
+                tax_line.tax_base_amount > 0,
+                "Reversal tax line %s: balance=%s but tax_base_amount=%s (signs must agree)" % (
+                    tax_line.name, tax_line.balance, tax_line.tax_base_amount,
+                ),
+            )
+
     def test_pos_payment_direction_and_accounts(self):
         """Ensure POS payments create correct inbound/outbound payments and accounts and related journal items"""
 
