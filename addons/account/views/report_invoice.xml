@@ -112,7 +112,7 @@
                                 <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
                             </div>
                         </div>
-
+ 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <t t-set="has_long_desc" t-value="any(line.name and line.name.count('\n') > 30 for line in o.invoice_line_ids if line.name)"/>
