@@ -37,6 +37,10 @@ SAMPLE_XML = """<?xml version="1.0" encoding="utf-8"?>
             <PrecioUnitario>200</PrecioUnitario>
         </LineaDetalle>
     </DetalleServicio>
+    <ResumenFactura>
+        <TotalImpuesto>650</TotalImpuesto>
+        <TotalComprobante>5650</TotalComprobante>
+    </ResumenFactura>
 </FacturaElectronica>"""
 
 
@@ -88,6 +92,11 @@ class TestProveedorUpload(TransactionCase):
         unmatched = lines.filtered(lambda l: not l.product_id)
         self.assertEqual(len(unmatched), 1)
         self.assertEqual(unmatched.name, 'Producto sin match')
+
+    def test_parses_totales_autenticos_del_resumen(self):
+        invoice = self._upload(SAMPLE_XML)
+        self.assertEqual(invoice.l10n_cr_fe_proveedor_monto_impuesto, 650.0)
+        self.assertEqual(invoice.l10n_cr_fe_proveedor_total, 5650.0)
 
     def test_invalid_xml_raises(self):
         with self.assertRaises(UserError):

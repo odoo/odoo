@@ -34,7 +34,13 @@ l10n_cr_fe_mr_decision = fields.Selection(
 l10n_cr_fe_mr_motivo = fields.Char(string="Motivo (Mensaje Receptor)", copy=False)
 l10n_cr_fe_proveedor_clave = fields.Char(string="Clave de la factura del proveedor", readonly=True, copy=False)
 l10n_cr_fe_proveedor_fecha_emision = fields.Char(string="Fecha de emisión (proveedor)", readonly=True, copy=False)
+l10n_cr_fe_proveedor_monto_impuesto = fields.Float(
+    string="Monto impuesto (XML original proveedor)", readonly=True, copy=False)
+l10n_cr_fe_proveedor_total = fields.Float(
+    string="Total factura (XML original proveedor)", readonly=True, copy=False)
 ```
+
+**Corrección posterior (`l10n_cr_fe_proveedor_monto_impuesto`/`l10n_cr_fe_proveedor_total`, ver 2.5):** no estaban en el diseño original. Se agregaron tras detectarse en pruebas manuales que "Aceptar total" podía reportar a Hacienda un monto de impuesto/total distinto al del XML real del proveedor, cuando alguna línea no tenía un impuesto de compra que hiciera match automático por tarifa (p.ej. líneas sin impuesto configurado en el catálogo de productos). El wizard ahora parsea `<ResumenFactura><TotalImpuesto>`/`<TotalComprobante>` del XML original y los guarda tal cual; `_l10n_cr_fe_build_mr_params` los usa para la decisión `'aceptado'` en vez de recalcular desde las líneas de Odoo.
 
 Los campos ya existentes (`l10n_cr_fe_clave`, `l10n_cr_fe_consecutivo`, `l10n_cr_fe_state`, `l10n_cr_fe_xml`, `l10n_cr_fe_xml_firmado`, `l10n_cr_fe_respuesta_xml`) se **reutilizan sin cambios de esquema** — para un `in_invoice`, representan el Mensaje Receptor que **nosotros** enviamos, no la factura del proveedor (cuya clave/fecha originales viven en los dos campos nuevos de arriba). Mismo patrón que ya usa Nota de Crédito: su propia clave vive en esos campos comunes; la clave del documento que referencia vive aparte.
 
@@ -115,7 +121,7 @@ Un wizard nuevo (`l10n_cr.fe.proveedor.upload`, `TransientModel`) donde el usuar
 
 Sobre esa factura de proveedor en borrador:
 
-- **Aceptar total**: confirma la factura tal cual llegó del XML. `l10n_cr_fe_mr_decision = 'aceptado'`.
+- **Aceptar total**: confirma la factura tal cual llegó del XML. `l10n_cr_fe_mr_decision = 'aceptado'`. El monto de impuesto y el total que se reportan a Hacienda son los **auténticos del XML original** (`l10n_cr_fe_proveedor_monto_impuesto`/`l10n_cr_fe_proveedor_total`, capturados por el wizard desde `<ResumenFactura>`), no los recalculados por Odoo a partir de las líneas — evita reportar un monto incompleto si alguna línea quedó sin impuesto de compra emparejado. Si esos campos no están disponibles (factura creada por otra vía), se usa `amount_tax`/`amount_total` de Odoo como respaldo.
 - **Aceptar parcial**: el usuario edita cantidades o quita líneas del borrador antes de confirmar — mismo mecanismo de selección/edición ya construido para Nota de Crédito parcial. `l10n_cr_fe_mr_motivo` es obligatorio. El monto total y el monto de impuesto que se reportan a Hacienda en el Mensaje Receptor salen de lo que quede en la factura tras el ajuste (Hacienda no recibe el detalle línea por línea de esta decisión — el `genXMLMr` real solo lleva un monto total agregado).
 - **Rechazar**: `l10n_cr_fe_mr_decision = 'rechazado'`, `l10n_cr_fe_mr_motivo` obligatorio, no se contabiliza el `in_invoice` (queda cancelado/sin confirmar).
 

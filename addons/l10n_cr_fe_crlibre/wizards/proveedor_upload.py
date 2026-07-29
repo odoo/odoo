@@ -79,11 +79,16 @@ class L10nCrFeProveedorUpload(models.TransientModel):
         if not invoice_lines:
             raise UserError(_("El XML no tiene líneas de detalle."))
 
+        monto_impuesto_text = self._find_text(root, 'TotalImpuesto')
+        total_factura_text = self._find_text(root, 'TotalComprobante')
+
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
             'l10n_cr_fe_proveedor_clave': clave,
             'l10n_cr_fe_proveedor_fecha_emision': fecha_emision,
+            'l10n_cr_fe_proveedor_monto_impuesto': float(monto_impuesto_text) if monto_impuesto_text else 0.0,
+            'l10n_cr_fe_proveedor_total': float(total_factura_text) if total_factura_text else 0.0,
             'invoice_line_ids': invoice_lines,
         })
         return {

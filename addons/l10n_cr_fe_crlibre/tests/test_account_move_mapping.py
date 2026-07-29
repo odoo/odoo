@@ -269,3 +269,43 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertEqual(params['total_factura'], 1000.0)
         self.assertEqual(params['numero_cedula_receptor'], '702320717')
         self.assertEqual(params['numero_consecutivo_receptor'], '0' * 20)
+
+    def test_build_mr_params_aceptado_uses_proveedor_totals_when_present(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor Y', 'vat': '3101987655'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado',
+            'l10n_cr_fe_proveedor_monto_impuesto': 17724.0,
+            'l10n_cr_fe_proveedor_total': 170124.0,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
+        # Los totales autenticos del XML original se usan tal cual, no los
+        # recalculados por Odoo a partir de las lineas (que serian 0/1000 aqui).
+        self.assertEqual(params['monto_total_impuesto'], 17724.0)
+        self.assertEqual(params['total_factura'], 170124.0)
+
+    def test_build_mr_params_aceptado_falls_back_to_odoo_totals_without_proveedor_data(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor Z', 'vat': '3101987656'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
+        self.assertEqual(params['total_factura'], bill.amount_total)
+        self.assertEqual(params['total_factura'], 1000.0)
