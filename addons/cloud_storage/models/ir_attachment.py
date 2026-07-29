@@ -84,6 +84,12 @@ class CloudStorageAttachment(models.Model):
         """
         raise NotImplementedError()
 
+    def _get_cloud_storage_download_url_time_to_expiry(self):
+        return self.env.context.get(
+            'cloud_storage_download_url_time_to_expiry',
+            self._cloud_storage_download_url_time_to_expiry,
+        )
+
     def _generate_cloud_storage_download_info(self):
         """
         Generate the download info for the public client to directly download

@@ -97,17 +97,18 @@ class IrAttachment(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('cloud_storage_provider') != 'azure':
             return super()._generate_cloud_storage_download_info()
         info = self._get_cloud_storage_azure_info()
-        expiry = datetime.now(timezone.utc) + timedelta(seconds=self._cloud_storage_download_url_time_to_expiry)
+        time_to_expiry = self._get_cloud_storage_download_url_time_to_expiry()
+        expiry = datetime.now(timezone.utc) + timedelta(seconds=time_to_expiry)
         return {
             'url': self._generate_cloud_storage_azure_sas_url(
                 **info,
                 permission='r',
                 expiry=expiry,
-                cache_control=f'private, max-age={self._cloud_storage_download_url_time_to_expiry}',
+                cache_control=f'private, max-age={time_to_expiry}',
                 content_type=self.mimetype or None,
                 content_disposition=content_disposition(self.name) if self.env.context.get('download_attachments') else None,
             ),
-            'time_to_expiry': self._cloud_storage_download_url_time_to_expiry,
+            'time_to_expiry': time_to_expiry,
         }
 
     def _generate_cloud_storage_upload_info(self):
