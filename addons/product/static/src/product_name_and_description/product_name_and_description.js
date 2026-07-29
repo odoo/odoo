@@ -115,7 +115,7 @@ export class ProductNameAndDescriptionField extends Component {
         }
         return {
             ...p,
-            canOpen: !this.props.readonly || this.isProductClickable,
+            canOpen: p.canOpen && (!this.props.readonly || this.isProductClickable),
             placeholder: _t("Search a product"),
             preventMemoization: true,
             value,
