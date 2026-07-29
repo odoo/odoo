@@ -10,29 +10,30 @@ export class RecordUses {
     data = new Map();
     /** @param {RecordList} list */
     add(list) {
-        const record = list._.owner;
-        if (!this.data.has(record.localId)) {
-            this.data.set(record.localId, new Map());
+        const localId = list._.owner.localId;
+        let use = this.data.get(localId);
+        if (!use) {
+            use = new Map();
+            this.data.set(localId, use);
         }
-        const use = this.data.get(record.localId);
-        if (!use.get(list._.name)) {
-            use.set(list._.name, 0);
-        }
-        use.set(list._.name, use.get(list._.name) + 1);
+        const name = list._.name;
+        use.set(name, (use.get(name) ?? 0) + 1);
     }
     /** @param {RecordList} list */
     delete(list) {
-        const record = list._.owner;
-        if (!this.data.has(record.localId)) {
+        const use = this.data.get(list._.owner.localId);
+        if (!use) {
             return;
         }
-        const use = this.data.get(record.localId);
-        if (!use.get(list._.name)) {
+        const name = list._.name;
+        const count = use.get(name);
+        if (!count) {
             return;
         }
-        use.set(list._.name, use.get(list._.name) - 1);
-        if (use.get(list._.name) === 0) {
-            use.delete(list._.name);
+        if (count === 1) {
+            use.delete(name);
+        } else {
+            use.set(name, count - 1);
         }
     }
 }

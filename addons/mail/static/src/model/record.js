@@ -98,9 +98,6 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
-        if (Model.singleton) {
-            return Model.name;
-        }
         if (!Array.isArray(expr)) {
             if (Model._.fields.get(expr)) {
                 if (Model._.fieldsMany.get(expr)) {
@@ -139,65 +136,39 @@ export class Record {
     }
     static _retrieveIdFromData(data) {
         const Model = toRaw(this);
-        const res = {};
-        if (Model.singleton) {
+        if (Model.singleton || Model.id === undefined) {
             return {};
         }
-        function _deepRetrieve(expr2) {
-            if (typeof expr2 === "string") {
-                if (isCommandList(data[expr2])) {
-                    // Note: only fields.One() is supported
-                    const [cmd, data2] = data[expr2].at(-1);
-                    return Object.assign(res, {
-                        [expr2]:
-                            cmd === "DELETE"
-                                ? undefined
-                                : cmd === "DELETE.noinv"
-                                ? [["DELETE.noinv", data2]]
-                                : cmd === "ADD.noinv"
-                                ? [["ADD.noinv", data2]]
-                                : data2,
-                    });
+        function idValue(expr) {
+            const val = data[expr];
+            if (isCommandList(val)) {
+                // Note: only fields.One() is supported
+                const [cmd, data2] = val.at(-1);
+                if (cmd === "DELETE") {
+                    return undefined;
                 }
-                return Object.assign(res, { [expr2]: data[expr2] });
-            }
-            if (expr2 instanceof Array) {
-                for (const expr of this.id) {
-                    if (typeof expr === "symbol") {
-                        continue;
-                    }
-                    _deepRetrieve(expr);
+                if (cmd === "DELETE.noinv") {
+                    return [["DELETE.noinv", data2]];
                 }
+                if (cmd === "ADD.noinv") {
+                    return [["ADD.noinv", data2]];
+                }
+                return data2;
             }
-        }
-        if (Model.id === undefined) {
-            return res;
+            return val;
         }
         if (typeof Model.id === "string") {
             if (typeof data !== "object" || data === null) {
                 return { [Model.id]: data }; // non-object data => single id
             }
-            if (isCommandList(data[Model.id])) {
-                // Note: only fields.One is supported
-                const [cmd, data2] = data[Model.id].at(-1);
-                return Object.assign(res, {
-                    [Model.id]:
-                        cmd === "DELETE"
-                            ? undefined
-                            : cmd === "DELETE.noinv"
-                            ? [["DELETE.noinv", data2]]
-                            : cmd === "ADD.noinv"
-                            ? [["ADD.noinv", data2]]
-                            : data2,
-                });
-            }
-            return { [Model.id]: data[Model.id] };
+            return { [Model.id]: idValue(Model.id) };
         }
+        const res = {};
         for (const expr of Model.id) {
             if (typeof expr === "symbol") {
                 continue;
             }
-            _deepRetrieve(expr);
+            res[expr] = idValue(expr);
         }
         return res;
     }

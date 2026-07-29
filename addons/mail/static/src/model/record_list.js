@@ -397,6 +397,7 @@ export class RecordList extends Array {
         const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListPush() {
+            const inverse = getInverse(recordList);
             for (const val of records) {
                 const record = recordList._.insert(
                     recordList,
@@ -408,7 +409,6 @@ export class RecordList extends Array {
                     }
                 );
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
-                const inverse = getInverse(recordList);
                 if (inverse) {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
@@ -459,6 +459,7 @@ export class RecordList extends Array {
         const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListUnshift() {
+            const inverse = getInverse(recordList);
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._.insert(recordList, records[i], (record) => {
                     recordList._proxy.data.unshift(record.localId);
@@ -466,7 +467,6 @@ export class RecordList extends Array {
                     record._.uses.add(recordList);
                 });
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
-                const inverse = getInverse(recordList);
                 if (inverse) {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
@@ -510,10 +510,10 @@ export class RecordList extends Array {
                 recordList._proxy.data = list;
             }
             recordList._.syncLength(recordList);
+            const inverse = getInverse(recordList);
             for (const oldRecord of oldRecords) {
                 oldRecord._.uses.delete(recordList);
                 store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, oldRecord);
-                const inverse = getInverse(recordList);
                 if (inverse) {
                     store._.updateFields(oldRecord, {
                         [inverse]: [["DELETE", recordList._.owner]],
@@ -524,7 +524,6 @@ export class RecordList extends Array {
                 const newRecord = toRaw(newRecordProxy)._raw;
                 newRecord._.uses.add(recordList);
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
-                const inverse = getInverse(recordList);
                 if (inverse) {
                     store._.updateFields(newRecord, { [inverse]: [["ADD", recordList._.owner]] });
                 }
