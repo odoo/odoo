@@ -409,20 +409,24 @@ export class Composer extends Component {
         return { composer: () => this.props.composer };
     }
 
-    /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
-    computeMoreActions(partitionedActions) {
-        if (this.props.mode === "extended" || partitionedActions.other.length === 0) {
-            this.moreActions = undefined;
-            return;
+    quickActionsList = computed(() => this.composerActions.partition.quick);
+
+    extraActionsList = computed(() => this.composerActions.partition.other);
+
+    moreAction = computed(() => {
+        if (this.props.mode === "extended" || this.composerActions.partition.other.length === 0) {
+            return undefined;
         }
-        this.moreActions = this.composerActions.more(this.composerActionsParams, {
-            actions: partitionedActions.other,
+        return this.composerActions.more(this.composerActionsParams, {
+            actions: this.composerActions.partition.other,
             disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
             dropdownPosition: "top-start",
             icon: "add_circle",
             name: _t("More Actions"),
         });
-    }
+    });
+
+    moreActionsList = computed(() => [this.moreAction()]);
 
     get isMultiUpload() {
         return true;

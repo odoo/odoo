@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <t t-set="dummy" t-value="this.computeActions()"/>
         <div class="o-mail-Message position-relative rounded-0 bg-inherit"
             t-att-data-bookmarked="this.message.is_bookmarked"
             t-att-data-persistent="this.message.persistent"
@@ -150,7 +149,7 @@
             <Dropdown state="this.optionsDropdown" menuClass="this.store.discussDropdownMenuClass(this)">
                 <button class="d-none"/>
                 <t t-set-slot="content">
-                    <ActionList actions="this.messageActions.actions" dropdown="true"/>
+                    <ActionList actions="this.messageActions.actionsComputed" dropdown="true"/>
                 </t>
             </Dropdown>
         </t>
@@ -158,7 +157,7 @@
         <t t-if="this.isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
             <ActionList actions="this.actions" inline="true" fw="false"/>
-            <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions.length - 1, 0))" t-as="i" t-key="i_index">
+            <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions().length - 1, 0))" t-as="i" t-key="i_index">
                 <t t-call="mail.Message.emptyQuickAction"/>
             </t>
         </div>

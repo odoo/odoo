@@ -5,7 +5,7 @@
     <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" position="'right-start'">
         <span class="d-flex position-fixed z-1" t-ref="this.anchorRef"/>
         <t t-set-slot="content">
-            <ActionList actions="this.messageActions.actions" dropdown="true"/>
+            <ActionList actions="this.messageActions.actionsComputed" dropdown="true"/>
         </t>
     </Dropdown>
 </t>

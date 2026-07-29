@@ -14,6 +14,7 @@ import { closeStream } from "@mail/utils/common/misc";
 
 import {
     Component,
+    computed,
     onWillDestroy,
     proxy,
     signal,
@@ -175,7 +176,7 @@ export class CallPreview extends Component {
         return this.env.inWelcomePage && this.ui.isSmall;
     }
 
-    get actions() {
+    actions = computed(() => {
         const cameraOnActionUpdated = {
             ...cameraOnAction,
             isActive: () => this.state.videoStream,
@@ -252,7 +253,7 @@ export class CallPreview extends Component {
         }
 
         return [callAudioActions, callVideoActions];
-    }
+    });
 
     async enableMicrophone() {
         if (

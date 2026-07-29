@@ -1,5 +1,5 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, proxy, signal, useScope } from "@odoo/owl";
+import { Component, computed, proxy, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -132,6 +132,13 @@ export class Action {
         this.store =
             store ??
             (owner[STORE_SYM] ? owner : isRecord(owner) ? owner.store : useService("mail.store"));
+        // Memoize the hot per-action getters as owl computeds: a reactive
+        // change then only re-evaluates the actions that actually read it,
+        // instead of every action of the owner on every render.
+        this._conditionComputed = computed(() => this._computeCondition());
+        this._sequenceComputed = computed(() => this._computeSequence());
+        this._sequenceGroupComputed = computed(() => this._computeSequenceGroup());
+        this._sequenceQuickComputed = computed(() => this._computeSequenceQuick());
     }
 
     get params() {
@@ -332,14 +339,17 @@ export class Action {
 
     /** @param {Action} action @returns {boolean|undefined} */
     _condition(action) {}
-    /** Condition for availability of this action */
-    get condition() {
+    _computeCondition() {
         return (
             this._condition(this.params) ??
             (typeof this.definition.condition === "function"
                 ? this.definition.condition.call(this, this.params)
                 : this.definition.condition ?? true)
         );
+    }
+    /** Condition for availability of this action */
+    get condition() {
+        return this._conditionComputed();
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
@@ -578,8 +588,7 @@ export class Action {
 
     /** @param {Action} action @returns {number|undefined} */
     _sequence(action) {}
-    /** Determines the order of this action (smaller first). */
-    get sequence() {
+    _computeSequence() {
         return (
             this._sequence(this.params) ??
             (typeof this.definition.sequence === "function"
@@ -587,10 +596,14 @@ export class Action {
                 : this.definition.sequence)
         );
     }
+    /** Determines the order of this action (smaller first). */
+    get sequence() {
+        return this._sequenceComputed();
+    }
 
     /** @param {Action} action @returns {number|undefined} */
     _sequenceGroup(action) {}
-    get sequenceGroup() {
+    _computeSequenceGroup() {
         return (
             this._sequenceGroup(this.params) ??
             (typeof this.definition.sequenceGroup === "function"
@@ -598,16 +611,22 @@ export class Action {
                 : this.definition.sequenceGroup)
         );
     }
+    get sequenceGroup() {
+        return this._sequenceGroupComputed();
+    }
 
     /** @param {Action} action @returns {number|undefined} */
     _sequenceQuick(action) {}
-    get sequenceQuick() {
+    _computeSequenceQuick() {
         return (
             this._sequenceQuick(this.params) ??
             (typeof this.definition.sequenceQuick === "function"
                 ? this.definition.sequenceQuick.call(this, this.params)
                 : this.definition.sequenceQuick)
         );
+    }
+    get sequenceQuick() {
+        return this._sequenceQuickComputed();
     }
 
     /** @param {Action} action @returns {true|undefined} */
@@ -664,6 +683,12 @@ export class UseActions extends Reactive {
         this.component = component;
         this.store = store;
         this.transformedActions = transformedActions;
+        // Memoized lists: with per-action memoized condition/sequence these
+        // only re-run when the visible set or order actually changes, and
+        // otherwise keep a stable array identity so consumers do not
+        // re-render for unrelated changes.
+        this.actionsComputed = computed(() => this._computeActions());
+        this.partitionComputed = computed(() => this._computePartition());
     }
 
     /**
@@ -679,7 +704,7 @@ export class UseActions extends Reactive {
         let moreAction = this.moreActions.get(id);
         if (moreAction) {
             moreAction = this.moreActions.get(id);
-            moreAction.definition.actions = data.actions;
+            moreAction.definition.actionsSignal.set(data.actions);
         } else {
             moreAction = new this.ActionClass({
                 ...actionsParams,
@@ -687,6 +712,9 @@ export class UseActions extends Reactive {
                 id: `more-action:${id}`,
                 definition: {
                     ...data,
+                    // signal: the dropdown's inner ActionList observes it, and
+                    // a reused more-action gets its list swapped in place
+                    actionsSignal: signal(data.actions),
                     btnAttrs: { "data-available-offline": true },
                     dropdown: true,
                     dropdownState: new DropdownState(),
@@ -704,6 +732,10 @@ export class UseActions extends Reactive {
 
     /** @returns {Action_T[]} */
     get actions() {
+        return this.actionsComputed();
+    }
+
+    _computeActions() {
         const actions = this.transformedActions
             .filter((action) => action.condition)
             .sort((a1, a2) => a1.sequence - a2.sequence);
@@ -712,6 +744,10 @@ export class UseActions extends Reactive {
 
     /** @return {PartitionedActions<Action_T>} */
     get partition() {
+        return this.partitionComputed();
+    }
+
+    _computePartition() {
         const actions = this.transformedActions.filter((action) => action.condition);
         const quick = actions
             .filter((a) => a.sequenceQuick)

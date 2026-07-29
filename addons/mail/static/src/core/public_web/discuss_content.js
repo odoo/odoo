@@ -37,6 +37,10 @@ export class DiscussContent extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
+        this.headerActionsList = computed(() => {
+            const partition = this.threadActions.partition;
+            return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+        });
         this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;

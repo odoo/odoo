@@ -50,8 +50,8 @@ const messagingMenuItemPatch = {
     get actionsDropdownState() {
         return this.channel ? this.channelDropdownState : super.actionsDropdownState;
     },
-    get actionsPartition() {
-        return this.channel ? this.threadActions.partition : super.actionsPartition;
+    _computeActionsPartition() {
+        return this.channel ? this.threadActions.partition : super._computeActionsPartition();
     },
     get actionsTitle() {
         return this.channel?.isChatChannel

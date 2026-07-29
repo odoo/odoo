@@ -1,7 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-import { Component, proxy, signal, useListener } from "@odoo/owl";
+import { Component, computed, proxy, signal, useListener } from "@odoo/owl";
 
 import { Action } from "@mail/core/common/action";
 import { browser } from "@web/core/browser/browser";
@@ -67,7 +67,7 @@ export class ChatHub extends Component {
         });
     }
 
-    get optionActions() {
+    optionActions = computed(() => {
         const actions = [];
         if (this.chatHub.showConversations && !this.chatHub.compact) {
             if (this.store.self_user?.share === false) {
@@ -110,7 +110,7 @@ export class ChatHub extends Component {
             );
         }
         return actions;
-    }
+    });
 
     get isMobileOS() {
         return isMobileOS();
