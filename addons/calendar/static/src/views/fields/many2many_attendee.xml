@@ -10,7 +10,7 @@
         <xpath expr="//img[hasclass('o_avatar')]" position="replace">
             <div class="o_attendee_tags_list">
                 <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
-                <div t-if="this.statusIcon" class="attendee_tag_status oi oi-fw rounded-circle" t-att-data-icon="this.statusIcon" t-attf-class="o_attendee_status_{{this.props.status}}"/>
+                <div t-if="this.statusIcon" class="attendee_tag_status oi rounded-circle" t-att-data-icon="this.statusIcon" t-attf-class="o_attendee_status_{{this.props.status}}"/>
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">

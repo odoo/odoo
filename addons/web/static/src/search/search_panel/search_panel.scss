@@ -103,21 +103,18 @@
 }
 
 .o_search_panel_sidebar {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
     width: 3rem;
-
-    .o_search_panel_category {
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
-    }
-    .o_search_panel_section_icon {
-        writing-mode: initial;
-        text-orientation: initial;
-    }
-
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }
 
+    & .btn {
+        writing-mode: initial;
+        text-orientation: initial;
+    }
+    
     &:hover .o_search_panel_sidebar_button {
         background-color: var(--btn-hover-bg);
         color: var(--btn-hover-color);

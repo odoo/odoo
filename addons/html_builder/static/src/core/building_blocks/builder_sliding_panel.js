@@ -26,6 +26,7 @@ export class BuilderSlidingPanel extends Component {
 
         label: t.string(),
         extraClasses: t.string().optional(""),
+        icon: t.string().optional(),
         fullHeight: t.boolean().optional(false),
         darkBackground: t.boolean().optional(false),
         openByDefault: t.boolean().optional(false),

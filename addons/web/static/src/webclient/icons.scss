@@ -35,7 +35,7 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
         content: attr(data-icon);
         text-rendering: geometricPrecision;
     }
-    &.oi-filled[data-icon]:not([data-icon=""]):before {
+    &.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"]):before {
         content: attr(data-icon) "_f";
     }
 }
