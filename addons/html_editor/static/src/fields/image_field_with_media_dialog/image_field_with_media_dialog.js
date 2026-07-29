@@ -24,6 +24,7 @@ export class ImageFieldWithMediaDialog extends ImageField {
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             imageUrl: this.imageUrl,
+            document: window.document,
         };
     }
 
