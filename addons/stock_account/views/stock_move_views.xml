@@ -8,6 +8,14 @@
         <field name="context">{'group_by': ['product_category_id', 'product_id'], 'pivot_column_groupby': ['date:month'], 'pivot_measures': ['remaining_qty', 'remaining_value']}</field>
     </record>
 
+    <record id="filter_stock_move_intercompany_deliveries" model="ir.filters">
+        <field name="name">Intercompany Deliveries</field>
+        <field name="model_id">stock.move</field>
+        <field name="domain">[('state', '=', 'done'), ('location_dest_id.usage', '=', 'transit'), ('location_dest_id.company_id', '=', False)]</field>
+        <field name="action_id" ref="stock.stock_move_action"/>
+        <field name="context">{'pivot_measures': ['quantity_product_uom', 'value'], 'pivot_column_groupby': ['partner_id'], 'pivot_row_groupby': ['date:month', 'picking_id', 'product_id']}</field>
+    </record>
+
     <record model="ir.ui.view" id="stock_move_view_list">
         <field name="name">stock.move.view.list.inherit.stock.account</field>
         <field name="inherit_id" ref="stock.view_move_tree"/>
