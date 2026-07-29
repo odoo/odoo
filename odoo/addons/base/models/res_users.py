@@ -761,7 +761,12 @@ class ResUsers(models.Model):
                     raise AccessDenied()
                 user = user.with_user(user).sudo()
                 auth_info = user._check_credentials(credential, user_agent_env)
-                tz = request.cookies.get('tz') if request else None
+                tz = None
+                if request and (browser_tz := request.cookies.get('tz')):
+                    # browsers report the CLDR name, a deprecated alias for some
+                    # zones, which ZoneInfo resolves to the canonical one
+                    with contextlib.suppress(KeyError, ValueError):
+                        tz = ZoneInfo(browser_tz).key
                 if tz in all_timezones and (not user.tz or not user.login_date):
                     # first login or missing tz -> set tz to browser tz
                     user.tz = tz
