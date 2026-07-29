@@ -350,6 +350,7 @@ class ResourceCalendarAttendance(models.Model):
                     attendance.recurrency_until = date.max
 
     def _compute_display_name(self):
+<<<<<<< 35b0d7fecb0bffe85b4737c9b4d6c0354eb84496
         for attendance in self:
             duration = format_duration(attendance.duration_hours)
             if attendance.duration_based:
@@ -359,6 +360,25 @@ class ResourceCalendarAttendance(models.Model):
                                                      hour_from=format_time(self.env, float_to_time(attendance.hour_from), time_format="short"),
                                                      hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"),
                                                      duration=duration)
+||||||| b2b023a142379260c871d19b465fa29b63b5073c
+        super()._compute_display_name()
+        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
+        dayofweek_selection = dict(self._fields['dayofweek']._description_selection(self.env))
+        day_period_selection = dict(self._fields['day_period']._description_selection(self.env))
+        for record in self:
+            record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
+            if record.two_weeks_calendar:
+                record.display_name = section_names[record.weektype] + ' - ' + record.display_name
+=======
+        super()._compute_display_name()
+        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
+        dayofweek_selection = dict(self._fields['dayofweek']._description_selection(self.env))
+        day_period_selection = dict(self._fields['day_period']._description_selection(self.env))
+        for record in self:
+            record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
+            if record.two_weeks_calendar:
+                record.display_name = section_names[record.week_type] + ' - ' + record.display_name
+>>>>>>> b2346d171e38b9c98f027e6223be524956c5c90d
 
     @classmethod
     def _to_dict_fields(cls):
