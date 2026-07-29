@@ -15,11 +15,12 @@ import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
 import {
+    asyncComputed,
+    computed,
     Component,
     onMounted,
     onPatched,
     onWillStart,
-    onWillUpdateProps,
     proxy,
     signal,
     t,
@@ -79,6 +80,10 @@ export class PropertiesField extends Component {
             isPopoverOpen: false,
         });
 
+        this.canChangeDefinition = computed(() =>
+            asyncComputed(() => this.checkDefinitionWriteAccess(), { initial: false })
+        );
+
         // Properties can be added from the cog menu of the form controller
         if (this.env.config?.viewType === "form") {
             useBus(this.env.model.bus, "PROPERTY_FIELD:EDIT", async (ev) => {
@@ -92,7 +97,10 @@ export class PropertiesField extends Component {
                 }
                 let canChangeDefinition = this.state.canChangeDefinition;
                 if (!canChangeDefinition) {
-                    canChangeDefinition = await this.checkDefinitionWriteAccess();
+                    this.canChangeDefinition().refresh();
+                    await this.canChangeDefinition().currentPromise();
+                    const asyncCanChangeDefinition = this.canChangeDefinition();
+                    canChangeDefinition = asyncCanChangeDefinition();
                     if (!canChangeDefinition) {
                         this.notification.add(this._getPropertyEditWarningText(), {
                             type: "warning",
@@ -112,12 +120,14 @@ export class PropertiesField extends Component {
             if (this.props.readonly || !this.props.editMode) {
                 return;
             }
-            this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
-                if (canChangeDefinition) {
-                    this.state.canChangeDefinition = true;
-                    this.setEditMode(!this.props.readonly);
-                }
-            });
+
+            const canChangeDefinition = this.canChangeDefinition();
+            await canChangeDefinition.currentPromise();
+
+            if (canChangeDefinition()) {
+                this.state.canChangeDefinition = true;
+                this.setEditMode(!this.props.readonly);
+            }
         });
 
         useEffect(() => {
@@ -128,36 +138,16 @@ export class PropertiesField extends Component {
                 if (this.props.readonly || (!this.state.isInEditMode && !this.props.editMode)) {
                     return;
                 }
-                this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
-                    this.state.canChangeDefinition = !!canChangeDefinition;
+                const asyncCanChangeDefinition = this.canChangeDefinition();
+                if (asyncCanChangeDefinition()) {
+                    this.state.canChangeDefinition = !!asyncCanChangeDefinition();
                     const editable =
-                        canChangeDefinition &&
+                        asyncCanChangeDefinition() &&
                         !this.props.readonly &&
                         (this.state.isInEditMode || this.props.editMode);
                     this.setEditMode(editable);
-                });
-            });
-        });
-
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.readonly && !this.props.readonly) {
-                this.setEditMode(false);
-            }
-            if (
-                !nextProps.readonly &&
-                (this.props.readonly || (nextProps.editMode && !this.props.editMode))
-            ) {
-                let canChangeDefinition = this.state.canChangeDefinition;
-                if (!canChangeDefinition) {
-                    canChangeDefinition = await this.checkDefinitionWriteAccess();
                 }
-                this.state.canChangeDefinition = !!canChangeDefinition;
-                const editable =
-                    canChangeDefinition &&
-                    !nextProps.readonly &&
-                    (this.state.isInEditMode || nextProps.editMode);
-                this.setEditMode(editable);
-            }
+            });
         });
 
         onMounted(() => {

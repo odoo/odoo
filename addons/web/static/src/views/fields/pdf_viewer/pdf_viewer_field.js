@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 
-import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 export class PdfViewerField extends Component {
@@ -28,8 +28,9 @@ export class PdfViewerField extends Component {
             isValid: true,
             objectUrl: "",
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.readonly) {
+        useEffect(() => {
+            void this.props.record;
+            if (this.props.readonly) {
                 this.state.objectUrl = "";
             }
         });
