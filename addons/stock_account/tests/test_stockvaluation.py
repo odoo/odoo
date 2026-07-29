@@ -3669,3 +3669,28 @@ class TestStockValuation(TestStockValuationCommon):
 
         # Ensure that we didn't do 109 / 9 to compute the price
         self.assertEqual(product.standard_price, 1.0)
+
+    def test_standard_price_in_qty_history_report_after_recount(self):
+        """Ensure the quantity history report reflects the product's standard price
+        when inventory is recounted at a date preceding the product's creation."""
+        product_standard = self.env['product.template'].create({
+            **self.product_common_vals,
+            'name': 'Standard Product',
+            'categ_id': self.category_standard.id,
+        }).product_variant_id  # Creating via product template for creation of product.value None -> 0.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product_standard.id,
+            'inventory_quantity': 10,
+            'location_id': self.stock_location.id,
+        })._apply_inventory(Datetime.to_datetime('2026-07-01'))
+        action = self.env['stock.quantity.history'].create({'inventory_datetime': Datetime.to_datetime('2026-07-02')}).open_at_date()
+        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        self.assertRecordValues(
+            products & product_standard,
+            [{
+                'standard_price': 10,
+                'qty_available': 10,
+                'total_value': 100,
+                'avg_cost': 10
+            }],
+        )
