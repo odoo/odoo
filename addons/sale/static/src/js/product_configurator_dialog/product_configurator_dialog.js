@@ -34,7 +34,7 @@ export class ProductConfiguratorDialog extends Component {
                 })
             )
             .optional(),
-        soDate: t.string(),
+        soDate: t.string().optional(),
         size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional(),
         edit: t.boolean().optional(false),
         options: t
