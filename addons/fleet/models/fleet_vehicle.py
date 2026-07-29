@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from datetime import date, datetime
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -448,12 +448,6 @@ class FleetVehicle(models.Model):
 
             cleanup = set()
             for vehicle in self:
-                vehicle.activity_schedule(
-                    'mail.mail_activity_data_todo',
-                    date_deadline=date.today() + relativedelta(weeks=1),
-                    note=_('Review driver change of %s and specify End date', vehicle.display_name),
-                    user_id=vehicle.manager_id.id or self.env.user.id,
-                )
                 driver_id = vals.get('driver_id', vehicle.driver_id.id)
                 future_driver_id = vals.get('future_driver_id', vehicle.future_driver_id.id)
                 if driver_id and driver_id == future_driver_id:
