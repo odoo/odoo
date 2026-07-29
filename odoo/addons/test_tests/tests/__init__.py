@@ -1,6 +1,7 @@
 from . import test_cases
 from . import test_form
 from . import test_freeze_time
+from . import test_logging
 from . import test_methods
 from . import test_res_config
 from . import test_test_retry
