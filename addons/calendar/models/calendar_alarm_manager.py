@@ -53,7 +53,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         """
 
         # Add filter on alarm type and partner_id
-        tuple_params = (alarm_type, tuple(partners.ids))
+        tuple_params = (alarm_type, tuple(partners.ids), tuple(partners.ids))
 
         # Upper bound on first_alarm of requested events
         # first alarm in the future + 3 minutes if there is one, now otherwise
@@ -61,7 +61,11 @@ class CalendarAlarm_Manager(models.AbstractModel):
             COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
             FROM calendar_event cal
             RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-            WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+            INNER JOIN calendar_event_res_partner_rel AS part_rel
+                ON part_rel.calendar_event_id = cal.id
+                AND part_rel.res_partner_id IN %s
+            WHERE cal.active = True
+                AND cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
         ) + interval '3' minute, now() at time zone 'utc')"""
 
         self.env.flush_all()
