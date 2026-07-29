@@ -64,3 +64,22 @@ class TestAccountMoveFeFields(TransactionCase):
         self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO_TE, {
             'clave': 'TE', 'consecutivo_codigo': '04', 'gen_xml_action': 'gen_xml_te',
         })
+
+    def test_mr_fields_exist_with_defaults(self):
+        partner = self.env['res.partner'].create({'name': 'Proveedor MR Fields'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+        })
+        self.assertFalse(bill.l10n_cr_fe_mr_decision)
+        self.assertFalse(bill.l10n_cr_fe_mr_motivo)
+        self.assertFalse(bill.l10n_cr_fe_proveedor_clave)
+        self.assertFalse(bill.l10n_cr_fe_proveedor_fecha_emision)
+
+    def test_tipo_documento_mr_constant(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_TIPO_DOCUMENTO_MR
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO_MR, {
+            'aceptado': {'clave': 'CCE', 'consecutivo_codigo': '05', 'gen_xml_action': 'gen_xml_mr'},
+            'aceptado_parcial': {'clave': 'CPCE', 'consecutivo_codigo': '06', 'gen_xml_action': 'gen_xml_mr'},
+            'rechazado': {'clave': 'RCE', 'consecutivo_codigo': '07', 'gen_xml_action': 'gen_xml_mr'},
+        })

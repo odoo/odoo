@@ -225,3 +225,22 @@ class TestAccountMoveMapping(TransactionCase):
         self.assertNotIn('receptor_nombre', params)
         self.assertNotIn('receptor_tipo_identif', params)
         self.assertNotIn('receptor_num_identif', params)
+
+    def test_get_tipo_documento_info_in_invoice_without_decision_returns_falsy(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+        })
+        self.assertFalse(bill._l10n_cr_fe_get_tipo_documento_info())
+
+    def test_get_tipo_documento_info_in_invoice_resolves_by_decision(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_mr_decision': 'aceptado_parcial',
+        })
+        info = bill._l10n_cr_fe_get_tipo_documento_info()
+        self.assertEqual(info['clave'], 'CPCE')
+        self.assertEqual(info['consecutivo_codigo'], '06')
