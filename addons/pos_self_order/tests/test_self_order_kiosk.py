@@ -345,3 +345,77 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_parent_category")
+
+    def test_self_order_limited_cat(self):
+        setup_product_combo_items(self)
+        self.office_combo.write({
+            "combo_ids": [
+                Command.unlink(c.id)
+                for c in self.office_combo.combo_ids
+                if c.id != self.desks_combo.id
+            ],
+        })
+
+        limited_cats_ids = self.env['pos.category'].search([]).ids
+        parent_cat = self.cola.pos_categ_ids[0]
+        hidden_child_category = self.env['pos.category'].create({
+            'name': 'Hidden child',
+            'parent_id': parent_cat.id,
+        })
+        visible_child_category = self.env['pos.category'].create({
+            'name': 'Child2',
+            'parent_id': parent_cat.id,
+        })
+        limited_cats_ids += [visible_child_category.id]
+        self.fanta.pos_categ_ids = [Command.link(visible_child_category.id)]
+
+        # Set the child category on this product. The category is loaded because it is a preparation category.
+        # However, the product should not be displayed and the subcategory should be hidden in the frontend
+        # because it is not a limited category.
+        self.cola.pos_categ_ids = [Command.set([hidden_child_category.id])]
+
+        # Hidden root category loaded because it is a preparation category.
+        hidden_root_category = self.env['pos.category'].create({
+            'name': 'Hidden root',
+        })
+
+        # This category is child of a hidden category -> displayed as root
+        visible_root_category = self.env['pos.category'].create({
+            'name': 'Visible Root',
+            'parent_id': hidden_child_category.id,
+        })
+        limited_cats_ids += [visible_root_category.id]
+
+        self.ketchup.pos_categ_ids = [Command.link(hidden_root_category.id), Command.link(visible_root_category.id)]
+
+        # The combo product to sent to the printer
+        self.combo_product_5.pos_categ_ids = [Command.link(hidden_child_category.id)]
+
+        printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+        })
+
+        printer.write({
+            'product_categories_ids': [Command.set([hidden_child_category.id, hidden_root_category.id])],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'is_order_printer': True,
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.set(limited_cats_ids)],
+            'printer_ids': [Command.set(printer.ids)],
+            'use_presets': False,
+            'default_preset_id': False,
+            'available_preset_ids': [Command.clear()],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        loaded_category_ids = [cat['id'] for cat in self.pos_config.load_self_data()['pos.category']]
+        self.assertTrue(all(cid in loaded_category_ids for cid in [hidden_root_category.id, hidden_child_category.id]))
+        self_route = self.pos_config._get_self_order_route()
+
+        self.start_tour(self_route, "test_self_order_limited_cat")
