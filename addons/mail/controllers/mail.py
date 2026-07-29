@@ -309,7 +309,7 @@ class MailController(http.Controller):
             }
             if icon in oi_font_char_codes:
                 icon = oi_font_char_codes[icon]
-                font = "/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff"
+                font = "/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2"
 
         size = max(width, height, 1) if width else size
         width = width or size
