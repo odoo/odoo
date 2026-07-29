@@ -101,7 +101,7 @@ class ResourceCalendarAttendance(models.Model):
         for record in self:
             record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
             if record.two_weeks_calendar:
-                record.display_name = section_names[record.weektype] + ' - ' + record.display_name
+                record.display_name = section_names[record.week_type] + ' - ' + record.display_name
 
     @api.model
     def get_week_type(self, date):
