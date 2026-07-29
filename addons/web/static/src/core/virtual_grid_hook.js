@@ -1,6 +1,5 @@
 import { computed, signal, types as t, useListener } from "@odoo/owl";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * Computes the start and end indices of the visible items in a virtual list.
@@ -80,7 +79,7 @@ const DEFAULT_BUFFER_COEFFICIENT = 1;
  * to the scrollable element.
  *
  * @param {Object} params
- * @param {import("@odoo/owl").Signal<HTMLElement>} [params.scrollableRef] signal
+ * @param {import("@odoo/owl").ReactiveValue<HTMLElement>} params.scrollableRef signal
  * @param {number[]} [params.rowHeights] initial row heights
  * @param {number[]} [params.columnWidths] initial column widths
  *  pointing to the scrollable element. It is optional, as this hook can spawn a
@@ -102,7 +101,7 @@ export function useVirtualGrid({
     columnWidths,
     initialScroll,
     bufferCoef,
-} = {}) {
+}) {
     function onResize() {
         innerWidth.set(window.innerWidth);
         innerHeight.set(window.innerHeight);
@@ -117,7 +116,6 @@ export function useVirtualGrid({
     }
 
     bufferCoef ||= DEFAULT_BUFFER_COEFFICIENT;
-    scrollableRef ||= signal.ref();
 
     // Columns reactive values
     const columnIndices = computed(function computeColumnIndices() {
@@ -159,21 +157,7 @@ export function useVirtualGrid({
     const scrollLeft = signal(initialScroll?.left || 0);
     const scrollTop = signal(initialScroll?.top || 0);
 
-    // TODO remove when Grid view uses a signal ref
-    if (typeof scrollableRef !== "function") {
-        const legacyCustomRef = scrollableRef;
-        const throttledOnScroll = useThrottleForAnimation(onScroll);
-        useLayoutEffect(
-            (el) => {
-                el?.addEventListener("scroll", throttledOnScroll);
-                return () => el?.removeEventListener("scroll", throttledOnScroll);
-            },
-            () => [legacyCustomRef.el]
-        );
-    } else {
-        useListener(scrollableRef, "scroll", useThrottleForAnimation(onScroll));
-    }
-
+    useListener(scrollableRef, "scroll", useThrottleForAnimation(onScroll));
     useListener(window, "resize", useThrottleForAnimation(onResize));
 
     return {
@@ -181,7 +165,6 @@ export function useVirtualGrid({
         lastRow,
         firstColumn,
         lastColumn,
-        ref: scrollableRef,
         /**
          * Sets the width of each column.
          * Indexes should match the indexes of the columns.
