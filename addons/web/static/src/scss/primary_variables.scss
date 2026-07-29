@@ -47,7 +47,6 @@ $o-font-weight-medium: 500 !default;
 $o-font-weight-bold: 700 !default;
 
 // Colors
-// This is BS default
 $o-white: #FFFFFF !default;
 $o-black: #000000 !default;
 
@@ -72,6 +71,17 @@ $o-grays: (
     800: $o-gray-800,
     900: $o-gray-900,
 ) !default;
+
+$o-colors: #a2a2a2, #ee2d2d, #dc8534, #e8bb1d, #5794dd, #9f628f, #db8865,
+           #41a9a2, #304be0, #ee2f8a, #61c36e, #9872e6 !default;
+
+$o-colors-ui: () !default;
+@for $index from 1 through length($o-colors) {
+    $_color-name: "color-#{$index}";
+    $_color-value: nth($o-colors, $index);
+    $o-colors-ui: map-merge($o-colors-ui, ($_color-name: $_color-value));
+}
+
 
 $o-community-color: #71639e !default;
 $o-enterprise-color: #714B67 !default;
