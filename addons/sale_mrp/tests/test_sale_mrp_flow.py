@@ -2664,6 +2664,41 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         sale_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 4.0)
 
+    def test_mo_split_with_batch_size_gets_separate_pick_pickings(self):
+        """
+        With 2-step manufacturing, when a BoM's batch size splits one big MTO
+        procurement into several MOs that get auto-confirmed together, each MO
+        should still get its own picking.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.manufacture_steps = 'pbm'
+        self.product.route_ids = [Command.set([
+            warehouse.mto_pull_id.route_id.id,
+            warehouse.manufacture_pull_id.route_id.id,
+        ])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'enable_batch_size': True,
+            'batch_size': 10.0,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 1})],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 20,
+            })],
+        })
+        so.action_confirm()
+
+        mos = so.mrp_production_ids
+        self.assertEqual(len(mos), 2)
+        self.assertEqual(len(mos.move_raw_ids.move_orig_ids.picking_id), 2)
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.move_ids.product_qty, 20)
+
     def test_separate_child_mo_for_shared_component(self):
         """Ensure that when confirming a Sale Order with multiple MTO products
         sharing the same component (which has its own BOM), each parent

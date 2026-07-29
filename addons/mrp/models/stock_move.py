@@ -553,7 +553,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.created_production_id,)
+        return keys + (self.created_production_id, self.production_group_id)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
