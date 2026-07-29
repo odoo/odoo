@@ -5,6 +5,7 @@
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
+from pytz import timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
@@ -362,13 +363,14 @@ class HolidaysAllocation(models.Model):
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
         self.ensure_one()
         datetime_min_time = datetime.min.time()
-        start_dt = datetime.combine(start_date, datetime_min_time)
-        end_dt = datetime.combine(end_date, datetime_min_time)
+        resource_tz = timezone(self.employee_id.tz or self.employee_id.resource_calendar_id.tz or 'UTC')
+        start_dt = resource_tz.localize(datetime.combine(start_date, datetime_min_time))
+        end_dt = resource_tz.localize(datetime.combine(end_date, datetime_min_time))
         worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
             [self.employee_id.id]['hours']
         if start_period != start_date or end_period != end_date:
-            start_dt = datetime.combine(start_period, datetime_min_time)
-            end_dt = datetime.combine(end_period, datetime_min_time)
+            start_dt = resource_tz.localize(datetime.combine(start_period, datetime_min_time))
+            end_dt = resource_tz.localize(datetime.combine(end_period, datetime_min_time))
             planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                 [self.employee_id.id]['hours']
         else:
