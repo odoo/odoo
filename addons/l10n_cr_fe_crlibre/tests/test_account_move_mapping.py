@@ -244,3 +244,29 @@ class TestAccountMoveMapping(TransactionCase):
         info = bill._l10n_cr_fe_get_tipo_documento_info()
         self.assertEqual(info['clave'], 'CPCE')
         self.assertEqual(info['consecutivo_codigo'], '06')
+
+    def test_build_mr_params_uses_proveedor_and_own_config(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor X', 'vat': '3101987654'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado_parcial',
+            'l10n_cr_fe_mr_motivo': 'Cantidad distinta a lo facturado',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        detalles = bill._l10n_cr_fe_build_detalles()
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20, detalles)
+        self.assertEqual(params['clave'], '6' * 50)
+        self.assertEqual(params['numero_cedula_emisor'], '3101987654')
+        self.assertEqual(params['fecha_emision_doc'], '2026-07-20T08:00:00-06:00')
+        self.assertEqual(params['mensaje'], '2')
+        self.assertEqual(params['detalle_mensaje'], 'Cantidad distinta a lo facturado')
+        self.assertEqual(params['total_factura'], 1000.0)
+        self.assertEqual(params['numero_cedula_receptor'], '702320717')
+        self.assertEqual(params['numero_consecutivo_receptor'], '0' * 20)

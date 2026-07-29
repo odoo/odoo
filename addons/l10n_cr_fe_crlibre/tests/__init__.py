@@ -10,3 +10,4 @@ from . import test_reintentar_fe
 from . import test_nota_credito_fe
 from . import test_account_move_reversal
 from . import test_tiquete_electronico_fe
+from . import test_recepcion_proveedores_fe
