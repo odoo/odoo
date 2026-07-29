@@ -1344,6 +1344,11 @@ class CalendarEvent(models.Model):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
         return False
 
+    def _track_log_get_default_subtype(self, track_init_values):
+        if {'start', 'stop', 'location'} & track_init_values.keys():
+            return self.env.ref('calendar.mt_calendar_event_updated')
+        return super()._track_log_get_default_subtype(track_init_values)
+
     def _get_mail_tz(self):
         self.ensure_one()
         return self.event_tz or self.env.user.tz
