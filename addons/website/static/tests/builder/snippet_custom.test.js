@@ -106,8 +106,8 @@ test("thumbnails are displayed on custom inner snippets even if they have the sa
     };
     const snippets = {
         snippet_groups: [
-            '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-            '<div name="Custom" data-oe-thumbnail="custom.svg" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+            '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            '<div name="Custom" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
         ],
         snippet_structure: [getSnippetStructure(structureSnippetDesc)],
         snippet_content: [getInnerContent(innerContentDesc)],

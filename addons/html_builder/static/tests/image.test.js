@@ -9,7 +9,10 @@ test("Size should not be displayed on CORS protected images", async () => {
     // The next line is needed in order to correctly run the test without the
     // fix.
     onRpc("/web/image/__odoo__unknown__src__/", () => dataURItoBlob(dummyBase64Img));
-    const { waitSidebarUpdated } = await setupHTMLBuilder(`<img src="${dummyCORSSrc}">`);
+    // Keep visibility independent of the remote image load.
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<img src="${dummyCORSSrc}" width="100" height="100">`
+    );
     await contains(":iframe img").click();
     await waitSidebarUpdated();
     expect(".o-hb-image-size-info").toHaveCount(0);
