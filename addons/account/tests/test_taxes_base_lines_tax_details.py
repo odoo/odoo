@@ -202,3 +202,110 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
         self.assertEqual(tax_details['raw_gross_total_excluded'], 100)
         self.assertEqual(tax_details['raw_gross_price_unit'], 100)
         self.assertEqual(tax_details['raw_discount_amount'], 20)
+
+    def test_include_base_amount_in_aggregate_base_line_tax_details(self):
+        """ Test that the tax amount from a tax that is affecting the base of subsequent taxes
+        is correctly propagated in '_aggregate_base_line_tax_details'
+        """
+        AccountTax = self.env['account.tax']
+        tax_20 = AccountTax.create({
+            'name': 'tax_20',
+            'sequence': -1,
+            'amount_type': 'percent',
+            'amount': 20,
+            'include_base_amount': True,
+        })
+        tax_18 = AccountTax.create({
+            'name': 'tax_18',
+            'amount_type': 'percent',
+            'amount': 18,
+        })
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 2000.0, 'quantity': 5, 'discount': 20.0, 'tax_ids': tax_20 + tax_18},
+            ],
+        ))
+
+        def tax_grouping_function(base_line, tax_data):
+            if not tax_data:
+                return None
+            return {
+                'amount': tax_data['tax'].amount,
+            }
+
+        aggregated_data = AccountTax._aggregate_base_line_tax_details(document['lines'][0], tax_grouping_function)
+        expected_values = [{
+            'grouping_key': {'amount': 20.0},
+            'taxes_data': [{
+                'base_amount': 8000.0,
+                'base_amount_currency': 8000.0,
+                'batch': tax_20,
+                'group': AccountTax,
+                'is_reverse_charge': False,
+                'price_include': False,
+                'raw_base_amount': 8000.0,
+                'raw_base_amount_currency': 8000.0,
+                'raw_tax_amount': 1600.0,
+                'raw_tax_amount_currency': 1600.0,
+                'tax': tax_20,
+                'tax_amount': 1600.0,
+                'tax_amount_currency': 1600.0,
+                'taxes': tax_18,
+            }],
+            'base_amount': 8000.0,
+            'base_amount_currency': 8000.0,
+            'raw_base_amount': 8000.0,
+            'raw_base_amount_currency': 8000.0,
+            'raw_tax_amount': 1600.0,
+            'raw_tax_amount_currency': 1600.0,
+            'raw_total_excluded': 8000.0,
+            'raw_total_excluded_currency': 8000.0,
+            'target_base_amount': 8000.0,
+            'target_base_amount_currency': 8000.0,
+            'target_tax_amount': 1600.0,
+            'target_tax_amount_currency': 1600.0,
+            'target_total_excluded': 8000.0,
+            'target_total_excluded_currency': 8000.0,
+            'tax_amount': 1600.0,
+            'tax_amount_currency': 1600.0,
+            'total_excluded': 8000.0,
+            'total_excluded_currency': 8000.0,
+        }, {
+            'grouping_key': {'amount': 18.0},
+            'taxes_data': [{
+                'base_amount': 9600.0,
+                'base_amount_currency': 9600.0,
+                'group': AccountTax,
+                'is_reverse_charge': False,
+                'batch': tax_18,
+                'price_include': False,
+                'raw_base_amount': 9600.0,
+                'raw_base_amount_currency': 9600.0,
+                'raw_tax_amount': 1728.0,
+                'raw_tax_amount_currency': 1728.0,
+                'tax': tax_18,
+                'tax_amount': 1728.0,
+                'tax_amount_currency': 1728.0,
+                'taxes': AccountTax,
+            }],
+            'base_amount': 9600.0,
+            'base_amount_currency': 9600.0,
+            'raw_base_amount': 9600.0,
+            'raw_base_amount_currency': 9600.0,
+            'raw_tax_amount': 1728.0,
+            'raw_tax_amount_currency': 1728.0,
+            'raw_total_excluded': 9600.0,
+            'raw_total_excluded_currency': 9600.0,
+            'target_base_amount': 9600.0,
+            'target_base_amount_currency': 9600.0,
+            'target_tax_amount': 1728.0,
+            'target_tax_amount_currency': 1728.0,
+            'target_total_excluded': 9600.0,
+            'target_total_excluded_currency': 9600.0,
+            'tax_amount': 1728.0,
+            'tax_amount_currency': 1728.0,
+            'total_excluded': 9600.0,
+            'total_excluded_currency': 9600.0,
+        }]
+        for i, data in enumerate(aggregated_data.values()):
+            self.assertDictEqual(expected_values[i], data)
