@@ -639,6 +639,47 @@ export declare class Registry<T> {
  * cleanup before each re-run and on disposal.
  */
 export declare function useEffect(fn: Parameters<typeof effect>[0]): void;
+export type Cleanup = (() => void) | void;
+/**
+ * Identity mapped type over a tuple. It keeps the type of each position when
+ * `callback` is contextually typed, while preventing typescript from inferring
+ * the dependency tuple from `callback`'s own (possibly shorter) parameter list.
+ */
+export type Args<T extends unknown[]> = {
+	[K in keyof T]: T[K];
+};
+/**
+ * Runs `callback` whenever the array returned by `dependencies` changes.
+ * Contrary to `useEffect`, only the `dependencies` function is tracked:
+ * reactive values read inside `callback` do not become dependencies, so the
+ * callback cannot retrigger itself.
+ *
+ * The dependency array is compared with `shallowEqual`, so `callback` only
+ * runs when one of the values it receives actually changed: with
+ * `() => [count() > 10]`, `count` going from 2 to 3 does not run it.
+ *
+ * `dependencies` must return an array of values, which are spread as the
+ * arguments of `callback`. As with `useEffect`, if `callback` returns a
+ * function, that function is called as cleanup before the next run and when
+ * the owning scope is destroyed.
+ *
+ * By default the callback also runs on the initial execution. Pass
+ * `{ initialRun: false }` to only react to subsequent changes.
+ *
+ * Example — refetch a record whenever its id changes, without subscribing to
+ * everything `loadRecord` happens to read:
+ *   useOnChange(
+ *     () => [this.props.recordId],
+ *     (recordId) => {
+ *       this.loadRecord(recordId);
+ *     }
+ *   );
+ */
+export declare function useOnChange<T extends unknown[]>(dependencies: () => [
+	...T
+], callback: (...args: Args<T>) => Cleanup, { initialRun }?: {
+	initialRun?: boolean;
+}): void;
 /**
  * Adds an event listener to a target and automatically removes it when the
  * surrounding component or plugin is destroyed.
@@ -658,9 +699,7 @@ export declare function useEffect(fn: Parameters<typeof effect>[0]): void;
 export declare function useListener(target: EventTarget | Signal<EventTarget | null>, eventName: string, handler: EventListener, eventParams?: AddEventListenerOptions): void;
 export declare function onWillStart(fn: (scope: Scope) => Promise<void> | void | any): void;
 export declare function onWillDestroy(fn: (scope: Scope) => void | any): void;
-export type PluginInstance<T extends PluginConstructor> = T extends {
-	scoped: (plugin: any, scope: Scope) => infer R;
-} ? R : Omit<InstanceType<T>, "setup">;
+export type PluginInstance<T extends PluginConstructor> = Omit<InstanceType<T>, "setup">;
 export declare function usePlugin<T extends PluginConstructor>(pluginType: T): PluginInstance<T>;
 /** @deprecated alias for {@link usePlugin} */
 export declare const plugin: typeof usePlugin;
