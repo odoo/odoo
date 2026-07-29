@@ -120,8 +120,14 @@ class WebsiteMenu(models.Model):
                             menu.page_id = None
                             menu.manual_url = menu.url
                         except werkzeug.exceptions.NotFound:
-                            menu.page_id.write({'url': menu.url})
-                            menu.manual_url = ''
+                            if url_parse(menu.url).netloc:
+                                # External url
+                                menu.page_id = None
+                                menu.manual_url = menu.url
+                            else:
+                                # Internal url: rewrite the related page url
+                                menu.page_id.write({'url': menu.url})
+                                menu.manual_url = ''
                     else:
                         menu.manual_url = menu.url
 
