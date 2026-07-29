@@ -3,8 +3,8 @@
 from collections import deque
 
 from odoo import api, Command, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero, float_compare
-from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.tools.sql import SQL
 
 
 class StockMove(models.Model):
@@ -26,6 +26,13 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
+
+    @api.depends('company_id', 'purchase_line_id', 'purchase_line_id.company_id')
+    def _compute_origin_company_id(self):
+        super()._compute_origin_company_id()
+        for move in self:
+            if move.purchase_line_id and move.purchase_line_id.company_id != move.company_id:
+                move.origin_company_id = move.purchase_line_id.company_id
 
     @api.depends('purchase_line_id', 'purchase_line_id.uom_id')
     def _compute_packaging_uom_id(self):
@@ -120,6 +127,20 @@ class StockMove(models.Model):
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+    def _get_origin_company_domains(self, operator, value):
+        domains = super()._get_origin_company_domains(operator, value)
+        domains.append(Domain.AND([
+            Domain.custom(
+                to_sql=lambda table: SQL(
+                    "%(move_company_id)s != %(pol_company_id)s",
+                    move_company_id=table.company_id,
+                    pol_company_id=table._join('purchase_line_id').company_id,
+                ),
+            ),
+            Domain('purchase_line_id.company_id', operator, value),
+        ]))
+        return domains
 
     def _get_source_document(self):
         res = super()._get_source_document()
