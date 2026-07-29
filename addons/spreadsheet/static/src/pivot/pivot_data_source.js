@@ -26,6 +26,7 @@ export class PivotDataSource extends OdooViewsDataSource {
                     "pivot_row_groupby",
                     "pivot_column_groupby"
                 ),
+                comparison: undefined,
             },
         };
         super(services, filteredParams);
