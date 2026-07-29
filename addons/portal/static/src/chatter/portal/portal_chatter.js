@@ -3,7 +3,7 @@ import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugi
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, plugin, providePlugins, xml } from "@odoo/owl";
+import { Component, providePlugins, usePlugin, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class PortalChatter extends Component {
@@ -23,7 +23,7 @@ export class PortalChatter extends Component {
 
     setup() {
         providePlugins([PortalChatterPlugin]);
-        const portalChatterPlugin = plugin(PortalChatterPlugin);
+        const portalChatterPlugin = usePlugin(PortalChatterPlugin);
         portalChatterPlugin.displayRating.set(this.props.displayRating);
         useSubEnv({ inFrontendPortalChatter: true });
         this.overlayService = useService("overlay");

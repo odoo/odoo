@@ -4,13 +4,13 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
-    plugin,
     proxy,
     signal,
     t,
     untrack,
     useEffect,
     useProps,
+    usePlugin,
     useScope,
     xml,
 } from "@odoo/owl";
@@ -27,7 +27,7 @@ import { useService } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
- * Version of plugin() where the plugin is allowed to not be provided by any parented component.
+ * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
  *
  * @template T
  * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
@@ -35,7 +35,7 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
  */
 export function useMaybePlugin(pluginType) {
     if (useScope().pluginManager?.getPluginById(pluginType.id)) {
-        return plugin(pluginType);
+        return usePlugin(pluginType);
     }
     return undefined;
 }
