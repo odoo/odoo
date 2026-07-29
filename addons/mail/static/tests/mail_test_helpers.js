@@ -38,6 +38,7 @@ import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
@@ -599,6 +600,20 @@ export async function makeMockRtcNetwork({ env, channelId }) {
                 },
                 async updateInfo(info) {
                     await rtcServiceIsListening;
+                    // This helper calls the remote update functions directly, so it bypasses
+                    // the updateAndBroadcastDebounce() that a real participant goes through.
+                    // Write the values it would have stored, otherwise a store fetch brings the
+                    // outdated ones back and reverts them.
+                    const serverInfo = pick(
+                        info,
+                        "is_camera_on",
+                        "is_deaf",
+                        "is_muted",
+                        "is_screen_sharing_on"
+                    );
+                    if (Object.keys(serverInfo).length > 0) {
+                        pyEnv["discuss.channel.rtc.session"].write([sessionId], serverInfo);
+                    }
                     dispatchUpdate({
                         name: UPDATE_EVENT.INFO_CHANGE,
                         payload: { [sessionId]: info },
