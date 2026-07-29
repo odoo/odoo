@@ -1,6 +1,6 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { patch } from "@web/core/utils/patch";
 import { onWillPatch, signal, useEffect } from "@odoo/owl";
@@ -8,7 +8,7 @@ import { onWillPatch, signal, useEffect } from "@odoo/owl";
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
-        this.portalChatterPlugin = maybePlugin(PortalChatterPlugin);
+        this.portalChatterPlugin = useMaybePlugin(PortalChatterPlugin);
         this.topRef = signal.ref();
         onWillPatch(() => {
             // Keep the composer position under the page header on scrolling

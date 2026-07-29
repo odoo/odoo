@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Composer } from "@mail/core/common/composer";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
@@ -13,7 +13,7 @@ const DEFAULT_STAR_RATING = 4;
 patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
-        this.portalChatterPlugin = maybePlugin(PortalChatterPlugin);
+        this.portalChatterPlugin = useMaybePlugin(PortalChatterPlugin);
         this.MAX_STAR_RATING = MAX_STAR_RATING;
         this.portalState = proxy({
             hoveredRatingValue: undefined,
