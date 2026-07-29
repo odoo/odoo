@@ -7,7 +7,7 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     trade_registry = fields.Char()
-    income_tax_id = fields.Char(string="Income Tax ID")
+    income_tax_id = fields.Char(related='partner_id.income_tax_id', readonly=False)
 
 
 class BaseDocumentLayout(models.TransientModel):

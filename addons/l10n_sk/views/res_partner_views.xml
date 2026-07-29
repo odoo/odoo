@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="before">
                 <field name="company_registry" invisible="country_code != 'SK'"/>
+                <field name="income_tax_id" invisible="country_code != 'SK'"/>
             </xpath>
         </field>
     </record>
