@@ -6,44 +6,31 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 import { uuid } from "@web/core/utils/strings";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 import {
+    getConfiguredPtavs,
     getCustomPtavs,
     getNoVariantPtavIds,
     getSelectedComboItems,
-    getSelectedCustomPtav,
     serializeComboItem,
 } from "./sale_utils";
 import { openComboConfigurator } from "./combo_configurator_utils";
 
 async function applyProduct(record, product) {
+    const { customPtavs, noVariantPtavIds } = getConfiguredPtavs(product);
     // handle custom values & no variants
     const customAttributesCommands = [
         x2ManyCommands.set([]), // Command.clear isn't supported in static_list/_applyCommands
+        ...customPtavs.map(customPtav => x2ManyCommands.create(undefined, {
+            custom_product_template_attribute_value_id: [customPtav.id, "we don't care"],
+            custom_value: customPtav.value,
+        })),
     ];
-    for (const ptal of product.attribute_lines) {
-        const selectedCustomPTAV = getSelectedCustomPtav(ptal);
-        if (selectedCustomPTAV) {
-            customAttributesCommands.push(
-                x2ManyCommands.create(undefined, {
-                    custom_product_template_attribute_value_id: [
-                        selectedCustomPTAV.id,
-                        "we don't care",
-                    ],
-                    custom_value: ptal.customValue,
-                })
-            );
-        }
-    }
-
-    const noVariantPTAVIds = product.attribute_lines
-        .filter((ptal) => ptal.create_variant === "no_variant")
-        .flatMap((ptal) => ptal.selected_attribute_value_ids);
 
     // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
     // updated in parallel (for performance).
     const update_values = {
         product_id: { id: product.id, display_name: product.display_name },
         product_uom_qty: product.quantity,
-        product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
+        product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPtavIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
     };
     if (product.uom) {
@@ -161,6 +148,20 @@ export const saleProductMixin = () => ({
         return true;
     },
 
+    async _onProductVariantUpdate() {
+        super._onProductVariantUpdate();
+        const data = await this._getProductConfiguratorData();
+        if (data.optional_products?.length) {
+            // The variant is already selected, only open the configurator to suggest its optional
+            // products, without allowing the variant itself to be changed
+            this._openProductConfigurator({
+                data, options: { canChangeVariant: false }, onDiscard: () => this._onProductUpdate()
+            });
+        } else {
+            this._onProductUpdate();
+        }
+    },
+
     _openGridConfigurator(edit = false) {}, // sale_product_matrix
 
     async _onProductUpdate() {}, // event_booth_sale, event_sale, sale_renting
@@ -175,7 +176,9 @@ export const saleProductMixin = () => ({
         }
     },
 
-    async _openProductConfigurator({ edit = false, selectedComboItems = [], data } = {}) {
+    async _openProductConfigurator({
+        edit = false, selectedComboItems = [], data, options = {}, onDiscard = () => {}
+    } = {}) {
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         let customPtavs = [];
@@ -220,13 +223,15 @@ export const saleProductMixin = () => ({
                 this._onProductUpdate();
             },
             discard: () => {
-                if (!selectedComboItems.length) {
-                    // Don't delete the main product if it's a combo product as it has been added
-                    // from combo configurator
+                // Only delete the line when the configurator is what puts a product on it, unlike
+                // a combo product or a directly picked variant, which are committed beforehand
+                if (this.props.record.data.product_id) {
+                    onDiscard();
+                } else {
                     this._getOrderLines().delete(this.props.record);
                 }
             },
-            ...this._getAdditionalDialogProps(),
+            ...this._getAdditionalDialogProps(options),
         });
     },
 
@@ -264,10 +269,11 @@ export const saleProductMixin = () => ({
     /**
      * Hook to append additional props in overriding modules.
      *
+     * @param options {Object} The options to pass to the dialog.
      * @return {Object} The additional props.
      */
-    _getAdditionalDialogProps() {
-        return {};
+    _getAdditionalDialogProps(options) {
+        return { options: options };
     },
 
     /**
