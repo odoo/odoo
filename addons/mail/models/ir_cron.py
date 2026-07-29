@@ -11,6 +11,7 @@ class IrCron(models.AbstractModel):
     interval_number = fields.Integer(tracking=True)
     interval_type = fields.Selection(tracking=True)
     priority = fields.Integer(tracking=True)
+    active = fields.Boolean(tracking=True)
 
     def _notify_admin(self, message):
         """ Send a notification to the admin users. """
