@@ -561,3 +561,36 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
         for expected, actual in zip(expected_alarms, actual_alarms):
             self.assertEqual(actual, expected)
+
+    def test_get_next_notif_cross_user_horizon(self):
+        """An earlier alarm on another user's event must not hide the current partner's next alarm."""
+        now = fields.Datetime.now()
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
+        my_event = self.env['calendar.event'].create({
+            'name': 'My Meeting',
+            'start': now + relativedelta(hours=2),
+            'stop': now + relativedelta(hours=3),
+            'alarm_ids': [(6, 0, alarm.ids)],
+            'partner_ids': [(4, self.user.partner_id.id)],
+        })
+
+        result_before = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual([r['event_id'] for r in result_before], my_event.ids, "The partner's upcoming alarm should be returned")
+
+        # another user's event, not attended by self.partner, with an earlier alarm
+        partner = self.env['res.partner'].create({'name': 'Someone Else'})
+        self.env['calendar.event'].create({
+            'name': 'Someone Else Meeting',
+            'start': now + relativedelta(minutes=30),
+            'stop': now + relativedelta(hours=1),
+            'alarm_ids': [(6, 0, alarm.ids)],
+            'partner_ids': [(4, partner.id)],
+        })
+
+        result_after = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(result_after, result_before, "Another user's earlier alarm must not hide the partner's next alarm")
