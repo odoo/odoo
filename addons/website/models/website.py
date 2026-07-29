@@ -210,6 +210,14 @@ class Website(models.CachedModel):
         # prefetch all accessible menus at once
         all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
 
+        # use field parent_id (1 query) to determine field child_id (2 queries by level)
+        children = dict.fromkeys(all_menus, ())
+        for menu in all_menus:
+            if menu.parent_id and menu.parent_id in all_menus:
+                children[menu.parent_id] += (menu.id,)
+        for menu, child_items in children.items():
+            menu._fields['child_id']._update_cache(menu, child_items)
+
         for website in self:
             menus = all_menus.filtered(lambda m: m.website_id == website)
 
@@ -221,15 +229,6 @@ class Website(models.CachedModel):
                         menus += menu
                         break
                     parent = parent.parent_id
-
-            # use field parent_id (1 query) to determine field child_id (2 queries by level)"
-            children = dict.fromkeys(menus, ())
-            for menu in menus:
-                # don't add child menu if parent is forbidden
-                if menu.parent_id and menu.parent_id in menus:
-                    children[menu.parent_id] += (menu.id,)
-            for menu, child_items in children.items():
-                menu._fields['child_id']._update_cache(menu, child_items)
 
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')
