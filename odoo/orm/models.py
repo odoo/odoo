@@ -2488,8 +2488,9 @@ class BaseModel(metaclass=MetaModel):
             days_offset = first_week_day and 7 - first_week_day
         interval = READ_GROUP_TIME_GRANULARITY[granularity]
         tz = False
-        if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
-            tz = pytz.timezone(self.env.context['tz'])
+        context_tz = date_utils.canonical_timezone(self.env.context.get('tz'))
+        if field.type == 'datetime' and context_tz in pytz.all_timezones_set:
+            tz = pytz.timezone(context_tz)
 
         # TODO: refactor remaing lines here
 
@@ -2591,8 +2592,9 @@ class BaseModel(metaclass=MetaModel):
                         range_end = value + interval
                         if field.type == 'datetime':
                             tzinfo = None
-                            if self.env.context.get('tz') in pytz.all_timezones_set:
-                                tzinfo = pytz.timezone(self.env.context['tz'])
+                            label_tz = date_utils.canonical_timezone(self.env.context.get('tz'))
+                            if label_tz in pytz.all_timezones_set:
+                                tzinfo = pytz.timezone(label_tz)
                                 range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
                                 # take into account possible hour change between start and end
                                 range_end = tzinfo.localize(range_end).astimezone(pytz.utc)

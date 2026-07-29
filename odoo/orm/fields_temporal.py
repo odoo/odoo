@@ -81,6 +81,7 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
         sql_expr = field_sql
         if self.type == 'datetime' and (timezone := model.env.context.get('tz')):
             # only use the timezone from the context
+            timezone = date_utils.canonical_timezone(timezone)
             if timezone in pytz.all_timezones_set:
                 sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
             else:
@@ -274,7 +275,8 @@ class Datetime(BaseDate[datetime]):
             dt = self.__get__(record)
             if not dt:
                 return False
-            if (tz := record.env.context.get('tz')) and tz in pytz.all_timezones_set:
+            tz = date_utils.canonical_timezone(record.env.context.get('tz'))
+            if tz and tz in pytz.all_timezones_set:
                 # only use the timezone from the context
                 dt = dt.astimezone(pytz.timezone(tz))
             return get_property(dt)

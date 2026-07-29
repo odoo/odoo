@@ -4,6 +4,7 @@ import pytz
 from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
+from odoo.tools import date_utils
 from odoo._monkeypatches.pytz import _tz_mapping
 
 _logger = logging.getLogger(__name__)
@@ -65,3 +66,63 @@ class TestTZ(TransactionCase):
         expected_offset = datetime.datetime.now(pytz.timezone('America/New_York')).strftime('%z')
         # offest will be -0400 in summer, -0500 in winter
         self.assertEqual(partner.tz_offset, expected_offset, "We don't expect pytz.timezone to fail if the timezone diseapeared when chaging os version")
+
+    def test_canonical_timezone(self):
+        """Retired aliases resolve, everything else is returned untouched."""
+        self.assertEqual(date_utils.canonical_timezone('Asia/Saigon'), 'Asia/Ho_Chi_Minh')
+        self.assertEqual(date_utils.canonical_timezone('US/Eastern'), 'America/New_York')
+        # already canonical, unknown, and empty values are left alone
+        self.assertEqual(date_utils.canonical_timezone('Europe/Brussels'), 'Europe/Brussels')
+        self.assertEqual(date_utils.canonical_timezone('Mars/Olympus_Mons'), 'Mars/Olympus_Mons')
+        self.assertEqual(date_utils.canonical_timezone(False), False)
+
+    def test_canonical_timezone_never_invents_a_zone(self):
+        """A mapping whose target is missing from the system is not applied."""
+        with patch.dict(_tz_mapping, {'Old/Zone': 'Nowhere/Unknown'}):
+            self.assertEqual(date_utils.canonical_timezone('Old/Zone'), 'Old/Zone')
+
+    def test_read_group_with_legacy_tz(self):
+        """Grouping in a retired alias converts, instead of falling back to UTC.
+
+        Before this, the SQL guard tested membership against pytz and skipped
+        the conversion for a legacy name, so a Vietnamese instance grouped its
+        datetimes seven hours off with no error anywhere.
+        """
+        self.env['res.partner'].create({'name': 'tz group test'})
+        domain = [('name', '=', 'tz group test')]
+        legacy = self.env['res.partner'].with_context(tz='Asia/Saigon')._read_group(
+            domain, ['create_date:day'], ['__count'],
+        )
+        canonical = self.env['res.partner'].with_context(tz='Asia/Ho_Chi_Minh')._read_group(
+            domain, ['create_date:day'], ['__count'],
+        )
+        self.assertEqual(legacy, canonical)
+        utc_grouped = self.env['res.partner'].with_context(tz='UTC')._read_group(
+            domain, ['create_date:day'], ['__count'],
+        )
+        if utc_grouped != canonical:
+            self.assertNotEqual(legacy, utc_grouped, "legacy alias must not group in UTC")
+
+    def test_login_stores_canonical_timezone(self):
+        """The browser value is translated on the way in, not stored raw."""
+        user = self.env['res.users'].create({
+            'name': 'browser tz user',
+            'login': 'browser_tz_user',
+            'password': 'browser_tz_user',
+        })
+        user.tz = False
+
+        class FakeRequest:
+            cookies = {'tz': 'Asia/Saigon'}
+            httprequest = type('E', (), {
+                'environ': {'REMOTE_ADDR': '127.0.0.1'},
+                'remote_addr': '127.0.0.1',
+            })()
+
+        with patch('odoo.addons.base.models.res_users.request', FakeRequest()):
+            self.env['res.users']._login(
+                {'login': 'browser_tz_user', 'password': 'browser_tz_user', 'type': 'password'},
+                {'interactive': False},
+            )
+        user.invalidate_recordset()
+        self.assertEqual(user.tz, 'Asia/Ho_Chi_Minh')

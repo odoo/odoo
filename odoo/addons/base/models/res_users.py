@@ -25,7 +25,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, str2bool, SQL
+from odoo.tools import date_utils, email_domain_extract, is_html_empty, frozendict, reset_cached_properties, str2bool, SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -768,7 +768,8 @@ class ResUsers(models.Model):
                     raise AccessDenied()
                 user = user.with_user(user).sudo()
                 auth_info = user._check_credentials(credential, user_agent_env)
-                tz = request.cookies.get('tz') if request else None
+                # browsers report the CLDR name, a retired alias for some zones
+                tz = date_utils.canonical_timezone(request.cookies.get('tz')) if request else None
                 if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                     # first login or missing tz -> set tz to browser tz
                     user.tz = tz

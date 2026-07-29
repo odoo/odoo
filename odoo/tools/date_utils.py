@@ -9,6 +9,8 @@ from datetime import date, datetime, time, timedelta, tzinfo
 import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
+from odoo._monkeypatches.pytz import _tz_mapping
+
 from .float_utils import float_round
 
 if typing.TYPE_CHECKING:
@@ -45,6 +47,7 @@ _SHORT_DATE_UNIT = {
 }
 
 __all__ = [
+    'canonical_timezone',
     'date_range',
     'float_to_time',
     'get_fiscal_year',
@@ -59,6 +62,19 @@ __all__ = [
     'time_to_float',
     'to_timezone',
 ]
+
+
+def canonical_timezone(name):
+    """ Resolve a retired tzdb alias (Asia/Saigon, US/Eastern, ...) to the name
+    the system actually ships. Values without a known equivalent, or whose
+    equivalent is missing locally, are returned unchanged.
+    """
+    if not name:
+        return name
+    canonical = _tz_mapping.get(name)
+    if canonical and canonical in pytz.all_timezones_set:
+        return canonical
+    return name
 
 
 def float_to_time(hours: float) -> time:
