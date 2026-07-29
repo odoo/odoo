@@ -451,6 +451,9 @@ function _download(data, filename, mimetype) {
 /**
  * Download data as a file
  *
+ * When `data` is a url and no filename nor mimetype is given, the file is
+ * requested from that url with GET.
+ *
  * @param {Object} data
  * @param {String} filename
  * @param {String} mimetype
@@ -469,6 +472,8 @@ downloadFile._download = _download;
  *
  * This function is meant to call a controller with some data
  * and download the response.
+ *
+ * The request is sent with POST, or with the method of the given form.
  *
  * Note: the actual implementation is certainly unconventional, but sadly
  * necessary to be able to test code using the download function

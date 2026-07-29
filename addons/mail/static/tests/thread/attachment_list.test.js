@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
 import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
@@ -162,6 +162,39 @@ test("view attachment", async () => {
     await contains(".o-mail-AttachmentImage");
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
+});
+
+test("triggers GET on download attachment from the file viewer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.png",
+        mimetype: "image/png",
+        res_id: channelId,
+        res_model: "discuss.channel",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentImage");
+    await contains(".o-FileViewer");
+    mockFetch((input, init) => {
+        expect.step(`${init.method} ${new URL(input, getOrigin()).pathname}`);
+        return new Blob(["test"], { type: "image/png" });
+    });
+    await click(".o-FileViewer-header [title='Download']");
+    // Attachment routes of discuss channels only allow GET, a POST download
+    // would be rejected with "405 Method Not Allowed".
+    await expect.waitForSteps([`GET /web/image/${attachmentId}`]);
 });
 
 test("can view pdf url", async () => {
