@@ -80,6 +80,12 @@ class CrlibreFeClient(models.AbstractModel):
             raise CrlibreApiError("Respuesta inesperada de 'gen_xml_te': %s" % resp)
         return base64.b64decode(resp['xml']).decode('utf-8')
 
+    def gen_xml_mr(self, params):
+        resp = self._call('genXML', 'gen_xml_mr', params)
+        if not isinstance(resp, dict) or not resp.get('xml'):
+            raise CrlibreApiError("Respuesta inesperada de 'gen_xml_mr': %s" % resp)
+        return base64.b64decode(resp['xml']).decode('utf-8')
+
     def register_api_user(self, full_name, username, password):
         resp = self._call('users', 'users_register', {
             'fullName': full_name,
@@ -170,6 +176,27 @@ class CrlibreFeClient(models.AbstractModel):
         })
         if not isinstance(resp, dict) or 'httpStatus' not in resp:
             raise CrlibreApiError("Respuesta inesperada de 'send/json': %s" % resp)
+        http_status = resp['httpStatus']
+        if http_status not in (200, 202):
+            raise CrlibreApiError("Hacienda rechazó el envío (HTTP %s): %s" % (http_status, resp.get('text')))
+        return {'http_status': http_status, 'raw': resp.get('text') or []}
+
+    def send_mr(self, token, clave, fecha_iso, emisor_tipo, emisor_num,
+                receptor_tipo, receptor_num, consecutivo_receptor, xml_firmado, environment):
+        resp = self._call('send', 'sendMensaje', {
+            'token': token,
+            'clave': clave,
+            'fecha': fecha_iso,
+            'emi_tipoIdentificacion': emisor_tipo,
+            'emi_numeroIdentificacion': emisor_num,
+            'recp_tipoIdentificacion': receptor_tipo,
+            'recp_numeroIdentificacion': receptor_num,
+            'consecutivoReceptor': consecutivo_receptor,
+            'comprobanteXml': base64.b64encode(xml_firmado.encode('utf-8')).decode('ascii'),
+            'client_id': self._CLIENT_ID_BY_ENVIRONMENT[environment],
+        })
+        if not isinstance(resp, dict) or 'httpStatus' not in resp:
+            raise CrlibreApiError("Respuesta inesperada de 'send/sendMensaje': %s" % resp)
         http_status = resp['httpStatus']
         if http_status not in (200, 202):
             raise CrlibreApiError("Hacienda rechazó el envío (HTTP %s): %s" % (http_status, resp.get('text')))
