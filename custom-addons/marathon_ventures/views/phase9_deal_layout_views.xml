@@ -73,12 +73,11 @@
             <group>
               <field name="brands" required="1"
                      placeholder="Select brand..."/>
-              <field name="contact" placeholder="Select contact..." required="1"/>
+              <field name="contact" placeholder="Select contact..." required="1"
+                     context="{'partner_display_contact_first': True}"/>
             </group>
             <group>
               <field name="campaign" placeholder="e.g., 2Q26 :30 spot"/>
-              <field name="contactaccount" string="Contact Account"
-                     readonly="1" placeholder="Select account..."/>
             </group>
           </group>
 
@@ -88,12 +87,14 @@
               <field name="length" required="1"/>
             </group>
             <group>
-              <field name="client_dr_gm_hybrid"
-                     string="Commercial Type" required="1"/>
+              <field name="commercial_type" string="Commercial Type" required="1"/>
             </group>
             <group>
               <field name="min_sep" string="Minimum Separation"
                      class="mv-highlight" required="1"/>
+            </group>
+            <group>
+              <field name="client_dr_gm_hybrid" />
             </group>
           </group>
 

@@ -301,7 +301,7 @@
             <th class="mv-daypart-col">DAYPART</th>
             <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
               <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
-              <div class="mv-week-col__dow">Mon</div>
+              <!-- <div class="mv-week-col__dow">Mon</div> -->
             </th>
             <th class="mv-total-col">TOTAL</th>
             <th class="mv-row-actions-col"></th>

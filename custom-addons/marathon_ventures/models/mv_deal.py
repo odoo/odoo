@@ -210,13 +210,21 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.clientcode = False
 
-    @api.depends()
+    @api.depends('brands')
     def _compute_commercial_type(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Brands__r.Advertiser__r.Commercial__c)
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.commercial_type = False
+            advertiser = rec.brands.advertiser
+            value = advertiser.commercial if advertiser else False
+            if not value:
+                rec.commercial_type = ''
+                continue
+            # TEXT() on a picklist returns the API/stored value; map to the label
+            # only if you need the display text instead.
+            rec.commercial_type = dict(
+                advertiser._fields['commercial']._description_selection(self.env)
+            ).get(value, value)
 
     @api.depends()
     def _compute_conga_invoice_wapa(self):
