@@ -21,9 +21,9 @@ let snippets;
 beforeEach(() => {
     snippets = {
         snippet_groups: [
-            '<div name="A" data-o-image-preview="" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="a"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
-            '<div name="B" data-o-image-preview="" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="b"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
-            '<div name="C" data-o-image-preview="" data-oe-thumbnail="c.svg" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="c"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+            '<div name="A" data-o-image-preview="" data-oe-thumbnail="/web/static/img/logo.png" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="a"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+            '<div name="B" data-o-image-preview="" data-oe-thumbnail="/web/static/img/logo2.png" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="b"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+            '<div name="C" data-o-image-preview="" data-oe-thumbnail="/web/static/img/nologo.png" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="c"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
         ],
     };
     addDropZoneSelector({
@@ -42,7 +42,11 @@ test("display group snippet", async () => {
     const thumbnailImgUrls = queryAll(`${snippetGroupsSelector} .o_snippet_thumbnail_img`).map(
         (thumbnail) => thumbnail.style.backgroundImage
     );
-    expect(thumbnailImgUrls).toEqual(['url("a.svg")', 'url("b.svg")', 'url("c.svg")']);
+    expect(thumbnailImgUrls).toEqual([
+        'url("/web/static/img/logo.png")',
+        'url("/web/static/img/logo2.png")',
+        'url("/web/static/img/nologo.png")',
+    ]);
 });
 
 test("install an app from snippet group", async () => {
@@ -59,7 +63,7 @@ test("install an app from snippet group", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-module-id="111" data-module-display-name="module_A" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-module-id="111" data-module-display-name="module_A"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
             ],
         },
     });
@@ -107,7 +111,7 @@ test("install an app from snippet structure", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: snippetsDescription.map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
@@ -149,8 +153,8 @@ test("open add snippet dialog + switch snippet category", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-                '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: createTestSnippets({ snippets, withName: false }).map(
                 (snippetDesc) => getSnippetStructure(snippetDesc)
@@ -208,8 +212,8 @@ test("search snippet in add snippet dialog", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-                '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: createTestSnippets({ snippets, withName: false }).map(
                 (snippetDesc) => getSnippetStructure(snippetDesc)
@@ -296,7 +300,7 @@ test("search snippet by class", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: snippetsForSetup.map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
@@ -339,8 +343,8 @@ test("add snippet dialog with imagePreview", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-                '<div name="B" data-oe-thumbnail="b.svg" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: createTestSnippets({ snippets, withName: false }).map(
                 (snippetDesc) => getSnippetStructure(snippetDesc)
@@ -367,7 +371,7 @@ test("insert snippet structure", async () => {
     const { contentEl } = await setupHTMLBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: createTestSnippets({ snippets, withName: false }).map(
                 (snippetDesc) => getSnippetStructure(snippetDesc)
@@ -399,7 +403,7 @@ test("Drag & drop snippet structure", async () => {
     const { contentEl } = await setupHTMLBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
             snippet_structure: createTestSnippets({ snippets, withName: false }).map(
                 (snippetDesc) => getSnippetStructure(snippetDesc)
