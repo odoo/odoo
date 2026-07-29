@@ -34,6 +34,7 @@ from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_embedded_actions
 from . import test_ir_default
+from . import test_logging
 from . import test_mail
 from . import test_menu
 from . import test_mimetypes
