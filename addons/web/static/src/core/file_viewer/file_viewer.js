@@ -1,7 +1,7 @@
 import { useRef } from "@web/owl2/utils";
 import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { download } from "@web/core/network/download";
+import { downloadFile } from "@web/core/network/download";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
@@ -345,9 +345,6 @@ export class FileViewer extends Component {
     }
 
     onClickDownload() {
-        download({
-            data: {},
-            url: this.state.file.downloadUrl,
-        });
+        downloadFile(this.state.file.downloadUrl);
     }
 }
