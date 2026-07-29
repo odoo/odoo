@@ -831,8 +831,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             keep = QueryURL(self._get_shop_path(original_category))
 
-        if attribute_values := kwargs.get('attribute_values', ''):
-            attribute_value_ids = {int(i) for i in attribute_values.split(',')}
+        try:
+            attribute_value_ids = {int(i) for i in kwargs.get('attribute_values', '').split(',')}
+        except ValueError:
+            attribute_value_ids = set()  # Malformed query param: no preselection.
+        if attribute_value_ids:
             combination = product.attribute_line_ids.mapped(
                 lambda ptal: (
                     ptal.product_template_value_ids.filtered(
@@ -2008,12 +2011,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Parses a list of attribute value query params, and returns a dict grouping attribute
         value ids by attribute id.
 
+        Malformed params are skipped rather than raising, as they are attacker- and
+        crawler-controlled and must not turn the shop page into an error page.
+
         :param list(str) attribute_values: The list of attribute value query parameters to parse.
         :return: A dict grouping attribute value ids by attribute id.
         :rtype: dict(int, list(int))
         """
-        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
-        return {
-            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
-            for pair in attribute_value_pairs
-        }
+        attribute_value_dict = {}
+        for value in attribute_values:
+            attribute_id, _sep, value_ids = value.partition('-')
+            try:
+                attribute_value_dict[int(attribute_id)] = [
+                    int(value_id) for value_id in value_ids.split(',')
+                ]
+            except ValueError:
+                continue  # Malformed query param: ignore this filter.
+        return attribute_value_dict

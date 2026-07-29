@@ -419,6 +419,27 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         }}).json().get('result', [])
         self.assertEqual(len(result), 0)
 
+    def test_malformed_attribute_values_query_param(self):
+        """Ensure a malformed `attribute_values` query param does not raise.
+
+        The param is crawler- and attacker-controlled, so an unparsable value must
+        degrade to "no filter" instead of turning the shop and product pages into
+        error pages.
+        """
+        self.computer_case.website_published = True
+        product_url = self.computer_case.website_url
+        malformed = (
+            '1',  # no `-` separator at all
+            'abc',  # not a number
+            '1-x',  # value id is not a number
+            '-1',  # empty attribute id
+            '494%2',  # truncated percent-escape, as sent by crawlers
+        )
+        for value in malformed:
+            for url in (f'/shop?attribute_values={value}', f'{product_url}?attribute_values={value}'):
+                with self.subTest(url=url):
+                    self.assertEqual(self.url_open(url).status_code, 200)
+
     def test_newest_products_filter_unpublished_access(self):
         """Ensure unpublished products cannot be fetched using a mono-record snippet configuration"""
 
