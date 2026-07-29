@@ -4798,11 +4798,37 @@ class AccountMove(models.Model):
         Meant to be called right after posting a periodic entry.
         Copies extra fields as defined by _get_fields_to_copy_recurring_entries().
         '''
+        moves_next_dates = []
         for record in self:
             record.auto_post_origin_id = record.auto_post_origin_id or record  # original entry references itself
             next_date = self._apply_delta_recurring_entries(record.date, record.auto_post_origin_id.date, record.auto_post)
 
             if not record.auto_post_until or next_date <= record.auto_post_until:  # recurrence continues
+                moves_next_dates.append((record, next_date))
+
+        if not moves_next_dates:
+            return
+
+        self.flush_model(['date', 'auto_post_origin_id'])
+        values = SQL(', ').join(
+            SQL('(%s::int4, %s::int4, %s::date)', move.id, move.auto_post_origin_id.id, next_date)
+            for move, next_date in moves_next_dates
+        )
+        recurrence_exists = dict(self.env.execute_query(SQL(
+            """
+               SELECT current_move.id,
+                      EXISTS (
+                          SELECT 1
+                            FROM account_move AS next_move
+                           WHERE next_move.auto_post_origin_id = current_move.auto_post_origin_id
+                             AND next_move.date = current_move.next_date
+                      )
+                 FROM (VALUES %(values)s) AS current_move(id, auto_post_origin_id, next_date)
+            """,
+            values=values,
+        )))
+        for record, next_date in moves_next_dates:
+            if not recurrence_exists.get(record.id):
                 record.copy(default=record._get_fields_to_copy_recurring_entries({'date': next_date}))
 
     def _get_fields_to_copy_recurring_entries(self, values):
@@ -6213,6 +6239,8 @@ class AccountMove(models.Model):
             raise UserError(_("You can't reset to draft those journal entries. You need to request a cancellation instead."))
 
         self._check_draftable()
+        # We delete next auto_post move if draft
+        self._unlink_next_draft_auto_post_moves()
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.state = 'draft'
@@ -6253,6 +6281,35 @@ class AccountMove(models.Model):
                     user=self.env.user.name,
                     date=today,
                 )
+
+    def _unlink_next_draft_auto_post_moves(self):
+        """
+        Deletes auto_post recurrence following each move in self
+        only if that next recurrence is in draft.
+        """
+        recurring_moves = self.filtered(lambda move: move.id and move.auto_post_origin_id.id)
+        if not recurring_moves:
+            return
+
+        self.flush_model(['date', 'auto_post_origin_id'])
+        next_draft_moves_ids = [move_id for [move_id] in self.env.execute_query(SQL(
+            """
+               SELECT next_move.id
+                 FROM account_move AS current_move
+                 JOIN LATERAL (
+                          SELECT move.id, move.state
+                            FROM account_move move
+                           WHERE move.auto_post_origin_id = current_move.auto_post_origin_id
+                             AND move.date > current_move.date
+                        ORDER BY move.date, move.id
+                           LIMIT 1
+                      ) AS next_move ON TRUE
+                WHERE current_move.id in %(ids)s
+                  AND next_move.state = 'draft'
+            """,
+            ids=recurring_moves._ids,
+        ))]
+        self.browse(next_draft_moves_ids).unlink()
 
     def _check_draftable(self):
         exchange_move_ids = set()
