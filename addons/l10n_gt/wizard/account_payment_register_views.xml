@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form_inherit_l10n_gt" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit.l10n_gt</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group2']//field[@name='amount']" position="attributes">
+                <attribute name="readonly" add="country_code == 'GT' and withhold == 'withhold'" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='withholding_line_ids']/list/field[@name='base_amount']" position="attributes">
+                <attribute name="readonly">parent.country_code == 'GT'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
