@@ -15,7 +15,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner_b = cls.env['res.partner'].create({'name': 'Partner B'})
+        cls.partner_b = cls.owner
 
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
@@ -30,7 +30,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         to 14. Invoice 2 without delivering. The amount in Stock OUT and COGS should be 14*2.
         """
         self.product_standard_auto.invoice_policy = 'order'
-        self.product_standard_auto.standard_price = 10.0
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_standard_auto)
@@ -66,14 +65,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         change the standard price to 14, deliver one, change the standard price to 16, invoice 1.
         The amounts used in Stock OUT and COGS should be 10 then 14."""
         self.product_standard_auto.invoice_policy = 'order'
-        self.product_standard_auto.standard_price = 10.0
 
         # Create and confirm a sale order for 2@12
         sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # Invoice 1
         invoice = sale_order._create_invoices()
@@ -100,8 +97,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.product_standard_auto.standard_price = 14.0
 
         # deliver the backorder
-        sale_order.picking_ids[0].move_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids[0].button_validate()
+        self._process_pickings(sale_order.picking_ids[0], quantity=1.0)
 
         # change the standard price to 16
         self.product_standard_auto.standard_price = 16.0
@@ -129,7 +125,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         standard price to 14, deliver one, invoice 2. The amounts used in Stock OUT and COGS should
         be 12*2."""
         self.product_standard_auto.invoice_policy = 'order'
-        self.product_standard_auto.standard_price = 10
         self._use_inventory_location_accounting()
 
         # Put two items in stock.
@@ -144,15 +139,13 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # change the standard price to 14
         self.product_standard_auto.standard_price = 14.0
 
         # deliver the backorder
-        sale_order.picking_ids.filtered('backorder_id').move_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.filtered('backorder_id').button_validate()
+        self._process_pickings(sale_order.picking_ids[0], quantity=1.0)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -186,7 +179,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_standard_delivered_invoice_pre_delivery(self):
         """Not possible to invoice pre delivery."""
         self.product_standard_auto.invoice_policy = 'delivery'
-        self.product_standard_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_standard_auto)
@@ -204,7 +196,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         standard price to 14, deliver one, invoice 2. The amounts used in Stock OUT and COGS should
         be 12*2."""
         self.product_standard_auto.invoice_policy = 'delivery'
-        self.product_standard_auto.standard_price = 10
         self._use_inventory_location_accounting()
 
         # Put two items in stock.
@@ -219,15 +210,13 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # change the standard price to 14
         self.product_standard_auto.standard_price = 14.0
 
         # deliver the backorder
-        sale_order.picking_ids.filtered('backorder_id').move_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.filtered('backorder_id').button_validate()
+        self._process_pickings(sale_order.picking_ids[0], quantity=1.0)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -261,7 +250,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_ordered_invoice_pre_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice without delivering."""
         self.product_avco_auto.invoice_policy = 'order'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
@@ -292,7 +280,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_ordered_invoice_post_partial_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after delivering 1."""
         self.product_avco_auto.invoice_policy = 'order'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
@@ -301,8 +288,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -327,7 +313,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_ordered_invoice_post_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after full delivery."""
         self.product_avco_auto.invoice_policy = 'order'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
@@ -359,38 +344,17 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         """ Sell and deliver some products before the user encodes the products receipt """
         product = self.product_avco_auto
         product.invoice_policy = 'order'
-        product.is_storable = True
-        product.categ_id.property_cost_method = 'average'
-        product.categ_id.property_valuation = 'real_time'
         product.list_price = 100
         product.standard_price = 50
 
         so = self._so_deliver(product, 5, product.list_price)
-        pick = so.picking_ids
 
         product.standard_price = 40
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0], active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.quantity = 1
-        return_wiz.product_return_moves.to_refund = False
-        res = return_wiz.action_create_returns()
-
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
-        return_pick.move_ids.write({'quantity': 1, 'picked': True})
-        return_pick.button_validate()
+        self._make_return(so.picking_ids.move_ids, 1, to_refund=False)
 
         # We don't set the price_unit so that the `standard_price` will be used (see _get_price_unit()):
-        move = self.env['stock.move'].create({
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.stock_location.id,
-            'product_id': product.id,
-            'product_uom': product.uom_id.id,
-            'quantity': 1,
-            'picked': True,
-        })
-        move._action_done()
+        self._make_in_move(product, 1)
 
         invoice = so._create_invoices()
         invoice.action_post()
@@ -402,7 +366,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_delivered_invoice_pre_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice without delivering. """
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
@@ -418,7 +381,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_delivered_invoice_post_partial_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after delivering 1."""
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
@@ -427,8 +389,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -453,16 +414,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_avco_delivered_invoice_post_delivery(self):
         """Standard price set to 10. Sale order 2@12. Invoice after full delivery."""
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         # Put two items in stock.
         self._inv_adj_two_units(self.product_avco_auto)
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
-        # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -490,16 +447,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         products was owned by an external partner. Invoice after full delivery.
         """
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1)
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
-        # Deliver both products (there should be two SML)
-        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12)
 
         # Invoice one by one
         invoice01 = sale_order._create_invoices()
@@ -532,16 +485,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         Make sure the cogs is only for the non consigned product.
         """
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1)
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
-        # Deliver both products (there should be two SML)
-        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12)
 
         # Invoice
         invoice01 = sale_order._create_invoices()
@@ -563,16 +512,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         Make sure the cogs is only for the non consigned product.
         """
         self.product_standard_auto.invoice_policy = 'delivery'
-        self.product_standard_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1)
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
-        # Deliver both products (there should be two SML)
-        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_standard_auto, 2, 12)
 
         # Invoice
         invoice01 = sale_order._create_invoices()
@@ -594,16 +539,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         Make sure the cogs is only for the non consigned product.
         """
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1, owner_id=self.partner_b)
         self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1)
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
-        # Deliver both products (there should be two SML)
-        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12)
 
         # Invoice
         invoice01 = sale_order._create_invoices()
@@ -624,13 +565,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         external partner. Invoice after full delivery.
         """
         self.product_avco_auto.invoice_policy = 'delivery'
-        self.product_avco_auto.standard_price = 10
 
         self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 2, owner_id=self.partner_b)
 
-        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
-        sale_order.picking_ids.move_line_ids.write({'quantity': 2, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12)
 
         invoice = sale_order._create_invoices()
         invoice.action_post()
@@ -687,8 +625,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # upate the standard price to 12
         self.product_fifo_auto.standard_price = 12
@@ -721,11 +658,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
-
-        # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -752,7 +685,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     # -------------------------------------------------------------------------
     def test_fifo_delivered_invoice_pre_delivery(self):
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
 
         self._fifo_in_one_eight_one_ten()
 
@@ -762,7 +694,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Invoice the sale order.
         # Nothing delivered = nothing to invoice.
         with self.assertRaises(UserError):
-            invoice_id = sale_order._create_invoices()
+            sale_order._create_invoices()
 
     def test_fifo_delivered_invoice_post_partial_delivery(self):
         """Receive 1@8, 1@10, so 2@12, standard price 12, deliver 1, invoice 2: the price used should be 10:
@@ -775,8 +707,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
 
         # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._process_pickings(sale_order.picking_ids, quantity=1.0, create_backorder=True)
 
         # upate the standard price to 12
         self.product_fifo_auto.standard_price = 12
@@ -805,16 +736,11 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
     def test_fifo_delivered_invoice_post_delivery(self):
         """Receive at 8 then at 10. Sale order 2@12. Invoice after delivering everything."""
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
 
         self._fifo_in_one_eight_one_ten()
 
         # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
-
-        # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -840,7 +766,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         """Receive at 8 then at 10. Sale order 10@12 and deliver without receiving the 2 missing.
         receive 2@12. Invoice."""
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
 
         self._make_in_move(self.product_fifo_auto, 8, 10)
 
@@ -958,7 +883,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         Now, receive 2@12. Make sure price difference is correctly reflected in expense account at
         closing."""
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
 
         self._make_in_move(self.product_fifo_auto, 8, 10)
         self._create_bill(self.product_fifo_auto, 8, 10)
@@ -993,17 +917,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         so_1 = self._so_deliver(self.product_fifo_auto, 2, 12)
 
         # Return 1 from SO1
-        stock_return_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=so_1.picking_ids.ids, active_id=so_1.picking_ids.ids[0], active_model='stock.picking')
-        )
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.action_assign()
-        return_pick.move_ids.write({'quantity': 1, 'picked': True})
-        return_pick._action_done()
+        return_pick = self._make_return(so_1.picking_ids.move_ids, 1).picking_id
 
         # Create, confirm and deliver a sale order for 1@12 (SO2)
         so_2 = self._so_deliver(self.product_fifo_auto, 1, 12)
@@ -1012,17 +926,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self._make_in_move(self.product_fifo_auto, 1, 20)
 
         # Re-deliver returned 1 from SO1
-        stock_redeliver_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=return_pick.ids, active_id=return_pick.ids[0], active_model='stock.picking')
-        )
-        stock_redeliver_picking = stock_redeliver_picking_form.save()
-        stock_redeliver_picking.product_return_moves.quantity = 1.0
-        stock_redeliver_picking_action = stock_redeliver_picking.action_create_returns()
-        redeliver_pick = self.env['stock.picking'].browse(stock_redeliver_picking_action['res_id'])
-        redeliver_pick.action_assign()
-        redeliver_pick.move_ids.write({'quantity': 1, 'picked': True})
-        redeliver_pick._action_done()
+        self._make_return(return_pick.move_ids, 1)
 
         # Invoice the sale orders
         invoice_1 = so_1._create_invoices()
@@ -1073,12 +977,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(delivery_1.move_ids.value, 10)
 
         # Return
-        ctx = {'active_id': delivery_1.id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
-        return_picking.button_validate()
+        self._make_return(delivery_1.move_ids, 1)
 
         # Change product price from $10 to $20
         self._make_out_move(self.product_fifo_auto, 1)
@@ -1087,8 +986,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Re deliver at $20
         delivery_2 = delivery_1.copy()
         delivery_2.action_confirm()
-        delivery_2.move_ids.write({'quantity': 1, 'picked': True})
-        delivery_2.button_validate()
+        self._process_pickings(delivery_2, 1)
         self.assertEqual(delivery_2.move_ids.value, 20)
 
         # Invoice the sale orders
@@ -1105,7 +1003,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     def test_fifo_uom_computation(self):
         self.product_fifo_auto.categ_id.property_valuation = 'real_time'
-        quantity = 50.0
         self.product_fifo_auto.list_price = 1.5
         self.product_fifo_auto.standard_price = 2.0
         unit_12 = self.env['uom.uom'].create({
@@ -1115,20 +1012,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         })
 
         # Create, confirm and deliver a sale order for 12@1.5 without reception with std_price = 2.0 (SO1)
-        so_1 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'order_line': [Command.create({
-                'name': self.product_fifo_auto.name,
-                'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
-                'product_uom_id': unit_12.id,
-                'price_unit': 18,
-                'tax_ids': False,  # no love taxes amls
-            })],
-        })
-        so_1.action_confirm()
-        so_1.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
-        so_1.picking_ids.button_validate()
+        so_1 = self._so_deliver(self.product_fifo_auto, 1, 18, product_uom=unit_12, picking=False)
+        self._process_pickings(so_1.picking_ids, 12)
 
         # Invoice the sale order.
         invoice_1 = so_1._create_invoices()
@@ -1160,23 +1045,11 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(aml[3].credit, 0.0)
 
         # Create stock move 1
-        self._make_in_move(self.product_fifo_auto, quantity, 1.0)
+        self._make_in_move(self.product_fifo_auto, 50.0, 1.0)
 
         # Create, confirm and deliver a sale order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
-        so_2 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'order_line': [Command.create({
-                'name': self.product_fifo_auto.name,
-                'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
-                'product_uom_id': unit_12.id,
-                'price_unit': 18,
-                'tax_ids': False,  # no love taxes amls
-            })],
-        })
-        so_2.action_confirm()
-        so_2.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
-        so_2.picking_ids.button_validate()
+        so_2 = self._so_deliver(self.product_fifo_auto, 1, 18, product_uom=unit_12, picking=False)
+        self._process_pickings(so_2.picking_ids, 12)
 
         # Invoice the sale order.
         invoice_2 = so_2._create_invoices()
@@ -1225,10 +1098,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         picking = so.picking_ids
         while picking:
             pickings.append(picking)
-            picking.move_ids.write({'quantity': 1, 'picked': True})
-            action = picking.button_validate()
-            if isinstance(action, dict):
-                Form.from_action(self.env, action).save().process()
+            self._process_pickings(picking, 1, create_backorder=True)
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()
@@ -1238,22 +1108,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self._make_in_move(self.product_fifo_auto, 1, 100)
 
         # Return the second picking (i.e. 1@20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
-        return_picking.button_validate()
+        self._make_return(pickings[1].move_ids, 1)
 
         # Add a credit note for the returned product
-        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
-        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({
-            'journal_id': invoice.journal_id.id,
-        })
-        action = refund_wizard.refund_moves()
-        reverse_invoice = self.env['account.move'].browse(action['res_id'])
-        reverse_invoice.invoice_line_ids[0].quantity = 1
-        reverse_invoice.action_post()
+        reverse_invoice = self._refund(invoice, 1)
 
         amls = reverse_invoice.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
@@ -1288,10 +1146,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         picking = so.picking_ids
         while picking:
             pickings.append(picking)
-            picking.move_ids.write({'quantity': 1, 'picked': True})
-            action = picking.button_validate()
-            if isinstance(action, dict):
-                Form.from_action(self.env, action).save().process()
+            self._process_pickings(picking, 1, create_backorder=True)
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()
@@ -1301,12 +1156,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self._make_in_move(self.product_fifo_auto, 1, 100)
 
         # Return the second picking (i.e. 1@20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
-        return_picking.button_validate()
+        self._make_return(pickings[1].move_ids, 1)
 
         # Create a new invoice for the returned product
         self.env['sale.advance.payment.inv'].with_context({
@@ -1343,19 +1193,14 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         original_delivery = so.picking_ids
 
         # Return Delivery in 2 steps
-        ctx = {'active_id': original_delivery.id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
+        return_picking = self._make_return(original_delivery.move_ids, 1).picking_id
 
         # 1st step, Customer -> Input
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
-        return_picking.button_validate()
+        self._process_pickings(return_picking, 1)
 
         # 2nd step, Input -> Stock
-        store_pick = return_picking.move_ids.move_dest_ids.picking_id
-        store_pick.move_ids.write({'quantity': 1, 'picked': True})
-        store_pick.button_validate()
+        store_pick = return_picking._get_next_transfers()
+        self._process_pickings(store_pick, 1)
 
         self.assertFalse(store_pick.move_ids.is_valued)
         self.assertEqual(store_pick.move_ids.value, 0)
@@ -1363,8 +1208,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # Re-deliver before creating invoice for COGS generation
         new_delivery = original_delivery.copy()
-        new_delivery.move_ids.write({'quantity': 1, 'picked': True})
-        new_delivery.button_validate()
+        self._process_pickings(new_delivery, 1)
 
         invoice = so._create_invoices()
         invoice.action_post()
@@ -1390,10 +1234,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         invoices = self.env['account.move']
         picking = so.picking_ids
         while picking:
-            picking.move_ids.write({'quantity': 1, 'picked': True})
-            action = picking.button_validate()
-            if isinstance(action, dict):
-                Form.from_action(self.env, action).save().process()
+            self._process_pickings(picking, 1, create_backorder=True)
             picking = picking.backorder_ids
 
             invoice = so._create_invoices()
@@ -1454,12 +1295,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.env.invalidate_all()
         invoice01.with_user(accountman.id).action_post()
 
-        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
-            'journal_id': invoice01.journal_id.id,
-        })
-        reversal = move_reversal.modify_moves()
-        invoice02 = self.env['account.move'].browse(reversal['res_id'])
-        invoice02.action_post()
+        invoice02 = self._refund(invoice01, is_modify=True)
 
         amls = invoice02.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
@@ -1475,12 +1311,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         then invoice the delivered part from the down payment.
         Deliver the remaining part and invoice it."""
         self.product_fifo_auto.invoice_policy = 'delivery'
-        self.product_fifo_auto.standard_price = 10
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product_fifo_auto.id,  # tracking serial
-            'inventory_quantity': 20,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
+        self._inv_adj_two_units(self.product_fifo_auto, 20)
 
         # Create a SO with a product invoiced on delivered quantity
         so = self._so_deliver(self.product_fifo_auto, 10, 100, picking=False)
@@ -1497,9 +1328,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         down_payment_invoices.action_post()
 
         # Deliver a part of it with a backorder
-        so.picking_ids.move_ids.quantity = 4
-        so.picking_ids.move_ids.picked = True
-        Form.from_action(self.env, so.picking_ids.button_validate()).save().process()
+        self._process_pickings(so.picking_ids, 4, create_backorder=True)
 
         self.env['sale.advance.payment.inv'].with_context(
             active_ids=so.ids,
@@ -1510,11 +1339,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
         down_payment_line.quantity = 0.4
         credit_note.action_post()
-        # Deliver the remaining part and invoice itµ
-        backorder = so.picking_ids.filtered(lambda p: p.state != 'done')
-        backorder.move_ids.quantity = 6
-        backorder.move_ids.picked = True
-        backorder.button_validate()
+        # Deliver the remaining part and invoice it
+        self._process_pickings(so.picking_ids.backorder_ids, 6)
 
         self.env['sale.advance.payment.inv'].with_context(
             active_ids=so.ids,
@@ -1568,7 +1394,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         delivery.move_ids.picked = True
         r = delivery.button_validate()
         Form(self.env[r['res_model']].with_context(r['context'])).save().process()
-        backorder_delivery = sale_order.picking_ids.filtered(lambda p: p.state != 'done')
+        backorder_delivery = delivery.backorder_ids
         backorder_delivery.move_ids.quantity = 2
         backorder_delivery.button_validate()
         self.env['sale.advance.payment.inv'].with_context(
@@ -1632,27 +1458,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         different uom than the product's uom, the cogs are computed correctly.
         """
         self.product_standard_auto.invoice_policy = 'delivery'
-        self.product_standard_auto.standard_price = 10.0
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product_standard_auto.id,
-            'inventory_quantity': 12,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
+        self._inv_adj_two_units(self.product_standard_auto, 12)
 
         # confirm a sale order in other uom
-        so_1 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'order_line': [Command.create({
-                'name': self.product_standard_auto.name,
-                'product_id': self.product_standard_auto.id,
-                'product_uom_qty': 2,
-                'product_uom_id': self.uom_pack_of_6.id,
-                'price_unit': 20,
-                'tax_ids': False,
-            })],
-        })
-        so_1.action_confirm()
-        so_1.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
+        so_1 = self._so_deliver(
+            self.product_standard_auto, 2, 20, picking=False, partner=self.owner, product_uom=self.uom_pack_of_6
+        )
         so_1.picking_ids.button_validate()
 
         # invoice the picking
@@ -1660,12 +1471,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         invoice_1.action_post()
 
         # create the return in the products uom
-        ctx = {'active_id': so_1.picking_ids.id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 9
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 9, 'picked': True})
-        return_picking.button_validate()
+        self._make_return(so_1.picking_ids.move_ids, 9)
 
         # invoice the credit note
         credit_note = so_1._create_invoices(final=True)
@@ -1687,7 +1493,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # SO + deliver
         sale_order = self._so_deliver(self.product_avco_auto, 5, 100)
-        sale_order.picking_ids.button_validate()
 
         # validate invoice
         invoice = sale_order._create_invoices()
@@ -1701,12 +1506,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self._make_in_move(self.product_avco_auto, 5, 30)
 
         # Return 1 quantity
-        ctx = {'active_id': sale_order.picking_ids[0].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
-        return_picking.button_validate()
+        self._make_return(sale_order.picking_ids[0].move_ids, 1)
 
         # create credit note from SO and confirm
         credit_note = sale_order._create_invoices(final=True)
@@ -1723,37 +1523,19 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         different uom than the product's uom, the cogs are computed correctly.
         """
         self.product_standard_auto.invoice_policy = 'delivery'
-        self.product_standard_auto.standard_price = 10.0
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product_standard_auto.id,
-            'inventory_quantity': 12,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
+        self._inv_adj_two_units(self.product_standard_auto, 12)
 
         # confirm a sale order in other uom
-        so_1 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'order_line': [Command.create({
-                'name': self.product_standard_auto.name,
-                'product_id': self.product_standard_auto.id,
-                'product_uom_qty': 2,
-                'product_uom_id': self.uom_pack_of_6.id,
-                'price_unit': 20,
-                'tax_ids': False,
-            })],
-        })
-        so_1.action_confirm()
+        so_1 = self._so_deliver(self.product_standard_auto, 2, 20, product_uom=self.uom_pack_of_6, picking=False)
 
         # deliver and invoice first part
         picking = so_1.picking_ids
-        picking.move_ids.write({'quantity': 6, 'picked': True})
-        Form.from_action(self.env, so_1.picking_ids.button_validate()).save().process()
+        self._process_pickings(picking, quantity=6.0, create_backorder=True)
         invoice_1 = so_1._create_invoices()
         invoice_1.action_post()
 
         # deliver and validate barckorder
-        picking.backorder_ids.move_ids.write({'quantity': 6, 'picked': True})
-        picking.backorder_ids.button_validate()
+        self._process_pickings(picking.backorder_ids, quantity=6.0)
         invoice_2 = so_1._create_invoices()
         invoice_2.action_post()
 
@@ -1773,16 +1555,11 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         Ensure that multiple COGS lines with different UoM do not negatively impact the COGS computation.
         Each COGS line quantity must be individually converted to the product UoM using its own UoM.
         """
-        unit_6 = self.env['uom.uom'].create({
-            'name': 'Pack of 6',
-            'relative_factor': 6,
-            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
-        })
+        unit_6 = self.uom_pack_of_6
         self.product_fifo_auto.write({"uom_ids": [Command.link(unit_6.id)]})
 
-        self._make_in_move(self.product_fifo_auto, 12, 1)
+        moves = self._make_in_move(self.product_fifo_auto, 12, 1)
 
-        moves = self.env['stock.move'].search([('product_id', '=', self.product_fifo_auto.id)])
         self.assertEqual(moves.value, 12)
 
         sale_order = self._so_deliver(self.product_fifo_auto, 6, 5)
@@ -1793,8 +1570,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         order_line.product_uom_qty = 12
 
         move = order_line.move_ids.filtered(lambda sm: sm.state != "done")
-        move.write({'quantity': 6, 'picked': True})
-        move.picking_id.button_validate()
+        self._process_pickings(move.picking_id, 6)
 
         invoice2 = sale_order._create_invoices()
         # Change invoice UoM from 6 Units to 1 Pack of 6 (because why not?)
@@ -1817,9 +1593,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.warehouse.delivery_steps = 'pick_ship'
         self._make_in_move(self.product_avco_auto, 1, 10)
         # create a SO
-        sale_order = self._so_deliver(self.product_avco_auto, 1, 1, picking=False)
-        # validate only the first picking of the chain
-        sale_order.picking_ids.button_validate()
+        sale_order = self._so_deliver(self.product_avco_auto, 1, 1)
         # validate invoice
         invoice = sale_order._create_invoices()
         invoice.action_post()
