@@ -55,9 +55,9 @@ class HrLeaveDisplayNameMixin(models.AbstractModel):
                 return custom_duration
             if is_hr_user:
                 return self.env._(
-                    "%(work_entry_type)s %(duration)s",
-                    work_entry_type=work_entry_type_display,
+                    "%(duration)s %(work_entry_type)s",
                     duration=custom_duration,
+                    work_entry_type=work_entry_type_display,
                 )
             return self.env._("%(duration)s", duration=duration_display)
 
