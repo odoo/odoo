@@ -816,13 +816,16 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
-        self._website_api_rpc(
-            '/api/website/unknown_industry',
-            {
-                'unknown_industry': unknown_industry,
-                'lang': self.env.context.get('lang'),
-            }
-        )
+        try:
+            self._website_api_rpc(
+                '/api/website/unknown_industry',
+                {
+                    'unknown_industry': unknown_industry,
+                    'lang': self.env.context.get('lang'),
+                }
+            )
+        except (AccessError, RequestException) as e:
+            logger.warning("Failed to report missing industry '%s': %s", unknown_industry, e)
 
     @api.model
     def configurator_get_images(self, industry_id, theme=''):
