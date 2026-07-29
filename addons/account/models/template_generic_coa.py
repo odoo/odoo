@@ -51,6 +51,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'stock_valuation',
                 'account_production_wip_account_id': 'wip',
                 'account_production_wip_overhead_account_id': 'cost_of_production',
+                'account_bills_to_receive_id': 'accrued_expenses',
+                'account_billed_not_received_id': 'prepayments',
+                'account_invoices_to_issue_id': 'accrued_income',
+                'account_invoiced_not_delivered_id': 'deferred_revenue',
             },
         }
 

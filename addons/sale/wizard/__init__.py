@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import (
+    accrued_orders,
     base_document_layout,
     mass_cancel_orders,
     payment_link_wizard,

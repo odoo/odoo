@@ -9,6 +9,7 @@ from . import const, controllers, models, report, wizard
 def _post_init_hook(env):
     _synchronize_crons(env)
     _setup_downpayment_account(env)
+    _setup_accrual_accounts(env)
 
 
 def _synchronize_crons(env):
@@ -20,4 +21,13 @@ def _synchronize_crons(env):
 def _setup_downpayment_account(env):
     env["account.chart.template"]._load_pre_defined_data({
         "res.company": {"downpayment_account_id"}
+    })
+
+
+def _setup_accrual_accounts(env):
+    env["account.chart.template"]._load_pre_defined_data({
+        "res.company": {
+            "account_invoices_to_issue_id",
+            "account_invoiced_not_delivered_id",
+        }
     })

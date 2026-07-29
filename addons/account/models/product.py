@@ -137,8 +137,7 @@ class ProductTemplate(models.Model):
         cache[key] = {
             'income': (
                 self.property_account_income_id
-                or self._get_category_account('property_account_income_categ_id')
-                or (self.company_id or self.env.company).income_account_id
+                or self._get_category_account('property_account_income_categ_id', 'income_account_id')
             ), 'expense': (
                 self.property_account_expense_id
                 or self._get_category_account('property_account_expense_categ_id')
@@ -148,10 +147,11 @@ class ProductTemplate(models.Model):
         }
         return dict(cache[key])
 
-    def _get_category_account(self, field_name):
+    def _get_category_account(self, field_name, company_field=None):
         """
         Return the first account defined on the product category hierarchy
-        for the given field.
+        for the given field, falling back on the company's `company_field`
+        account when none is found on the hierarchy.
         """
         categ = self.categ_id
         while categ:
@@ -159,6 +159,8 @@ class ProductTemplate(models.Model):
             if account:
                 return account
             categ = categ.parent_id
+        if company_field:
+            return (self.company_id or self.env.company)[company_field]
         return self.env['account.account']
 
     def get_product_accounts(self, fiscal_pos=None):

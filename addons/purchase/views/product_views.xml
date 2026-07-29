@@ -262,4 +262,16 @@
         </field>
     </record>
 
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit.purchase</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_account_expense_categ_id" position="after">
+                    <field name="property_account_bills_to_receive_id" options="{'no_create': True}" decoration-muted="not property_account_bills_to_receive_active"/>
+                    <field name="property_account_billed_not_received_id" options="{'no_create': True}" decoration-muted="not property_account_billed_not_received_active"/>
+                </field>
+            </field>
+        </record>
+
 </odoo>

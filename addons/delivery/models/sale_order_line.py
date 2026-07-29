@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class SaleOrderLine(models.Model):
@@ -32,6 +33,13 @@ class SaleOrderLine(models.Model):
     def _is_delivery(self):
         self.ensure_one()
         return self.is_delivery
+
+    def _get_accrual_domain(self):
+        """ Reused by account.accrued.orders.wizard and stock_account's
+        Stock Valuation report. """
+        domain = super()._get_accrual_domain()
+        domain = Domain.AND([domain, [('is_delivery', '=', False)]])
+        return domain
 
     def _get_invalid_delivery_weight_lines(self):
         """Retrieve lines containing physical products with no weight defined."""

@@ -217,6 +217,12 @@ class ProductTemplate(models.Model):
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref("sale.sale_menu_root").id]
 
+    def _get_product_accounts(self):
+        accounts = super()._get_product_accounts()
+        accounts['invoices_to_issue'] = self._get_category_account('property_account_invoices_to_issue_id', 'account_invoices_to_issue_id')
+        accounts['invoiced_not_delivered'] = self._get_category_account('property_account_invoiced_not_delivered_id', 'account_invoiced_not_delivered_id')
+        return accounts
+
     @api.model
     def get_import_templates(self):
         res = super().get_import_templates()
