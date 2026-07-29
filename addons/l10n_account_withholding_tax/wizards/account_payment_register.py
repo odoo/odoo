@@ -167,8 +167,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batch = wizard._get_batches()[0]
                 base_lines = []
                 for move in batch['lines'].move_id.filtered(lambda m: m.withholding_residual_amount_currency):
-                    move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
-                    base_lines += move_base_lines
+                    base_lines += move._get_withholding_base_lines()
 
                 if base_lines:
                     wizard.withholding_line_ids = wizard.withholding_line_ids._prepare_withholding_lines_commands(
