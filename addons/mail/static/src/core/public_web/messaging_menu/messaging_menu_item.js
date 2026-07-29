@@ -87,7 +87,12 @@ export class MessagingMenuItem extends Component {
         return this.messageDropdownState;
     }
 
-    get actionsPartition() {
+    // computed for memoization/stable identity; the body stays a method so
+    // patches can override it (an instance field would shadow a prototype
+    // getter override)
+    actionsPartition = computed(() => this._computeActionsPartition());
+
+    _computeActionsPartition() {
         const { quick, other, group, actionPanels } = this.messageActions.partition;
         const isBookmarkTab = this.activeTab().eq(this.store.messagingMenu.bookmarkTab);
         const filter = (actions) =>
@@ -101,6 +106,11 @@ export class MessagingMenuItem extends Component {
             group: group.map(filter),
         };
     }
+
+    actionsList = computed(() => {
+        const partition = this.actionsPartition();
+        return [partition.quick, partition.other, ...partition.group];
+    });
 
     get actionsTitle() {
         return _t("Thread Actions");

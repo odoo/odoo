@@ -66,6 +66,14 @@ export class ChatWindow extends Component {
         this.ui = useService("ui");
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
+        this.quickActionsList = computed(() =>
+            this.threadActions.partition.quick.slice(0, this.ui.isSmall ? 2 : 4).reverse()
+        );
+        this.dropdownActionsList = computed(() => {
+            const partition = this.threadActions.partition;
+            const quickInDropdown = partition.quick.slice(this.ui.isSmall ? 2 : 4);
+            return [quickInDropdown, partition.other, ...partition.group];
+        });
         this.actionsMenuButtonHover = useHover(this.actionsMenuButtonRef);
         this.parentChannelHover = useHover(this.parentChannelRef);
         this.isMobileOS = isMobileOS();

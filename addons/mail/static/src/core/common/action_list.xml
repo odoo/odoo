@@ -9,7 +9,7 @@
             'o-inline rounded-3': this.props.inline,
             'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
         }"/>
-        <t t-foreach="this.groups" t-as="group" t-key="group_index">
+        <t t-foreach="this.groups()" t-as="group" t-key="group_index">
             <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
                 <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
             </span>
@@ -32,7 +32,7 @@
                 <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
                     templateParams="this.action.dropdownTemplateParams"/>
                 <t t-elif="this.action.definition?.isMoreAction">
-                    <t t-component="this.ActionList" actions="this.action.definition.actions" dropdown="true"/>
+                    <t t-component="this.ActionList" actions="this.action.definition.actionsSignal" dropdown="true"/>
                 </t>
                 <t t-else="">No content.</t>
             </t>

@@ -1,5 +1,6 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount, t, useProps } from "@odoo/owl";
+import { propSignal } from "@mail/utils/common/hooks";
+import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel } from "@mail/core/common/action";
@@ -108,8 +109,11 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
+        this.actions = propSignal(
+            "actions",
+            t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
+        );
         this.props = useProps({
-            actions: t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))])),
             groupClass: t.string().optional(),
             ...actionListPropsSchema,
         });
@@ -118,15 +122,16 @@ export class ActionList extends Component {
         this.actionListProps = actionListProps;
     }
 
-    get groups() {
+    groups = computed(() => {
+        const actions = this.actions();
         let groups;
-        if (this.props.actions.find((i) => Array.isArray(i))) {
-            groups = this.props.actions;
+        if (actions.find((i) => Array.isArray(i))) {
+            groups = actions;
         } else {
-            groups = [this.props.actions];
+            groups = [actions];
         }
         return groups.filter((group) => group.length); // don't show empty groups
-    }
+    });
 
     get hasBtnBg() {
         return this.props.odooControlPanelSwitchStyle || this.props.hasBtnBg;

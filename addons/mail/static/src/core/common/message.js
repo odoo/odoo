@@ -252,19 +252,28 @@ export class Message extends Component {
         };
     }
 
-    computeActions() {
+    // components have no getter memoization: explicit computeds, so each
+    // piece re-runs only when its deps change and keeps a stable identity
+    quickActions = computed(() => {
         const allActions = this.messageActions.actions;
-        const quickActions = allActions.slice(
+        return allActions.slice(
             0,
             allActions.length > this.quickActionCount
                 ? this.quickActionCount - 1
                 : this.quickActionCount
         );
-        const moreActions =
-            allActions.length > this.quickActionCount
-                ? allActions.slice(this.quickActionCount - 1)
-                : false;
-        const moreAction = moreActions?.length
+    });
+
+    moreMenuActions = computed(() => {
+        const allActions = this.messageActions.actions;
+        return allActions.length > this.quickActionCount
+            ? allActions.slice(this.quickActionCount - 1)
+            : false;
+    });
+
+    moreAction = computed(() => {
+        const moreActions = this.moreMenuActions();
+        return moreActions?.length
             ? this.messageActions.more(this.messageActionsParams, {
                   actions: moreActions,
                   dropdownMenuClass: "o-mail-Message-moreMenu",
@@ -278,14 +287,18 @@ export class Message extends Component {
                   name: this.expandText,
               })
             : undefined;
-        const actions = moreAction ? [...quickActions, moreAction] : quickActions;
+    });
+
+    actions = computed(() => {
+        const moreAction = this.moreAction();
+        const actions = moreAction
+            ? [...this.quickActions(), moreAction]
+            : [...this.quickActions()];
         if (this.isAlignedRight) {
             actions.reverse();
         }
-        this.state.moreAction = moreAction;
-        this.quickActions = quickActions;
-        this.actions = actions;
-    }
+        return actions;
+    });
 
     get attClass() {
         return {
@@ -391,7 +404,7 @@ export class Message extends Component {
             this.state.isHovered ||
             this.state.isClicked ||
             this.emojiPicker?.isOpen ||
-            Boolean(this.state.moreAction?.isActive)
+            Boolean(this.moreAction()?.isActive)
         );
     }
 
