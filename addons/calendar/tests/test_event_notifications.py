@@ -830,3 +830,27 @@ class TestEventNotifications(CalendarMailCommon):
 
         result_after = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
         self.assertEqual(result_after, result_before, "Another user's earlier alarm must not hide the partner's next alarm")
+
+    def test_get_next_notif_alarm_in_more_than_24_hours(self):
+        """get alarm for event starting in more than 24 hours"""
+        now = datetime(2024, 1, 10, 13, 0, 0)
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'hours',
+            'duration': 24,
+        })
+        # alarm expected at 2024-01-10 14:00:00 (in 1 hour)
+        event = self.env['calendar.event'].create({
+            'name': 'My Meeting',
+            'start': now + relativedelta(hours=25),
+            'stop': now + relativedelta(hours=26),
+            'alarm_ids': [(6, 0, alarm.ids)],
+            'partner_ids': [(4, self.user.partner_id.id)],
+        })
+        self.user.partner_id.calendar_last_notif_ack = now
+        with self.mock_datetime_and_now(now):
+            result = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['event_id'], event.id)
+        self.assertEqual(result[0]['notify_at'], '2024-01-10 14:00:00')

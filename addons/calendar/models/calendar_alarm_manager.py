@@ -77,22 +77,18 @@ class CalendarAlarm_Manager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        past = one_date - timedelta(minutes=(missing * event_maxdelta))
         future = fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds)
-        if future <= past:
-            return result
         for alarm in event.alarm_ids:
             if alarm.alarm_type != alarm_type:
                 continue
             past = one_date - timedelta(minutes=(missing * alarm.duration_minutes))
-            if future <= past:
-                continue
-            if after and past <= fields.Datetime.from_string(after):
+            notify_at = one_date - timedelta(minutes=alarm.duration_minutes)
+            if future <= notify_at or (after and past <= fields.Datetime.from_string(after)):
                 continue
             result.append({
                 'alarm_id': alarm.id,
                 'event_id': event.id,
-                'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
+                'notify_at': notify_at,
             })
         return result
 
