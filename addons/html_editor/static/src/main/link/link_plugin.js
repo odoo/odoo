@@ -111,11 +111,12 @@ async function fetchAttachmentMetaData(url, ormService) {
     try {
         const urlParsed = new URL(url, window.location.origin);
         const attachementId = parseInt(urlParsed.pathname.split("/").pop());
-        return (
+        const result = (
             await ormService.read("ir.attachment", [attachementId], ["name", "mimetype", "type"])
         )[0];
+        return result || { name: url, type: "url" };
     } catch {
-        return { name: url };
+        return { name: url, type: "url" };
     }
 }
 
