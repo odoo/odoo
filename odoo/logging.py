@@ -12,16 +12,14 @@ __all__ = [  # noqa: RUF022
 
 
 class JSONFormatter(logging.Formatter):
-    def __init__(self, *args, record_keys=None, ignore_record_keys=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.record_keys = record_keys
-        if ignore_record_keys is not None:
-            self.ignore_record_keys = set(ignore_record_keys)
-        else:
-            # by default we want only the lower level key, avoiding to have duplicated information.
-            # message is derived from msg and args, but once formatted to json and the args stringified,
-            # it is not possible to format the message, so we keep the message instead
-            self.ignore_record_keys = {
+
+    DEFAULT_IMPLICIT_RECORD_KEYS = {
+        'message',  # prefered to msg and args to have the corrsct args formating
+        'test',  # needed on runbot
+        'exc_info',  # needed on runbot, concataneted to message implicilty in some cases
+    }
+
+    DEFAULT_IGNORED_RECORD_KEYS = {
                 'msecs',  # derived from created
                 'relativeCreated',  # derived from created
                 'asctime',  # derived from created
@@ -29,7 +27,20 @@ class JSONFormatter(logging.Formatter):
                 'module',  # derived from filename (pathname)
                 'msg',  # formatted in message
                 'args',  # formatted in message
-            }
+    }
+
+    def __init__(self, *args, record_keys=None, ignore_record_keys=None, additional_record_keys=None, **kwargs):
+        """
+        :param record_keys: list of keys to include in the json output, if None, all keys are included except those in ignore_record_keys
+        :param ignore_record_keys: list of keys to ignore in the json output, if None, a default list of keys is used. Only used if record_keys is None
+        :param additional_record_keys: list of additional keys to include in the json output
+        """
+        super().__init__(*args, **kwargs)
+        if record_keys is not None and (ignore_record_keys is not None or additional_record_keys is not None):
+            raise ValueError("record_keys is exclusive with ignore_record_keys / additional_record_keys")
+        self.record_keys = record_keys
+        self.additional_record_keys = set(additional_record_keys) if additional_record_keys else set()
+        self.ignore_record_keys = set(ignore_record_keys) if ignore_record_keys else set()
 
     def format(self, record):
         record_json = {}
@@ -64,4 +75,5 @@ class JSONFormatter(logging.Formatter):
         return json.dumps(record_json, default=str)
 
     def _get_default_record_keys(self, record):
-        return list(record.__dict__.keys() | {'message'} - self.ignore_record_keys)
+        record_keys = (record.__dict__.keys() | self.DEFAULT_IMPLICIT_RECORD_KEYS) - self.DEFAULT_IGNORED_RECORD_KEYS
+        return sorted((record_keys - self.ignore_record_keys) | self.additional_record_keys)
