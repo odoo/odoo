@@ -203,3 +203,44 @@ class TestCrlibreClient(TransactionCase):
             result = self.client.gen_xml_te({'clave': '5' * 50})
         self.assertEqual(result, xml)
         self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_te')
+
+    def test_gen_xml_mr_decodes_base64(self):
+        import base64
+        xml = '<MensajeReceptor>ok</MensajeReceptor>'
+        payload = {'status': 'ok',
+                   'resp': {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.gen_xml_mr({'clave': '5' * 50})
+        self.assertEqual(result, xml)
+        self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_mr')
+
+    def test_send_mr_includes_consecutivo_receptor(self):
+        raw_lines = ['HTTP/1.1 202 Accepted', 'Content-Type: application/json', '', '']
+        payload = {'status': 'ok', 'resp': {'httpStatus': 202, 'text': raw_lines}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.send_mr(
+                token='tok', clave='5' * 50, fecha_iso='2026-07-27T09:00:00-06:00',
+                emisor_tipo='01', emisor_num='702320717',
+                receptor_tipo='02', receptor_num='3101123456',
+                consecutivo_receptor='0' * 20,
+                xml_firmado='<MensajeReceptor/>', environment='stag')
+        self.assertEqual(result['http_status'], 202)
+        called_data = m.call_args.kwargs['data']
+        self.assertEqual(called_data['r'], 'sendMensaje')
+        self.assertEqual(called_data['consecutivoReceptor'], '0' * 20)
+        self.assertEqual(called_data['recp_tipoIdentificacion'], '02')
+        self.assertEqual(called_data['recp_numeroIdentificacion'], '3101123456')
+
+    def test_send_mr_error_status_raises(self):
+        payload = {'status': 'ok', 'resp': {'httpStatus': 400, 'text': ['HTTP/1.1 400 Bad Request', '']}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)):
+            with self.assertRaises(CrlibreApiError):
+                self.client.send_mr(
+                    token='tok', clave='5' * 50, fecha_iso='2026-07-27T09:00:00-06:00',
+                    emisor_tipo='01', emisor_num='702320717',
+                    receptor_tipo='02', receptor_num='3101123456',
+                    consecutivo_receptor='0' * 20,
+                    xml_firmado='<MensajeReceptor/>', environment='stag')
