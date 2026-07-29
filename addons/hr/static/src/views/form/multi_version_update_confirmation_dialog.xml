@@ -21,7 +21,7 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="this._change_current" t-custom-ref="autofocus">
+                <button class="btn btn-primary" t-on-click="this._change_current" t-ref="this.currentButtonRef">
                 This version
                 </button>
                 <button class="btn btn-secondary" t-on-click="this._change_multi">
