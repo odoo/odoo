@@ -45,7 +45,7 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_echohttp6_json_over_http(self):
-        payload = json.dumps({'commander': 'Thor'})
+        payload = json.dumps({'commander': 'Thor'}, separators=(',', ':'))
         res = self.nodb_url_open('/test_http/echo-json-over-http', data=payload, headers=CT_JSON)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, payload)
@@ -65,7 +65,7 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
         })
         res = self.nodb_url_open("/test_http/echo-json?race=Asgard", data=payload, headers=CT_JSON)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 1234, "result": {"commander": "Thor"}}')
+        self.assertEqual(res.text, '{"jsonrpc":"2.0","id":1234,"result":{"commander":"Thor"}}')
 
     def test_echojson1_http_get_nodb(self):
         res = self.nodb_url_open('/test_http/echo-json')  # GET
@@ -165,7 +165,7 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         })
         res = self.db_url_open('/test_http/echo-json?race=Asgard', data=payload, headers=CT_JSON)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 1234, "result": {"commander": "Thor"}}')
+        self.assertEqual(res.text, '{"jsonrpc":"2.0","id":1234,"result":{"commander":"Thor"}}')
 
     def test_echojson1_http_get_db(self):
         res = self.db_url_open('/test_http/echo-json')  # GET
@@ -189,8 +189,8 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         })
         res = self.db_url_open("/test_http/echo-json-context", data=payload, headers=CT_JSON)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": '
-            f'{{"lang": "en_US", "tz": false, "uid": {self.jackoneill.id}, "name": "Thor"}}'
+        self.assertEqual(res.text, '{"jsonrpc":"2.0","id":0,"result":'
+            f'{{"lang":"en_US","tz":false,"uid":{self.jackoneill.id},"name":"Thor"}}'
             '}')
 
     def test_echojson3_bad_json(self):

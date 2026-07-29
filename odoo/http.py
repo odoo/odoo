@@ -1700,7 +1700,7 @@ class Request:
         :param collections.abc.Mapping cookies: cookies to set on the client
         :rtype: :class:`~odoo.http.Response`
         """
-        data = json.dumps(data, ensure_ascii=False, default=date_utils.json_default)
+        data = json.dumps(data, ensure_ascii=False, default=date_utils.json_default, separators=(',', ':'))
 
         headers = werkzeug.datastructures.Headers(headers)
         headers['Content-Length'] = len(data)
