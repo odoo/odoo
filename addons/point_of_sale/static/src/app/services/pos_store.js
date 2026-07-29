@@ -142,6 +142,7 @@ export class PosStore extends WithLazyGetterTrap {
             },
             partnerList: {
                 offsetBySearch: {},
+                fullyLoadedBySearch: { "": false },
             },
         };
         // Handle offline mode
