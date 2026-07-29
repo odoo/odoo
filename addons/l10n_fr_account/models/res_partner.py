@@ -25,3 +25,13 @@ class ResPartner(models.Model):
     def _inverse_l10n_fr_siren(self):
         for partner in self:
             partner._set_additional_identifier('FR_SIREN', partner.l10n_fr_siren)
+
+    @api.depends('l10n_fr_siret')
+    def _compute_same_vat_partner_id(self):
+        super()._compute_same_vat_partner_id()
+
+        for partner in self:
+            if not partner.l10n_fr_is_french or not partner.same_vat_partner_id:
+                continue
+            if partner.l10n_fr_siret and partner.same_vat_partner_id.l10n_fr_siret and partner.l10n_fr_siret != partner.same_vat_partner_id.l10n_fr_siret:
+                partner.same_vat_partner_id = False
