@@ -11,3 +11,4 @@ from . import ir_attachment
 from . import res_company
 from . import template_de_skr03
 from . import template_de_skr04
+from . import res_partner
