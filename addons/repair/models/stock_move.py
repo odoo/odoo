@@ -71,6 +71,14 @@ class StockMove(models.Model):
                 moves_with_reference.add(move.id)
         super(StockMove, self - self.env['stock.move'].browse(moves_with_reference))._compute_reference()
 
+    def _inverse_description_picking(self):
+        super()._inverse_description_picking()
+        for move in self:
+            # add the description to related lines if it has a value and belongs to a repair order
+            if move.repair_id and move.description_picking_manual:
+                if move.sale_line_id:
+                    move.sale_line_id.name = f"{move.sale_line_id.translated_product_name}\n{move.description_picking}"
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)

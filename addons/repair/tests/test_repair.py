@@ -689,7 +689,8 @@ class TestRepair(TestRepairCommon):
 
     def test_repair_components_lots_show_in_invoice(self):
         """
-        Test that the lots of the components of a repair order are shown in the invoice
+        Test that the lots of the components of a repair order are shown in the invoice.
+        Also checks that picking description is propogated to sales orders and invoices.
         """
         quant = self.create_quant(self.product_storable_serial, 1)
         quant.action_apply_inventory()
@@ -703,6 +704,7 @@ class TestRepair(TestRepairCommon):
                     'product_uom_qty': 1.0,
                     'state': 'draft',
                     'repair_line_type': 'add',
+                    'description_picking': 'Picking Description',
                 })
             ],
         })
@@ -718,6 +720,8 @@ class TestRepair(TestRepairCommon):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
+        self.assertEqual(sale_order.order_line[0].name, f'{self.product_storable_serial.display_name}\nPicking Description')
+        self.assertEqual(invoice.line_ids[0].name, f'{self.product_storable_serial.display_name}\nPicking Description')
 
     def test_create_repair_order_from_cross_company_sn(self):
         """
