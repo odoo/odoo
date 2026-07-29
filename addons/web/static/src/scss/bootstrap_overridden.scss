@@ -30,12 +30,24 @@ $black:    $o-black !default;
 
 $primary: $o-brand-primary !default;
 $secondary: $gray-300 !default;
+$light: $o-gray-100 !default;
 $dark: $o-gray-900 !default;
 
 $success: $o-success !default;
 $info: $o-info !default;
 $warning: $o-warning !default;
 $danger: $o-danger !default;
+
+$theme-colors: map-merge((
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+), $o-colors-ui) !default;
 
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
