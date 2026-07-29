@@ -138,6 +138,38 @@ class ResourceCalendar(models.Model):
     # Compute Methods
     # --------------------------------------------------
 
+<<<<<<< d1ba42137b120d0bdafa5f454b69bf6baf8c05d0
+||||||| 526f7e2037a9462e91dd2180153392fbd66b18af
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_attendance(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids_1st_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '0')
+            calendar.attendance_ids_2nd_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '1')
+
+    def _inverse_two_weeks_calendar(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids = calendar.attendance_ids_1st_week + calendar.attendance_ids_2nd_week
+
+=======
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_attendance(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids_1st_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '0')
+            calendar.attendance_ids_2nd_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '1')
+
+    def _inverse_two_weeks_calendar(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar or self.env.context.get('resource_skip_inverse_two_weeks'):
+                continue
+            calendar.attendance_ids = calendar.attendance_ids_1st_week + calendar.attendance_ids_2nd_week
+
+>>>>>>> f5a4fa52d78060808fe06ea84033bb041cc88950
     @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
         for calendar in self.filtered("company_id"):
@@ -218,6 +250,11 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Overrides
     # --------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(ResourceCalendar, self.with_context(resource_skip_inverse_two_weeks=True)).create(vals_list)
+        return res
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -630,11 +667,39 @@ class ResourceCalendar(models.Model):
 
     def _get_default_attendance_ids(self, company_id=None):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
+<<<<<<< d1ba42137b120d0bdafa5f454b69bf6baf8c05d0
         if company_id and company_id.resource_calendar_id.calendar_type == "fixed" and (attendances := company_id.resource_calendar_id.attendance_ids):
             return [Command.clear()] + [Command.create(attendance) for attendance in attendances._to_dict()]
         return [Command.clear()] + [
             Command.create({'dayofweek': str(dayofweek), 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0})
             for dayofweek in range(5)
+||||||| 526f7e2037a9462e91dd2180153392fbd66b18af
+        if company_id and (attendances := company_id.resource_calendar_id.attendance_ids):
+            return [
+                Command.create(attendance._copy_attendance_vals()) for attendance in attendances
+            ]
+        return [
+            Command.create({'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+=======
+        company_calendar = company_id.resource_calendar_id if company_id else self.env['resource.calendar']
+        if (
+            (attendances := company_calendar.attendance_ids)
+            and (not self or not (company_calendar.two_weeks_calendar and not self.two_weeks_calendar))
+        ):
+            return [
+                Command.create(attendance._copy_attendance_vals()) for attendance in attendances
+            ]
+        return [
+            Command.create({'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            Command.create({'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+>>>>>>> f5a4fa52d78060808fe06ea84033bb041cc88950
         ]
 
     # --------------------------------------------------
