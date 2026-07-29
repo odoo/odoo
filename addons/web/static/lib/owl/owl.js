@@ -73,6 +73,7 @@ var owl = (() => {
     useConfig: () => useConfig,
     useEffect: () => useEffect,
     useListener: () => useListener,
+    useOnChange: () => useOnChange,
     usePlugin: () => usePlugin,
     useProps: () => useProps,
     useScope: () => useScope,
@@ -1597,53 +1598,6 @@ ${issueStrings}`);
     const scope = useScope();
     scope.onDestroy(scope.decorate(fn, "onWillDestroy"));
   }
-  function useEffect(fn) {
-    onWillDestroy(effect(fn));
-  }
-  function useListener(target, eventName, handler, eventParams) {
-    if (typeof target === "function") {
-      useEffect(() => {
-        const el = target();
-        if (el) {
-          el.addEventListener(eventName, handler, eventParams);
-          return () => el.removeEventListener(eventName, handler, eventParams);
-        }
-        return;
-      });
-    } else {
-      target.addEventListener(eventName, handler, eventParams);
-      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
-    }
-  }
-  function useApp() {
-    return useScope().app;
-  }
-  function usePlugin(pluginType) {
-    const scope = useScope();
-    let plugin2 = scope.pluginManager.getPluginById(pluginType.id);
-    if (!plugin2) {
-      if (scope instanceof PluginManager) {
-        plugin2 = scope.pluginManager.startPlugin(pluginType);
-      } else {
-        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
-      }
-    }
-    const scoped = pluginType.scoped;
-    return scoped ? scoped(plugin2, scope) : plugin2;
-  }
-  var plugin = usePlugin;
-  function useConfig(key, type) {
-    const scope = useScope();
-    if (!(scope instanceof PluginManager)) {
-      throw new OwlError("Expected to be in a plugin scope");
-    }
-    if (scope.app.dev && type) {
-      assertType(scope.config, types.object({ [key]: type }), "Config does not match the type");
-    }
-    const configValue = scope.config[key];
-    return configValue === void 0 ? getDefault(type)?.() : configValue;
-  }
-  var config = useConfig;
   var EventBus = class extends EventTarget {
     trigger(name, payload) {
       this.dispatchEvent(new CustomEvent(name, { detail: payload }));
@@ -1721,9 +1675,68 @@ ${issueStrings}`);
     acc += strings[i];
     return new Markup(acc);
   }
+  function useEffect(fn) {
+    onWillDestroy(effect(fn));
+  }
+  function useOnChange(dependencies, callback, { initialRun = true } = {}) {
+    const deps = computed(dependencies, { equals: shallowEqual });
+    let skipRun = !initialRun;
+    useEffect(() => {
+      const args = deps();
+      if (skipRun) {
+        skipRun = false;
+        return;
+      }
+      return untrack(() => callback(...args));
+    });
+  }
+  function useListener(target, eventName, handler, eventParams) {
+    if (typeof target === "function") {
+      useEffect(() => {
+        const el = target();
+        if (el) {
+          el.addEventListener(eventName, handler, eventParams);
+          return () => el.removeEventListener(eventName, handler, eventParams);
+        }
+        return;
+      });
+    } else {
+      target.addEventListener(eventName, handler, eventParams);
+      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+    }
+  }
+  function useApp() {
+    return useScope().app;
+  }
+  function usePlugin(pluginType) {
+    const scope = useScope();
+    let plugin2 = scope.pluginManager.getPluginById(pluginType.id);
+    if (!plugin2) {
+      if (scope instanceof PluginManager) {
+        plugin2 = scope.pluginManager.startPlugin(pluginType);
+      } else {
+        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
+      }
+    }
+    const scoped = pluginType.scoped;
+    return scoped ? scoped(plugin2, scope) : plugin2;
+  }
+  var plugin = usePlugin;
+  function useConfig(key, type) {
+    const scope = useScope();
+    if (!(scope instanceof PluginManager)) {
+      throw new OwlError("Expected to be in a plugin scope");
+    }
+    if (scope.app.dev && type) {
+      assertType(scope.config, types.object({ [key]: type }), "Config does not match the type");
+    }
+    const configValue = scope.config[key];
+    return configValue === void 0 ? getDefault(type)?.() : configValue;
+  }
+  var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.44";
+  var version = "3.0.0-alpha.45";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4877,8 +4890,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-07-16T13:58:03.987Z",
-    hash: "4b650af9",
+    date: "2026-07-29T11:21:03.982Z",
+    hash: "cf5b97cd",
     url: "https://github.com/odoo/owl"
   };
 
