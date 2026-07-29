@@ -27,7 +27,8 @@
             'o-help': livechatThread.channel.livechat_status === 'need_help',
         }">
             <t t-set="livechatStatusButton" t-value="this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>
-            <i class="o-livechat-LivechatStatusLabel-icon oi oi-fw" t-att-data-icon="livechatThread.channel.livechat_end_dt ? 'sports_score' : (small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon)" t-att-class="{
+            <t t-set="btnIcon" t-value="livechatThread.channel.livechat_end_dt ? 'sports_score' : (small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon)"/>
+            <i t-if="btnIcon" class="o-livechat-LivechatStatusLabel-icon oi oi-fw" t-att-data-icon="btnIcon" t-att-class="{
                 'o-white': livechatThread.channel.livechat_end_dt,
                 'o-xsmaller': livechatThread.channel.livechat_end_dt and small,
             }"/>
