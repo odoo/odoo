@@ -9,6 +9,12 @@
                     <field name="l10n_de_stnr" invisible="%(base.de)d not in account_enabled_tax_country_ids"/>
                     <field name="l10n_de_widnr" invisible="country_code != 'DE'"/>
                 </field>
+                <xpath expr="//field[@name='company_registry']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'DE'" separator=" or "/>
+                </xpath>
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="company_registry" string="Commercial Register Number" invisible="country_code != 'DE'"/>
+                </xpath>
             </field>
         </record>
 </odoo>
