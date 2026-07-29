@@ -8,7 +8,8 @@
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
-                <filter string="To Do" name="ready" domain="[('state','=','ready')]"/>
+                <filter string="Draft" name="draft" domain="[('production_state', '=', 'draft')]"/>
+                <filter string="To Do" name="ready" domain="[('production_state', '!=', 'draft'), ('state','=','ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
@@ -182,7 +183,8 @@
                 <field name="product_id"/>
                 <field name="production_lot_producing_id"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
-                <filter string="To Do" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Draft" name="draft" domain="[('production_state', '=', 'draft')]"/>
+                <filter string="To Do" name="ready" domain="[('production_state', '!=', 'draft'), ('state', '=', 'ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Done" name="finish" domain="[('state', '=', 'done')]"/>

@@ -1777,10 +1777,9 @@ class MrpProduction(models.Model):
 
     def button_plan(self, as_soon_as_possible=True):
         """ Create work orders. And probably do stuff, like things. """
-        orders_to_plan = self.filtered(lambda order: not order.is_planned)
-        orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == 'draft')
-        orders_to_confirm.action_confirm()
-        for order in orders_to_plan:
+        for order in self:
+            if order.is_planned:
+                continue
             if as_soon_as_possible:
                 order.date_start = fields.Datetime.now()
             order._plan_workorders()
