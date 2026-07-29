@@ -2087,50 +2087,43 @@ export class Rtc extends Record {
                 break;
             }
         }
-        if (this.localSession) {
-            switch (type) {
-                case "camera": {
-                    this.removeVideoFromSession(this.localSession, {
-                        type: "camera",
-                        cleanup: false,
-                    });
-                    if (this.cameraTrack) {
-                        this.updateStream(this.localSession, this.cameraTrack);
-                    }
-                    break;
-                }
-                case "screen": {
-                    if (!this.screenTrack) {
-                        this.removeVideoFromSession(this.localSession, {
-                            type: "screen",
-                            cleanup: false,
-                        });
-                    } else {
-                        this.updateStream(this.localSession, this.screenTrack);
-                    }
-                    break;
-                }
-            }
-        }
-        const updatedTrack = type === "camera" ? this.cameraTrack : this.screenTrack;
-        await this.network?.updateUpload(type, updatedTrack);
         if (!this.localSession) {
             return;
         }
         switch (type) {
             case "camera": {
+                this.removeVideoFromSession(this.localSession, {
+                    type: "camera",
+                    cleanup: false,
+                });
+                if (this.cameraTrack) {
+                    this.updateStream(this.localSession, this.cameraTrack);
+                }
+                // broadcast the new state right away: updating the upload waits
+                // on the peer connections, and a peer that never completes its
+                // handshake must not block the flag for everyone else
                 this.updateAndBroadcast({
                     is_camera_on: !!this.isSendingCamera,
                 });
                 break;
             }
             case "screen": {
+                if (!this.screenTrack) {
+                    this.removeVideoFromSession(this.localSession, {
+                        type: "screen",
+                        cleanup: false,
+                    });
+                } else {
+                    this.updateStream(this.localSession, this.screenTrack);
+                }
                 this.updateAndBroadcast({
                     is_screen_sharing_on: !!this.isSendingScreen,
                 });
                 break;
             }
         }
+        const updatedTrack = type === "camera" ? this.cameraTrack : this.screenTrack;
+        await this.network?.updateUpload(type, updatedTrack);
     }
 
     /**
