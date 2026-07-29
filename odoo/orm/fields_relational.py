@@ -789,7 +789,7 @@ class One2many(_RelationalMulti[M]):
         if self.comodel_name and self.inverse_name:
             comodel = env.registry[self.comodel_name]
             inverse_field = comodel._fields[self.inverse_name]
-            if inverse_field.type == 'many2one_reference':
+            if inverse_field.type == 'many2one_reference' and inverse_field.model_field:
                 return Domain(inverse_field.model_field, '=', self.model_name)
         return Domain.TRUE
 
