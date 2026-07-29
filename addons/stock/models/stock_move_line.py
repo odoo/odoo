@@ -1120,6 +1120,16 @@ class StockMoveLine(models.Model):
                 quantity=self.quantity,
                 package=package
             )
+        prec = self.env["decimal.precision"].precision_get("Product Unit")
+        if not self.env.context.get('barcode_view', False):
+            for line in self:
+                move = line.move_id
+                remaining = move.product_uom_qty - move.quantity
+                if not float_is_zero(remaining, prec):
+                    remaining_line = line.copy()
+                    remaining_line.quantity = max(remaining, 0.0) if not move.product_id.is_storable or float_compare(remaining, move.product_id.free_qty, prec) < 0 else max(move.product_id.free_qty, 0.0)
+                    remaining_line.quantity_product_uom = remaining
+                    move._action_assign()
         self.write({'result_package_id': package.id})
         return package
 
