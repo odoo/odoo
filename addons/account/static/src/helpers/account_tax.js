@@ -1286,6 +1286,7 @@ export const accountTaxHelpers = {
         const tax_details = base_line.tax_details;
         const taxes_data = tax_details.taxes_data;
         const manual_tax_amounts = base_line.manual_tax_amounts;
+        const tax_amount_to_propagate = {}
 
         // If there are no taxes, we pass an empty object to the grouping function.
         for (const tax_data of taxes_data.length !== 0 ? taxes_data : [null]) {
@@ -1331,9 +1332,13 @@ export const accountTaxHelpers = {
                     const excluded_target_field = `target_${excluded_rounded_field}`;
                     const excluded_manual_field = `manual_${excluded_rounded_field}`;
 
-                    const excluded_rounded_amount =
+                    let excluded_rounded_amount =
                         tax_details[excluded_rounded_field] + tax_details[excluded_delta_field];
-                    const excluded_raw_amount = tax_details[excluded_raw_field];
+                    let excluded_raw_amount = tax_details[excluded_raw_field];
+                    if (tax_data && tax_data.tax.id in tax_amount_to_propagate) {
+                        excluded_rounded_amount += tax_amount_to_propagate[tax_data.tax.id][excluded_rounded_field]
+                        excluded_raw_amount += tax_amount_to_propagate[tax_data.tax.id][excluded_raw_field]
+                    }
 
                     values[excluded_rounded_field] = excluded_rounded_amount;
                     values[excluded_raw_field] = excluded_raw_amount;
@@ -1385,6 +1390,22 @@ export const accountTaxHelpers = {
 
             // Tax amount.
             if (tax_data) {
+                // Compute the amount that should be propagated by tax
+                for (const tax of tax_data['taxes']) {
+                    const tax_id = tax.id
+                    if (tax_id in tax_amount_to_propagate) {
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded'] += tax_data['raw_tax_amount']
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded_currency'] += tax_data['raw_tax_amount_currency']
+                        tax_amount_to_propagate[tax_id]['total_excluded'] += tax_data['tax_amount']
+                        tax_amount_to_propagate[tax_id]['total_excluded_currency'] += tax_data['tax_amount_currency']
+                    } else {
+                        tax_amount_to_propagate[tax_id] = {}
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded'] = tax_data['raw_tax_amount']
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded_currency'] = tax_data['raw_tax_amount_currency']
+                        tax_amount_to_propagate[tax_id]['total_excluded'] = tax_data['tax_amount']
+                        tax_amount_to_propagate[tax_id]['total_excluded_currency'] = tax_data['tax_amount_currency']
+                    }
+                }
                 const reverse_charge_sign = tax_data.is_reverse_charge ? -1 : 1;
                 const values = values_per_grouping_key[grouping_key];
                 for (const suffix of ["_currency", ""]) {
