@@ -411,10 +411,15 @@ class AccountMove(models.Model):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
         client = self.env['l10n_cr.fe.client']
+        # Para un Mensaje Receptor (in_invoice), Hacienda rastrea el envio por la
+        # clave de la factura original del proveedor (la que se manda en el sobre
+        # de sendMensaje), no por la clave propia que generamos para el
+        # consecutivo del Mensaje Receptor. Verificado contra el sandbox real.
+        clave = self.l10n_cr_fe_proveedor_clave if self.move_type == 'in_invoice' else self.l10n_cr_fe_clave
         try:
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
-            result = client.consultar_estado(token, self.l10n_cr_fe_clave, config.environment)
+            result = client.consultar_estado(token, clave, config.environment)
         except CrlibreApiError as exc:
             self.message_post(body=_("Error al consultar el estado FE: %s") % exc)
             return

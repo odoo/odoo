@@ -123,7 +123,9 @@ Al confirmar cualquiera de las tres, se dispara el envío del Mensaje Receptor (
 
 ### 2.6 Reutilización de vistas/acciones existentes
 
-Los botones "Consultar estado FE" y "Reintentar envío FE", y el statusbar de `l10n_cr_fe_state`, se generalizan para mostrarse también cuando `move_type == 'in_invoice'` — sin lógica nueva, mismo criterio `invisible=` ya usado para incluir `out_refund`.
+Los botones "Consultar estado FE" y "Reintentar envío FE", y el statusbar de `l10n_cr_fe_state`, se generalizan para mostrarse también cuando `move_type == 'in_invoice'` — mismo criterio `invisible=` ya usado para incluir `out_refund`.
+
+**Corrección posterior (verificada contra el sandbox real):** "Consultar estado FE" sí necesitó lógica nueva, no fue una generalización directa. Se probó manualmente contra Hacienda y se confirmó que el Mensaje Receptor se rastrea por la clave de la **factura original del proveedor** (`l10n_cr_fe_proveedor_clave`), no por la clave propia que este módulo genera para el consecutivo del Mensaje Receptor (`l10n_cr_fe_clave`) — consistente con el sobre de `sendMensaje` (ver 2.3-bis). `action_l10n_cr_fe_consultar_estado` elige la clave correcta según `move_type` antes de consultar.
 
 ## 3. Fuera de alcance (documentado para retomar en el futuro)
 
