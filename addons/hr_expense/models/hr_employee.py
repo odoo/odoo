@@ -36,19 +36,27 @@ class HrEmployee(models.Model):
 
         domain = Domain.FALSE  # Nothing accepted by domain, by default
         user = self.env.user
-        employee = user.employee_id
         if user.has_groups('hr_expense.group_hr_expense_user'):
             domain = Domain('company_id', '=', False) | Domain('company_id', 'child_of', self.env.company.root_id.id)  # Then, domain accepts everything
         elif user.has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
+            employees = user.employee_ids
             domain = (
-                Domain('department_id.manager_id', '=', employee.id)
-                | Domain('parent_id', '=', employee.id)
-                | Domain('id', '=', employee.id)
+                Domain('department_id.manager_id', 'in', employees.ids)
+                | Domain('parent_id', 'in', employees.ids)
+                | Domain('id', 'in', employees.ids)
                 | Domain('expense_manager_id', '=', user.id)
-            ) & Domain('company_id', 'in', [False, employee.company_id.id])
+            )
         elif user.employee_id:
+            employee = user.employee_id
             domain = Domain('id', '=', employee.id) & Domain('company_id', 'in', [False, employee.company_id.id])
         return domain
+
+    def _get_expense_managers(self):
+        return (
+            self.expense_manager_id
+            | self.parent_id.user_id
+            | self.department_id.manager_id.user_id
+        )
 
     @api.depends('parent_id')
     def _compute_expense_manager(self):

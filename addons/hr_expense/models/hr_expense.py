@@ -357,11 +357,7 @@ class HrExpense(models.Model):
                 expense.is_editable = True
                 continue
 
-            managers = (
-                expense.manager_id
-                | employee.expense_manager_id
-                | employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
-            )
+            managers = expense.sudo()._get_managers()
             if is_all_approver:
                 managers |= self.env.user
             if expense.employee_id.id in expenses_employee_ids_under_user_ones:
@@ -491,7 +487,7 @@ class HrExpense(models.Model):
     def _compute_from_employee_id(self):
         for expense in self:
             expense.department_id = expense.employee_id.department_id
-            expense.manager_id = expense._get_default_responsible_for_approval()
+            expense.manager_id = expense.sudo()._get_default_responsible_for_approval()
 
     @api.depends('quantity', 'price_unit', 'tax_ids')
     def _compute_total_amount_currency(self):
@@ -1412,11 +1408,7 @@ class HrExpense(models.Model):
                 reason = _("%(expense_name)s: You are neither a Manager nor a HR Officer", expense_name=expense.name)
 
             elif not is_hr_admin:
-                current_managers = (
-                        expense_employee.expense_manager_id
-                        | expense_employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
-                        | expense.manager_id
-                )
+                current_managers = expense.sudo()._get_managers()
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
                     current_managers |= self.env.user
 
@@ -1508,8 +1500,9 @@ class HrExpense(models.Model):
 
     def _get_default_responsible_for_approval(self):
         self.ensure_one()
-        approver_group = 'hr_expense.group_hr_expense_team_approver'
+        return (self._get_managers() - self.employee_id.user_id)[:1]
 
+<<<<<<< fcdd41ff24e645c353f7e5276aa98952f3208462
         employee = self.employee_id.sudo()
         expense_manager = employee.expense_manager_id - employee.user_id
         if expense_manager:
@@ -1524,6 +1517,37 @@ class HrExpense(models.Model):
             return employee_team_leader.sudo(False)
 
         return self.env['res.users']
+||||||| 9e1a0592f24a422d3e8166539557af93afe30c8c
+        employee = self.employee_id
+        expense_manager = employee.expense_manager_id - employee.user_id
+        if expense_manager:
+            return expense_manager
+
+        department_manager = employee.department_id.manager_id.user_id - employee.user_id
+        if department_manager and department_manager.has_groups(approver_group):
+            return department_manager
+
+        employee_team_leader = employee.parent_id.user_id
+        if employee_team_leader:
+            return employee_team_leader
+
+        return self.env['res.users']
+=======
+    def _get_managers(self):
+        """Return all possible validators of an expense"""
+        self.ensure_one()
+        department_approver = self.env["res.users"]
+        if (
+            (department_manager := self.employee_id.department_id.manager_id.user_id)
+            and department_manager.has_groups('hr_expense.group_hr_expense_team_approver')
+        ):
+            department_approver = department_manager
+        return (
+            self.employee_id.expense_manager_id
+            | department_approver
+            | self.manager_id
+        )
+>>>>>>> 706732c15b0570a5f5f2b88295b2f7aad3a6d806
 
     def _needs_product_price_computation(self):
         # Hook to be overridden.
