@@ -430,7 +430,7 @@ class AccountChartTemplate(models.AbstractModel):
                     account = xmlid2account.get(xmlid)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
-                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                        query = self.env['account.account'].with_context(active_test=False)._search(self.env['account.account']._check_company_domain(company))
                         account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
                         query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
                         accounts = self.env['account.account'].browse(query)
