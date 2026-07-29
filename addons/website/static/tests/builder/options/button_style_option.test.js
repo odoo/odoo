@@ -159,6 +159,6 @@ test("button border width is not previewed", async () => {
     });
     // If border width is 0, previewed width is 0
     expect(".options-container .o-hb-select-toggle .o-hb-button-style-preview").toHaveStyle({
-        "border-color": "rgba(0, 0, 0, 0)",
+        "border-width": "0px",
     });
 });
