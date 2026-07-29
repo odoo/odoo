@@ -830,7 +830,7 @@ test("should be able to show preview when hovering radial type button", async ()
     const gradientAfter = `radial-gradient(circle farthest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)`;
 
     const { el } = await setupEditor(
-        `<p>a<font style="background-image: ${gradientBefore}; background-color: transparent;">[bcd]</font>e</p>`
+        `<p>a<font style="background-color: transparent; background-image: ${gradientBefore};">[bcd]</font>e</p>`
     );
     await expandToolbar();
     await click(".o-we-toolbar .o-select-color-background");
@@ -849,7 +849,7 @@ test("should be able to show preview when hovering radial type button", async ()
     await hover("button[title='Extend to the farthest side']");
     await animationFrame();
     expect(getContent(el)).toBe(
-        `<p>a<font style="background-image: ${gradientAfter}; background-color: transparent;">[bcd]</font>e</p>`
+        `<p>a<font style="background-color: transparent; background-image: ${gradientAfter};">[bcd]</font>e</p>`
     );
     expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
 
@@ -858,7 +858,7 @@ test("should be able to show preview when hovering radial type button", async ()
     await animationFrame();
     expect(".o_custom_gradient_button").toHaveStyle({ backgroundImage: gradientBefore });
     expect(getContent(el)).toBe(
-        `<p>a<font style="background-image: ${gradientBefore}; background-color: transparent;">[bcd]</font>e</p>`
+        `<p>a<font style="background-color: transparent; background-image: ${gradientBefore};">[bcd]</font>e</p>`
     );
     expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
 
@@ -872,7 +872,7 @@ test("should be able to show preview when hovering radial type button", async ()
 
     expect(".o_custom_gradient_button").toHaveStyle({ backgroundImage: gradientAfter });
     expect(getContent(el)).toBe(
-        `<p>a<font style="background-image: ${gradientAfter}; background-color: transparent;">[bcd]</font>e</p>`
+        `<p>a<font style="background-color: transparent; background-image: ${gradientAfter};">[bcd]</font>e</p>`
     );
     expect("button[title='Extend to the farthest side']").toHaveClass("active");
 });
