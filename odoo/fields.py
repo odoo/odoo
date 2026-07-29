@@ -1812,6 +1812,11 @@ class _String(Field[str | typing.Literal[False]]):
 
     _related_translate = property(attrgetter('translate'))
 
+    def _compute_related(self, records):
+        if records.env.context.get('edit_translations'):
+            records = records.with_context(edit_translations=None, check_translations=True)
+        super()._compute_related(records)
+
     def _description_translate(self, env):
         return bool(self.translate)
 
@@ -1869,6 +1874,14 @@ class _String(Field[str | typing.Literal[False]]):
         if value is None:
             return False
         if callable(self.translate) and record.env.context.get('edit_translations'):
+            field_ = self
+            record_ = record
+            while not field_.store and field_.related:
+                record_ = record_.mapped(field_.related.rsplit('.', 1)[0])[:1]
+                field_ = field_.related_field
+            if field_ is not self:
+                return field_.convert_to_record(value, record_)
+
             if not self.get_trans_terms(value):
                 return value
             base_lang = record._get_base_lang()
