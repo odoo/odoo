@@ -531,7 +531,6 @@ export class ColorPlugin extends Plugin {
             removePresetGradient(element);
         }
 
-        const hasGradientStyle = element.style.backgroundImage.includes("-gradient");
         if (mode === "backgroundColor") {
             if (!color) {
                 element.classList.remove("o_cc", ...COLOR_COMBINATION_CLASSES);
@@ -541,7 +540,7 @@ export class ColorPlugin extends Plugin {
             let newBackgroundImage = backgroundImagePartsToCss(parts);
             // we override the bg image if the new bg image is empty, but the previous one is a gradient.
             if (hasGradient && !newBackgroundImage) {
-                newBackgroundImage = "none";
+                newBackgroundImage = "";
             }
             element.style.backgroundImage = newBackgroundImage;
             removeStyle(element, "background-color");
@@ -584,8 +583,8 @@ export class ColorPlugin extends Plugin {
             );
         } else {
             delete parts.gradient;
-            if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
-                removeStyle(element, "background-image");
+            if (oldClassName.includes("text-gradient") && !backgroundImagePartsToCss(parts)) {
+                element.style["background-image"] = "";
             }
             if (color.startsWith("text") || color.startsWith("bg-")) {
                 removeStyle(element, mode);
