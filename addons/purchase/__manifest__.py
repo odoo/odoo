@@ -37,6 +37,7 @@
         'data/purchase_demo.xml',
     ],
     'application': True,
+    'post_init_hook': '_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'purchase/static/src/components/**/*',

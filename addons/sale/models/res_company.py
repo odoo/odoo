@@ -3,12 +3,28 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.base.models.res_company import company_default_for
+
 SALE_INVOICE_POLICY = [("order", "Ordered quantities"), ("delivery", "Delivered quantities")]
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
     _check_company_auto = True
+
+    account_invoices_to_issue_id = fields.Many2one(
+        'account.account',
+        string='Invoices to be Issued Account',
+        **company_default_for('account_invoices_to_issue_id', 'product.category', 'property_account_invoices_to_issue_id'),
+        check_company=True,
+    )
+
+    account_invoiced_not_delivered_id = fields.Many2one(
+        'account.account',
+        string='Invoiced Not Delivered Account',
+        **company_default_for('account_invoiced_not_delivered_id', 'product.category', 'property_account_invoiced_not_delivered_id'),
+        check_company=True,
+    )
 
     _check_quotation_validity_days = models.Constraint(
         "CHECK(quotation_validity_days >= 0)",
