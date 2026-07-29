@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="card">
+                    <t t-name="card" class="d-flex flex-column">
                         <div name="card_title" class="mb-1 ms-2">
                             <div class="d-flex align-items-center gap-2 position-relative">
                                 <field name="name" class="fw-bold fs-4"/>
@@ -165,7 +165,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="px-4">
+                        <div class="px-4 mt-auto">
                             <field name="kanban_dashboard_graph" widget="dashboard_graph" graph_type="line"/>
                         </div>
                     </t>
