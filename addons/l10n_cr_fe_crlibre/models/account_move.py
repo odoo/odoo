@@ -110,6 +110,10 @@ class AccountMove(models.Model):
     l10n_cr_fe_mr_motivo = fields.Char(string="Motivo (Mensaje Receptor)", copy=False)
     l10n_cr_fe_proveedor_clave = fields.Char(string="Clave de la factura del proveedor", readonly=True, copy=False)
     l10n_cr_fe_proveedor_fecha_emision = fields.Char(string="Fecha de emisión (proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_monto_impuesto = fields.Float(
+        string="Monto impuesto (XML original proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_total = fields.Float(
+        string="Total factura (XML original proveedor)", readonly=True, copy=False)
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -278,15 +282,26 @@ class AccountMove(models.Model):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
         mensaje_codigo = {'aceptado': '1', 'aceptado_parcial': '2', 'rechazado': '3'}[self.l10n_cr_fe_mr_decision]
+        # Para aceptacion total, Hacienda espera los montos autenticos del XML
+        # original del proveedor -- no los recalculados por Odoo a partir de las
+        # lineas, que pueden quedar incompletos (p.ej. una linea sin impuesto de
+        # compra emparejado). Para parcial/rechazado, los montos SI deben salir
+        # de las lineas ajustadas por el usuario en Odoo (ver spec 2.5).
+        if self.l10n_cr_fe_mr_decision == 'aceptado' and self.l10n_cr_fe_proveedor_total:
+            monto_total_impuesto = self.l10n_cr_fe_proveedor_monto_impuesto
+            total_factura = self.l10n_cr_fe_proveedor_total
+        else:
+            monto_total_impuesto = self.amount_tax
+            total_factura = self.amount_total
         return {
             'clave': self.l10n_cr_fe_proveedor_clave,
             'numero_cedula_emisor': (self.partner_id.vat or '').replace('-', '').strip(),
             'fecha_emision_doc': self.l10n_cr_fe_proveedor_fecha_emision,
             'mensaje': mensaje_codigo,
             'detalle_mensaje': self.l10n_cr_fe_mr_motivo or '',
-            'monto_total_impuesto': self.amount_tax,
+            'monto_total_impuesto': monto_total_impuesto,
             'codigo_actividad': config.economic_activity_code,
-            'total_factura': self.amount_total,
+            'total_factura': total_factura,
             'numero_cedula_receptor': config.identification_number,
             'numero_consecutivo_receptor': consecutivo,
         }
