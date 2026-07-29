@@ -274,10 +274,9 @@ class AccountMove(models.Model):
             }])
         return params
 
-    def _l10n_cr_fe_build_mr_params(self, consecutivo, detalles):
+    def _l10n_cr_fe_build_mr_params(self, consecutivo):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
-        resumen = self._l10n_cr_fe_build_resumen_totals(detalles)
         mensaje_codigo = {'aceptado': '1', 'aceptado_parcial': '2', 'rechazado': '3'}[self.l10n_cr_fe_mr_decision]
         return {
             'clave': self.l10n_cr_fe_proveedor_clave,
@@ -285,9 +284,9 @@ class AccountMove(models.Model):
             'fecha_emision_doc': self.l10n_cr_fe_proveedor_fecha_emision,
             'mensaje': mensaje_codigo,
             'detalle_mensaje': self.l10n_cr_fe_mr_motivo or '',
-            'monto_total_impuesto': resumen['total_impuestos'],
+            'monto_total_impuesto': self.amount_tax,
             'codigo_actividad': config.economic_activity_code,
-            'total_factura': resumen['total_comprobante'],
+            'total_factura': self.amount_total,
             'numero_cedula_receptor': config.identification_number,
             'numero_consecutivo_receptor': consecutivo,
         }
@@ -296,6 +295,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
         if not tipo_doc:
+            return
+        if self.move_type == 'in_invoice' and self.l10n_cr_fe_state not in ('draft', 'error'):
             return
         if not self.partner_id:
             raise UserError(_("El comprobante no tiene cliente (receptor)."))
@@ -317,10 +318,9 @@ class AccountMove(models.Model):
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
             clave_res = client.get_clave(clave_params)
-            detalles = self._l10n_cr_fe_build_detalles()
 
             if self.move_type == 'in_invoice':
-                mr_params = self._l10n_cr_fe_build_mr_params(clave_res['consecutivo'], detalles)
+                mr_params = self._l10n_cr_fe_build_mr_params(clave_res['consecutivo'])
                 xml = client.gen_xml_mr(mr_params)
                 token = client.get_hacienda_token(
                     config.hacienda_username, config.hacienda_password, config.environment)
@@ -335,6 +335,7 @@ class AccountMove(models.Model):
                     consecutivo_receptor=clave_res['consecutivo'],
                     xml_firmado=xml_firmado, environment=config.environment)
             else:
+                detalles = self._l10n_cr_fe_build_detalles()
                 genxml_params = self._l10n_cr_fe_build_genxml_params(
                     clave_res['clave'], clave_res['consecutivo'], detalles)
                 gen_xml_action = tipo_doc['gen_xml_action']

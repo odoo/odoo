@@ -260,8 +260,7 @@ class TestAccountMoveMapping(TransactionCase):
                 'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
             })],
         })
-        detalles = bill._l10n_cr_fe_build_detalles()
-        params = bill._l10n_cr_fe_build_mr_params('0' * 20, detalles)
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
         self.assertEqual(params['clave'], '6' * 50)
         self.assertEqual(params['numero_cedula_emisor'], '3101987654')
         self.assertEqual(params['fecha_emision_doc'], '2026-07-20T08:00:00-06:00')
