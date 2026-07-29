@@ -45,7 +45,7 @@
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-name="combination_info['display_name']"
                 >
-                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
+                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center pt-2 pb-2 pb-md-3">
                         <div class="d-flex align-items-center flex-grow-1">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
                                 <li class="breadcrumb-item d-none d-lg-inline-block">
@@ -725,6 +725,56 @@
                 </div>
             </div>
         </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_mobile_bottom_bar"
+        inherit_id="website_sale.product"
+        name="Product Mobile Bottom Bar"
+    >
+        <!-- Add sticky bottom bar inside wrap, after all content -->
+        <div id='wrap' position="inside">
+            <t t-if="is_add_to_cart_possible">
+                <div
+                    id="o_wsale_product_mobile_bar"
+                    class="oe_website_sale d-flex d-md-none sticky-bottom align-items-center gap-2
+                        position-fixed bottom-0 start-0 end-0
+                        bg-body border-top px-3 py-2
+                        o_not_editable"
+                >
+                    <t t-call="website_sale.product_price"/>
+                    <t
+                        t-if="combination_info.get('base_unit_price')"
+                        t-call="website_sale.base_unit_price"
+                        base_unit_price="combination_info['base_unit_price']"
+                    />
+                    <button
+                        name="add_to_cart"
+                        t-attf-class="btn btn-primary ms-auto"
+                        t-if="not combination_info['prevent_sale']"
+                        data-action="add_to_cart"
+                        data-animation-selector=".o_wsale_product_images"
+                        t-att-data-product-category-id="product.public_categ_ids.ids and product.public_categ_ids.ids[0]"
+                        t-att-data-product-id="product_variant.id"
+                        t-att-data-product-template-id="product.id"
+                        t-att-data-product-type="product.type"
+                        t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                    >
+                        <i class="oi" data-icon="shopping_cart"/>
+                    </button>
+
+                    <!-- Contact Us — shown when sale not possible -->
+                    <a
+                        id="o_wsale_mobile_bar_contact"
+                        class="btn btn-primary o_wsale_mobile_bar_btn ms-auto"
+                        t-att-href="website._get_contact_us_url(combination_info.get('display_name', ''))"
+                        t-if="combination_info['prevent_sale']"
+                    >
+                        <i class="oi" data-icon="mail"/>
+                    </a>
+                </div>
+            </t>
+        </div>
     </template>
 
     <template id="website_sale.product_tags" name="Product Tags" active="True">

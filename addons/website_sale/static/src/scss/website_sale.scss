@@ -1189,6 +1189,34 @@ $-product-radius-map: (
     }
 }
 
+#o_wsale_product_mobile_bar {
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    height: 70px;
+
+    .o_wsale_mobile_bar_btn {
+        height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+    }
+
+    .o_wsale_mobile_bar_price {
+        span {
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+    }
+}
+
+// Prevent page content from being hidden behind sticky bar on mobile
+@include media-breakpoint-down(md) {
+    #wrapwrap:has(.o_wsale_product_page) .o_footer {
+        padding-bottom: 70px;
+    }
+}
+
 // ==== Product Details Content ================================================
 #o_wsale_product_details_content {
     display: flex;

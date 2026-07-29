@@ -509,7 +509,14 @@
             <div class="d-flex flex-grow-1">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
-                <ul class="o_header_mobile_buttons_wrap navbar-nav d-flex flex-row align-items-center gap-2 mb-0 ms-auto"/>
+                <ul class="o_header_mobile_buttons_wrap navbar-nav d-flex flex-row align-items-center gap-2 mb-0 ms-auto">
+                    <li class="nav-item">
+                        <t t-call="website.placeholder_header_search_box"
+                            _simple_button_layout="True"
+                            _force_modal_trigger="True"
+                            _simple_button_classes.f="nav-link text-reset p-1"/>
+                    </li>
+                </ul>
             </div>
             <button
                 class="nav-link btn p-2 o_not_editable"
@@ -528,12 +535,6 @@
                 </div>
                 <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100 pt-0">
                     <ul class="navbar-nav">
-                        <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box"
-                            _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
-                            _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
-                            _input_group_classes.f="mb-3"
-                            _force_modal_trigger="True"/>
                         <!-- Navbar -->
                         <li>
                             <t t-set="is_vertical_nav" t-valuef="True"/>

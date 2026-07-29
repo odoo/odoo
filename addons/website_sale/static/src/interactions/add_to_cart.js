@@ -15,7 +15,8 @@ export class AddToCart extends Interaction {
     async addToCart(ev) {
         const button = ev.currentTarget;
 
-        const productEl = button.closest('.js_product');
+        const productEl = button.closest(".js_product") || button.closest("#wrap")?.querySelector(".js_product");
+
         const productPageData = productEl ? {
             quantity: parseFloat(productEl.querySelector('input[name="add_qty"]')?.value) || 1,
             uomId: parseInt(productEl.querySelector('input[name="uom_id"]:checked')?.value),
@@ -26,7 +27,6 @@ export class AddToCart extends Interaction {
 
         const productContainer = productEl ?? this._getProductContainer(button);
         const optionalParams = productContainer ? this._getOptionalParams(productContainer) : {};
-
         const quantity = await this.waitFor(this.services['cart'].add({
             productTemplateId: parseInt(button.dataset.productTemplateId),
             productId: parseInt(button.dataset.productId),
@@ -36,7 +36,9 @@ export class AddToCart extends Interaction {
             ...optionalParams,
         }, {
             isBuyNow: button.dataset.action === 'buy_now',
-            isConfigured: button.parentElement.id === 'add_to_cart_wrap',
+            isConfigured: ['add_to_cart_wrap', 'o_wsale_product_mobile_bar'].includes(
+                button.parentElement.id
+            ),
             showQuantity: button.dataset.showQuantity === 'True',
         }));
 
