@@ -61,10 +61,10 @@ class TestGridItem extends Component {
 class TestGridComponent extends Component {
     static components = { TestGridItem };
     static template = xml`
-        <div class="scrollable" t-ref="this.virtualGrid.ref" style="${CONTAINER_STYLE}" t-att-dir="this.direction">
+        <div class="scrollable" t-ref="this.scrollableRef" style="${CONTAINER_STYLE}" t-att-dir="this.direction">
             <div class="inner" style="height: ${ROW_COUNT * ITEM_HEIGHT}px; width: ${
-        COLUMN_COUNT * ITEM_WIDTH
-    }px;">
+                COLUMN_COUNT * ITEM_WIDTH
+            }px;">
                 <t t-foreach="this.virtualRows()" t-as="row" t-key="row">
                     <t t-foreach="this.virtualColumns()" t-as="col" t-key="col">
                         <TestGridItem row="row" col="col" />
@@ -77,8 +77,10 @@ class TestGridComponent extends Component {
     props = useProps();
     direction = localization.direction;
 
+    scrollableRef = signal.ref();
     virtualGrid = useVirtualGrid({
         ...this.props,
+        scrollableRef: this.scrollableRef,
         rowHeights: Array(ROW_COUNT).fill(ITEM_HEIGHT),
         columnWidths: Array(COLUMN_COUNT).fill(ITEM_WIDTH),
     });
@@ -183,17 +185,16 @@ test("initialScroll: bottom right", async () => {
 test("required params only", async () => {
     class C extends Component {
         static template = xml`
-            <div class="scrollable" t-ref="this.virtualGrid.ref"
+            <div class="scrollable" t-ref="this.scrollableRef"
         />`;
 
-        virtualGrid = useVirtualGrid({ scrollableRef });
+        scrollableRef = signal.ref();
+        virtualGrid = useVirtualGrid({
+            scrollableRef: this.scrollableRef,
+        });
     }
 
-    const scrollableRef = signal.ref();
     const { virtualGrid } = await mountWithCleanup(C);
-
-    expect(virtualGrid.ref()).toBe(scrollableRef());
-    expect(scrollableRef()).toHaveClass("scrollable");
 
     expect(virtualGrid.firstRow()).toBe(null);
     expect(virtualGrid.lastRow()).toBe(null);
@@ -204,10 +205,12 @@ test("required params only", async () => {
 test("with empty rows and columns", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="this.virtualGrid.ref" />
+            <div t-ref="this.scrollableRef" />
         `;
 
+        scrollableRef = signal.ref();
         virtualGrid = useVirtualGrid({
+            scrollableRef: this.scrollableRef,
             rowHeights: [],
             columnWidths: [],
         });
@@ -224,10 +227,12 @@ test("with empty rows and columns", async () => {
 test("with 1 row and 1 column", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="this.virtualGrid.ref" />
+            <div t-ref="this.scrollableRef" />
         `;
 
+        scrollableRef = signal.ref();
         virtualGrid = useVirtualGrid({
+            scrollableRef: this.scrollableRef,
             rowHeights: [1],
             columnWidths: [1],
         });
@@ -244,10 +249,12 @@ test("with 1 row and 1 column", async () => {
 test("with columns only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="this.virtualGrid.ref" />
+            <div t-ref="this.scrollableRef" />
         `;
 
+        scrollableRef = signal.ref();
         virtualGrid = useVirtualGrid({
+            scrollableRef: this.scrollableRef,
             columnWidths: Array(100).fill(1),
         });
     }
@@ -263,10 +270,12 @@ test("with columns only", async () => {
 test("with rows only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="this.virtualGrid.ref" />
+            <div t-ref="this.scrollableRef" />
         `;
 
+        scrollableRef = signal.ref();
         virtualGrid = useVirtualGrid({
+            scrollableRef: this.scrollableRef,
             rowHeights: Array(100).fill(1),
         });
     }
