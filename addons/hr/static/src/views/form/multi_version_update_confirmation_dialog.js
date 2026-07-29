@@ -1,7 +1,6 @@
+import { Component, props, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutofocus } from "@web/core/utils/hooks";
-
-import { Component, props, t } from "@odoo/owl";
 
 export class MultiVersionUpdateConfirmationDialog extends Component {
     static template = "hr.FormView.MultiVersionUpdateConfirmation";
@@ -15,8 +14,10 @@ export class MultiVersionUpdateConfirmationDialog extends Component {
         version_changes: t.object().optional(),
     });
 
+    currentButtonRef = signal.ref(HTMLButtonElement);
+
     setup() {
-        useAutofocus();
+        useAutofocus({ ref: this.currentButtonRef });
     }
 
     _cancel() {
