@@ -19,7 +19,6 @@ class AccountMoveLine(models.Model):
                 SELECT f.*, rel.account_tax_id AS applied_tax_id
                 FROM filtered_aml f
                 JOIN account_move_line_account_tax_rel rel ON f.id = rel.account_move_line_id
-                WHERE f.tax_repartition_line_id IS NULL
             ),
             tax_lines AS (
                 SELECT
@@ -27,7 +26,7 @@ class AccountMoveLine(models.Model):
                     tax_rep.account_id AS rep_account_id,
                     tax_rep.factor_percent,
                     tax_rep.use_in_tax_closing,
-                    COALESCE(f.group_tax_id, f.tax_line_id) AS effective_tax_id
+                    COALESCE(f.group_tax_id, f.tax_line_id) AS applied_tax_id
                 FROM filtered_aml f
                 JOIN account_tax_repartition_line tax_rep ON tax_rep.id = f.tax_repartition_line_id
             ),
@@ -61,8 +60,14 @@ class AccountMoveLine(models.Model):
                     ON lt.move_id = aml.move_id
                     AND lt.currency_id = aml.currency_id
                     AND lt.partner_id IS NOT DISTINCT FROM aml.partner_id
-                    AND lt.effective_tax_id = aml.applied_tax_id
-                JOIN account_tax t ON aml.applied_tax_id = t.id
+                    AND (
+                        lt.applied_tax_id = aml.applied_tax_id
+                        OR (
+                            aml.tax_repartition_line_id IS NOT NULL
+                            AND lt.tax_line_id = aml.applied_tax_id
+                        )
+                    )
+                JOIN account_tax t ON lt.tax_line_id = t.id
                 JOIN res_currency curr ON curr.id = lt.currency_id
                 JOIN res_currency comp_curr ON comp_curr.id = lt.company_currency_id
                 WHERE (
@@ -124,6 +129,15 @@ class AccountMoveLine(models.Model):
             table_references=table_references,
             search_condition=search_condition,
         )
+
+    @api.model
+    def _get_query_tax_details(self, table_references, search_condition) -> SQL:
+        """Create the tax details sub-query based on an existing SQL query.
+
+        Kept as a compatibility wrapper for callers already building their own
+        account.move.line query.
+        """
+        return self._get_query_tax_details_simplified(table_references, search_condition)
 
     @api.model
     def _get_query_tax_details_from_domain(self, domain, fallback=False) -> SQL:
