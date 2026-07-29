@@ -193,3 +193,19 @@ class TestResourceCalendar(TransactionCase):
                 (form.hours_per_week, form.hours_per_day),
                 (12, 4),
             )
+
+    def test_create_WS_when_company_two_weeks_calendar(self):
+        self.env.company.resource_calendar_id = False
+
+        calendar_two_week = self.env['resource.calendar'].create({
+            'name': 'Company Calendar',
+        })
+
+        calendar_two_week.company_id.resource_calendar_id = calendar_two_week
+        calendar_two_week.switch_calendar_type()
+
+        with Form(self.env['resource.calendar']) as calendar:
+            calendar.save()
+            self.assertEqual(len(calendar.attendance_ids_1st_week), 5)
+            self.assertEqual(len(calendar.attendance_ids_2nd_week), 5)
+            self.assertTrue(calendar.two_weeks_calendar)
