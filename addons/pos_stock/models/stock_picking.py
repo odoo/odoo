@@ -162,15 +162,6 @@ class StockPickingType(models.Model):
 
     has_stock_reports_to_print = fields.Boolean(compute='_compute_has_stock_reports_to_print')
 
-    @api.depends(
-        'auto_print_delivery_slip',
-        'auto_print_return_slip',
-        'auto_print_reception_report',
-        'auto_print_reception_report_labels',
-        'auto_print_product_labels',
-        'auto_print_lot_labels',
-        'auto_print_packages',
-    )
     def _compute_has_stock_reports_to_print(self):
         for record in self:
             record.has_stock_reports_to_print = (
@@ -181,6 +172,7 @@ class StockPickingType(models.Model):
                 or record.auto_print_product_labels
                 or record.auto_print_lot_labels
                 or record.auto_print_packages
+                or (record._fields.get('auto_print_cmr_report') and record.auto_print_cmr_report)
             )
 
     @api.depends('warehouse_id')

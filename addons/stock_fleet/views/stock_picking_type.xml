@@ -55,6 +55,9 @@
                     </div>
                 </div>
             </xpath>
+            <field name="auto_print_packages" position="before">
+                <field name="auto_print_cmr_report" string="Consignment Note (CMR)" invisible="code != 'outgoing'"/>
+            </field>
         </field>
     </record>
 
