@@ -47,11 +47,9 @@ class ResPartner(models.Model):
     def _l10n_ph_compute_split_name(self):
         for partner in self:
             if 'PH' not in partner.fiscal_country_codes or partner.l10n_ph_entity_type == 'corporation' or not partner.name:
-                partner.write({
-                    'l10n_ph_first_name': False,
-                    'l10n_ph_middle_name': False,
-                    'l10n_ph_last_name': False,
-                })
+                partner.l10n_ph_first_name = False
+                partner.l10n_ph_middle_name = False
+                partner.l10n_ph_last_name = False
                 continue
 
             first_name, middle_name, last_name, suffix = self._l10n_ph_split_name(partner.name)
