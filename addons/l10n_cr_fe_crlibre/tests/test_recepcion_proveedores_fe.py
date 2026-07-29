@@ -245,6 +245,24 @@ class TestRecepcionProveedoresFe(TransactionCase):
         self.assertEqual(bill.state, 'draft')
         self.assertNotEqual(bill.l10n_cr_fe_state, 'enviado')
 
+    def test_consultar_estado_uses_proveedor_clave_for_in_invoice(self):
+        """Verificado manualmente contra el sandbox real: Hacienda rastrea el
+        Mensaje Receptor por la clave de la factura original del proveedor
+        (la que se mandó en el sobre de sendMensaje), no por la clave propia
+        que generamos para el consecutivo del Mensaje Receptor."""
+        bill = self._create_bill()
+        bill.write({'l10n_cr_fe_state': 'enviado', 'l10n_cr_fe_clave': '7' * 50})
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_hacienda_token',
+                   return_value='tok'), \
+             patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.consultar_estado',
+                   return_value={'ind_estado': 'desconocido', 'respuesta_xml': None}) as m_consultar:
+            bill.action_l10n_cr_fe_consultar_estado()
+        m_consultar.assert_called_once()
+        clave_arg = m_consultar.call_args.args[1]
+        self.assertEqual(clave_arg, bill.l10n_cr_fe_proveedor_clave)
+        self.assertEqual(clave_arg, '5' * 50)
+        self.assertNotEqual(clave_arg, bill.l10n_cr_fe_clave)
+
     def test_tipo_documento_resolves_per_decision(self):
         bill = self._create_bill()
         bill.l10n_cr_fe_mr_decision = 'aceptado'
