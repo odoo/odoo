@@ -624,6 +624,42 @@ class OdooPdfFileWriter(PdfFileWriter):
                 font[NameObject('/W')] = ArrayObject([NumberObject(1), ArrayObject(glyph_widths)])
                 stream.close()
 
+        # Every annotation dictionary, except those whose subtype is Popup,
+        # must contain the /F key (annotation flags), as required by PDF/A (clause 6.3.2).
+        # - Print flag must be 1.
+        # - Hidden, Invisible, ToggleNoView and NoView flags must be 0.
+        # - For text annotations, NoZoom and NoRotate are recommended to be 1.
+        PDFA_ANNOT_FLAG_INVISIBLE = 1 << 0
+        PDFA_ANNOT_FLAG_HIDDEN = 1 << 1
+        PDFA_ANNOT_FLAG_PRINT = 1 << 2
+        PDFA_ANNOT_FLAG_NOZOOM = 1 << 3
+        PDFA_ANNOT_FLAG_NOROTATE = 1 << 4
+        PDFA_ANNOT_FLAG_NOVIEW = 1 << 5
+        PDFA_ANNOT_FLAG_TOGGLENOVIEW = 1 << 8
+
+        for page in pages:
+            page_obj = page.getObject()
+            annots = page_obj.get('/Annots', [])
+            if isinstance(annots, IndirectObject):
+                annots = annots.getObject()
+            for annot_ref in annots:
+                annot = annot_ref.getObject()
+                if annot.get('/Subtype') == '/Popup':
+                    continue
+
+                flags = annot.get('/F', 0)
+                flags |= PDFA_ANNOT_FLAG_PRINT
+                flags &= ~(
+                    PDFA_ANNOT_FLAG_HIDDEN
+                    | PDFA_ANNOT_FLAG_INVISIBLE
+                    | PDFA_ANNOT_FLAG_TOGGLENOVIEW
+                    | PDFA_ANNOT_FLAG_NOVIEW
+                )
+                if annot.get('/Subtype') == '/Text':
+                    flags |= PDFA_ANNOT_FLAG_NOZOOM | PDFA_ANNOT_FLAG_NOROTATE
+
+                annot[NameObject('/F')] = NumberObject(flags)
+
         outlines = self._root_object['/Outlines'].getObject()
         outlines[NameObject('/Count')] = NumberObject(1)
 
