@@ -24,12 +24,14 @@ export function OR(...args) {
     return [OR_SYM, ...args];
 }
 
+const COMMANDS = new Set(["ADD", "DELETE", "ADD.noinv", "DELETE.noinv", "REPLACE"]);
+
 export function isCommandList(data) {
     return Array.isArray(data) && data.length > 0 && data.every((cmd) => isCommand(cmd));
 }
 
 export function isCommand(data) {
-    return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv", "REPLACE"].includes(data?.[0]);
+    return COMMANDS.has(data?.[0]);
 }
 
 /**
