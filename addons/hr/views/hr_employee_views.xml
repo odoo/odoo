@@ -678,7 +678,7 @@
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
                                 </div>
                                 <div t-if="record.job_title.raw_value" class="text-truncate">
-                                    <i class="oi oi-fw me-2 text-primary" data-icon="luggage" title="Job Position"/>
+                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="work" title="Job Position"/>
                                     <field name="job_title"/>
                                 </div>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
@@ -690,7 +690,7 @@
                                     <field name="work_phone" widget="phone"/>
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_user" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
-                                    <i class="oi oi-fw me-2 text-primary" data-icon="work" title="Contract"/>
+                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="contract" title="Contract"/>
                                     <field name="first_contract_date"/>
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
