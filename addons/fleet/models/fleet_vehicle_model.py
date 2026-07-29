@@ -53,7 +53,6 @@ class FleetVehicleModel(models.Model):
     default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='electric', tracking=True)
     power = fields.Float('Power', tracking=True)
     horsepower = fields.Float(tracking=True)
-    horsepower_tax = fields.Float('Horsepower Taxation', tracking=True)
     electric_assistance = fields.Boolean(default=False, tracking=True)
     power_unit = fields.Selection([
         ('power', 'kW'),
