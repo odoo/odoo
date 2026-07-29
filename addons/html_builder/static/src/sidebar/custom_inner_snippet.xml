@@ -11,7 +11,7 @@
         <div class="o_snippet_thumbnail" t-att-data-snippet="snippet.name">
             <button t-if="!snippet.isInstallable" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
             <Img t-if="snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
-            <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
+            <div class="o_snippet_thumbnail_img" t-att-style="snippet.thumbnailSrc and ('background-image: url(' + snippet.thumbnailSrc + ');')"/>
             <t t-if="state.isRenaming">
                 <div class="rename-input w-100 mx-1 z-1">
                     <input t-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="snippet.title" class="text-start" t-on-pointerdown.stop=""/>
