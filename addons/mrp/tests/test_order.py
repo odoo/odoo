@@ -2133,7 +2133,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(len(mo_3.workorder_ids), 2)
 
         mo_3.button_plan()
-        self.assertEqual(mo_3.state, 'confirmed')
+        self.assertEqual(mo_3.state, 'draft')
         self.assertEqual(mo_3.workorder_ids[0].state, 'ready')  # No matter the MO Reservation state, the first WO is always ready
 
         mo_1 = Form(self.env['mrp.production'])
@@ -2150,7 +2150,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(len(mo_1.workorder_ids), 2)
         self.assertEqual(len(mo_2.workorder_ids), 2)
 
-        (mo_1 | mo_2).button_plan()  # Confirm and plan in the same "request"
+        (mo_1 | mo_2).action_confirm()
+        (mo_1 | mo_2).button_plan()
         self.assertEqual(mo_1.state, 'confirmed')
         self.assertEqual(mo_2.state, 'confirmed')
         self.assertEqual(mo_1.workorder_ids[0].state, 'ready')
