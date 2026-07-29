@@ -2570,6 +2570,7 @@ class AccountTax(models.Model):
         tax_details = base_line['tax_details']
         taxes_data = tax_details['taxes_data']
         manual_tax_amounts = base_line['manual_tax_amounts']
+        tax_amount_to_propagate = defaultdict(lambda: defaultdict(float))
 
         # If there are no taxes, we pass None to the grouping function.
         for tax_data in (taxes_data or [None]):
@@ -2593,6 +2594,9 @@ class AccountTax(models.Model):
                     excluded_manual_field = f'manual_{excluded_rounded_field}'
                     excluded_rounded_amount = tax_details[excluded_rounded_field] + tax_details[excluded_delta_field]
                     excluded_raw_amount = tax_details[excluded_raw_field]
+                    if tax_data:
+                        excluded_rounded_amount += tax_amount_to_propagate[tax_data['tax']][excluded_rounded_field]
+                        excluded_raw_amount += tax_amount_to_propagate[tax_data['tax']][excluded_raw_field]
                     values[excluded_rounded_field] = excluded_rounded_amount
                     values[excluded_raw_field] = excluded_raw_amount
                     if base_line[excluded_manual_field] is not None:
@@ -2629,6 +2633,13 @@ class AccountTax(models.Model):
 
             # Tax amount.
             if tax_data:
+                # Compute the amount that should be propagated by tax
+                for tax in tax_data['taxes']:
+                    tax_amount_to_propagate[tax]['raw_total_excluded'] += tax_data['raw_tax_amount']
+                    tax_amount_to_propagate[tax]['raw_total_excluded_currency'] += tax_data['raw_tax_amount_currency']
+                    tax_amount_to_propagate[tax]['total_excluded'] += tax_data['tax_amount']
+                    tax_amount_to_propagate[tax]['total_excluded_currency'] += tax_data['tax_amount_currency']
+
                 reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
                 values = values_per_grouping_key[grouping_key]
                 for suffix in ('_currency', ''):
