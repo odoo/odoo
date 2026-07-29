@@ -59,6 +59,11 @@
                                         <field name="power"/>
                                         <field name="power_unit"/>
                                     </div>
+                                    <label for="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <div class="o_row" name="horsepower_row" invisible="power_unit != 'horsepower'">
+                                        <field name="horsepower"/>
+                                        <field name="power_unit"/>
+                                    </div>
                                     <label for="vehicle_range"/>
                                     <div class="o_row">
                                         <field name="vehicle_range"/>
@@ -70,12 +75,6 @@
                                         <field name="co2_emission_unit"/>
                                     </div>
                                     <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
-                                    <label for="horsepower" invisible="power_unit != 'horsepower'"/>
-                                    <div class="o_row" invisible="power_unit != 'horsepower'">
-                                        <field name="horsepower"/>
-                                        <field name="power_unit"/>
-                                    </div>
-                                    <field name="horsepower_tax" invisible="power_unit != 'horsepower'"/>
                                 </group>
                             </group>
                         </page>

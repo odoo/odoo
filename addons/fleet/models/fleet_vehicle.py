@@ -15,7 +15,7 @@ MODEL_FIELDS_TO_VEHICLE = {
     'transmission': 'transmission', 'model_year': 'model_year', 'electric_assistance': 'electric_assistance',
     'seats': 'seats', 'doors': 'doors', 'default_co2': 'co2',
     'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type', 'power': 'power', 'horsepower': 'horsepower',
-    'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id', 'vehicle_range': 'vehicle_range',
+    'category_id': 'category_id', 'vehicle_range': 'vehicle_range',
     'power_unit': 'power_unit', 'range_unit': 'range_unit',
 }
 
@@ -112,7 +112,6 @@ class FleetVehicle(models.Model):
         ('horsepower', 'Horsepower')
         ], 'Power Unit', default='power', required=True)
     horsepower = fields.Float(compute='_compute_horsepower', store=True, readonly=False)
-    horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_horsepower_tax', store=True, readonly=False)
     power = fields.Float('Power', help='Power in kW of the vehicle',
         compute='_compute_power', store=True, readonly=False)
     co2 = fields.Float('CO₂ Emissions', help='CO2 emissions of the vehicle', compute='_compute_co2',
@@ -215,10 +214,6 @@ class FleetVehicle(models.Model):
     @api.depends('model_id')
     def _compute_horsepower(self):
         self._load_fields_from_model(['horsepower'])
-
-    @api.depends('model_id')
-    def _compute_horsepower_tax(self):
-        self._load_fields_from_model(['horsepower_tax'])
 
     @api.depends('model_id')
     def _compute_fuel_type(self):
