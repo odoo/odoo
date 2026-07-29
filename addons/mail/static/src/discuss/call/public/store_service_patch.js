@@ -8,7 +8,8 @@ const StorePatch = {
     _hasFullscreenUrlOnUpdate() {
         const channel = this.discuss?.thread?.channel;
         let base = browser.location.href;
-        if (channel?.invitationLink) {
+        if (this._hasFullscreenUrl && channel?.invitationLink) {
+            // Mirror the meeting link so that it can be copied from the address bar.
             base = channel.invitationLink;
         } else if (channel) {
             base = `/discuss/channel/${channel.id}`;
