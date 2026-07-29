@@ -19,7 +19,7 @@
                         }"
                     t-attf-style="{{(this.activity().user_id || this.activity().role_id) ? '' : 'height:80%; width:80%;'}}"
                 >
-                    <i class="oi small" role="img" t-attf-class="{{this.activity().user_id || this.activity().role_id ? 'small' : 'fs-2'}}" t-att-data-icon="this.activity().icon"/>
+                    <i class="oi oi-sm oi-filled" role="img" t-attf-class="{{this.activity().user_id || this.activity().role_id ? 'oi-sm' : 'fs-2'}}" t-att-data-icon="this.activity().icon"/>
                 </div>
             </div>
         </div>
