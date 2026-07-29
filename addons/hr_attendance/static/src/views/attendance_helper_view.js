@@ -1,3 +1,5 @@
+import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
@@ -9,6 +11,7 @@ export class AttendanceActionHelper extends Component {
     setup() {
         this.actionService = useService("action");
         this.uiService = useService("ui");
+        this.dialogService = useService("dialog");
         this.state = proxy({
             hasDemoData: true,
         });
@@ -25,7 +28,13 @@ export class AttendanceActionHelper extends Component {
     }
 
     loadAttendanceScenario() {
-        this.actionService.doAction("hr_attendance.action_load_demo_data");
+        this.dialogService.add(ConfirmationDialog, {
+            body: _t("This action will generate several fake records across multiple apps. Are you sure you want to proceed?"),
+            confirmLabel: _t("Load Sample Data"),
+            cancelLabel: _t("Cancel"),
+            confirm: () => this.actionService.doAction("hr_attendance.action_load_demo_data"),
+            cancel: () => { },
+        });
     }
 
     LoadTryKiosk() {

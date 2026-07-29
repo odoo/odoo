@@ -425,6 +425,11 @@ class HrAttendance(models.Model):
         # Calculate attendances records for the previous month and the current until today
         now = datetime.now()
         previous_month_datetime = (now - relativedelta(months=1))
+        # Ensure employees have a valid contract start date (so attendances render in the Gantt view)
+        employees = employee_sj | employee_mw | employee_eg
+        employees.write({
+            'contract_date_start': (now - relativedelta(months=2)).date(),
+        })
         date_range = now.day + monthrange(previous_month_datetime.year, previous_month_datetime.month)[1]
         city_coordinates = (50.27, 5.31)
         city_coordinates_exception = (51.01, 2.82)
