@@ -11,9 +11,10 @@ import {
     openFormView,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -21,10 +22,12 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
 import { press } from "@odoo/hoot-dom";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -61,6 +64,41 @@ test('[text composer] display partner mention suggestions on typing "@"', async 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+});
+
+test.tags("focus required");
+test("suggestion list closed by Escape stays closed when a member starts typing", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input:focus");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // The typing status re-renders the composer without changing the
+    // suggestions: the list closed by the user has to stay closed.
+    withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", { channel_id: channelId, is_typing: true })
+    );
+    await contains(".o-discuss-Typing", { text: "TestPartner is typing..." });
+    await animationFrame(); // a re-open would show up on the next render
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // Typing more characters re-opens the suggestions for the refined search.
+    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
 test.tags("html composer");
