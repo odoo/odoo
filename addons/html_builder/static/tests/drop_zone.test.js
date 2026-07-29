@@ -38,7 +38,7 @@ test("drop beside dropzone inserts the snippet", async () => {
 
 test("snippets cannot be dropped next to elements inside excluded parent", async () => {
     const snippetContent = [
-        `<div name="Image" data-oe-thumbnail="image.svg" data-snippet="s_image">
+        `<div name="Image" data-snippet="s_image">
             <img src="/web/image/test.png" data-snippet="s_image" alt="Test Image"/>
         </div>`,
     ];
