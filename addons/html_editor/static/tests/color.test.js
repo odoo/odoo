@@ -425,7 +425,7 @@ test("should apply background color whithout interrupting gradient text color on
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter:
-            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-image: none; background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
     });
 });
 test("should apply background color whithout interrupting gradient text color on fully selected gradient", async () => {
@@ -434,7 +434,7 @@ test("should apply background color whithout interrupting gradient text color on
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcde]</font></p>',
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter:
-            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-image: none; background-color: rgb(255, 0, 0);">[abcde]</font></font></p>',
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-color: rgb(255, 0, 0);">[abcde]</font></font></p>',
     });
 });
 test("should apply background color whithout interrupting gradient background color on selected text", async () => {
@@ -850,7 +850,7 @@ describe("colorElement", () => {
                         );
                     },
                     contentAfter:
-                        '<div class="o_cc o_cc1" style="background-image: none; background-color: rgb(255, 0, 0);">a</div>',
+                        '<div class="o_cc o_cc1" style="background-color: rgb(255, 0, 0);">a</div>',
                 });
             });
             test("should not have an o_cc1 gradient when applying the color bg-900", async () => {
@@ -864,7 +864,7 @@ describe("colorElement", () => {
                         );
                     },
                     contentAfter:
-                        '<div class="o_cc o_cc1 bg-900" style="background-image: none;">a</div>',
+                        '<div class="o_cc o_cc1 bg-900">a</div>',
                 });
             });
             test("should not have an o_cc1 gradient when applying a gradient color", async () => {
