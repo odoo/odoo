@@ -59,9 +59,10 @@ CHECKOUT_WEBHOOK_EVENTS = [
 
 MERCHANT_WEBHOOK_EVENTS = ["CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"]
 
-# Odoo's public credentials as a PayPal Partner.
-# Needed to offer merchant onboarding via Odoo.
-PARTNER_CREDENTIALS = {
+SELLER_EMAIL_CONFIRMED = "CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"
+
+# Odoo's public identifiers as a PayPal Partner used to offer merchant onboarding via Odoo.
+ONBOARDING_REFERENCE = {
     "partner_id": "QHZVTLZNWGSEW",
     "partner_client_id": "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp",  # noqa: E501
 }

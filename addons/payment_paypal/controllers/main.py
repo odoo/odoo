@@ -84,7 +84,7 @@ class PaypalController(http.Controller):
 
         # Check the origin and integrity of the notification.
         try:
-            self._verify_notification_origin(data, tx_sudo)
+            self._verify_notification_origin(data, tx_sudo=tx_sudo)
         except ValidationError:
             tx_sudo.with_context(
                 # The verification request is idempotent; the handler is safe to replay.
@@ -100,18 +100,20 @@ class PaypalController(http.Controller):
         :return: None
         """
         merchant_id = data.get("resource", {}).get("merchant_id")
+        if not merchant_id:
+            return
         provider_sudo = (
             request
             .env["payment.provider"]
             .sudo()
             .search([("code", "=", "paypal"), ("paypal_account_id", "=", merchant_id)], limit=1)
         )
-        if not merchant_id or not provider_sudo:
+        if not provider_sudo:
             return
 
         self._verify_notification_origin(data, provider=provider_sudo)
 
-        if data["event_type"] == "CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED":
+        if data["event_type"] == const.SELLER_EMAIL_CONFIRMED:
             provider_sudo.paypal_email_confirmed = True
 
     def _normalize_paypal_data(self, data, from_webhook=False):

@@ -4,7 +4,7 @@ import json
 import secrets
 from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import urls
 
@@ -62,6 +62,27 @@ class PaymentProvider(models.Model):
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
+
+        # === CONSTRAINT METHODS === #
+
+    @api.constrains("is_published")
+    def _check_paypal_credentials_are_set_if_published(self):
+        """Check that the PayPal credentials are valid when the provider is set to published mode.
+
+        :raise ValidationError: If the PayPal credentials are not valid.
+        """
+        for provider in self.filtered(lambda p: p.code == "paypal" and p.is_published):
+            if (
+                not provider.paypal_client_id
+                or not provider.paypal_client_secret
+                or not provider.paypal_account_id
+            ):
+                raise ValidationError(
+                    provider.env._(
+                        'PayPal credentials are missing. Please click the "Connect" button or'
+                        " fill them manually to set up your account."
+                    )
+                )
 
     # === CRUD METHODS === #
 
@@ -165,28 +186,22 @@ class PaymentProvider(models.Model):
         response_content = self._send_api_request(
             "POST", "/v1/oauth2/token", data=data, paypal_onboarding_shared_id=shared_id
         )
-        paypal_onboarding_access_token = response_content["access_token"]
-        if not paypal_onboarding_access_token:
+        if not (paypal_onboarding_access_token := response_content.get("access_token")):
             raise ValidationError(_("Failed to retrieve access token."))
         return paypal_onboarding_access_token
 
     def _paypal_check_onboarding_status(self):
         self.ensure_one()
-
         if not self.paypal_account_id:
             raise ValidationError(_("Missing Account ID. Cannot check onboarding status."))
-
         endpoint = (
-            f"/v1/customer/partners/{const.PARTNER_CREDENTIALS['partner_id']}"
+            f"/v1/customer/partners/{const.ONBOARDING_REFERENCE['partner_id']}"
             f"/merchant-integrations/{self.paypal_account_id}"
         )
         response_content = self._send_api_request("GET", endpoint)
-
-        self.paypal_email_account = response_content.get("primary_email", False)
-
-        self.paypal_payments_receivable = response_content.get("payments_receivable", False)
-        self.paypal_email_confirmed = response_content.get("primary_email_confirmed", False)
-
+        self.paypal_email_account = response_content.get("primary_email")
+        self.paypal_payments_receivable = response_content.get("payments_receivable")
+        self.paypal_email_confirmed = response_content.get("primary_email_confirmed")
         return response_content
 
     # === REQUEST HELPERS === #
