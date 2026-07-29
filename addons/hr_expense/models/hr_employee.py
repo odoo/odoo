@@ -13,21 +13,28 @@ class EmployeeBase(models.AbstractModel):
 
         res = [('id', '=', 0)]  # Nothing accepted by domain, by default
         user = self.env.user
-        employee = user.employee_id
         if user.has_groups('hr_expense.group_hr_expense_user') or user.has_groups('account.group_account_user'):
             res = ['|', ('company_id', '=', False), ('company_id', 'child_of', self.env.company.root_id.id)]  # Then, domain accepts everything
         elif user.has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
+            employees = user.employee_ids
             res = [
                 '|', '|', '|',
-                ('department_id.manager_id', '=', employee.id),
-                ('parent_id', '=', employee.id),
-                ('id', '=', employee.id),
+                ('department_id.manager_id', 'in', employees.ids),
+                ('parent_id', 'in', employees.ids),
+                ('id', 'in', employees.ids),
                 ('expense_manager_id', '=', user.id),
-                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
             ]
         elif user.employee_id:
+            employee = user.employee_id
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
+
+    def _get_expense_managers(self):
+        return (
+            self.expense_manager_id
+            | self.parent_id.user_id
+            | self.department_id.manager_id.user_id
+        )
 
 
 class Employee(models.Model):
