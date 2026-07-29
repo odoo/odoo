@@ -371,6 +371,10 @@ class IrModuleModule(models.Model):
                     if package := manifest['external_dependencies'].get('apt', {}).get(e.dependency):
                         install_package = f'apt install {package}'
 
+                if 'fedora' in id_likes:
+                    if package := manifest['external_dependencies'].get('dnf', {}).get(e.dependency):
+                        install_package = f'dnf install {package}'
+
             if install_package:
                 msg += _("\nIt can be installed running: %s", install_package)
 

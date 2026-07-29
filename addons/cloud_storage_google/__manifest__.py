@@ -13,6 +13,9 @@
         "apt": {
             "google-auth": "python3-google-auth",
         },
+        "dnf": {
+            "google-auth": "python3-google-auth",
+        },
     },
     'assets': {
         'web.assets_backend': [
