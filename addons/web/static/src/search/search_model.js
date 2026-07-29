@@ -70,6 +70,8 @@ const { DateTime } = luxon;
  * }} Search
  */
 
+const DEFAULT_GROUPBY_ID = -1;
+
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
 //     color: string;
@@ -712,6 +714,11 @@ export class SearchModel extends EventBus {
      * with given groupId.
      */
     deactivateGroup(groupId) {
+        if (groupId === DEFAULT_GROUPBY_ID) {
+            delete this.defaultGroupBy;
+            this._notify();
+            return;
+        }
         this._filterQuery((item) => this.searchItems[item.searchItemId].groupId !== groupId);
         this._checkOrderByCountStatus();
         this._notify();
@@ -864,7 +871,11 @@ export class SearchModel extends EventBus {
             if (type === "favorite") {
                 const activeItemGroupBys = this._getSearchItemGroupBys(firstActiveItem);
                 let createNewGroupBys = Boolean(activeItemGroupBys.length);
-                if (createNewGroupBys && this.defaultGroupBy) {
+                if (
+                    createNewGroupBys &&
+                    this.defaultGroupBy &&
+                    this.env.config.viewType === "kanban"
+                ) {
                     const currentGroupBy = this._getGroupBy({ fallbackOnDefault: false });
                     if (JSON.stringify(currentGroupBy) === JSON.stringify(this.defaultGroupBy)) {
                         createNewGroupBys = false;
@@ -2099,6 +2110,30 @@ export class SearchModel extends EventBus {
             }
             facets.push(facet);
         }
+        const hasAGroupByFacet = facets.some((f) => f.type === "groupBy");
+        if (
+            !hasAGroupByFacet &&
+            !this.globalGroupBy.length &&
+            this.defaultGroupBy &&
+            this.env.config.viewType !== "kanban"
+        ) {
+            facets.unshift({
+                groupId: DEFAULT_GROUPBY_ID,
+                type: "groupBy",
+                values: this.defaultGroupBy.map((gb) => {
+                    const [fieldName, interval] = gb.split(":");
+                    const { string } = this.searchViewFields[fieldName];
+                    if (interval) {
+                        const { description } = this._getIntervalOptionByIntervalId(interval);
+                        return `${string}:${description}`;
+                    }
+                    return string;
+                }),
+                separator: ">",
+                icon: FACET_ICONS.groupBy,
+                color: FACET_COLORS.groupBy,
+            });
+        }
         return facets;
     }
 
@@ -2199,8 +2234,8 @@ export class SearchModel extends EventBus {
         const groupBy = groupBys.length
             ? groupBys
             : this.globalGroupBy.length
-              ? this.globalGroupBy.slice()
-              : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
+            ? this.globalGroupBy.slice()
+            : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
         return typeof groupBy === "string" ? [groupBy] : groupBy;
     }
 
