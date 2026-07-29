@@ -427,6 +427,62 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 allocation._update_accrual()
                 self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
 
+    @freeze_time('2025-09-01')
+    def test_frequency_daily_worked_time_non_utc_timezone(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Brisbane 40 Hours',
+            'hours_per_day': 8,
+            'attendance_ids': [
+                Command.create({
+                    'dayofweek': str(weekday),
+                    'hour_from': 8,
+                    'hour_to': 12,
+                })
+                for weekday in range(5)
+            ] + [
+                Command.create({
+                    'dayofweek': str(weekday),
+                    'hour_from': 13,
+                    'hour_to': 17,
+                })
+                for weekday in range(5)
+            ],
+        })
+        self.employee_emp.tz = 'Australia/Brisbane'
+        self.employee_emp.resource_calendar_id = calendar
+        self.user_hrmanager.tz = 'Australia/Brisbane'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Daily Worked Time Accrual',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'can_be_carryover': True,
+            'carryover_date': 'allocation',
+            'level_ids': [Command.create({
+                'milestone_date': 'creation',
+                'added_value': 5,
+                'added_value_type': 'hour',
+                'frequency': 'daily',
+                'action_with_unused_accruals': 'all',
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'name': 'Brisbane Daily Accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type_hour.id,
+            'date_from': date(2025, 9, 1),
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+        allocation.action_approve()
+
+        balances = []
+        for day in range(2, 9):
+            allocation._process_accrual_plans(date(2025, 9, day))
+            balances.append(allocation.number_of_hours_display)
+
+        self.assertEqual(balances, [5, 10, 15, 20, 25, 25, 25])
+
     def test_frequency_weekly(self):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
