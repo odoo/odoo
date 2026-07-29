@@ -1,5 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
 import { _t } from "@web/core/l10n/translation";
 
@@ -9,7 +9,7 @@ import { onWillStart } from "@odoo/owl";
 patch(Composer.prototype, {
     setup() {
         super.setup();
-        this.projectSharingPlugin = maybePlugin(ProjectSharingPlugin);
+        this.projectSharingPlugin = useMaybePlugin(ProjectSharingPlugin);
         onWillStart(() => {
             if (this.thread && !this.thread.id) {
                 this.state.active = false;

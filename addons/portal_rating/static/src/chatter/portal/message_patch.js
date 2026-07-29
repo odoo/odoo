@@ -1,7 +1,7 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Message } from "@mail/core/common/message";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { signal } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -17,7 +17,7 @@ patch(Message.prototype, {
         this.state.editRating = false;
         this.state.showFullBody = false;
         this.state.isBodyClamped = false;
-        this.portalChatterPlugin = maybePlugin(PortalChatterPlugin);
+        this.portalChatterPlugin = useMaybePlugin(PortalChatterPlugin);
         this.richBodyRef = signal.ref(HTMLDivElement);
         useLayoutEffect(
             (el) => {

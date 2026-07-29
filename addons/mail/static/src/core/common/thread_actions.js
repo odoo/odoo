@@ -7,7 +7,7 @@ import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/ac
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -46,7 +46,7 @@ registerThreadAction("rename-thread", {
     onSelected: ({ action }) => action.editingName.set(true),
     sequence: 30,
     sequenceGroup: 20,
-    setup: ({ action }) => (action.editingName = maybePlugin(RenameThreadPlugin)?.editingName),
+    setup: ({ action }) => (action.editingName = useMaybePlugin(RenameThreadPlugin)?.editingName),
 });
 registerThreadAction("close", {
     btnAttrs: { "data-available-offline": true },

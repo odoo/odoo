@@ -4,12 +4,14 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
+    plugin,
     proxy,
     signal,
     t,
     untrack,
     useEffect,
     useProps,
+    useScope,
     xml,
 } from "@odoo/owl";
 
@@ -23,6 +25,20 @@ import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
+
+/**
+ * Version of plugin() where the plugin is allowed to not be provided by any parented component.
+ *
+ * @template T
+ * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
+ * @returns {import("@odoo/owl").PluginInstance<T>|undefined}
+ */
+export function useMaybePlugin(pluginType) {
+    if (useScope().pluginManager?.getPluginById(pluginType.id)) {
+        return plugin(pluginType);
+    }
+    return undefined;
+}
 
 /**
  * @param {() => HTMLElement} target

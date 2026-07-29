@@ -1,14 +1,14 @@
 import { browser } from "@web/core/browser/browser";
 import { PortalRatingPlugin } from "@portal_rating/chatter/portal/portal_rating_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { maybePlugin } from "@mail/utils/common/misc";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 import { patch } from "@web/core/utils/patch";
 
 const chatterPatch = {
     setup() {
         super.setup(...arguments);
         this.state.showReviewComposer = false;
-        this.portalRating = maybePlugin(PortalRatingPlugin);
+        this.portalRating = useMaybePlugin(PortalRatingPlugin);
     },
 
     get reviewChatter() {
