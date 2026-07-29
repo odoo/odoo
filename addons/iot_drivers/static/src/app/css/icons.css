@@ -16,7 +16,6 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    vertical-align: -11.5%;
     -webkit-font-smoothing: antialiased;
     -webkit-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
@@ -26,10 +25,9 @@
 .oi::before {
     content: attr(data-icon);
     display: inline-block;
-    transform: scale(1.214285);
 }
 
-.oi.oi-filled[data-icon]:not([data-icon=""])::before {
+.oi.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"])::before {
     content: attr(data-icon) "_f";
 }
 
