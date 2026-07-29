@@ -300,6 +300,12 @@ class AccountMove(models.Model):
             return
         if not self.partner_id:
             raise UserError(_("El comprobante no tiene cliente (receptor)."))
+        if self.move_type == 'in_invoice':
+            if not self.l10n_cr_fe_proveedor_clave or not self.l10n_cr_fe_proveedor_fecha_emision:
+                raise UserError(_(
+                    "La factura del proveedor no tiene clave/fecha de emisión del XML original."))
+            if self.l10n_cr_fe_mr_decision in ('aceptado_parcial', 'rechazado') and not self.l10n_cr_fe_mr_motivo:
+                raise UserError(_("Debes indicar el motivo del Mensaje Receptor."))
 
         client = self.env['l10n_cr.fe.client']
         try:
@@ -325,15 +331,15 @@ class AccountMove(models.Model):
                 token = client.get_hacienda_token(
                     config.hacienda_username, config.hacienda_password, config.environment)
                 xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-                fecha = fields.Datetime.context_timestamp(self, datetime.now())
-                fecha_iso = fecha.strftime('%Y-%m-%dT%H:%M:%S-06:00')
                 client.send_mr(
-                    token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
-                    emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                    receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
-                    receptor_num=(self.partner_id.vat or '').replace('-', '').strip(),
+                    token=token, clave=self.l10n_cr_fe_proveedor_clave,
+                    fecha_iso=self.l10n_cr_fe_proveedor_fecha_emision,
+                    emisor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
+                    emisor_num=(self.partner_id.vat or '').replace('-', '').strip(),
+                    receptor_tipo=config.identification_type, receptor_num=config.identification_number,
                     consecutivo_receptor=clave_res['consecutivo'],
                     xml_firmado=xml_firmado, environment=config.environment)
+                fecha_iso = fields.Datetime.context_timestamp(self, datetime.now()).strftime('%Y-%m-%dT%H:%M:%S-06:00')
             else:
                 detalles = self._l10n_cr_fe_build_detalles()
                 genxml_params = self._l10n_cr_fe_build_genxml_params(

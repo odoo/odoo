@@ -207,6 +207,44 @@ class TestRecepcionProveedoresFe(TransactionCase):
         self.assertEqual(bill.l10n_cr_fe_state, 'enviado')
         self.assertEqual(bill.state, 'posted')
 
+    def test_aceptar_total_send_mr_envelope_uses_proveedor_clave_and_fecha(self):
+        """El sobre enviado a Hacienda (send_mr) debe describir la factura original
+        del proveedor (clave/fecha), no una clave/fecha inventada por nosotros, y el
+        emisor/receptor del sobre debe coincidir con el proveedor/nuestra empresa
+        (verificado contra un request real de la colección Postman de CRLibre)."""
+        bill = self._create_bill()
+        patchers = self._patch_full_success()
+        mocks = [p.start() for p in patchers]
+        send_mr_mock = mocks[4]
+        try:
+            bill.action_l10n_cr_fe_aceptar_total()
+        finally:
+            for p in patchers:
+                p.stop()
+        self.assertEqual(send_mr_mock.call_count, 1)
+        _, kwargs = send_mr_mock.call_args
+        config = bill._l10n_cr_fe_get_config()
+        self.assertEqual(kwargs['clave'], bill.l10n_cr_fe_proveedor_clave)
+        self.assertEqual(kwargs['clave'], '5' * 50)
+        self.assertEqual(kwargs['fecha_iso'], bill.l10n_cr_fe_proveedor_fecha_emision)
+        self.assertEqual(kwargs['fecha_iso'], '2026-07-27T10:00:00-06:00')
+        self.assertEqual(kwargs['emisor_num'], self.partner.vat)
+        self.assertEqual(kwargs['receptor_num'], config.identification_number)
+        # La clave/fecha propias del sobre nunca deben coincidir con la clave que
+        # generamos nosotros (get_clave) para el consecutivo del Mensaje Receptor.
+        self.assertNotEqual(kwargs['clave'], bill.l10n_cr_fe_clave)
+
+    def test_action_post_bypass_without_motivo_raises_and_does_not_post(self):
+        """Un usuario no debe poder saltarse la validación de motivo poniendo
+        l10n_cr_fe_mr_decision directamente y usando el botón nativo "Confirmar"
+        (action_post) en vez de action_l10n_cr_fe_rechazar/aceptar_parcial."""
+        bill = self._create_bill()
+        bill.l10n_cr_fe_mr_decision = 'rechazado'
+        with self.assertRaises(UserError):
+            bill.action_post()
+        self.assertEqual(bill.state, 'draft')
+        self.assertNotEqual(bill.l10n_cr_fe_state, 'enviado')
+
     def test_tipo_documento_resolves_per_decision(self):
         bill = self._create_bill()
         bill.l10n_cr_fe_mr_decision = 'aceptado'
