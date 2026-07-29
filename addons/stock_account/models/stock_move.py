@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
+from odoo.tools.sql import SQL
 from odoo.exceptions import UserError, ValidationError
 
 VALUATION_DICT = {
@@ -52,6 +53,10 @@ class StockMove(models.Model):
         currency_field='company_currency_id',
         string='Remaining Value', compute='_compute_remaining_value')
 
+    origin_company_id = fields.Many2one('res.company', string='Origin Company', compute='_compute_origin_company_id', search='_search_origin_company_id', compute_sudo=True,
+                                        help='Only set if the move is generated from a document belonging to another company')
+    order_partner_id = fields.Many2one('res.partner', compute='_compute_order_partner_id', compute_sql='_compute_sql_order_partner_id', compute_sudo=True,
+                                      help="If the move originates from a document from another company, contains that company's partner, otherwise the move's partner.")
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
     account_move_id = fields.Many2one('account.move', 'stock_move_id', copy=False, index="btree_not_null")
     invoice_line_ids = fields.One2many('account.move.line', 'stock_move_id', 'Invoice Line', index='btree_not_null')
@@ -105,6 +110,24 @@ class StockMove(models.Model):
     def _compute_is_valued(self):
         for move in self:
             move.is_valued = move.is_in or move.is_out or move.is_dropship
+
+    def _compute_origin_company_id(self):
+        self.origin_company_id = False
+
+    def _search_origin_company_id(self, operator, value):
+        domains = self._get_origin_company_domains(operator, value)
+        if not domains:
+            return Domain.FALSE
+
+        return [('id', 'in', self._search(Domain.OR(domains)))]
+
+    @api.depends('partner_id')
+    def _compute_order_partner_id(self):
+        for move in self:
+            move.order_partner_id = move.partner_id
+
+    def _compute_sql_order_partner_id(self, table):
+        return SQL("%s", table.partner_id)
 
     def _compute_value_manual(self):
         for move in self:
@@ -769,3 +792,8 @@ class StockMove(models.Model):
         self._clear_journal_entries()
         super()._action_reset_to_draft()
         self._reset_valuation(date)
+
+    def _get_origin_company_domains(self, operator, value):
+        """ Overriden in `sale_stock` & `purchase_stock`
+        """
+        return []
