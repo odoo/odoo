@@ -12,9 +12,6 @@ import { mountComponent } from "@web/env";
     const mainComponentsRegistry = registry.category("main_components");
     mainComponentsRegistry.add("DiscussClientAction", { Component: DiscussClientAction });
 
-    const { env } = await mountComponent(MainComponentsContainer, document.body, {
-        name: "Discuss",
-    });
-    env.services["mail.store"].insert(odoo.discuss_data);
+    await mountComponent(MainComponentsContainer, document.body, { name: "Discuss" });
     odoo.isReady = true;
 })();

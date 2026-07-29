@@ -13,7 +13,8 @@ export class MessagingMenuUIState extends Record {
         },
         eager: true,
         onUpdate() {
-            this.selectedFilter = this.activeTab.defaultFilter;
+            // No tab to show while the menu is still being filled up.
+            this.selectedFilter = this.activeTab?.defaultFilter;
         },
     });
     /** @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} */
