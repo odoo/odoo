@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import io
+from hashlib import sha256
 
 import odoo.tests
 from odoo.tools.translate import TranslationImporter
@@ -358,3 +359,29 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         # inconsistent behavior but usually users don't care or may even be happy about it
         self.assertEqual(record_en.html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
         self.assertEqual(record_fr.html, '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def test_edit_translations_related_html(self):
+        """Related Html fields must not nest edit_translations spans, and must keep branding attrs."""
+        terms_fr = ('Couteau', 'Fourchette', 'Cuiller')
+        expected = ''.join(
+            '<p>'
+                '<span '
+                    'data-oe-model="test_new_api.related_translation_1" '
+                    f'data-oe-id="{self.test1.id}" '
+                    'data-oe-field="html" '
+                    'data-oe-translation-state="translated" '
+                    f'data-oe-translation-initial-sha="{sha256(term.encode()).hexdigest()}"'
+                '>'
+                    f'{term}'
+                '</span>'
+            '</p>'
+            for term in terms_fr
+        )
+        ctx = {'lang': 'fr_FR', 'edit_translations': True}
+        stored = self.test1.with_context(**ctx).html
+        related = self.test2.with_context(**ctx).html
+        related_2hops = self.test3.with_context(**ctx).html
+
+        self.assertEqual(stored, expected)
+        self.assertEqual(related, expected)
+        self.assertEqual(related_2hops, expected)
