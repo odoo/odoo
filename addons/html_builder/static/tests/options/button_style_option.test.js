@@ -146,6 +146,26 @@ test("fill gradient should be stored as background-image", async () => {
     );
 });
 
+test("fill gradient should not be removed after text color change", async () => {
+    await setupHTMLBuilder(
+        '<p><a href="http://test.com/" class="btn btn-custom">Link label</a></p>'
+    );
+
+    await contains(":iframe p > a").click();
+
+    const gradient = "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)";
+    await contains("[data-label=Fill] .o_we_color_preview").click();
+    await contains(".gradient-tab").click();
+    await contains(".o_gradient_color_button").click();
+
+    expect(":iframe p > a").toHaveStyle({ "background-image": gradient }, { inline: true });
+
+    // Change the text color and make sure the background gradient is preserved
+    await contains("[data-label=Text] .o_we_color_preview").click();
+    await contains(".o_color_button[data-color='#FF0000']").click();
+    expect(":iframe p > a").toHaveStyle({ "background-image": gradient }, { inline: true });
+});
+
 test("border works even if current border style is none", async () => {
     await setupHTMLBuilder('<p><a href="http://test.com/" class="btn">Link label</a></p>', {
         styleContent: "p > a { border: 0px none rgba(0, 0, 0, 0); }",
