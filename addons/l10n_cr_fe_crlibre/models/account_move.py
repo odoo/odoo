@@ -33,6 +33,18 @@ L10N_CR_FE_TIPO_DOCUMENTO = {
 # move_type). Se resuelve aparte en _l10n_cr_fe_get_tipo_documento_info().
 L10N_CR_FE_TIPO_DOCUMENTO_TE = {'clave': 'TE', 'consecutivo_codigo': '04', 'gen_xml_action': 'gen_xml_te'}
 
+# Mensaje Receptor (MR): respuesta obligatoria de Hacienda cuando esta empresa
+# recibe una factura electronica de un proveedor. Cada decision (aceptar
+# total, aceptar parcial, rechazar) es su propio tipo de documento con su
+# propio consecutivo independiente (Anexo v4.4): 05=CCE (aceptacion total),
+# 06=CPCE (aceptacion parcial), 07=RCE (rechazo). Se resuelve por
+# l10n_cr_fe_mr_decision, no por move_type, en _l10n_cr_fe_get_tipo_documento_info().
+L10N_CR_FE_TIPO_DOCUMENTO_MR = {
+    'aceptado': {'clave': 'CCE', 'consecutivo_codigo': '05', 'gen_xml_action': 'gen_xml_mr'},
+    'aceptado_parcial': {'clave': 'CPCE', 'consecutivo_codigo': '06', 'gen_xml_action': 'gen_xml_mr'},
+    'rechazado': {'clave': 'RCE', 'consecutivo_codigo': '07', 'gen_xml_action': 'gen_xml_mr'},
+}
+
 # Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
 # de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
 L10N_CR_FE_MOTIVO_NC = [
@@ -88,6 +100,16 @@ class AccountMove(models.Model):
         string="Consumidor final (Tiquete Electrónico)", copy=False,
         help="Si está marcado, este comprobante se emite ante Hacienda como Tiquete "
              "Electrónico (sin identificar al receptor) en vez de Factura Electrónica.")
+    l10n_cr_fe_mr_decision = fields.Selection(
+        selection=[
+            ('aceptado', "Aceptado"),
+            ('aceptado_parcial', "Aceptado parcialmente"),
+            ('rechazado', "Rechazado"),
+        ],
+        string="Decisión sobre la factura del proveedor", copy=False)
+    l10n_cr_fe_mr_motivo = fields.Char(string="Motivo (Mensaje Receptor)", copy=False)
+    l10n_cr_fe_proveedor_clave = fields.Char(string="Clave de la factura del proveedor", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_fecha_emision = fields.Char(string="Fecha de emisión (proveedor)", readonly=True, copy=False)
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -107,6 +129,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.move_type == 'out_invoice' and self.l10n_cr_fe_es_tiquete:
             return L10N_CR_FE_TIPO_DOCUMENTO_TE
+        if self.move_type == 'in_invoice':
+            return L10N_CR_FE_TIPO_DOCUMENTO_MR.get(self.l10n_cr_fe_mr_decision)
         return L10N_CR_FE_TIPO_DOCUMENTO.get(self.move_type)
 
     def _l10n_cr_fe_build_detalles(self):
@@ -384,6 +408,6 @@ class AccountMove(models.Model):
     def action_post(self):
         res = super().action_post()
         for move in self:
-            if move.move_type in L10N_CR_FE_TIPO_DOCUMENTO:
+            if move._l10n_cr_fe_get_tipo_documento_info():
                 move._l10n_cr_fe_generate_and_send()
         return res
