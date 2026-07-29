@@ -439,12 +439,22 @@ class AccountChartTemplate(models.AbstractModel):
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = xmlid2account.get(xmlid)
                     if 'code' in values:
+<<<<<<< cff1e03e9fcf970b0c8d151f7d488fd84dd5eb1d
                         # Inactive accounts are typically parents — skip padding to avoid code collisions
                         normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}' if values.get("active", True) else values["code"]
                         if not (account and account.code and re.match(f'^{values["code"]}0*$', account.code)):
                             query = self.env['account.account'].with_context(active_test=False)._search(
                                 self.env['account.account']._check_company_domain(company)
                             )
+||||||| ccc3bcad8df771d0325f5e0e971d79435385c2a1
+                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                        if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                            query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+=======
+                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                        if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                            query = self.env['account.account'].with_context(active_test=False)._search(self.env['account.account']._check_company_domain(company))
+>>>>>>> 25ffe81aa64fcbeb53be240f215f09be25720c1a
                             account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
                             query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
                             accounts = self.env['account.account'].browse(query)
