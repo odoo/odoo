@@ -274,9 +274,28 @@ class AccountMove(models.Model):
             }])
         return params
 
+    def _l10n_cr_fe_build_mr_params(self, consecutivo, detalles):
+        self.ensure_one()
+        config = self._l10n_cr_fe_get_config()
+        resumen = self._l10n_cr_fe_build_resumen_totals(detalles)
+        mensaje_codigo = {'aceptado': '1', 'aceptado_parcial': '2', 'rechazado': '3'}[self.l10n_cr_fe_mr_decision]
+        return {
+            'clave': self.l10n_cr_fe_proveedor_clave,
+            'numero_cedula_emisor': (self.partner_id.vat or '').replace('-', '').strip(),
+            'fecha_emision_doc': self.l10n_cr_fe_proveedor_fecha_emision,
+            'mensaje': mensaje_codigo,
+            'detalle_mensaje': self.l10n_cr_fe_mr_motivo or '',
+            'monto_total_impuesto': resumen['total_impuestos'],
+            'codigo_actividad': config.economic_activity_code,
+            'total_factura': resumen['total_comprobante'],
+            'numero_cedula_receptor': config.identification_number,
+            'numero_consecutivo_receptor': consecutivo,
+        }
+
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
-        if self.move_type not in L10N_CR_FE_TIPO_DOCUMENTO:
+        tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
+        if not tipo_doc:
             return
         if not self.partner_id:
             raise UserError(_("El comprobante no tiene cliente (receptor)."))
@@ -299,23 +318,41 @@ class AccountMove(models.Model):
             clave_params = self._l10n_cr_fe_build_clave_params()
             clave_res = client.get_clave(clave_params)
             detalles = self._l10n_cr_fe_build_detalles()
-            genxml_params = self._l10n_cr_fe_build_genxml_params(
-                clave_res['clave'], clave_res['consecutivo'], detalles)
-            gen_xml_action = self._l10n_cr_fe_get_tipo_documento_info()['gen_xml_action']
-            xml = getattr(client, gen_xml_action)(genxml_params)
-            token = client.get_hacienda_token(
-                config.hacienda_username, config.hacienda_password, config.environment)
-            xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-            if self._l10n_cr_fe_get_tipo_documento_info() == L10N_CR_FE_TIPO_DOCUMENTO_TE:
-                receptor_tipo, receptor_num = '', ''
+
+            if self.move_type == 'in_invoice':
+                mr_params = self._l10n_cr_fe_build_mr_params(clave_res['consecutivo'], detalles)
+                xml = client.gen_xml_mr(mr_params)
+                token = client.get_hacienda_token(
+                    config.hacienda_username, config.hacienda_password, config.environment)
+                xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+                fecha = fields.Datetime.context_timestamp(self, datetime.now())
+                fecha_iso = fecha.strftime('%Y-%m-%dT%H:%M:%S-06:00')
+                client.send_mr(
+                    token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                    emisor_tipo=config.identification_type, emisor_num=config.identification_number,
+                    receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
+                    receptor_num=(self.partner_id.vat or '').replace('-', '').strip(),
+                    consecutivo_receptor=clave_res['consecutivo'],
+                    xml_firmado=xml_firmado, environment=config.environment)
             else:
-                receptor_tipo = self.partner_id.l10n_cr_fe_identification_type or '01'
-                receptor_num = self.partner_id.vat.replace('-', '').strip()
-            client.send_fe(
-                token=token, clave=clave_res['clave'], fecha_iso=genxml_params['fecha_emision'],
-                emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                receptor_tipo=receptor_tipo, receptor_num=receptor_num,
-                xml_firmado=xml_firmado, environment=config.environment)
+                genxml_params = self._l10n_cr_fe_build_genxml_params(
+                    clave_res['clave'], clave_res['consecutivo'], detalles)
+                gen_xml_action = tipo_doc['gen_xml_action']
+                xml = getattr(client, gen_xml_action)(genxml_params)
+                token = client.get_hacienda_token(
+                    config.hacienda_username, config.hacienda_password, config.environment)
+                xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+                if tipo_doc == L10N_CR_FE_TIPO_DOCUMENTO_TE:
+                    receptor_tipo, receptor_num = '', ''
+                else:
+                    receptor_tipo = self.partner_id.l10n_cr_fe_identification_type or '01'
+                    receptor_num = self.partner_id.vat.replace('-', '').strip()
+                fecha_iso = genxml_params['fecha_emision']
+                client.send_fe(
+                    token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                    emisor_tipo=config.identification_type, emisor_num=config.identification_number,
+                    receptor_tipo=receptor_tipo, receptor_num=receptor_num,
+                    xml_firmado=xml_firmado, environment=config.environment)
         except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
             self.message_post(body=_("Error en el flujo de Factura Electrónica: %s") % exc)
@@ -324,7 +361,7 @@ class AccountMove(models.Model):
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
-            'l10n_cr_fe_fecha_emision': genxml_params['fecha_emision'],
+            'l10n_cr_fe_fecha_emision': fecha_iso,
             'l10n_cr_fe_xml': xml,
             'l10n_cr_fe_xml_firmado': xml_firmado,
             'l10n_cr_fe_state': 'enviado',
@@ -403,6 +440,25 @@ class AccountMove(models.Model):
             'l10n_cr_fe_state': 'draft',
             'l10n_cr_fe_motivo_rechazo': False,
         })
+        self._l10n_cr_fe_generate_and_send()
+
+    def action_l10n_cr_fe_aceptar_total(self):
+        self.ensure_one()
+        self.l10n_cr_fe_mr_decision = 'aceptado'
+        self.action_post()
+
+    def action_l10n_cr_fe_aceptar_parcial(self):
+        self.ensure_one()
+        if not self.l10n_cr_fe_mr_motivo:
+            raise UserError(_("Debes indicar el motivo de la aceptación parcial."))
+        self.l10n_cr_fe_mr_decision = 'aceptado_parcial'
+        self.action_post()
+
+    def action_l10n_cr_fe_rechazar(self):
+        self.ensure_one()
+        if not self.l10n_cr_fe_mr_motivo:
+            raise UserError(_("Debes indicar el motivo del rechazo."))
+        self.l10n_cr_fe_mr_decision = 'rechazado'
         self._l10n_cr_fe_generate_and_send()
 
     def action_post(self):
