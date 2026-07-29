@@ -110,6 +110,7 @@ export class OdooPivotModel extends PivotModel {
         }
         searchParams.groupBy = [];
         searchParams.orderBy = [];
+        searchParams.comparison = undefined;
         await super.load(searchParams);
     }
 
