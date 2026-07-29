@@ -7,7 +7,6 @@
 
 $oi-default-size: 1em;   // Normally 14px
 $oi-fw-ratio: 1.28571429; // Matches .fa-fw
-$ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
 
 // ================================
 // MIXINS
@@ -17,7 +16,7 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     display: inline-block;
     font-family: var(--icon-font-family, #{$ms-font-family});
     font-style: normal;
-    font-size: var(--oi-font-size, #{$default-icon-size});
+    font-size: var(--oi-font-size, #{$oi-default-size});
     font-weight: 400 !important;
     line-height: 1;
     letter-spacing: normal;
@@ -25,7 +24,6 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    vertical-align: -11.5%;
     speak: never;
     -webkit-font-smoothing: antialiased;
     -webkit-font-feature-settings: 'liga';
@@ -33,11 +31,9 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     -moz-font-feature-settings: 'liga';
 
     &:before {
-        transform: scale(var(--oi-before-scale, #{$ms-size-multiplier}));
         display: inline-block;
         content: attr(data-icon);
         text-rendering: geometricPrecision;
-        font-size: var(--oi-font-size, $oi-default-size);
     }
     &.oi-filled[data-icon]:not([data-icon=""]):before {
         content: attr(data-icon) "_f";
@@ -84,39 +80,23 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     animation: fa-spin 1s infinite steps(8);
 }
 
-.o_fa_stack {
-    display: grid;
-    align-items: baseline;
-    justify-items: center;
-
-    > * {
-        grid-column: 1/-1;
-        grid-row: 1/-1;
-    }
-
-    > :first-child {
-        font-size: 2em;
-    }
-}
-
 // ================================
 // SCSS VARIABLES
 // ================================
 
 $ms-font-family: 'Material Symbols Outlined';
 $oi-font-family: 'odoo_ui_icons';
-$default-icon-size: $oi-default-size;
 // TODO : review large size and get rid of $fa- variables
-$fa-lg-size: $oi-default-size * 1.25;
 $fa-fw-width: 1.28571em;
 
 // Icon sizing map
 $icon-sizes: (
-    'lg': $fa-lg-size,
-    '2x': $oi-default-size * 2,
-    '3x': $oi-default-size * 3,
-    '4x': $oi-default-size * 4,
-    '5x': $oi-default-size * 5,
+    'sm': 0.8em,
+    'lg': 1.25em,
+    '2x': 2em,
+    '3x': 3em,
+    '4x': 4em,
+    '5x': 5em,
     '6x': 6em,
     '7x': 7em,
     '8x': 8em,
@@ -204,8 +184,7 @@ $icon-bundles: (
         font-size: $size;
 
         @if $name == 'lg' {
-            line-height: 0.5;
-            vertical-align: -40%;
+            vertical-align: middle;
         }
     }
 }
@@ -289,13 +268,4 @@ $icon-bundles: (
     100% {
         transform: rotate(359deg);
     }
-}
-
-// ================================
-// MATERIAL SYMBOLS ADVANCED FEATURES
-// ================================
-
-// Skip transform computation
-.oi-natural-scale {
-    --oi-before-scale: 1;
 }

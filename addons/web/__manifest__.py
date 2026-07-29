@@ -541,7 +541,6 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.odoo_ui_icons': [
             '/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2',
-            '/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff',
             '/web/static/lib/odoo_ui_icons/odoo_ui_icons.css',
         ],
         'web.icons_fonts': [
