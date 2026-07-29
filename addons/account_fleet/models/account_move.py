@@ -72,7 +72,11 @@ class AccountMoveLine(models.Model):
         assignments (one set, one NULL).
         """
         query = super()._get_extra_query_base_tax_line_mapping()
-        return SQL("%s AND (base_line.vehicle_id = account_move_line.vehicle_id OR account_move_line.vehicle_id IS NULL)", query)
+        return SQL("%s AND (base_line.vehicle_id = tax_line.vehicle_id OR tax_line.vehicle_id IS NULL)", query)
+
+    @api.model
+    def _get_query_tax_details_aml_fields(self):
+        return (*super()._get_query_tax_details_aml_fields(), 'vehicle_id')
 
     def _prepare_fleet_log_service(self):
         vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
