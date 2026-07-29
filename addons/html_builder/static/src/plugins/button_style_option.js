@@ -96,6 +96,8 @@ export class ButtonStyleOption extends BaseOptionComponent {
             for (const style of propertiesToCopy) {
                 if (style === "border" && !hasBorder) {
                     // We do not copy the "border" property if border-width is 0
+                    // However, we change the border width to ensure visual consistency in preview
+                    styles[styleTo] += "border-width: 0px !important;";
                     continue;
                 }
                 const value = styleFrom.getPropertyValue(style);
