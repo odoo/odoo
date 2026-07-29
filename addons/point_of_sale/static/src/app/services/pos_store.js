@@ -2242,6 +2242,7 @@ export class PosStore extends WithLazyGetterTrap {
                 label: preset.name,
                 isSelected: order.preset_id && preset.id === order.preset_id.id,
                 item: preset,
+                color: preset.color,
             }));
 
             if (selectionList.length <= 1) {
