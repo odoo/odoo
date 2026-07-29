@@ -2191,10 +2191,11 @@ test("failure on loading more messages should display error and prompt retry but
 test("Retry loading more messages on failed load more messages should load more messages", async () => {
     // The initial load and the retry/success loads use the real handler; only the
     // "load more" that must fail goes through messageFetchDeferred. It is rejected
-    // only once the fetch is in flight (waitForSteps), so that while it is pending a
+    // only once the fetch is in flight (fetchStarted), so that while it is pending a
     // duplicate IntersectionObserver fire no-ops on status "loading" and cannot leave
     // an orphaned fetch racing the retry click.
     let messageFetchDeferred;
+    let fetchStarted;
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -2217,6 +2218,7 @@ test("Retry loading more messages on failed load more messages should load more 
     listenStoreFetch("/discuss/channel/messages", {
         async onRpc() {
             if (messageFetchDeferred) {
+                fetchStarted.resolve();
                 expect.step("load more messages");
                 await messageFetchDeferred;
             }
@@ -2227,9 +2229,12 @@ test("Retry loading more messages on failed load more messages should load more 
     await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 30 });
     messageFetchDeferred = new Deferred();
+    fetchStarted = new Deferred();
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await expect.waitForSteps(["load more messages"]);
+    // We need to wait for the IO callback to arrive.
+    await fetchStarted;
+    expect.verifySteps(["load more messages"]);
     messageFetchDeferred.reject(new Error("Simulated load more failure"));
     await contains("button:text('Click here to retry')");
     messageFetchDeferred = undefined;
