@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_margin_tree_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">product.margin.tree.inherit.l10n_in</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product_margin.view_product_margin_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_num_invoiced']" position="after">
+                <field name="manufactured_num_products" string="# Manufactured" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
