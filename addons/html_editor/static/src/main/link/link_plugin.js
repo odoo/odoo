@@ -193,11 +193,11 @@ export class LinkPlugin extends Plugin {
     resources = {
         user_commands: [
             {
-                id: "openLinkTools",
+                id: "openLinkPopover",
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "link",
-                run: ({ link, type } = {}) => this.openLinkTools(link, type),
+                run: ({ link, type } = {}) => this.openLinkPopover(link, type),
                 isAvailable: (selection) => {
                     const linkEl = findInSelection(selection, "a");
                     return linkEl
@@ -238,7 +238,7 @@ export class LinkPlugin extends Plugin {
                 id: "link",
                 description: _t("Insert link (Ctrl + K)"),
                 groupId: "link",
-                commandId: "openLinkTools",
+                commandId: "openLinkPopover",
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
@@ -252,7 +252,7 @@ export class LinkPlugin extends Plugin {
             {
                 id: "link",
                 groupId: "image_link",
-                commandId: "openLinkTools",
+                commandId: "openLinkPopover",
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
@@ -269,19 +269,19 @@ export class LinkPlugin extends Plugin {
         powerbox_items: [
             {
                 categoryId: "navigation",
-                commandId: "openLinkTools",
+                commandId: "openLinkPopover",
             },
             {
                 title: _t("Button"),
                 description: _t("Add a button"),
                 categoryId: "navigation",
-                commandId: "openLinkTools",
+                commandId: "openLinkPopover",
                 commandParams: { type: "primary" },
             },
         ],
 
         power_buttons: withSequence(10, {
-            commandId: "openLinkTools",
+            commandId: "openLinkPopover",
             commandParams: { type: "primary" },
             description: _t("Add a button"),
             icon: "square",
@@ -406,8 +406,8 @@ export class LinkPlugin extends Plugin {
                 // 1. the `focus editable` and
                 // 2. the odoo `Shortcut bar` closure
                 // Which can affect the link overlay opening sequence if we keep it in sync.
-                // Therefore we need to wait for the next tick before triggering openLinkTools.
-                setTimeout(() => this.openLinkTools());
+                // Therefore we need to wait for the next tick before triggering openLinkPopover.
+                setTimeout(() => this.openLinkPopover());
             },
             {
                 hotkey: "control+k",
@@ -536,20 +536,15 @@ export class LinkPlugin extends Plugin {
     }
 
     /**
-     * open the Link popover to edit links
+     * Prepares the context parameters needed to open the link tools: selection,
+     * cursors, common ancestor, text content, image check and the link element.
      *
      * @param {HTMLElement} [linkElement]
+     * @param {string} [type]
+     * @returns {Object} context parameters for link popover
      */
-    openLinkTools(linkElement, type) {
-        this.currentOverlay.close();
-        this.LinkPopoverState.editing = false;
-        if (!this.isLinkAllowedOnSelection()) {
-            return this.services.notification.add(
-                _t("Unable to create a link on the current selection."),
-                { type: "danger" }
-            );
-        }
-        let selection = this.dependencies.selection.getEditableSelection();
+    getLinkPopoverContext(linkElement, type) {
+        const selection = this.dependencies.selection.getEditableSelection();
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
         linkElement = linkElement || findInSelection(selection, "a");
@@ -573,72 +568,27 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = cleanZWChars(selection?.toString());
         const isImage = !!findInSelection(selection, `img, ${ICON_SELECTOR}`);
 
-        const applyCallback = (params) => {
-            const { attributes, label, attachmentId } = params;
-            if (this.linkInDocument) {
-                this.applyAttributes(this.linkInDocument, attributes);
-                if (!isImage) {
-                    if (
-                        this.linkInDocument.childElementCount == 0 &&
-                        cleanZWChars(this.linkInDocument.textContent) !== label
-                    ) {
-                        this.linkInDocument.textContent = label;
-                        cursorsToRestore = null;
-                    }
-                }
-            } else if (attributes.href) {
-                // prevent the link creation if the url field was empty
-
-                // create a new link with current selection as a content
-                if ((selectionTextContent && selectionTextContent === label) || isImage) {
-                    const link = this.createLink(attributes.href);
-                    const image = isImage && findInSelection(selection, "img");
-                    const figure =
-                        image?.parentElement?.matches("figure[contenteditable=false]") &&
-                        image.parentElement;
-                    if (figure) {
-                        figure.before(link);
-                        link.append(figure);
-                        if (link.parentElement === this.editable) {
-                            const baseContainer =
-                                this.dependencies.baseContainer.createBaseContainer();
-                            link.before(baseContainer);
-                            baseContainer.replaceChildren(link);
-                        }
-                    } else {
-                        const content = this.dependencies.selection.extractContent(selection);
-                        link.append(content);
-                        link.normalize();
-                        cursorsToRestore = null;
-                        selection = this.dependencies.selection.getEditableSelection();
-                        const anchorClosestElement = closestElement(selection.anchorNode);
-                        if (commonAncestor !== anchorClosestElement) {
-                            // We force the cursor after the anchorClosestElement
-                            // To be sure the link is inserted in the correct place in the dom.
-                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                            this.dependencies.selection.setSelection(
-                                { anchorNode, anchorOffset },
-                                { normalize: false }
-                            );
-                        }
-                        this.dependencies.dom.insert(link);
-                    }
-                    this.linkInDocument = link;
-                } else if (label) {
-                    const link = this.createLink(attributes.href, label);
-                    this.applyAttributes(link, attributes);
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
-                    this.dependencies.dom.insert(link);
-                }
-            }
-            if (attachmentId) {
-                this.linkInDocument.dataset.attachmentId = attachmentId;
-            }
+        return {
+            selection,
+            linkElement,
+            cursorsToRestore,
+            commonAncestor,
+            selectionTextContent,
+            isImage,
         };
+    }
 
+    /**
+     * Prepares the props object passed to the link popover.
+     *
+     * @param {Object} context - The context returned by `getLinkPopoverContext`.
+     * @param {Function} applyCallback - The apply callback from `getApplyCallbacks`.
+     * @returns {Object} props
+     */
+    getLinkPopoverProps(context, applyCallback) {
         this.restoreSavePoint = this.dependencies.history.makeSavePoint();
-        const props = {
+        const { linkElement, isImage, selection } = context;
+        return {
             document: this.document,
             linkElement,
             isImage: isImage,
@@ -646,7 +596,7 @@ export class LinkPlugin extends Plugin {
             onApply: (...args) => {
                 delete this._isNavigatingByMouse;
                 applyCallback(...args);
-                this.closeLinkTools(cursorsToRestore);
+                this.closeLinkTools(context.cursorsToRestore);
                 this.dependencies.selection.focusEditable();
                 this.dependencies.history.commit();
             },
@@ -654,7 +604,7 @@ export class LinkPlugin extends Plugin {
             onDiscard: () => {
                 this.restoreSavePoint();
                 if (linkElement.isConnected) {
-                    this.openLinkTools(linkElement);
+                    this.openLinkPopover(linkElement);
                 } else {
                     this.linkInDocument = null;
                     this.currentOverlay.close();
@@ -695,11 +645,107 @@ export class LinkPlugin extends Plugin {
             allowStripDomain: this.config.allowStripDomain,
             advancedAttributeOptions: this.getResource("advanced_popover_options"),
         };
+    }
 
-        const popover = this.getActivePopover(linkElement);
+    /**
+     * Prepares the callback of the apply button in the popover.
+     *
+     * @param {Object} context - The context returned by `_getLinkToolContext`.
+     * @returns {Function} applyCallback
+     */
+    getApplyCallbacks(context) {
+        const { selectionTextContent, isImage, commonAncestor } = context;
+        return (params) => {
+            const { attributes, label, attachmentId } = params;
+            if (this.linkInDocument) {
+                this.applyAttributes(this.linkInDocument, attributes);
+                if (!isImage) {
+                    if (
+                        this.linkInDocument.childElementCount == 0 &&
+                        cleanZWChars(this.linkInDocument.textContent) !== label
+                    ) {
+                        this.linkInDocument.textContent = label;
+                        context.cursorsToRestore = null;
+                    }
+                }
+            } else if (attributes.href) {
+                // prevent the link creation if the url field was empty
+
+                // create a new link with current selection as a content
+                if ((selectionTextContent && selectionTextContent === label) || isImage) {
+                    const link = this.createLink(attributes.href);
+                    const image = isImage && findInSelection(context.selection, "img");
+                    const figure =
+                        image?.parentElement?.matches("figure[contenteditable=false]") &&
+                        image.parentElement;
+                    if (figure) {
+                        figure.before(link);
+                        link.append(figure);
+                        if (link.parentElement === this.editable) {
+                            const baseContainer =
+                                this.dependencies.baseContainer.createBaseContainer();
+                            link.before(baseContainer);
+                            baseContainer.replaceChildren(link);
+                        }
+                    } else {
+                        const content = this.dependencies.selection.extractContent(
+                            context.selection
+                        );
+                        link.append(content);
+                        link.normalize();
+                        context.cursorsToRestore = null;
+                        context.selection = this.dependencies.selection.getEditableSelection();
+                        const anchorClosestElement = closestElement(context.selection.anchorNode);
+                        if (commonAncestor !== anchorClosestElement) {
+                            // We force the cursor after the anchorClosestElement
+                            // To be sure the link is inserted in the correct place in the dom.
+                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                            this.dependencies.selection.setSelection(
+                                { anchorNode, anchorOffset },
+                                { normalize: false }
+                            );
+                        }
+                        this.dependencies.dom.insert(link);
+                    }
+                    this.linkInDocument = link;
+                } else if (label) {
+                    const link = this.createLink(attributes.href, label);
+                    this.applyAttributes(link, attributes);
+                    this.linkInDocument = link;
+                    context.cursorsToRestore = null;
+                    this.dependencies.dom.insert(link);
+                }
+            }
+            if (attachmentId) {
+                this.linkInDocument.dataset.attachmentId = attachmentId;
+            }
+        };
+    }
+
+    /**
+     * open the Link popover to edit links
+     *
+     * @param {HTMLElement} [linkElement]
+     */
+    openLinkPopover(linkElement, type) {
+        this.currentOverlay.close();
+        this.LinkPopoverState.editing = false;
+        if (!this.isLinkAllowedOnSelection()) {
+            return this.services.notification.add(
+                _t("Unable to create a link on the current selection."),
+                { type: "danger" }
+            );
+        }
+        const context = this.getLinkPopoverContext(linkElement, type);
+        const applyCallback = this.getApplyCallbacks(context);
+
+        this.restoreSavePoint = this.dependencies.history.makeSavePoint();
+        const props = this.getLinkPopoverProps(context, applyCallback);
+
+        const popover = this.getActivePopover(context.linkElement);
         if (popover) {
             this.currentOverlay = popover.overlay;
-            if (!linkElement.href) {
+            if (!context.linkElement.href) {
                 this.LinkPopoverState.editing = true;
             }
             this.currentOverlay.open({ props: popover.getProps(props) });
@@ -870,7 +916,7 @@ export class LinkPlugin extends Plugin {
                 parentElement.contains(selection.anchorNode) &&
                 parentElement.contains(selection.focusNode)
             ) {
-                this.openLinkTools(linkContainingImage);
+                this.openLinkPopover(linkContainingImage);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -881,10 +927,10 @@ export class LinkPlugin extends Plugin {
                 this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
             if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
-                    this.openLinkTools(closestLinkElement);
+                    this.openLinkPopover(closestLinkElement);
                 }
             } else if (isLinkEditable) {
-                this.openLinkTools(closestLinkElement);
+                this.openLinkPopover(closestLinkElement);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
