@@ -395,7 +395,7 @@ export class CalendarCommonRenderer extends Component {
         return event.end.getDate() === event.start.getDate() || event.allDay;
     }
     onEventDragStop(info) {
-        this.ref().classList.remove("o_interacting", "o_grabbing");
+        this.ref()?.classList.remove("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
             const point = info.jsEvent.changedTouches?.[0] ?? info.jsEvent;
             const x = point.clientX;
