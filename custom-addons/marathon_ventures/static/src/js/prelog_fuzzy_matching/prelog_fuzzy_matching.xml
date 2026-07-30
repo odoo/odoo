@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvPrelogFuzzyMatching">
+    <div class="mv-fuzzy">
+      <header class="mv-fuzzy__header">
+        <div>
+          <div class="mv-fuzzy__eyebrow">OPERATIONS</div>
+          <h1>Prelog Fuzzy Matching</h1>
+          <p>
+            Review unmatched Prelog Data and attach the correct sold schedule.
+            Suggestions allow a <t t-esc="state.timeBufferMinutes"/>-minute
+            buffer around the booked rotation.
+          </p>
+        </div>
+        <div class="mv-fuzzy__header-stat" t-if="state.hasFiltered">
+          <strong t-esc="state.total"/>
+          <span>unmatched</span>
+        </div>
+      </header>
+
+      <main class="mv-fuzzy__main" t-if="state.loaded">
+        <section class="mv-fuzzy__filter-card">
+          <div class="mv-fuzzy__filter-grid">
+            <label class="mv-fuzzy__field">
+              <span>Program / Network</span>
+              <select t-on-change="onProgramChange"
+                      t-att-disabled="state.querying or state.attaching">
+                <option value="">Choose a Program</option>
+                <option t-foreach="state.programs" t-as="program"
+                        t-key="program.id"
+                        t-att-value="program.id"
+                        t-att-selected="program.id === state.filters.programId">
+                  <t t-esc="program.name"/>
+                  <t t-if="program.inactive"> (Inactive)</t>
+                </option>
+              </select>
+            </label>
+
+            <label class="mv-fuzzy__field">
+              <span>Week <small>Monday</small></span>
+              <input type="date"
+                     t-att-value="state.filters.weekStart"
+                     t-att-disabled="state.querying or state.attaching"
+                     t-on-change="onWeekChange"/>
+            </label>
+
+            <label class="mv-fuzzy__field">
+              <span>Version</span>
+              <select t-on-change="onVersionChange"
+                      t-att-disabled="!state.filters.programId or !state.filters.weekStart or state.querying or state.attaching">
+                <option value="">
+                  <t t-esc="state.versions.length ? 'Choose a version' : 'No versions'"/>
+                </option>
+                <option t-foreach="state.versions" t-as="version"
+                        t-key="version"
+                        t-att-value="version"
+                        t-att-selected="version === state.filters.version">
+                  Version <t t-esc="version"/>
+                </option>
+              </select>
+            </label>
+
+            <div class="mv-fuzzy__filter-actions">
+              <button class="btn btn-primary"
+                      t-on-click="onFilter"
+                      t-att-disabled="state.querying or state.attaching">
+                <i class="fa fa-filter me-1"/>
+                <t t-esc="state.querying ? 'Filtering…' : 'Filter Prelogs'"/>
+              </button>
+              <button class="btn btn-outline-secondary"
+                      t-on-click="onExport"
+                      t-att-disabled="state.exporting or state.querying or state.attaching or !state.hasFiltered">
+                <i class="fa fa-download me-1"/>
+                <t t-esc="state.exporting ? 'Exporting…' : 'Export Exceptions'"/>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="mv-fuzzy__legend" aria-label="Result legend">
+          <strong>Legend</strong>
+          <span><i class="mv-fuzzy__swatch mv-fuzzy__swatch--missing"/>No schedule suggested</span>
+          <span><i class="mv-fuzzy__swatch mv-fuzzy__swatch--suggested"/>Schedule suggested</span>
+          <span><i class="mv-fuzzy__swatch mv-fuzzy__swatch--mismatch"/>Field mismatch</span>
+        </section>
+
+        <section class="mv-fuzzy__results" t-if="state.hasFiltered">
+          <div class="mv-fuzzy__results-toolbar">
+            <div>
+              <h2>Unmatched Prelog Data</h2>
+              <p t-if="state.total">
+                Showing <t t-esc="visibleRangeStart"/>–<t t-esc="visibleRangeEnd"/>
+                of <t t-esc="state.total"/>
+              </p>
+              <p t-else="">No unmatched rows for these filters.</p>
+            </div>
+            <button class="btn btn-success"
+                    t-on-click="onAttach"
+                    t-att-disabled="!selectedCount or state.attaching">
+              <i class="fa fa-link me-1"/>
+              <t t-esc="state.attaching ? 'Attaching…' : `Attach Schedules (${selectedCount})`"/>
+            </button>
+          </div>
+
+          <div class="mv-fuzzy__loading" t-if="state.querying">
+            <i class="fa fa-spinner fa-spin"/>
+            Finding schedule suggestions…
+          </div>
+
+          <div class="mv-fuzzy__empty" t-if="!state.querying and !state.total">
+            <i class="fa fa-check-circle"/>
+            <h3>Nothing to review</h3>
+            <p>Every Prelog Data row in this Program, week, and version is already matched.</p>
+          </div>
+
+          <div class="mv-fuzzy__table-wrap" t-if="!state.querying and state.rows.length">
+            <table class="mv-fuzzy__table">
+              <thead>
+                <tr>
+                  <th>Prelog</th>
+                  <th>Network</th>
+                  <th>Version</th>
+                  <th>Air Date</th>
+                  <th>Air Time</th>
+                  <th>Length</th>
+                  <th>Rate</th>
+                  <th>Week</th>
+                  <th>Network Deal #</th>
+                  <th>Adv / Product</th>
+                  <th>Suggested Schedule</th>
+                  <th>Suggested Time</th>
+                  <th>Suggested Days</th>
+                  <th>Suggested Rate</th>
+                  <th>Suggested Length</th>
+                  <th>Suggested Deal #</th>
+                  <th>Reason</th>
+                  <th>Manual Schedule</th>
+                  <th>Attach</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr t-foreach="state.rows" t-as="row" t-key="row.id">
+                  <td t-att-class="cellClass(row)">
+                    <button class="mv-fuzzy__record-link"
+                            t-on-click="() => this.openPrelog(row)">
+                      <t t-esc="row.name"/>
+                    </button>
+                  </td>
+                  <td t-att-class="cellClass(row, row.network_mismatch)">
+                    <t t-esc="row.network"/>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <t t-esc="row.version"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.day_mismatch)">
+                    <t t-esc="row.air_date"/>
+                    <span class="mv-fuzzy__muted" t-if="row.day">
+                      <t t-esc="` (${row.day})`"/>
+                    </span>
+                  </td>
+                  <td t-att-class="cellClass(row, row.time_mismatch)">
+                    <t t-esc="row.air_time"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.length_mismatch)">
+                    <t t-esc="row.length"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.rate_mismatch)">
+                    $<t t-esc="formatRate(row.rate)"/>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <t t-esc="row.week"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.deal_mismatch)">
+                    <t t-esc="row.deal_number"/>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <span class="mv-fuzzy__advertiser-product"
+                          t-att-title="row.advertiser_product">
+                      <t t-esc="row.advertiser_product"/>
+                    </span>
+                  </td>
+
+                  <td t-att-class="cellClass(row)">
+                    <button t-if="row.suggested"
+                            class="mv-fuzzy__record-link"
+                            t-on-click="() => this.openSchedule(row.suggested)">
+                      <t t-esc="row.suggested.name"/>
+                    </button>
+                    <span t-else="" class="mv-fuzzy__muted">No suggestion</span>
+                    <span class="badge text-bg-secondary ms-1"
+                          t-if="row.ambiguous_count &gt; 1">
+                      <t t-esc="row.ambiguous_count"/> tied
+                    </span>
+                    <span class="badge text-bg-danger ms-1"
+                          t-if="row.suggested and !row.suggestion_attachable">
+                      <t t-esc="row.suggested.status_label or 'Not sold'"/>
+                    </span>
+                  </td>
+                  <td t-att-class="cellClass(row, row.time_mismatch)">
+                    <t t-esc="row.suggested ? row.suggested.time_range : ''"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.day_mismatch)">
+                    <t t-esc="row.suggested ? row.suggested.days_allowed : ''"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.rate_mismatch)">
+                    <t t-if="row.suggested">$<t t-esc="formatRate(row.suggested.rate)"/></t>
+                  </td>
+                  <td t-att-class="cellClass(row, row.length_mismatch)">
+                    <t t-esc="row.suggested ? row.suggested.length : ''"/>
+                  </td>
+                  <td t-att-class="cellClass(row, row.deal_mismatch)">
+                    <t t-esc="row.suggested ? row.suggested.deal_number : ''"/>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <span t-if="row.reason"
+                          t-att-class="'mv-fuzzy__reason ' + (row.suggested ? 'mv-fuzzy__reason--warning' : 'mv-fuzzy__reason--error')">
+                      <t t-esc="row.reason"/>
+                    </span>
+                    <span t-else="" class="mv-fuzzy__ready">
+                      <i class="fa fa-check"/> Ready to attach
+                    </span>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <div class="mv-fuzzy__manual">
+                      <input type="text"
+                             placeholder="Schedule name or Odoo ID"
+                             t-att-value="state.manualValues[row.id] or ''"
+                             t-att-disabled="state.attaching"
+                             t-on-input="(ev) => this.onManualInput(row, ev)"/>
+                      <label title="Use this manual schedule">
+                        <input type="checkbox"
+                               t-att-checked="isManualSelected(row)"
+                               t-att-disabled="state.attaching or !(state.manualValues[row.id] or '').trim()"
+                               t-on-change="(ev) => this.onManualToggle(row, ev)"/>
+                        Use
+                      </label>
+                    </div>
+                  </td>
+                  <td t-att-class="cellClass(row)">
+                    <label class="mv-fuzzy__attach-check"
+                           t-if="row.suggested">
+                      <input type="checkbox"
+                             t-att-checked="isSuggestedSelected(row)"
+                             t-att-disabled="state.attaching or !row.suggestion_attachable"
+                             t-on-change="(ev) => this.onSuggestedToggle(row, ev)"/>
+                      Suggested
+                    </label>
+                    <span t-else="" class="mv-fuzzy__muted">—</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="mv-fuzzy__pager" t-if="state.total">
+            <button class="btn btn-outline-secondary btn-sm"
+                    t-on-click="previousPage"
+                    t-att-disabled="state.offset &lt;= 0 or state.querying">
+              <i class="fa fa-chevron-left"/> Previous
+            </button>
+            <span>Page <strong t-esc="state.page"/> of <strong t-esc="state.pages"/></span>
+            <button class="btn btn-outline-secondary btn-sm"
+                    t-on-click="nextPage"
+                    t-att-disabled="state.offset + state.pageSize &gt;= state.total or state.querying">
+              Next <i class="fa fa-chevron-right"/>
+            </button>
+          </nav>
+        </section>
+
+        <section class="mv-fuzzy__welcome" t-if="!state.hasFiltered">
+          <i class="fa fa-random"/>
+          <h2>Choose a Prelog set to begin</h2>
+          <p>Programs are loaded from Odoo, so this page works for every network—not only MLB and NHL.</p>
+        </section>
+      </main>
+
+      <div class="mv-fuzzy__loading mv-fuzzy__loading--page" t-if="!state.loaded">
+        <i class="fa fa-spinner fa-spin"/>
+        Loading Prelog Fuzzy Matching…
+      </div>
+    </div>
+  </t>
+
+</templates>
