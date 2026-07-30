@@ -203,7 +203,7 @@ class TestSafeEvalTransaction(TransactionCase):
         vals = {
             'module': 'module_test',
             'name': 'duplicate_name',
-            'model': 'res.partner',
+            'model': 'test_tools.partner',
         }
         self.env['ir.model.data'].create(vals)
 
