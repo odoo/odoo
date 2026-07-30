@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_utils";
 import { scrollFixedOffset } from "@html_builder/utils/scrolling";
 
 export class BlogTableOfContents extends Interaction {

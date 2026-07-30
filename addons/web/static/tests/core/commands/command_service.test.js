@@ -14,7 +14,7 @@ import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { registry } from "@web/core/registry";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 
 class TestComponent extends Component {
     static template = xml`<div />`;

@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useActiveElement } from "../ui/ui_service";
+import { useActiveElement } from "../ui/ui_plugin";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";

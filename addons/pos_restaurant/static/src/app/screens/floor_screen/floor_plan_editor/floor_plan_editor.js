@@ -27,7 +27,7 @@ import {
     loadImage,
     STATIC_IMG_BASE_URL,
 } from "@pos_restaurant/app/services/floor_plan/utils/utils";
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/core/ui/ui_utils";
 
 const SETTING_MENU_SPACE = 320;
 const TABLE_SPACING = 20;

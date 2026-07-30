@@ -5,7 +5,7 @@ import { markup } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { getTemplate } from "@web/core/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { utils as ui } from "@web/core/ui/ui_service";
+import { utils as ui } from "@web/core/ui/ui_utils";
 import { renderToElement } from "@web/core/utils/render";
 
 export class SearchBar extends Interaction {

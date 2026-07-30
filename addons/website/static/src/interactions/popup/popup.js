@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_utils";
 
 export class Popup extends Interaction {
     static selector = ".s_popup:not(#website_cookies_bar):not(.s_age_verification_popup)";

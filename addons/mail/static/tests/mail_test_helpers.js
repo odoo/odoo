@@ -40,13 +40,13 @@ import { Component, onMounted, onPatched } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
-import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
+import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { pick } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-export { SIZES } from "@web/core/ui/ui_service";
+export { SIZES } from "@web/core/ui/ui_utils";
 
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import { Store as StoreService } from "@mail/core/common/store_service";

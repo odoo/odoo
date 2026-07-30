@@ -15,7 +15,7 @@ import {
     DEFAULT_FLOOR_COLOR_KEY,
     DEFAULT_FLOOR_COLOR_OPACITY,
 } from "./elements";
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/core/ui/ui_utils";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { applyDefaults, convertObjectUrlToDataUrl } from "./utils/utils";

@@ -1,5 +1,5 @@
 import { session } from "@web/session";
-import { utils } from "@web/core/ui/ui_service";
+import { utils } from "@web/core/ui/ui_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { pick } from "@web/core/utils/objects";
 import { getTag } from "@web/core/utils/xml";

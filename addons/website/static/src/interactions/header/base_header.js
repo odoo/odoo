@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 
 export class BaseHeader extends Interaction {

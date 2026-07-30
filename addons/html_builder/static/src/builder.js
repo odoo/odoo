@@ -16,7 +16,7 @@ import {
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
-import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
+import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";

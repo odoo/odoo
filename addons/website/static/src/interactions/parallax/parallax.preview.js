@@ -1,6 +1,6 @@
 import { Parallax } from "@website/interactions/parallax/parallax";
 import { registry } from "@web/core/registry";
-import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_utils";
 
 // A manual parallax implementation is required for snippet previews because
 // snippets are scaled down in preview, and `background-attachment: fixed`

@@ -2,7 +2,7 @@
 
 import { WebsiteSlidesCommon } from "@website_slides/interactions/slides_course_common";
 import "@website_slides/interactions/slides_course_join";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";

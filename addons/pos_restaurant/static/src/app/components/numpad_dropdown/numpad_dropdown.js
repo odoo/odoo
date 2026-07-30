@@ -1,7 +1,7 @@
 import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { SIZES, utils } from "@web/core/ui/ui_service";
+import { SIZES, utils } from "@web/core/ui/ui_utils";
 import {
     getButtons,
     EMPTY,

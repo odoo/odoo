@@ -32,7 +32,7 @@ import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
