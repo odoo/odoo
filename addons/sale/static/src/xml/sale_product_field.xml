@@ -3,6 +3,9 @@
 <templates xml:space="preserve">
 
     <t t-name="sale.SaleProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <xpath expr="//div[@t-if='props.readonly']" position="attributes">
+            <attribute name="t-if">sectionAndNoteIsReadonly</attribute>
+        </xpath>
         <xpath expr="//Many2One" position="after">
             <!-- Show configuration button for custom lines/products -->
             <button
