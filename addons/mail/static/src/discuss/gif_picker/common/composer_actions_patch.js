@@ -25,7 +25,7 @@ registerComposerAction("add-gif", {
     },
     condition: ({ composer, owner, store }) =>
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
-        !owner.env.inChatter &&
+        !owner.ancestors?.has("Chatter") &&
         !composer.message,
     icon: "gif_box",
     name: _t("Send GIF"),

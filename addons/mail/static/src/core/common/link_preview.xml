@@ -55,7 +55,7 @@
     </t>
 
     <t t-name="mail.LinkPreviewImage">
-        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ this.className }}">
+        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.ancestors.has('Chatter') }" t-attf-class="{{ this.className }}">
             <div class="position-relative d-inline-block">
                 <a t-if="this.linkPreview.imageUrl" t-att-href="this.linkPreview.imageUrl" target="_blank">
                     <Gif t-if="this.linkPreview.isGif" paused="this.props.messageLinkPreview.gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
@@ -68,7 +68,7 @@
     </t>
 
     <t t-name="mail.LinkPreviewVideo">
-        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.env.inChatter, 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ this.className }}">
+        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.ancestors?.has('Chatter'), 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ this.className }}">
             <div class="row g-0 flex-row-reverse">
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !this.linkPreview.og_description }">
                     <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">
