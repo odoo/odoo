@@ -1,6 +1,6 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 import logging
+
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ class InvoiceAgentBulkProcess(models.TransientModel):
                 processed += 1
             except Exception:
                 _logger.exception(
-                    "Failed to reset AI extraction for move %s", move.display_name
+                    "Failed to reset AI extraction for move %s", move.display_name,
                 )
                 skipped += 1
 
@@ -92,7 +92,7 @@ class InvoiceAgentBulkProcess(models.TransientModel):
             'params': {
                 'title': _('Bulk Re-Extraction Complete'),
                 'message': _(
-                    'Processed: %(processed)d, Skipped: %(skipped)d'
+                    'Processed: %(processed)d, Skipped: %(skipped)d',
                 ) % {'processed': processed, 'skipped': skipped},
                 'sticky': True,
                 'type': notification_type,
