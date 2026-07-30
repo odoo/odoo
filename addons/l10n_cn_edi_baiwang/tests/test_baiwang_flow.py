@@ -102,6 +102,101 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         result = client.query_invoice({'foo': 'bar'})
         self.assertEqual(result, {'success': True})
 
+    def test_03b_structured_error_with_known_reference(self):
+        company = self.company_data['company']
+        client = BaiwangClient(company)
+
+        def fake_proxy_call(_company, _payload):
+            return {'success': False, 'error': {'reference': 'invalid_payload', 'data': {'message': 'bad payload'}}}
+
+        with self.assertRaises(UserError) as err:
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+        self.assertIn('The Baiwang request payload is invalid.', str(err.exception))
+
+    def test_03c_provider_error_with_known_code(self):
+        company = self.company_data['company']
+        client = BaiwangClient(company)
+
+        def fake_proxy_call(_company, _payload):
+            return {
+                'success': False,
+                'error': {
+                    'reference': 'provider_error',
+                    'data': {'code': '101', 'message': 'token rejected'},
+                },
+            }
+
+        with self.assertRaises(UserError) as err:
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+        self.assertIn('Authentication failed. Please verify your Baiwang credentials.', str(err.exception))
+        self.assertIn('Baiwang [101]: token rejected', str(err.exception))
+
+    def test_03d_provider_error_with_unknown_code(self):
+        company = self.company_data['company']
+        client = BaiwangClient(company)
+
+        def fake_proxy_call(_company, _payload):
+            return {
+                'success': False,
+                'error': {
+                    'reference': 'provider_error',
+                    'data': {'code': '777777', 'message': 'upstream rejected request'},
+                },
+            }
+
+        with self.assertRaises(UserError) as err:
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+        self.assertIn('Baiwang error [777777]: upstream rejected request', str(err.exception))
+
+    def test_03e_malformed_error_payload_fallback(self):
+        company = self.company_data['company']
+        client = BaiwangClient(company)
+
+        def fake_proxy_call(_company, _payload):
+            return {'success': False, 'error': []}
+
+        with self.assertRaises(UserError) as err:
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+        self.assertIn('Unexpected Baiwang proxy error.', str(err.exception))
+
+    def test_03f_proxy_structured_error_passthrough(self):
+        company = self.company_data['company']
+        proxy_user = company.l10n_cn_baiwang_proxy_user_id
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
+
+        expected = {
+            'success': False,
+            'error': {
+                'reference': 'provider_error',
+                'data': {'code': 'X-CODE', 'message': 'provider message'},
+            },
+        }
+        with patch.object(proxy_class, '_l10n_cn_baiwang_contact_proxy', return_value=expected):
+            result = proxy_user._l10n_cn_baiwang_query_invoice(company, {'foo': 'bar'})
+
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error']['reference'], 'provider_error')
+        self.assertEqual(result['error']['data']['code'], 'X-CODE')
+        self.assertEqual(result['error']['data']['message'], 'provider message')
+
+    def test_03g_proxy_structured_api_error_mapping(self):
+        company = self.company_data['company']
+        client = BaiwangClient(company)
+
+        def fake_proxy_call(_company, _payload):
+            return {
+                'success': False,
+                'error': {
+                    'reference': 'baiwang_api_error',
+                    'data': {'code': '101', 'message': 'token rejected'},
+                },
+            }
+
+        with self.assertRaises(UserError) as err:
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+        self.assertIn('Authentication failed. Please verify your Baiwang credentials.', str(err.exception))
+        self.assertIn('Baiwang [101]: token rejected', str(err.exception))
+
     def test_04_subscribe_action_uses_iap_callback_url(self):
         company = self.company_data['company']
         settings = self.env['res.config.settings'].create({'company_id': company.id})
@@ -223,6 +318,46 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(credit_note.l10n_cn_baiwang_red_form_status, 'red_form_confirmed')
         self.assertEqual(credit_note.l10n_cn_baiwang_state, 'issued')
         self.assertEqual(credit_note.l10n_cn_baiwang_invoice_no, 'mock-red-fapiao-789')
+
+    def test_08c_red_form_reuses_single_document(self):
+        invoice = self._create_posted_invoice()
+        invoice.l10n_cn_baiwang_invoice_no = '24442000000071309399'
+
+        wizard = self.env['account.move.reversal'].with_context(
+            active_ids=invoice.ids,
+            active_model='account.move',
+        ).create({
+            'journal_id': invoice.journal_id.id,
+            'reason': 'Customer rejected goods',
+            'l10n_cn_baiwang_red_form_type': '02',
+        })
+        wizard.reverse_moves()
+        credit_note = wizard.new_move_ids
+
+        pending_response = {
+            'success': True,
+            'response': [{
+                'redConfirmUuid': 'mock-uuid-123',
+                'redConfirmNo': 'mock-no-456',
+                'confirmState': '02',
+            }],
+        }
+
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
+        with patch.object(
+            proxy_class, '_l10n_cn_baiwang_contact_proxy',
+            return_value={'success': True, 'response': pending_response},
+        ):
+            credit_note.action_request_baiwang_red_form()
+
+        red_docs = credit_note.l10n_cn_edi_document_ids
+        self.assertEqual(len(red_docs), 1)
+        self.assertEqual(red_docs.state, 'red_form_pending')
+
+        with self.assertRaises(UserError):
+            credit_note.action_request_baiwang_red_form()
+        red_docs = credit_note.l10n_cn_edi_document_ids
+        self.assertEqual(len(red_docs), 1)
 
     def test_09_proportional_global_discount(self):
         invoice = self.env['account.move'].create({

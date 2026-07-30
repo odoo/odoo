@@ -147,6 +147,8 @@ class L10nCnEdiDocument(models.Model):
                         ('company_id', '=', company.id),
                         ('move_type', '=', 'in_invoice'),
                     ], limit=1)
+                    if not blue_move:
+                        continue
                     is_pending = confirm_state == '02'
                     amt_total = float(form.get('invoiceTotalPrice', 0.0))
                     amt_tax = float(form.get('invoiceTotalTax', 0.0))
@@ -162,18 +164,13 @@ class L10nCnEdiDocument(models.Model):
                         'baiwang_red_form_type': form.get('redInvoiceLabel'),
                     })
 
-                    if blue_move:
-                        blue_move.activity_schedule(
-                            'mail.mail_activity_data_todo',
-                            summary=self.env._(
-                                "Inbound Red Form %(number)s requires approval (Price: %(price)s, Tax: %(tax)s)",
-                                number=form.get('redConfirmNo'), price=amt_total, tax=amt_tax,
-                            ),
-                            user_id=blue_move.create_uid.id,
-                        )
-
                     if is_pending:
-                        summary = self.env._("Inbound Red Form %s requires approval", form.get('redConfirmNo'))
+                        summary = self.env._(
+                            "Inbound Red Form %(number)s requires approval (Price: %(price)s, Tax: %(tax)s)",
+                            number=form.get('redConfirmNo'),
+                            price=amt_total,
+                            tax=amt_tax,
+                        )
                     else:
                         summary = self.env._("Inbound Red Form %s is approved/issued. Please draft Credit Note.", form.get('redConfirmNo'))
 
