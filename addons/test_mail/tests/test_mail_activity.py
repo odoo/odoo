@@ -523,7 +523,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activity_groups', [])
         self.assertEqual(len(groups_data), 3, 'Should have activities for 2 test models + generic for non accessible')
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue), exp_domain in [
@@ -619,7 +619,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activity_groups', [])
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
             ('mail.activity', 'Non accessible: deleted', (1, 1, 2, 0)),
@@ -642,7 +642,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
-            }).get('Store', {}).get('activityGroups', [])
+            }).get('Store', {}).get('activity_groups', [])
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
             ('mail.activity', 'Non accessible: deleted (MC ignored, stripped out like inaccessible records)', (1, 1, 2, 0)),
@@ -664,7 +664,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
-            }).get('Store', {}).get('activityGroups', [])
+            }).get('Store', {}).get('activity_groups', [])
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
             ('mail.activity', 'Non accessible: deleted + company error managed like forbidden record', (1, 1, 3, 0)),

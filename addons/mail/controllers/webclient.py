@@ -173,7 +173,7 @@ class WebclientController(ThreadController):
             activities_to_assign_count=request.env["res.users"]._get_activities_to_assign_count(),
             activityCounter=sum(group.get("total_count", 0) for group in groups),
             activity_counter_bus_id=bus_last_id,
-            activityGroups=groups,
+            activity_groups=groups,
         )
 
     @store_handler("mail.canned.response")

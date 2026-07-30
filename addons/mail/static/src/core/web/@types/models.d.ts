@@ -18,7 +18,8 @@ declare module "models" {
         activities_to_assign_count: undefined;
         activity_counter_bus_id: number;
         activityCounter: number;
-        activityGroups: Object[];
+        activity_groups: Object[];
+        activityGroups: Readonly<Object[]>;
         markNeedactionMessagesAsRead: () => Promise<void>;
         messagingMenuSystrayState: MessagingMenuUIState;
         onLinkFollowed: (fromThread: Thread) => void;
