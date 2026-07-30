@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_hsn_quantity" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.hsn.quantity</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='invoice_tab']//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="after">
+                <field name="hsn_quantity" attrs="{'column_invisible':[('parent.country_code', '!=', 'IN')]}" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
