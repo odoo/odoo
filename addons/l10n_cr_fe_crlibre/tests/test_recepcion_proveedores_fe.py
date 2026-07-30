@@ -263,6 +263,102 @@ class TestRecepcionProveedoresFe(TransactionCase):
         self.assertEqual(clave_arg, '5' * 50)
         self.assertNotEqual(clave_arg, bill.l10n_cr_fe_clave)
 
+    def test_abrir_aceptar_parcial_bloquea_si_no_hay_cambios(self):
+        """Si la factura quedó idéntica (en monto) al XML original del
+        proveedor, no tiene sentido mandar una aceptación "parcial" — se debe
+        forzar el uso de "Aceptar total" en su lugar."""
+        bill = self._create_bill()
+        bill.write({
+            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
+            'l10n_cr_fe_proveedor_total': bill.amount_total,
+        })
+        with self.assertRaises(UserError):
+            bill.action_l10n_cr_fe_abrir_aceptar_parcial()
+
+    def test_abrir_aceptar_parcial_permite_si_hay_cambios(self):
+        bill = self._create_bill()
+        bill.write({
+            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
+            'l10n_cr_fe_proveedor_total': bill.amount_total + 500,
+        })
+        action = bill.action_l10n_cr_fe_abrir_aceptar_parcial()
+        self.assertEqual(action['res_model'], 'l10n_cr.fe.mr.motivo.wizard')
+        self.assertEqual(action['context']['default_move_id'], bill.id)
+        self.assertEqual(action['context']['default_decision'], 'aceptado_parcial')
+
+    def test_abrir_aceptar_parcial_sin_proveedor_total_no_bloquea(self):
+        """Facturas creadas antes del fix (o sin totales del proveedor
+        capturados) no deben quedar bloqueadas — no hay base de comparación."""
+        bill = self._create_bill()
+        action = bill.action_l10n_cr_fe_abrir_aceptar_parcial()
+        self.assertEqual(action['res_model'], 'l10n_cr.fe.mr.motivo.wizard')
+
+    def test_aceptar_parcial_engine_bloquea_sin_cambios_aunque_se_llame_directo(self):
+        """Protección contra bypass: aunque alguien llame directo al método
+        que realmente envía (saltándose el botón/wizard), debe bloquearse
+        igual si no hubo cambios reales."""
+        bill = self._create_bill()
+        bill.write({
+            'l10n_cr_fe_mr_motivo': 'Motivo cualquiera',
+            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
+            'l10n_cr_fe_proveedor_total': bill.amount_total,
+        })
+        with self.assertRaises(UserError):
+            bill.action_l10n_cr_fe_aceptar_parcial()
+        self.assertNotEqual(bill.state, 'posted')
+
+    def test_action_l10n_cr_fe_abrir_rechazar_returns_wizard_action(self):
+        bill = self._create_bill()
+        action = bill.action_l10n_cr_fe_abrir_rechazar()
+        self.assertEqual(action['res_model'], 'l10n_cr.fe.mr.motivo.wizard')
+        self.assertEqual(action['context']['default_move_id'], bill.id)
+        self.assertEqual(action['context']['default_decision'], 'rechazado')
+
+    def test_wizard_confirmar_aceptar_parcial(self):
+        bill = self._create_bill()
+        bill.write({
+            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
+            'l10n_cr_fe_proveedor_total': bill.amount_total + 500,
+        })
+        wizard = self.env['l10n_cr.fe.mr.motivo.wizard'].create({
+            'move_id': bill.id,
+            'decision': 'aceptado_parcial',
+            'motivo': 'Cantidad recibida distinta a la facturada',
+        })
+        patchers = self._patch_full_success()
+        for p in patchers:
+            p.start()
+        try:
+            result = wizard.action_confirmar()
+        finally:
+            for p in patchers:
+                p.stop()
+        self.assertEqual(result, {'type': 'ir.actions.act_window_close'})
+        self.assertEqual(bill.l10n_cr_fe_mr_motivo, 'Cantidad recibida distinta a la facturada')
+        self.assertEqual(bill.l10n_cr_fe_mr_decision, 'aceptado_parcial')
+        self.assertEqual(bill.l10n_cr_fe_state, 'enviado')
+        self.assertEqual(bill.state, 'posted')
+
+    def test_wizard_confirmar_rechazar(self):
+        bill = self._create_bill()
+        wizard = self.env['l10n_cr.fe.mr.motivo.wizard'].create({
+            'move_id': bill.id,
+            'decision': 'rechazado',
+            'motivo': 'Factura no corresponde a compra realizada',
+        })
+        patchers = self._patch_full_success()
+        for p in patchers:
+            p.start()
+        try:
+            wizard.action_confirmar()
+        finally:
+            for p in patchers:
+                p.stop()
+        self.assertEqual(bill.l10n_cr_fe_mr_motivo, 'Factura no corresponde a compra realizada')
+        self.assertEqual(bill.l10n_cr_fe_mr_decision, 'rechazado')
+        self.assertEqual(bill.l10n_cr_fe_state, 'enviado')
+        self.assertEqual(bill.state, 'draft')
+
     def test_tipo_documento_resolves_per_decision(self):
         bill = self._create_bill()
         bill.l10n_cr_fe_mr_decision = 'aceptado'

@@ -306,6 +306,16 @@ class AccountMove(models.Model):
             'numero_consecutivo_receptor': consecutivo,
         }
 
+    def _l10n_cr_fe_mr_parcial_sin_cambios(self):
+        """True si la factura de proveedor sigue idéntica (en monto) al XML
+        original — usado para bloquear una "aceptación parcial" que en
+        realidad no ajustó nada, y que debería ser una aceptación total."""
+        self.ensure_one()
+        if not self.l10n_cr_fe_proveedor_total:
+            return False
+        return (self.amount_tax == self.l10n_cr_fe_proveedor_monto_impuesto
+                and self.amount_total == self.l10n_cr_fe_proveedor_total)
+
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
         tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
@@ -321,6 +331,10 @@ class AccountMove(models.Model):
                     "La factura del proveedor no tiene clave/fecha de emisión del XML original."))
             if self.l10n_cr_fe_mr_decision in ('aceptado_parcial', 'rechazado') and not self.l10n_cr_fe_mr_motivo:
                 raise UserError(_("Debes indicar el motivo del Mensaje Receptor."))
+            if self.l10n_cr_fe_mr_decision == 'aceptado_parcial' and self._l10n_cr_fe_mr_parcial_sin_cambios():
+                raise UserError(_(
+                    "La factura no tiene cambios respecto al XML original del proveedor. "
+                    "Si estás de acuerdo con todo, usa 'Aceptar total' en su lugar."))
 
         client = self.env['l10n_cr.fe.client']
         try:
@@ -487,6 +501,35 @@ class AccountMove(models.Model):
             raise UserError(_("Debes indicar el motivo del rechazo."))
         self.l10n_cr_fe_mr_decision = 'rechazado'
         self._l10n_cr_fe_generate_and_send()
+
+    def action_l10n_cr_fe_abrir_aceptar_parcial(self):
+        """Botón "Aceptar parcial" del formulario: si el usuario ya ajustó la
+        factura, abre un popup pidiendo el motivo (en vez de obligarlo a ir
+        hasta la pestaña "Factura Electrónica CR" a llenarlo a mano)."""
+        self.ensure_one()
+        if self._l10n_cr_fe_mr_parcial_sin_cambios():
+            raise UserError(_(
+                "La factura no tiene cambios respecto al XML original del proveedor. "
+                "Si estás de acuerdo con todo, usa 'Aceptar total' en su lugar."))
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'l10n_cr.fe.mr.motivo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_move_id': self.id, 'default_decision': 'aceptado_parcial'},
+        }
+
+    def action_l10n_cr_fe_abrir_rechazar(self):
+        """Botón "Rechazar" del formulario: abre un popup pidiendo el motivo,
+        mismo patrón que action_l10n_cr_fe_abrir_aceptar_parcial."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'l10n_cr.fe.mr.motivo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_move_id': self.id, 'default_decision': 'rechazado'},
+        }
 
     def action_post(self):
         res = super().action_post()
