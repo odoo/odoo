@@ -82,6 +82,10 @@ export class MessagingMenu extends Component {
         return !this.messages().length && !this.showPushPermissionRequest;
     }
 
+    get visibleTabs() {
+        return this.store.messagingMenu.sortedVisibleTabs;
+    }
+
     get noSearchResultText() {
         return this.searchTerm() ? _t('No results for "%s".', this.searchTerm()) : "";
     }
