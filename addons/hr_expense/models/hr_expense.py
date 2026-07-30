@@ -636,7 +636,7 @@ class HrExpense(models.Model):
     def _get_expense_job_position_limit(self):
         self.ensure_one()
         limit_lines = self.product_id.expense_job_position_limit_ids
-        job_limit = limit_lines.filtered(lambda line: self.employee_id.job_id in line.job_ids)
+        job_limit = limit_lines.filtered(lambda line: self.employee_id.sudo().job_id in line.job_ids)
         default_limit = limit_lines.filtered(lambda line: not line.job_ids)
         return job_limit[:1] or default_limit[:1]
 
