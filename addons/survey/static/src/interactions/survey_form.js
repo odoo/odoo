@@ -11,7 +11,7 @@ import {
     serializeDate,
 } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils } from "@web/core/ui/ui_utils";
 import { resizeTextArea } from "@web/core/utils/autoresize";
 import { Interaction } from "@web/public/interaction";
 import { redirect } from "@web/core/utils/urls";

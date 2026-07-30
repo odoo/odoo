@@ -2,16 +2,17 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { rpc } from "@web/core/network/rpc";
-import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils } from "@web/core/ui/ui_utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
-import { markup } from "@odoo/owl";
+import { markup, usePlugin } from "@odoo/owl";
 import {
     DYNAMIC_SNIPPET_DEFAULT_ITEMS_PER_ROW,
     DYNAMIC_SNIPPET_DEFAULT_ITEMS_PER_ROW_SM,
 } from "@website/utils/dynamic_snippets";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";
@@ -30,6 +31,7 @@ export class DynamicSnippet extends Interaction {
             }),
         },
     };
+    uiPlugin = usePlugin(UIPlugin);
 
     setup() {
         /**
@@ -55,7 +57,9 @@ export class DynamicSnippet extends Interaction {
 
     start() {
         // Re-render on media breakpoint change
-        this.registerCleanup(listenSizeChange(this.protectSyncAfterAsync(this.render.bind(this))));
+        const cb = this.protectSyncAfterAsync(this.render.bind(this));
+        this.uiPlugin.bus.addEventListener("resize", cb);
+        this.registerCleanup(() => this.uiPlugin.bus.removeEventListener("resize", cb));
         this.render();
     }
 

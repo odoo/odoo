@@ -23,7 +23,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 

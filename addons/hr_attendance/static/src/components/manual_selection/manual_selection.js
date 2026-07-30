@@ -6,7 +6,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { Pager } from "@web/core/pager/pager";
-import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class KioskManualSelection extends Component {

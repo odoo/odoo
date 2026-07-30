@@ -6,7 +6,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
+import { getFirstAndLastTabableElements } from "@web/core/ui/ui_utils";
 import { cookie } from "@web/core/browser/cookie";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";

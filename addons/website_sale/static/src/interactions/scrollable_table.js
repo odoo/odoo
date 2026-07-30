@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
-import { SIZES, utils as uiUtils } from '@web/core/ui/ui_service';
+import { SIZES, utils as uiUtils } from '@web/core/ui/ui_utils';
 
 export class ScrollableTable extends Interaction {
     static selector = '.o_wsale_scrollable_table';

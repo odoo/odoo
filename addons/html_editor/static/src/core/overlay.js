@@ -2,7 +2,7 @@ import { Component, onWillDestroy, useProps, proxy, signal, t, useListener, xml 
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
-import { useActiveElement } from "@web/core/ui/ui_service";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";

@@ -4,7 +4,7 @@ import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { onMounted, onWillUnmount, signal, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { SIZES } from "@web/core/ui/ui_service";
+import { SIZES } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";

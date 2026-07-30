@@ -15,7 +15,7 @@ declare module "services" {
     import { overlayService } from "@web/core/overlay/overlay_plugin";
     import { popoverService } from "@web/core/popover/popover_plugin";
     import { tooltipService } from "@web/core/tooltip/tooltip_service";
-    import { uiService } from "@web/core/ui/ui_service";
+    import { uiService } from "@web/core/ui/ui_plugin";
     import { sortableService } from "@web/core/utils/sortable_plugin";
     import { publicInteractionService } from "@web/public/interaction_service";
     import { viewService } from "@web/views/view_service";
