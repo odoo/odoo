@@ -1480,7 +1480,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         Updates the quantity of the move to match the quantity resulting from the `_set_lot_ids`.
         """
         product = self.product_id
-        if product.tracking == 'none':
+        if self.product_id.tracking != 'serial' and self.quantity:
             return
 
         assigned_quantity = 0
