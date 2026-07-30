@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from decimal import Decimal
 from io import BytesIO
 from zipfile import ZipFile
 
@@ -291,6 +292,59 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         xml_tree = etree.fromstring(xml_attachment.raw)
         actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(actual_delivery_date.text, '20241231')
+
+    def test_facturx_unit_price_precision(self):
+        tax = self.percent_tax(
+            19,
+            type_tax_use='sale',
+            price_include_override='tax_included',
+        )
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Product A',
+                    'quantity': 2,
+                    'price_unit': 160,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+                Command.create({
+                    'name': 'Product B',
+                    'quantity': 2,
+                    'price_unit': 19,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+        })
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        line_nodes = xml_tree.findall(
+            './/ram:IncludedSupplyChainTradeLineItem',
+            self.namespaces,
+        )
+        self.assertEqual(len(line_nodes), 2)
+        for line_node in line_nodes:
+            quantity = Decimal(line_node.findtext(
+                './ram:SpecifiedLineTradeDelivery/ram:BilledQuantity',
+                namespaces=self.namespaces,
+            ))
+            unit_price = Decimal(line_node.findtext(
+                './ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:ChargeAmount',
+                namespaces=self.namespaces,
+            ))
+            line_total = Decimal(line_node.findtext(
+                (
+                    './ram:SpecifiedLineTradeSettlement/'
+                    'ram:SpecifiedTradeSettlementLineMonetarySummation/'
+                    'ram:LineTotalAmount'
+                ),
+                namespaces=self.namespaces,
+            ))
+            self.assertEqual(
+                (quantity * unit_price).quantize(Decimal('0.01')),
+                line_total,
+            )
 
     def test_get_invoice_legal_documents_fallback(self):
         company = self.company_data['company']

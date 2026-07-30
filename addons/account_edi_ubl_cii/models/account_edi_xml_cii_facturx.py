@@ -1,4 +1,5 @@
 from odoo import _, models, Command
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
 from lxml import etree
 
@@ -137,6 +138,9 @@ class AccountEdiXmlCii(models.AbstractModel):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
 
+        def format_price(number):
+            return str(FloatFmt(number, min_dp=2, max_dp=10))
+
         def grouping_key_generator(base_line, tax_data):
             tax = tax_data['tax']
             grouping_key = {
@@ -174,6 +178,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             'tax_details': tax_details,
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'format_price': format_price,
             'is_html_empty': is_html_empty,
             'scheduled_delivery_time': self._get_scheduled_delivery_time(invoice),
             'intracom_delivery': False,
@@ -237,6 +242,13 @@ class AccountEdiXmlCii(models.AbstractModel):
 
             # The quantity is the line.quantity since we keep the unece_uom_code!
             line_vals['quantity'] = line_vals['line'].quantity
+            if line_vals['quantity']:
+                line_vals['gross_price_total_unit'] = (
+                    line_vals['price_subtotal_before_discount'] / line_vals['quantity']
+                )
+                line_vals['price_subtotal_unit'] = (
+                    line_vals['line'].price_subtotal / line_vals['quantity']
+                )
 
             # Invert the quantity and the gross_price_total_unit if a line has a negative price total
             if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
