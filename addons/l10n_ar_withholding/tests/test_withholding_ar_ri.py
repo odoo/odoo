@@ -498,7 +498,7 @@ class TestArWithholdingArRi(TestArCommon):
         wizard = Form(self.new_payment_register(moves, taxes))
         wizard.currency_id = self.env['res.currency']
         self.assertEqual(wizard.amount, 188865.27)
-        self.assertFalse(wizard.l10n_ar_adjustment_warning)
+        self.assertNotIn('l10n_ar_adjustment_warning_alert', wizard.alerts or {})
 
     def test_payment_withholding_kept(self):
         """ Check that resetting a payment doesn't remove any payment withholding line. """

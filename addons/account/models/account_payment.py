@@ -215,6 +215,7 @@ class AccountPayment(models.Model):
         currency_field='company_currency_id', compute='_compute_amount_company_currency_signed', store=True)
     # used to get and display duplicate move warning if partner, amount and date match existing payments
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_payment_ids')
+    alerts = fields.Json(compute='_compute_alerts')
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
     _check_amount_not_negative = models.Constraint(
@@ -821,6 +822,23 @@ class AccountPayment(models.Model):
         for payment in self:
             # Uses payment._origin.id to handle records in edition/existing records and 0 for new records
             payment.duplicate_payment_ids = payment_to_duplicate_move.get(payment._origin.id, self.env['account.payment'])
+
+    @api.depends('duplicate_payment_ids', 'state')
+    def _compute_alerts(self):
+        for payment in self:
+            payment.alerts = payment._get_alerts()
+
+    def _get_alerts(self):
+        self.ensure_one()
+        alerts = {}
+        if self.state == 'draft' and self.duplicate_payment_ids:
+            alerts['account_duplicate_payment'] = {
+                'level': 'warning',
+                'message': self.env._("This payment has the same partner, amount and date as another payment."),
+                'action_text': self.env._("Duplicated Payments"),
+                'action': self.duplicate_payment_ids._get_records_action(name=self.env._("Duplicated Payments")),
+            }
+        return alerts
 
     def _search_reconciled_invoice_ids(self, operator, value):
         if operator not in ('in', '='):

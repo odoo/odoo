@@ -6,7 +6,7 @@ import markupsafe
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import OrderedSet, frozendict
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, formatLang
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -170,7 +170,7 @@ class AccountPaymentRegister(models.TransientModel):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_moves')
     is_register_payment_on_draft = fields.Boolean(compute='_compute_is_register_payment_on_draft')
-    actionable_errors = fields.Json(compute='_compute_actionable_errors')
+    alerts = fields.Json(compute='_compute_alerts')
 
     # == trust check ==
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
@@ -605,12 +605,21 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
-    @api.depends('line_ids', 'unreconciled_paid_amount')
-    def _compute_actionable_errors(self):
+    @api.depends(
+        'line_ids',
+        'unreconciled_paid_amount',
+        'duplicate_payment_ids',
+        'hide_writeoff_section',
+        'payment_difference',
+        'untrusted_payments_count',
+        'total_payments_amount',
+        'missing_account_partners',
+    )
+    def _compute_alerts(self):
         for wizard in self:
-            actionable_errors = {}
+            alerts = {}
             if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
-                actionable_errors['unreconciled_matched_payments'] = {
+                alerts['unreconciled_matched_payments'] = {
                     'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
                         amount=wizard.unreconciled_paid_amount,
                         currency=wizard.currency_id.symbol,
@@ -619,7 +628,37 @@ class AccountPaymentRegister(models.TransientModel):
                     'action': unreconciled_matched_payments._get_records_action(name=self.env._("Payments")),
                     'level': 'warning',
                 }
-            wizard.actionable_errors = actionable_errors
+            if wizard.duplicate_payment_ids:
+                alerts['duplicate_payment'] = {
+                    'message': self.env._("This payment has the same partner, amount and date as another payment."),
+                    'action_text': self.env._("Duplicated Payments"),
+                    'action': wizard.duplicate_payment_ids._get_records_action(name=self.env._("Duplicated Payments")),
+                    'level': 'warning',
+                }
+            if wizard.hide_writeoff_section:
+                alerts['early_payment_discount'] = {
+                    'message': self.env._("Early Payment Discount of %s has been applied.", formatLang(self.env, wizard.payment_difference, currency_obj=wizard.currency_id)),
+                    'level': 'info',
+                }
+            if wizard.untrusted_payments_count > 0:
+                alerts['untrusted_bank_accounts'] = {
+                    'message': self.env._(
+                        "%(skipped)s out of %(total)s payments will be skipped due to untrusted bank accounts.",
+                        skipped=wizard.untrusted_payments_count,
+                        total=wizard.total_payments_amount,
+                     ),
+                    'action_text': self.env._("View untrusted bank accounts"),
+                    'action': wizard.action_open_untrusted_bank_accounts(),
+                    'level': 'warning',
+                }
+            if wizard.missing_account_partners:
+                alerts['missing_account_partners'] = {
+                    'message': self.env._("Payments related to partners with no bank account specified will be skipped."),
+                    'action_text': self.env._("View Partner(s)"),
+                    'action': wizard.action_open_missing_account_partners(),
+                    'level': 'warning',
+                }
+            wizard.alerts = alerts
 
     def _convert_to_wizard_currency(self, installments):
         self.ensure_one()

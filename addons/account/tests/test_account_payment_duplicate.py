@@ -61,6 +61,7 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
 
         # Different type but same partner, amount and date, no duplicate
         self.assertRecordValues(payment_in_1, [{'duplicate_payment_ids': []}])
+        self.assertFalse(payment_in_1.alerts)
 
         # Create duplicate payments
         payment_in_2 = payment_in_1.copy(default={'date': payment_in_1.date})
@@ -69,10 +70,15 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         self.assertRecordValues(payment_in_2, [{
             'duplicate_payment_ids': [payment_in_1.id],
         }])
+        self.assertIn('account_duplicate_payment', payment_in_2.alerts)
+        self.assertEqual(payment_in_2.alerts['account_duplicate_payment']['level'], 'warning')
+
         # Outbound payment finds duplicate outbound duplicate, not the inbound payment with same information
         self.assertRecordValues(payment_out_2, [{
             'duplicate_payment_ids': [payment_out_1.id],
         }])
+        self.assertIn('account_duplicate_payment', payment_out_2.alerts)
+        self.assertEqual(payment_out_2.alerts['account_duplicate_payment']['level'], 'warning')
         # Different date but same amount and same partner, no duplicate
         payment_out_3 = payment_out_1.copy(default={'date': '2023-12-31'})
         self.assertRecordValues(payment_out_3, [{'duplicate_payment_ids': []}])
@@ -148,7 +154,12 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
 
         # Payment wizards flag unreconciled existing payments of the same payment type only
         self.assertRecordValues(payment_1, [{'duplicate_payment_ids': [existing_payment_in.id]}])
+        self.assertIn('duplicate_payment', payment_1.alerts)
+        self.assertEqual(payment_1.alerts['duplicate_payment']['level'], 'warning')
+
         self.assertRecordValues(payment_2, [{'duplicate_payment_ids': [existing_payment_out.id]}])
+        self.assertIn('duplicate_payment', payment_2.alerts)
+        self.assertEqual(payment_2.alerts['duplicate_payment']['level'], 'warning')
 
     def test_register_payment_single_batch_duplicate_payments(self):
         """ Test that duplicate_payment_ids is correctly calculated for single batches """
@@ -164,6 +175,13 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         existing_payment = self.payment_in
 
         self.assertRecordValues(payment_1, [{'duplicate_payment_ids': [existing_payment.id]}])
+        self.assertIn('duplicate_payment', payment_1.alerts)
+        self.assertEqual(payment_1.alerts['duplicate_payment']['level'], 'warning')
+
         self.assertRecordValues(payment_2, [{'duplicate_payment_ids': []}])  # different amount, not a duplicate
+        self.assertFalse(payment_2.alerts)
+
         # Combined payments does not show payment_1 as duplicate because payment_1 is reconciled
         self.assertRecordValues(combined_payments, [{'duplicate_payment_ids': [existing_payment.id]}])
+        self.assertIn('duplicate_payment', combined_payments.alerts)
+        self.assertEqual(combined_payments.alerts['duplicate_payment']['level'], 'warning')

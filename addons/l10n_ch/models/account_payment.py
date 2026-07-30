@@ -1,25 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from odoo import _, models, fields, api
+from odoo import models
 from odoo.tools.business_data import mod10r
 
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    l10n_ch_reference_warning_msg = fields.Char(compute='_compute_l10n_ch_reference_warning_msg')
-
-    @api.depends('partner_id', 'memo', 'payment_type')
-    def _compute_l10n_ch_reference_warning_msg(self):
+    def _get_alerts(self):
+        alerts = super()._get_alerts()
         for payment in self:
             if payment.payment_type == 'outbound' and\
                     payment.partner_id.country_code in ['CH', 'LI'] and\
                     payment.partner_bank_id.l10n_ch_qr_iban and\
                     not payment._l10n_ch_reference_is_valid(payment.memo):
-                payment.l10n_ch_reference_warning_msg = _("Please fill in a correct QRR reference in the payment reference. The banks will refuse your payment file otherwise.")
-            else:
-                payment.l10n_ch_reference_warning_msg = False
+                alerts['l10n_ch_reference_warning'] = {
+                    'message': self.env._("Please fill in a correct QRR reference in the payment reference. The banks will refuse your payment file otherwise."),
+                    'level': 'warning',
+                }
+        return alerts
 
     def _l10n_ch_reference_is_valid(self, payment_reference):
         """Check if this invoice has a valid reference (for Switzerland)
