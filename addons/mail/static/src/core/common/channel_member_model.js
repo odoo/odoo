@@ -42,7 +42,12 @@ export class ChannelMember extends Record {
     syncUnread = true;
     _syncUnread = Record.attr(false, {
         compute() {
-            if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
+            if (!this.eq(this.thread?.selfMember)) {
+                return false;
+            }
+            // The local counter only catches up with the server here, so freezing
+            // it with nothing unread never lets the banner come back.
+            if (!this.syncUnread && this.localMessageUnreadCounter > 0) {
                 return false;
             }
             return (
