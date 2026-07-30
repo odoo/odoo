@@ -13,3 +13,4 @@ from . import test_tiquete_electronico_fe
 from . import test_recepcion_proveedores_fe
 from . import test_proveedor_upload
 from . import test_proveedor_xml_parser
+from . import test_proveedor_email
