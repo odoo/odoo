@@ -71,13 +71,3 @@ class ResPartner(models.Model):
                     'level': 'danger',
                 }
         return error_messages
-
-    def _get_tax_office_missing_message(self):
-        """Overridden in l10n_tr_nilvera_einvoice_extended to use the tax office field instead of ref."""
-        self.ensure_one()
-        return _("Reference field must be set to the tax office name") if not self.ref else None
-
-    def _get_tax_office_for_edispatch(self):
-        """Overridden in l10n_tr_nilvera_einvoice_extended to return the tax office field instead of ref."""
-        self.ensure_one()
-        return self.ref
