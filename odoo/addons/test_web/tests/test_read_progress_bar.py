@@ -20,7 +20,10 @@ class TestReadProgressBar(common.TransactionCase):
                 'contact': 'success', 'private': 'danger', 'other': '200',
             },
         }
-        result = self.env['res.partner'].read_progress_bar([], 'category_id', progressbar)
+
+        self.env['test_web.partner'].create([{'name': f'Partner {i}', 'type': 'contact'} for i in range(2)])
+
+        result = self.env['test_web.partner'].read_progress_bar([], 'category_id', progressbar)
         # check that it works when grouping by m2m field
         self.assertTrue(result)
         # check the null group
@@ -67,7 +70,7 @@ class TestReadProgressBar(common.TransactionCase):
                     'field_description': 'Country',
                     'name': 'x_country_id',
                     'ttype': 'many2one',
-                    'relation': 'res.country',
+                    'relation': 'test_web.country',
                 }),
                 (0, 0, {
                     'field_description': 'Date',
@@ -83,7 +86,7 @@ class TestReadProgressBar(common.TransactionCase):
             ],
         })
 
-        c1, c2, c3 = self.env['res.country'].search([], limit=3)
+        c1, c2, c3 = self.env['test_web.country'].create([{'name': f'Country {i}'} for i in range(3)])
 
         self.env['x_progressbar'].create([
             # week 1 2019
