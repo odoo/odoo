@@ -18,7 +18,7 @@ from odoo.tools import file_open, split_every
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-    _ALLOWED_PAYMENT_METHODS = ['adyen', 'stripe']
+    _ALLOWED_PAYMENT_METHODS = ['adyen', 'stripe', 'mollie']
 
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
