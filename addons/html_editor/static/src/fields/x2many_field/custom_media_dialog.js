@@ -34,7 +34,7 @@ export class CustomMediaDialog extends MediaDialog {
         if (nonPreloadedAttachments.length > 0) {
             const elements = await renderMedia({
                 orm: this.orm,
-                activeTab: this.state.activeTab,
+                activeTab: this.activeTab(),
                 availableTabs: this.tabs,
                 oldMediaNode: this.props.media,
                 selectedMedia: nonPreloadedAttachments,
