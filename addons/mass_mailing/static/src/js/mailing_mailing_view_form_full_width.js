@@ -33,6 +33,25 @@ export class MassMailingFullWidthViewController extends formView.Controller {
     // Private
     //--------------------------------------------------------------------------
     /**
+     * Overridden to be able to check if the code view is toggled off
+     *
+     * @override
+     */
+    async saveButtonClicked()  {
+        if (this.$iframe.contents().find('textarea.o_codeview').hasClass('d-none')) {
+            await super.saveButtonClicked();
+        }
+        else {
+            this.model.notificationService.add(
+                this.model.env._t(
+                    `You can't save while "Code" view is enabled. Please click on the "<\/> " icon to toggle it off then save.`
+                )
+                ,
+                { type: 'danger', sticky: true}
+            );
+        }
+    }
+    /**
      * Resize the given iframe so its height fits its contents and initialize a
      * resize observer to resize on each size change in its contents.
      * This also ensures the contents of the sidebar remain visible no matter
