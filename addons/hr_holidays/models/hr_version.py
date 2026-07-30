@@ -76,6 +76,9 @@ class HrVersion(models.Model):
         if not any(field in vals for field in ['contract_date_start', 'contract_date_end', 'date_version', 'resource_calendar_id']) or self.env.context.get('salary_simulation'):
             return super().write(vals)
 
+        if 'resource_calendar_id' in vals and not vals['resource_calendar_id']:
+            self._check_multi_day_hourly_leaves()
+
         all_new_leave_origin = []
         all_new_leave_vals = []
         leaves_state = {}
@@ -141,6 +144,31 @@ class HrVersion(models.Model):
                     allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
 
         return result
+
+    def _check_multi_day_hourly_leaves(self):
+        """
+            Without a working schedule, a time off in hours must stay within a single day.
+            Removing the schedule of a version is refused while it still covers such a time off.
+        """
+        for version in self.sudo().filtered('resource_calendar_id'):
+            domain = Domain([
+                ('employee_id', '=', version.employee_id.id),
+                ('state', 'not in', ['refuse', 'cancel']),
+                ('work_entry_type_request_unit', '=', 'hour'),
+                ('request_date_to', '>=', version.date_start),
+            ])
+            if version.date_end:
+                domain &= Domain('request_date_from', '<=', version.date_end)
+            leaves = self.env['hr.leave'].sudo().search(domain).filtered(
+                lambda leave: leave.request_date_from != leave.request_date_to
+            )
+            if leaves:
+                raise ValidationError(self.env._(
+                    "You cannot remove the working schedule of %(employee)s: without one, a time off in hours "
+                    "must start and end on the same day, and these time off span several days:\n%(leaves)s",
+                    employee=version.employee_id.display_name,
+                    leaves="\n".join(f"- {leave.display_name}" for leave in leaves),
+                ))
 
     def _get_leaves(self, extra_domain=None, min_date=None):
         if min_date is None:
