@@ -124,6 +124,10 @@ async function updateShopContent(interaction, {
         const currentOffcanvas = document.querySelector('.o_website_offcanvas');
         setElementContent(currentOffcanvas, markup(newOffcanvas.innerHTML))
 
+        const newSortby = updatedShopPage.querySelector('.o_sortby_dropdown');
+        const currentSortby = document.querySelector('.o_sortby_dropdown');
+        setElementContent(currentSortby, markup(newSortby.innerHTML))
+
         const applyBtn = document.querySelector('#o_wsale_offcanvas_product_count');
         if (applyBtn) {
             setElementContent(applyBtn, data.product_count)
