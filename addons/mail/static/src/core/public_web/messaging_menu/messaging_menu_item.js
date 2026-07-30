@@ -44,12 +44,9 @@ export class MessagingMenuItem extends Component {
         this.store = useService("mail.store");
         this.message = useProps.static(
             "message",
-            types.instanceOf(this.store["mail.message"].Class).optional()
+            types.instanceOf(this.store["mail.message"]).optional()
         );
-        this.activeTab = propSignal(
-            "activeTab",
-            types.instanceOf(this.store["MessagingMenuTab"].Class)
-        );
+        this.activeTab = propSignal("activeTab", types.instanceOf(this.store["MessagingMenuTab"]));
         this.onClick = useProps.static("onClick", types.function());
         this.hasTouch = hasTouch;
         this.isActive = computed(() => this._isActive);

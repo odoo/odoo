@@ -47,9 +47,9 @@ export class AttachmentList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            attachments: t.array(t.instanceOf(this.store["ir.attachment"].Class)),
+            attachments: t.array(t.instanceOf(this.store["ir.attachment"])),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
-            unlinkAttachment: t.function([t.instanceOf(this.store["ir.attachment"].Class)]),
+            unlinkAttachment: t.function([t.instanceOf(this.store["ir.attachment"])]),
         });
         this.ui = useService("ui");
         this.dialog = useService("dialog");

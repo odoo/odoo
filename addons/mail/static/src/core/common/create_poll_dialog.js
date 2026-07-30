@@ -18,7 +18,7 @@ export class CreatePollDialog extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: types.function([types.instanceOf(MouseEvent)]),
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            thread: types.instanceOf(this.store["mail.thread"]),
         });
         useAutofocus({ ref: this.questionRef });
         this.state = proxy({

@@ -20,7 +20,7 @@ patch(FormRenderer.prototype, {
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
             this.thread = signal(null, {
-                type: types.instanceOf(this.mailStore["mail.thread"].Class),
+                type: types.instanceOf(this.mailStore["mail.thread"]),
             });
         }
         this.uiService = useService("ui");

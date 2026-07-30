@@ -13,7 +13,7 @@ export class Follower extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: types.function([]).optional(),
-            follower: types.instanceOf(this.store["mail.followers"].Class),
+            follower: types.instanceOf(this.store["mail.followers"]),
             onFollowerChanged: types.function([]).optional(),
         });
         this.avatarCard = usePopover(AvatarCard, { position: "right" });

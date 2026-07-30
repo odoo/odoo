@@ -15,7 +15,7 @@ class MessageSeenIndicatorDialog extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]).optional(),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
         });
         useListener(
             browser,
@@ -39,7 +39,7 @@ export class MessageSeenIndicator extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             className: t.string().optional(),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
         });
         this.dialog = useService("dialog");
     }

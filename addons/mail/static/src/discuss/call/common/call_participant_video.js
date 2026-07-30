@@ -23,11 +23,11 @@ export class CallParticipantVideo extends Component {
         this.props = useProps({
             inset: t
                 .function([
-                    t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                    t.instanceOf(this.store["discuss.channel.rtc.session"]),
                     t.selection(["camera", "screen"]),
                 ])
                 .optional(),
-            session: t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+            session: t.instanceOf(this.store["discuss.channel.rtc.session"]),
             type: t.selection(["camera", "screen"]),
         });
         onMounted(() => this._update());

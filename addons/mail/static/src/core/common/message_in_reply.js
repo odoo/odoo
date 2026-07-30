@@ -9,7 +9,7 @@ import { url } from "@web/core/utils/urls";
 export const onParentMessageClickType = (store) =>
     t.function([
         t.instanceOf(MouseEvent),
-        t.object({ parentAtRender: t.instanceOf(store["mail.message"].Class) }),
+        t.object({ parentAtRender: t.instanceOf(store["mail.message"]) }),
     ]);
 
 export class MessageInReply extends Component {
@@ -19,7 +19,7 @@ export class MessageInReply extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.class = propComputed("class", t.string().optional(""));
-        this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
+        this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
         this.onClick = useProps.static("onClick", onParentMessageClickType(this.store).optional());
     }
 

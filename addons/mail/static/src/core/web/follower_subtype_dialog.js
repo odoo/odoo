@@ -14,11 +14,11 @@ export class FollowerSubtypeDialog extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: types.function([types.instanceOf(MouseEvent)]),
-            follower: types.instanceOf(this.store["mail.followers"].Class),
+            follower: types.instanceOf(this.store["mail.followers"]),
             onFollowerChanged: types.function([]),
         });
         this.subtypes = signal(null, {
-            type: types.array(types.instanceOf(this.store["mail.message.subtype"].Class)),
+            type: types.array(types.instanceOf(this.store["mail.message.subtype"])),
         });
         onWillStart(async () => {
             const { store_data, subtype_ids } = await rpc("/mail/read_subscription_data", {

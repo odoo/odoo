@@ -19,7 +19,7 @@ const messagingMenuItemPatch = {
         this.channelDropdownState = useDropdownState();
         this.channel = useProps.static(
             "channel",
-            types.instanceOf(this.store["discuss.channel"].Class).optional()
+            types.instanceOf(this.store["discuss.channel"]).optional()
         );
         this.isDiscussSidebarChannelActions = true;
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });

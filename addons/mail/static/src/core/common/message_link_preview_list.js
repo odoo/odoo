@@ -13,7 +13,7 @@ export class MessageLinkPreviewList extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             messageLinkPreviews: types.array(
-                types.instanceOf(this.store["mail.message.link.preview"].Class)
+                types.instanceOf(this.store["mail.message.link.preview"])
             ),
         });
     }

@@ -28,7 +28,7 @@ export class NotificationSettings extends Component {
     setup() {
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
         });
         this.dialog = useService("dialog");

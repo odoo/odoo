@@ -9,7 +9,7 @@ const notificationItemPatch = {
     setup() {
         super.setup(...arguments);
         this.ratingProps = props({
-            rating: t.instanceOf(this.store["rating.rating"].Class).optional(),
+            rating: t.instanceOf(this.store["rating.rating"]).optional(),
         });
     },
 };

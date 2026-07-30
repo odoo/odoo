@@ -14,7 +14,7 @@ export class SearchMessageResult extends Component {
         this.props = useProps({
             messageSearch: t.instanceOf(MessageSearchState),
             onClickJump: t.function([]).optional(),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
     }
 

@@ -23,7 +23,7 @@ export class MentionList extends Component {
             close: t.function([]).optional(() => {}),
             composerType: t.string(),
             onSelect: t.function([t.instanceOf(Event), optionType(this.store), t.record()]),
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
             type: t.string(),
         });
         this.suggestionService = useService("mail.suggestion");

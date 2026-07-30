@@ -38,13 +38,7 @@ export function makeStore(env, { localRegistry } = {}) {
                 `There must be no duplicated Model Names (duplicate found: ${OgClass.getName()})`
             );
         }
-        // classes cannot be made reactive because they are functions and they are not supported.
-        // work-around: make an object whose prototype is the class, so that static props become
-        // instance props.
-        /** @type {typeof Record} */
-        const Model = Object.create(OgClass);
-        // Produce another class with changed prototype, so that there are automatic get/set on relational fields
-        const Class = {
+        const Model = {
             [OgClass.getName()]: class extends OgClass {
                 constructor() {
                     super();
@@ -74,10 +68,7 @@ export function makeStore(env, { localRegistry } = {}) {
             },
         }[OgClass.getName()];
         Model._ = new ModelInternal();
-        Object.assign(Model, {
-            Class,
-            records: proxy({}),
-        });
+        Model.records = proxy({});
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;
         // Detect fields with a dummy record and setup getter/setters on them
@@ -135,7 +126,9 @@ export function makeStore(env, { localRegistry } = {}) {
         if (Model._inherits) {
             const ownProperties = new Set([
                 ...Model._.fields.keys(),
-                ...Object.getOwnPropertyNames(Model.prototype),
+                // the model's own members live on the registry class, one layer above the
+                // per-store subclass
+                ...Object.getOwnPropertyNames(Object.getPrototypeOf(Model.prototype)),
             ]);
             for (const [parentModelName, parentFieldName] of Object.entries(Model._inherits)) {
                 const inverseField = Model._.fieldsInverse.get(parentFieldName);
@@ -155,11 +148,12 @@ export function makeStore(env, { localRegistry } = {}) {
                     Model._.parentFields.set(fieldName, parentFieldName);
                 }
                 // getters and functions
-                for (const key of Object.getOwnPropertyNames(ParentModel.prototype)) {
+                const parentProto = Object.getPrototypeOf(ParentModel.prototype);
+                for (const key of Object.getOwnPropertyNames(parentProto)) {
                     if (ownProperties.has(key)) {
                         continue;
                     }
-                    const descriptor = Object.getOwnPropertyDescriptor(ParentModel.prototype, key);
+                    const descriptor = Object.getOwnPropertyDescriptor(parentProto, key);
                     if (descriptor.get || typeof descriptor.value === "function") {
                         Model._.parentFields.set(key, parentFieldName);
                     }

@@ -17,7 +17,7 @@ export class VoiceRecorder extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            composer: types.instanceOf(this.store["Composer"].Class),
+            composer: types.instanceOf(this.store["Composer"]),
             state: types.object({
                 cancelRecording: types.function([]),
                 elapsed: types.string(),

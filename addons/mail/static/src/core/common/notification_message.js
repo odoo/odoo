@@ -13,9 +13,9 @@ export class NotificationMessage extends Component {
         this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");
         this.props = useProps({
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
     }
 

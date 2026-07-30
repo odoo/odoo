@@ -16,7 +16,7 @@ export class MessagePinDialog extends Component {
         this.props = useProps({
             close: t.function([]),
             isUnpin: t.boolean().optional(false),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
         });
     }
 

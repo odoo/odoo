@@ -15,7 +15,7 @@ export class ThreadIcon extends Component {
         this.props = useProps({
             className: t.string().optional(""),
             size: t.selection(["small", "medium", "large"]).optional("medium"),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
             title: t.boolean().optional(true),
             typing: t.boolean().optional(),
         });

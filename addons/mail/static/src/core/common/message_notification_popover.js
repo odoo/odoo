@@ -9,7 +9,7 @@ export class MessageNotificationPopover extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            message: types.instanceOf(this.store["mail.message"].Class),
+            message: types.instanceOf(this.store["mail.message"]),
         });
     }
 

@@ -13,8 +13,8 @@ export class AvatarStack extends Component {
                 .function(
                     [
                         t.or([
-                            t.instanceOf(this.store["res.partner"].Class),
-                            t.instanceOf(this.store["mail.guest"].Class),
+                            t.instanceOf(this.store["res.partner"]),
+                            t.instanceOf(this.store["mail.guest"]),
                         ]),
                     ],
                     t.record(t.boolean())
@@ -26,8 +26,8 @@ export class AvatarStack extends Component {
             onClick: t.function([t.instanceOf(MouseEvent)]).optional(() => () => {}),
             personas: t.array(
                 t.or([
-                    t.instanceOf(this.store["res.partner"].Class),
-                    t.instanceOf(this.store["mail.guest"].Class),
+                    t.instanceOf(this.store["res.partner"]),
+                    t.instanceOf(this.store["mail.guest"]),
                 ])
             ),
             size: t.number().optional(24),

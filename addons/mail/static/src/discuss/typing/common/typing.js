@@ -11,9 +11,9 @@ export class Typing extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             displayText: t.boolean().optional(true),
-            member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+            member: t.instanceOf(this.store["discuss.channel.member"]).optional(),
             size: t.string().optional("small"),
         });
         this.isBrowserSafari = isBrowserSafari;

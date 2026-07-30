@@ -78,7 +78,7 @@ export class Thread extends Component {
             showDates: t.boolean().optional(true),
             showEmptyMessage: t.boolean().optional(true),
             showJumpPresent: t.boolean().optional(true),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
         this.ui = useService("ui");
         this.state = proxy({

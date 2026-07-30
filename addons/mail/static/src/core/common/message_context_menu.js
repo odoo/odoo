@@ -18,8 +18,8 @@ export class MessageContextMenu extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             dropdownState: t.instanceOf(DropdownState),
-            message: t.instanceOf(this.store["mail.message"].Class),
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            message: t.instanceOf(this.store["mail.message"]),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         /** Anchor element, owned by the parent and bound here with `t-ref`. */
         this.anchorRef = propSignal("anchorRef", t.instanceOf(HTMLElement));

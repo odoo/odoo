@@ -10,7 +10,7 @@ export class CountryFlag extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             class: t.string().optional(),
-            country: t.instanceOf(this.store["res.country"].Class),
+            country: t.instanceOf(this.store["res.country"]),
         });
     }
 }

@@ -19,7 +19,7 @@ export class QuickReactionMenu extends Component {
         this.props = useProps({
             action: t.instanceOf(Action),
             classNames: t.record(t.boolean()).optional(),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
             messageActive: t.boolean().optional(),
         });
         this.ui = useService("ui");

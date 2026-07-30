@@ -20,7 +20,7 @@ export class ActivityListPopoverItem extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
         this.onActivityChanged = useProps.static("onActivityChanged", t.function([]).optional());
         this.onClickDoneAndScheduleNext = useProps.static(
             "onClickDoneAndScheduleNext",

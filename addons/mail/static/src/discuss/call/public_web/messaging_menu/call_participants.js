@@ -26,10 +26,7 @@ export class MessagingMenuCallParticipants extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.channel = useProps.static(
-            "channel",
-            t.instanceOf(this.store["discuss.channel"].Class)
-        );
+        this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"]));
         useEffect(() => {
             this.expanded.set(this.selfInCall());
         });

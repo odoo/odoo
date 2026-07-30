@@ -19,7 +19,7 @@ class ChatBubblePreview extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
+            chatWindow: types.instanceOf(this.store.ChatWindow),
         });
     }
 
@@ -44,7 +44,7 @@ export class ChatBubble extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
+            chatWindow: types.instanceOf(this.store.ChatWindow),
         });
         const popoverRef = signal.ref();
         this.isMobileOS = isMobileOS();

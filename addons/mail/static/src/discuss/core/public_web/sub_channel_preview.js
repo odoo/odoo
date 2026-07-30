@@ -14,7 +14,7 @@ const { DateTime } = luxon;
 export const subChannelPreviewOnClickType = (store) =>
     t.function([
         t.instanceOf(MouseEvent),
-        t.object({ channelAtRender: t.instanceOf(store["discuss.channel"].Class) }),
+        t.object({ channelAtRender: t.instanceOf(store["discuss.channel"]) }),
     ]);
 
 export class SubChannelPreview extends Component {
@@ -24,7 +24,7 @@ export class SubChannelPreview extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"].Class));
+        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
         this.class = propComputed("class", t.string().optional());
         this.onClick = useProps.static(
             "onClick",

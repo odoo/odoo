@@ -9,7 +9,7 @@ export class PollResult extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            poll: types.instanceOf(this.store["mail.poll"].Class),
+            poll: types.instanceOf(this.store["mail.poll"]),
         });
     }
 

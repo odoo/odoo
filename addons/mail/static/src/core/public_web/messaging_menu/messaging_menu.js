@@ -55,7 +55,7 @@ export class MessagingMenu extends Component {
         this.store = useService("mail.store");
         this.state = useProps.static(
             "state",
-            types.signal(types.instanceOf(this.store.MessagingMenuUIState.Class))
+            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
         );
         this.activeTab = computed(() => this.state().activeTab);
         this.close = useProps.static("close", types.function().optional());

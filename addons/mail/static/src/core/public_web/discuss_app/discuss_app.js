@@ -33,7 +33,7 @@ export class Discuss extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             hasSidebar: t.boolean().optional(true),
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });

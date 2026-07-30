@@ -42,13 +42,13 @@ export class NotificationItem extends Component {
             onSwipeRight: onSwipeType.optional(),
             persona: t
                 .or([
-                    t.instanceOf(this.store["res.partner"].Class),
-                    t.instanceOf(this.store["mail.guest"].Class),
+                    t.instanceOf(this.store["res.partner"]),
+                    t.instanceOf(this.store["mail.guest"]),
                 ])
                 .optional(),
             slots: t.object().optional(),
             textClassName: t.string().optional(""),
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.rootHover = useHover(this.rootRef);
         useSubEnv({ inNotificationItem: true });

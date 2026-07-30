@@ -9,7 +9,7 @@ export class Priority extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            thread: types.instanceOf(this.store["mail.thread"]),
         });
     }
 

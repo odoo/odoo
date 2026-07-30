@@ -51,7 +51,7 @@ export class ChannelMemberList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([]).optional(),
         });
         this.dialogService = useService("dialog");

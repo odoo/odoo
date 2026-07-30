@@ -22,7 +22,7 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
         this.onActivityChanged = useProps.static("onActivityChanged", t.function([]));
         this.reloadParentView = useProps.static("reloadParentView", t.function([]));
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
