@@ -497,15 +497,26 @@ export class TicketScreen extends Component {
         return order.employee_id ? order.employee_id.name : "";
     }
     getStatus(order) {
+        return this._getFilterOptions().get(this._getStatusKey(order))?.text;
+    }
+    getStatusColor(order) {
+        return (
+            {
+                ONGOING: "info",
+                PAYMENT: "info",
+                RECEIPT: "success",
+                SYNCED: "success",
+            }[this._getStatusKey(order)] ?? "secondary"
+        );
+    }
+    _getStatusKey(order) {
         if (
             order.finalized &&
             (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         ) {
-            return _t("Paid");
-        } else {
-            const screen = order.getScreenData();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
+            return "SYNCED";
         }
+        return this._getScreenToStatusMap()[order.getScreenData().name];
     }
     /**
      * If the order is the only order and is empty
@@ -532,8 +543,7 @@ export class TicketScreen extends Component {
             order.finalized ||
             order.payment_ids.some(
                 (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
-            ) ||
-            order.finalized
+            )
         );
     }
     isHighlighted(order) {
