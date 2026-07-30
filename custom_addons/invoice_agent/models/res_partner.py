@@ -23,7 +23,7 @@ class ResPartner(models.Model):
         for partner in self:
             ai_invoices = partner.invoice_ids.filtered(
                 lambda m: m.move_type in ('in_invoice', 'in_refund')
-                and m.ai_confidence is not None
+                and m.ai_confidence is not None,
             )
             partner.ai_invoice_count = len(ai_invoices)
             if ai_invoices:

@@ -1,6 +1,7 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 import logging
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -211,7 +212,7 @@ class AccountMove(models.Model):
                 'title': _('Vendor Not Matched'),
                 'message': _(
                     'Could not automatically match a vendor from the AI-extracted data. '
-                    'Please select the vendor manually from the list.'
+                    'Please select the vendor manually from the list.',
                 ),
             },
         }
