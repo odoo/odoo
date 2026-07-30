@@ -130,3 +130,18 @@ test("many2many: async load", async () => {
         `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}]">b</div>`
     );
 });
+
+test("many2many: support action that did not store the names of selected elements", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'"/>`,
+    });
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<div class="test-options-target" data-test='[{"id":1},{"id":3}]'>b</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await waitSidebarUpdated();
+    expect("td [data-name=First]").toHaveCount(1);
+    expect("td [data-name=Second]").toHaveCount(0);
+    expect("td [data-name=Third]").toHaveCount(1);
+});
