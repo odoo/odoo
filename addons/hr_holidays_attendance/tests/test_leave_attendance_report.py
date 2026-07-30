@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
-from freezegun import freeze_time
+import pytz
 
 from odoo import fields
 from odoo.tests import tagged
@@ -11,15 +11,20 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 @tagged('-at_install', 'post_install', 'holidays_attendance')
 class TestLeaveAttendanceReport(TestHrHolidaysCommon):
 
-    @freeze_time('2026-02-28')
     def test_overlap_leave_and_public_holiday(self):
-        self.employee_emp.contract_date_start = "2026-02-01"
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        tuesday = monday + timedelta(days=1)
+        wednesday = monday + timedelta(days=2)
+
+        emp.contract_date_start = monday - timedelta(days=7)
         self.env['resource.calendar.leaves'].create({
             'name': 'Some Public Holiday',
-            'calendar_id': self.employee_emp.resource_calendar_id.id,
-            'date_from': '2026-02-10 00:00:00',
-            'date_to': '2026-02-10 18:00:00',
-            'resource_id': False
+            'calendar_id': emp.resource_calendar_id.id,
+            'date_from': datetime(tuesday.year, tuesday.month, tuesday.day, 0, 0),
+            'date_to': datetime(tuesday.year, tuesday.month, tuesday.day, 18, 0),
+            'resource_id': False,
         })
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Ignore Public Holiday Leave',
@@ -29,14 +34,16 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         })
         leave = self.env['hr.leave'].create({
             'name': 'Some leave',
-            'employee_id': self.employee_emp.id,
+            'employee_id': emp.id,
             'holiday_status_id': leave_type.id,
-            'request_date_from': "2026-02-09",
-            'request_date_to': "2026-02-11",
+            'request_date_from': monday,
+            'request_date_to': wednesday,
         })
         leave.action_approve()
-        non_overlap_days = (self.env["hr.leave.attendance.report"].search(
-            ['&', '|', ('date', '=', '2026-02-09'), ('date', '=', '2026-02-11'), ('employee_id', '=', self.employee_emp.id)]))
+        non_overlap_days = self.env["hr.leave.attendance.report"].search([
+            '&', '|', ('date', '=', monday), ('date', '=', wednesday),
+            ('employee_id', '=', emp.id),
+        ])
         self.assertRecordValues(non_overlap_days, [{
             'expected_hours': 8.0,
             'leave_hours': 8.0,
@@ -252,17 +259,15 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         # though version A (still active, on calendar_a) would have worked it.
         self.assertFalse(row(day(1, 3)), "Thursday isn't worked on calendar_b -> no row")
 
-    @freeze_time('2026-02-28')
     def test_holiday_timezone_midnight_rollover(self):
         """ A closure covering one Brussels-local day must exclude that day
-            only, not the previous UTC day its start timestamp falls on.
-
-            2026-02-16 is a Monday, 2026-02-17 the following Tuesday; both are
-            working days. Brussels is UTC+1 in February (no DST), so local
-            midnight on the 17th is 2026-02-16 23:00 UTC, and local 23:59 on
-            the 17th is 2026-02-17 22:59 UTC. """
+            only, not the previous UTC day its start timestamp falls on. """
         emp = self.employee_emp
-        emp.contract_date_start = "2026-02-01"
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        tuesday = monday + timedelta(days=1)
+
+        emp.contract_date_start = monday - timedelta(days=7)
         calendar = emp.resource_calendar_id
         calendar.tz = 'Europe/Brussels'
         Report = self.env['hr.leave.attendance.report']
@@ -270,36 +275,45 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         def row(d):
             return Report.search([('employee_id', '=', emp.id), ('date', '=', d)])
 
+        tz = pytz.timezone('Europe/Brussels')
+        day_start = tz.localize(datetime.combine(tuesday, time.min))
+        day_end = tz.localize(datetime.combine(tuesday, time.max))
+
         self.env['resource.calendar.leaves'].create({
             'name': 'Closure',
             'calendar_id': calendar.id,
             'company_id': self.company.id,
-            'date_from': '2026-02-16 23:00:00',
-            'date_to': '2026-02-17 22:59:00',
+            'date_from': day_start.astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': day_end.astimezone(pytz.utc).replace(tzinfo=None),
             'resource_id': False,
         })
 
         self.env.flush_all()
 
-        self.assertFalse(row('2026-02-17'), "closure covers Tuesday in Brussels time -> no row")
-        self.assertRecordValues(row('2026-02-16'), [{
+        self.assertFalse(row(tuesday), "closure covers Tuesday in Brussels time -> no row")
+        self.assertRecordValues(row(monday), [{
             'worked_hours': 0.0,
             'expected_hours': round(calendar.hours_per_day, 2),
             'leave_hours': 0.0,
             'difference_hours': -round(calendar.hours_per_day, 2),
         }])
 
-    @freeze_time('2026-02-28')
     def test_overlap_leave_and_public_holiday_excluded(self):
         """ When the leave type excludes public holidays from its duration,
             the holiday is dropped from the leave's pro-rated working-day
             count (exercises the holiday anti-join in `leave_day`). """
-        self.employee_emp.contract_date_start = "2026-02-01"
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        tuesday = monday + timedelta(days=1)
+        wednesday = monday + timedelta(days=2)
+
+        emp.contract_date_start = monday - timedelta(days=7)
         self.env['resource.calendar.leaves'].create({
             'name': 'Some Public Holiday',
-            'calendar_id': self.employee_emp.resource_calendar_id.id,
-            'date_from': '2026-02-10 00:00:00',
-            'date_to': '2026-02-10 18:00:00',
+            'calendar_id': emp.resource_calendar_id.id,
+            'date_from': datetime(tuesday.year, tuesday.month, tuesday.day, 0, 0),
+            'date_to': datetime(tuesday.year, tuesday.month, tuesday.day, 18, 0),
             'resource_id': False,
         })
         leave_type = self.env['hr.leave.type'].create({
@@ -310,15 +324,17 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         })
         leave = self.env['hr.leave'].create({
             'name': 'Some leave',
-            'employee_id': self.employee_emp.id,
+            'employee_id': emp.id,
             'holiday_status_id': leave_type.id,
-            'request_date_from': "2026-02-09",
-            'request_date_to': "2026-02-11",
+            'request_date_from': monday,
+            'request_date_to': wednesday,
         })
         leave.action_approve()
-        non_overlap_days = (self.env["hr.leave.attendance.report"].search(
-            ['&', '|', ('date', '=', '2026-02-09'), ('date', '=', '2026-02-11'), ('employee_id', '=', self.employee_emp.id)]))
-        # 2026-02-10 is a public holiday -> no report row; the leave's 16h are
+        non_overlap_days = self.env["hr.leave.attendance.report"].search([
+            '&', '|', ('date', '=', monday), ('date', '=', wednesday),
+            ('employee_id', '=', emp.id),
+        ])
+        # Tuesday is a public holiday -> no report row; the leave's 16h are
         # spread over the 2 remaining working days -> 8h each.
         self.assertRecordValues(non_overlap_days, [{
             'expected_hours': 8.0,
