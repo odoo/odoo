@@ -18,6 +18,33 @@ class PosOrder(models.Model):
         column2="document_id",
         groups="account.group_account_invoice",
     )
+    l10n_my_edi_state = fields.Selection(
+        string="MyInvois State",
+        help="State of this order on the MyInvois portal.",
+        selection=[
+            ('in_progress', 'Validation In Progress'),
+            ('valid', 'Valid'),
+            ('rejected', 'Rejected'),
+            ('invalid', 'Invalid'),
+            ('cancelled', 'Cancelled'),
+        ],
+        compute='_compute_l10n_my_edi_state',
+        store=True,
+        groups="account.group_account_invoice",
+    )
+
+    # --------------------------------
+    # Compute, inverse, search methods
+    # --------------------------------
+
+    @api.depends('consolidated_invoice_ids.myinvois_state', 'account_move.l10n_my_edi_state')
+    def _compute_l10n_my_edi_state(self):
+        for order in self:
+            consolidated_invoice = order._get_active_consolidated_invoice(including_in_progress=True)
+            if consolidated_invoice:
+                order.l10n_my_edi_state = consolidated_invoice.myinvois_state
+            else:
+                order.l10n_my_edi_state = order.account_move.l10n_my_edi_state
 
     # -----------------------
     # CRUD, inherited methods

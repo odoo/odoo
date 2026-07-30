@@ -332,6 +332,62 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             }])
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_myinvois_state_on_consolidated_order(self):
+        """ The state of the active consolidated invoice is mirrored on its PoS orders. """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+            orders = first_order | second_order
+
+            # Not consolidated yet.
+            self.assertEqual(orders.mapped('l10n_my_edi_state'), [False, False])
+
+            self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            }).button_consolidate()
+
+            # The consolidated invoice exists but has not been sent yet: still no state.
+            consolidated_invoice = orders.consolidated_invoice_ids
+            self.assertEqual(len(consolidated_invoice), 1)
+            self.assertFalse(consolidated_invoice.myinvois_state)
+            self.assertEqual(orders.mapped('l10n_my_edi_state'), [False, False])
+
+            with patch(CONTACT_PROXY_METHOD, new=self._mock_pending_submission):
+                # Sent, but MyInvois has not validated it yet.
+                consolidated_invoice.action_submit_to_myinvois()
+                self.assertEqual(consolidated_invoice.myinvois_state, 'in_progress')
+                self.assertEqual(orders.mapped('l10n_my_edi_state'), ['in_progress', 'in_progress'])
+
+                # The status is fetched again later on, and is now final.
+                consolidated_invoice.action_update_submission_status()
+                self.assertEqual(consolidated_invoice.myinvois_state, 'valid')
+                self.assertEqual(orders.mapped('l10n_my_edi_state'), ['valid', 'valid'])
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_myinvois_state_on_singly_invoiced_order(self):
+        """ Test that an order invoiced on its own takes the state of its invoice """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                uninvoiced_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                invoiced_order = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product_two, 1.0)],
+                    'customer': self.invoicing_customer,
+                    'is_invoiced': True,
+                })
+
+            self.assertEqual(invoiced_order.account_move.l10n_my_edi_state, 'valid')
+            self.assertEqual(invoiced_order.l10n_my_edi_state, 'valid')
+            self.assertFalse(invoiced_order.consolidated_invoice_ids)
+
+            # A non invoiced order still has an invoice from the session's closing entry but no state.
+            self.assertTrue(uninvoiced_order.account_move)
+            self.assertFalse(uninvoiced_order.account_move.l10n_my_edi_state)
+            self.assertFalse(uninvoiced_order.l10n_my_edi_state)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_delete_consolidated_invoice(self):
         with freeze_time("2025-01-01"):
             with self.with_pos_session():
@@ -1032,6 +1088,27 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 'success': True,
             }
         raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _mock_pending_submission(self, endpoint, params):
+        """ Mock a successful submission for which MyInvois did not return a final status yet.
+        A later single document status fetch returns 'valid'. """
+        if endpoint == 'api/l10n_my_edi/1/get_submission_statuses':
+            return {
+                'statuses': {
+                    f'12345897451351{8 + i}': {
+                        'status': 'in_progress',
+                        'reason': '',
+                    } for i in range(10)
+                },
+                'document_count': 10,
+            }
+        if endpoint == 'api/l10n_my_edi/1/get_status':
+            return {
+                'status': 'valid',
+                'long_id': '123-789-654',
+                'valid_datetime': '2025-01-01T01:00:00Z',
+            }
+        return self._mock_successful_submission(endpoint, params)
 
     #########
     # Helpers
