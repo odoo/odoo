@@ -89,19 +89,19 @@ class test_inherits_demo(TransactionCaseWithUserDemo):
     def test_50_search_one2many(self):
         """ check search on one2many field based on inherited many2one field. """
         # create a daughter record attached to partner Demo
-        partner_demo = self.partner_demo
+        partner_demo = self.env['test.inherit.partner'].create({'name': 'Partner'})
         daughter = self.env['test_inherit_daughter'].create({'partner_id': partner_demo.id})
         self.assertEqual(daughter.partner_id, partner_demo)
         self.assertIn(daughter, partner_demo.daughter_ids)
 
         # search the partner from the daughter record
-        partners = self.env['res.partner'].search([('daughter_ids', 'like', 'not existing daugther')])
+        partners = self.env['test.inherit.partner'].search([('daughter_ids', 'like', 'not existing daugther')])
         self.assertFalse(partners)
-        partners = self.env['res.partner'].search([('daughter_ids', 'not like', 'not existing daugther')])
+        partners = self.env['test.inherit.partner'].search([('daughter_ids', 'not like', 'not existing daugther')])
         self.assertIn(partner_demo, partners)
-        partners = self.env['res.partner'].search([('daughter_ids', '!=', False)])
+        partners = self.env['test.inherit.partner'].search([('daughter_ids', '!=', False)])
         self.assertIn(partner_demo, partners)
-        partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
+        partners = self.env['test.inherit.partner'].search([('daughter_ids', 'in', daughter.ids)])
         self.assertIn(partner_demo, partners)
 
 

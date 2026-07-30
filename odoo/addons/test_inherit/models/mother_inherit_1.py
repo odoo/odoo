@@ -11,7 +11,7 @@ class TestInheritMother(models.Model):
     _inherit = 'test.inherit.mother'
 
     field_in_mother = fields.Char()
-    partner_id = fields.Many2one('res.partner')
+    partner_id = fields.Many2one('test.inherit.partner')
     state = fields.Selection([('a', 'A'), ('b', 'B')], default='a')
 
     # extend the name field: make it required and change its default value
