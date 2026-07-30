@@ -228,7 +228,14 @@ def init_logger():
     conf = tools.config['log_config']
     if conf:
         with open(conf, 'rb') as fobj:
-            conf = json.load(fobj)
+            if conf.endswith('.toml'):
+                try:
+                    import tomllib  # ruff: ignore[import-outside-top-level]
+                except ImportError:
+                    import tomli as tomllib  # ruff: ignore[import-outside-top-level]
+                conf = tomllib.load(fobj)
+            else:
+                conf = json.load(fobj)
             # since we create a bunch of loggers at import, if this is enabled
             # (default) none of the loggers created before loading the config
             # will fire unless they're forcefully enabled in the config file
