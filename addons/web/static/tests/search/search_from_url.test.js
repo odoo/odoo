@@ -1,4 +1,4 @@
-import { expect, test, waitFor, fill } from "@odoo/hoot";
+import { beforeEach, expect, test, waitFor, fill } from "@odoo/hoot";
 import { animationFrame, press, queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
@@ -46,6 +46,17 @@ const SHARE_KEY = "Share\nALT + SHIFT + H";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 defineModels({ MockPurchaseOrders, ResCompany, ResPartner, ResUsers });
+
+/** URLs written to the clipboard during a test, captured by the patch below. */
+let clipboardWrites;
+beforeEach(() => {
+    clipboardWrites = [];
+    patchWithCleanup(browser.navigator.clipboard, {
+        async writeText(text) {
+            clipboardWrites.push(text);
+        },
+    });
+});
 
 test("URL with single filter creates filter with domain", async () => {
     redirect("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
@@ -363,12 +374,6 @@ test("hotkey sharing triggers notification", async () => {
         },
     });
 
-    patchWithCleanup(browser.navigator.clipboard, {
-        async writeText() {
-            expect.step("Copy to clipboard");
-        },
-    });
-
     await mountView({
         type: "list",
         resModel: "mock.purchase.order",
@@ -378,19 +383,14 @@ test("hotkey sharing triggers notification", async () => {
 
     await press(["alt", "shift", "h"]);
     await animationFrame();
-    expect.verifySteps(["Copy to clipboard", "Success notification"]);
+    expect(clipboardWrites).toHaveLength(1);
+    expect.verifySteps(["Success notification"]);
 });
 
 test.tags("desktop"); // Shortcut testing only on computer
 test("hotkey sharing copies simple domain + groupBy to clipboard", async () => {
     // Less comprehensinve testing then decoding url, as we use the same helper
     // as when saving favorite filters to encode the search params in the url
-    patchWithCleanup(browser.navigator.clipboard, {
-        async writeText(url) {
-            expect.step(url.split("?domain=")[1]);
-        },
-    });
-
     await mountView({
         type: "list",
         resModel: "mock.purchase.order",
@@ -414,23 +414,17 @@ test("hotkey sharing copies simple domain + groupBy to clipboard", async () => {
     await press(["alt", "shift", "h"]);
     await animationFrame();
 
-    expect.verifySteps([
+    expect(clipboardWrites[0].split("?domain=")[1]).toBe(
         encodeURIComponent('[("state", "=", "draft")]') +
             "&groupBy=" +
-            encodeURIComponent('["state"]'),
-    ]);
+            encodeURIComponent('["state"]')
+    );
 });
 
 test.tags("desktop"); // Shortcut testing only on computer
 test("hotkey sharing copies complex search to clipboard", async () => {
     // Less comprehensinve testing then decoding url, as we use the same helper
     // as when saving favorite filters to encode the search params in the url
-    patchWithCleanup(browser.navigator.clipboard, {
-        async writeText(url) {
-            expect.step(url.split("?domain=")[1]);
-        },
-    });
-
     await mountView({
         type: "list",
         resModel: "mock.purchase.order",
@@ -459,26 +453,17 @@ test("hotkey sharing copies complex search to clipboard", async () => {
     await press(["alt", "shift", "h"]);
     await animationFrame();
 
-    expect.verifySteps([
+    expect(clipboardWrites[0].split("?domain=")[1]).toBe(
         encodeURIComponent(`["|", ("state", "=", "draft"), ("partner_id", "ilike", "%Juan%")]`) +
             "&groupBy=" +
             encodeURIComponent('["partner_id"]') +
             "&orderBy=" +
-            encodeURIComponent('[{"name":"__count","asc":true}]'),
-    ]);
+            encodeURIComponent('[{"name":"__count","asc":true}]')
+    );
 });
 
 test.tags("desktop"); // Shortcut testing only on computer
 test("hotkey sharing keeps a relative date filter relative in the URL", async () => {
-    // A relative (smart-date) filter must be shared as its symbolic expression
-    // (e.g. "today =week_start") rather than a frozen absolute range, so the
-    // recipient re-evaluates it against their own "today", possibly another day.
-    patchWithCleanup(browser.navigator.clipboard, {
-        async writeText(url) {
-            expect.step(decodeURIComponent(url.split("?domain=")[1].split("&")[0]));
-        },
-    });
-
     await mountView({
         type: "list",
         resModel: "mock.purchase.order",
@@ -499,7 +484,7 @@ test("hotkey sharing keeps a relative date filter relative in the URL", async ()
     await press(["alt", "shift", "h"]);
     await animationFrame();
 
-    expect.verifySteps([
-        `["&", ("date_order", ">=", "today =week_start"), ("date_order", "<", "today =week_start +1w")]`,
-    ]);
+    expect(decodeURIComponent(clipboardWrites[0].split("?domain=")[1].split("&")[0])).toBe(
+        `["&", ("date_order", ">=", "today =week_start"), ("date_order", "<", "today =week_start +1w")]`
+    );
 });
