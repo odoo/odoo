@@ -210,7 +210,8 @@ export class GeneratePrinterData {
         const baseUrl = this.config._base_url;
         const company = this.company;
         const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
-        const useQrCode = company.point_of_sale_ticket_portal_url_display_mode !== "url";
+        const useQrCode =
+            company.point_of_sale_ticket_portal_url_display_mode !== "url" && this.order.finalized;
         const useTips = this.config.set_tip_after_payment && this.order.displayPrice > 0;
         const tipPercentages = [
             this.config.tip_percentage_1,
