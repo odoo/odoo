@@ -13,7 +13,7 @@ functionRegistry.add("ODOO.CURRENCY.RATE", {
         const to = toString(currencyTo);
         const _date = date ? toJsDate(date, this.locale) : undefined;
         const _companyId = companyId ? toNumber(companyId) : undefined;
-        return this.getters.getCurrencyRate(from, to, _date, _companyId);
+        return { value: this.getters.getCurrencyRate(from, to, _date, _companyId) };
     },
     args: [
         arg("currency_from (string)", _t("First currency code.")),

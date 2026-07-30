@@ -254,7 +254,6 @@ export class ListDataSource extends OdooViewsDataSource {
 
     /**
      * @param {string} fieldPath
-     * @returns {string | EvaluationError}
      */
     getListHeaderValue(fieldPath) {
         this.addFieldPathToFetch(fieldPath);
@@ -279,7 +278,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 _t("The field %s does not exist or you do not have access to that field", fieldPath)
             );
         }
-        return field.string;
+        return { value: field.string };
     }
 
     /**
