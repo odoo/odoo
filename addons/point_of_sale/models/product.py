@@ -86,7 +86,7 @@ class ProductProduct(models.Model):
                     supplier_list.append({
                         'name': s.partner_id.name,
                         'delay': s.delay,
-                        'price': s.price
+                        'price': s.currency_id._convert(s.price, config.currency_id, config.company_id, date.today())
                     })
                     break
 
