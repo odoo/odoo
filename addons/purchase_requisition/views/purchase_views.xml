@@ -21,7 +21,7 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <field name="product_id" position="after">
+            <field name="order_line" position="after">
                 <field name="requisition_id"/>
             </field>
             <filter name="representative" position="after">
