@@ -361,7 +361,7 @@ class MaintenanceRequest(models.Model):
             self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
             self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
-            self.activity_update()
+            self.filtered(lambda m: not m.stage_id.done).activity_update()
         if vals.get('user_id') or vals.get('schedule_date'):
             self.activity_update()
         if self._need_new_activity(vals):
