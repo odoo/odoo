@@ -368,7 +368,7 @@ class StockWarehouseOrderpoint(models.Model):
             }, _('Edit Product'))
         notification = False
         if len(self) == 1:
-            notification = self.with_context(written_after=now)._get_replenishment_order_notification()
+            notification = self._get_replenishment_order_notification(written_after=now)
         # Forced to call compute quantity because we don't have a link.
         self.action_remove_manual_qty_to_order()
         self._compute_qty_to_order()
@@ -650,11 +650,11 @@ class StockWarehouseOrderpoint(models.Model):
             'trigger': 'manual',
         }
 
-    def _get_replenishment_order_notification(self):
+    def _get_replenishment_order_notification(self, written_after=None):
         self.ensure_one()
         domain = Domain('orderpoint_id', 'in', self.ids)
-        if self.env.context.get('written_after'):
-            domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
+        if written_after:
+            domain &= Domain('write_date', '>=', written_after)
         move = self.env['stock.move'].search(domain, limit=1)
         if ((move.location_id.warehouse_id and move.location_id.warehouse_id != self.warehouse_id)
             or move.location_id.usage == 'transit') and move.picking_id:

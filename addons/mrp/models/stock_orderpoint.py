@@ -26,11 +26,11 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_to_update.bom_id = False
         super()._inverse_route_id()
 
-    def _get_replenishment_order_notification(self):
+    def _get_replenishment_order_notification(self, written_after=None):
         self.ensure_one()
         domain = Domain('orderpoint_id', 'in', self.ids)
-        if self.env.context.get('written_after'):
-            domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
+        if written_after:
+            domain &= Domain('write_date', '>=', written_after)
         production = self.env['mrp.production'].search(domain, limit=1)
         if production:
             return {
@@ -47,7 +47,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
-        return super()._get_replenishment_order_notification()
+        return super()._get_replenishment_order_notification(written_after=written_after)
 
     @api.depends('bom_id', 'product_id.bom_ids.produce_delay')
     def _compute_deadline_date(self):
