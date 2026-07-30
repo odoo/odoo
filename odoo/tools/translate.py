@@ -1688,36 +1688,43 @@ def _get_translation_upgrade_queries(cr, field):
                     ON imd.model = %s AND imd.res_id = t0.res_id
               GROUP BY t0.res_id
             )""" + query, [translation_name, Model._name])
-        for id_, new_translations, translations, noupdate, *extra in cr.fetchall():
-            if not new_translations:
-                continue
-            # new_translations contains translations updated from the latest po files
-            src_value = new_translations.pop('en_US')
-            src_terms = field.get_trans_terms(src_value)
-            for lang, dst_value in new_translations.items():
-                terms_mapping = translations.setdefault(lang, {})
-                dst_terms = field.get_trans_terms(dst_value)
-                for src_term, dst_term in zip(src_terms, dst_terms):
-                    if src_term == dst_term or noupdate:
-                        terms_mapping.setdefault(src_term, dst_term)
-                    else:
-                        terms_mapping[src_term] = dst_term
-            new_values = {
-                lang: field.translate(terms_mapping.get, src_value)
-                for lang, terms_mapping in translations.items()
-            }
-            if "en_US" not in new_values:
-                new_values["en_US"] = field.translate(lambda v: None, src_value)
-            if extra and extra[0] not in new_values:
-                new_values[extra[0]] = field.translate(lambda v: None, src_value)
-            elif not extra:
-                missing_languages = languages - set(translations)
-                if missing_languages:
-                    src_value = field.translate(lambda v: None, src_value)
-                    for lang in sorted(missing_languages):
-                        new_values[lang] = src_value
-            query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
-            migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
+        write_cr = cr._cnx.cursor()
+        for rows in iter(lambda: cr.fetchmany(100), []):
+            for id_, new_translations, translations, noupdate, *extra in rows:
+                if not new_translations:
+                    continue
+                # new_translations contains translations updated from the latest po files
+                src_value = new_translations.pop('en_US')
+                src_terms = field.get_trans_terms(src_value)
+                for lang, dst_value in new_translations.items():
+                    terms_mapping = translations.setdefault(lang, {})
+                    dst_terms = field.get_trans_terms(dst_value)
+                    for src_term, dst_term in zip(src_terms, dst_terms):
+                        if src_term == dst_term or noupdate:
+                            terms_mapping.setdefault(src_term, dst_term)
+                        else:
+                            terms_mapping[src_term] = dst_term
+                new_values = {
+                    lang: field.translate(terms_mapping.get, src_value)
+                    for lang, terms_mapping in translations.items()
+                }
+                if "en_US" not in new_values:
+                    new_values["en_US"] = field.translate(lambda v: None, src_value)
+                if extra and extra[0] not in new_values:
+                    new_values[extra[0]] = field.translate(lambda v: None, src_value)
+                elif not extra:
+                    missing_languages = languages - set(translations)
+                    if missing_languages:
+                        src_value = field.translate(lambda v: None, src_value)
+                        for lang in sorted(missing_languages):
+                            new_values[lang] = src_value
+                query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
+                migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
+                if len(migrate_queries) >= 100:
+                    for query in migrate_queries:
+                        write_cr.execute(query)
+                    write_cr.connection.commit()
+                    migrate_queries.clear()
 
         query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND state = 'translated' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
