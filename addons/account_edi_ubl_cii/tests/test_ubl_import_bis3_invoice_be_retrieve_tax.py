@@ -276,3 +276,30 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_import_document_charge_with_different_tax(self):
+        tax_21_m = self.percent_tax(21.0, type_tax_use='purchase', name='VAT 21% M')
+        tax_21_s = self.percent_tax(21.0, type_tax_use='purchase', name='VAT 21% S')
+
+        def mocked_import_retrieve_tax(self, search_plan, company, tax_values_list):
+            for tax_values in tax_values_list:
+                if tax_values.get('invoice_predictive'):
+                    tax_values['tax'] = tax_21_m
+                elif tax_values.get('_tax_key'):
+                    tax_values['tax'] = tax_21_s
+
+        self.patch(self.env.registry['account.tax'], '_import_retrieve_tax', mocked_import_retrieve_tax)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_document_charge_tax_alignment',
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        self.assertRecordValues(
+            invoice,
+            [{
+                'amount_untaxed': 67.0,
+                'amount_tax': 14.07,
+                'amount_total': 81.07,
+            }],
+        )
