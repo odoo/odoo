@@ -250,6 +250,51 @@ test("mobile: mark as read when opening chat", async () => {
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob", count: 0 });
 });
 
+test("show banner for new message after thread was read from another device", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
+    let lastMessageId;
+    for (let i = 0; i < 20; ++i) {
+        lastMessageId = pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel:has(:text('General'))");
+    await contains(".o-mail-Thread-banner:has(:text('20 new messages'))");
+    await click(".o-mail-Thread-banner span:text('Mark as Read')");
+    await contains(".o-mail-Thread-banner", { count: 0 });
+    // Simulate mark as read from another device.
+    await rpc("/discuss/channel/mark_as_read", {
+        channel_id: channelId,
+        last_message_id: lastMessageId,
+    });
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Hello!",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread-banner:has(:text('1 new message'))");
+});
+
 test("no unread message banner after message is deleted", async () => {
     const pyEnv = await startServer();
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
