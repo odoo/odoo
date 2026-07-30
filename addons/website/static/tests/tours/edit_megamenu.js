@@ -117,13 +117,15 @@ registry.category("web_tour.tours").add("megamenu_active_nav_link", {
             trigger: ".o-we-linkpopover button.js_edit_menu",
             run: "click",
         },
+        ...simulateLotOfMenusAsOnRunbot,
         ...addMegaMenu("MegaTron"),
         clickOnExtraMenuItem({}, true),
         toggleMegaMenu,
         ...openLinkPopup({
             trigger:
                 ":iframe .o_extra_menu_items:has(a.show) .o_mega_menu .nav-link:contains(Laptops)",
-            label: "Home",
+            // No label: unlike a regular page link, this link's href is "#", so
+            // its popover preview shows the current page's title, not "Laptops".
             url: "#",
             focusNodeIndex: 0,
             runClick: false,
@@ -144,6 +146,7 @@ registry.category("web_tour.tours").add("megamenu_active_nav_link", {
         },
         ...clickOnSave(),
         clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
         {
             content: "Click on the first menu link of the first column",
             trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(1)",
