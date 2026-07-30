@@ -75,8 +75,8 @@ class HrLeaveAttendanceReport(models.Model):
 
     def _cte_bounds(self):
         return SQL("""
-            SELECT (date_trunc('month', CURRENT_DATE) - INTERVAL '1 year')::date AS date_from,
-                   (CURRENT_DATE - 1)::date AS date_to
+            SELECT (date_trunc('month', (now())::date) - INTERVAL '1 year')::date AS date_from,
+                   ((now())::date - 1)::date AS date_to
         """)
 
     def _cte_cal_workday(self):
