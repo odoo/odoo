@@ -112,8 +112,16 @@ export const integerField = {
     supportedTypes: ["integer"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: ({ options }) => ({
-        formatNumber:
-            options?.enable_formatting !== undefined ? Boolean(options.enable_formatting) : true,
+        // Support legacy/docs option `format` as alias of `enable_formatting` (see #275937)
+        formatNumber: (() => {
+            if (options?.enable_formatting !== undefined) {
+                return Boolean(options.enable_formatting);
+            }
+            if (options?.format !== undefined) {
+                return Boolean(options.format);
+            }
+            return true;
+        })(),
         humanReadable: !!options.human_readable,
         inputType: options.type,
         min: options.min,

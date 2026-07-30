@@ -366,13 +366,19 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
     const fieldsSpec = {};
     const properties = [];
     for (const fieldName in activeFields) {
-        if (fields[fieldName].relatedPropertyField) {
+        // activeFields may reference names absent from `fields` (e.g. KanbanSampleModel /
+        // bank reconciliation empty state). Skip rather than crash on undefined.
+        const field = fields[fieldName];
+        if (!field) {
+            continue;
+        }
+        if (field.relatedPropertyField) {
             continue;
         }
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
         const isAlwaysInvisible = invisible === "True" || invisible === "1";
         fieldsSpec[fieldName] = {};
-        switch (fields[fieldName].type) {
+        switch (field.type) {
             case "one2many":
             case "many2many": {
                 if (related && (withInvisible || !isAlwaysInvisible)) {
@@ -441,7 +447,11 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
     }
 
     for (const fieldName of properties) {
-        const fieldSpec = fieldsSpec[fields[fieldName].definition_record];
+        const definitionRecord = fields[fieldName]?.definition_record;
+        if (!definitionRecord) {
+            continue;
+        }
+        const fieldSpec = fieldsSpec[definitionRecord];
         if (fieldSpec) {
             if (!fieldSpec.fields) {
                 fieldSpec.fields = {};

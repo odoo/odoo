@@ -150,10 +150,16 @@ export const floatField = {
         }
 
         return {
-            formatNumber:
-                options?.enable_formatting !== undefined
-                    ? Boolean(options.enable_formatting)
-                    : true,
+            formatNumber: (() => {
+                if (options?.enable_formatting !== undefined) {
+                    return Boolean(options.enable_formatting);
+                }
+                // Legacy/docs alias used in stock views: options="{'format': false}"
+                if (options?.format !== undefined) {
+                    return Boolean(options.format);
+                }
+                return true;
+            })(),
             inputType: options.type,
             humanReadable: !!options.human_readable,
             step: options.step,
