@@ -125,7 +125,7 @@ describe("should open a popover", () => {
     });
     test("clicking input prefix icon should focus associated input", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await waitFor(".o-we-linkpopover");
         expect(".o-we-linkpopover label[for='o_we_label_link']").toHaveCount(1);
         expect(".o-we-linkpopover label[for='o_linkpopover_url']").toHaveCount(1);
@@ -714,7 +714,7 @@ describe("popover in contenteditable=false or readonly mode", () => {
 describe("popover for file uploads", () => {
     test("should display upload button whether url input is empty or filled.", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await waitFor(".o-we-linkpopover");
         // Upload button should be visible
         expect("button i[data-icon='upload']").toHaveCount(1);
@@ -738,7 +738,7 @@ describe("popover for file uploads", () => {
     test("can create a link to an uploaded file", async () => {
         const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await waitFor(".o-we-linkpopover");
         await click("button i[data-icon='upload']");
         await mockedUpload;
@@ -760,7 +760,7 @@ describe("popover for file uploads", () => {
         const { editor } = await setupEditor("<p>[]<br></p>", {
             config: { allowTargetBlank: true },
         });
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await contains("input.o_we_href_input_link").fill(
             "/web/content/1?unique=123&download=true",
             { confirm: false }
@@ -782,7 +782,7 @@ describe("popover for file uploads", () => {
     test("label input does not get filled on file upload if it is already filled", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await waitFor(".o-we-linkpopover");
         // Fill label input
         await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
@@ -836,7 +836,7 @@ describe("popover for file uploads", () => {
         });
         const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
-        execCommand(editor, "openLinkTools");
+        execCommand(editor, "openLinkPopover");
         await waitFor(".o-we-linkpopover");
         let xhr;
         const waitForRequest = new Promise((res) => {
