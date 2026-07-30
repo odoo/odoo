@@ -91,9 +91,8 @@ class SwedishBlackBoxDriver(SerialDriver):
         :return: whether the device is supported by the driver
         :rtype: bool
         """
-
+        protocol = cls._protocol
         try:
-            protocol = cls._protocol
             packet = cls._wrap_message("SIQ")
             with serial_connection(device["identifier"], protocol) as connection:
                 response = cls._send_to_blackbox(packet, connection, 2)
@@ -105,7 +104,7 @@ class SwedishBlackBoxDriver(SerialDriver):
                     device["protocol_version"] = identity["protocol_version"]
                     if response[4] != "0":
                         _logger.warning(
-                            ("Received error: %s - Severity: %s"),
+                            "Received error: %s - Severity: %s",
                             MainStatus.get(response[4]),
                             SeverityError.get(response[5][1:2]),
                         )
@@ -113,14 +112,14 @@ class SwedishBlackBoxDriver(SerialDriver):
                     return True
         except serial.serialutil.SerialTimeoutException:
             pass
-        except Exception:
-            _logger.exception(
-                "Error while probing %s with protocol %s", device, protocol.name
+        except Exception:  # noqa: BLE001
+            _logger.warning(
+                "Error while probing %s with protocol %s", device, protocol.name,
             )
 
     @classmethod
     def _get_identity(cls, connection):
-        """ "Get Identity of Swedish Black box
+        """Get Identity of Swedish Black box
         :return: dictionary containing unit_id, protocol_version, firmware_version
         :rtype: dict
         """
@@ -132,15 +131,14 @@ class SwedishBlackBoxDriver(SerialDriver):
                     "protocol_version": int(response[5]),
                     "firmware_version": response[6],
                 }
-            else:
-                _logger.error("Sent IQ request error")
-                return False
+            _logger.error("Sent IQ request error")
+            return False
         except Exception:  # noqa: BLE001
             _logger.error("Did not receive a response")
 
     @staticmethod
     def _lrc(msg):
-        """ "Compute a message's longitudinal redundancy check value.
+        """Compute a message's longitudinal redundancy check value.
         :param msg: the message the LRC is computed for
         :type msg: byte
         :return: the message LRC
@@ -170,8 +168,7 @@ class SwedishBlackBoxDriver(SerialDriver):
     def _register_receipt(self, data):
         if self.protocol_version >= 2:
             return self._register_receipt_v2(data)
-        else:
-            return self._register_receipt_v1(data)
+        return self._register_receipt_v1(data)
 
     def _register_receipt_v2(self, data):
         """The register receipt message registers a receipt (CCSP v2 only).
