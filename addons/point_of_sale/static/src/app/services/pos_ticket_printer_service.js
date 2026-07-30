@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { formatDateTime } from "@web/core/l10n/dates";
-import { EpsonPrinter } from "../utils/printer/epson_printer";
+import { EpsonPrinter, PollingPrinter } from "../utils/printer/epson_printer";
 import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { RetryPrintPopup } from "../components/popups/retry_print_popup/retry_print_popup";
 import { _t } from "@web/core/l10n/translation";
@@ -413,6 +413,13 @@ export class PosTicketPrinterService {
                 return new ZebraPrinter({ printer });
             }
             return new EpsonPrinter({ printer });
+        }
+        if (printer.printer_type === "polling") {
+            return new PollingPrinter({
+                printer,
+                posData: this.data,
+                bus: this.env.services.bus_service,
+            });
         }
 
         return false;

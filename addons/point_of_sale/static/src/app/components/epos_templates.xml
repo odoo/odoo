@@ -7,4 +7,19 @@
             </s:Body>
         </s:Envelope>
     </t>
+    <t t-name="point_of_sale.PollingPrinterLayout">
+        <PrintRequestInfo Version="3.00">
+            <!-- multiple receipts can be printed at the same time by adding multiple <ePOSPrint> sections -->
+            <ePOSPrint>
+                <Parameter>
+                    <devid>local_printer</devid>
+                    <timeout>20000</timeout>
+                    <printjobid />
+                </Parameter>
+                <PrintData>
+                    <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print"/>
+                </PrintData>
+            </ePOSPrint>
+        </PrintRequestInfo>
+    </t>
 </templates>

@@ -3,20 +3,36 @@ import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 import { getLNATargetAddressSpace } from "../init_lna";
+import { getOnNotified } from "@point_of_sale/utils";
+import { uuid } from "@web/core/utils/strings";
 
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
 const ERROR_CODE_PRINTER_NOT_REACHABLE = "PRINTER_NOT_REACHABLE";
 
+// Documentation: https://files.support.epson.com/pdf/pos/bulk/tm-int_sdp_um_e_reve.pdf
+const EPSON_ERRORS = {
+    EPTR_AUTOMATICAL: _t("Continuous printing of high-density printing caused a printing error."),
+    EPTR_CUTTER: _t("The cutter has a foreign matter, please check the cutter mechanism."),
+    EPTR_MECHANICAL: _t("Mechanical error, please check the printer."),
+    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occurred, please check the printer."),
+    EX_BADPORT: _t("The device is not connected, please check the printer power / connection."),
+    EX_TIMEOUT: _t("Print timeout occurred, please try again."),
+};
+
 /**
  * We need to remove all `xmlns=""` in the DOM otherwise, the print
  * request will succeed but nothing will be printed
  */
-function ePOSPrint(children) {
-    let ePOSLayout = getTemplate("point_of_sale.ePOSLayout");
+function ePOSPrint(children, template, jobId) {
+    let ePOSLayout = getTemplate(template);
     ePOSLayout = ePOSLayout.cloneNode(true);
     const [eposPrintEl] = ePOSLayout.getElementsByTagName("epos-print");
     append(eposPrintEl, children);
+    if (jobId) {
+        const [printJobId] = ePOSLayout.getElementsByTagName("printjobid");
+        append(printJobId, jobId);
+    }
     return ePOSLayout.innerHTML.replaceAll(`xmlns=""`, "");
 }
 
@@ -25,94 +41,89 @@ function ePOSPrint(children) {
  * We will use Floyd-Steinberg dithering.
  */
 function canvasToRaster(canvas) {
-    const imageData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    const width = imageData.width;
-    const height = imageData.height;
-    const errors = Array.from(Array(width), (_) => Array(height).fill(0));
-    const rasterData = new Array(width * height).fill(0);
+    const {
+        data: pixels,
+        width,
+        height,
+    } = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
+    const raster = new Uint8Array(Math.ceil((width * height) / 8));
+
+    // Floyd-Steinberg only ever propagates error to the current and next
+    // rows, so we only need to keep two rows of error terms around instead
+    // of one for the whole image (which can get very tall for long receipts).
+    let currentRowErrors = new Float32Array(width);
+    let nextRowErrors = new Float32Array(width);
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            let oldColor, newColor;
+            const i = y * width + x;
+            const idx = i * 4;
 
             // Compute grayscale level. Those coefficients were found online
             // as R, G and B have different impacts on the darkness
             // perception (e.g. pure blue is darker than red or green).
-            const idx = (y * width + x) * 4;
-            oldColor = pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114;
+            let level = pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114;
 
             // Propagate the error from neighbor pixels
-            oldColor += errors[x][y];
-            oldColor = Math.min(255, Math.max(0, oldColor));
+            level = Math.min(255, Math.max(0, level + currentRowErrors[x]));
 
-            if (oldColor < 128) {
+            const isBlack = level < 128;
+            if (isBlack) {
                 // This pixel should be black
-                newColor = 0;
-                rasterData[y * width + x] = 1;
-            } else {
-                // This pixel should be white
-                newColor = 255;
-                rasterData[y * width + x] = 0;
+                raster[i >> 3] |= 0x80 >> i % 8;
+            }
+
+            const error = level - (isBlack ? 0 : 255);
+            if (!error) {
+                continue;
             }
 
             // Propagate the error to the following pixels, based on
             // Floyd-Steinberg dithering.
-            const error = oldColor - newColor;
-            if (error) {
-                if (x < width - 1) {
-                    // Pixel on the right
-                    errors[x + 1][y] += (7 / 16) * error;
-                }
-                if (x > 0 && y < height - 1) {
-                    // Pixel on the bottom left
-                    errors[x - 1][y + 1] += (3 / 16) * error;
-                }
-                if (y < height - 1) {
-                    // Pixel below
-                    errors[x][y + 1] += (5 / 16) * error;
-                }
-                if (x < width - 1 && y < height - 1) {
-                    // Pixel on the bottom right
-                    errors[x + 1][y + 1] += (1 / 16) * error;
-                }
+            if (x + 1 < width) {
+                // Pixel on the right
+                currentRowErrors[x + 1] += (7 / 16) * error;
+            }
+            if (x > 0) {
+                // Pixel on the bottom left
+                nextRowErrors[x - 1] += (3 / 16) * error;
+            }
+            // Pixel below
+            nextRowErrors[x] += (5 / 16) * error;
+            if (x + 1 < width) {
+                // Pixel on the bottom right
+                nextRowErrors[x + 1] += (1 / 16) * error;
             }
         }
+
+        [currentRowErrors, nextRowErrors] = [nextRowErrors, currentRowErrors];
+        nextRowErrors.fill(0);
     }
 
-    return rasterData.join("");
-}
-
-/**
- * Base 64 encode a raster image
- */
-function encodeRaster(rasterData) {
-    let encodedData = "";
-    for (let i = 0; i < rasterData.length; i += 8) {
-        const sub = rasterData.substr(i, 8);
-        encodedData += String.fromCharCode(parseInt(sub, 2));
-    }
-    return btoa(encodedData);
+    return raster;
 }
 
 /**
  * Create the raster data from a canvas
  */
-export function processCanvas(canvas) {
-    const rasterData = canvasToRaster(canvas);
-    const encodedData = encodeRaster(rasterData);
-    return ePOSPrint([
-        createElement(
-            "image",
-            {
-                width: canvas.width,
-                height: canvas.height,
-                align: "center",
-            },
-            [createTextNode(encodedData)]
-        ),
-        createElement("cut", { type: "feed" }),
-    ]);
+export function processCanvas(canvas, template = "point_of_sale.ePOSLayout", jobId) {
+    const encodedData = canvasToRaster(canvas).toBase64();
+    return ePOSPrint(
+        [
+            createElement(
+                "image",
+                {
+                    width: canvas.width,
+                    height: canvas.height,
+                    align: "center",
+                },
+                [createTextNode(encodedData)]
+            ),
+            createElement("cut", { type: "feed" }),
+        ],
+        template,
+        jobId
+    );
 }
 
 /**
@@ -152,17 +163,15 @@ export class EpsonPrinter extends BasePrinter {
         this.sendPrintingJob(pulse);
     }
 
+    prepareImage(img, template, jobId) {
+        return img instanceof HTMLCanvasElement ? processCanvas(img, template, jobId) : img;
+    }
+
     /**
      * @override
      */
     async sendPrintingJob(img) {
-        let processed = img;
-
-        // Only canvas needs to be rasterized, if it's already an XML (string or document)
-        // we can directly send it to the printer
-        if (img instanceof HTMLCanvasElement) {
-            processed = processCanvas(img);
-        }
+        const processed = this.prepareImage(img, "point_of_sale.ePOSLayout");
 
         const params = {
             method: "POST",
@@ -232,6 +241,8 @@ export class EpsonPrinter extends BasePrinter {
             message = _t("Printer cover is open. Please close it and try again!");
         } else if (errorCode === "EPTR_REC_EMPTY" || hasStatus) {
             message = _t("It seems that the printer runs out of paper.");
+        } else if (errorCode in EPSON_ERRORS) {
+            message = EPSON_ERRORS[errorCode];
         } else {
             message = _t(
                 "The following error code was given by the printer: %s \nTo find more details on the error reason, please search online for: Epson ePoS error %s ",
@@ -261,5 +272,68 @@ export class EpsonPrinter extends BasePrinter {
             return "ROLL_PAPER_HAS_ALMOST_RUN_OUT";
         }
         return undefined;
+    }
+}
+
+export class PollingPrinter extends EpsonPrinter {
+    // Documentation: https://files.support.epson.com/pdf/pos/bulk/tm-int_sdp_um_e_reve.pdf
+    setup({ printer, posData, bus }) {
+        super.setup(...arguments);
+        this.posData = posData;
+        this.pendingPrintJobs = new Map();
+        getOnNotified(bus, "POLLING_PRINTER");
+        posData.connectWebSocket("POLLING_PRINTER", this.pollingPrinterNotification.bind(this));
+    }
+
+    pollingPrinterNotification(response) {
+        if (response.some((r) => !r.printJobId)) {
+            for (const [printJobId, resolve] of this.pendingPrintJobs) {
+                resolve({ success: "false", errorCode: "ERROR_CODE_PRINTER_OLD_FIRMWARE" });
+                this.pendingPrintJobs.delete(printJobId);
+            }
+            return;
+        }
+        for (const jobResult of response) {
+            const resolve = this.pendingPrintJobs.get(jobResult.printJobId);
+            if (resolve) {
+                resolve(jobResult);
+                this.pendingPrintJobs.delete(jobResult.printJobId);
+            }
+        }
+    }
+
+    async sendPrintingJob(img) {
+        const printJobId = uuid();
+        const processed = this.prepareImage(img, "point_of_sale.PollingPrinterLayout", printJobId);
+
+        const { promise: printerResponsePromise, resolve: resolvePrinterResponse } =
+            Promise.withResolvers();
+        this.pendingPrintJobs.set(printJobId, resolvePrinterResponse);
+        const fallbackTimeout = setTimeout(() => {
+            this.pendingPrintJobs.delete(printJobId);
+            resolvePrinterResponse({ result: false, errorCode: ERROR_CODE_PRINTER_NOT_REACHABLE });
+        }, this.timeout);
+
+        try {
+            await this.posData.orm.call("pos.printer", "push_polling_printer_receipt", [
+                this.id,
+                processed,
+            ]);
+            const printerResponse = await printerResponsePromise;
+            return {
+                result: printerResponse.success === "true" && !printerResponse.errorCode,
+                errorCode: printerResponse.errorCode,
+                canRetry: true,
+            };
+        } catch {
+            return {
+                result: false,
+                errorCode: "ERROR_CODE_REQUEST_BACKEND",
+                canRetry: true,
+            };
+        } finally {
+            clearTimeout(fallbackTimeout);
+            this.pendingPrintJobs.delete(printJobId);
+        }
     }
 }

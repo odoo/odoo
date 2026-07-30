@@ -3,3 +3,4 @@
 from . import binary
 from . import customer_display
 from . import main
+from . import printer
