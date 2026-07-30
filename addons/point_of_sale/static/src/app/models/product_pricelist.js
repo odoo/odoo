@@ -54,33 +54,35 @@ export class ProductPricelist extends Base {
 
         for (let i = 0; i < this.item_ids.length; i++) {
             const item = this.item_ids[i];
+            // Read the ids from the raw data: the targeted record may not be loaded in
+            // the PoS, and a rule must not be treated as global just because its target
+            // is missing.
+            const { product_id, product_tmpl_id, categ_id } = item.raw;
 
             // Index by product_id (variant rules)
-            if (item.product_id) {
-                const prodId = item.product_id.id;
-                if (!this.rulesByProductId[prodId]) {
-                    this.rulesByProductId[prodId] = [];
+            if (product_id) {
+                if (!this.rulesByProductId[product_id]) {
+                    this.rulesByProductId[product_id] = [];
                 }
-                this.rulesByProductId[prodId].push(item);
+                this.rulesByProductId[product_id].push(item);
                 continue;
             }
 
             // Index by product_tmpl_id (template rules)
-            if (item.product_tmpl_id) {
-                const tmplId = item.product_tmpl_id.id;
-                if (!this.rulesByTmplId[tmplId]) {
-                    this.rulesByTmplId[tmplId] = [];
+            if (product_tmpl_id) {
+                if (!this.rulesByTmplId[product_tmpl_id]) {
+                    this.rulesByTmplId[product_tmpl_id] = [];
                 }
-                this.rulesByTmplId[tmplId].push(item);
+                this.rulesByTmplId[product_tmpl_id].push(item);
                 continue;
             }
 
-            if (item.categ_id) {
-                if (!this.uiState.generalRulesIdsByCateg[item.categ_id.id]) {
-                    this.uiState.generalRulesIdsByCateg[item.categ_id.id] = {};
+            if (categ_id) {
+                if (!this.uiState.generalRulesIdsByCateg[categ_id]) {
+                    this.uiState.generalRulesIdsByCateg[categ_id] = {};
                 }
 
-                this.uiState.generalRulesIdsByCateg[item.categ_id.id][i] = item.id;
+                this.uiState.generalRulesIdsByCateg[categ_id][i] = item.id;
                 continue;
             }
 
