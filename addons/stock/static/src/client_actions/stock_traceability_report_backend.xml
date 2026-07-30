@@ -69,6 +69,9 @@
                         <span t-elif="col.value and ((line.picking_type_code == 'incoming' and line.source_name === col.value) or (line.picking_type_code == 'outgoing' and line.destination_name === col.value))">
                             <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-out="col.value"/>
                         </span>
+                        <span t-elif="col.value and (line.source_name === col.value or (line.destination_name === col.value and !line.highlight_destination))">
+                            <span class="o_stock_reports_dim" t-out="col.value"/>
+                        </span>
                         <span t-elif="col.value and line.lot_name === col.value">
                             <a class="o_stock_report_lot_action" href="#" t-on-click.prevent="() => this.onClickOpenLot(line)" t-out="col.value"/>
                         </span>
