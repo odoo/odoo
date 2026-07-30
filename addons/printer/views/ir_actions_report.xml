@@ -4,7 +4,7 @@
     <field name="model">ir.actions.report</field>
     <field name="inherit_id" ref="base.act_report_xml_view"/>
     <field name="arch" type="xml">
-      <field name="report_type" position="after">
+      <field name="paperformat_id" position="after">
         <field name="printer_ids"
                required="context.get('missing_printer')"
                widget="many2many_tags"

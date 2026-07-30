@@ -59,56 +59,83 @@
             <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
                 <form string="Report">
+                    <header>
+                        <button name="create_action" type="object"
+                                string="Add to the 'Print' menu"
+                                invisible="binding_model_id"
+                                help="Display an option on related documents to print this report">
+                        </button>
+                        <button name="unlink_action" type="object"
+                                string="Remove from the 'Print' menu"
+                                invisible="not binding_model_id"
+                                help="Remove the contextual action related to this report">
+                        </button>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="create_action" type="object"
-                                    invisible="binding_model_id" icon="add_box" icon_class="oi-filled"
-                                    help="Display an option on related documents to print this report" class="oe_stat_button">
-                                    <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_text">Add to the 'Print' menu</span>
-                                    </div>
-                            </button>
-                            <button name="unlink_action" type="object"
-                                    invisible="not binding_model_id" icon="indeterminate_check_box" icon_class="oi-filled"
-                                    help="Remove the contextual action related to this report" class="oe_stat_button">
-                                    <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_text">Remove from the 'Print' menu</span>
-                                    </div>
-                            </button>
                             <button name="associated_view" type="object"
                                     invisible="'qweb' not in report_type" icon='code'
                                     class="oe_stat_button">
-                                    <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_text">Qweb Views</span>
-                                    </div>
+                                    <field string="Views" name="linked_view_count" widget="statinfo" invisible="linked_view_count &lt;= 1"/>
+                                    <field string="View" name="linked_view_count" widget="statinfo" invisible="linked_view_count &gt; 1"/>
                             </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1 class="o_outlined">
+                                <field name="name" placeholder="Name in the 'Print' menu..."/>
+                            </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="model" invisible="1"/> <!-- Required field computed with an onchange-->
+                                <field name="model_id" readonly="0" required="1"/>
                                 <field name="report_type"/>
-                                <field name="paperformat_id"
-                                       invisible="'pdf' not in report_type"/>
-                            </group>
-                            <group>
-                                <field name="model"/>
-                                <field name="report_name"/>
-                                <field name="print_report_name" />
+                                <field name="paperformat_id" invisible="'pdf' not in report_type" placeholder="Defined in the general settings"/>
                             </group>
                         </group>
                         <notebook>
                             <page name="security" string="Visibility">
-                                <field name="group_ids"/>
-                            </page>
-                            <page name='advanced' string="Advanced Properties">
                                 <group>
-                                    <field name="attachment_use"/>
-                                    <field name="attachment"/>
+                                    <group>
+                                        <field name="group_ids" widget="many2many_tags" placeholder="Visible to all groups" options="{'on_tag_click': 'open_form'}"/>
+                                        <field name="domain" placeholder="Visible to all records"/>
+                                    </group>
                                 </group>
                             </page>
-                            <page name="explanation" string="Explanation">
+                            <page name='advanced' string="Settings">
+                                <div class="row mt16 o_settings_container">
+                                    <setting string="File Name" help="Set the name of the file that will be saved on the computer">
+                                        <div class="content-group">
+                                            <field name="print_report_name" placeholder="e.g. 'report ' + (object.name) + '.pdf'"/>
+                                        </div>
+                                    </setting>
+
+                                    <setting string="Technical Name" help="Set a technical name to call the report in the code">
+                                        <div class="content-group">
+                                            <field name="report_name" placeholder="e.g. module_name.report_name"/>
+                                        </div>
+                                    </setting>
+                                </div>
+
+                                <div class="row mt16 o_settings_container">
+                                    <setting name="attachment_setting" string="Save as attachment" help="Whether the report is saved as attachment when it is printed">
+                                        <field name="save_as_attachment"/>
+                                        <div class="content-group" invisible="not save_as_attachment">
+                                            <div class="mt16 d-flex">
+                                                <label for="attachment" class="o_light_label mr8"/>
+                                                <field name="attachment" placeholder="e.g. 'report ' + (object.name) + '.pdf'" required="save_as_attachment"/>
+                                            </div>
+                                            <div class="mt16 d-flex">
+                                                <label for="attachment_use" class="o_light_label mr8"/>
+                                                <field name="attachment_use" widget="boolean_toggle" class="oe_inline flex-grow-1"/>
+                                            </div>
+                                        </div>
+                                    </setting>
+                                </div>
+                            </page>
+                            <page name="explanation" string="Notes">
                                 <group>
-                                    <field name="explanation" nolabel="1"/>
+                                    <field name="explanation" nolabel="1" placeholder="Keep track of what this report action does and why it exists..."/>
                                 </group>
                             </page>
                         </notebook>
@@ -122,11 +149,9 @@
             <field name="arch" type="xml">
                 <list string="Report xml">
                     <field name="name"/>
-                    <field name="model"/>
-                    <field name="type"/>
-                    <field name="report_name"/>
+                    <field name="model_id"/>
                     <field name="report_type"/>
-                    <field name="attachment"/>
+                    <field name="report_name"/>
                 </list>
             </field>
         </record>
@@ -134,20 +159,24 @@
             <field name="name">ir.actions.report.search</field>
             <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
-                <search string="Report Xml">
+                <search string="Report Xml">                    
                     <field name="name"
-                        filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
+                        filter_domain="['|', ('name','ilike',self), ('report_name','ilike',self)]"
                         string="Report"/>
-                    <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
+                    <field name="model_id" string="Model"/>
+                    <filter string="PDF" domain="[('report_type', '=', 'qweb-pdf')]" name="report_pdf"/>
+                    <filter string="HTML" domain="[('report_type', '=', 'qweb-html')]" name="report_html"/>
+                    <filter string="Text" domain="[('report_type', '=', 'qweb-text')]" name="report_text"/>
                     <group>
-                        <filter string="Report Type" name="report_type" domain="[]" context="{'group_by':'report_type'}"/>
-                        <filter string="Report Model" name="report_model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Format" name="report_type" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Model" name="report_model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Paper Size" name="paperformat_id" domain="[]" context="{'group_by':'paperformat_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
         <record id="ir_action_report" model="ir.actions.act_window">
-            <field name="name">Reports</field>
+            <field name="name">Report Actions</field>
             <field name="res_model">ir.actions.report</field>
             <field name="view_id" ref="act_report_xml_view_tree"/>
             <field name="search_view_id" ref="act_report_xml_search_view"/>
