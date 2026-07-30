@@ -12,7 +12,7 @@ talks to Baiwang without the proxy layer (see _legacy_direct_call comments).
 
 from odoo.exceptions import UserError
 
-from odoo.addons.l10n_cn_edi_baiwang.error_catalog import map_baiwang_error
+from odoo.addons.l10n_cn_edi_baiwang.exceptions import get_baiwang_error_message
 
 
 class BaiwangClient:
@@ -46,7 +46,7 @@ class BaiwangClient:
         reference = error.get('reference')
         data = error.get('data')
         if reference in {'provider_error', 'baiwang_api_error', 'baiwang_oauth_failed'}:
-            return map_baiwang_error(self.company.env, reference, data)
+            return get_baiwang_error_message(self.company.env, reference, data)
 
         reference_mapping = {
             'invalid_payload': self.company.env._('The Baiwang request payload is invalid.'),
