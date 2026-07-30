@@ -2801,6 +2801,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.component_a.write({"standard_price": 2.50, "categ_id": new_category.id})
         self.component_b.write({"standard_price": 1, "categ_id": new_category.id})
         self.component_c.write({"standard_price": 1, "categ_id": new_category.id})
+        self.kit_1.write({'invoice_policy': 'order'})
 
         # We receive enough of each component in Warehouse 1 to make 2x kit_1
         warehouse_1 = self.env['stock.warehouse'].create({
