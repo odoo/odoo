@@ -18,4 +18,45 @@
            </xpath>
         </field>
     </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.l10n_my_myinvois</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="before">
+                <field name="l10n_my_edi_state" optional="hide" widget="badge"
+                       decoration-info="l10n_my_edi_state == 'in_progress'"
+                       decoration-success="l10n_my_edi_state == 'valid'"
+                       decoration-warning="l10n_my_edi_state == 'rejected'"
+                       decoration-muted="l10n_my_edi_state == 'invalid'"
+                       decoration-danger="l10n_my_edi_state == 'cancelled'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.search.inherit.l10n_my_myinvois</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="lines" position="after">
+                <field name="l10n_my_edi_state"/>
+            </field>
+            <filter name="cancelled" position="after">
+                <separator groups="account.group_account_invoice"/>
+                <filter string="MyInvois In Progress" name="filter_myinvois_in_progress"
+                        domain="[('l10n_my_edi_state', '=', 'in_progress')]"
+                        groups="account.group_account_invoice"/>
+                <filter string="MyInvois Valid" name="filter_myinvois_valid"
+                        domain="[('l10n_my_edi_state', '=', 'valid')]"
+                        groups="account.group_account_invoice"/>
+            </filter>
+            <filter name="status" position="after">
+                <filter string="MyInvois State" name="groupby_l10n_my_edi_state" domain="[]"
+                        context="{'group_by': 'l10n_my_edi_state'}"
+                        groups="account.group_account_invoice"/>
+            </filter>
+        </field>
+    </record>
 </odoo>
