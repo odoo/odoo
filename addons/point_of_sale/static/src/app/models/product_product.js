@@ -37,10 +37,7 @@ export class ProductProduct extends Base {
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
-        return (
-            this.attribute_line_ids.map((a) => a.product_template_value_ids).flat().length > 1 ||
-            this.attribute_line_ids.some((a) => a.attribute_id.display_type === "multi")
-        );
+        return this.attribute_line_ids.map((a) => a.product_template_value_ids).flat().length >= 1;
     }
 
     needToConfigure() {
