@@ -689,14 +689,15 @@ class DiscussChannel(models.Model):
                 attachment.generate_access_token()[0],
                 attachment.name,
             )
-        file_extension = get_extension(attachment.display_name)
+
+        file_extension = get_extension(attachment.display_name or '')
         attachment_data = {
             "id": attachment.id,
             "access_token": attachment.generate_access_token()[0],
             "checksum": attachment.checksum,
             "extension": file_extension.lstrip("."),
             "mimetype": attachment.mimetype,
-            "filename": attachment.display_name,
+            "filename": attachment.display_name or _('File'),
             "url": attachment.url,
         }
         return Markup(
@@ -708,7 +709,6 @@ class DiscussChannel(models.Model):
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
         self.ensure_one()
-        parts = []
         previous_message_author = None
         message_domain = Domain("message_type", "!=", "notification")
         # sudo - chatbot.message: visitors can access messages on chats they have access to
@@ -718,27 +718,40 @@ class DiscussChannel(models.Model):
         filtered_messages = (
             self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
         ).filtered_domain(message_domain)
+        parts = []
         for message in filtered_messages.sorted("id"):
-            # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
-            if previous_message_author != message_author:
-                if parts:
-                    parts.append(Markup("<br/>"))
-                parts.append(
-                    Markup("<strong>%s:</strong><br/>")
-                    % (
-                        (message_author.user_livechat_username if message_author._name == "res.partner" else None)
-                        or message_author.name
-                    ),
-                )
-            if not tools.is_html_empty(message.body):
-                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+            if previous_message_author != message_author and parts:
+                parts.append(Markup(""))
+
+            parts.extend(self._get_channel_history_format_message(message, message.body, message_author, previous_message_author))
+            if not tools.is_html_empty(message.body) or message.attachment_ids:
                 previous_message_author = message_author
-            for attachment in message.attachment_ids:
-                previous_message_author = message_author
-                # sudo - ir.attachment: public user can read attachment metadata
-                parts.append(Markup("%s<br/>") % self._attachment_to_html(attachment.sudo()))
-        return Markup("").join(parts)
+
+        return Markup("<br/>").join(parts)
+
+    def _get_channel_history_format_message(self, message, message_body, message_author, previous_message_author):
+        # sudo - res.partner: accessing livechat username or name is allowed to visitor
+        parts = []
+        if previous_message_author != message_author:
+            parts.append(
+                Markup("<strong>%s:</strong>")
+                % self._get_channel_history_format_author(message_author),
+            )
+        if not tools.is_html_empty(message_body):
+            parts.append(html2plaintext(message_body))
+
+        for attachment in message.attachment_ids:
+            # sudo - ir.attachment: public user can read attachment metadata
+            parts.append(self._attachment_to_html(attachment.sudo()))
+        return parts
+
+    def _get_channel_history_format_author(self, message_author):
+        return (
+            message_author._name == "res.partner"
+            and message_author.user_livechat_username
+            or message_author.name
+        )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
         pass

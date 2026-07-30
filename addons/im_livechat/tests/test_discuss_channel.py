@@ -304,7 +304,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(
             channel_history,
             "<strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
-            "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s<br/>"
+            "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s"
             % {
                 "attachment_1": _convert_attachment_to_html(attachment1),
                 "attachment_2": _convert_attachment_to_html(attachment2),
