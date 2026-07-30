@@ -17,6 +17,7 @@
         'views/account_move_reversal_views.xml',
         'views/proveedor_upload_views.xml',
         'views/mr_motivo_wizard_views.xml',
+        'views/proveedor_email_views.xml',
         'data/mail_template.xml',
     ],
     'license': 'LGPL-3',
