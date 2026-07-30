@@ -5511,7 +5511,7 @@ class BaseModel(metaclass=MetaModel):
                     })
                 else:
                     old_translations = {
-                        k: old_stored_translations.get(f'_{k}', v)
+                        k: v
                         for k, v in old_stored_translations.items()
                         if k in valid_langs
                     }

@@ -279,3 +279,26 @@ class TestEventData(EventCase, MockVisitor):
             self.assertIn(self.event_public, visible_events)
             self.assertIn(self.event_link_only, visible_events, "Should now be visible because visitor is participating")
             self.assertNotIn(self.event_logged_users, visible_events)
+
+    def test_website_configuration_duplicated(self):
+        """ Ensure that duplicating an event from a different language context copies the website description. """
+        website_lang = self.env['website'].search([], limit=1).default_lang_id.code
+        user_lang = 'es_AR' if website_lang != 'es_AR' else 'es_ES'
+        if not self.env['res.lang'].search([('code', '=', user_lang)]):
+            self.env['res.lang']._activate_lang(user_lang)
+        event = self.env['event.event'].with_context(lang=user_lang).create({
+            'name': 'Test Event',
+            'description': '<section>Website Blocks</section>'
+        })
+        event.with_context(lang=website_lang, delay_translations=True).write({
+            'description': '<section>Custom Website Blocks</section>'
+        })
+        copied_event = event.with_context(lang=user_lang).copy()
+        self.assertEqual(
+            copied_event.with_context(lang=website_lang).description,
+            '<section>Custom Website Blocks</section>'
+        )
+        self.assertEqual(
+            copied_event.with_context(lang=user_lang).description,
+            '<section>Website Blocks</section>'
+        )
