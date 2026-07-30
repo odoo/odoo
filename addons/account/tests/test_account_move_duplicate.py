@@ -144,3 +144,32 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         bill2.update({'ref': "bill2 ref"})
         self.assertIn(bill1, bill2.duplicated_ref_ids)
         self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+    def test_in_receipt_duplicate(self):
+        """ Ensure duplicated in_receipts are detected correctly"""
+        receipt_1 = self.init_invoice(
+            move_type='in_receipt',
+            products=self.product_a,
+            invoice_date='2023-01-01',
+        )
+        receipt_2 = receipt_1.copy(default={'invoice_date': receipt_1.invoice_date})
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+        # Duplicates should also be detected between in_invoices and in_receipts
+        receipt_2.move_type = 'in_invoice'
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+    def test_out_receipt_duplicate(self):
+        """ Ensure duplicated out_receipts are detected correctly"""
+        receipt_1 = self.init_invoice(
+            move_type='out_receipt',
+            products=self.product_a,
+            invoice_date='2023-01-01',
+        )
+        receipt_2 = receipt_1.copy(default={'invoice_date': receipt_1.invoice_date})
+        receipt_2.ref = receipt_1.ref
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+        # Duplicates should also be detected between out_invoices and out_receipts
+        receipt_2.move_type = 'out_invoice'
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
