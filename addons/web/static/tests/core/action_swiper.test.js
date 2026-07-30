@@ -352,6 +352,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: 0,
             clientY: 0,
         },
+        initialPointerMoveDistance: 0
     });
     await dragHelper.moveTo(swiper, {
         position: {
@@ -375,6 +376,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientLeft,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -400,6 +402,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientLeft,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -419,6 +422,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientWidth,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -519,6 +523,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientLeft,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -546,6 +551,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientLeft,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -572,6 +578,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -597,6 +604,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {

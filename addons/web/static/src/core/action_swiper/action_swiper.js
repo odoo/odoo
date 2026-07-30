@@ -36,8 +36,8 @@ export class ActionSwiper extends Component {
         slots: t.object(),
         animationType: t.string().optional("bounce"),
     });
-    static swipeDistanceRatio = 2;
-    static swipeEffectiveThreshold = 20;
+    static swipeDistanceRatio = 3;
+    static swipeEffectiveThreshold = 10;
     static animationLength = 400;
 
     root = signal.ref();
@@ -52,6 +52,9 @@ export class ActionSwiper extends Component {
         this.isSwipeEnabled = false;
         this.scrollables = undefined;
         this.startX = undefined;
+        this.startY = undefined;
+        this.swipeAxis = null;
+        this.isVerticalScroll = false;
         this.swipedDistance = 0;
         this.isSwipeStarted = false;
         const _onTouchMove = (ev) => this._onTouchMoveSwipe(ev);
@@ -84,6 +87,11 @@ export class ActionSwiper extends Component {
      * @param {TouchEvent} ev
      */
     _onTouchEndSwipe(ev) {
+        if (this.isVerticalScroll) {
+            ev.stopPropagation();
+            this.isVerticalScroll = false;
+            return;
+        }
         this.isSwipeEnabled = false;
         this.targetContainer().classList.add("o_actionswiper_transition_enabled");
         if (this.isSwipeStarted) {
@@ -116,9 +124,35 @@ export class ActionSwiper extends Component {
      * @param {TouchEvent} ev
      */
     _onTouchMoveSwipe(ev) {
+        if (this.isVerticalScroll) {
+            ev.stopPropagation();
+            return;
+        }
         if (this.isSwipeEnabled) {
             browser.clearTimeout(this.enabledTimeoutId);
             const { onLeftSwipe, onRightSwipe } = this.localizedProps;
+
+            // Determine the dominant axis of swiping to prevent scrolling on the vertical axis
+            // and swiping on the horizontal axis at the same time.
+            if (!this.swipeAxis) {
+                const deltaX = ev.touches[0].clientX - this.startX;
+                const deltaY = ev.touches[0].clientY - this.startY;
+                if (
+                    Math.abs(deltaX) < this.constructor.swipeEffectiveThreshold &&
+                    Math.abs(deltaY) < this.constructor.swipeEffectiveThreshold
+                ) {
+                    ev.stopPropagation();
+                    return; // not enough movement yet to decide, don't touch native scroll
+                }
+                this.swipeAxis = Math.abs(deltaX) >= Math.abs(deltaY) ? "x" : "y";
+                if (this.swipeAxis === "y") {
+                    this.isVerticalScroll = true;
+                    ev.stopPropagation();
+                    this._reset();
+                    return;
+                }
+            }
+
             this.swipedDistance = clamp(
                 ev.touches[0].clientX - this.startX,
                 onLeftSwipe ? -this.containerWidth : 0,
@@ -141,6 +175,7 @@ export class ActionSwiper extends Component {
                 }
                 if (Math.abs(this.swipedDistance) > this.constructor.swipeEffectiveThreshold) {
                     this.isSwipeStarted = true;
+                    this.applyStyle(this.swipedDistance);
                 }
             }
         }
@@ -167,8 +202,11 @@ export class ActionSwiper extends Component {
                 this.targetContainer() && this.targetContainer().getBoundingClientRect().width;
         }
         this.isSwipeEnabled = true;
+        this.isVerticalScroll = false;
         this.targetContainer().classList.remove("o_actionswiper_transition_enabled");
         this.startX = ev.touches[0].clientX;
+        this.startY = ev.touches[0].clientY;
+        this.swipeAxis = null;
         if (this.props.enabledDuration) {
             this.enabledTimeoutId = browser.setTimeout(
                 () => this._reset(),
@@ -183,6 +221,8 @@ export class ActionSwiper extends Component {
     _reset() {
         this.scrollables = undefined;
         this.startX = undefined;
+        this.startY = undefined;
+        this.swipeAxis = null;
         this.swipedDistance = 0;
         this.isSwipeEnabled = false;
         this.isSwipeStarted = false;
