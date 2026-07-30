@@ -58,9 +58,9 @@ class TestTZ(TransactionCase):
                 self.env.user.tz = "US/Eastern"
 
     def test_partner_with_old_tz(self):
-        # this test makes sence after ubuntu noble without tzdata-legacy installed
-        partner = self.env['res.partner'].create({'name': 'test', 'tz': 'UTC'})
-        self.env.cr.execute("""UPDATE res_partner set tz='US/Eastern' WHERE id=%s""", (partner.id,))
+        # this test makes sense after ubuntu noble without tzdata-legacy installed
+        partner = self.env['test_core.partner'].create({'name': 'test', 'tz': 'UTC'})
+        self.env.cr.execute("""UPDATE test_core_partner set tz='US/Eastern' WHERE id=%s""", (partner.id,))
         partner.invalidate_recordset()
         self.assertEqual(partner.tz, 'US/Eastern')  # tz was update despite selection not existing, but data was not migrated
         expected_offset = datetime.datetime.now(ZoneInfo('America/New_York')).strftime('%z')
@@ -69,9 +69,9 @@ class TestTZ(TransactionCase):
 
     def test_tz_selection_excludes_special_timezones(self):
         with self.assertRaises(ValueError):
-            self.env['res.partner'].create({'name': 'test', 'tz': 'localtime'})
+            self.env['test_core.partner'].create({'name': 'test', 'tz': 'localtime'})
         with self.assertRaises(ValueError):
-            self.env['res.partner'].create({'name': 'test', 'tz': 'Factory'})
+            self.env['test_core.partner'].create({'name': 'test', 'tz': 'Factory'})
 
     def test_login_deprecated_timezone(self):
         # browsers report the CLDR name, which is deprecated for some timezones
