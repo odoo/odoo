@@ -142,4 +142,5 @@ def inform_database(ssl_certificate_end_date, server_url=None):
         )
         response.raise_for_status()
     except requests.exceptions.RequestException:
-        _logger.exception("Could not reach configured server to inform about the certificate status")
+        # Do not display a traceback as old db don't have the controller
+        _logger.warning("Could not reach configured server to inform about the certificate status")
