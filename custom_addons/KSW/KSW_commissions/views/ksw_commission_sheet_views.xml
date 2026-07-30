@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Commission Sheet — Form View                                       -->
+    <!-- ================================================================ -->
+    <!--
+        Notes:
+        • ``is_locked`` (stored Boolean) drives readonly on all editable
+          fields — per AGENTS.md gotcha on non-stored computes in
+          readonly expressions.
+        • The loans field is shown *twice*: once as read-only for
+          supervisors, once as editable for accountants — using
+          complementary ``groups`` / ``groups="!..."`` trick
+          (AGENTS.md note on form-view field visibility).
+        • ``holiday_id`` is conditionally invisible on non-holiday-bonus
+          lines using ``attrs`` on the inline list rows.
+        • The form intentionally mirrors the paper form layout:
+          employee header block → allowance/commission lines →
+          summary totals (driver, loans, total).
+    -->
+    <record id="view_ksw_commission_sheet_form" model="ir.ui.view">
+        <field name="name">ksw.commission.sheet.form</field>
+        <field name="model">ksw.commission.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Commission &amp; Allowance Sheet"
+                  class="o_commission_sheet_form">
+
+                <!-- Preload is_locked for readonly expressions -->
+                <field name="is_locked" invisible="1"/>
+                <field name="state" invisible="1"/>
+
+                <header>
+                    <!-- Supervisor confirms -->
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <!-- Accountant finalises -->
+                    <button name="action_done"
+                            string="Finalise"
+                            type="object"
+                            class="btn-primary"
+                            groups="KSW_commissions.group_commission_accountant"
+                            invisible="state != 'confirmed'"/>
+                    <!-- Officer / Accountant resets -->
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            class="btn-secondary"
+                            groups="KSW_commissions.group_commission_officer"
+                            invisible="state == 'draft'"/>
+                    <!-- Apply template lines to an empty draft sheet -->
+                    <button name="action_apply_template"
+                            string="Apply Template"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'draft'"
+                            title="Pre-fill lines from the employee's assigned commission template"/>
+                    <!-- Print -->
+                    <button name="%(KSW_commissions.action_report_commission_sheet)d"
+                            string="Print"
+                            type="action"
+                            class="btn-secondary"/>
+                    <statusbar statusfield="state"
+                               statusbar_visible="draft,confirmed,done"/>
+                </header>
+
+                <sheet>
+                    <!-- ── Paper form header block ── -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Employee">
+                            <field name="employee_id"
+                                   readonly="is_locked or state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="job_id" readonly="1"/>
+                            <field name="identification_id"
+                                   readonly="1"
+                                   groups="hr.group_hr_user"/>
+                            <field name="vehicle_number" readonly="1"/>
+                            <field name="wage" readonly="1"
+                                   groups="hr.group_hr_user"/>
+                        </group>
+                        <group string="Period">
+                            <field name="period"
+                                   readonly="is_locked or state != 'draft'"/>
+                            <field name="site_id" readonly="1"/>
+                            <field name="currency_id" readonly="1" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- ── Allowance / Commission lines ── -->
+                    <notebook>
+                        <page string="Lines">
+                            <field name="line_ids"
+                                   readonly="is_locked or state != 'draft'"
+                                   widget="one2many">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="category_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="kind" readonly="1" optional="show"/>
+                                    <field name="holiday_id"
+                                           invisible="kind != 'holiday_bonus'"/>
+                                    <!-- Hidden mirrors powering the
+                                         readonly / invisible expressions
+                                         below (column_invisible hides
+                                         from the renderer but keeps the
+                                         value reachable). -->
+                                    <field name="is_quantity_based"
+                                           column_invisible="True"/>
+                                    <field name="min_quantity"
+                                           column_invisible="True"/>
+                                    <field name="max_quantity"
+                                           column_invisible="True"/>
+                                    <field name="quantity"
+                                           string="Qty"
+                                           readonly="not is_quantity_based"/>
+                                    <field name="amount"
+                                           readonly="is_quantity_based"/>
+                                    <field name="description" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="note"
+                                   readonly="is_locked or state != 'draft'"
+                                   placeholder="Internal notes…"/>
+                        </page>
+                    </notebook>
+
+                    <!-- ── Summary totals block (paper form right side) ── -->
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="lines_subtotal"
+                               string="Lines Subtotal"
+                               readonly="1"/>
+                        <field name="driver_commission_amount"
+                               string="Driver's Commission"
+                               readonly="1"/>
+                        <field name="location_allowance_amount"
+                               string="Location Allowance"
+                               readonly="1"/>
+                        <field name="sales_commission_amount"
+                               string="Sales Commission"
+                               readonly="1"/>
+                        <field name="collection_commission_amount"
+                               string="Collection Commission"
+                               readonly="1"/>
+                        <field name="combined_commission_amount"
+                               string="Combined Commission"
+                               readonly="1"
+                               invisible="combined_commission_amount == 0"/>
+                        <field name="total"
+                               string="Gross Total"
+                               readonly="1"/>
+                        <separator/>
+                        <!-- Loans — read-only display for supervisors -->
+                        <field name="x_loans_amount_locked"
+                               string="Loans Deduction"
+                               readonly="1"
+                               groups="!KSW_commissions.group_commission_accountant"/>
+                        <!-- Loans — editable for Accountant while confirmed -->
+                        <field name="x_loans_amount_locked"
+                               string="Loans Deduction"
+                               readonly="state != 'confirmed'"
+                               groups="KSW_commissions.group_commission_accountant"/>
+                        <!-- Live shortfall hint (draft only) -->
+                        <field name="loans_amount"
+                               string="Live Shortfall (auto)"
+                               readonly="1"
+                               invisible="state != 'draft'"
+                               help="Current sum of KSW_deduction pending shortfalls for this employee/period. Frozen into 'Loans Deduction' when you confirm."/>
+                        <separator/>
+                        <field name="total_payable"
+                               string="Bank Transfer Amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"/>
+                    </group>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Commission Sheet — List View                                       -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_commission_sheet_list" model="ir.ui.view">
+        <field name="name">ksw.commission.sheet.list</field>
+        <field name="model">ksw.commission.sheet</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'"
+                  decoration-info="state == 'confirmed'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="period"/>
+                <field name="lines_subtotal" sum="Lines Subtotal"/>
+                <field name="driver_commission_amount" sum="Driver Commission"/>
+                <field name="location_allowance_amount" sum="Location Allowance" optional="show"/>
+                <field name="sales_commission_amount" sum="Sales Commission" optional="show"/>
+                <field name="collection_commission_amount" sum="Collection Commission" optional="show"/>
+                <field name="combined_commission_amount" sum="Combined Commission" optional="hide"/>
+                <field name="total" sum="Gross Total"/>
+                <field name="x_loans_amount_locked"
+                       string="Loans"
+                       sum="Loans"
+                       groups="KSW_commissions.group_commission_accountant"/>
+                <field name="total_payable" sum="Bank Transfer"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Commission Sheet — Search View                                     -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_commission_sheet_search" model="ir.ui.view">
+        <field name="name">ksw.commission.sheet.search</field>
+        <field name="model">ksw.commission.sheet</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <filter name="draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Awaiting Accountant"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter name="done" string="Done"
+                        domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="my_sheets" string="My Employee's Sheets"
+                        domain="[('employee_id.user_id', '=', uid)]"/>
+                <group>
+                    <filter string="Period" name="group_period"
+                            domain="[]"
+                            context="{'group_by': 'period'}"/>
+                    <filter string="Employee" name="group_employee"
+                            domain="[]"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_dept"
+                            domain="[]"
+                            context="{'group_by': 'department_id'}"/>
+                    <filter string="State" name="group_state"
+                            domain="[]"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Actions                                                            -->
+    <!-- ================================================================ -->
+    <record id="action_ksw_commission_sheet_all" model="ir.actions.act_window">
+        <field name="name">Commission Sheets</field>
+        <field name="res_model">ksw.commission.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_commission_sheet_search"/>
+        <field name="context">{'search_default_group_period': 1}</field>
+    </record>
+
+    <record id="action_ksw_commission_sheet_my" model="ir.actions.act_window">
+        <field name="name">My Subordinates' Sheets</field>
+        <field name="res_model">ksw.commission.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_commission_sheet_search"/>
+        <!-- No client-side domain: the supervisor record rule already scopes
+             results to the user's subordinates (server-side), and `user` is
+             not available in the JS domain eval context. -->
+        <field name="context">{'search_default_draft': 1, 'search_default_group_period': 1}</field>
+    </record>
+
+</odoo>
+
+
+

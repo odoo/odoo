@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+	<!-- Disabled: old cron job for backward compatibility -->
+	<record forcecreate="True" id="cron_download_data" model="ir.cron">
+		<field name="name">Download Data (DISABLED - Use incremental cron instead)</field>
+		<field eval="False" name="active"/>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="interval_number">10</field>
+		<field name="interval_type">minutes</field>
+		<field name="numbercall">-1</field>
+		<field name="model_id" ref="hr_zk_attendance.model_biometric_device_details"/>
+		<field name="state">code</field>
+		<field name="code">model.cron_download()</field>
+	</record>
+
+	<!-- Main cron job: Incremental attendance download running 24/7 every 30 minutes -->
+	<!-- This ensures no attendance records are missed, handles network issues gracefully, -->
+	<!-- and includes exponential backoff retry logic for database serialization errors -->
+	<!-- CRITICAL: Never returns False to prevent cron disabling on any error -->
+	<record forcecreate="True" id="cron_incremental_download_data" model="ir.cron">
+		<field name="name">Incremental Attendance Download (24/7 every 30 minutes)</field>
+		<field eval="True" name="active"/>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="interval_number">30</field>
+		<field name="interval_type">minutes</field>
+		<field name="numbercall">-1</field>
+		<field name="model_id" ref="hr_zk_attendance.model_biometric_device_details"/>
+		<field name="state">code</field>
+		<field name="code">
+# Call the improved cron job method that handles retries and all devices
+# This method NEVER raises exceptions to ensure the cron continues running
+model.cron_download_incremental()
+</field>
+	</record>
+</odoo>

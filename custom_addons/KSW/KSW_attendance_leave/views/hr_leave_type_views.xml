@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add is_attendance_issue checkbox to leave type form -->
+    <record id="view_hr_leave_type_form_inherit_attendance_issue" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit.attendance.issue</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='requires_allocation']" position="before">
+                <field name="is_attendance_issue"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

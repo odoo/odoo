@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add is_unpaid_leave checkbox to leave type form -->
+    <record id="view_hr_leave_type_form_inherit_unpaid" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit.unpaid</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='requires_allocation']" position="before">
+                <field name="is_unpaid_leave"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

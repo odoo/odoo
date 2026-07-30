@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Helpdesk Access Groups Category -->
+    <record id="res_groups_privilege_helpdesk" model="res.groups.privilege">
+        <field name="name">Helpdesk</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="odoo_website_helpdesk.ticket_categories_1"/>
+    </record>
+    <!-- Helpdesk User Group -->
+    <record id="helpdesk_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="res_groups_privilege_helpdesk"/>
+    </record>
+    <!-- Helpdesk Team Leader Group -->
+    <record id="helpdesk_team_leader" model="res.groups">
+        <field name="name">Team Leader</field>
+        <field name="implied_ids" eval="[(4, ref('odoo_website_helpdesk.helpdesk_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_helpdesk"/>
+    </record>
+    <!-- Helpdesk Manager Group -->
+    <record id="helpdesk_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="implied_ids" eval="[(4, ref('odoo_website_helpdesk.helpdesk_team_leader'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_helpdesk"/>
+    </record>
+    <!-- Group Show Category -->
+    <record id="group_show_category" model="res.groups">
+        <field name="name">group_show_category</field>
+    </record>
+    <!-- Group Show Subcategory -->
+    <record id="group_show_subcategory" model="res.groups">
+        <field name="name">group_show_subcategory</field>
+    </record>
+    <!-- Default User with Helpdesk Manager Group -->
+    <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('odoo_website_helpdesk.helpdesk_team_leader'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Inherit the Time Off Type form to add is_annual_leave checkbox -->
+    <record id="view_hr_leave_type_form_inherit_ksw" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit.ksw</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='requires_allocation']" position="before">
+                <field name="is_annual_leave"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

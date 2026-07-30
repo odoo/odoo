@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Multi-company rule on the 'hr_loan' model -->
+        <record id="hr_loan_rule_company" model="ir.rule">
+            <field name="name">Loan Request Multi Company</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">
+                ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+        <!-- Rule granting access to HR users to modify loan forms -->
+        <record id="hr_loan_rule_user" model="ir.rule">
+            <field name="name">Loan Forms Modification Accounts and Hr</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <!-- Rule allowing employees to modify their own loan records -->
+        <record id="hr_loan_rule_employee" model="ir.rule">
+            <field name="name">User: Modify own loan only</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]
+            </field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>

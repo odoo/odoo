@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Daily attendance tree view-->
+    <record id="daily_attendance_view_tree" model="ir.ui.view">
+        <field name="name">daily.attendance.view.tree</field>
+        <field name="model">daily.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance" create="false" delete="false">
+                <field name="punching_day"/>
+                <field name="employee_id"/>
+                <field name="punch_type"/>
+                <field name="attendance_type"/>
+                <field name="punching_time"/>
+                <field name="address_id"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Attendance analysis action-->
+    <record id="daily_attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendance Analysis</field>
+        <field name="res_model">daily.attendance</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

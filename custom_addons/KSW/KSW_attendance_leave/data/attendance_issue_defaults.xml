@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+
+    <!-- Mark known attendance-issue leave types -->
+    <record id="hr_holidays.leave_type_paid_time_off" model="hr.leave.type">
+        <field name="is_attendance_issue" eval="True"/>
+    </record>
+
+    <record id="hr_holidays.leave_type_sick_time_off" model="hr.leave.type">
+        <field name="is_attendance_issue" eval="True"/>
+    </record>
+
+</odoo>
+

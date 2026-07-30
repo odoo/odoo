@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Sales / Collection Commission Rule — Form / List / Search        -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_sales_commission_rule_form" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.rule.form</field>
+        <field name="model">ksw.sales.commission.rule</field>
+        <field name="arch" type="xml">
+            <form string="Sales / Collection Commission Rule">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Sales — General"/></h1>
+                    </div>
+                    <group>
+                        <group string="Applies To">
+                            <field name="kind"/>
+                            <field name="scope"/>
+                            <field name="employee_id"
+                                   options="{'no_create': True}"
+                                   invisible="scope not in ('employee', 'employee_client')"
+                                   required="scope in ('employee', 'employee_client')"/>
+                            <field name="partner_ids"
+                                   string="Clients"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"
+                                   domain="[('customer_rank', '>', 0)]"
+                                   invisible="scope not in ('client', 'employee_client')"
+                                   required="scope in ('client', 'employee_client')"/>
+                            <field name="priority"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Condition">
+                            <field name="condition_type"/>
+                            <field name="single_threshold_metric"
+                                   invisible="condition_type != 'single_threshold'"/>
+                            <field name="sales_min_pct"
+                                   string="Sales Min %"
+                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and single_threshold_metric != 'sales')"/>
+                            <field name="collection_min_pct"
+                                   string="Collection Min %"
+                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and single_threshold_metric != 'collection')"/>
+                            <field name="condition_formula"
+                                   placeholder="result = sales_pct >= 50 and collection_pct >= 60"
+                                   invisible="condition_type != 'formula'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tier Ladder">
+                            <field name="tier_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="from_pct"/>
+                                    <field name="to_pct"/>
+                                    <field name="rate_pct"/>
+                                    <field name="base"/>
+                                    <field name="reduced_rate_max_pct" optional="show"/>
+                                    <field name="reduced_rate_multiplier" optional="show"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                            <p class="text-muted">
+                                Each tier maps an achievement-percentage range
+                                (<i>From %</i>–<i>To %</i>) to a commission
+                                <i>Rate %</i>.  The <i>Base</i> column controls
+                                which monetary amount the rate is multiplied against.
+                                Leave <i>To %</i> at 0 for an unbounded top tier.
+                                <br/>
+                                <b>Reduced Rate:</b> Set <i>Reduced Rate Up To %</i>
+                                and <i>Reduced Rate Multiplier</i> on a tier to apply
+                                a discounted rate when the final achievement falls at or
+                                below that bound.  Example: Rate = 1%, Reduced Up To = 69,
+                                Multiplier = 0.7 → employees achieving 50–69% earn 0.7%
+                                instead of the full 1%.
+                            </p>
+                        </page>
+                        <page string="Description">
+                            <field name="description"
+                                   placeholder="Internal notes — when does this rule apply, why was it created…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ksw_sales_commission_rule_list" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.rule.list</field>
+        <field name="model">ksw.sales.commission.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="scope"/>
+                <field name="employee_id" optional="show"/>
+                <field name="partner_ids" string="Clients" widget="many2many_tags" optional="hide"/>
+                <field name="condition_type"/>
+                <field name="priority"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_sales_commission_rule_search" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.rule.search</field>
+        <field name="model">ksw.sales.commission.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="partner_ids" string="Client"/>
+                <filter name="kind_sales" string="Sales"
+                        domain="[('kind', '=', 'sales')]"/>
+                <filter name="kind_collection" string="Collection"
+                        domain="[('kind', '=', 'collection')]"/>
+                <filter name="kind_combined" string="Combined"
+                        domain="[('kind', '=', 'combined')]"/>
+                <separator/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Kind" name="group_kind"
+                            domain="[]" context="{'group_by': 'kind'}"/>
+                    <filter string="Scope" name="group_scope"
+                            domain="[]" context="{'group_by': 'scope'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_sales_commission_rule" model="ir.actions.act_window">
+        <field name="name">Sales/Collection Commission Rules</field>
+        <field name="res_model">ksw.sales.commission.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_sales_commission_rule_search"/>
+        <field name="context">{'search_default_group_kind': 1}</field>
+    </record>
+
+</odoo>
+

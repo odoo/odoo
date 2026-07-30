@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    This XML file defines templates for a rating form and a thank you message in an Odoo application.-->
+    <template id="rating_form" name="Ticket Rating">
+        <t t-call="website.layout">
+            <center>
+                <h4>
+                    <b>Write Review
+                    </b>
+                </h4>
+                <form style="display: flex;
+                      justify-content: center;"
+                      t-attf-action="/rating/{{ticket}}/submit"
+                      method="post">
+                    <div class="">
+                        <div class="o_portal_chatter_header">
+                            <div class="row o_website_rating_card_container justify-content-center">
+                                <div class="col-lg-5">
+                                    <div class="starRating"
+                                         id="star">
+                                        <div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <input class="starRating "
+                                                               id="rating11"
+                                                               type="radio"
+                                                               name="rating"
+                                                               value="1"
+                                                               checked="checked">
+                                                            <label for="rating11">
+                                                                <span>
+                                                                    1
+                                                                </span>
+                                                            </label>
+                                                        </input>
+                                                    </div>
+                                                    <input id="rating12"
+                                                           type="radio"
+                                                           name="rating"
+                                                           value="2">
+                                                        <label for="rating12">
+                                                            <span>
+                                                                2
+                                                            </span>
+                                                        </label>
+                                                    </input>
+                                                </div>
+                                                <input id="rating13"
+                                                       type="radio"
+                                                       name="rating"
+                                                       value="3">
+                                                    <label for="rating13">
+                                                        <span>
+                                                            3
+                                                        </span>
+                                                    </label>
+                                                </input>
+                                            </div>
+                                            <input id="rating14"
+                                                   type="radio"
+                                                   name="rating"
+                                                   value="4">
+                                                <label for="rating14">
+                                                    <span>
+                                                        4
+                                                    </span>
+                                                </label>
+                                            </input>
+                                        </div>
+                                        <input id="rating15"
+                                               type="radio"
+                                               name="rating"
+                                               value="5">
+                                            <label for="rating15">
+                                            </label>
+                                        </input>
+                                    </div>
+                                </div>
+                                <div class="o_portal_chatter_composer_body mb32">
+                                    <label>Your
+                                        Review
+                                    </label>
+                                    <textarea id="msg"
+                                              rows="4"
+                                              name="message"
+                                              class="form-control"
+                                              style="width: 365px;"
+                                              placeholder="Write a message..."
+                                              required="required"/>
+                                    <div class="o_portal_chatter_attachments mt-3"/>
+                                    <button type="submit"
+                                            id="post"
+                                            class="btn btn-primary mt8 a-submit">
+                                        Post
+                                        Your
+                                        Review
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_portal_chatter_composer"/>
+                    </div>
+                </form>
+            </center>
+        </t>
+    </template>
+    <!-- Template for the Thank you message after rating submission -->
+    <template id="rating_thanks" name="Thanks Rating">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_text_block pt40 pb40 o_colored_level "
+                         data-snippet="s_text_block">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <div class="col-lg-7 col-xl-6 mr-lg-auto">
+                                <span class="d-block fa fa-4x fa-handshake-o mx-auto rounded-circle bg-primary"/>
+                                <br/>
+                                <h1 class="text-center">Thank You!</h1>
+                                <div class="pb16 pt16 s_hr"
+                                     data-snippet="s_hr"
+                                     data-name="Separator">
+                                    <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                </div>
+                                <p class="text-center">We will get back
+                                    to you shortly.
+                                </p>
+                            </div>
+                            <div class="col-lg-4">
+                                <ul class="list-unstyled mb-0 pl-2">
+                                    <li>My Company</li>
+                                    <li>
+                                        <i class="fa fa-map-marker fa-fw mr-2"/>
+                                        <span class="o_force_ltr">3575
+                                            Demo Buena Vista Avenue
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-phone fa-fw mr-2"/>
+                                        <span class="o_force_ltr">+1
+                                            (650) 555-0111
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-1x fa-fw fa-envelope mr-2"/>
+                                        <span>
+                                            info@yourcompany.example.com
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,1627 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * om_hr_payroll
+# 
+# Translators:
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Allen Xie <xfz@forisen.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# keecome <7018511@qq.com>, 2018
+# Martin Trigaux, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:42
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+"* 当工资单创建时状态为“草稿“ \n"
+" \n"
+" * 如果工资单待审批时, 状态为“等待中“。\n"
+" \n"
+" * 如果工资单被确认后状态为 “已完成”。\n"
+" \n"
+" * 当用户取消工资单时状态为”取消“。"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+msgstr "<span class=\"o_form_label\">薪资规则</span>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+" selected employee(s) based on the dates and credit note specified on "
+"Payslips Run.</span>"
+msgstr "<span colspan=\"4\" nolabel=\"1\">向导将根据工资单生成器上输入的日期和付款单号生成所选员工的工资单.</span>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Address</strong>"
+msgstr "<strong>地址</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Authorized signature</strong>"
+msgstr "<strong>授权签名</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Bank Account</strong>"
+msgstr "<strong>银行账号</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Date From:</strong>"
+msgstr "<strong>起始日期:</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Date From</strong>"
+msgstr "<strong>开始日期</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Date To:</strong>"
+msgstr "<strong>结束日期:</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Date To</strong>"
+msgstr "<strong>结束日期</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Designation</strong>"
+msgstr "<strong>设计</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Email</strong>"
+msgstr "<strong>EMail</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Identification No</strong>"
+msgstr "<strong>身份证号码</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Name</strong>"
+msgstr "<strong>名称</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Reference</strong>"
+msgstr "<strong>参考</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Register Name:</strong>"
+msgstr "<strong>登记名称 :</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Total</strong>"
+msgstr "<strong>总计</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.actions.act_window,help:om_hr_payroll.action_contribution_register_form
+msgid ""
+"A contribution register is a third party involved in the salary\n"
+"            payment of the employees. It can be the social security, the\n"
+"            state or anyone that collect or inject money on payslips."
+msgstr ""
+"缴款名册是参与员工工资 \n"
+" 支付的第三方。有可能是社会保障机构、\n"
+" 国家或在工资单中收取或注入资金的任何人。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_account_accountant
+msgid "Account Accountant"
+msgstr "会计"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "会计"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "会计信息"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__active
+msgid "Active"
+msgstr "有效"
+
+#. module: om_hr_payroll
+#: model_terms:ir.actions.act_window,help:om_hr_payroll.action_contribution_register_form
+msgid "Add a new contribution register"
+msgstr "添加缴款名册"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "添加内部备注"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contract_advantage_template_view_form
+msgid "Advantage Name"
+msgstr "补贴名称"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "所有下级规则"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.ALW
+msgid "Allowance"
+msgstr "补助"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "总为真"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__amount
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Amount"
+msgstr "金额"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_select
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "金额类型"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "每年"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "显示在工资单"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr "如果表达式为真，适用这个规则。你可以输入条件，例如 basic > 1000。"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.BASIC
+msgid "Basic"
+msgstr "基本"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_basic
+msgid "Basic Salary"
+msgstr "基本工资"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
+msgid "Belgium Payroll"
+msgstr "比利时工资表"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "每两个月"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "每两周"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "计算"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "取消"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "取消工资单"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:96
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr "不能取消完成的工资单"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__category_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__category_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "类别"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "下级规则"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__child_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__child_ids
+msgid "Child Salary Rule"
+msgstr "下级薪资规则"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__children_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__children_ids
+msgid "Children"
+msgstr "下级"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "下级定义"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Choose a Payroll Localization"
+msgstr "选择工资本地化"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "关闭"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__code
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Code"
+msgstr "代号"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payroll_structure_view_kanban
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_view_kanban
+msgid "Code:"
+msgstr "代码："
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "公司"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.COMP
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "公司缴款"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "计算"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "计算表"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_select
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_select
+msgid "Condition Based on"
+msgstr "选择条件"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "条件"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
+
+#. module: om_hr_payroll
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "确认"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "Contract"
+msgstr "合同"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.hr_contract_advantage_template_action
+#: model:ir.ui.menu,name:om_hr_payroll.hr_contract_advantage_template_menu_action
+msgid "Contract Advantage Templates"
+msgstr "合同优势模板"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "缴款"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__register_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "缴款名册"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "缴款名册的工资单明细"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_action_hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "缴款名册"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr "交通补贴"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr "Gravie交通补贴"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__credit_note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__credit_note
+msgid "Credit Note"
+msgstr "退款"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__date_from
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__date_start
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__date_from
+msgid "Date From"
+msgstr "起始日期"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__date_to
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__date_end
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__date_to
+msgid "Date To"
+msgstr "结束日期"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.DED
+msgid "Deduction"
+msgstr "扣除"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__default_value
+msgid "Default value for this advantage"
+msgstr "该优势的默认值"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract__schedule_pay
+msgid "Defines the frequency of the wage payment."
+msgstr "定义工资支付的频率。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr ""
+"设置依据所选合同在这个工资单上适用的规则。如果合同字段为空，这个字段也不是必输的，这样所有在所选期间内的所有设置在员工合同结构上的规则都生效。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__note
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "说明"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "详情按工资规则类别"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__details_by_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Details by Salary Rule Category"
+msgstr "详情按工资规则类别"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "完成"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "已完成的工资单批处理"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "已付款的工资条"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "草稿"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "草稿工资单批处理"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "工资条草稿"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__employee_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__employee_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "员工"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "员工合同"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "员工职能"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "员工工资单"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contract_advantage_template
+msgid "Employee's Advantage on Contract"
+msgstr "雇员在合同中的优势"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Employee's working schedule."
+msgstr "员工的工作时间表"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__employee_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "员工"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:92
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr "错误！您无法创建薪资规则类别的递归层次结构。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:189
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr "错误！您无法创建薪资规则的递归层次结构。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "偶然第三方参与的员工薪资支付"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_fix
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_fix
+msgid "Fixed Amount"
+msgstr "固定总额"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "例如，输入50意味着50%"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/report/report_contribution_register.py:35
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "表单内容丢失，无法打印此报表。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_fr_hr_payroll
+msgid "French Payroll"
+msgstr "法国工资表"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "一般"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "生成"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "生成工资单"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "为已选的所有员工生成工资单"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr "获得销售额的1％"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:182
+#, python-format
+msgid "Global Leaves"
+msgstr "全局离开"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:om_hr_payroll.GROSS
+msgid "Gross"
+msgstr "总额"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "分组"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr "住房补贴"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details__id
+msgid "ID"
+msgstr "ID"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_run__credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr "如果勾选它，表示这里生成的工资条都是退款工资单"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr "如果去掉了“激活”这个字段上的勾，你可以不必删除就停用这个薪资规则。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_in_hr_payroll
+msgid "Indian Payroll"
+msgstr "印度工资表"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr "表示这张工资单有另一个退款"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "输入数据"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__input_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__input_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "输入"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__note
+msgid "Internal Note"
+msgstr "内部备注"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_view_kanban
+msgid "Is a Blocking Reason?"
+msgstr "是阻塞原因?"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__quantity
+msgid ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+"用于百分比和固定金额计算。例如，餐券在每个工作日得到固定 1 "
+"欧元的规则可以在表达式中定义数量，如下所示：worked_days.WORK100.number_of_days。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"用于计算。例如，某个规则是销售员每卖一件产品得到1%的提成，表达式是：result = inputs.SALEURO.amount * "
+"contract.wage*0.01."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details____last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule_category__parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr "薪资类别的父级类别只用于报告目的"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__lower_bound
+msgid "Lower Bound"
+msgstr "下限"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract_advantage_template__lower_bound
+msgid "Lower bound authorized by the employer for this advantage"
+msgstr "雇主针对该优势的授权下限"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__paid
+msgid "Made Payment Order ? "
+msgstr "建立付款单？ "
+
+#. module: om_hr_payroll
+#: model:res.groups,name:om_hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "管理员"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range_max
+msgid "Maximum Range"
+msgstr "最大范围"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr "餐券"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range_min
+msgid "Minimum Range"
+msgstr "最小范围"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "杂项"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "每月"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__name
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Name"
+msgstr "名称"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.NET
+msgid "Net"
+msgstr "净"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr "工资净额"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:201
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "正常工作日100%付薪"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "备注"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__number_of_days
+msgid "Number of Days"
+msgstr "天数"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__number_of_hours
+msgid "Number of Hours"
+msgstr "工时数"
+
+#. module: om_hr_payroll
+#: model:res.groups,name:om_hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "主管"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "其他输入项"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__parent_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__parent_id
+msgid "Parent"
+msgstr "上级"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__parent_rule_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "上级薪资规则"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__partner_id
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__payslip_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__slip_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__payslip_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Pay Slip"
+msgstr "工资单"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "工资单批处理"
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "工资单详情"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "工资单明细"
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "工资单明细按供款记录"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "PaySlip Lines by Contribution Register"
+msgstr "工资单明细行，按缴款名册"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "PaySlip Name"
+msgstr "工资单名称"
+
+#. module: om_hr_payroll
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_root
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll"
+msgstr "工资表"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_report_hr_payroll_report_contribution_register
+msgid "Payroll Contribution Register Report"
+msgstr "工资表缴款名册报告"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll Entries"
+msgstr "薪资条目"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "工资表结构"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll rules that apply to your country"
+msgstr "适用于贵国的薪资规则"
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.action_report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "工资单"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:82
+#, python-format
+msgid "Payslip 'Date From' must be earlier 'Date To'."
+msgstr "工资单的'开始日期'必须早于‘结束日期'。"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_run
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__payslip_run_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "工资单批处理"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__payslip_count
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "工资单计算详情"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_employee__payslip_count
+msgid "Payslip Count"
+msgstr "薪资统计"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_report_hr_payroll_report_payslip_details
+msgid "Payslip Details Report"
+msgstr "工资单明细"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "工资单输入"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__input_line_ids
+msgid "Payslip Inputs"
+msgstr "工资单输入"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_line
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "工资单明细"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__line_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "工资单明细"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Payslip Lines by Contribution Register"
+msgstr "工资单明细行，按缴款名册"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
+msgstr "工资单明细行，按缴款名册"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__name
+msgid "Payslip Name"
+msgstr "工资单名称"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "工资单的工作天数"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_employee__slip_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__slip_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.payroll_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "工资单"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payslip_run
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "工资单批处理"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "按员工分组的工资条"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_percentage
+msgid "Percentage (%)"
+msgstr "百分比(%)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_percentage_base
+msgid "Percentage based on"
+msgstr "百分比基数"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "会计期间"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Post payroll slips in accounting"
+msgstr "在会计账簿中发布工资单"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "打印"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr "个人所得税"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr "公积金"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_python_compute
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_python_compute
+msgid "Python Code"
+msgstr "Python 代码"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_python
+msgid "Python Condition"
+msgstr "Python 条件"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Python表达式"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__quantity
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__quantity
+msgid "Quantity"
+msgstr "数量"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "Quantity/Rate"
+msgstr "数量 / 费率"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Quantity/rate"
+msgstr "数量 / 费率"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "每季度"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "范围"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range
+msgid "Range Based on"
+msgstr "范围依据"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__rate
+msgid "Rate (%)"
+msgstr "比率(%)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__number
+msgid "Reference"
+msgstr "参考"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "退款"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:102
+#, python-format
+msgid "Refund: "
+msgstr "退款："
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__register_line_ids
+msgid "Register Line"
+msgstr "记录明细"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "已拒绝"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__salary_rule_id
+msgid "Rule"
+msgstr "规则"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "薪资类别"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "薪资计算"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "薪酬制度"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "薪资规则类别"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "薪资规则类别"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__input_id
+msgid "Salary Rule Input"
+msgstr "薪薪资规则输入项"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__rule_ids
+#: model:ir.ui.menu,name:om_hr_payroll.menu_action_hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_list
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "薪资规则"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:403
+#: code:addons/om_hr_payroll/models/hr_payslip.py:453
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "工资条：%s %s"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__struct_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "薪资结构"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "薪资结构"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__schedule_pay
+msgid "Scheduled Pay"
+msgstr "已安排的付款"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "搜索工资单批处理"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "搜索工资条明细"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "搜索工资单"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "搜索薪资规则"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "半年"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "设为草稿"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_global_settings
+msgid "Settings"
+msgstr "设置"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "状态"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__state
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__state
+msgid "Status"
+msgstr "状态"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__struct_id
+msgid "Structure"
+msgstr "结构"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr "薪资规则的代码可以被其他规则的计算公式引用，引用时区分大小写。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_rule_input__code
+msgid "The code that can be used in the salary rules"
+msgstr "可以在薪资规则中使用的代码"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_select
+msgid "The computation method for the rule amount."
+msgstr "规则金额的计算方法"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "The contract for which applied this input"
+msgstr "符合当前输入的合同"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "适用这个规则的最大金额"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "这条规则的最小金额"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr "这个规则将用于计算%字段的值；一般来说是基数，你也可以用小写的类别代码作为一个变量名（hra，ma，lta等）作为可变的基数。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__total
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Total"
+msgstr "总计"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "工作天数总计"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__upper_bound
+msgid "Upper Bound"
+msgstr "上限"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract_advantage_template__upper_bound
+msgid "Upper bound authorized by the employer for this advantage"
+msgstr "雇主针对该优势的授权上限"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__sequence
+msgid "Use to arrange calculation sequence"
+msgstr "使用预定的序列排列"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr "用于工资单显示薪资规则"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "正在等待"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "每周"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "工作天数"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "工作天数"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "工作天数及输入"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Working Schedule"
+msgstr "工作安排"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:211
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr "薪资规则 %s (%s)百分比基数或者数量定义错误。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:218
+#, python-format
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "薪资规则 %s (%s) Python代码定义错误"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:240
+#, python-format
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "薪资规则 %s (%s) Python条件定义错误。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:204
+#, python-format
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "为薪资规则  %s (%s) 定义的数量错误。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:234
+#, python-format
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "薪资规则%s (%s) 范围条件定义错误。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:36
+#, python-format
+msgid "You cannot create a recursive salary structure."
+msgstr "你不能创建递归的薪资结构。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:127
+#, python-format
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr "你不能删除非草稿或者取消状态的工资单！"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#, python-format
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "您必须选择员工以生成工资单。"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:525
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr "您必须设置一份合同以便创建工资核算单。"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "结果将影响一个变量"

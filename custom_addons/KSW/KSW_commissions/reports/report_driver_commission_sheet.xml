@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Report action                                                      -->
+    <!-- ================================================================ -->
+    <record id="action_report_driver_commission_sheet" model="ir.actions.report">
+        <field name="name">Driver Commission Sheet</field>
+        <field name="model">ksw.driver.commission.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">KSW_commissions.report_driver_commission_sheet</field>
+        <field name="report_file">KSW_commissions.report_driver_commission_sheet</field>
+        <field name="binding_model_id" ref="model_ksw_driver_commission_sheet"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- QWeb template                                                      -->
+    <!-- ================================================================ -->
+    <template id="report_driver_commission_sheet">
+        <t t-call="web.html_container">
+
+            <!-- ── One page per driver commission sheet ────────────── -->
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <!-- Title -->
+                        <h2 class="text-center mb-2">Driver Commission Sheet</h2>
+                        <h4 class="text-center text-muted mb-4">
+                            <t t-out="o.site_id.name or ''"/> —
+                            <t t-out="o.period and o.period.strftime('%B %Y') or ''"/>
+                        </h4>
+
+                        <!-- Sheet header -->
+                        <table class="table table-sm table-bordered mb-3">
+                            <tr>
+                                <td style="width:20%"><strong>Sheet Ref.</strong></td>
+                                <td style="width:30%" t-out="o.name or ''"/>
+                                <td style="width:20%"><strong>Site</strong></td>
+                                <td style="width:30%" t-out="o.site_id.name or ''"/>
+                            </tr>
+                            <tr>
+                                <td><strong>Period</strong></td>
+                                <td t-out="o.period and o.period.strftime('%B %Y') or ''"/>
+                                <td><strong>Status</strong></td>
+                                <td>
+                                    <t t-if="o.state == 'draft'">Draft</t>
+                                    <t t-else="">Confirmed</t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Site tier rate reference -->
+                        <t t-if="o.site_id">
+                            <h5 class="mt-2">Tier Rate Configuration</h5>
+                            <table class="table table-sm table-bordered mb-3">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th colspan="2" class="text-center">Tier 1 (No Commission)</th>
+                                        <th colspan="2" class="text-center">Tier 2</th>
+                                        <th colspan="2" class="text-center">Tier 3</th>
+                                        <th colspan="2" class="text-center">Tier 4</th>
+                                        <th colspan="2" class="text-center">Tier 5 (Open)</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">Required/30d</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Band</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Band</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Band</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Band</th>
+                                        <th class="text-center">Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center">
+                                        <td t-out="o.site_id.required_trips_full_month or 0"/>
+                                        <td>—</td>
+                                        <td t-out="o.site_id.tier2_trips or 0"/>
+                                        <td t-out="'%.2f' % (o.site_id.tier2_rate or 0.0)"/>
+                                        <td t-out="o.site_id.tier3_trips or 0"/>
+                                        <td t-out="'%.2f' % (o.site_id.tier3_rate or 0.0)"/>
+                                        <td t-out="o.site_id.tier4_trips or 0"/>
+                                        <td t-out="'%.2f' % (o.site_id.tier4_rate or 0.0)"/>
+                                        <td>∞</td>
+                                        <td t-out="'%.2f' % (o.site_id.tier5_rate or 0.0)"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Driver lines -->
+                        <h5 class="mt-2">Driver Trip Tally</h5>
+                        <table class="table table-sm table-bordered mb-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width:3%">#</th>
+                                    <th style="width:18%">Employee</th>
+                                    <th style="width:10%">Vehicle</th>
+                                    <th style="width:5%" class="text-center">Days</th>
+                                    <th style="width:7%" class="text-center">Req.</th>
+                                    <th style="width:7%" class="text-center">Actual</th>
+                                    <th style="width:7%" class="text-center">Mult.</th>
+                                    <th style="width:5%" class="text-center">T1</th>
+                                    <th style="width:5%" class="text-center">T2</th>
+                                    <th style="width:5%" class="text-center">T3</th>
+                                    <th style="width:5%" class="text-center">T4</th>
+                                    <th style="width:5%" class="text-center">T5</th>
+                                    <th style="width:13%" class="text-end">Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.line_ids" t-as="ln">
+                                    <tr>
+                                        <td t-out="ln_index + 1"/>
+                                        <td t-out="ln.employee_id.name or ''"/>
+                                        <td t-out="ln.vehicle_number or ''"/>
+                                        <td class="text-center" t-out="ln.worked_days or 0"/>
+                                        <td class="text-center" t-out="ln.required_trips or 0"/>
+                                        <td class="text-center" t-out="ln.actual_trips or 0"/>
+                                        <td class="text-center fw-bold" t-out="ln.multiplied_trips or 0"/>
+                                        <td class="text-center text-muted" t-out="ln.tier1_trips or 0"/>
+                                        <td class="text-center" t-out="ln.tier2_trips or 0"/>
+                                        <td class="text-center" t-out="ln.tier3_trips or 0"/>
+                                        <td class="text-center" t-out="ln.tier4_trips or 0"/>
+                                        <td class="text-center" t-out="ln.tier5_trips or 0"/>
+                                        <td class="text-end fw-bold">
+                                            <t t-out="'%.2f' % ln.total_commission"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="not o.line_ids">
+                                    <tr>
+                                        <td colspan="13" class="text-center text-muted">
+                                            No driver lines entered.
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot class="table-light fw-bold">
+                                <tr>
+                                    <td colspan="12" class="text-end">Total Commission</td>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % o.total_commission"/>
+                                        <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- Status / printed -->
+                        <p class="text-muted" style="font-size: 10px;">
+                            Printed on
+                            <t t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </p>
+
+                        <!-- Signatures -->
+                        <div class="row mt-5" style="page-break-inside: avoid;">
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Supervisor</strong>
+                                </p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Site Manager</strong>
+                                </p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Approved by</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+
+            <!-- ── Cumulative summary (only when printing 2+ sheets) ── -->
+            <t t-if="len(docs) > 1">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h2 class="text-center mb-2">Driver Commission — Monthly Summary</h2>
+                        <h4 class="text-center text-muted mb-4">
+                            <t t-set="period_labels" t-value="docs._report_get_period_labels()"/>
+                            <t t-foreach="period_labels" t-as="label">
+                                <t t-out="label"/>
+                                <t t-if="not label_last"> · </t>
+                            </t>
+                        </h4>
+
+                        <!-- Per-site totals -->
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width:4%">#</th>
+                                    <th style="width:22%">Sheet</th>
+                                    <th style="width:22%">Site</th>
+                                    <th style="width:12%">Period</th>
+                                    <th style="width:10%" class="text-center">Drivers</th>
+                                    <th style="width:10%" class="text-center">Status</th>
+                                    <th style="width:20%" class="text-end">Total Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs" t-as="o">
+                                    <tr>
+                                        <td t-out="o_index + 1"/>
+                                        <td t-out="o.name or ''"/>
+                                        <td t-out="o.site_id.name or ''"/>
+                                        <td t-out="o.period and o.period.strftime('%m/%Y') or ''"/>
+                                        <td class="text-center" t-out="len(o.line_ids)"/>
+                                        <td class="text-center">
+                                            <t t-if="o.state == 'draft'">Draft</t>
+                                            <t t-else="">✓ Confirmed</t>
+                                        </td>
+                                        <td class="text-end fw-bold">
+                                            <t t-out="'%.2f' % o.total_commission"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot class="table-light fw-bold">
+                                <tr>
+                                    <td colspan="4" class="text-end">TOTALS</td>
+                                    <td class="text-center">
+                                        <t t-out="sum(len(o.line_ids) for o in docs)"/>
+                                    </td>
+                                    <td/>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % sum(o.total_commission for o in docs)"/>
+                                        SAR
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- Per-driver grand roll-up -->
+                        <h5 class="mt-4">Per-Driver Roll-up</h5>
+                        <t t-set="driver_rollup" t-value="docs._report_get_driver_rollup()"/>
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:5%">#</th>
+                                    <th style="width:30%">Driver</th>
+                                    <th style="width:15%" class="text-center">Sheets</th>
+                                    <th style="width:15%" class="text-center">Total Trips (Mult.)</th>
+                                    <th style="width:35%" class="text-end">Total Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="driver_rollup" t-as="drv">
+                                    <tr>
+                                        <td t-out="drv_index + 1"/>
+                                        <td t-out="drv['name']"/>
+                                        <td class="text-center" t-out="drv['sheet_count']"/>
+                                        <td class="text-center" t-out="drv['total_trips']"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f SAR' % drv['total_commission']"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <p class="text-muted mt-3" style="font-size:10px;">
+                            Printed on
+                            <t t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                            — <t t-out="len(docs)"/> sheet(s)
+                        </p>
+
+                    </div>
+                </t>
+            </t>
+
+        </t>
+    </template>
+
+</odoo>
+
+
+

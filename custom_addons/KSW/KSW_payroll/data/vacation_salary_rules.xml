@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="0">
+
+        <!-- ========================================================= -->
+        <!-- Vacation Balance Settlement (ALW)                          -->
+        <!-- Reads from payslip input line 'VACATION_BAL'               -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_vacation_balance" model="hr.salary.rule">
+            <field name="name">Vacation Balance Settlement</field>
+            <field name="sequence" eval="16"/>
+            <field name="code">VACATION_BAL</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.VACATION_BAL and inputs.VACATION_BAL.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.VACATION_BAL.amount if inputs.VACATION_BAL else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Monetary value of the employee's remaining annual leave balance
+(remaining_days × daily basic wage). Only appears on vacation payslips.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Flight Ticket Allowance (ALW)                              -->
+        <!-- Reads from payslip input line 'FLIGHT_TICKET'              -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_flight_ticket" model="hr.salary.rule">
+            <field name="name">Flight Ticket Allowance</field>
+            <field name="sequence" eval="17"/>
+            <field name="code">FLIGHT_TICKET</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.FLIGHT_TICKET and inputs.FLIGHT_TICKET.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.FLIGHT_TICKET.amount if inputs.FLIGHT_TICKET else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Flight ticket allowance for annual leave. Filled by the
+Accounting department during the leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Penalty Deduction (DED)                                    -->
+        <!-- Reads from payslip input line 'PENALTY'                    -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_penalty" model="hr.salary.rule">
+            <field name="name">Penalty Deduction</field>
+            <field name="sequence" eval="170"/>
+            <field name="code">PENALTY</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.PENALTY and inputs.PENALTY.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.PENALTY.amount if inputs.PENALTY else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Penalty deduction applied during annual leave approval.
+Filled by HR during the leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Additional Commissions (ALW)                               -->
+        <!-- Reads from payslip input line 'ADDITIONAL_COMMISSIONS'     -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_additional_commissions" model="hr.salary.rule">
+            <field name="name">Additional Commissions</field>
+            <field name="sequence" eval="18"/>
+            <field name="code">ADDITIONAL_COMMISSIONS</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.ADDITIONAL_COMMISSIONS and inputs.ADDITIONAL_COMMISSIONS.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.ADDITIONAL_COMMISSIONS.amount if inputs.ADDITIONAL_COMMISSIONS else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Additional commissions for the employee. Filled by the
+Accounting department during the annual leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Remaining Loans Deduction (DED)                            -->
+        <!-- Reads from payslip input line 'REMAINING_LOANS'            -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_remaining_loans" model="hr.salary.rule">
+            <field name="name">Remaining Loans</field>
+            <field name="sequence" eval="171"/>
+            <field name="code">REMAINING_LOANS</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.REMAINING_LOANS and inputs.REMAINING_LOANS.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.REMAINING_LOANS.amount if inputs.REMAINING_LOANS else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Remaining loan amount to deduct from the vacation payslip.
+Filled by the Accounting department during the annual leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Financial Consideration for Excess Leave (DED)             -->
+        <!-- Reads from payslip input line 'FIN_CONSIDERATION'          -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_fin_consideration" model="hr.salary.rule">
+            <field name="name">Financial Consideration for Excess Leave</field>
+            <field name="sequence" eval="172"/>
+            <field name="code">FIN_CONSIDERATION</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.FIN_CONSIDERATION and inputs.FIN_CONSIDERATION.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.FIN_CONSIDERATION.amount if inputs.FIN_CONSIDERATION else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Financial consideration for excess unpaid leave days.
+Filled by the Accounting department during the combined annual+unpaid leave approval.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Visa Cost Recovery for Excess Leave (DED)                  -->
+        <!-- Reads from payslip input line 'VISA_COST_RECOVERY'         -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_visa_cost_recovery" model="hr.salary.rule">
+            <field name="name">Visa Cost Recovery for Excess Leave</field>
+            <field name="sequence" eval="173"/>
+            <field name="code">VISA_COST_RECOVERY</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.VISA_COST_RECOVERY and inputs.VISA_COST_RECOVERY.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.VISA_COST_RECOVERY.amount if inputs.VISA_COST_RECOVERY else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Visa cost recovery for excess unpaid leave days.
+Filled by the Accounting department during the combined annual+unpaid leave approval.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Advance HRA for paid vacation months (ALW)                 -->
+        <!-- Reads from payslip input line 'VACATION_HRA'.              -->
+        <!-- On the vacation payslip the regular HRA rule is suppressed -->
+        <!-- (see data/salary_rule_deduction.xml); all HRA for the paid -->
+        <!-- vacation period is paid here as a single advance lump sum. -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_vacation_hra" model="hr.salary.rule">
+            <field name="name">Advance HRA (Paid Vacation Months)</field>
+            <field name="sequence" eval="19"/>
+            <field name="code">VACATION_HRA</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(inputs.VACATION_HRA) and inputs.VACATION_HRA.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.VACATION_HRA.amount if inputs.VACATION_HRA else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Housing allowance paid upfront for every paid vacation
+month (including the current month). The regular HRA rule is suppressed
+on vacation payslips to avoid double payment of the vacation month.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Advance GOSI for paid vacation months (DED)                -->
+        <!-- Reads from payslip input line 'VACATION_GOSI' (positive).  -->
+        <!-- Emits a negative salary line because GOSI is a deduction.  -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_vacation_gosi" model="hr.salary.rule">
+            <field name="name">Advance GOSI (Paid Vacation Months)</field>
+            <field name="sequence" eval="161"/>
+            <field name="code">VACATION_GOSI</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(inputs.VACATION_GOSI) and inputs.VACATION_GOSI.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.VACATION_GOSI.amount if inputs.VACATION_GOSI else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">GOSI deduction paid upfront for every paid vacation month
+(including the current month). The regular GOSI rule is suppressed on
+vacation payslips to avoid double deduction of the vacation month.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Attach all vacation rules to the BASE salary structure     -->
+        <!-- ========================================================= -->
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids" eval="[
+                (4, ref('hr_rule_vacation_balance')),
+                (4, ref('hr_rule_flight_ticket')),
+                (4, ref('hr_rule_penalty')),
+                (4, ref('hr_rule_additional_commissions')),
+                (4, ref('hr_rule_remaining_loans')),
+                (4, ref('hr_rule_fin_consideration')),
+                (4, ref('hr_rule_visa_cost_recovery')),
+                (4, ref('hr_rule_vacation_hra')),
+                (4, ref('hr_rule_vacation_gosi')),
+            ]"/>
+        </record>
+
+    </data>
+
+</odoo>
+
+
