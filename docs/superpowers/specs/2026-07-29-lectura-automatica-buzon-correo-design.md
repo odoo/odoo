@@ -130,3 +130,5 @@ Una vista de lista simple (`email_from`, `date`, `state`, `move_id`) bajo un nue
 - Simular un correo con la misma Clave que una factura ya existente → `state='duplicado'`, enlazado a la factura existente, no se crea una segunda.
 - Simular un correo sin adjunto XML (o con uno inválido) → `state='sin_xml_valido'`, con motivo, sin factura creada.
 - Confirmar que el asistente manual (`l10n_cr.fe.proveedor.upload`) sigue funcionando igual tras el refactor (mismos tests existentes, ahora contra el método compartido).
+
+**Nota de implementación:** se confirmó contra el código fuente de `mail.thread` que `_primary_email = 'email_from'` (atributo de clase) le basta a Odoo para mapear automáticamente el remitente sin código adicional; solo `date` necesitó un override explícito de `message_new`. `message_process` devuelve el id entero del registro creado, no un recordset.
