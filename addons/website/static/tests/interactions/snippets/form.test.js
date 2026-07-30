@@ -952,3 +952,82 @@ test("validates a date against today resolved when the form is mounted", async (
     await fillAndSubmitForm(dateInputEl, "11/15/2025");
     checkField(dateInputEl, true, false);
 });
+
+test("add aria-invalid to invalid fields", async () => {
+    await startInteractions(formTemplate);
+    const mailEl = queryOne("input[name=email_from]");
+
+    expect(mailEl.getAttribute("aria-invalid")).toBeEmpty();
+    expect(mailEl.getAttribute("aria-errormessage")).toBeEmpty();
+
+    // Submit
+    await click("a.s_website_form_send");
+    expect(mailEl.getAttribute("aria-invalid")).toBe("true");
+    const errorMessage = mailEl.getAttribute("aria-errormessage");
+    expect(errorMessage).not.toBeEmpty();
+    const errorMessageEl = queryOne(`#${errorMessage}`);
+    expect(errorMessageEl).toHaveText("Please fill out this field.");
+    expect(errorMessageEl).toHaveClass("visually-hidden");
+
+    // Fill mail
+    await click("input[name=email_from]");
+    await fill("a@b.com");
+    await advanceTime(400); // Debounce delay.
+
+    // Submit
+    await click("a.s_website_form_send");
+    expect(mailEl.getAttribute("aria-invalid")).toBeEmpty();
+    expect(mailEl.getAttribute("aria-errormessage")).toBeEmpty();
+});
+
+test("add aria-invalid to invalid checkbox fields", async () => {
+    const formTemplate = /* html */ `
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-sm-auto s_website_form_label" style="width: 200px;" for="o8j0sq77aobs">
+                            <span class="s_website_form_label_content">Label</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input type="checkbox" value="Yes" class="s_website_form_input form-check-input" name="Your Company" required="" id="o8j0sq77aobs">
+                            </div>
+                            <span class="s_website_form_field_description small form-text text-muted" data-description-mark=" *">Description</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                    <div style="width: 200px;" class="s_website_form_label"></div>
+                    <span id="s_website_form_result"></span>
+                    <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                </div>
+            </form>
+        </section>
+    `;
+
+    await startInteractions(formTemplate);
+    const checkboxEl = queryOne("input[type='checkbox']");
+
+    expect(checkboxEl.getAttribute("aria-invalid")).toBeEmpty();
+    expect(checkboxEl.getAttribute("aria-errormessage")).toBeEmpty();
+
+    // Submit
+    await click("a.s_website_form_send");
+    expect(checkboxEl.getAttribute("aria-invalid")).toBe("true");
+    const errorMessage = checkboxEl.getAttribute("aria-errormessage");
+    expect(errorMessage).not.toBeEmpty();
+    const errorMessageEl = queryOne(`#${errorMessage}`);
+    expect(errorMessageEl).toHaveText("Please check this box if you want to proceed.");
+    expect(errorMessageEl).toHaveClass("visually-hidden");
+
+    // Fill mail
+    await click("input[type='checkbox']");
+    await advanceTime(400); // Debounce delay.
+
+    // Submit
+    await click("a.s_website_form_send");
+    expect(checkboxEl.getAttribute("aria-invalid")).toBeEmpty();
+    expect(checkboxEl.getAttribute("aria-errormessage")).toBeEmpty();
+});
