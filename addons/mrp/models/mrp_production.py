@@ -1982,7 +1982,7 @@ class MrpProduction(models.Model):
         return True
 
     def _post_inventory(self, cancel_backorder=False):
-        moves_to_do, moves_not_to_do, moves_to_cancel = set(), set(), set()
+        moves_to_do, moves_not_to_do, moves_to_cancel = OrderedSet(), OrderedSet(), OrderedSet()
         for move in self.move_raw_ids:
             if move.state == 'done':
                 moves_not_to_do.add(move.id)
