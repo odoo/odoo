@@ -15,3 +15,10 @@ class TestInheritMother(models.Model):
     def _compute_surname(self):
         for rec in self:
             rec.surname = rec.name or ''
+
+
+class TestInheritPartner(models.Model):
+    _name = 'test.inherit.partner'
+    _description = 'Test Inherit Partner'
+
+    name = fields.Char()
