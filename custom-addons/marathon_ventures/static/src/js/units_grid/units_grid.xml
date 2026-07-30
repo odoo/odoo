@@ -321,14 +321,14 @@
             <!-- Row select checkbox - hidden for preview rows since they
                  aren't real Deal Lines yet (saved only after planner
                  clicks Save). -->
-            <td class="mv-row-check-col">
+            <td class="mv-row-check-col" rowspan="2">
               <input t-if="!row._is_ltc_preview"
                      type="checkbox"
                      t-att-checked="state.selected[row.id] ? 'checked' : null"
                      t-on-change="(ev) => this.toggleRow(row.id, ev)"/>
             </td>
 
-            <td class="mv-daypart-cell">
+            <td class="mv-daypart-cell" rowspan="2">
               <!-- Daypart selector (always editable; planners can switch) -->
               <select class="mv-daypart-select"
                       t-on-change="(ev) => this.onDaypartChange(row, ev)">

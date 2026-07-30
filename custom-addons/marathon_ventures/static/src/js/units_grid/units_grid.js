@@ -95,6 +95,13 @@ export class MvUnitsGrid extends Component {
         } else {
             this.dayparts = DAYPART_OPTIONS;
         }
+        // Prime the per-row bulk-allocation block so the "To" input
+        // renders its pre-filled last-day-of-quarter default on first
+        // paint. Without this, _ensureBulk only runs when the planner
+        // interacts with the section, and the "To" input starts empty.
+        for (const row of (this.state.payload.rows || [])) {
+            this._ensureBulk(row);
+        }
         this.state.loaded = true;
         this.resetEdits();
     }
@@ -291,6 +298,10 @@ export class MvUnitsGrid extends Component {
             total_spots: 0,
             total_revenue: 0,
         };
+        // Prime the bulk block on the fresh row so its "To" input
+        // renders the pre-filled last-day-of-quarter on the first
+        // paint (same as existing rows do via loadGrid's priming).
+        this._ensureBulk(newRow);
         this.state.payload.rows.push(newRow);
         // Phase 12: run_start / run_end are no longer per-row from the
         // UI - the server auto-fills them from the deal-level
@@ -374,12 +385,27 @@ export class MvUnitsGrid extends Component {
             row._bulk = {
                 // Section 1 (From / To / Units / Go). sec1_start defaults
                 // to the deal start date when empty - see XML t-att-value.
-                sec1_start: '', sec1_end: '', sec1_units: '',
+                // sec1_end defaults to the Sunday of the LAST week
+                // currently rendered in the grid (i.e. the last date of
+                // the broadcast quarter the deal spans) so a planner who
+                // just clicks Go covers the whole visible range.
+                sec1_start: '', sec1_end: this._gridEndDateIso(), sec1_units: '',
                 // Section 2 (To / Go) - cancels weeks after To.
                 sec2_end: '', sec2_units: '',
             };
         }
         return row._bulk;
+    }
+
+    // ISO of the LAST week header shown in the current grid.
+    // Matches the last column's date (Monday-of-week) so the pre-
+    // filled "To" input lines up with what the planner sees in the
+    // week column headers. Returns '' when the payload has no
+    // weeks yet (e.g. brand-new deal with no schedules).
+    _gridEndDateIso() {
+        const weeks = this.state.payload && this.state.payload.weeks;
+        if (!weeks || !weeks.length) return '';
+        return weeks[weeks.length - 1];
     }
 
     onBulkInputChange(row, key, ev) {
