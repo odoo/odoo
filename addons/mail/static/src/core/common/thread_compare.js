@@ -1,3 +1,5 @@
+import { compareDatetime } from "@mail/utils/common/misc";
+
 import { registry } from "@web/core/registry";
 
 /**
@@ -15,16 +17,21 @@ threadCompareRegistry.add(
      * @param {import("models").Thread thread2}
      */
     (thread1, thread2) => {
-        const aMessageDatetime = thread1.newestPersistentOfAllMessage?.datetime;
-        const bMessageDateTime = thread2.newestPersistentOfAllMessage?.datetime;
-        if (!aMessageDatetime && bMessageDateTime) {
+        const aTime =
+            thread1.newestPersistentOfAllMessage?.datetime ?? thread1.channel?.create_date;
+        const bTime =
+            thread2.newestPersistentOfAllMessage?.datetime ?? thread2.channel?.create_date;
+        if (!aTime && bTime) {
             return 1;
         }
-        if (!bMessageDateTime && aMessageDatetime) {
+        if (!bTime && aTime) {
             return -1;
         }
-        if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
-            return bMessageDateTime - aMessageDatetime;
+        if (aTime && bTime) {
+            const res = compareDatetime(bTime, aTime);
+            if (res !== 0) {
+                return res;
+            }
         }
     },
     { sequence: 40 }

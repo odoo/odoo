@@ -53,7 +53,7 @@
                     'align-items-start justify-content-end': this.showStartMessage,
                     'align-items-center justify-content-center opacity-75': !this.showStartMessage
                 }">
-                <t t-if="this.props.thread.isLoaded and this.props.showEmptyMessage">
+                <t t-if="this.state.mountedAndLoaded and this.props.showEmptyMessage">
                     <t name="empty-message">
                         <t t-if="this.showStartMessage" t-call="mail.Thread.startMessage"/>
                         <div t-else="" class="d-flex flex-column align-items-center">
