@@ -14,16 +14,16 @@ class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
     # Viva Wallet
-    viva_wallet_merchant_id = fields.Char(string="Merchant ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
+    viva_wallet_merchant_id = fields.Char(string="Merchant ID", groups='point_of_sale.group_pos_manager', help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
     viva_wallet_api_key = fields.Char(string="API Key", groups='point_of_sale.group_pos_manager', help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
-    viva_wallet_client_id = fields.Char(string="Client ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/pos-apis-credentials/#find-your-pos-apis-credentials')
-    viva_wallet_client_secret = fields.Char(string="Client secret")
+    viva_wallet_client_id = fields.Char(string="Client ID", groups='point_of_sale.group_pos_manager', help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/pos-apis-credentials/#find-your-pos-apis-credentials')
+    viva_wallet_client_secret = fields.Char(string="Client secret", groups='point_of_sale.group_pos_manager')
     viva_wallet_terminal_id = fields.Char(string="Terminal ID", help='[Terminal ID of the Viva Wallet terminal], for example: 16002169')
-    viva_wallet_bearer_token = fields.Char(default='Bearer Token')
-    viva_wallet_webhook_verification_key = fields.Char()
-    viva_wallet_latest_response = fields.Json() # used to buffer the latest asynchronous notification from Adyen.
-    viva_wallet_test_mode = fields.Boolean(string="Test mode", help="Run transactions in the test environment.")
-    viva_wallet_webhook_endpoint = fields.Char(compute='_compute_viva_wallet_webhook_endpoint', readonly=True)
+    viva_wallet_bearer_token = fields.Char(default='Bearer Token', groups='point_of_sale.group_pos_manager')
+    viva_wallet_webhook_verification_key = fields.Char(groups='point_of_sale.group_pos_manager')
+    viva_wallet_latest_response = fields.Json(groups='point_of_sale.group_pos_manager') # used to buffer the latest asynchronous notification from Adyen.
+    viva_wallet_test_mode = fields.Boolean(string="Test mode", help="Run transactions in the test environment.", groups='point_of_sale.group_pos_manager')
+    viva_wallet_webhook_endpoint = fields.Char(compute='_compute_viva_wallet_webhook_endpoint', readonly=True, groups='point_of_sale.group_pos_manager')
 
 
     def _viva_wallet_account_get_endpoint(self):
@@ -85,15 +85,19 @@ class PosPaymentMethod(models.Model):
         return resp.json().get('Key')
 
     def _call_viva_wallet(self, endpoint, action, data=None, should_retry=True):
+        # sudo: talking to Viva Wallet requires the manager-only credential fields
+        # (bearer token, client id/secret, test mode); callers already check the
+        # user's group before delegating here.
+        self_sudo = self.sudo()
         session = get_viva_wallet_session(should_retry)
-        session.headers.update({'Authorization': f"Bearer {self.viva_wallet_bearer_token}"})
-        endpoint = f"{self._viva_wallet_api_get_endpoint()}/ecr/v1/{endpoint}"
+        session.headers.update({'Authorization': f"Bearer {self_sudo.viva_wallet_bearer_token}"})
+        endpoint = f"{self_sudo._viva_wallet_api_get_endpoint()}/ecr/v1/{endpoint}"
         try:
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
             return {'error': _("There are some issues between us and Viva Wallet, try again later.%s)", e)}
         if resp.text and resp.json().get('detail') == 'Could not validate credentials':
-            session.headers.update(self._bearer_token(session))
+            session.headers.update(self_sudo._bearer_token(session))
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
 
         if resp.status_code == 200:
