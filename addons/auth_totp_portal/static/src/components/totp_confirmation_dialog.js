@@ -23,15 +23,28 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
                 setTimeout(this.tooltip.close, 800);
             });
         };
+<<<<<<< b9a088e60470abdb16cf21d7b14b9f771111fb06
         useLayoutEffect(
             (clipboardButtonEl) => {
                 if (clipboardButtonEl) {
+||||||| 64ceef175fc0dc014908bd4d79b8acf526a7a3c6
+        useEffect(
+            (clipboardButtonEl) => {
+                if (clipboardButtonEl) {
+=======
+        useEffect(
+            (...clipboardButtonEls) => {
+                for (const clipboardButtonEl of clipboardButtonEls) {
+>>>>>>> e6dcde6ebc9710b93e6d81e68e426937a042e82a
                     clipboardButtonEl.addEventListener("click", onClickClipboardButton);
-                    return () =>
-                        clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
                 }
+                return () => {
+                    for (const clipboardButtonEl of clipboardButtonEls) {
+                        clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
+                    }
+                };
             },
-            () => [this.modalRef.el?.querySelector("#collapseTotpSecret .o_clipboard_button")]
+            () => [...(this.modalRef.el?.querySelectorAll(".o_clipboard_button") ?? [])]
         );
     }
 }
