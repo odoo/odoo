@@ -29,8 +29,12 @@ export class ProductProduct extends Base {
             return this._searchString;
         }
         const fields = ["display_name", "barcode", "default_code"];
+        const attributeValues = (this.product_template_attribute_value_ids || []).map(
+            (v) => v.name
+        );
         const raw = fields
             .map((field) => this[field] || "")
+            .concat(attributeValues)
             .filter(Boolean)
             .join(" ");
         this._searchString = normalize(raw);

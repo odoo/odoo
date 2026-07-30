@@ -25,3 +25,16 @@ test("product template and product product override", async () => {
     });
     expect(product.allBarcodes).toBe("");
 });
+
+test("product template searchString includes single-value attribute value from variants", async () => {
+    const store = await setupPosEnv();
+    const template = store.models["product.template"].get(60);
+    const variant = store.models["product.product"].get(60);
+
+    expect(variant.searchString).toMatch("standard");
+    expect(template.searchString).toMatch("standard");
+
+    const results = store.getProductsBySearchWord("standard", [template]);
+    expect(results.length).toBe(1);
+    expect(results[0].id).toBe(60);
+});
