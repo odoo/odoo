@@ -8,6 +8,7 @@ import {
 } from "../utils";
 import { BasicMany2Many } from "./basic_many2many";
 import { BuilderComponent } from "./builder_component";
+import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2Many extends Component {
     static components = { BuilderComponent, BasicMany2Many };
@@ -28,23 +29,38 @@ export class BuilderMany2Many extends Component {
         useBuilderComponent(this.props);
         this.fields = useService("field");
         const { getAllActions, callOperation } = getAllActionsAndOperations(this.props);
+        this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
-        this.domState = useDomState((el) => {
-            const getAction = this.env.editor.shared.builderActions.getAction;
-            const actionWithGetValue = getAllActions().find(
-                ({ actionId }) => getAction(actionId).getValue
+        const getAction = this.env.editor.shared.builderActions.getAction;
+        const actionWithGetValue = getAllActions().find(
+            ({ actionId }) => getAction(actionId).getValue
+        );
+        const { actionId, actionParam } = actionWithGetValue;
+        const getValue = (el) =>
+            getAction(actionId).getValue({ editingElement: el, params: actionParam });
+        this.domState = useDomState(async (el) => {
+            const selectionString = getValue(el);
+            const selection = JSON.parse(selectionString || "[]");
+            const selectedWithMissingName = selection.filter(
+                (e) => !("display_name" in e && "name" in e)
             );
-            const { actionId, actionParam } = actionWithGetValue;
-            const actionValue = getAction(actionId).getValue({
-                editingElement: el,
-                params: actionParam,
-            });
-            return {
-                selection: JSON.parse(actionValue || "[]"),
-            };
+            if (selectedWithMissingName.length) {
+                await this.searchModel.currentPromise();
+                const namedValues = await this.cachedModel.ormRead(
+                    this.searchModel(),
+                    selectedWithMissingName.map((e) => e.id),
+                    ["display_name", "name"]
+                );
+                const nameMap = new Map(namedValues.map((e) => [e.id, e]));
+                for (const e of selectedWithMissingName) {
+                    e.name ||= nameMap.get(e.id).name;
+                    e.display_name ||= nameMap.get(e.id).display_name;
+                }
+            }
+            return { selection };
         });
         this.searchModel = asyncComputed(() => this.getSearchModel(this.props));
         onWillStart(() => this.searchModel.currentPromise());
