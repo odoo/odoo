@@ -112,7 +112,7 @@ export class BuilderList extends Component {
         this.visibilityState = proxy({
             limit: this.props.limit,
         });
-        this.onTableScroll = useThrottleForAnimation(this._onTableScroll);
+        this.onTableScroll = useThrottleForAnimation(this._onTableScroll.bind(this));
     }
 
     get cappedItems() {

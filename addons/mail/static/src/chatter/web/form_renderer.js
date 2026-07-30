@@ -26,7 +26,7 @@ patch(FormRenderer.prototype, {
         this.uiService = useService("ui");
         this.mailPopoutService = useService("mail.popout");
 
-        this.onResize = useDebounced(this.render, 200);
+        this.onResize = useDebounced(this.render.bind(this), 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
     },

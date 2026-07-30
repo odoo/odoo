@@ -48,7 +48,7 @@ export class ProductImageViewer extends Dialog {
         });
 
         // Debounce update in line with `ease-out` animation.
-        this.updateCarousel = useDebounced(this._updateCarousel, 250, {
+        this.updateCarousel = useDebounced(this._updateCarousel.bind(this), 250, {
             immediate: true,
             trailing: true,
         });

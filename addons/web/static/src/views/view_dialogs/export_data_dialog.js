@@ -131,7 +131,7 @@ export class ExportDataDialog extends Component {
         this.newTemplateText = _t("New template");
         this.removeFieldText = _t("Remove field");
 
-        this.debouncedOnResize = useDebounced(this.updateSize, 300);
+        this.debouncedOnResize = useDebounced(this.updateSize.bind(this), 300);
 
         useSortable({
             // Params

@@ -1,6 +1,5 @@
 import { computed, onWillDestroy, signal } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
-import { useComponent } from "@web/owl2/utils";
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same
@@ -207,8 +206,7 @@ export function useDebounced(
     delay,
     { execBeforeUnmount = false, immediate = false, trailing = !immediate } = {}
 ) {
-    const component = useComponent();
-    const debounced = debounce(callback.bind(component), delay, { leading: immediate, trailing });
+    const debounced = debounce(callback, delay, { leading: immediate, trailing });
     onWillDestroy(() => debounced.cancel(execBeforeUnmount));
     return debounced;
 }
@@ -221,8 +219,7 @@ export function useDebounced(
  * @param {T} func the function to throttle
  */
 export function useThrottleForAnimation(func) {
-    const component = useComponent();
-    const throttledForAnimation = throttleForAnimation(func.bind(component));
+    const throttledForAnimation = throttleForAnimation(func);
     onWillDestroy(throttledForAnimation.cancel);
     return throttledForAnimation;
 }

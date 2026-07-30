@@ -71,7 +71,7 @@ export class FormRenderer extends Component {
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");
         this.onResize = useDebounced(() => render(this), 200);
-        this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
+        this.onScrollThrottled = useThrottleForAnimation(this.onScroll.bind(this));
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
