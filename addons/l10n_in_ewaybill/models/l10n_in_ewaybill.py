@@ -671,8 +671,8 @@ class L10nInEwaybill(models.Model):
                     }.items(),
                     partner_detail={'from': self.partner_ship_from_id, 'to': self.partner_ship_to_id}.items()
                 ),
-                "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
-                "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
+                "actToStateCode": self.partner_ship_to_id.country_id.code != "IN" and 97 or self._get_partner_state_code(self.partner_ship_to_id),
+                "actFromStateCode": self.partner_ship_from_id.country_id.code != "IN" and 97 or self._get_partner_state_code(self.partner_ship_from_id),
         }
         return ewaybill_json
 
