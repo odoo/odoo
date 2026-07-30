@@ -25,7 +25,7 @@ export class ShapeSelector extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = proxy({ activeGroup: "basic" });
-        this.onScroll = useThrottleForAnimation(this._onScroll);
+        this.onScroll = useThrottleForAnimation(this._onScroll.bind(this));
         useAutofocus({ ref: this.backButtonRef });
     }
     getShapeUrl(shapePath) {

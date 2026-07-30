@@ -19,7 +19,7 @@ export class FloorPlan extends FloorPlanBase {
         this.pos = usePos();
         this.alert = useService("alert");
         this.ui = useService("ui");
-        useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
+        useListener(window, "resize", useDebounced(this.handleWindowResize.bind(this), 100));
         this.scrollFloorId = null;
         useLayoutEffect(
             (selectedFloor, isKanban) => {

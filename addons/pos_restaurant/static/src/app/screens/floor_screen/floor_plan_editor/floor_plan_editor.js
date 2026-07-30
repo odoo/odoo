@@ -146,7 +146,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         useListener(document, "mouseup", this.handleEnd.bind(this));
         useListener(document, "touchend", this.handleEnd.bind(this), { passive: false });
         useListener(document, "keydown", this.handleKeyDown.bind(this));
-        useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
+        useListener(window, "resize", useDebounced(this.handleWindowResize.bind(this), 100));
         useListener(window, "beforeunload", this.handleBeforeUnload.bind(this));
 
         onWillUnmount(() => {

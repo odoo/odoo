@@ -44,7 +44,7 @@ export class KanbanHeader extends Component {
         this.orm = useService("orm");
         this.uiService = useService("ui");
         this.popover = usePopover(KanbanHeaderTooltip);
-        this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
+        this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter.bind(this), 400);
         this.odoomark = odoomark;
     }
 

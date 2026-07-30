@@ -10,7 +10,7 @@ export class ProductCatalogKanbanController extends KanbanController {
         this.orm = useService("orm");
         this.orderId = this.props.context.order_id;
         this.orderResModel = this.props.context.product_catalog_order_model;
-        this.backToQuotationDebounced = useDebounced(this.backToQuotation, 500)
+        this.backToQuotationDebounced = useDebounced(this.backToQuotation.bind(this), 500)
 
         onWillStart(() => this.onWillStart());
     }

@@ -227,8 +227,8 @@ export class FileSelector extends Component {
             );
         });
 
-        this.debouncedOnScroll = useDebounced(this.updateScroll, 15);
-        this.debouncedScrollUpdate = useDebounced(this.updateScroll, 500);
+        this.debouncedOnScroll = useDebounced(this.updateScroll.bind(this), 15);
+        this.debouncedScrollUpdate = useDebounced(this.updateScroll.bind(this), 500);
 
         useLayoutEffect(
             (modalEl) => {

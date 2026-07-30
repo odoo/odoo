@@ -41,7 +41,7 @@ export class Chatter extends Component {
         this.highlightMessage = router.current.highlight_message_id;
         this.rootRef = signal.ref(HTMLDivElement);
         this.topRef = signal.ref(HTMLDivElement);
-        this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
+        this.onScrollDebounced = useThrottleForAnimation(this.onScroll.bind(this));
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
 

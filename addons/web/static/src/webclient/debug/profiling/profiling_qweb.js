@@ -55,7 +55,7 @@ export class ProfilingQwebView extends Component {
             view: null,
         });
 
-        this.renderProfilingInformation = useDebounced(this.renderProfilingInformation, 100);
+        this.renderProfilingInformation = useDebounced(this.renderProfilingInformation.bind(this), 100);
 
         onWillStart(async () => {
             await loadBundle("web.ace_lib");

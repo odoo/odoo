@@ -13,7 +13,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     setup() {
         super.setup();
-        this.debouncedUpdateQuantity = useDebounced(this._onQuantityChange, 500, {
+        this.debouncedUpdateQuantity = useDebounced(this._onQuantityChange.bind(this), 500, {
             execBeforeUnmount: true,
         });
         this._pendingUpdate = Promise.resolve();

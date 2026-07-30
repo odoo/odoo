@@ -194,7 +194,7 @@ export class Composer extends Component {
         );
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
-        this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
+        this.saveContentDebounced = useDebounced(this.saveContent.bind(this), 5000, {
             execBeforeUnmount: true,
         });
         this.updateFromEditor = false;

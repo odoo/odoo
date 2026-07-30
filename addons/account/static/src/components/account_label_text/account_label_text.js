@@ -28,7 +28,7 @@ export class AccountLabelTextField extends ListTextField {
         super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
-        this.debouncedOnLabelInput = useDebounced(this.onLabelInput, 200);
+        this.debouncedOnLabelInput = useDebounced(this.onLabelInput.bind(this), 200);
 
         const fixM2xTabIndex = () => {
             const input = this.m2xInput;
