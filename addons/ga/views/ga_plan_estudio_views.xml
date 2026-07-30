@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="ga_plan_estudio_view_tree" model="ir.ui.view">
+		<field name="name">ga.plan.estudio.tree</field>
+		<field name="model">ga.plan.estudio</field>
+		<field name="arch" type="xml">
+			<tree string="Asigancion de materias" create="true" edit="true">
+				<field name="id"/>
+				<field name="gestion_id"/>
+				<field name="materia_id"/>
+				<field name="grado_id"/>
+			</tree>
+		</field>
+	</record>
+	<record id="ga_plan_estudio_view_form" model="ir.ui.view">
+		<field name="name">ga.plan.estudio.form</field>
+		<field name="model">ga.plan.estudio</field>
+		<field name="arch" type="xml">
+			<form string="Asignacion de materias">
+				<sheet>
+					<group>
+						<field name="gestion_id"/>
+						<field name="materia_id"/>
+						<field name="grado_id"/>
+					</group>
+					<notebook>
+						<page string="Asigancion de maestros">
+							<field name="paralelo_profesor_ids">
+								<tree editable="buttom">
+									<field name="profesor_id"/>
+									<field name="aula_id"/>
+									<field name="paralelo_id"/>
+								</tree>
+								<form string="Dias asignados">
+									<group>
+										<field name="profesor_id"/>
+										<field name="aula_id"/>
+										<field name="paralelo_id"/>
+										<field name="paralelo_profesor_dias_ids">
+											<tree editable="bottom">
+												<field name="dias_id"/>
+												<field name="hora_inicio" widget="float_time"/>
+												<field name="duracion"/>	
+											</tree>
+										</field>
+									</group>
+								</form>
+							</field>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="ga_plan_estudio_action" model="ir.actions.act_window">
+		<field name="name">Asigancion de Maestros</field>
+		<field name="res_model">ga.plan.estudio</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+</odoo>
