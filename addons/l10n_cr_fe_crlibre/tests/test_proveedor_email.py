@@ -1,4 +1,7 @@
 import base64
+import uuid
+from email.message import EmailMessage
+from email.utils import formatdate
 
 from odoo.tests.common import TransactionCase, tagged
 
@@ -89,3 +92,27 @@ class TestProveedorEmail(TransactionCase):
         record._l10n_cr_fe_procesar_adjuntos(message)
         self.assertEqual(record.state, 'sin_xml_valido')
         self.assertFalse(record.move_id)
+
+    def _build_raw_email(self, xml_string, sender='proveedor@x.cr', subject='Factura'):
+        msg = EmailMessage()
+        msg['From'] = sender
+        msg['To'] = 'facturas@tuempresa.cr'
+        msg['Subject'] = subject
+        msg['Message-Id'] = '<test-%s@x.cr>' % uuid.uuid4()
+        msg['Date'] = formatdate(localtime=True)
+        msg.set_content('Adjunto la factura electrónica.')
+        msg.add_attachment(xml_string.encode('utf-8'), maintype='application',
+                            subtype='xml', filename='factura.xml')
+        return msg.as_bytes()
+
+    def test_message_process_end_to_end_crea_registro_y_factura(self):
+        raw_email = self._build_raw_email(SAMPLE_XML)
+        thread_id = self.env['mail.thread'].message_process(
+            'l10n_cr.fe.proveedor.email', raw_email)
+        record = self.env['l10n_cr.fe.proveedor.email'].browse(thread_id)
+        self.assertEqual(record.email_from, 'proveedor@x.cr')
+        self.assertTrue(record.date)
+        self.assertEqual(record.state, 'procesado')
+        self.assertTrue(record.move_id)
+        self.assertEqual(record.move_id.l10n_cr_fe_proveedor_clave,
+                          '50627072600020840085800100001010000000009123456789')

@@ -1,6 +1,6 @@
 import base64
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -20,6 +20,17 @@ class L10nCrFeProveedorEmail(models.Model):
     ], string="Estado", readonly=True)
     move_id = fields.Many2one('account.move', string="Factura de proveedor", readonly=True)
     error_message = fields.Text(string="Motivo", readonly=True)
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        custom_values = dict(custom_values or {})
+        custom_values.setdefault('date', msg_dict.get('date'))
+        return super().message_new(msg_dict, custom_values=custom_values)
+
+    def _message_post_after_hook(self, new_message, message_values):
+        res = super()._message_post_after_hook(new_message, message_values)
+        self._l10n_cr_fe_procesar_adjuntos(new_message)
+        return res
 
     def _l10n_cr_fe_procesar_adjuntos(self, message):
         self.ensure_one()
