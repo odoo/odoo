@@ -37,14 +37,24 @@ export OPENROUTER_API_KEY
 export PATH="${HOME}/.local/bin:${HOME}/.hermes/bin:${PATH}"
 
 # ---------------------------------------------------------------------------
-# Ensure Hermes
+# Ensure Hermes (install path is cached by the workflow when possible)
 # ---------------------------------------------------------------------------
 ensure_hermes() {
+  export PATH="${HOME}/.local/bin:${HOME}/.hermes/bin:${PATH}"
   if command -v hermes >/dev/null 2>&1; then
-    notice "hermes: $(command -v hermes)"
+    notice "hermes (cached/present): $(command -v hermes)"
+    hermes --version 2>/dev/null || true
     return
   fi
-  notice "Installing Hermes Agent..."
+  # Restore from Actions cache dir if workflow restored it
+  if [[ -x "${RUNNER_TEMP:-/tmp}/luffy-hermes-cache/bin/hermes" ]]; then
+    export PATH="${RUNNER_TEMP}/luffy-hermes-cache/bin:${PATH}"
+  fi
+  if command -v hermes >/dev/null 2>&1; then
+    notice "hermes from runner cache: $(command -v hermes)"
+    return
+  fi
+  notice "Installing Hermes Agent (cold)..."
   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
   export PATH="${HOME}/.local/bin:${HOME}/.hermes/bin:${PATH}"
   # shellcheck disable=SC1091
@@ -61,6 +71,17 @@ ensure_hermes() {
   done
   command -v hermes >/dev/null 2>&1 || die "hermes not found after install"
   notice "hermes installed: $(command -v hermes)"
+  # Copy into cache dir for Actions cache save
+  if [[ -n "${RUNNER_TEMP:-}" ]]; then
+    mkdir -p "${RUNNER_TEMP}/luffy-hermes-cache/bin"
+    if command -v hermes >/dev/null 2>&1; then
+      HERMES_BIN="$(command -v hermes)"
+      cp -f "$HERMES_BIN" "${RUNNER_TEMP}/luffy-hermes-cache/bin/hermes" 2>/dev/null || true
+      # Also stash common install trees if present
+      [[ -d "${HOME}/.hermes" ]] && cp -a "${HOME}/.hermes" "${RUNNER_TEMP}/luffy-hermes-cache/hermes-home" 2>/dev/null || true
+      [[ -d "${HOME}/.local" ]] && cp -a "${HOME}/.local" "${RUNNER_TEMP}/luffy-hermes-cache/local" 2>/dev/null || true
+    fi
+  fi
 }
 
 ensure_hermes

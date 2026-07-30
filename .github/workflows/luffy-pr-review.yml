@@ -1,11 +1,8 @@
 # Luffy — comment-triggered PR review via Hermes Agent + OpenRouter
 #
-# Trigger on a PR:
-#   @luffy review this pr
-#   @luffy review
-#
+# Trigger: @luffy review this pr
 # Required secret: OPENROUTER_API_KEY
-# Optional variable: LUFFY_MODEL
+# Optional: LUFFY_MODEL, LUFFY_HUB_TOKEN, LUFFY_HUB_REPO
 
 name: Luffy PR Review
 
@@ -20,7 +17,6 @@ on:
         type: string
 
 permissions:
-  # contents:write so self-hosted hub memory can be committed with GITHUB_TOKEN
   contents: write
   pull-requests: write
   issues: write
@@ -86,22 +82,56 @@ jobs:
           path: luffy
           fetch-depth: 1
 
-      - name: Checkout PR head (code under review)
+      # F1: shallow PR head (not full history)
+      - name: Checkout PR head (shallow)
         if: steps.gate.outputs.matched == 'true'
         uses: actions/checkout@v4
         with:
           path: workspace
-          fetch-depth: 0
+          fetch-depth: 1
           ref: refs/pull/${{ steps.gate.outputs.pr_number }}/head
 
-      - name: Restore Hermes home (memory)
+      # F1b: sparse to changed paths only (huge monorepos)
+      - name: Sparse-checkout changed files
+        if: steps.gate.outputs.matched == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.gate.outputs.pr_number }}
+          LUFFY_ROOT: ${{ github.workspace }}/luffy
+          WORKSPACE_ROOT: ${{ github.workspace }}/workspace
+        run: |
+          set -euo pipefail
+          chmod +x "$LUFFY_ROOT/scripts/sparse-pr-paths.sh"
+          mapfile -t PATHS < <("$LUFFY_ROOT/scripts/sparse-pr-paths.sh" || true)
+          COUNT="${#PATHS[@]}"
+          echo "PR changed files: $COUNT"
+          if [[ "$COUNT" -eq 0 || "$COUNT" -gt 200 ]]; then
+            echo "Sparse skip (count=$COUNT)"
+            exit 0
+          fi
+          cd "$WORKSPACE_ROOT"
+          git sparse-checkout init --no-cone
+          # Include changed files + common roots Hermes may need
+          git sparse-checkout set "${PATHS[@]}" || {
+            echo "sparse-checkout set failed; keeping full shallow tree"
+            git sparse-checkout disable || true
+          }
+          echo "Sparse cone active with $COUNT paths"
+          du -sh . || true
+
+      # F2: cache Hermes install tree
+      - name: Restore Hermes install cache
         if: steps.gate.outputs.matched == 'true'
         uses: actions/cache@v4
+        continue-on-error: true
         with:
-          path: .luffy-hermes-home
-          key: luffy-hermes-${{ github.repository }}-v1
+          path: |
+            ~/.local
+            ~/.hermes
+          key: luffy-hermes-bin-${{ runner.os }}-v1
           restore-keys: |
-            luffy-hermes-${{ github.repository }}-
+            luffy-hermes-bin-${{ runner.os }}-
 
       - name: React eyes
         if: steps.gate.outputs.matched == 'true' && github.event_name == 'issue_comment'
@@ -130,18 +160,17 @@ jobs:
           OUT_DIR: ${{ github.workspace }}/luffy/.luffy-out
           TRACE_ROOT: ${{ github.workspace }}/luffy/.luffy-out/traces
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          # Hub memory: prefer dedicated PAT; fall back to GITHUB_TOKEN for self-reviews
           LUFFY_HUB_TOKEN: ${{ secrets.LUFFY_HUB_TOKEN }}
           LUFFY_HUB_REPO: ${{ vars.LUFFY_HUB_REPO }}
           LUFFY_HUB_PUBLISH: ${{ vars.LUFFY_HUB_PUBLISH }}
         run: |
           set -euo pipefail
-          # Fall back to GITHUB_TOKEN when LUFFY_HUB_TOKEN is unset (same-repo dispatch)
           if [[ -z "${LUFFY_HUB_TOKEN:-}" ]]; then
             export LUFFY_HUB_TOKEN="${GITHUB_TOKEN}"
           fi
           export LUFFY_HUB_REPO="${LUFFY_HUB_REPO:-Mr-Ashish/luffy-pr-review-agent}"
           export LUFFY_HUB_PUBLISH="${LUFFY_HUB_PUBLISH:-1}"
+          export PATH="${HOME}/.local/bin:${HOME}/.hermes/bin:${PATH}"
           chmod +x "$LUFFY_ROOT/scripts/"*.sh
           if [[ -z "${OPENROUTER_API_KEY:-}" ]]; then
             echo "::error::Secret OPENROUTER_API_KEY is not set"
@@ -152,12 +181,13 @@ jobs:
             export LUFFY_STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             "$LUFFY_ROOT/scripts/save-trace.sh" || true
             "$LUFFY_ROOT/scripts/publish-run-to-hub.sh" || true
+            echo "pipeline_rc=0" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # Orchestrator saves trace + dispatches hub memory ingest
           set +e
           "$LUFFY_ROOT/scripts/run-luffy-review.sh"
-          echo "pipeline_rc=$?" >> "$GITHUB_OUTPUT"
+          RC=$?
+          echo "pipeline_rc=$RC" >> "$GITHUB_OUTPUT"
           set -e
 
       - name: Post review comment (always if matched)
@@ -184,6 +214,22 @@ jobs:
           fi
           "$LUFFY_ROOT/scripts/post-review-comment.sh" "$REVIEW_FILE" "$PR_NUMBER"
 
+      - name: React result
+        if: steps.gate.outputs.matched == 'true' && github.event_name == 'issue_comment' && always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PIPELINE_RC: ${{ steps.review.outputs.pipeline_rc }}
+        run: |
+          CONTENT="+1"
+          if [[ "${PIPELINE_RC:-1}" != "0" ]]; then
+            CONTENT="-1"
+          fi
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" \
+            -f content="$CONTENT" || true
+
       - name: Ensure trace package exists
         if: steps.gate.outputs.matched == 'true' && always()
         env:
@@ -198,7 +244,6 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x "$LUFFY_ROOT/scripts/save-trace.sh"
-          # Re-run save-trace so post-failure stubs are included
           export LUFFY_STATUS="${LUFFY_STATUS:-complete}"
           export LUFFY_STARTED_AT="${LUFFY_STARTED_AT:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
           "$LUFFY_ROOT/scripts/save-trace.sh"
@@ -233,10 +278,3 @@ jobs:
             .luffy-hermes-home/memories/
           if-no-files-found: ignore
           retention-days: 14
-
-      - name: Save Hermes home (memory)
-        if: steps.gate.outputs.matched == 'true' && always()
-        uses: actions/cache/save@v4
-        with:
-          path: .luffy-hermes-home
-          key: luffy-hermes-${{ github.repository }}-v1-${{ github.run_id }}

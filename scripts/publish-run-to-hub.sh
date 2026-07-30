@@ -64,7 +64,7 @@ publish_direct() {
   cleanup() { rm -rf "$WORK"; }
   trap cleanup EXIT
 
-  git clone --depth 20 \
+  git clone --depth 1 \
     "https://x-access-token:${TOKEN}@github.com/${HUB_REPO}.git" \
     "$WORK/hub"
 

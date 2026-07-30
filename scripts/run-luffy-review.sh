@@ -50,6 +50,9 @@ if [[ -f "$HERMES_HOME/memories/MEMORY.md" ]]; then
 fi
 
 ORCH_RC=0
+# F3: load central hub MEMORY for this repo before Hermes runs
+stage preload_hub_memory "$SCRIPTS/preload-hub-memory.sh" || true
+
 stage assemble "$SCRIPTS/assemble-context.sh" || ORCH_RC=$?
 
 if [[ $ORCH_RC -eq 0 ]]; then
