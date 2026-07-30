@@ -164,6 +164,36 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
         }
     });
 
+    QUnit.test(
+        "Week: check dates across a DST transition happening at local midnight (Africa/Cairo)",
+        async (assert) => {
+            // Egypt springs its clock forward from 00:00 to 01:00 on the last Friday of
+            // April, so "midnight" doesn't exist as a local time that day. This used to
+            // make FullCalendar's Luxon timezone plugin resolve that day's header to the
+            // previous day (duplicating its weekday name).
+            patchWithCleanup(luxon.Settings, {
+                defaultZone: luxon.IANAZone.create("Africa/Cairo"),
+            });
+
+            await start({
+                model: {
+                    scale: "week",
+                    date: luxon.DateTime.local(2027, 4, 29),
+                },
+            });
+            assert.containsN(target, ".fc-day-header", 7);
+
+            const dateNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const dates = ["25", "26", "27", "28", "29", "30", "1"];
+
+            const els = target.querySelectorAll(".fc-day-header");
+            for (let i = 0; i < els.length; i++) {
+                assert.strictEqual(els[i].querySelector(".o_cw_day_name").textContent, dateNames[i]);
+                assert.strictEqual(els[i].querySelector(".o_cw_day_number").textContent, dates[i]);
+            }
+        }
+    );
+
     QUnit.test("Day: automatically scroll to 6am", async (assert) => {
         // Make calendar scrollable
         target.style.height = "500px";
