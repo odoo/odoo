@@ -428,10 +428,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             :param src_partners: merge source res.partner recordset (does not include destination one)
             :param dst_partner: record of destination res.partner
         """
-        all_src_accounts = src_partners.bank_ids
+        all_src_accounts = src_partners.sudo().bank_ids
 
         for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_account_number == src_account.sanitized_account_number)
+            duplicate_account = dst_partner.sudo().bank_ids.filtered(lambda a: a.sanitized_account_number == src_account.sanitized_account_number)
             if duplicate_account:
                 self._update_foreign_keys_generic('res.partner.bank', src_account, duplicate_account)
                 self._update_reference_fields_generic('res.partner.bank', src_account, duplicate_account)

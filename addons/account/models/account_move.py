@@ -7317,16 +7317,21 @@ class AccountMove(models.Model):
         if not self.display_qr_code:
             return None
 
+        # sudo: users allowed to print or send an invoice (salesperson, purchase user, ...)
+        # don't necessarily have access to `res.partner.bank`; generating the QR code only
+        # reads the recipient bank's configuration (task-6403179).
+        partner_bank = self.partner_bank_id.sudo()
+
         qr_code_method = self.qr_code_method
         if qr_code_method:
             # If the user set a qr code generator manually, we check that we can use it
-            error_msg = self.partner_bank_id._get_error_messages_for_qr(self.qr_code_method, self.partner_id, self.currency_id)
+            error_msg = partner_bank._get_error_messages_for_qr(self.qr_code_method, self.partner_id, self.currency_id)
             if error_msg:
                 raise UserError(error_msg)
         else:
             # Else we find one that's eligible and assign it to the invoice
             for candidate_method, _candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-                error_msg = self.partner_bank_id._get_error_messages_for_qr(candidate_method, self.partner_id, self.currency_id)
+                error_msg = partner_bank._get_error_messages_for_qr(candidate_method, self.partner_id, self.currency_id)
                 if not error_msg:
                     qr_code_method = candidate_method
                     break
@@ -7336,7 +7341,7 @@ class AccountMove(models.Model):
             return None
 
         unstruct_ref = self.payment_reference or self.name
-        rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
+        rslt = partner_bank.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
 
         # We only set qr_code_method after generating the url; otherwise, it
         # could be set even in case of a failure in the QR code generation

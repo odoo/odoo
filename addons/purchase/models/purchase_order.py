@@ -1053,7 +1053,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         move_type = self.env.context.get('default_move_type', 'in_invoice')
 
-        partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
+        partner_bank_id = self.partner_id.commercial_partner_id.sudo().bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
         invoice_vals = {
             'move_type': move_type,
             'narration': self.note,
