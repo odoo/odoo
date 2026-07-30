@@ -142,6 +142,18 @@ class AccountMove(models.Model):
             return f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
         return fields.Datetime.now()
 
+    def _l10n_cn_baiwang_get_or_create_red_form_document(self):
+        self.ensure_one()
+        doc = self.env['l10n_cn_edi.document'].search([
+            ('move_id', '=', self.id),
+        ], limit=1)
+        if doc:
+            return doc
+        return self.env['l10n_cn_edi.document'].create({
+            'move_id': self.id,
+            'state': 'draft',
+        })
+
     def action_cancel_baiwang_red_form(self):
         """Cancel a pending Red Form request."""
         for move in self:
@@ -424,10 +436,10 @@ class AccountMove(models.Model):
         original_move = self.reversed_entry_id
         if not original_move or not original_move.l10n_cn_baiwang_invoice_no:
             raise UserError(self.env._("Cannot find the normal invoice number. Ensure this credit note was created from a posted Baiwang invoice."))
-        edi_doc = self.env['l10n_cn_edi.document'].create({
-            'move_id': self.id,
-            'state': 'draft',
-        })
+        edi_doc = self._l10n_cn_baiwang_get_or_create_red_form_document()
+        if edi_doc.state == 'red_form_pending':
+            raise UserError(self.env._("A Red Form request is already pending for this Credit Note."))
+        edi_doc.write({'state': 'draft', 'error_message': False})
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move)
         try:
             result = client.add_red_confirmation(red_form_data)

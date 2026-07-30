@@ -12,6 +12,8 @@ talks to Baiwang without the proxy layer (see _legacy_direct_call comments).
 
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_cn_edi_baiwang.error_catalog import map_baiwang_error
+
 
 class BaiwangClient:
     """
@@ -20,8 +22,6 @@ class BaiwangClient:
 
     def __init__(self, company):
         self.company = company
-        self.tax_no = company.vat
-        self.org_auth_code = company.l10n_cn_baiwang_org_auth_code
         self.proxy_user = company.l10n_cn_baiwang_proxy_user_id
 
     def _ensure_proxy_user(self):
@@ -36,11 +36,34 @@ class BaiwangClient:
         self._ensure_proxy_user()
         return True
 
+    def _map_proxy_error(self, error):
+        fallback = self.company.env._('Unexpected Baiwang proxy error.')
+        if isinstance(error, str):
+            return error or fallback
+        if not isinstance(error, dict):
+            return fallback
+
+        reference = error.get('reference')
+        data = error.get('data')
+        if reference in {'provider_error', 'baiwang_api_error', 'baiwang_oauth_failed'}:
+            return map_baiwang_error(self.company.env, reference, data)
+
+        reference_mapping = {
+            'invalid_payload': self.company.env._('The Baiwang request payload is invalid.'),
+            'proxy_contact_failed': self.company.env._('Failed to contact the Baiwang proxy service. Please try again later.'),
+        }
+        if reference in reference_mapping:
+            return reference_mapping[reference]
+
+        if reference:
+            return self.company.env._('Unexpected Baiwang proxy error (%s).') % reference
+        return fallback
+
     def _call_proxy(self, method, *args, error_prefix="", allow_failed_with_response=False):
         self._ensure_proxy_user()
         result = method(self.company, *args)
         if not result.get('success') and not (allow_failed_with_response and 'response' in result):
-            err_details = result.get('error', 'Unknown error')
+            err_details = self._map_proxy_error(result.get('error'))
             # Safely format with %s if present, otherwise append
             msg = error_prefix % err_details if '%s' in error_prefix else f"{error_prefix}: {err_details}"
             raise UserError(msg)
