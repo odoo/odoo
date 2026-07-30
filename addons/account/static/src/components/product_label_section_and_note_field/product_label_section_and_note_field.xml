@@ -9,7 +9,7 @@
                     placeholder="Enter a description"
                     rows="1"
                     t-att-class="this.sectionAndNoteClasses"
-                    t-att-readonly="this.sectionAndNoteIsReadonly"
+                    t-att-readonly="this.labelIsReadonly"
                     t-att-value="this.label"
                     t-custom-ref="labelNodeRef"
                     t-key="this.props.readonly"
@@ -20,7 +20,7 @@
                     class="o_input text-wrap border-0 w-100"
                     placeholder="Enter a description"
                     t-att-class="this.sectionAndNoteClasses"
-                    t-att-readonly="this.sectionAndNoteIsReadonly"
+                    t-att-readonly="this.labelIsReadonly"
                     t-att-value="this.label"
                     t-custom-ref="labelNodeRef"
                     t-key="this.props.readonly"
@@ -31,7 +31,7 @@
                     <Many2One cssClass="'flex-grow-1'" t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
                 </div>
                 <div
-                    t-if="this.props.readonly"
+                    t-if="this.labelIsReadonly"
                     class="o_input d-print-none border-0 fst-italic"
                     t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel.value and this.label) }"
                     t-out="this.label"
