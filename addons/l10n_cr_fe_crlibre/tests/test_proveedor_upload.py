@@ -1,4 +1,5 @@
 import base64
+from datetime import date
 
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
@@ -99,6 +100,10 @@ class TestProveedorUpload(TransactionCase):
         self.assertEqual(invoice.l10n_cr_fe_proveedor_monto_impuesto, 650.0)
         self.assertEqual(invoice.l10n_cr_fe_proveedor_total, 5650.0)
         self.assertEqual(invoice.l10n_cr_fe_proveedor_subtotal, 5000.0)
+
+    def test_sets_invoice_date_from_fecha_emision(self):
+        invoice = self._upload(SAMPLE_XML)
+        self.assertEqual(invoice.invoice_date, date(2026, 7, 20))
 
     def test_invalid_xml_raises(self):
         with self.assertRaises(UserError):
