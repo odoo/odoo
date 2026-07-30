@@ -301,6 +301,7 @@ export class PosOrder extends PosOrderAccounting {
                 (item) => item.combo_item_id.id === line.combo_item_id.id
             );
             line.setUnitPrice(currentItem.price_unit);
+            line.price_extra = currentItem.price_extra;
             // Removing to be able to have extras that are the same as free products
             attributes_prices[line.combo_parent_id.uuid].splice(
                 attributes_prices[line.combo_parent_id.uuid].indexOf(currentItem),
@@ -339,10 +340,12 @@ export class PosOrder extends PosOrderAccounting {
             }
 
             const newQty = comboRemainingFree[comboId] - childQty;
-            const baseData = { combo_item_id: cLine.combo_item_id };
+            const baseData = { combo_item_id: cLine.combo_item_id, line: cLine };
 
             if (cLine.attribute_value_ids) {
-                baseData.configuration = { attribute_value_ids: cLine.attribute_value_ids };
+                baseData.configuration = {
+                    attribute_value_ids: cLine.attribute_value_ids.map((value) => value.id),
+                };
             }
 
             if (newQty >= 0) {
