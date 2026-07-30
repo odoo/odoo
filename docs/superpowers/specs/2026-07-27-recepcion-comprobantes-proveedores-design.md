@@ -117,6 +117,8 @@ Un wizard nuevo (`l10n_cr.fe.proveedor.upload`, `TransientModel`) donde el usuar
    - Si no lo encuentra: la línea queda marcada para que el usuario complete el producto a mano — no se crean productos nuevos automáticamente (evita duplicados/basura en el catálogo).
 3. Crea un `account.move` en borrador (`move_type='in_invoice'`), con `l10n_cr_fe_proveedor_clave`/`l10n_cr_fe_proveedor_fecha_emision` poblados desde el XML, listo para revisión.
 
+**Corrección posterior:** el diseño original no fijaba `invoice_date` — quedaba vacío y el usuario tenía que llenarlo a mano antes de poder confirmar la factura (campo obligatorio nativo de Odoo). Ahora `action_procesar()` toma la parte de fecha del `FechaEmision` original (ej. `"2026-07-27T23:11:08-06:00"` → `"2026-07-27"`, sin necesidad de conversión de zona horaria porque el offset ya es el de Costa Rica) y la asigna directamente a `invoice_date` al crear el `account.move`.
+
 ### 2.5 Decisión del usuario
 
 Sobre esa factura de proveedor en borrador:

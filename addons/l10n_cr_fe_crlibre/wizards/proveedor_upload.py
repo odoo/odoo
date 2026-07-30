@@ -86,6 +86,7 @@ class L10nCrFeProveedorUpload(models.TransientModel):
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
+            'invoice_date': fecha_emision.split('T')[0] if fecha_emision else False,
             'l10n_cr_fe_proveedor_clave': clave,
             'l10n_cr_fe_proveedor_fecha_emision': fecha_emision,
             'l10n_cr_fe_proveedor_monto_impuesto': float(monto_impuesto_text) if monto_impuesto_text else 0.0,
