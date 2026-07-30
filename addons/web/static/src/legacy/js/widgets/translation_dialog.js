@@ -159,8 +159,7 @@ odoo.define('web.TranslationDialog', function (require) {
                     if (!translations[term.lang]) {
                        translations[term.lang] = {};
                     }
-                    const source = term.initialValue ? term.initialValue : term.source;
-                    translations[term.lang][source] = term.value;
+                    translations[term.lang][term.source] = term.value;
                 });
             }
             else { // model translation
