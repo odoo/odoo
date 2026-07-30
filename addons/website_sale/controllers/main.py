@@ -759,6 +759,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             query = request.httprequest.args.to_dict(flat=False)
             return request.redirect(product._get_product_url(query), code=301)
 
+        search_term = kwargs.get("search")
+
+        if search_term and not kwargs.get("attribute_values"):
+            attribute_values = product._get_attribute_values_from_search_term(search_term)
+            if attribute_values:
+                kwargs["attribute_values"] = ",".join(str(v) for v in sorted(attribute_values.ids))
+
         product_values = self._prepare_product_values(
             # request context must be given to ensure context updates in overrides are correctly
             # forwarded to `_get_combination_info` call
