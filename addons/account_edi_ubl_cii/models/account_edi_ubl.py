@@ -2894,11 +2894,16 @@ class AccountEdiUBL(models.AbstractModel):
             if not category_code:
                 continue
 
+            tax_key = frozendict({
+                'category_code': category_code,
+                'percentage': percentage,
+            })
             allowance_charge_values['attempt_tax_values'] = tax_values = {
                 'amount_type': 'percent',
                 'type_tax_use': odoo_document_type,
                 'ubl_cii_tax_category_code': category_code,
                 'amount': percentage,
+                '_tax_key': tax_key,
             }
             taxes_values.append(tax_values)
 
@@ -3306,6 +3311,11 @@ class AccountEdiUBL(models.AbstractModel):
             company=company,
             tax_values_list=tax_values_list,
         )
+
+        for tax_values in collected_values['taxes_values']:
+            tax_key = tax_values.get('_tax_key')
+            if tax_key and (global_tax_values := collected_values['tax_total_values'].get(tax_key)):
+                global_tax_values['related_taxes_values'].append(tax_values)
 
         # Taxes at the document line level.
         for line_collected_values in lines_collected_values:
