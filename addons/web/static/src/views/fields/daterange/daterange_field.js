@@ -50,6 +50,10 @@ export class DateRangeField extends Component {
                     );
 
                     this.pickerContainer.dataset.name = this.props.name;
+
+                    this.pickerContainer.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                    });
                 }
 
                 return () => {
