@@ -273,7 +273,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "toAddr2": "",
             "toPlace": "Peebles",
             "toPincode": 999999,
-            "actToStateCode": 99,
+            "actToStateCode": 97,
             "toStateCode": 99,
             "itemList": [{
                 "productName": "product_a",
