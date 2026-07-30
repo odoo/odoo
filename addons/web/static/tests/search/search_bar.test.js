@@ -1493,7 +1493,9 @@ test("edit a filter", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("Id");
     expect(getCurrentOperator()).toBe(label("="));
-    expect(getCurrentValue()).toBe("1");
+    // "id" now uses a record selector (like a many2one), so the value is
+    // displayed as the record's display name instead of the raw id.
+    expect(getCurrentValue()).toBe("First record");
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
@@ -1731,7 +1733,8 @@ test("facets display with any / not any operator (with a complex path)", async f
     expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
+    // opening the dialog loads the display name of the "id" record selector
+    expect.verifySteps([`fields_get`, `web_search_read`]);
 
     await addNewRule();
 
@@ -1764,7 +1767,8 @@ test("facets display with any / not any operator (with a or)", async function ()
     expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
+    // opening the dialog loads the display name of the "id" record selector
+    expect.verifySteps([`fields_get`, `web_search_read`]);
 
     await addNewRule();
 
