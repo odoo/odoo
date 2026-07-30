@@ -88,3 +88,8 @@ class TestProveedorXmlParser(TransactionCase):
     def test_xml_sin_clave_ni_emisor_levanta_user_error(self):
         with self.assertRaises(UserError):
             self._parse('<FacturaElectronica></FacturaElectronica>')
+
+    def test_valor_no_numerico_en_cantidad_levanta_user_error(self):
+        xml_con_cantidad_invalida = SAMPLE_XML.replace('<Cantidad>10</Cantidad>', '<Cantidad>diez</Cantidad>')
+        with self.assertRaises(UserError):
+            self._parse(xml_con_cantidad_invalida)

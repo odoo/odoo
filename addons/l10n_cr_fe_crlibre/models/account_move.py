@@ -301,6 +301,16 @@ class AccountMove(models.Model):
             ('company_id', '=', self.env.company.id),
         ], limit=1)
 
+    def _l10n_cr_fe_xml_to_float(self, text):
+        """Convierte un texto de un nodo XML numérico a float, o 0.0 si el
+        nodo no existía / venía vacío. Levanta UserError (en vez del
+        ValueError crudo) si el texto no es numérico -- el XML no cumple con
+        el schema esperado."""
+        try:
+            return float(text) if text else 0.0
+        except ValueError:
+            raise UserError(_("El XML tiene un valor no numérico en uno de sus campos."))
+
     def _l10n_cr_fe_build_vals_from_proveedor_xml(self, xml_bytes):
         """Parsea un XML de factura de proveedor (schema Hacienda v4.4) y
         devuelve el dict de creación para un account.move in_invoice. Usado
@@ -339,11 +349,12 @@ class AccountMove(models.Model):
         invoice_lines = []
         for linea in root.findall('.//{*}LineaDetalle'):
             cabys = self._l10n_cr_fe_xml_find_text(linea, 'CodigoCABYS')
-            cantidad = float(self._l10n_cr_fe_xml_find_text(linea, 'Cantidad') or '0')
-            precio_unitario = float(self._l10n_cr_fe_xml_find_text(linea, 'PrecioUnitario') or '0')
+            cantidad = self._l10n_cr_fe_xml_to_float(self._l10n_cr_fe_xml_find_text(linea, 'Cantidad'))
+            precio_unitario = self._l10n_cr_fe_xml_to_float(
+                self._l10n_cr_fe_xml_find_text(linea, 'PrecioUnitario'))
             detalle = self._l10n_cr_fe_xml_find_text(linea, 'Detalle')
             tarifa_text = self._l10n_cr_fe_xml_find_text(linea, 'Tarifa')
-            tarifa_percent = float(tarifa_text) if tarifa_text else 0.0
+            tarifa_percent = self._l10n_cr_fe_xml_to_float(tarifa_text)
             product = self._l10n_cr_fe_xml_find_product(cabys)
             tax = self._l10n_cr_fe_xml_find_tax(tarifa_percent)
             invoice_lines.append((0, 0, {
@@ -367,9 +378,9 @@ class AccountMove(models.Model):
             'invoice_date': fecha_emision.split('T')[0] if fecha_emision else False,
             'l10n_cr_fe_proveedor_clave': clave,
             'l10n_cr_fe_proveedor_fecha_emision': fecha_emision,
-            'l10n_cr_fe_proveedor_monto_impuesto': float(monto_impuesto_text) if monto_impuesto_text else 0.0,
-            'l10n_cr_fe_proveedor_total': float(total_factura_text) if total_factura_text else 0.0,
-            'l10n_cr_fe_proveedor_subtotal': float(subtotal_text) if subtotal_text else 0.0,
+            'l10n_cr_fe_proveedor_monto_impuesto': self._l10n_cr_fe_xml_to_float(monto_impuesto_text),
+            'l10n_cr_fe_proveedor_total': self._l10n_cr_fe_xml_to_float(total_factura_text),
+            'l10n_cr_fe_proveedor_subtotal': self._l10n_cr_fe_xml_to_float(subtotal_text),
             'invoice_line_ids': invoice_lines,
         }
 

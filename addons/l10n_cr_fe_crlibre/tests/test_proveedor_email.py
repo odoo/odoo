@@ -80,3 +80,12 @@ class TestProveedorEmail(TransactionCase):
         record._l10n_cr_fe_procesar_adjuntos(message)
         self.assertEqual(record.state, 'sin_xml_valido')
         self.assertFalse(record.move_id)
+
+    def test_procesar_adjuntos_xml_con_campo_numerico_invalido(self):
+        xml_con_cantidad_invalida = SAMPLE_XML.replace(
+            '<Cantidad>10</Cantidad>', '<Cantidad>diez</Cantidad>')
+        record = self.env['l10n_cr.fe.proveedor.email'].create({'email_from': 'alguien@x.cr'})
+        message = self._make_message_with_attachment(record, xml_con_cantidad_invalida, 'factura.xml')
+        record._l10n_cr_fe_procesar_adjuntos(message)
+        self.assertEqual(record.state, 'sin_xml_valido')
+        self.assertFalse(record.move_id)
