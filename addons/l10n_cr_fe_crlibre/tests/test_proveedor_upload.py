@@ -80,6 +80,21 @@ class TestProveedorUpload(TransactionCase):
         invoice = self._upload(SAMPLE_XML)
         self.assertEqual(invoice.partner_id, existing)
 
+    def test_ignores_partner_restricted_to_a_different_company(self):
+        """No debe reusar un partner con la misma cédula si está restringido
+        (company_id) a otra compañía distinta a la actual — en ese caso debe
+        crear uno nuevo (compartido), no asignar el de la otra compañía."""
+        other_company = self.env['res.company'].create({'name': 'Otra Compañía'})
+        foreign_partner = self.env['res.partner'].create({
+            'name': 'Proveedor de otra compañía',
+            'vat': '3101999888',
+            'company_id': other_company.id,
+        })
+        invoice = self._upload(SAMPLE_XML)
+        self.assertNotEqual(invoice.partner_id, foreign_partner)
+        self.assertEqual(invoice.partner_id.vat, '3101999888')
+        self.assertEqual(invoice.partner_id.name, 'Proveedor XML SA')
+
     def test_line_with_matching_cabys_links_product(self):
         invoice = self._upload(SAMPLE_XML)
         lines = invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'product')

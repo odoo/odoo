@@ -111,7 +111,7 @@ def send_mr(self, token, clave, fecha_iso, emisor_tipo, emisor_num,
 
 Un wizard nuevo (`l10n_cr.fe.proveedor.upload`, `TransientModel`) donde el usuario sube el archivo XML recibido por correo. Al procesarlo:
 
-1. Parsea el XML: datos del emisor (para ubicar o crear el `res.partner` proveedor por cédula), `Clave` y `FechaEmision` del documento original, y las líneas de `DetalleServicio`.
+1. Parsea el XML: datos del emisor (para ubicar o crear el `res.partner` proveedor por cédula, limitando la búsqueda a `company_id in (False, compañía actual)` — evita reusar por error un partner con la misma cédula restringido a otra compañía, algo que Odoo rechaza con un error de "cruce entre empresas" al guardar la factura), `Clave` y `FechaEmision` del documento original, y las líneas de `DetalleServicio`.
 2. Para cada línea: busca un `product.product` existente por `l10n_cr_fe_cabys` igual al `CodigoCABYS` de la línea.
    - Si lo encuentra: arma la línea completa (cantidad, precio, impuesto según la tarifa del XML).
    - Si no lo encuentra: la línea queda marcada para que el usuario complete el producto a mano — no se crean productos nuevos automáticamente (evita duplicados/basura en el catálogo).
