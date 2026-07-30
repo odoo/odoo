@@ -97,7 +97,7 @@ test("Hide product name if its not translated", async () => {
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
 });
 
 test("If translated product name already in the SOL name, should not hide the translated product name", async () => {
@@ -120,7 +120,7 @@ test("If translated product name already in the SOL name, should not hide the tr
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText(
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue(
         [translatedProductName, "A description"].join("\n")
     );
 });
@@ -150,7 +150,7 @@ test("Editing the description shouldn't show the translated product name", async
     await contains(".o_field_product_label_section_and_note_cell textarea").edit("A description");
     await clickSave();
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
     expect(sol.name).toBe([translatedProductName, "A description"].join("\n"));
 });
 
@@ -218,5 +218,5 @@ test("Show full description if SOL name is not started with product name", async
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
 });
