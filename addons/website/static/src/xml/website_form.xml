@@ -11,14 +11,14 @@
     <!-- Error status -->
     <t t-name="website.s_website_form_status_error">
         <span id="s_website_form_result" class="me-2 small text-danger">
-            <i class="oi me-1" data-icon="close" role="img" aria-hidden="true" title="Error"/>
+            <i class="oi me-1" data-icon="close" role="img" aria-label="Error" title="Error"/>
             <t t-out="message"/>
         </span>
     </t>
 
     <t t-name="website.s_website_form_status_custom_error">
-        <span class="s_website_form_custom_error me-2 small text-danger">
-            <i class="oi me-1" data-icon="close" role="presentation"/>
+        <span class="s_website_form_custom_error me-2 small text-danger" t-att-id="id" t-attf-class="{{ hidden ? 'visually-hidden' : '' }}">
+            <i class="oi me-1" data-icon="close" role="img" aria-label="Error" title="Error"/>
             <t t-out="message"/>
         </span>
     </t>
