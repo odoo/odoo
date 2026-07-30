@@ -311,7 +311,7 @@ class StockMove(models.Model):
 
     def _should_count_for_quantity_received(self):
         res = super()._should_count_for_quantity_received()
-        return res or self.is_subcontract
+        return res or self.is_subcontract or self.location_id.is_subcontracting_location
 
     def _update_subcontract_order_qty(self, new_quantity):
         for move in self:
