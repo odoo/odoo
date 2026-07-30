@@ -573,3 +573,23 @@ class TestReplenishWizard(PurchaseTestCommon):
             ('location_dest_id.usage', '=', 'internal'),
         ]).route_id
         self.assertIn(replenish_wizard.route_id.id, buy_routes.ids)
+
+    def test_product_replenish_wizard_default_selected(self):
+        # Ensure that when multiple routes are available, the ones selected on the product takes priority
+        # Adds another check to ensure MTO is not taken by default
+        mto = self.warehouse.mto_pull_id.route_id
+        mto.active = True
+        new_route = self.route_buy.copy()
+        new_route.product_selectable = True
+
+        self.product.write({
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+            })],
+            'route_ids': [Command.link(mto.id), Command.link(new_route.id)]
+        })
+
+        replenish_wizard = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product.product_tmpl_id.id
+        ))
+        self.assertEqual(replenish_wizard.route_id.id, new_route.id)
