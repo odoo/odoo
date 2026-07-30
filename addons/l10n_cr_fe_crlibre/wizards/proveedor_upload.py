@@ -49,7 +49,10 @@ class L10nCrFeProveedorUpload(models.TransientModel):
         if not emisor_cedula:
             raise UserError(_("El XML no tiene la identificación del emisor."))
 
-        partner = self.env['res.partner'].search([('vat', '=', emisor_cedula)], limit=1)
+        partner = self.env['res.partner'].search([
+            ('vat', '=', emisor_cedula),
+            ('company_id', 'in', (False, self.env.company.id)),
+        ], limit=1)
         if not partner:
             partner = self.env['res.partner'].create({
                 'name': emisor_nombre or emisor_cedula,
