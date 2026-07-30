@@ -21,12 +21,15 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         };
     }
 
-    get sectionAndNoteIsReadonly() {
+    get labelIsReadonly() {
         return (
-            this.props.readonly
-            && this.isProductClickable
-            && (["cancel", "posted"].includes(this.props.record.evalContext.parent.state)
-            || this.props.record.evalContext.parent.locked)
+            !this.props.record.isInEdition
+            || (
+                this.props.readonly
+                && this.isProductClickable
+                && (["cancel", "posted"].includes(this.props.record.evalContext.parent.state)
+                || this.props.record.evalContext.parent.locked)
+            )
         )
     }
 
