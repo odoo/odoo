@@ -1,3 +1,8 @@
+export const getAttributesPriceExtra = (attributeValues) =>
+    (attributeValues ?? [])
+        .filter((attr) => attr?.attribute_id?.create_variant !== "always")
+        .reduce((total, attr) => total + (attr?.price_extra || 0), 0);
+
 export const computeComboItems = (
     parentProduct,
     childLineConf,
@@ -13,12 +18,6 @@ export const computeComboItems = (
         const originalPrice = conf.combo_item_id.combo_id.base_price * conf.qty;
         return acc + originalPrice;
     }, 0);
-
-    const getAttributesPriceExtra = (attributeValueIds) =>
-        (attributeValueIds ?? [])
-            .filter((attr) => attr?.attribute_id?.create_variant !== "always")
-            .map((attr) => attr?.price_extra || 0)
-            .reduce((acc, price) => acc + price, 0);
 
     let remainingTotal = parentLstPrice;
     const ProductPrice = currency_id || decimalPrecision.find((dp) => dp.name === "Product Price");

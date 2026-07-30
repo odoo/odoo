@@ -31,6 +31,9 @@
             <span t-if="this.props.comboExtraPrice" style="font-size: 0.65rem;" class="price-extra px-1 py-0 rounded-1 text-bg-info position-absolute top-0 end-0">
                 <t t-out="this.props.comboExtraPrice"/>
             </span>
+            <span t-if="this.props.selectedComboExtraPrice" style="font-size: 0.65rem;" class="selected-price-extra px-1 py-0 rounded-1 text-bg-primary position-absolute top-0 start-0">
+                Extra: <t t-out="this.props.selectedComboExtraPrice"/>
+            </span>
             <t t-call-slot="quantityButtons" />
         </article>
     </t>

@@ -1,5 +1,6 @@
 import { formatCurrency } from "@web/core/currency";
 import { Base } from "../related_models";
+import { getAttributesPriceExtra } from "../utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
 
@@ -19,6 +20,61 @@ export class PosOrderlineAccounting extends Base {
      *
      * All getters in this section are used in XML files, their goal is to be shown in the UI.
      */
+    get attributesExtraPrice() {
+        return getAttributesPriceExtra(this.attribute_value_ids);
+    }
+
+    get comboExtraQuantity() {
+        if (!this.combo_parent_id || !this.combo_item_id) {
+            return 0;
+        }
+        const combo = this.combo_item_id.combo_id;
+        const parentQty = Math.abs(this.combo_parent_id.getQuantity() || 1);
+        let remainingFree = combo.qty_free * parentQty;
+
+        for (const line of this.combo_parent_id.combo_line_ids || []) {
+            if (line.combo_item_id?.combo_id?.id !== combo.id) {
+                continue;
+            }
+            const qty = Math.abs(line.getQuantity());
+            const freeQty = Math.min(qty, Math.max(0, remainingFree));
+            remainingFree -= freeQty;
+            if (line.uuid === this.uuid) {
+                return qty - freeQty;
+            }
+        }
+        return 0;
+    }
+
+    get comboExtraPrice() {
+        if (!this.combo_parent_id || !this.combo_item_id) {
+            return 0;
+        }
+        const surcharge = (this.combo_item_id.extra_price || 0) + this.attributesExtraPrice;
+        return (
+            this.comboExtraQuantity * this.combo_item_id.combo_id.base_price +
+            Math.abs(this.getQuantity()) * surcharge
+        );
+    }
+
+    get comboExtraDisplayPrice() {
+        const extraPrice = this.comboExtraPrice;
+        const lineTotal = this.price_unit * Math.abs(this.getQuantity());
+        if (this.currency.isZero(extraPrice) || this.currency.isZero(lineTotal)) {
+            return 0;
+        }
+        return this.displayPrice * (extraPrice / lineTotal);
+    }
+
+    get currencyComboExtraPrice() {
+        const extraPrice = this.comboExtraDisplayPrice;
+        if (this.currency.isZero(extraPrice)) {
+            return "";
+        }
+        const sign = extraPrice > 0 ? "+ " : "";
+        return sign + formatCurrency(extraPrice, this.currency.id, { trailingZeros: false });
+    }
+
     get currencyDisplayPrice() {
         if (this.combo_parent_id) {
             return "";

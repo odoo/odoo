@@ -110,7 +110,7 @@ export class Orderline extends Component {
             decimalPart: decimalPart && `${decimalPoint}${decimalPart}`,
             productImage: this.props.showImage && imageUrl,
             taxGroup: this.props.showTaxGroup && taxGroup,
-            price: this.line.currencyDisplayPrice,
+            price: line.combo_parent_id ? line.currencyComboExtraPrice : line.currencyDisplayPrice,
             isServiceFeeLine: line.isServiceFeeLine(),
             serviceFeeDisplayInfo: line.getServiceFeeDisplayInfo(),
         };
