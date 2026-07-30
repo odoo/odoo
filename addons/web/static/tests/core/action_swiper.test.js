@@ -153,10 +153,10 @@ test("can perform actions by swiping to the right", async () => {
         message: "target has translateX",
     });
 
-    // Touch ends before the half of the distance has been reached
+    // Touch ends before the fourth of the distance has been reached
     await dragHelper.moveTo(swiper, {
         position: {
-            clientX: swiper.clientWidth / 2 - 1,
+            clientX: swiper.clientWidth / 4 - 1,
             clientY: 0,
         },
     });
@@ -165,7 +165,7 @@ test("can perform actions by swiping to the right", async () => {
         message: "target does not have a translate value",
     });
 
-    // Touch ends once the half of the distance has been crossed
+    // Touch ends once the fourth of the distance has been crossed
     await swipeRight(".o_actionswiper");
     // The action is performed AND the component is reset
     expect(targetContainer.style.transform).not.toInclude("translateX", {
@@ -221,10 +221,10 @@ test("can perform actions by swiping in both directions", async () => {
     expect(targetContainer.style.transform).toInclude("translateX", {
         message: "target has translateX",
     });
-    // Touch ends before the half of the distance has been reached to the left
+    // Touch ends before the fourth of the distance has been reached to the left
     await dragHelper.moveTo(swiper, {
         position: {
-            clientX: -swiper.clientWidth / 2 + 1,
+            clientX: -swiper.clientWidth / 4 + 1,
             clientY: 0,
         },
     });
@@ -235,10 +235,10 @@ test("can perform actions by swiping in both directions", async () => {
         message: "target does not have a translate value",
     });
 
-    // Touch ends once the half of the distance has been crossed to the left
+    // Touch ends once the fourth of the distance has been crossed to the left
     await swipeLeft(".o_actionswiper");
     expect.verifySteps(["onLeftSwipe"]);
-    // Touch ends once the half of the distance has been crossed to the right
+    // Touch ends once the fourth of the distance has been crossed to the right
     await swipeRight(".o_actionswiper");
 
     expect(targetContainer.style.transform).not.toInclude("translateX", {
@@ -345,6 +345,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: 0,
             clientY: 0,
         },
+        initialPointerMoveDistance: 0
     });
     await dragHelper.moveTo(swiper, {
         position: {
@@ -368,6 +369,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientLeft,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -393,6 +395,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientLeft,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -412,6 +415,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: scrollable.clientWidth,
             clientY: clientYMiddleScrollBar,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -511,6 +515,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientLeft,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -538,6 +543,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientLeft,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -564,6 +570,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
@@ -589,6 +596,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,
         },
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(largeText, {
         position: {
