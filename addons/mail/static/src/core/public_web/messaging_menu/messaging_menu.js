@@ -82,6 +82,15 @@ export class MessagingMenu extends Component {
         return !this.messages().length && !this.showPushPermissionRequest;
     }
 
+    get visibleTabs() {
+        return this.store.messagingMenu.sortedVisibleTabs;
+    }
+
+    /** Counter shown on a tab's badge, if any. */
+    getTabCounter(tab) {
+        return tab.counter;
+    }
+
     get noSearchResultText() {
         return this.searchTerm() ? _t('No results for "%s".', this.searchTerm()) : "";
     }

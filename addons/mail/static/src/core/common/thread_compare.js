@@ -1,3 +1,5 @@
+import { compareDatetime } from "@mail/utils/common/misc";
+
 import { registry } from "@web/core/registry";
 
 /**
@@ -23,8 +25,19 @@ threadCompareRegistry.add(
         if (!bMessageDateTime && aMessageDatetime) {
             return -1;
         }
-        if (aMessageDatetime && bMessageDateTime && aMessageDatetime !== bMessageDateTime) {
-            return bMessageDateTime - aMessageDatetime;
+        if (aMessageDatetime && bMessageDateTime) {
+            const res = compareDatetime(bMessageDateTime, aMessageDatetime);
+            if (res !== 0) {
+                return res;
+            }
+        }
+        const aCreate = thread1.channel?.create_date;
+        const bCreate = thread2.channel?.create_date;
+        if (aCreate && bCreate) {
+            const res = compareDatetime(bCreate, aCreate);
+            if (res !== 0) {
+                return res;
+            }
         }
     },
     { sequence: 40 }
