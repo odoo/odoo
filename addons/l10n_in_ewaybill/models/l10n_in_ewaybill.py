@@ -685,6 +685,11 @@ class L10nInEwaybill(models.Model):
                 "shipToGSTIN": self.partner_ship_to_id.commercial_partner_id.vat or "URP",
                 "shipToTradeName": self.partner_ship_to_id.commercial_partner_id.name,
             })
+        match self.type_id.sub_type:
+            case "Export":
+                ewaybill_json['toGstin'] = "URP"
+            case "Import":
+                ewaybill_json['fromGstin'] = "URP"
         return ewaybill_json
 
     def _prepare_ewaybill_transportation_json_payload(self):
