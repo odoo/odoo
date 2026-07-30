@@ -34,7 +34,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_document_params(self, partner, invoice, invoice_data):
         edi_user, document = super()._get_peppol_document_params(partner, invoice, invoice_data)
-        if edi_user.proxy_type == 'pdp':
+        if edi_user and document and edi_user.proxy_type == 'pdp':
             document.update({
                 'flow_number': 2,
                 'force_peppol_only': not invoice.company_id.l10n_fr_pdp_send_to_ppf,
