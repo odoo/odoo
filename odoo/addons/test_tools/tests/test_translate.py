@@ -497,17 +497,17 @@ class TestTranslationExport(TransactionCase):
     def test_push_translation_filters_no_letter_strings(self):
         """Strings with no letters should not be queued for translation export."""
         reader = TranslationReader(self.env.cr)
-        reader._push_translation('module', 'model', 'res.partner,name', 1, 'hello')
-        reader._push_translation('module', 'model', 'res.partner,name', 2, '123')
-        reader._push_translation('module', 'model', 'res.partner,name', 3, '!@#')
-        reader._push_translation('module', 'model', 'res.partner,name', 4, '')
+        reader._push_translation('module', 'model', 'test_tools.partner,name', 1, 'hello')
+        reader._push_translation('module', 'model', 'test_tools.partner,name', 2, '123')
+        reader._push_translation('module', 'model', 'test_tools.partner,name', 3, '!@#')
+        reader._push_translation('module', 'model', 'test_tools.partner,name', 4, '')
         sources = [entry[1] for entry in reader._to_translate]
         self.assertEqual(sources, ['hello'])
 
     def test_push_translation_exports_one_letter_strings(self):
         """One-letter strings should be queued for export (e.g. UoM abbreviations like 'g' for grams)."""
         reader = TranslationReader(self.env.cr)
-        reader._push_translation('module', 'model', 'res.partner,name', 1, 'g')
+        reader._push_translation('module', 'model', 'test_tools.partner,name', 1, 'g')
         sources = [entry[1] for entry in reader._to_translate]
         self.assertEqual(sources, ['g'])
 
@@ -518,12 +518,12 @@ class TestTranslation(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('fr_FR')
-        cls.customers = cls.env['res.partner.category'].create({'name': 'Customers'})
+        cls.customers = cls.env['test_tools.partner.category'].create({'name': 'Customers'})
 
         cls.customers_xml_id = cls.customers.export_data(['id']).get('datas')[0][0]
         po_string = '''
         #. module: __export__
-        #: model:res.partner.category,name:%s
+        #: model:test_tools.partner.category,name:%s
         msgid "Customers"
         msgstr "Clients"
         ''' % cls.customers_xml_id
@@ -600,7 +600,7 @@ class TestTranslation(TransactionCase):
     def test_104_orderby_translated_field(self):
         """ Test search ordered by a translated field. """
         # create a category with a French translation
-        padawans = self.env['res.partner.category'].create({'name': 'Padawans'})
+        padawans = self.env['test_tools.partner.category'].create({'name': 'Padawans'})
         padawans_fr = padawans.with_context(lang='fr_FR')
         padawans_fr.write({'name': 'Apprentis'})
         # search for categories, and sort them by (translated) name
@@ -652,7 +652,7 @@ class TestTranslation(TransactionCase):
         self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
 
     def test_108_search_en(self):
-        CategoryEn = self.env['res.partner.category'].with_context(lang='en_US')
+        CategoryEn = self.env['test_tools.partner.category'].with_context(lang='en_US')
         category_equal = CategoryEn.search([('name', '=', 'Customers')])
         self.assertEqual(category_equal.id, self.customers.id, "Search with '=' doesn't work for English")
         category_ilike = CategoryEn.search([('name', 'ilike', 'stoMer')])
@@ -663,7 +663,7 @@ class TestTranslation(TransactionCase):
         self.assertIn(self.customers, category_in, "Search with 'in' doesn't work for English")
 
     def test_109_search_fr(self):
-        CategoryFr = self.env['res.partner.category'].with_context(lang='fr_FR')
+        CategoryFr = self.env['test_tools.partner.category'].with_context(lang='fr_FR')
         category_equal = CategoryFr.search([('name', '=', 'Clients')])
         self.assertEqual(category_equal.id, self.customers.id, "Search with '=' doesn't work for non English")
         category_ilike = CategoryFr.search([('name', 'ilike', 'lIen')])
@@ -678,7 +678,7 @@ class TestTranslation(TransactionCase):
         langs = self.env['res.lang'].get_installed()
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')],
                          langs, "Test did not start with the expected languages")
-        CategoryEs = self.env['res.partner.category'].with_context(lang='es_ES')
+        CategoryEs = self.env['test_tools.partner.category'].with_context(lang='es_ES')
         category_equal = CategoryEs.search([('name', '=', 'Customers')])
         self.assertEqual(category_equal.id, self.customers.id, "Search with '=' should use the English name if the current language translation is not available")
         category_ilike = CategoryEs.search([('name', 'ilike', 'usTom')])
@@ -759,7 +759,7 @@ class TestTranslation(TransactionCase):
 
     # TODO Currently, the unique constraint doesn't work for translatable field
     # def test_111_unique_en(self):
-    #     Country = self.env['res.country']
+    #     Country = self.env['test_tools.country']
     #     country_1 = Country.create({'name': 'Odoo'})
     #     country_1.with_context(lang='fr_FR').name = 'Odoo_Fr'
     #     country_1.flush_recordset()
@@ -778,7 +778,7 @@ class TestTranslationWrite(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.category = cls.env['res.partner.category'].create({'name': 'Reblochon'})
+        cls.category = cls.env['test_tools.partner.category'].create({'name': 'Reblochon'})
         cls.category_xml_id = cls.category.export_data(['id']).get('datas')[0][0]
 
     def test_00(self):
@@ -788,21 +788,21 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
                          "Test did not started with expected languages")
 
-        category = self.env['res.partner.category'].with_context(lang='en_US').create({'name': 'English'})
+        category = self.env['test_tools.partner.category'].with_context(lang='en_US').create({'name': 'English'})
         self.assertEqual(category.with_context(lang='en_US').name, 'English')
         self.assertEqual(category.with_context(lang='fr_FR').name, 'English')
 
         category.with_context(lang='en_US').name = 'English 2'
         self.assertEqual(category.with_context(lang='fr_FR').name, 'English 2')
 
-        category2 = self.env['res.partner.category'].with_context(lang='fr_FR').create({'name': 'French'})
+        category2 = self.env['test_tools.partner.category'].with_context(lang='fr_FR').create({'name': 'French'})
         self.assertEqual(category2.with_context(lang='en_US').name, 'French')
         self.assertEqual(category2.with_context(lang='fr_FR').name, 'French')
 
         category2.with_context(lang='en_US').name = 'English'
         self.assertEqual(category2.with_context(lang='fr_FR').name, 'French')
 
-        category3 = self.env['res.partner.category'].with_context(lang='en_US').create({'name': 'English'})
+        category3 = self.env['test_tools.partner.category'].with_context(lang='en_US').create({'name': 'English'})
         self.assertEqual(category3.with_context(lang='en_US').name, 'English')
         self.assertEqual(category3.with_context(lang='fr_FR').name, 'English')
 
@@ -859,7 +859,7 @@ class TestTranslationWrite(TransactionCase):
 
         po_string = '''
         #. module: __export__
-        #: model:res.partner.category,name:%s
+        #: model:test_tools.partner.category,name:%s
         msgid "Reblochon"
         msgstr "Translated Name"
         ''' % self.category_xml_id
@@ -1006,7 +1006,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
                          "Test did not started with expected languages")
 
-        group = self.env['res.groups'].create({'name': 'test_group', 'comment': empty_value})
+        group = self.env['test_tools.groups'].create({'name': 'test_group', 'comment': empty_value})
         self.assertEqual(group.with_context(lang='en_US').comment, empty_value)
         self.assertEqual(group.with_context(lang='fr_FR').comment, empty_value)
 
@@ -1058,7 +1058,7 @@ class TestTranslationWrite(TransactionCase):
     def test_update_field_translations_for_empty(self):
         self.env['res.lang']._activate_lang('nl_NL')
         self.env['res.lang']._activate_lang('fr_FR')
-        group = self.env['res.groups'].create({'name': 'test_group', 'comment': False})
+        group = self.env['test_tools.groups'].create({'name': 'test_group', 'comment': False})
 
         groupEN = group.with_context(lang='en_US')
         groupFR = group.with_context(lang='fr_FR')
@@ -1072,7 +1072,7 @@ class TestTranslationWrite(TransactionCase):
         group.comment = False
         groupFR.update_field_translations('comment', {'nl_NL': False, 'fr_FR': False})
         groupFR.flush_recordset()
-        self.cr.execute("SELECT comment FROM res_groups WHERE id = %s", (group.id,))
+        self.cr.execute("SELECT comment FROM test_tools_groups WHERE id = %s", (group.id,))
         (comment,) = self.cr.fetchone()
         self.assertEqual(comment, None)
 
@@ -1136,7 +1136,7 @@ class TestXMLTranslation(TransactionCase):
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({
             'name': 'test',
-            'model': 'res.partner',
+            'model': 'test_tools.partner',
             'arch': archf % terms,
         })
         view.invalidate_recordset()
@@ -1528,7 +1528,7 @@ class TestXMLTranslation(TransactionCase):
     def test_cache_consistency(self):
         view = self.env["ir.ui.view"].create({
             "name": "test_translate_xml_cache_invalidation",
-            "model": "res.partner",
+            "model": "test_tools.partner",
             "arch": "<form><b>content</b></form>",
         })
         view_fr = view.with_context({"lang": "fr_FR"})
@@ -1832,7 +1832,7 @@ class TestXMLTranslation(TransactionCase):
         # xml developed in fr_FR
         view1 = self.env['ir.ui.view'].with_context(lang='fr_FR').create({
             'name': 'view_1',
-            'model': 'res.partner',
+            'model': 'test_tools.partner',
             'arch': xml % ('Pomme', 'Poire')  # with typo
         })  # with typo
         # jsonb column value:
@@ -1858,7 +1858,7 @@ class TestXMLTranslation(TransactionCase):
         # xml developed in en_GB
         view1 = self.env['ir.ui.view'].with_context(lang='en_GB').create({
             'name': 'view_1',
-            'model': 'res.partner',
+            'model': 'test_tools.partner',
             'arch': xml % ('Footbell', 'Clbus', 'Rakning')  # with typo
         })
         view1.update_field_translations('arch_db', {'en_US': {'Footbell': 'SocceR'}})  # still with a typo
@@ -1902,7 +1902,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         cls.xml = '<form><div>%s</div><div>%s</div></form>'
         cls.view1 = cls.env['ir.ui.view'].with_context(lang='fr_FR').create({
             'name': 'view_1',
-            'model': 'res.partner',
+            'model': 'test_tools.partner',
             'arch': cls.xml % ('un étudiant', 'une étudiante')
         })
         # jsonb column value:
@@ -2036,7 +2036,7 @@ class TestHTMLTranslation(TransactionCase):
 <h1>My First Heading</h1>
 <p>My first paragraph.</p>
 '''
-        company = self.env['res.company'].browse(9999)
+        company = self.env['test_tools.company'].browse(9999)
         company.report_footer = html
         self.assertHTMLEqual(company.report_footer, html)
         # flushing on non-existing records does not break for scalar fields; the
@@ -2046,7 +2046,7 @@ class TestHTMLTranslation(TransactionCase):
     def test_delay_translations_no_term(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('nl_NL')
-        Company = self.env['res.company']
+        Company = self.env['test_tools.company']
         company0 = Company.create({'name': 'company_1', 'report_footer': '<h1>Knife</h1>'})
         company0.update_field_translations('report_footer', {'fr_FR': {'Knife': 'Couteau'}})
 

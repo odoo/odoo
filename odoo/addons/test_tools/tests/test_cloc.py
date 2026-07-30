@@ -141,8 +141,8 @@ class TestClocCustomization(TransactionCase):
         field = self.env['ir.model.fields'].with_context(studio=True).create({
             'name': name,
             'field_description': name,
-            'model': 'res.partner',
-            'model_id': self.env.ref('base.model_res_partner').id,
+            'model': 'test_tools.partner',
+            'model_id': self.env['ir.model']._get_id('test_tools.partner'),
             'ttype': 'integer',
             'store': False,
             'compute': "for rec in self: rec['x_invoice_count'] = 10",
@@ -221,8 +221,8 @@ for rec in records:
         self.env['ir.model.fields'].create({
             'name': "x_no_xml_id",
             'field_description': "no_xml_id",
-            'model': 'res.partner',
-            'model_id': self.env.ref('base.model_res_partner').id,
+            'model': 'test_tools.partner',
+            'model_id': self.env['ir.model']._get_id('test_tools.partner'),
             'ttype': 'integer',
             'store': False,
             'compute': "for rec in self: rec['x_invoice_count'] = 10",
