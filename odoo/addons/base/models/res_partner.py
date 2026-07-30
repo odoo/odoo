@@ -1330,7 +1330,7 @@ class ResPartner(models.Model):
         """
         assert validation in (False, 'error', 'setnull')
         value = normalize_identifier(value)
-        if not value:
+        if not value or self.env.context.get('no_vat_validation'):
             return {'valid': True, 'value': value, 'example': None}
 
         if (tin_meta := TIN_METADATA.get(key)) and (country_code := tin_meta.get('countries')[:1]):
