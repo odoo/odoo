@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="debit_notes_customer_action" model="ir.actions.act_window">
+        <field name="name">Debit Notes</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('debit_origin_id', '!=', False), ('move_type', '=', 'out_invoice')]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+    <record id="debit_notes_vendor_action" model="ir.actions.act_window">
+        <field name="name">Debit Notes</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('debit_origin_id', '!=', False), ('move_type', '=', 'in_invoice')]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+    <menuitem id="debit_note_customer_menu"
+              name="Debit Notes"
+              action="debit_notes_customer_action"
+              parent="account.menu_finance_receivables"/>
+    <menuitem id="debit_note_vendor_menu"
+              name="Debit Notes"
+              action="debit_notes_vendor_action"
+              parent="account.menu_finance_payables"/>
+    </data>
+</odoo>
