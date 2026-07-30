@@ -77,7 +77,7 @@
             data-available-offline=""
         >
             <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.icon_class}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
-            <span class="o-xsmaller text-center lh-1 opacity-75" t-out="tab.label"/>
+            <span class="o-xsmaller text-center lh-1 opacity-75 mt-1" t-out="tab.label"/>
             <span t-if="tab.counter" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-count' }}" t-out="tab.counter"/>
         </button>
     </nav>
