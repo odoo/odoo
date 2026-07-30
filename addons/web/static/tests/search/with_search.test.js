@@ -1,7 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
+import { Component, proxy, t, useEffect, useProps, xml } from "@odoo/owl";
 import {
     defineModels,
     fields,
@@ -214,19 +214,17 @@ test("load view description with given id if it is not provided and loadSearchVi
 });
 
 test("toggle a filter render the underlying component with an updated domain", async () => {
+    const domains = [[], [[1, "=", 1]]];
+    let i = 0;
     class TestComponent extends Component {
         props = useProps();
         static components = { SearchBarMenu };
         static template = xml`<div class="o_test_component"><SearchBarMenu/></div>`;
 
         setup() {
-            onWillStart(() => {
-                expect.step("willStart");
-                expect(this.props.domain).toEqual([]);
-            });
-            onWillUpdateProps((nextProps) => {
-                expect.step("willUpdateProps");
-                expect(nextProps.domain).toEqual([[1, "=", 1]]);
+            useEffect(() => {
+                expect.step("useEffect");
+                expect(this.props.domain).toEqual(domains[i++]);
             });
         }
     }
@@ -235,26 +233,24 @@ test("toggle a filter render the underlying component with an updated domain", a
         resModel: "animal",
         searchViewId: 1,
     });
-    expect.verifySteps(["willStart"]);
+    expect.verifySteps(["useEffect"]);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("True domain");
-    expect.verifySteps(["willUpdateProps"]);
+    expect.verifySteps(["useEffect"]);
 });
 
 test("react to prop 'domain' changes", async () => {
+    const vals = ['carnivorous', 'herbivorous'];
+    let i = 0;
     class TestComponent extends Component {
         props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
 
         setup() {
-            onWillStart(() => {
-                expect.step("willStart");
-                expect(this.props.domain).toEqual([["type", "=", "carnivorous"]]);
-            });
-            onWillUpdateProps((nextProps) => {
-                expect.step("willUpdateProps");
-                expect(nextProps.domain).toEqual([["type", "=", "herbivorous"]]);
+            useEffect(() => {
+                expect.step("useEffect");
+                expect(this.props.domain).toEqual([["type", "=", vals[i++]]]);
             });
         }
     }
@@ -277,11 +273,11 @@ test("react to prop 'domain' changes", async () => {
     }
 
     const parent = await mountWithCleanup(Parent);
-    expect.verifySteps(["willStart"]);
+    expect.verifySteps(["useEffect"]);
 
     parent.searchState.domain = [["type", "=", "herbivorous"]];
     await animationFrame();
-    expect.verifySteps(["willUpdateProps"]);
+    expect.verifySteps(["useEffect"]);
 });
 
 test("search defaults are removed from context at reload", async function () {
@@ -296,18 +292,9 @@ test("search defaults are removed from context at reload", async function () {
             context: t.object(),
         });
         setup() {
-            onWillStart(() => {
-                expect.step("willStart");
+            useEffect(() => {
+                expect.step("useEffect");
                 expect(this.props.context).toEqual({
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
-                    allowed_company_ids: [1],
-                });
-            });
-            onWillUpdateProps((nextProps) => {
-                expect.step("willUpdateProps");
-                expect(nextProps.context).toEqual({
                     lang: "en",
                     tz: "taht",
                     uid: 7,
@@ -338,13 +325,13 @@ test("search defaults are removed from context at reload", async function () {
     }
 
     const parent = await mountWithCleanup(Parent);
-    expect.verifySteps(["willStart"]);
+    expect.verifySteps(["useEffect"]);
 
     expect(parent.searchState.context).toEqual(context);
 
     parent.searchState.domain = [["type", "=", "herbivorous"]];
 
     await animationFrame();
-    expect.verifySteps(["willUpdateProps"]);
+    expect.verifySteps(["useEffect"]);
     expect(parent.searchState.context).toEqual(context);
 });
