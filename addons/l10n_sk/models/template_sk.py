@@ -73,6 +73,34 @@ class AccountChartTemplate(models.AbstractModel):
                 'asset_depreciation_account_id': 'chart_sk_082000',
                 'asset_expense_account_id': 'chart_sk_551000',
             },
+            'chart_sk_022100': {
+                'asset_depreciation_account_id': 'chart_sk_082100',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022200': {
+                'asset_depreciation_account_id': 'chart_sk_082200',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022300': {
+                'asset_depreciation_account_id': 'chart_sk_082300',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022400': {
+                'asset_depreciation_account_id': 'chart_sk_082400',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022500': {
+                'asset_depreciation_account_id': 'chart_sk_082500',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022510': {
+                'asset_depreciation_account_id': 'chart_sk_082510',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022900': {
+                'asset_depreciation_account_id': 'chart_sk_082900',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
             'chart_sk_025000': {
                 'asset_depreciation_account_id': 'chart_sk_085000',
                 'asset_expense_account_id': 'chart_sk_551000',
