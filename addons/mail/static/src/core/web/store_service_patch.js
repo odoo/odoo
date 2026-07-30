@@ -33,18 +33,9 @@ const StorePatch = {
             },
         });
         /** @type {Object[]} */
-        this.activityGroups = fields.Attr([], {
+        this.activity_groups = fields.Attr(undefined, {
             onUpdate() {
                 this.onUpdateActivityGroups();
-            },
-            sort(g1, g2) {
-                /**
-                 * Sort by model ID ASC but always place the activity group for "mail.activity" model at
-                 * the end (other activities).
-                 */
-                const getSortId = (activityGroup) =>
-                    activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
-                return getSortId(g1) - getSortId(g2);
             },
         });
     },
@@ -66,6 +57,17 @@ const StorePatch = {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
             this.activityBroadcastChannel = null;
         }
+    },
+    get activityGroups() {
+        return (this.activity_groups || []).slice().sort((g1, g2) => {
+            /**
+             * Sort by model ID ASC but always place the activity group for "mail.activity" model at
+             * the end (other activities).
+             */
+            const getSortId = (activityGroup) =>
+                activityGroup.model === "mail.activity" ? Number.MAX_VALUE : activityGroup.id;
+            return getSortId(g1) - getSortId(g2);
+        });
     },
     onPushNotificationDisplayed() {
         super.onPushNotificationDisplayed(...arguments);

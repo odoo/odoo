@@ -154,7 +154,7 @@ registerStoreHandler("systray_get_activities", function store_systray_get_activi
     store.add_global_values({
         activityCounter: groups.reduce((counter, group) => counter + (group.total_count || 0), 0),
         activity_counter_bus_id: bus_last_id,
-        activityGroups: groups,
+        activity_groups: groups,
         activities_to_assign_count,
     });
 });
