@@ -402,7 +402,6 @@ class TestPeppolParticipant(TransactionCase):
             p_rec = partner_form.save()
             self.assertEqual(p_rec.commercial_partner_id, p_rec)
             self.assertEqual(p_rec.commercial_partner_id.name, "test")
-        p_rec.routing_identifier = "odemo:0477472701"
 
     def test_do_not_reset_peppol_endpoint(self):
         be_country = self.env.ref('base.be')

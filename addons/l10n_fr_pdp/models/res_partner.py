@@ -97,7 +97,7 @@ class ResPartner(models.Model):
         if (not force_recompute and self.routing_scheme and self.routing_endpoint) or self.country_code != 'FR':
             return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
         if self.env.company._get_peppol_proxy_type() == 'pdp':
-            if ctc_value := self._get_additional_identifier('FR_CTC') or self._l10n_fr_pdp_get_siren():
+            if ctc_value := (self._get_additional_identifier('FR_CTC') or (not force_recompute and self._l10n_fr_pdp_get_siren())):
                 return {'scheme': '0225', 'value': ctc_value, 'key': 'FR_CTC'}
             return {}  # we preferer suggesting no routing identifier than anything else than 0225 if the PDP is in use.
         return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)

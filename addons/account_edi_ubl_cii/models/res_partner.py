@@ -221,7 +221,7 @@ class ResPartner(models.Model):
     def _get_all_identifiers(self, enrich=False):
         # EXTENDS 'account'
         all_identifiers = super()._get_all_identifiers(enrich)
-        metadata = self.routing_identifier and self._get_all_identifiers_metadata_by_scheme().get(self.routing_scheme)
+        metadata = self.routing_scheme and self.routing_endpoint and self._get_all_identifiers_metadata_by_scheme().get(self.routing_scheme)
         if enrich and metadata and metadata['key'] not in all_identifiers:
             all_identifiers[metadata['key']] = self.routing_endpoint
         return all_identifiers
