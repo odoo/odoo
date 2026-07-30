@@ -15,7 +15,7 @@ import {
 
 definePosModels();
 
-test("ticket data renders totals, cashier, payments, order lines and qr code", async () => {
+test("ticket data renders totals, cashier, payments, order lines and qr code for processed order", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();
     const product = store.models["product.template"].get(5);
@@ -27,6 +27,7 @@ test("ticket data renders totals, cashier, payments, order lines and qr code", a
     await store.addLineToOrder({ product_tmpl_id: product, qty: 3 }, order);
     addPayment(order, cardPm, 10.35);
     order.setOrderPrices();
+    order.state = "paid";
 
     const { ticket } = renderReceipt(store, order);
 
