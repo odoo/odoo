@@ -227,6 +227,19 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         res = self._submit_address_values({**address_values, "ma_ice": "001561191000055"})
         self.assertIn("ma_ice", res["invalid_fields"])
 
+    def test_addtional_identifiers_with_invalid_value(self):
+        self.authenticate(self.account_a.login, self.account_a.login)
+        csrf_token = self.csrf_token()
+        address_values = {
+            **self.default_address_values,
+            "ma_ice": "Invalid ICE",
+            "csrf_token": csrf_token,
+            "partner_id": self.account_a.partner_id.id,
+        }
+        # Invalid identifiers should not raise error
+        res = self._submit_address_values(address_values)
+        self.assertIn("ma_ice", res["invalid_fields"])
+
     def test_company_name_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()

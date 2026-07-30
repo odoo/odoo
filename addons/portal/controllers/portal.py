@@ -19,6 +19,7 @@ from odoo.http import Controller, request, route
 from odoo.http.session import logout
 from odoo.http.stream import content_disposition
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
+from odoo.tools.partner_identifiers import validation_error_message
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -759,6 +760,22 @@ class CustomerPortal(Controller):
             except ValidationError as exception:
                 invalid_fields.add('vat')
                 error_messages.append(exception.args[0])
+
+        # Validate additional_identifiers
+        for additional_identifier, value in address_values.get("additional_identifiers", {}).items():
+            validation_vals = self.env["res.partner"]._validate_identifier(
+                additional_identifier, value
+            )
+            if not validation_vals["valid"]:
+                invalid_fields.add(additional_identifier.lower())
+                identifier_label = self.env["res.partner"]._get_identifier_label(additional_identifier)
+                error_messages.append(
+                    validation_error_message(
+                        self.env, identifier_label,
+                        validation_vals["value"],
+                        example=validation_vals["example"]
+                    )
+                )
 
         # Build the set of required fields from the address form's requirements.
         required_field_set = {f for f in required_fields.split(',') if f}
