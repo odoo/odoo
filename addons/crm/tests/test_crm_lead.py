@@ -337,6 +337,26 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(won_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
         self.assertEqual(other_lead.date_closed, datetime(2020, 2, 2, 18, 0, 0))
 
+    @users('user_sales_manager')
+    def test_crm_lead_date_closed_reset_zero_probability(self):
+        lead = self.lead_1.with_env(self.env)
+        lead.write({'probability': 100})
+        self.assertTrue(lead.date_closed)
+        lead.write({'probability': 0})
+        self.assertFalse(lead.date_closed)
+
+    @users('user_sales_manager')
+    def test_crm_lead_date_closed_reset_zero_probability_batch(self):
+        lead = self.lead_1.with_env(self.env)
+        lost_lead = self.lead_team_1_lost.with_env(self.env)
+        lead.write({'probability': 100})
+        self.assertTrue(lead.date_closed)
+        self.assertTrue(lost_lead.date_closed)
+        old_date_closed = lost_lead.date_closed
+        (lead + lost_lead).write({'probability': 0})
+        self.assertFalse(lead.date_closed)
+        self.assertEqual(lost_lead.date_closed, old_date_closed, 'Lost lead date_closed should remain untouched')
+
     @users('user_sales_leads')
     @freeze_time("2012-01-14")
     def test_crm_lead_lost_date_closed(self):
