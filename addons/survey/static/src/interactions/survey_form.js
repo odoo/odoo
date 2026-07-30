@@ -1434,16 +1434,6 @@ export class SurveyForm extends Interaction {
                 const answerId = buttonEl.querySelector("input").value;
                 const isCorrect = correctAnswer.includes(parseInt(answerId));
                 buttonEl.classList.add(`bg-${isCorrect ? "success" : "danger"}`, "text-white");
-                // For the user incorrect answers, replace the empty check icon by a crossed check icon
-                if (!isCorrect && buttonEl.classList.contains("o_survey_selected")) {
-                    let fromIcon = "fa-check-circle";
-                    let toIcon = "fa-times-circle";
-                    if (questionType === "multiple_choice") {
-                        fromIcon = "fa-check-square";
-                        toIcon = "fa-times-rectangle"; // fa-times-square doesn't exist in fontawesome 4.7
-                    }
-                    buttonEl.querySelector(`i.${fromIcon}`)?.classList.replace(fromIcon, toIcon);
-                }
             }
         }
     }
