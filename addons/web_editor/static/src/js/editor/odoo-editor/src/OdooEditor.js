@@ -2257,7 +2257,16 @@ export class OdooEditor extends EventTarget {
         // Determine colors at cursor position
         const sel = this.document.getSelection();
         if (sel.rangeCount && (!foreColor || !hiliteColor)) {
-            const endContainer = closestElement(sel.getRangeAt(0).endContainer);
+            // Reset the selection inside the editable
+            let range = sel.getRangeAt(0);
+            if (!this.editable.contains(range.endContainer)) {
+                range = new Range();
+                range.selectNodeContents(this.editable);
+                range.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+            const endContainer = closestElement(range.endContainer);
             const computedStyle = getComputedStyle(endContainer);
             const backgroundImage = computedStyle.backgroundImage;
             const hasGradient = isColorGradient(backgroundImage);
