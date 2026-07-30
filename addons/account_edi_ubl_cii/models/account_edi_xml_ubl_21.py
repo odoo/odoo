@@ -57,7 +57,8 @@ class AccountEdiXmlUBL21(models.AbstractModel):
 
     def _get_selfbilling_customization_ids(self):
         return {
-            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
+            'ubl_bis3': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0',
+            'nlcius': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0',
         }
 
     # -------------------------------------------------------------------------

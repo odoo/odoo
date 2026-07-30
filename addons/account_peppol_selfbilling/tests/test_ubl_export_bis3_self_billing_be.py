@@ -3,6 +3,13 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, Test
 
 from odoo.tests import tagged
 
+from lxml import etree
+
+NS_MAP = {
+    'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+    'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
+}
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3SelfInvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
