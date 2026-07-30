@@ -81,55 +81,71 @@ jobs:
         with:
           path: luffy
           fetch-depth: 1
+          sparse-checkout: |
+            agent
+            scripts
+            .github
+          sparse-checkout-cone-mode: true
 
-      # F1: shallow PR head (not full history)
-      - name: Checkout PR head (shallow)
+      # List changed files via API BEFORE cloning the monorepo (no checkout needed)
+      - name: Resolve PR sparse paths
         if: steps.gate.outputs.matched == 'true'
+        id: sparse
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.gate.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          PATHS_FILE="${{ github.workspace }}/pr-paths.txt"
+          # Leading slash for single-file sparse paths (git no-cone)
+          gh pr view "$PR_NUMBER" --repo "$REPO" --json files \
+            --jq '.files[].path' | head -200 | sed 's|^|/|' > "$PATHS_FILE" || true
+          COUNT=$(grep -c . "$PATHS_FILE" || echo 0)
+          echo "PR changed files: $COUNT"
+          if [[ "$COUNT" -ge 1 && "$COUNT" -le 200 ]]; then
+            # Multiline string for actions/checkout sparse-checkout input
+            {
+              echo "sparse<<EOF"
+              cat "$PATHS_FILE"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "use_sparse=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_sparse=false" >> "$GITHUB_OUTPUT"
+            echo "sparse=" >> "$GITHUB_OUTPUT"
+          fi
+
+      # F1: shallow PR head + sparse from the start (avoid downloading whole monorepo)
+      - name: Checkout PR head (sparse shallow)
+        if: steps.gate.outputs.matched == 'true' && steps.sparse.outputs.use_sparse == 'true'
+        uses: actions/checkout@v4
+        with:
+          path: workspace
+          fetch-depth: 1
+          ref: refs/pull/${{ steps.gate.outputs.pr_number }}/head
+          sparse-checkout: ${{ steps.sparse.outputs.sparse }}
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout PR head (full shallow fallback)
+        if: steps.gate.outputs.matched == 'true' && steps.sparse.outputs.use_sparse != 'true'
         uses: actions/checkout@v4
         with:
           path: workspace
           fetch-depth: 1
           ref: refs/pull/${{ steps.gate.outputs.pr_number }}/head
 
-      # F1b: sparse to changed paths only (huge monorepos)
-      - name: Sparse-checkout changed files
-        if: steps.gate.outputs.matched == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ steps.gate.outputs.pr_number }}
-          LUFFY_ROOT: ${{ github.workspace }}/luffy
-          WORKSPACE_ROOT: ${{ github.workspace }}/workspace
-        run: |
-          set -euo pipefail
-          chmod +x "$LUFFY_ROOT/scripts/sparse-pr-paths.sh"
-          mapfile -t PATHS < <("$LUFFY_ROOT/scripts/sparse-pr-paths.sh" || true)
-          COUNT="${#PATHS[@]}"
-          echo "PR changed files: $COUNT"
-          if [[ "$COUNT" -eq 0 || "$COUNT" -gt 200 ]]; then
-            echo "Sparse skip (count=$COUNT)"
-            exit 0
-          fi
-          cd "$WORKSPACE_ROOT"
-          git sparse-checkout init --no-cone
-          # Include changed files + common roots Hermes may need
-          git sparse-checkout set "${PATHS[@]}" || {
-            echo "sparse-checkout set failed; keeping full shallow tree"
-            git sparse-checkout disable || true
-          }
-          echo "Sparse cone active with $COUNT paths"
-          du -sh . || true
-
-      # F2: cache Hermes install tree
+      # F2: cache Hermes install tree (restore + save)
       - name: Restore Hermes install cache
         if: steps.gate.outputs.matched == 'true'
+        id: hermes_cache
         uses: actions/cache@v4
         continue-on-error: true
         with:
           path: |
             ~/.local
             ~/.hermes
-          key: luffy-hermes-bin-${{ runner.os }}-v1
+          key: luffy-hermes-bin-${{ runner.os }}-v2
           restore-keys: |
             luffy-hermes-bin-${{ runner.os }}-
 
@@ -278,3 +294,15 @@ jobs:
             .luffy-hermes-home/memories/
           if-no-files-found: ignore
           retention-days: 14
+
+      # F2: persist Hermes install for next runs (actions/cache@v4 saves on post if restore used;
+      # explicit save ensures install after a miss is stored even when job continues after failures)
+      - name: Save Hermes install cache
+        if: steps.gate.outputs.matched == 'true' && always()
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.local
+            ~/.hermes
+          key: luffy-hermes-bin-${{ runner.os }}-v2-${{ github.run_id }}

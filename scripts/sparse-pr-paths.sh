@@ -13,5 +13,6 @@ export GH_REPO="$REPO"
   exit 1
 }
 
+# Leading slash = single-file path in git sparse-checkout --no-cone mode
 gh pr view "$PR_NUMBER" --repo "$REPO" --json files \
-  --jq '.files[].path' 2>/dev/null | head -400
+  --jq '.files[].path' 2>/dev/null | head -400 | sed 's|^|/|'
