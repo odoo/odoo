@@ -151,7 +151,7 @@ class PosOrderReceipt(models.AbstractModel):
         order_fields = self.env['pos.order']._load_pos_data_fields(self.config_id)
         config_fields = self.env['pos.config']._load_pos_data_fields(self.config_id)
 
-        use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url'
+        use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url' and self.state != 'draft'
         company = self.company_id
         config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
