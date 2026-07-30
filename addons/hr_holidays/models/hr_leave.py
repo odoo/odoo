@@ -658,6 +658,11 @@ class HrLeave(models.Model):
                         )
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    # without hours per day the window covers the whole day, count at most the average hours of a day instead
+                    version = leave.employee_id.sudo()._get_version(leave.request_date_from)
+                    average_day_hours = 0
+                    if version.is_flexible and not version.is_fully_flexible and not version.hours_per_day:
+                        average_day_hours = version.hours_per_week / 7
                     if leave.work_entry_type_request_unit != 'hour':
                         total_days = (leave.request_date_to - leave.request_date_from).days + 1
                         if public_holidays:
@@ -673,8 +678,12 @@ class HrLeave(models.Model):
                             if leave.request_date_to_period == 'am':
                                 total_days -= 0.5
                         days = max(0, total_days)
+                        if average_day_hours:
+                            hours = days * average_day_hours
                     elif leave.employee_id.sudo().is_fully_flexible or not leave.employee_id.sudo().hours_per_day:
                         days = hours / 24
+                        if average_day_hours:
+                            hours = min(hours, average_day_hours)
                     else:
                         days = hours / leave.employee_id.sudo().hours_per_day
                 elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
