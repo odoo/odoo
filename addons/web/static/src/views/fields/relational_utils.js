@@ -256,7 +256,10 @@ export class Many2XAutocomplete extends Component {
                 fieldString,
                 onClose: () => {
                     const autoCompleteInput =
-                        this.autocompleteContainerRef().querySelector("input");
+                        this.autocompleteContainerRef()?.querySelector("input");
+                    if (!autoCompleteInput) {
+                        return;
+                    }
 
                     // There are two cases:
                     // 1. Value is the same as the input: it means the autocomplete has re-rendered with the right value

@@ -134,7 +134,7 @@ export const stepUtils = {
             },
             {
                 isActive: ["mobile"],
-                trigger: `.o_kanban_record:contains('${valueSearched}')`,
+                trigger: `.modal:not(.o_inactive_modal) .o_kanban_record:contains('${valueSearched}')`,
                 run: "click",
             },
         ];

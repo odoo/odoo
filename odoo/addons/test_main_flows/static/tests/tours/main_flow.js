@@ -234,7 +234,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_kanban_record:contains('Units')",
+    trigger: ".modal:not(.o_inactive_modal) .o_kanban_record:contains('Units')",
     run: "click",
 },
 {
@@ -393,7 +393,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_kanban_record:contains('Units')",
+    trigger: ".modal:not(.o_inactive_modal) .o_kanban_record:contains('Units')",
     run: "click",
 },
 {
