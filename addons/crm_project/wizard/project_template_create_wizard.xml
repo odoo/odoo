@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="crm_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">crm.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified_template"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+            <xpath expr="//label[@for='alias_name']" position="replace"/>
+            <xpath expr="//group/group/div[field[@name='alias_name']]" position="replace"/>
+            <field name="date_start" position="before">
+                <!-- Grouped in a named div so that modules extending this view can
+                     tell these fields apart from the ones contributed to the parent
+                     view by other modules. -->
+                <div name="crm_lead_customer">
+                    <field name="customer_action" widget="radio" invisible="not is_customer_action_visible" required="True"/>
+                    <field
+                        name="partner_id"
+                        string="Customer"
+                        invisible="customer_action != 'exist'"
+                        required="customer_action == 'exist'"
+                        widget="res_partner_many2one"
+                        options="{'no_create_edit': True, 'no_open': True}"
+                    />
+                </div>
+                <field
+                    name="template_id"
+                    string="Project Template"
+                    placeholder="New project"
+                    domain="[
+                        ('is_template', '=', True),
+                        '|', ('company_id', '=?', context.get('lead_company_id')), ('company_id', '=', False),
+                    ]"
+                    context="{'default_is_template': True}"
+                />
+            </field>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="invisible">not template_id</attribute>
+            </xpath>
+            <xpath expr="//form/footer/button[@name='create_project_from_template']" position="attributes">
+                <attribute name="name">action_create_project_from_lead</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
