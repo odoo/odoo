@@ -1,36 +1,139 @@
-name: Deploy ERP to AWS EC2
+name: Deploy — EC2 Production
 
 on:
   push:
-    branches:
-      - production # Only trigger when code lands on the production branch
+    branches: [production]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  deploy:
-    # This condition ensures the workflow ONLY runs if the push was a merged Pull Request
-    if: github.event.head_commit.message != '' && contains(github.event.head_commit.message, 'Merge pull request') || contains(github.event.head_commit.message, 'Merge branch')
+  ci:
+    # Re-run CI on the merge commit before deploying
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
 
+  deploy:
+    needs: [ci]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy to AWS EC2 via SSH
+      - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          PREVIOUS_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/odoo
+            set -e
 
-            # Pull specifically from the production branch
+            cd /opt/odoo
+
+            # ------------------------------------------------------------------
+            # 1. Record the current state BEFORE pulling new code
+            #    If anything goes wrong, this SHA is our rollback target.
+            # ------------------------------------------------------------------
+            PREVIOUS_SHA=$(git rev-parse HEAD)
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+            echo "=== Deploy started at $TIMESTAMP ==="
+            echo "Current SHA: $PREVIOUS_SHA"
+            echo "Target SHA:  ${{ github.sha }}"
+
+            # ------------------------------------------------------------------
+            # 2. Pre-upgrade database snapshot (safety net)
+            #    Module upgrades can corrupt data. This dump lets us recover
+            #    without restoring yesterday's backup.
+            # ------------------------------------------------------------------
+            echo "Taking pre-upgrade DB snapshot..."
+            docker compose exec -T db pg_dump -U odoo -Fc --no-owner \
+                -f /tmp/pre_deploy_${TIMESTAMP}.dump odoo \
+                || echo "WARNING: Pre-upgrade snapshot failed — continuing anyway"
+
+            # ------------------------------------------------------------------
+            # 3. Pull latest code and rebuild
+            # ------------------------------------------------------------------
+            echo "Pulling latest code..."
             git pull origin production
-            docker system prune -f
-            docker compose down
-            docker compose up -d
 
-            # Run upgrade on all databases across all modules
-            docker compose exec -T odoo odoo -u all -d all --stop-after-init
+            echo "Rebuilding and restarting stack..."
+            docker compose up -d --build
+
+            # ------------------------------------------------------------------
+            # 4. Run module upgrade
+            # ------------------------------------------------------------------
+            echo "Upgrading invoice_agent module..."
+            docker compose exec -T odoo odoo \
+                -u invoice_agent \
+                --stop-after-init \
+                --log-level=warn
+
+            # ------------------------------------------------------------------
+            # 5. Restart Odoo to boot in server mode
+            # ------------------------------------------------------------------
+            echo "Restarting Odoo..."
+            docker compose restart odoo
+
+            # ------------------------------------------------------------------
+            # 6. Health check — poll /web/login until it returns HTTP 200
+            # ------------------------------------------------------------------
+            echo "Running health check..."
+            HEALTHY=false
+            for i in $(seq 1 30); do
+                STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                    http://localhost:8069/web/login 2>/dev/null || echo "000")
+                if [ "$STATUS" = "200" ]; then
+                    HEALTHY=true
+                    echo "Health check passed (HTTP 200) after ${i}s"
+                    break
+                fi
+                echo "  Attempt $i/30 — HTTP $STATUS, waiting..."
+                sleep 2
+            done
+
+            # ------------------------------------------------------------------
+            # 7. Rollback on failure
+            # ------------------------------------------------------------------
+            if [ "$HEALTHY" != "true" ]; then
+                echo ""
+                echo "!!! DEPLOY FAILED — Odoo is not responding !!!"
+                echo "Rolling back to $PREVIOUS_SHA..."
+
+                git checkout "$PREVIOUS_SHA"
+                docker compose up -d --build
+                docker compose restart odoo
+
+                # Verify rollback
+                for i in $(seq 1 30); do
+                    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                        http://localhost:8069/web/login 2>/dev/null || echo "000")
+                    if [ "$STATUS" = "200" ]; then
+                        echo "Rollback successful — Odoo running at $PREVIOUS_SHA"
+                        exit 1  # still fail the workflow (rollback succeeded but deploy didn't)
+                    fi
+                    sleep 2
+                done
+
+                echo "!!! CRITICAL: Rollback also failed — manual intervention required !!!"
+                exit 2
+            fi
+
+            # ------------------------------------------------------------------
+            # 8. Clean up pre-upgrade dump (deploy succeeded)
+            # ------------------------------------------------------------------
+            docker compose exec -T db rm -f "/tmp/pre_deploy_${TIMESTAMP}.dump" \
+                || true
+
+            echo ""
+            echo "=== Deploy complete ==="
+            echo "SHA: ${{ github.sha }}"
+            echo "Time: $(date)"
