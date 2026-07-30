@@ -22,4 +22,6 @@ class ResPartner(models.Model):
         fields = super()._load_pos_data_fields(config)
         if self.env.company.country_id.code == "PE":
             fields += ["city_id", "l10n_latam_identification_type_id", "l10n_pe_district"]
+        elif self.env.company.account_fiscal_country_id.code == "PE":
+            fields += ["l10n_latam_identification_type_id"]
         return fields
