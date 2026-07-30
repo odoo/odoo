@@ -81,6 +81,7 @@ class L10nCrFeProveedorUpload(models.TransientModel):
 
         monto_impuesto_text = self._find_text(root, 'TotalImpuesto')
         total_factura_text = self._find_text(root, 'TotalComprobante')
+        subtotal_text = self._find_text(root, 'TotalVentaNeta')
 
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -89,6 +90,7 @@ class L10nCrFeProveedorUpload(models.TransientModel):
             'l10n_cr_fe_proveedor_fecha_emision': fecha_emision,
             'l10n_cr_fe_proveedor_monto_impuesto': float(monto_impuesto_text) if monto_impuesto_text else 0.0,
             'l10n_cr_fe_proveedor_total': float(total_factura_text) if total_factura_text else 0.0,
+            'l10n_cr_fe_proveedor_subtotal': float(subtotal_text) if subtotal_text else 0.0,
             'invoice_line_ids': invoice_lines,
         })
         return {

@@ -114,6 +114,11 @@ class AccountMove(models.Model):
         string="Monto impuesto (XML original proveedor)", readonly=True, copy=False)
     l10n_cr_fe_proveedor_total = fields.Float(
         string="Total factura (XML original proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_subtotal = fields.Float(
+        string="Subtotal sin impuesto (XML original proveedor)", readonly=True, copy=False,
+        help="TotalVentaNeta del XML original — se usa para detectar si el usuario "
+             "realmente ajustó líneas/cantidades/precios, sin depender de si el "
+             "impuesto de compra se emparejó automáticamente.")
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -309,12 +314,19 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_mr_parcial_sin_cambios(self):
         """True si la factura de proveedor sigue idéntica (en monto) al XML
         original — usado para bloquear una "aceptación parcial" que en
-        realidad no ajustó nada, y que debería ser una aceptación total."""
+        realidad no ajustó nada, y que debería ser una aceptación total.
+
+        Compara el subtotal SIN impuesto (`amount_untaxed` vs. el
+        `TotalVentaNeta` original) en vez de los montos con impuesto: estos
+        últimos pueden diferir del XML original solo porque el impuesto de
+        compra no se emparejó automáticamente (ver fix de montos auténticos
+        en `_l10n_cr_fe_build_mr_params`), sin que el usuario haya editado
+        ninguna línea — lo que causaría falsos negativos en este check.
+        """
         self.ensure_one()
-        if not self.l10n_cr_fe_proveedor_total:
+        if not self.l10n_cr_fe_proveedor_subtotal:
             return False
-        return (self.amount_tax == self.l10n_cr_fe_proveedor_monto_impuesto
-                and self.amount_total == self.l10n_cr_fe_proveedor_total)
+        return self.amount_untaxed == self.l10n_cr_fe_proveedor_subtotal
 
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()

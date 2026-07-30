@@ -38,6 +38,7 @@ SAMPLE_XML = """<?xml version="1.0" encoding="utf-8"?>
         </LineaDetalle>
     </DetalleServicio>
     <ResumenFactura>
+        <TotalVentaNeta>5000</TotalVentaNeta>
         <TotalImpuesto>650</TotalImpuesto>
         <TotalComprobante>5650</TotalComprobante>
     </ResumenFactura>
@@ -97,6 +98,7 @@ class TestProveedorUpload(TransactionCase):
         invoice = self._upload(SAMPLE_XML)
         self.assertEqual(invoice.l10n_cr_fe_proveedor_monto_impuesto, 650.0)
         self.assertEqual(invoice.l10n_cr_fe_proveedor_total, 5650.0)
+        self.assertEqual(invoice.l10n_cr_fe_proveedor_subtotal, 5000.0)
 
     def test_invalid_xml_raises(self):
         with self.assertRaises(UserError):
