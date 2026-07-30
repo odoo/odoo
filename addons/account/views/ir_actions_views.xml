@@ -5,13 +5,11 @@
         <field name="model">ir.actions.report</field>
         <field name="inherit_id" ref="base.act_report_xml_view"/>
         <field name="arch" type="xml">
-            <field name="paperformat_id" position="after">
-                <field name="is_invoice_report" invisible="model != 'account.move'"/>
-            </field>
-
-            <field name="report_name" position="after">
-                <field name="domain"/>
-            </field>
+            <setting name="attachment_setting" position="after">
+                <setting invisible="model != 'account.move'" string="Invoice Report" help="Defines if the report is used in the invoice wizard">
+                    <field name="is_invoice_report"/>
+                </setting>
+            </setting>
         </field>
     </record>
 </odoo>
