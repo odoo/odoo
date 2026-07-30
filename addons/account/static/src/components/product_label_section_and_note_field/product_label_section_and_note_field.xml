@@ -9,7 +9,7 @@
                     placeholder="Enter a description"
                     rows="1"
                     t-att-class="sectionAndNoteClasses"
-                    t-att-readonly="sectionAndNoteIsReadonly"
+                    t-att-readonly="this.labelIsReadonly"
                     t-att-value="label"
                     t-ref="labelNodeRef"
                     t-key="props.readonly"
@@ -21,7 +21,7 @@
                     class="o_input text-wrap border-0 w-100"
                     placeholder="Enter a description"
                     t-att-class="sectionAndNoteClasses"
-                    t-att-readonly="sectionAndNoteIsReadonly"
+                    t-att-readonly="this.labelIsReadonly"
                     t-att-value="label"
                     t-ref="labelNodeRef"
                     t-key="props.readonly"
@@ -41,7 +41,7 @@
                     </t>
                 </div>
                 <div
-                    t-if="props.readonly"
+                    t-if="this.labelIsReadonly"
                     class="o_input d-print-none border-0 fst-italic"
                     t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and label) }"
                     t-out="label"
