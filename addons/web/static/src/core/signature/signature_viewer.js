@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -26,8 +26,8 @@ export class SignatureViewer extends Component {
         this.state = proxy({
             isValid: true,
         });
-        onWillUpdateProps((np) => {
-            if (this.props.url !== np.url) {
+        useEffect(() => {
+            if (this.props.url) {
                 this.state.isValid = true;
             }
         });
