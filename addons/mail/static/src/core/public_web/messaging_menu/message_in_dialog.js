@@ -15,7 +15,7 @@ export class MessageInDialog extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
+        this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
         this.close = useProps.static("close", t.function([]));
     }
 

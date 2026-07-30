@@ -8,8 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 /** @param {import("models").Store} store */
-export const openReactionMenuType = (store) =>
-    t.function([t.instanceOf(store.MessageReactions.Class)]);
+export const openReactionMenuType = (store) => t.function([t.instanceOf(store.MessageReactions)]);
 
 export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
@@ -22,12 +21,12 @@ export class MessageReactionList extends Component {
         super.setup(...arguments);
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
-        this.message = propSignal("message", t.instanceOf(this.store["mail.message"].Class));
+        this.message = propSignal("message", t.instanceOf(this.store["mail.message"]));
         this.openReactionMenu = useProps.static(
             "openReactionMenu",
             openReactionMenuType(this.store)
         );
-        this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions.Class));
+        this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions));
         this.ui = useService("ui");
         this.preview = useDropdownState();
         this.hover = useHover([this.reactionButtonRef, this.reactionListRef], {

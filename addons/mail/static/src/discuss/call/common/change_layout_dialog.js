@@ -29,7 +29,7 @@ export class ChangeLayoutDialog extends Component {
         this.CALL_GRID_LAYOUT = CALL_GRID_LAYOUT;
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([]).optional(),
         });
         this.rtc = useService("discuss.rtc");

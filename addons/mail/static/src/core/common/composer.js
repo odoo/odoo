@@ -81,7 +81,7 @@ class FullComposerRecoveryPopover extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]).optional(),
-            composer: t.instanceOf(this.store["Composer"].Class),
+            composer: t.instanceOf(this.store["Composer"]),
             onClickFullRecover: t.function([]),
             onClickTextRecover: t.function([]),
         });
@@ -129,7 +129,7 @@ export class Composer extends Component {
             autofocus: t.or([t.number(), t.boolean()]).optional(0),
             className: t.string().optional(""),
             /** @deprecated use the `this.composer` signal instead */
-            composer: t.instanceOf(this.store["Composer"].Class),
+            composer: t.instanceOf(this.store["Composer"]),
             disabled: t.boolean().optional(),
             dropzoneRef: t.signal(t.instanceOf(HTMLElement)).optional(),
             mode: t.selection(["compact", "normal", "extended"]).optional("normal"),
@@ -141,7 +141,7 @@ export class Composer extends Component {
             showFullComposer: t.boolean().optional(true),
             type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
         });
-        this.composer = propComputed("composer", t.instanceOf(this.store["Composer"].Class));
+        this.composer = propComputed("composer", t.instanceOf(this.store["Composer"]));
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {

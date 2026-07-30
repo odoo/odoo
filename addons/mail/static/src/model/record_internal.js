@@ -251,7 +251,8 @@ export class RecordInternal {
         }
         if (record._.gettingField || !Model._.fields.get(name)) {
             let res = Reflect.get(...arguments);
-            if (typeof res === "function") {
+            // a model is a class, so a function: binding it would hide its statics
+            if (typeof res === "function" && !res._) {
                 res = res.bind(recordFullProxy);
             }
             return res;

@@ -11,7 +11,7 @@ const { DateTime } = luxon;
 export const onViewMeetingType = (store) =>
     types.function([
         types.instanceOf(MouseEvent),
-        types.object({ eventAtRender: types.instanceOf(store["calendar.event"].Class) }),
+        types.object({ eventAtRender: types.instanceOf(store["calendar.event"]) }),
     ]);
 
 export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopoverItem {

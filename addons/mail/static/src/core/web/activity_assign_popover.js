@@ -15,12 +15,12 @@ export class ActivityAssignPopover extends Component {
         this.store = useService("mail.store");
         this.orm = useService("orm");
         this.responsibleLabel = _t("Responsible");
-        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
         this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
         this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
         this.onActivityChanged = useProps.static(
             "onActivityChanged",
-            t.function([t.instanceOf(this.store["mail.thread"].Class)])
+            t.function([t.instanceOf(this.store["mail.thread"])])
         );
         this.userId = signal(this.activity().user_id?.id || false);
         this.userName = signal(this.activity().user_id?.name || "");

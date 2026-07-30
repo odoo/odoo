@@ -24,7 +24,7 @@ export class SearchMessageInput extends Component {
         this.props = useProps({
             closeSearch: t.function([]).optional(),
             messageSearch: t.instanceOf(MessageSearchState),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
         useListener(
             browser,

@@ -14,7 +14,7 @@ export class MessageDeleteDialog extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: types.function([types.instanceOf(MouseEvent)]),
-            message: types.instanceOf(this.store["mail.message"].Class),
+            message: types.instanceOf(this.store["mail.message"]),
             onConfirm: types.function([]),
         });
     }

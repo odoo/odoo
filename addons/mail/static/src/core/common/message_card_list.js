@@ -21,12 +21,12 @@ export class MessageCardList extends Component {
             emptyText: t.string().optional(),
             loadMore: t.boolean().optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
-            messages: t.array(t.instanceOf(this.store["mail.message"].Class)),
+            messages: t.array(t.instanceOf(this.store["mail.message"])),
             mode: t.string(),
             onClickJump: t.function([]).optional(),
             onLoadMoreVisible: t.function([]).optional(),
             showEmpty: t.boolean().optional(),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
         this.ui = useService("ui");
         useSubEnv({ messageCard: true });

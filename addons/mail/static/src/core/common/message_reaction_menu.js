@@ -17,8 +17,8 @@ export class MessageReactionMenu extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]),
-            initialReaction: t.instanceOf(this.store.MessageReactions.Class).optional(),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            initialReaction: t.instanceOf(this.store.MessageReactions).optional(),
+            message: t.instanceOf(this.store["mail.message"]),
         });
         this.ui = useService("ui");
         useEffect(() => {

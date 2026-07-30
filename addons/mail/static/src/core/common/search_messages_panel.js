@@ -16,7 +16,7 @@ export class SearchMessagesPanel extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]).optional(),
-            thread: t.instanceOf(this.store["mail.thread"].Class),
+            thread: t.instanceOf(this.store["mail.thread"]),
         });
         this.messageSearch = this.env.messageSearch ?? useMessageSearch(this.props.thread);
         useOnChange(

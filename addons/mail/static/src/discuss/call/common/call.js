@@ -73,7 +73,7 @@ export class Call extends Component {
         });
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             compact: t.boolean().optional(),
             hasOverlay: t.boolean().optional(true),
             isPip: t.boolean().optional(),

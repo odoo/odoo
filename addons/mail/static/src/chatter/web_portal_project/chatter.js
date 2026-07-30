@@ -24,7 +24,7 @@ export class Chatter extends Component {
         this.threadModel = propComputed("threadModel", t.string());
         this.twoColumns = propComputed("twoColumns", t.boolean().optional(false));
         this.thread = signal(null, {
-            type: t.instanceOf(this.store["mail.thread"].Class),
+            type: t.instanceOf(this.store["mail.thread"]),
         });
         this.state = proxy({
             jumpThreadPresent: 0,

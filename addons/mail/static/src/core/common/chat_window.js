@@ -42,7 +42,7 @@ export class ChatWindow extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            chatWindow: t.instanceOf(this.store.ChatWindow.Class),
+            chatWindow: t.instanceOf(this.store.ChatWindow),
             right: t.number().optional(),
         });
         useSubEnv({ inChatWindow: true });

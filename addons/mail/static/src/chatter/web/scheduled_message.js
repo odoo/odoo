@@ -24,9 +24,9 @@ export class ScheduledMessage extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             onScheduledMessageChanged: types.function([
-                types.instanceOf(this.store["mail.thread"].Class),
+                types.instanceOf(this.store["mail.thread"]),
             ]),
-            scheduledMessage: types.instanceOf(this.store["mail.scheduled.message"].Class),
+            scheduledMessage: types.instanceOf(this.store["mail.scheduled.message"]),
         });
         this.readMore = signal(false);
         this.toggleFn = toggleFn;

@@ -28,7 +28,7 @@ export const SUGGESTION_DELIMITERS = Object.freeze({
 export const optionType = (store) =>
     t.object({
         buttonClass: t.string().optional(),
-        cannedResponse: t.instanceOf(store["mail.canned.response"].Class).optional(),
+        cannedResponse: t.instanceOf(store["mail.canned.response"]).optional(),
         classList: t.string().optional(),
         emoji: emojiType.optional(),
         group: t.any().optional(),
@@ -36,10 +36,10 @@ export const optionType = (store) =>
         isSpecial: t.boolean().optional(),
         label: t.string().optional(),
         optionTemplate: t.string().optional(),
-        partner: t.instanceOf(store["res.partner"].Class).optional(),
-        role: t.instanceOf(store["res.role"].Class).optional(),
+        partner: t.instanceOf(store["res.partner"]).optional(),
+        role: t.instanceOf(store["res.role"]).optional(),
         source: t.string().optional(),
-        thread: t.instanceOf(store["mail.thread"].Class).optional(),
+        thread: t.instanceOf(store["mail.thread"]).optional(),
         title: t.string().optional(),
         unselectable: t.boolean().optional(),
     });

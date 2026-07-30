@@ -10,7 +10,7 @@ export class TalkingAudioBars extends Component {
         this.store = useService("mail.store");
         this.props = props({
             asPill: t.boolean().optional(false),
-            session: t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+            session: t.instanceOf(this.store["discuss.channel.rtc.session"]),
         });
     }
 }

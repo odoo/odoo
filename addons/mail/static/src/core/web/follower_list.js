@@ -21,7 +21,7 @@ export class FollowerList extends Component {
             dropdown: types.instanceOf(DropdownState),
             onAddFollowers: types.function([]).optional(),
             onFollowerChanged: types.function([]).optional(),
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            thread: types.instanceOf(this.store["mail.thread"]),
         });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {

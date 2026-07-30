@@ -10,10 +10,10 @@ export class ActivityMailTemplate extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
         this.onActivityChanged = useProps.static(
             "onActivityChanged",
-            t.function([t.instanceOf(this.store["mail.thread"].Class)]).optional()
+            t.function([t.instanceOf(this.store["mail.thread"])]).optional()
         );
         this.onClickButtons = useProps.static(
             "onClickButtons",

@@ -11,12 +11,12 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"].Class));
+        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
         this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
         this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
         this.onActivityChanged = useProps.static(
             "onActivityChanged",
-            t.function([t.instanceOf(this.store["mail.thread"].Class)])
+            t.function([t.instanceOf(this.store["mail.thread"])])
         );
         this.onClickDoneProp = useProps.static("onClickDone", t.function([]).optional());
         this.onClickDoneAndScheduleNextProp = useProps.static(

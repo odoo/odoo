@@ -39,21 +39,19 @@ export class CallParticipantCard extends Component {
         this.props = useProps({
             cardData: types.object({
                 key: types.string(),
-                member: types.instanceOf(this.store["discuss.channel.member"].Class).optional(),
-                session: types
-                    .instanceOf(this.store["discuss.channel.rtc.session"].Class)
-                    .optional(),
+                member: types.instanceOf(this.store["discuss.channel.member"]).optional(),
+                session: types.instanceOf(this.store["discuss.channel.rtc.session"]).optional(),
                 type: types.selection(["camera", "screen"]).optional(),
                 videoStream: types
                     .or([types.instanceOf(MediaStream), types.selection([false])])
                     .optional(),
             }),
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            channel: types.instanceOf(this.store["discuss.channel"]),
             className: types.string(),
             compact: types.boolean().optional(),
             inset: types
                 .function([
-                    types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                    types.instanceOf(this.store["discuss.channel.rtc.session"]),
                     types.selection(["camera", "screen"]),
                 ])
                 .optional(),

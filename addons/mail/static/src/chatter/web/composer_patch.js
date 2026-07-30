@@ -14,7 +14,7 @@ patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
         this.webComposerProps = useProps({
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
             withMessageFields: t.boolean().optional(),
         });
         this.subjectInputRef = signal.ref();

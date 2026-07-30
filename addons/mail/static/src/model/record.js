@@ -202,18 +202,8 @@ export class Record {
         return res;
     }
     /**
-     * Technical attribute, DO NOT USE in business code.
-     * This class is almost equivalent to current class of model,
-     * except this is a function, so we can new() it, whereas
-     * `this` is not, because it's an object.
-     * (in order to comply with OWL reactivity)
-     *
-     * @type {typeof Record}
-     */
-    static Class;
-    /**
-     * This method is almost equivalent to new Class, except that it properly
-     * setup relational fields of model with get/set, @see Class
+     * This method is almost equivalent to constructor, except that it properly
+     * setups all model concepts.
      *
      * @returns {Record}
      */
@@ -221,7 +211,7 @@ export class Record {
         const Model = toRaw(this);
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {
-            const recordProxy = new Model.Class();
+            const recordProxy = new Model();
             const record = toRaw(recordProxy)._raw;
             Object.assign(record._, { localId: Model.localId(ids) });
             for (const name of Model._.fields.keys()) {

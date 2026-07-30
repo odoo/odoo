@@ -14,7 +14,7 @@ export class LinkPreviewConfirmDelete extends Component {
         this.props = useProps({
             close: types.function([]),
             LinkPreview: types.component(), // cannot import LinkPreview due to circular dependency
-            messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"].Class),
+            messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"]),
         });
         useSubEnv({ inLinkPreviewConfirmDelete: true });
     }

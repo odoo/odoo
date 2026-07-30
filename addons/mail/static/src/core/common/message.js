@@ -85,14 +85,14 @@ export class Message extends Component {
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
             isReadOnly: t.boolean().optional(),
-            message: t.instanceOf(this.store["mail.message"].Class),
+            message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
-            previousMessage: t.instanceOf(this.store["mail.message"].Class).optional(),
+            previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
             squashed: t.boolean().optional(),
-            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.onParentMessageClick = useProps.static(
             "onParentMessageClick",

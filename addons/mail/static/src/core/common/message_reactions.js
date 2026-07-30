@@ -17,7 +17,7 @@ export class MessageReactions extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.message = propComputed("message", t.instanceOf(this.store["mail.message"].Class));
+        this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
         this.openReactionMenu = useProps.static(
             "openReactionMenu",
             openReactionMenuType(this.store)

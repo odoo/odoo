@@ -40,18 +40,14 @@ export class ChannelInvitation extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             className: t.string().optional(),
             close: t.function([]).optional(),
             state: t
                 .object({
                     searchStr: t.string().optional(),
-                    selectablePartners: t
-                        .array(t.instanceOf(this.store["res.partner"].Class))
-                        .optional(),
-                    selectedPartners: t
-                        .array(t.instanceOf(this.store["res.partner"].Class))
-                        .optional(),
+                    selectablePartners: t.array(t.instanceOf(this.store["res.partner"])).optional(),
+                    selectedPartners: t.array(t.instanceOf(this.store["res.partner"])).optional(),
                 })
                 .optional(),
         });

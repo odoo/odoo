@@ -17,7 +17,7 @@ export class LinkPreview extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"].Class),
+            messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"]),
         });
         this.dialogService = useService("dialog");
         this.ui = useService("ui");

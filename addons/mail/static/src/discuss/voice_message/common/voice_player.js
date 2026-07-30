@@ -58,7 +58,7 @@ export class VoicePlayer extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            attachment: types.instanceOf(this.store["ir.attachment"].Class),
+            attachment: types.instanceOf(this.store["ir.attachment"]),
         });
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");

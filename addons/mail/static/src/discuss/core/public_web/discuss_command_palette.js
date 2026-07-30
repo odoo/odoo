@@ -70,14 +70,14 @@ export class DiscussCommand extends Component {
                     searchValueSuffix: t.boolean().optional(),
                 })
                 .optional(),
-            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             counter: t.number().optional(),
             executeCommand: t.function([]),
             name: t.string(),
             persona: t
                 .or([
-                    t.instanceOf(this.store["res.partner"].Class),
-                    t.instanceOf(this.store["mail.guest"].Class),
+                    t.instanceOf(this.store["res.partner"]),
+                    t.instanceOf(this.store["mail.guest"]),
                 ])
                 .optional(),
             searchValue: t.string(),

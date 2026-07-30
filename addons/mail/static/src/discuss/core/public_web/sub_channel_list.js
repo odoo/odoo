@@ -19,7 +19,7 @@ export class SubChannelList extends Component {
         // bound once so `onClickSubChannel` is a stable (useProps.static) handler
         this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = useProps({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            channel: types.instanceOf(this.store["discuss.channel"]),
             close: types.function([types.instanceOf(MouseEvent)]).optional(),
         });
         this.search = useSearch({

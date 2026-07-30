@@ -15,7 +15,7 @@ export class Poll extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            poll: types.instanceOf(this.store["mail.poll"].Class),
+            poll: types.instanceOf(this.store["mail.poll"]),
         });
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();

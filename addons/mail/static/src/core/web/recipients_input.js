@@ -24,7 +24,7 @@ export class RecipientsInput extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = useProps({
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            thread: types.instanceOf(this.store["mail.thread"]),
             recipientType: types.string(),
             placeholder: types.string(),
         });

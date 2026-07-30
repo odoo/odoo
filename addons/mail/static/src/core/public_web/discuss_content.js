@@ -31,7 +31,7 @@ export class DiscussContent extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
-            thread: types.instanceOf(this.store["mail.thread"].Class).optional(),
+            thread: types.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.ui = useService("ui");
         this.notification = useService("notification");

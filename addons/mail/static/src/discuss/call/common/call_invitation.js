@@ -25,7 +25,7 @@ export class CallInvitation extends Component {
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            channel: types.instanceOf(this.store["discuss.channel"]),
         });
         this.ui = useService("ui");
         this.state = proxy({

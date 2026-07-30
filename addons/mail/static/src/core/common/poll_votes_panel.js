@@ -16,7 +16,7 @@ export class PollVotesPanel extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]).optional(),
-            poll: t.instanceOf(this.store["mail.poll"].Class),
+            poll: t.instanceOf(this.store["mail.poll"]),
         });
         this.ui = useService("ui");
         this.tabsRef = signal.ref();

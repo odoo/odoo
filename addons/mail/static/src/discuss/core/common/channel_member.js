@@ -19,10 +19,7 @@ export class ChannelMember extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.member = propComputed(
-            "member",
-            t.instanceOf(this.store["discuss.channel.member"].Class)
-        );
+        this.member = propComputed("member", t.instanceOf(this.store["discuss.channel.member"]));
         this.actions = useChannelMemberActions({ member: this.member });
         this.showingActions = useDropdownState();
     }

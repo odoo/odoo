@@ -17,7 +17,7 @@ export class AttachmentPanel extends Component {
         this.sequential = useSequential();
         this.store = useService("mail.store");
         this.props = useProps({
-            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([]).optional(),
         });
         this.offlineService = useService("offline");
