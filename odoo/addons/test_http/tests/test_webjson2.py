@@ -271,8 +271,8 @@ class TestHttpWebJson_2(TestHttpBase):
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_url_params_vs_body_params(self):
-        url_model = 'res.users'
-        body_model = 'res.partner'
+        url_model = 'test_http.stargate'
+        body_model = 'test_http.galaxy'
         method = 'search'
 
         with (
