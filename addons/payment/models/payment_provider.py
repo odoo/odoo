@@ -1232,7 +1232,12 @@ class PaymentProvider(models.Model):
         if post_processing_cron:
             any_installed_provider = bool(
                 self.sudo().search_count(
-                    [("module_state", "in", ("installed", "to install"))], limit=1
+                    [
+                        "|",
+                        ("module_state", "in", ("installed", "to install")),
+                        ("module_id", "=", False),
+                    ],
+                    limit=1,
                 )
             )
             post_processing_cron.active = any_installed_provider
