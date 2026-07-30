@@ -266,32 +266,44 @@ class TestRecepcionProveedoresFe(TransactionCase):
     def test_abrir_aceptar_parcial_bloquea_si_no_hay_cambios(self):
         """Si la factura quedó idéntica (en monto) al XML original del
         proveedor, no tiene sentido mandar una aceptación "parcial" — se debe
-        forzar el uso de "Aceptar total" en su lugar."""
+        forzar el uso de "Aceptar total" en su lugar. Se compara el subtotal
+        SIN impuesto (no el total con impuesto): si el impuesto de compra no
+        se emparejó automáticamente, el total con impuesto igual difiere del
+        original aunque el usuario no haya tocado nada — el subtotal no."""
         bill = self._create_bill()
-        bill.write({
-            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
-            'l10n_cr_fe_proveedor_total': bill.amount_total,
-        })
+        bill.l10n_cr_fe_proveedor_subtotal = bill.amount_untaxed
         with self.assertRaises(UserError):
             bill.action_l10n_cr_fe_abrir_aceptar_parcial()
 
     def test_abrir_aceptar_parcial_permite_si_hay_cambios(self):
         bill = self._create_bill()
-        bill.write({
-            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
-            'l10n_cr_fe_proveedor_total': bill.amount_total + 500,
-        })
+        bill.l10n_cr_fe_proveedor_subtotal = bill.amount_untaxed + 500
         action = bill.action_l10n_cr_fe_abrir_aceptar_parcial()
         self.assertEqual(action['res_model'], 'l10n_cr.fe.mr.motivo.wizard')
         self.assertEqual(action['context']['default_move_id'], bill.id)
         self.assertEqual(action['context']['default_decision'], 'aceptado_parcial')
 
-    def test_abrir_aceptar_parcial_sin_proveedor_total_no_bloquea(self):
-        """Facturas creadas antes del fix (o sin totales del proveedor
-        capturados) no deben quedar bloqueadas — no hay base de comparación."""
+    def test_abrir_aceptar_parcial_sin_proveedor_subtotal_no_bloquea(self):
+        """Facturas creadas antes del fix (o sin subtotal del proveedor
+        capturado) no deben quedar bloqueadas — no hay base de comparación."""
         bill = self._create_bill()
         action = bill.action_l10n_cr_fe_abrir_aceptar_parcial()
         self.assertEqual(action['res_model'], 'l10n_cr.fe.mr.motivo.wizard')
+
+    def test_abrir_aceptar_parcial_bloquea_aunque_impuesto_no_haya_matcheado(self):
+        """Reproduce el caso real: el proveedor cobró impuesto (60) pero en
+        Odoo no hay un impuesto de compra con esa tarifa configurado, así que
+        amount_tax/amount_total quedan en 0/menos que el original aunque el
+        usuario no haya editado ninguna línea. El check debe bloquear de
+        todas formas, porque se basa en el subtotal (amount_untaxed), que sí
+        coincide con el XML aunque el impuesto no se haya emparejado."""
+        bill = self._create_bill()
+        bill.l10n_cr_fe_proveedor_subtotal = bill.amount_untaxed
+        bill.l10n_cr_fe_proveedor_monto_impuesto = 60.0
+        bill.l10n_cr_fe_proveedor_total = bill.amount_total + 60.0
+        self.assertNotEqual(bill.amount_total, bill.l10n_cr_fe_proveedor_total)
+        with self.assertRaises(UserError):
+            bill.action_l10n_cr_fe_abrir_aceptar_parcial()
 
     def test_aceptar_parcial_engine_bloquea_sin_cambios_aunque_se_llame_directo(self):
         """Protección contra bypass: aunque alguien llame directo al método
@@ -300,8 +312,7 @@ class TestRecepcionProveedoresFe(TransactionCase):
         bill = self._create_bill()
         bill.write({
             'l10n_cr_fe_mr_motivo': 'Motivo cualquiera',
-            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
-            'l10n_cr_fe_proveedor_total': bill.amount_total,
+            'l10n_cr_fe_proveedor_subtotal': bill.amount_untaxed,
         })
         with self.assertRaises(UserError):
             bill.action_l10n_cr_fe_aceptar_parcial()
@@ -316,10 +327,7 @@ class TestRecepcionProveedoresFe(TransactionCase):
 
     def test_wizard_confirmar_aceptar_parcial(self):
         bill = self._create_bill()
-        bill.write({
-            'l10n_cr_fe_proveedor_monto_impuesto': bill.amount_tax,
-            'l10n_cr_fe_proveedor_total': bill.amount_total + 500,
-        })
+        bill.l10n_cr_fe_proveedor_subtotal = bill.amount_untaxed + 500
         wizard = self.env['l10n_cr.fe.mr.motivo.wizard'].create({
             'move_id': bill.id,
             'decision': 'aceptado_parcial',
