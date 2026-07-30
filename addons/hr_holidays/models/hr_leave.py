@@ -516,7 +516,7 @@ class HrLeave(models.Model):
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_work_entry_type_id(self):
         for holiday in self:
-            local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
+            local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', [holiday.employee_id.company_id.country_id.id] + [False])])
             all_valid_work_entry_types = local_work_entry_types.with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).filtered_domain([('has_valid_allocation', '=', True)])
             no_allocation_required_work_entry_types = local_work_entry_types.with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).filtered_domain([('requires_allocation', '=', False)])
             if not holiday.work_entry_type_id.requires_allocation:
