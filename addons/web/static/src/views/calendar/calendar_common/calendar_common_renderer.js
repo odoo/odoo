@@ -413,7 +413,7 @@ export class CalendarCommonRenderer extends Component {
         // when rendering months, FullCalendar uses a date w/out tz
         // so use UTC instead of local tz when converting to DateTime
         const options = scale === "month" ? { zone: "UTC" } : {};
-        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date, options);
+        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date, options).plus({ hour: 1 });
         return {
             weekdayShort,
             weekdayLong,
