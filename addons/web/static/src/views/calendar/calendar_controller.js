@@ -221,6 +221,26 @@ export class CalendarController extends Component {
         return this.state.sidePanelExpanded;
     }
 
+    get filters() {
+        const res = [];
+        for (const f of this.model.filterSections) {
+            const filter = { label: f.label, active: false };
+            if (f.filters.some((f) => f.active)) {
+                filter.active = true;
+            }
+            res.push(filter);
+        }
+        return res;
+    }
+
+    get toScheduleString() {
+        const { eventsToSchedule } = this.model.data;
+        if (eventsToSchedule.length) {
+            return _t("%s to schedule", eventsToSchedule.length);
+        }
+        return _t("Nothing to schedule");
+    }
+
     get className() {
         return this.props.className;
     }
