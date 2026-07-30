@@ -153,6 +153,7 @@ class StockTraceabilityReport(models.TransientModel):
         res_model, res_id, reference = self._get_reference(move_line)
         source_name, destination_name = self._get_location_names(move_line)
         date = format_datetime(self.env, move_line.move_id.date)
+        product_in_location = move_line.location_dest_usage == 'internal' and sum(self._get_related_move_lines(move_line, 'child').mapped('quantity')) < move_line.quantity
         return {
             'id': autoIncrement(),
             'model_name': 'stock.move.line',
@@ -179,6 +180,7 @@ class StockTraceabilityReport(models.TransientModel):
             ],
             'level': level,
             'unfoldable': unfoldable,
+            'highlight_destination': product_in_location,
         }
 
     def _make_column(self, name, value):
