@@ -357,6 +357,32 @@ class MaintenanceRequest(models.Model):
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
+<<<<<<< b6a0f5a06a919bcc92eb358e72d65552a154e777
+||||||| 626d31fa0191bfe7ca8e1fcf177357eeeb60f2c7
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
+            self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
+            self.activity_feedback(['maintenance.mail_act_maintenance_request'])
+            self.activity_update()
+        if vals.get('user_id') or vals.get('schedule_date'):
+            self.activity_update()
+        if self._need_new_activity(vals):
+            # need to change description of activity also so unlink old and create new activity
+            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
+            self.activity_update()
+=======
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
+            self.filtered(lambda m: not m.stage_id.done).write({'close_date': False})
+            self.activity_feedback(['maintenance.mail_act_maintenance_request'])
+            self.filtered(lambda m: not m.stage_id.done).activity_update()
+        if vals.get('user_id') or vals.get('schedule_date'):
+            self.activity_update()
+        if self._need_new_activity(vals):
+            # need to change description of activity also so unlink old and create new activity
+            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
+            self.activity_update()
+>>>>>>> 91937dd3bb937d263a985d6dd7a18343b9dd084a
         return res
 
     def _add_followers(self):

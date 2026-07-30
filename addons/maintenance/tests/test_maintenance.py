@@ -157,6 +157,7 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
         form = Form(equipment)
         maintenance.close_date = False
         form = Form(equipment)
+<<<<<<< b6a0f5a06a919bcc92eb358e72d65552a154e777
 
     def test_schedule_date_and_end_must_be_set_together(self):
         request = self.maintenance_request.create({
@@ -186,3 +187,35 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
                 'schedule_date': False,
                 'schedule_end': fields.Datetime.now(),
             })
+||||||| 626d31fa0191bfe7ca8e1fcf177357eeeb60f2c7
+=======
+
+    def test_no_duplicate_activity_on_stage_change(self):
+        """
+        Ensure that changing the stage of a maintenance request does not create duplicate activities.
+        """
+        maintenance_request = self.env['maintenance.request'].create({
+            'name': 'Test activity duplication',
+            'maintenance_type': 'preventive',
+            'recurring_maintenance': True,
+            'repeat_type': 'forever',
+            'schedule_date': fields.Date.today(),
+        })
+        maintenance_done_stage = self.env['maintenance.stage'].create({
+            'name': 'Done Stage',
+            'done': True,
+        })
+        self.assertEqual(len(maintenance_request.activity_ids), 1, "There should be one activity created for the maintenance request.")
+        maintenance_request.write({'stage_id': maintenance_done_stage.id})
+        new_request = self.env['maintenance.request'].search([
+            ('id', '!=', maintenance_request.id),
+            ('name', '=', maintenance_request.name),
+        ])
+        self.assertEqual(len(new_request), 1, "A recurring maintenance request should be created.")
+        self.assertEqual(
+            len(new_request.activity_ids),
+            1,
+            "The recurring maintenance request should have one activity.",
+        )
+        self.assertEqual(len(maintenance_request.activity_ids), 0, "There should be no activities after moving to a done stage.")
+>>>>>>> 91937dd3bb937d263a985d6dd7a18343b9dd084a
