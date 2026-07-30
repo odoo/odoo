@@ -757,7 +757,7 @@ class HrEmployee(models.Model):
             if version.is_flexible or version.resource_calendar_id._is_duration_based_on_date(target_date):
                 # Quick calculation to center flexible hours around 12PM midday
                 if version.is_flexible:
-                    hours_day = version.hours_per_day
+                    hours_day = version.hours_per_day or version.hours_per_week / 7
                 else:
                     hours_day = self.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
