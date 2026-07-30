@@ -342,7 +342,7 @@ export class CalendarCommonRenderer extends Component {
             weekdayShort: weekdayShort,
             weekdayLong: weekdayLong,
             day,
-        } = DateTime.fromJSDate(date);
+        } = DateTime.fromJSDate(date).plus({ hours: 1 });
         return renderToString(this.constructor.headerTemplate, {
             weekdayShort,
             weekdayLong,
