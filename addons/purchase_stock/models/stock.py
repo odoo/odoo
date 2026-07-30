@@ -291,11 +291,11 @@ class StockWarehouseOrderpoint(models.Model):
             values['supplierinfo'] = self.supplier_id
         return values
 
-    def _get_replenishment_order_notification(self):
+    def _get_replenishment_order_notification(self, written_after=None):
         self.ensure_one()
         domain = Domain('orderpoint_id', 'in', self.ids)
-        if self.env.context.get('written_after'):
-            domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
+        if written_after:
+            domain &= Domain('write_date', '>=', written_after)
         order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
             return {
@@ -312,7 +312,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
-        return super()._get_replenishment_order_notification()
+        return super()._get_replenishment_order_notification(written_after=written_after)
 
     def _prepare_procurement_values(self, date=False):
         values = super()._prepare_procurement_values(date=date)
