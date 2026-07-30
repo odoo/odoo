@@ -208,7 +208,7 @@ class StockMove(models.Model):
 
     def _should_count_for_quantity_received(self):
         res = super()._should_count_for_quantity_received()
-        return res or self.is_subcontract
+        return res or self.is_subcontract or self.location_id.is_subcontract()
 
     def _check_access_if_subcontractor(self, vals):
         if self.env.user._is_portal() and not self.env.su:
