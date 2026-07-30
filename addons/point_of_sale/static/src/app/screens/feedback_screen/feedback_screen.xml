@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.FeedbackScreen">
         <div t-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="onClick">
             <div class="d-flex flex-column align-items-center">
-                <div style="width: 115px; height: 115px;">
+                <div class="checkmark-wrapper">
                     <t t-if="!this.state.loading">
                         <t t-call="point_of_sale.ValidationAnimation"/>
                     </t>
