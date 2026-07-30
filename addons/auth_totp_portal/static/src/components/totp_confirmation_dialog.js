@@ -24,14 +24,17 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
             });
         };
         useEffect(
-            (clipboardButtonEl) => {
-                if (clipboardButtonEl) {
+            (...clipboardButtonEls) => {
+                for (const clipboardButtonEl of clipboardButtonEls) {
                     clipboardButtonEl.addEventListener("click", onClickClipboardButton);
-                    return () =>
-                        clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
                 }
+                return () => {
+                    for (const clipboardButtonEl of clipboardButtonEls) {
+                        clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
+                    }
+                };
             },
-            () => [this.modalRef.el?.querySelector("#collapseTotpSecret .o_clipboard_button")]
+            () => [...(this.modalRef.el?.querySelectorAll(".o_clipboard_button") ?? [])]
         );
     }
 }
