@@ -460,7 +460,7 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'employee_id')
+                 'request_date_from', 'request_date_to', 'employee_id', 'work_entry_type_id')
     def _compute_date_from_to(self):
         for holiday in self:
             if not holiday.request_date_from or not holiday.request_date_to:
@@ -790,7 +790,7 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days')
+    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_id')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
