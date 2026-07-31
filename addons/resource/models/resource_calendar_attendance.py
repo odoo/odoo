@@ -51,7 +51,7 @@ class ResourceCalendarAttendance(models.Model):
         ], 'Day of Week', required=True, index=True, precompute=True,
         compute="_compute_dayofweek", store=True, readonly=False)
 
-    # Variable
+    # flexible
     date = fields.Date()
     recurrency = fields.Boolean()
     recurrency_excluded_occurences = fields.Json()
@@ -138,7 +138,7 @@ class ResourceCalendarAttendance(models.Model):
             [tuple(calendar_ids)],
         )
 
-    def _check_attendances_variable_for_calendar(self, ids_to_check):
+    def _check_attendances_flexible_for_calendar(self, ids_to_check):
         # 1. SORT THE ATTENDANCES - the recurring ones become the leaves of the collision tree,
         #    the single-date ones are grouped by their date for the last step
         recurrent_attendance_leaves = []
@@ -217,8 +217,8 @@ class ResourceCalendarAttendance(models.Model):
         # 2. BUILD THE SEARCH DOMAIN - for each calendar, look for every attendance that could overlap
         #    with the ones we are saving (so we can check them all together later)
         for calendar, attendances in self.grouped('calendar_id').items():
-            if calendar.calendar_type == "variable":
-                # for a variable calendar we want:
+            if calendar.calendar_type == "flexible":
+                # for a flexible calendar we want:
                 # - every single-date attendance (ad-hocs) on the same dates
                 # - every recurring attendance still active inside the dates we check
                 all_dates = attendances.mapped('date')
@@ -258,8 +258,8 @@ class ResourceCalendarAttendance(models.Model):
         )
         ids_to_check = set(self.ids)
         for calendar, attendances in attendances_by_calendar:
-            if calendar.calendar_type == "variable":
-                attendances._check_attendances_variable_for_calendar(ids_to_check)
+            if calendar.calendar_type == "flexible":
+                attendances._check_attendances_flexible_for_calendar(ids_to_check)
             else:
                 attendances._check_attendances_fixed_for_calendar(ids_to_check)
 
@@ -381,7 +381,7 @@ class ResourceCalendarAttendance(models.Model):
 
     def _filter_by_date(self, date: date, additional_filter=None):
         """
-        Get the attendances for a specific date. For variable schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
+        Get the attendances for a specific date. For flexible schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
 
         :param date
         :param additional_filter: optional callable to apply extra filtering in the same loop

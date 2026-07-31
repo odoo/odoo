@@ -7,23 +7,23 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
-class TestVariableResourceCalendar(TransactionCase):
+class TestFullyFlexibleResourceCalendar(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.variable_calendar, cls.fixed_calendar = cls.env['resource.calendar'].create([{
-            'name': 'Test Variable Calendar',
-            'calendar_type': 'variable',
+        cls.flexible_calendar, cls.fixed_calendar = cls.env['resource.calendar'].create([{
+            'name': 'Test Flexible Calendar',
+            'calendar_type': 'flexible',
         }, {
             'name': 'Test Fixed Calendar',
             'calendar_type': 'fixed',
         }])
 
-    def test_attendance_intervals_batch_variable_calendar(self):
+    def test_attendance_intervals_batch_flexible_calendar(self):
         """Test that _attendance_intervals_batch returns only attendances in the selected date range"""
         start = date(1, 1, 1)
-        self.variable_calendar.attendance_ids = [(5, 0, 0)] + [
+        self.flexible_calendar.attendance_ids = [(5, 0, 0)] + [
             (0, 0,
                 {
                     'date': start + timedelta(days=day, weeks=week),
@@ -42,26 +42,26 @@ class TestVariableResourceCalendar(TransactionCase):
         start_dt = datetime(2025, 11, 10, 0, 0, 0, tzinfo=tz)
         end_dt = datetime(2025, 11, 20, 23, 59, 59, tzinfo=tz)
 
-        intervals = self.variable_calendar._attendance_intervals_batch(start_dt, end_dt)[False]
+        intervals = self.flexible_calendar._attendance_intervals_batch(start_dt, end_dt)[False]
 
         # Should only take attendance with date between Nov 10 and Nov 20 (18 attendances)
-        # Attendances based on dayofweek are ignored in variable calendars
+        # Attendances based on dayofweek are ignored in flexible calendars
         self.assertEqual(len(intervals), 18, "Should have 18 attendance in range")
         self.assertEqual(intervals._items[0][0:2], (datetime(2025, 11, 10, 8, 0, tzinfo=tz), datetime(2025, 11, 10, 12, 0, tzinfo=tz)))
         self.assertEqual(intervals._items[-1][0:2], (datetime(2025, 11, 20, 13, 0, tzinfo=tz), datetime(2025, 11, 20, 17, 0, tzinfo=tz)))
 
     def test_attendance_intervals_duration_based_domain_filter(self):
-        self.variable_calendar.attendance_ids = [(5, 0, 0)] + [
+        self.flexible_calendar.attendance_ids = [(5, 0, 0)] + [
             (0, 0, {'date': date(2026, 1, 5), 'duration_hours': hours, 'hour_from': 0, 'hour_to': 0})
             for hours in [2, 4, 6]
         ]
-        att_2h, att_4h, att_6h = sorted(self.variable_calendar.attendance_ids, key=lambda a: a.duration_hours)
+        att_2h, att_4h, att_6h = sorted(self.flexible_calendar.attendance_ids, key=lambda a: a.duration_hours)
 
         tz = ZoneInfo('UTC')
         start_dt = datetime(2026, 1, 5, 0, 0, 0, tzinfo=tz)
         end_dt = datetime(2026, 1, 5, 23, 59, 59, tzinfo=tz)
 
-        intervals = self.variable_calendar._attendance_intervals_batch(start_dt, end_dt, domain=[('duration_hours', '>', 3)])[False]
+        intervals = self.flexible_calendar._attendance_intervals_batch(start_dt, end_dt, domain=[('duration_hours', '>', 3)])[False]
 
         intervals_by_attendance = {att: (start, end) for start, end, att in intervals}
         self.assertEqual(len(intervals_by_attendance), 2, "Only the 4h and 6h attendances match the domain; the 2h one is filtered out")
@@ -81,7 +81,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_dayofweek_compute(self):
         """Test that the dayofweek is correctly computed based on the date"""
         attendance = self.env['resource.calendar.attendance'].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'date': date(1, 1, 5),  # This is a Friday
             'hour_from': 8,
             'hour_to': 17,
@@ -109,7 +109,7 @@ class TestVariableResourceCalendar(TransactionCase):
 
         with Form(calendar) as calendar_form:
             # Should NOT raise an error.
-            calendar_form.calendar_type = 'variable'
+            calendar_form.calendar_type = 'flexible'
 
         self.assertEqual(len(calendar.attendance_ids), 0, "Changing schedule type should unlink attendances of the other type")
 
@@ -124,9 +124,9 @@ class TestVariableResourceCalendar(TransactionCase):
 
         calendar = self.env['resource.calendar'].create({
             'name': 'Test Attendance Unlinking 2',
-            'calendar_type': 'variable',
+            'calendar_type': 'flexible',
         })
-        self.assertEqual(len(calendar.attendance_ids), 0, "Variable calendar should not have default attendances created.")
+        self.assertEqual(len(calendar.attendance_ids), 0, "Flexible calendar should not have default attendances created.")
 
     def setup_collision(self):
         """
@@ -146,7 +146,7 @@ class TestVariableResourceCalendar(TransactionCase):
         8 4 8 6 8 4
         """
 
-        self.variable_calendar.attendance_ids = [(5, 0, 0),
+        self.flexible_calendar.attendance_ids = [(5, 0, 0),
             (0, 0, {
                 'hour_from': 6,
                 'hour_to': 8,
@@ -187,7 +187,7 @@ class TestVariableResourceCalendar(TransactionCase):
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'hour_from': 7,
                     'hour_to': 9,
                     'date': '2025-01-08',
@@ -199,7 +199,7 @@ class TestVariableResourceCalendar(TransactionCase):
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'hour_from': 7,
                     'hour_to': 9,
                     'recurrency': True,
@@ -212,7 +212,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_collision_overlap_adhoc_adhoc(self):
         self.env["resource.calendar.attendance"].create([
             {
-                'calendar_id': self.variable_calendar.id,
+                'calendar_id': self.flexible_calendar.id,
                 'hour_from': 7,
                 'hour_to': 9,
                 'date': '2024-12-31',
@@ -221,7 +221,7 @@ class TestVariableResourceCalendar(TransactionCase):
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'hour_from': 8,
                     'hour_to': 10,
                     'date': '2024-12-31',
@@ -231,7 +231,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_collision_overlap_recurrence_adhoc(self):
         self.env["resource.calendar.attendance"].create([
             {
-                'calendar_id': self.variable_calendar.id,
+                'calendar_id': self.flexible_calendar.id,
                 'hour_from': 7,
                 'hour_to': 9,
                 'recurrency': True,
@@ -243,7 +243,7 @@ class TestVariableResourceCalendar(TransactionCase):
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'hour_from': 8,
                     'hour_to': 10,
                     'date': '2024-12-31',
@@ -259,18 +259,18 @@ class TestVariableResourceCalendar(TransactionCase):
         On 2025-01-15: R123 = 11h => +13h not possible
         """
         self.setup_collision()
-        self.variable_calendar.attendance_ids.duration_based = True
+        self.flexible_calendar.attendance_ids.duration_based = True
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'duration_hours': 13.1,
                     'date': '2025-01-15',
                 },
             ])
         self.env["resource.calendar.attendance"].create([
             {
-                'calendar_id': self.variable_calendar.id,
+                'calendar_id': self.flexible_calendar.id,
                 'duration_hours': 13,
                 'date': '2025-01-15',
             },
@@ -285,11 +285,11 @@ class TestVariableResourceCalendar(TransactionCase):
         On 2025-01-15: R123 = 11h => +13h not possible
         """
         self.setup_collision()
-        self.variable_calendar.attendance_ids.duration_based = True
+        self.flexible_calendar.attendance_ids.duration_based = True
         with self.assertRaises(UserError):
             self.env["resource.calendar.attendance"].create([
                 {
-                    'calendar_id': self.variable_calendar.id,
+                    'calendar_id': self.flexible_calendar.id,
                     'duration_hours': 13.1,
                     'recurrency': True,
                     'recurrency_interval': 1,
@@ -299,7 +299,7 @@ class TestVariableResourceCalendar(TransactionCase):
             ])
         self.env["resource.calendar.attendance"].create([
             {
-                'calendar_id': self.variable_calendar.id,
+                'calendar_id': self.flexible_calendar.id,
                 'duration_hours': 13,
                 'recurrency': True,
                 'recurrency_interval': 1,
@@ -311,7 +311,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_exclusion_first_occurence(self):
         date_to_exclude = date(2025, 1, 1)
         recurrency = self.env["resource.calendar.attendance"].create([{
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'duration_hours': 12,
             'recurrency': True,
             'recurrency_interval': 1,
@@ -319,13 +319,13 @@ class TestVariableResourceCalendar(TransactionCase):
             'date': date_to_exclude,
         }])
         recurrency.exclude_occurence('2025-01-01')
-        result = self.variable_calendar.attendance_ids._filter_by_date(date_to_exclude)
+        result = self.flexible_calendar.attendance_ids._filter_by_date(date_to_exclude)
         self.assertEqual(len(result), 0)
 
     def test_exclusion_allows_new_adhoc_on_excluded_date(self):
         """Excluding an occurrence should allow a new adhoc attendance to overlap that date without raising"""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -337,7 +337,7 @@ class TestVariableResourceCalendar(TransactionCase):
 
         # 2025-01-05 overlaps R1's time range (8-12) but its occurrence is excluded → no error
         self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 9,
             'hour_to': 11,
             'date': date(2025, 1, 5),
@@ -346,7 +346,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_exclusion_allows_new_recurrence_on_excluded_date(self):
         """Excluding an occurrence should allow a new recurrence whose only conflicting date is the excluded one"""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -360,7 +360,7 @@ class TestVariableResourceCalendar(TransactionCase):
         # New recurrence scoped to 2025-01-05 only (recurrency_until == date): its sole occurrence
         # overlaps R1's time range (8-12) but that date is excluded → no error
         self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 9,
             'hour_to': 11,
             'recurrency': True,
@@ -373,7 +373,7 @@ class TestVariableResourceCalendar(TransactionCase):
     def test_recurrency_count_one_occurrence(self):
         """Test that setting recurrency_count to 1 computes recurrency_until equal to the attendance date."""
         attendance = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'date': date(2025, 3, 10),
             'hour_from': 8,
             'hour_to': 12,
@@ -391,7 +391,7 @@ class TestVariableResourceCalendar(TransactionCase):
         unlinks the original record, so the new adhoc attendance must still be created from the
         previously-captured data instead of copying the (now deleted) source."""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -412,13 +412,13 @@ class TestVariableResourceCalendar(TransactionCase):
         self.assertEqual(adhoc.date, date(2025, 1, 5))
         self.assertEqual(adhoc.hour_from, 9)
         self.assertEqual(adhoc.hour_to, 11)
-        self.assertEqual(adhoc.calendar_id, self.variable_calendar)
+        self.assertEqual(adhoc.calendar_id, self.flexible_calendar)
 
     def test_create_new_recurrency_drops_recurrency_until_when_end_type_not_date(self):
         """create_new_recurrency must drop the copied recurrency_until when the change switches
         recurrency_end_type away from 'date', so it is recomputed from the new end type."""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -451,7 +451,7 @@ class TestVariableResourceCalendar(TransactionCase):
         identifies the occurrence to exclude from the recurrency; the new adhoc's date must come
         from `changes` (the moved-to date), not be forced to the arg date."""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -477,7 +477,7 @@ class TestVariableResourceCalendar(TransactionCase):
         recurrency, the arg date is used only to stop the source recurrency the day before; the
         new recurrency's start date must come from `changes` (the moved-to date)."""
         recurrency = self.env["resource.calendar.attendance"].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -504,7 +504,7 @@ class TestVariableResourceCalendar(TransactionCase):
 
     def test_convert_single_occurrence_recurrencies(self):
         shared_data = {
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 12,
             'recurrency': True,
@@ -531,7 +531,7 @@ class TestVariableResourceCalendar(TransactionCase):
             'recurrency_excluded_occurences': ['2025-01-10'],
         }])
 
-        self.variable_calendar._convert_single_occurrence_recurrencies()
+        self.flexible_calendar._convert_single_occurrence_recurrencies()
 
         self.assertFalse(single.recurrency, "All-excluded recurrency should be converted to ad-hoc")
         self.assertFalse(single.recurrency_excluded_occurences, "Exclusion list should be cleared after conversion")
@@ -541,7 +541,7 @@ class TestVariableResourceCalendar(TransactionCase):
 
     def test_calendar_clean_excluded_dates(self):
         recurrency = self.env['resource.calendar.attendance'].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'date': date(2026, 1, 1),
             'hour_from': 8,
             'hour_to': 12,
@@ -559,13 +559,13 @@ class TestVariableResourceCalendar(TransactionCase):
             'recurrency_count': 2,
         })
 
-        self.variable_calendar._clean_excluded_occurrences()
+        self.flexible_calendar._clean_excluded_occurrences()
 
         self.assertFalse(recurrency.recurrency_excluded_occurences, "Exclusion list should be cleaned of dates before the new start date, after until date and not falling in recurrency")
 
     def test_exclude_first_occurrence_skips_existing_excluded_days(self):
         recurrency = self.env['resource.calendar.attendance'].create({
-            'calendar_id': self.variable_calendar.id,
+            'calendar_id': self.flexible_calendar.id,
             'hour_from': 8,
             'hour_to': 16,
             'recurrency': True,

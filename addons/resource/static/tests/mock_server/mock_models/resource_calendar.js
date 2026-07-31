@@ -3,7 +3,7 @@ import { models } from "@web/../tests/web_test_helpers";
 export class ResourceCalendar extends models.ServerModel {
     _name = "resource.calendar";
 
-    _records = [{ id: 1, name: "Variable", calendar_type: "variable" }];
+    _records = [{ id: 1, name: "Flexible", calendar_type: "flexible" }];
 
     get_attendances() {
         return this.env["resource.calendar.attendance"]

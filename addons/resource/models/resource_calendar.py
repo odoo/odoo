@@ -77,12 +77,12 @@ class ResourceCalendar(models.Model):
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
     calendar_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('variable', 'Variable')],
+        ('flexible', 'Flexible')],
         string='Calendar Type', default='fixed', required=True)
 
     def _get_attendances_to_unlink(self, next_calendar_type=None):
         """ To retrieve attendances with date, to unlink when the calendar will be/is fixed
-            Or attendance without date, to unlink when the calendar will be/is variable"""
+            Or attendance without date, to unlink when the calendar will be/is flexible"""
         return self.attendance_ids.filtered(lambda a: a.date if (next_calendar_type or a.calendar_id.calendar_type) == "fixed" else not a.date)
 
     def _convert_single_occurrence_recurrencies(self):
@@ -161,7 +161,7 @@ class ResourceCalendar(models.Model):
     @api.depends('attendance_ids.dayofweek', 'calendar_type')
     def _compute_days_per_week(self):
         for calendar in self:
-            if calendar.calendar_type == 'variable':
+            if calendar.calendar_type == 'flexible':
                 continue
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.days_per_week = len(set(attendances.mapped('dayofweek')))
@@ -175,7 +175,7 @@ class ResourceCalendar(models.Model):
     def _compute_hours_per_week(self):
         """ Compute the average hours per week """
         for calendar in self:
-            if calendar.calendar_type == 'variable':
+            if calendar.calendar_type == 'flexible':
                 continue
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.hours_per_week = sum(attendances.mapped('duration_hours'))
@@ -793,7 +793,7 @@ class ResourceCalendar(models.Model):
     def _get_attendances_by_date(self, date_from, date_to, domain=None):
         """
         Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
-            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
+            - For flexible schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
             - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
 
         :param date_from: start date of the period (included)
@@ -804,12 +804,12 @@ class ResourceCalendar(models.Model):
         result = defaultdict(lambda: self.env['resource.calendar.attendance'])
 
         domain_fixed = Domain([('date', '=', False)])
-        domain_variable_recurrency = Domain([
+        domain_flexible_recurrency = Domain([
             ('recurrency', '=', True),
             ('date', '<=', date_to),
             ('recurrency_until', '>=', date_from),
         ])
-        domain_variable_adhoc = Domain([
+        domain_flexible_adhoc = Domain([
             ('recurrency', '=', False),
             ('date', '>=', date_from),
             ('date', '<=', date_to),
@@ -818,8 +818,8 @@ class ResourceCalendar(models.Model):
             domain or Domain.TRUE,
             Domain.OR([
                 domain_fixed,
-                domain_variable_recurrency,
-                domain_variable_adhoc,
+                domain_flexible_recurrency,
+                domain_flexible_adhoc,
             ]),
             Domain('calendar_id', '=', self.id),
         ])

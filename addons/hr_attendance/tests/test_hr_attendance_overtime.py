@@ -801,7 +801,7 @@ class TestHrAttendanceOvertime(HttpCase):
             'auto_check_out_tolerance': 0
         })
         self.employee.resource_calendar_id.write({
-            'calendar_type': 'variable',
+            'calendar_type': 'flexible',
             'attendance_ids': [(5, 0, 0),
                                (0, 0, {'date': datetime(2025, 3, 5), 'hour_from': 12, 'hour_to': 16}),
                                (0, 0, {'date': datetime(2025, 3, 12), 'hour_from': 8, 'hour_to': 16})],
