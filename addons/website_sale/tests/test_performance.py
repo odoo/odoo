@@ -284,8 +284,8 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
             Command.create({
                 "base_pricelist_id": cls.pricelist.id,
                 "base": "pricelist",
-                "compute_price": "percentage",
-                "percent_price": 10,
+                "compute_price": "discount",
+                "price_discount": 10,
             })
         ]
 

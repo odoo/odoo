@@ -90,14 +90,14 @@ class TestProductCatalog(HttpCase, SaleCommon):
             Command.create({
                 "min_quantity": 1.0,
                 "product_id": self.product.id,
-                "compute_price": "percentage",
-                "percent_price": 50,
+                "compute_price": "discount",
+                "price_discount": 50,
             }),
             Command.create({
                 "min_quantity": 2.0,
                 "product_id": self.service_product.id,
-                "compute_price": "percentage",
-                "percent_price": 50,
+                "compute_price": "discount",
+                "price_discount": 50,
             }),
         ]
 

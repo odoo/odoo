@@ -297,13 +297,21 @@ export class PosOrderline extends PosOrderlineAccounting {
 
     displayDiscountPolicy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
-        // is a percentage discount. However we don't have that information in pos
+        // is a plain discount. However we don't have that information in pos
         // so this is heuristic used to imitate the same behavior.
         if (
             this.order_id.pricelist_id &&
-            this.order_id.pricelist_id.item_ids
-                .map((rule) => rule.compute_price)
-                .includes("percentage")
+            this.order_id.pricelist_id.item_ids.some(
+                (rule) =>
+                    rule.compute_price === "discount" &&
+                    rule.price_discount > 0 &&
+                    !(
+                        rule.price_round ||
+                        rule.price_surcharge ||
+                        rule.price_min_margin ||
+                        rule.price_max_margin
+                    )
+            )
         ) {
             return "without_discount";
         }

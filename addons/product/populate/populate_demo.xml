@@ -115,9 +115,8 @@
                 <field name="product_tmpl_id" ref="product_templates" null_ratio="0.4"/>
                 <field name="product_id" domain="[('product_tmpl_id', '=?', product_tmpl_id)]" ref="product_templates.product_variant_ids" null_ratio="0.5"/>
                 <field name="categ_id" ref="product_subcategories" null_ratio="0.6"/>
-                <field name="compute_price" values="{'fixed': 4, 'percentage': 3, 'formula': 3}"/>
+                <field name="compute_price" values="{'fixed': 4, 'markup': 3, 'discount': 3}"/>
                 <field name="fixed_price" start="5.0" end="4000.0" distribution="exponential(rate=0.002)"/>
-                <field name="percent_price" start="-50.0" end="50.0" distribution="normal(mean=-10, std=15)"/>
                 <field name="price_discount" start="0.0" end="50.0" distribution="beta(alpha=2, beta=3)"/>
                 <field name="price_surcharge" start="-100.0" end="200.0" distribution="normal(mean=10, std=40)" null_ratio="0.5"/>
                 <field name="min_quantity" generator="scalar.integer" start="1" end="100" distribution="exponential(rate=0.08)"/>

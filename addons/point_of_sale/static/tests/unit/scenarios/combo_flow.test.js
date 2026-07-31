@@ -524,8 +524,8 @@ test("ProductComboChangePricelist: changing pricelist updates combo price", asyn
     const plItem = store.models["product.pricelist.item"].create({
         id: 20,
         pricelist_id: salePricelist.id,
-        compute_price: "percentage",
-        percent_price: 10,
+        compute_price: "discount",
+        price_discount: 10,
         base: "list_price",
         min_quantity: 0,
     });

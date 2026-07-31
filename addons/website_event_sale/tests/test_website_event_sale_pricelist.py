@@ -49,8 +49,8 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
             'currency_id': self.currency_test.id,
             'item_ids': [(5, 0, 0), (0, 0, {
                 'applied_on': '3_global',
-                'compute_price': 'percentage',
-                'percent_price': 10,
+                'compute_price': 'discount',
+                'price_discount': 10,
             })],
             'name': 'Percentage Discount',
             'selectable': True,

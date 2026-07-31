@@ -69,8 +69,8 @@ test("FeedbackScreenDiscountWithPricelistTour: discount display with multiple pr
         id: 10,
         pricelist_id: basePricelist.id,
         product_tmpl_id: testProduct,
-        compute_price: "percentage",
-        percent_price: 30,
+        compute_price: "discount",
+        price_discount: 30,
         base: "list_price",
         min_quantity: 0,
     });
@@ -87,8 +87,8 @@ test("FeedbackScreenDiscountWithPricelistTour: discount display with multiple pr
         pricelist_id: specialPricelist.id,
         base: "pricelist",
         base_pricelist_id: basePricelist,
-        compute_price: "percentage",
-        percent_price: 10,
+        compute_price: "discount",
+        price_discount: 10,
         min_quantity: 0,
     });
     specialPricelist.item_ids = [store.models["product.pricelist.item"].get(11)];

@@ -87,8 +87,8 @@ class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
                 'item_ids': [
                     Command.create({
                         'applied_on': '3_global',
-                        'compute_price': 'percentage',
-                        'percent_price': 10,
+                        'compute_price': 'discount',
+                        'price_discount': 10,
                     }),
                 ],
                 'name': name,

@@ -67,9 +67,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "sequence": 2,
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "list_price",
-                    "percent_price": 10,
+                    "price_discount": 10,
                 })
             ],
         })
@@ -83,7 +83,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "sequence": 20,
             "item_ids": [
                 Command.create({
-                    "compute_price": "formula",
+                    "compute_price": "discount",
                     "base": "list_price",
                     "price_discount": 20,
                 })
@@ -97,7 +97,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "country_group_ids": [Command.link(cls.europe.id)],
             "sequence": 3,
             "currency_id": cls.curr_eur.id,
-            "item_ids": [Command.create({"compute_price": "formula", "base": "list_price"})],
+            "item_ids": [Command.create({"compute_price": "discount", "base": "list_price"})],
         })
 
         ca_group = cls.env["res.country.group"].create({
@@ -232,8 +232,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                     "applied_on": "1_product",
                     "product_tmpl_id": product.product_tmpl_id.id,
                     "min_quantity": 500,
-                    "compute_price": "percentage",
-                    "percent_price": 63,
+                    "compute_price": "discount",
+                    "price_discount": 63,
                 }),
             ]
         })
@@ -245,8 +245,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                     "product_tmpl_id": product.product_tmpl_id.id,
                     "base": "pricelist",
                     "base_pricelist_id": self.pricelist.id,
-                    "compute_price": "percentage",
-                    "percent_price": 25,
+                    "compute_price": "discount",
+                    "price_discount": 25,
                 })
             ],
         })
@@ -321,8 +321,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "item_ids": [
                 Command.create({
                     "base": "standard_price",
-                    "compute_price": "percentage",
-                    "percent_price": 10,
+                    "compute_price": "discount",
+                    "price_discount": 10,
                 })
             ],
         })
@@ -397,8 +397,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.pricelist.sudo().write({
             "item_ids": [
                 Command.create({
-                    "percent_price": 20,
-                    "compute_price": "percentage",
+                    "price_discount": 20,
+                    "compute_price": "discount",
                     "product_tmpl_id": product_tmpl.id,
                 })
             ]
@@ -420,7 +420,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "name": "Pricelist with validity period",
             "item_ids": [
                 Command.create({
-                    "compute_price": "formula",
+                    "compute_price": "discount",
                     "base": "list_price",
                     "price_discount": 20,
                     "date_start": tomorrow,
@@ -464,9 +464,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             "name": "Benelux 2",
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "list_price",
-                    "percent_price": 20,
+                    "price_discount": 20,
                 })
             ],
         })

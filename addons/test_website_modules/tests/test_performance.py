@@ -181,7 +181,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 'product_tmpl_id': cls.templateC.id,
                 'price_discount': 20,
                 'min_quantity': 2,
-                'compute_price': 'formula',
+                'compute_price': 'discount',
             })],
         })
         tax_group = cls.env['account.tax.group'].create({'name': 'Test 6%'})

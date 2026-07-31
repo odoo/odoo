@@ -155,12 +155,12 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             item_ids=[
                 Command.create({
                     "product_tmpl_id": self.product_template_sofa.id,
-                    "compute_price": "percentage",
-                    "percent_price": 10.0,
+                    "compute_price": "discount",
+                    "price_discount": 10.0,
                     "date_start": datetime.now() - timedelta(1),
                     "date_end": datetime.now() + timedelta(1),
                 }),
-                Command.create({"compute_price": "percentage", "percent_price": 0.0}),
+                Command.create({"compute_price": "discount", "price_discount": 0.0}),
             ],
         )
 

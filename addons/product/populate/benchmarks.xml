@@ -150,9 +150,8 @@
                 <field name="product_tmpl_id" ref="price_products" null_ratio="0.4"/>
                 <field name="product_id" domain="[('product_tmpl_id', '=?', product_tmpl_id)]" ref="price_products.product_variant_ids" null_ratio="0.5"/>
                 <field name="categ_id" ref="price_categories" null_ratio="0.6"/>
-                <field name="compute_price" values="{'fixed': 4, 'percentage': 3, 'formula': 3}"/>
+                <field name="compute_price" values="{'fixed': 4, 'markup': 3, 'discount': 3}"/>
                 <field name="fixed_price" start="5.0" end="900.0"/>
-                <field name="percent_price" start="-30.0" end="30.0"/>
                 <field name="price_discount" start="0.0" end="40.0"/>
                 <field name="min_quantity" generator="scalar.integer" start="1" end="50" distribution="exponential(rate=0.1)"/>
             </create>
