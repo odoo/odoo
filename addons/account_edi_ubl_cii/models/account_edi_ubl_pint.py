@@ -1,7 +1,7 @@
 from odoo import _, models
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.tools import formatLang, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
 
 class AccountEdiUBLPint(models.AbstractModel):
@@ -12,22 +12,6 @@ class AccountEdiUBLPint(models.AbstractModel):
     # -------------------------------------------------------------------------
     # EXPORT: NODES
     # -------------------------------------------------------------------------
-
-    def _ubl_add_invoice_type_code_node(self, vals):
-        super()._ubl_add_invoice_type_code_node(vals)
-
-        if self._is_document(vals, 'invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
-        elif self._is_document(vals, 'self_invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
-
-    def _ubl_add_credit_note_type_code_node(self, vals):
-        super()._ubl_add_credit_note_type_code_node(vals)
-
-        if self._is_document(vals, 'credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
-        elif self._is_document(vals, 'self_credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
 
     def _ubl_add_notes_nodes_all_invoices(self, vals):
         invoice = vals['invoice']
@@ -82,11 +66,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_invoice_delivery_nodes(vals)
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            document_node = vals['document_node']
-            if document_node['cac:Delivery']:
-                document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
-            else:
-                document_node['cac:Delivery'] = None
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_add_document_currency_code_node(self, vals):
         # The currency in which the invoice is issued and in which all monetary amounts are expressed.
@@ -171,7 +153,7 @@ class AccountEdiUBLPint(models.AbstractModel):
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         super()._ubl_add_party_tax_scheme_nodes(vals)
-        if vals['no_party_tax_scheme']:
+        if not self._need_party_tax_scheme_nodes(vals):
             return
 
         super()._ubl_add_party_tax_scheme_nodes_vat_gst(vals)
@@ -226,38 +208,8 @@ class AccountEdiUBLPint(models.AbstractModel):
         return node
 
     def _ubl_add_payment_means_nodes_all_invoices(self, vals):
-        invoice = vals['invoice']
-        nodes = vals['document_node']['cac:PaymentMeans']
-
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
-            else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
-        else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
-
-        partner_bank = invoice.partner_bank_id
-        payment_means_node = {
-            'cbc:PaymentMeansCode': {
-                '_text': payment_means_code,
-                'name': payment_means_name,
-            },
-            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
-        }
-
-        if partner_bank:
-            payment_means_node['cac:PayeeFinancialAccount'] = self._ubl_get_payment_means_payee_financial_account_node_from_partner_bank(vals, partner_bank)
-        else:
-            payment_means_node['cac:PayeeFinancialAccount'] = None
-
-        nodes.append(payment_means_node)
-
-    def _ubl_add_payment_means_nodes(self, vals):
-        super()._ubl_add_payment_means_nodes(vals)
-
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            self._ubl_add_payment_means_nodes_all_invoices(vals)
+        # DEPRECATED, to be removed in master
+        pass
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # This override is a fix for the taxes engine.
@@ -372,32 +324,186 @@ class AccountEdiUBLPint(models.AbstractModel):
                 min_dp=currency.decimal_places,
             )
 
-    def _init_invoice_export_values(self, invoice):
-        vals = super()._init_invoice_export_values(invoice)
-        AccountTax = self.env['account.tax']
-        company = vals['company']
+    def _export_document_node_constraints(self, vals):
+        """
+        Validates invoice constraints for PINT payload
+        https://docs.peppol.eu/poac/pint/v1.1.1/pint/trn-invoice/businessrule/
+        """
+        constraints = super()._export_document_node_constraints(vals)
 
-        # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
-            base_lines=vals['base_lines'],
-            company=company,
-            vals=vals,
-        )
+        document_node = vals['document_node']
+        is_invoice = self._is_document(vals, 'invoice', 'self_invoice')
 
-        # Sub-dictionaries to store UBL-related values along the whole process.
-        vals['_ubl_values'] = {}
-        for base_line in vals['base_lines']:
-            base_line['_ubl_values'] = {}
+        # -----------------------------------------------------------------
+        # 1. Specification, Process & Document Identification
+        # -----------------------------------------------------------------
+        # [IBR-003] - An Invoice MUST have an Invoice issue date (ibt-002).
+        if not document_node['cbc:IssueDate']['_text']:
+            constraints['ibr_003_issue_date_required'] = self.env._(
+                "Invoice Issue Date is missing [IBR-003]."
+            )
 
-        # Global rounding of tax_details using 6 digits.
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        # [IBR-005] - An Invoice MUST have an Invoice currency code (ibt-005).
+        if not document_node['cbc:DocumentCurrencyCode']['_text']:
+            constraints['ibr_005_currency_code_required'] = self.env._(
+                "Currency Code is missing [IBR-005]."
+            )
 
-        return vals
+        # -----------------------------------------------------------------
+        # 2. Accounting Supplier Party (Seller / ibg-04)
+        # -----------------------------------------------------------------
+        supplier_party = document_node['cac:AccountingSupplierParty']['cac:Party']
+
+        # [IBR-006] - An Invoice MUST contain the Seller name (ibt-027).
+        if not supplier_party['cac:PartyName']['cbc:Name']['_text']:
+            constraints['ibr_006_seller_name_required'] = self.env._(
+                "Seller Name is missing [IBR-006]."
+            )
+
+        # [IBR-008] - An Invoice MUST contain the Seller postal address (ibg-05).
+        # [IBR-009] - The Seller postal address (ibg-05) MUST contain a Seller country code (ibt-040).
+        supplier_country = supplier_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text']
+        if not supplier_country:
+            constraints['ibr_009_seller_country_required'] = self.env._(
+                "Seller Country Code is missing [IBR-009]."
+            )
+
+        # [IBR-081] - The Seller electronic address (ibt-034) MUST be provided.
+        # [IBR-062] - The Seller electronic address (ibt-034) MUST have a Scheme identifier.
+        seller_endpoint = supplier_party.get('cbc:EndpointID', {})
+        if not seller_endpoint.get('_text'):
+            constraints['ibr_081_seller_endpoint_required'] = self.env._(
+                "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
+            )
+        if not seller_endpoint.get('schemeID'):
+            constraints['ibr_062_seller_endpoint_scheme_required'] = self.env._(
+                "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
+            )
+
+        # -----------------------------------------------------------------
+        # 3. Accounting Customer Party (Buyer / ibg-08)
+        # -----------------------------------------------------------------
+        customer_party = document_node['cac:AccountingCustomerParty']['cac:Party']
+
+        # [IBR-007] - An Invoice MUST contain the Buyer name (ibt-044).
+        if not customer_party['cac:PartyName']['cbc:Name']['_text']:
+            constraints['ibr_007_buyer_name_required'] = self.env._(
+                "Buyer Name is missing [IBR-007]."
+            )
+
+        # [IBR-010] - An Invoice MUST contain the Buyer postal address (ibg-08).
+        # [IBR-011] - The Buyer postal address (ibg-08) MUST contain a Buyer country code (ibt-055).
+        customer_country = customer_party['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text']
+        if not customer_country:
+            constraints['ibr_011_buyer_country_required'] = self.env._(
+                "Buyer Country Code is missing [IBR-011]."
+            )
+
+        # [IBR-080] - The Buyer electronic address (ibt-049) MUST be provided.
+        # [IBR-063] - The Buyer electronic address (ibt-049) MUST have a Scheme identifier.
+        buyer_endpoint = customer_party.get('cbc:EndpointID', {})
+        if not buyer_endpoint.get('_text'):
+            constraints['ibr_080_buyer_endpoint_required'] = self.env._(
+                "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
+            )
+        if not buyer_endpoint.get('schemeID'):
+            constraints['ibr_063_buyer_endpoint_scheme_required'] = self.env._(
+                "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
+            )
+
+        # -----------------------------------------------------------------
+        # 4. Invoice Lines (ibg-25)
+        # -----------------------------------------------------------------
+        line_key = 'cac:InvoiceLine' if is_invoice else 'cac:CreditNoteLine'
+        invoice_lines = document_node[line_key]
+
+        # [IBR-016] - An Invoice MUST have at least one Invoice line (ibg-25).
+        if not invoice_lines:
+            constraints['ibr_016_invoice_line_required'] = self.env._(
+                "At least one Invoice Line is required [IBR-016]."
+            )
+
+        for line_idx, line in enumerate(invoice_lines, start=1):
+
+            # [IBR-022] - Each Invoice line (ibg-25) MUST have an invoiced quantity (ibt-129).
+            qty_node = line['cbc:InvoicedQuantity'] if is_invoice else line.get('cbc:CreditedQuantity', {})
+            if qty_node.get('_text') in [None, False]:
+                constraints[f'ibr_022_line_qty_required_{line_idx}'] = self.env._(
+                    "Line %s: Invoiced quantity is missing [IBR-022].", line_idx
+                )
+
+            # [IBR-023] - An Invoice line (ibg-25) MUST have an Invoiced quantity unit of measure code (ibt-130).
+            if not qty_node.get('unitCode'):
+                constraints[f'ibr_023_line_unit_code_required_{line_idx}'] = self.env._(
+                    "Line %s: Invoiced quantity unit of measure code is missing [IBR-023].", line_idx
+                )
+
+            # [IBR-024] - Each Invoice line (ibg-25) MUST have an Invoice line net amount (ibt-131).
+            if not isinstance(line['cbc:LineExtensionAmount']['_text'], FloatFmt):
+                constraints[f'ibr_024_line_net_amount_required_{line_idx}'] = self.env._(
+                    "Line %s: Invoice line net amount is missing [IBR-024].", line_idx
+                )
+
+            line_item = line['cac:Item']
+            # [IBR-025] - Each Invoice line (ibg-25) MUST contain the Item name (ibt-153).
+            if not line_item['cbc:Name']['_text']:
+                constraints[f'ibr_025_item_name_required_{line_idx}'] = self.env._(
+                    "Line %s: Item name is missing [IBR-025].", line_idx
+                )
+
+            # [IBR-026] - Each Invoice line (ibg-25) MUST contain the Item net price (ibt-146).
+            # [IBR-027] - The Item net price (ibt-146) MUST NOT be negative.
+            net_price = line['cac:Price']['cbc:PriceAmount']['_text']
+            if not isinstance(net_price, FloatFmt):
+                constraints[f'ibr_026_price_amount_required_{line_idx}'] = self.env._(
+                    "Line %s: Item net price is missing [IBR-026].", line_idx
+                )
+            elif float(net_price) < 0:
+                constraints[f'ibr_027_price_amount_negative_{line_idx}'] = self.env._(
+                    "Line %s: Item net price MUST NOT be negative [IBR-027].", line_idx
+                )
+
+            # [IBR-SR-58] - The Invoiced item TAX category code (ibt-151) MUST be present.
+            if not all(tax_category['cbc:ID']['_text'] for tax_category in line_item['cac:ClassifiedTaxCategory']):
+                constraints[f'ibr_sr_58_line_tax_category_required_{line_idx}'] = self.env._(
+                    "Line %s: Item tax category code is missing [IBR-SR-58].", line_idx
+                )
+
+            # -----------------------------------------------------------------
+            # 5. Allowances and Charges (ibg-20, ibg-21, ibg-27, ibg-28)
+            # -----------------------------------------------------------------
+            doc_allowances = line['cac:AllowanceCharge']
+
+            for charge_idx, allow_node in enumerate(doc_allowances, start=1):
+                is_charge = allow_node['cbc:ChargeIndicator']['_text'] == 'true'
+                amount = allow_node['cbc:Amount']['_text']
+                reason_text = (allow_node.get('cbc:AllowanceChargeReason') or {}).get('_text')
+                reason_code = (allow_node.get('cbc:AllowanceChargeReasonCode') or {}).get('_text')
+
+                if is_charge:
+                    # [IBR-036] - Charge (ibg-21) MUST have a charge amount (ibt-099).
+                    if not isinstance(amount, FloatFmt):
+                        constraints[f'ibr_036_charge_amount_required_{charge_idx}'] = self.env._(
+                            "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036].", charge=charge_idx, line=line_idx
+                        )
+                    # [IBR-038] - Each Document level charge (ibg-21) MUST have a reason or reason code.
+                    if not reason_text and not reason_code:
+                        constraints[f'ibr_038_charge_reason_required_{charge_idx}'] = self.env._(
+                            "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is required [IBR-038].", charge=charge_idx, line=line_idx
+                        )
+                else:
+                    # [IBR-031] - Allowance (ibg-20) MUST have an allowance amount (ibt-092).
+                    if not isinstance(amount, FloatFmt):
+                        constraints[f'ibr_031_allowance_amount_required_{charge_idx}'] = self.env._(
+                            "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031].", charge=charge_idx, line=line_idx
+                        )
+                    # [IBR-033] - Each Document level allowance (ibg-20) MUST have a reason or reason code.
+                    if not reason_text and not reason_code:
+                        constraints[f'ibr_033_allowance_reason_required_{charge_idx}'] = self.env._(
+                            "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is required [IBR-033].", charge=charge_idx, line=line_idx
+                        )
+
+        return constraints
 
     # -------------------------------------------------------------------------
     # IMPORT

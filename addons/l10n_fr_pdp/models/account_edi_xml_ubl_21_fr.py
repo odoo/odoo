@@ -1,5 +1,6 @@
 from odoo import _, api, models
 from odoo.tools.misc import formatLang
+from odoo.tools import html2plaintext
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -13,7 +14,7 @@ PAID_STATES = frozenset({'in_payment', 'paid'})
 
 class AccountEdiXmlUbl21Fr(models.AbstractModel):
     _name = "account.edi.xml.ubl_21_fr"
-    _inherit = 'account.edi.xml.ubl_bis3'
+    _inherit = "account.edi.ubl_cen_en16931"
     _description = "France UBL 2.1 E-Invoicing Format"
 
     @api.model
@@ -38,13 +39,10 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_21_fr.xml"
 
-    def _export_invoice(self, invoice, convert_fixed_taxes=True):
-        # Use new helpers
-        return self._export_invoice_new(invoice)
-
-    def _export_invoice_constraints_new(self, invoice, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        constraints = super()._export_invoice_constraints_new(invoice, vals)
+    def _export_document_node_constraints(self, vals):
+        # EXTENDS account.edi.ubl_cen_en16931
+        invoice = vals['invoice']
+        constraints = super()._export_document_node_constraints(vals)
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
@@ -55,7 +53,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             if not id_type or not id_value:
                 constraints[f"ubl_21_fr_{partner_type}_identifier_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
 
-        if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
+        if self._is_document(vals, 'credit_note') and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
             constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = self.env._("You cannot create a Credit Note without an original invoice: %s", vals['invoice'].name)
 
         customer = vals['customer'].commercial_partner_id
@@ -63,15 +61,58 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             cpro_module_name = self.env['ir.module.module'].sudo()._get('l10n_fr_facturx_chorus_pro').display_name
             constraints["ubl_21_fr_cpro_module_missing"] = self.env._("This partner is behind Chorus PRO. Please install the module '%s'", cpro_module_name)
 
+        billing_context = vals['document_node']['cbc:ProfileID']['_text']
+
+        # [BR-FR-CO-07]-BT-9 Due date, if present, must not be before BT-2
+        # Issue date, unless it's a down payment or the billing context is
+        # B2/S2/M2 (already paid).
+        if (
+            invoice.invoice_date_due
+            and invoice.invoice_date_due < invoice.invoice_date
+            and not invoice._is_downpayment()
+            and billing_context not in ('B2', 'S2', 'M2')
+        ):
+            constraints['ubl_21_fr_due_date_before_issue_date'] = self.env._(
+                "The due date (%(due_date)s) cannot be before the issue date (%(issue_date)s).",
+                due_date=invoice.invoice_date_due, issue_date=invoice.invoice_date,
+            )
+
+        # [BR-FR-CO-09]-If the billing context (BT-23) is B2/S2/M2, the paid
+        # amount (BT-113) must equal the total (BT-112), the payable amount
+        # (BT-115) must be 0 and the due date (BT-9) must be set.
+        if billing_context in ('B2', 'S2', 'M2'):
+            paid_amount = invoice.amount_total - invoice.amount_residual
+            if invoice.currency_id.compare_amounts(paid_amount, invoice.amount_total) != 0:
+                constraints['ubl_21_fr_billing_context_paid_amount'] = self.env._(
+                    "Billing context %(context)s requires the paid amount to equal the total amount.",
+                    context=billing_context,
+                )
+            if invoice.currency_id.compare_amounts(invoice.amount_residual, 0) != 0:
+                constraints['ubl_21_fr_billing_context_payable_amount'] = self.env._(
+                    "Billing context %(context)s requires the payable amount to be 0.",
+                    context=billing_context,
+                )
+            if not invoice.invoice_date_due:
+                constraints['ubl_21_fr_billing_context_due_date_required'] = self.env._(
+                    "Billing context %(context)s requires the due date to be set.",
+                    context=billing_context,
+                )
+
         return constraints
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
+    def _ubl_add_document_currency_code_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_document_currency_code_node(vals)
+        vals['document_node']['cbc:DocumentCurrencyCode']['_text'] = vals['currency'].name
+
+    def _ubl_add_invoice_header_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_invoice_header_nodes(vals)
         customer = vals['customer'].commercial_partner_id
         b2g = self._pdp_needs_b2g_fields(customer)
 
         invoice = vals['invoice']
-        super()._add_invoice_header_nodes(document_node, vals)
+        document_node = vals['document_node']
 
         profile_id = self._l10n_fr_pdp_get_profile_id(vals)
         document_node.update({
@@ -79,11 +120,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             'cbc:ProfileID': {'_text': profile_id},
         })
 
+        # Add the invoice narration, if any.
+        if invoice.narration:
+            document_node['cbc:Note'].append({'_text': html2plaintext(invoice.narration)})
+
         # [BR-FR-05] Add mandatory notes with defaults if not already present
-        # Initialize / Listify 'cbc:Note'
-        existing_note = document_node.get('cbc:Note')
-        if not existing_note or not isinstance(document_node.get('cbc:Note'), list):
-            document_node['cbc:Note'] = [existing_note] if existing_note else []
         # Add default notes
         for code, default_content in self._get_default_notes(vals).items():
             document_node['cbc:Note'].append({
@@ -91,7 +132,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             })
 
         # Règles de gestion G1.52
-        if vals['document_type'] == 'credit_note':
+        if self._is_document(vals, 'credit_note'):
             document_node['cac:BillingReference'] = {
                 'cac:InvoiceDocumentReference': {
                     'cbc:ID': {'_text': invoice.reversed_entry_id.name},
@@ -102,7 +143,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
         # For credit notes, this is handled in `_add_invoice_payment_means_nodes` instead, as `cac:PaymentMeans` is
         # not populated yet at this point.
-        if profile_id in ('B2', 'S2', 'M2') and vals['document_type'] != 'credit_note':
+        if profile_id in ('B2', 'S2', 'M2') and not self._is_document(vals, 'credit_note'):
             document_node['cbc:DueDate'] = {'_text': invoice._pdp_get_payment_date() or invoice.invoice_date}
 
         # Profile ID X4 - Final invoice with downpayments
@@ -130,11 +171,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 'cbc:ID': {'_text': invoice.purchase_order_reference}
             }
 
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_payment_means_nodes(document_node, vals)
+    def _ubl_add_payment_means_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_payment_means_nodes(vals)
 
-        if vals['document_type'] != 'credit_note':
+        if not self._is_document(vals, 'credit_note'):
             return
 
         profile_id = self._l10n_fr_pdp_get_profile_id(vals)
@@ -142,7 +183,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         if profile_id in ('B2', 'S2', 'M2'):
             invoice = vals['invoice']
             payment_due_date = invoice._pdp_get_payment_date() or invoice.invoice_date
-            for node in document_node['cac:PaymentMeans']:
+            for node in vals['document_node']['cac:PaymentMeans']:
                 node['cbc:PaymentDueDate'] = {'_text': payment_due_date}
 
     def _ubl_add_invoice_type_code_node(self, vals):
@@ -163,7 +204,29 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         else:
             super()._ubl_add_credit_note_type_code_node(vals)
 
+    def _ubl_get_partner_address_node(self, vals, partner):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_partner_address_node(vals, partner)
+        node['cac:Country']['cbc:Name'] = None
+        return node
+
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        if commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
+            vals['party_node']['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
+
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_tax_scheme_nodes(vals)
+        if self._need_party_tax_scheme_nodes(vals):
+            self._ubl_add_party_tax_scheme_nodes_vat_gst(vals)
+
     def _ubl_add_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl
         super()._ubl_add_party_identification_nodes(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
@@ -179,7 +242,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         }
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
+        # EXTENDS account.edi.ubl
         super()._ubl_add_party_legal_entity_nodes(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
@@ -220,22 +283,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 '_text': FloatFmt(price_amount, min_dp=1, max_dp=6),
                 'currencyID': currency.name,
             },
-            'cac:AllowanceCharge': {
-                "cbc:ChargeIndicator": [{
-                    "_text": 'false',
-                }],
-                # Discount amount
-                "cbc:Amount": [{
-                    "_text": FloatFmt(0, min_dp=1, max_dp=6),
-                    "currencyID": currency.name,
-                }],
-                # Pre-discount amount
-                'cbc:BaseAmount': {
-                    '_text': FloatFmt(price_amount, min_dp=1, max_dp=6),
-                    'currencyID': currency.name,
-                },
-            }
         }
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
 
     def _import_ubl_invoice_add_prepaid_amount(self, collected_values):
         # imported invoice is a final invoice following downpayments.
@@ -279,3 +331,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 invoice._sync_dynamic_lines(container),
             ):
                 downpayment_lines.move_id = invoice.id
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        # EXTENDS account.edi.common
+        return self._ubl_import_invoice(invoice, file_data, new=new)

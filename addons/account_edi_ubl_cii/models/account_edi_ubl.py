@@ -1,24 +1,39 @@
 import logging
 
 from stdnum.be import vat as be_vat
-
-from odoo import _, fields, models, Command
+from lxml import etree
+from odoo import Command, _, fields, models
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape
+from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     EAS_MAPPING,
-    FloatFmt,
     GST_COUNTRY_CODES,
+    FloatFmt,
 )
-from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import (
+    PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS,
+    PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS,
+    PEPPOL_INVOICE_OPTIONAL_FIELDS,
+    PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS,
+)
 
 _logger = logging.getLogger(__name__)
+
+UBL_NAMESPACES = {
+    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+}
 
 
 class AccountEdiUBL(models.AbstractModel):
     _name = "account.edi.ubl"
     _inherit = 'account.edi.common'
     _description = "Base helpers for UBL"
+
+    def _find_value(self, xpath, tree, nsmap=False):
+        # EXTENDS account.edi.common
+        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # BASE LINES HELPERS
@@ -1181,7 +1196,7 @@ class AccountEdiUBL(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
             'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
-            'cbc:AllowanceChargeReason': {'_text': _("Discount")},
+            'cbc:AllowanceChargeReason': {'_text': _("Charge") if is_charge else _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -1250,6 +1265,15 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_line_allowance_charge_nodes(self, vals):
         vals['line_node']['cac:AllowanceCharge'] = []
+
+        # Discount.
+        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
+
+        # Recycling contribution taxes.
+        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(vals)
+
+        # Excise taxes.
+        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(vals)
 
     def _ubl_add_line_extension_amount_node(self, vals, in_foreign_currency=True):
         line_node = vals['line_node']
@@ -1377,6 +1401,9 @@ class AccountEdiUBL(models.AbstractModel):
                     'cbc:ID': {'_text': tax_scheme_id},
                 },
             })
+
+    def _need_party_tax_scheme_nodes(self, vals):
+        return True
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         vals['party_node']['cac:PartyTaxScheme'] = []
@@ -1786,7 +1813,35 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_payment_means_nodes(self, vals):
-        vals['document_node']['cac:PaymentMeans'] = []
+        nodes = vals['document_node']['cac:PaymentMeans'] = []
+
+        if not self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            return
+
+        invoice = vals['invoice']
+        if invoice.move_type == 'out_invoice':
+            if invoice.partner_bank_id:
+                payment_means_code, payment_means_name = 30, 'credit transfer'
+            else:
+                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
+        else:
+            payment_means_code, payment_means_name = 57, 'standing agreement'
+
+        partner_bank = invoice.partner_bank_id
+        payment_means_node = {
+            'cbc:PaymentMeansCode': {
+                '_text': payment_means_code,
+                'name': payment_means_name,
+            },
+            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+        }
+
+        if partner_bank:
+            payment_means_node['cac:PayeeFinancialAccount'] = self._ubl_get_payment_means_payee_financial_account_node_from_partner_bank(vals, partner_bank)
+        else:
+            payment_means_node['cac:PayeeFinancialAccount'] = None
+
+        nodes.append(payment_means_node)
 
     def _ubl_get_payment_terms_node_from_payment_term(self, vals, payment_term):
         note = payment_term.note and html2plaintext(payment_term.note) or None
@@ -2341,21 +2396,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_prepaid_payable_amount_node(sub_vals)
 
     def _fill_document_values_invoice(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = Invoice
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-        self._ubl_add_version_id_node(vals)
-        self._ubl_add_customization_id_node(vals)
-        self._ubl_add_profile_id_node(vals)
-        self._ubl_add_id_node(vals)
-        self._ubl_add_issue_date_node(vals)
-        self._ubl_add_due_date_node(vals)
-        self._ubl_add_invoice_type_code_node(vals)
-        self._ubl_add_notes_nodes(vals)
-        self._ubl_add_document_currency_code_node(vals)
-        self._ubl_add_tax_currency_code_node(vals)
-        self._ubl_add_buyer_reference_node(vals)
-        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_invoice_header_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_invoice_delivery_nodes(vals)
@@ -2367,20 +2408,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_node(vals)
 
     def _fill_document_values_credit_note(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = CreditNote
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
-        self._ubl_add_version_id_node(vals)
-        self._ubl_add_customization_id_node(vals)
-        self._ubl_add_profile_id_node(vals)
-        self._ubl_add_id_node(vals)
-        self._ubl_add_issue_date_node(vals)
-        self._ubl_add_credit_note_type_code_node(vals)
-        self._ubl_add_notes_nodes(vals)
-        self._ubl_add_document_currency_code_node(vals)
-        self._ubl_add_tax_currency_code_node(vals)
-        self._ubl_add_buyer_reference_node(vals)
-        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_invoice_header_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_invoice_delivery_nodes(vals)
@@ -2392,19 +2420,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_legal_monetary_total_node(vals)
 
     def _fill_document_values_debit_note(self, vals):
-        document_node = vals['document_node']
-        document_node['_template'] = DebitNote
-        document_node['_nsmap'][None] = "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
-        self._ubl_add_version_id_node(vals)
-        self._ubl_add_customization_id_node(vals)
-        self._ubl_add_profile_id_node(vals)
-        self._ubl_add_id_node(vals)
-        self._ubl_add_issue_date_node(vals)
-        self._ubl_add_notes_nodes(vals)
-        self._ubl_add_document_currency_code_node(vals)
-        self._ubl_add_tax_currency_code_node(vals)
-        self._ubl_add_buyer_reference_node(vals)
-        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_invoice_header_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_invoice_delivery_nodes(vals)
@@ -2415,11 +2431,31 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_tax_totals_nodes(vals)
         self._ubl_add_requested_monetary_total_node(vals)
 
+    def _fill_template_values(self, vals):
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            vals['document_node']['_template'] = Invoice
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            vals['document_node']['_template'] = CreditNote
+        elif self._is_document(vals, 'debit_note'):
+            vals['document_node']['_template'] = DebitNote
+
+    def _fill_nsmap_values(self, vals):
+        nsmap = vals['document_node']['_nsmap']
+
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+        elif self._is_document(vals, 'debit_note'):
+            nsmap[None] = "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+
+        nsmap['cac'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        nsmap['cbc'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        nsmap['ext'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+
     def _fill_document_values(self, vals):
-        document_node = vals['document_node']
-        document_node['_nsmap']['cac'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        document_node['_nsmap']['cbc'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-        document_node['_nsmap']['ext'] = "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+        self._fill_template_values(vals)
+        self._fill_nsmap_values(vals)
 
         if self._is_document(vals, 'invoice', 'self_invoice'):
             self._fill_document_values_invoice(vals)
@@ -2427,6 +2463,10 @@ class AccountEdiUBL(models.AbstractModel):
             self._fill_document_values_credit_note(vals)
         elif self._is_document(vals, 'debit_note'):
             self._fill_document_values_debit_note(vals)
+
+    # -----------------------------------------------------------------------------------
+    # EXPORT: nodes
+    # -----------------------------------------------------------------------------------
 
     def _export_document_node_constraints(self, vals):
         return super()._invoice_constraints_common(vals['invoice'])
@@ -2459,6 +2499,25 @@ class AccountEdiUBL(models.AbstractModel):
 
         self._define_document_type(vals, document_type)
 
+    def _ubl_add_invoice_header_nodes(self, vals):
+        self._ubl_add_version_id_node(vals)
+        self._ubl_add_customization_id_node(vals)
+        self._ubl_add_profile_id_node(vals)
+        self._ubl_add_id_node(vals)
+        self._ubl_add_copy_indicator_node(vals)
+        self._ubl_add_issue_date_node(vals)
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            self._ubl_add_due_date_node(vals)
+            self._ubl_add_invoice_type_code_node(vals)
+        elif self._is_document(vals, 'credit_note', 'self_credit_note'):
+            self._ubl_add_credit_note_type_code_node(vals)
+        self._ubl_add_notes_nodes(vals)
+        self._ubl_add_document_currency_code_node(vals)
+        self._ubl_add_tax_currency_code_node(vals)
+        self._ubl_add_buyer_reference_node(vals)
+        self._ubl_add_order_reference_node(vals)
+        self._ubl_add_billing_reference_nodes(vals)
+
     def _init_invoice_export_values(self, invoice):
         vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
 
@@ -2479,11 +2538,54 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_delivery(vals, delivery)
 
         vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+
+        AccountTax = self.env['account.tax']
+        company = vals['company']
+
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=company,
+            vals=vals,
+        )
+
+        # Sub-dictionaries to store UBL-related values along the whole process.
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
+
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+
         return vals
 
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
+        """ Generates an UBL 2.1 xml for a given invoice, using the new dict_to_xml helpers. """
+
+        # 1. Validate the structure of the taxes
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
+
+        # 2. Instantiate the XML builder
         vals = self._init_invoice_export_values(invoice)
-        return self._export_document(vals)
+        self._export_document(vals)
+
+        # 3. Run constraints
+        errors = [constraint for constraint in vals['constraints'].values() if constraint]
+
+        # 4. Render the XML
+        xml_content = dict_to_xml(
+            vals['document_node'],
+            nsmap=vals['document_node']['_nsmap'],
+            template=vals['document_node']['_template'],
+        )
+
+        # 5. Format the XML
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT: INVOICE
@@ -2491,6 +2593,21 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_init_collected_values(self, invoice, collected_values):
         return self._import_init_collected_values(invoice, collected_values)
+
+    def _get_import_document_amount_sign(self, tree):
+        """
+        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
+        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
+        of each quantity in the invoice.
+        """
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
+            if amount_node is not None and float(amount_node.text) < 0:
+                return 'refund', -1
+            return 'invoice', 1
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
+            return 'refund', 1
+        return None, None
 
     def _import_ubl_invoice_document_sign(self, collected_values):
         self._import_invoice_document_sign(collected_values)
@@ -3228,6 +3345,90 @@ class AccountEdiUBL(models.AbstractModel):
                     'tax_ids': [],
                 }),
             ]
+
+    def _import_retrieve_partner_vals(self, tree, role):
+        """ Returns a dict of values that will be used to retrieve the partner """
+        vat = self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        country_code = self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
+        if not vat and country_code:
+            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
+                if field == 'vat' and (vat := self._find_value(f".//cac:{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID='{scheme_id}']", tree)):
+                    break
+        return {
+            'vat': vat,
+            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree),
+            'country_code': country_code,
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:StreetName', tree),
+            'street2': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CityName', tree),
+            'zip_code': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:PostalZone', tree),
+        }
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        logs = []
+        invoice_values = {}
+        if qty_factor == -1:
+            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+        role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
+        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner.id
+        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
+        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+        # ==== partner_bank_id ====
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [
+            bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
+            for bank_detail_node in bank_detail_nodes
+            if bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
+        ]
+        if bank_details:
+            self._import_partner_bank(invoice, bank_details)
+
+        # ==== ref, invoice_origin, narration, payment_reference ====
+        ref = tree.findtext('./{*}ID')
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+            invoice_values['name'] = ref
+        elif ref:
+            invoice_values['ref'] = ref
+        invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
+        invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
+        invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
+
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
+
+        # ==== invoice_incoterm_id ====
+        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
+        if incoterm_code:
+            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
+            if incoterm:
+                invoice_values['invoice_incoterm_id'] = incoterm.id
+
+        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines, Payable Rounding Amount ====
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
+        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
+        line_tag = (
+            'InvoiceLine'
+            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+            else 'CreditNoteLine'
+        )
+        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', qty_factor)
+        line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
+
+        invoice_values = {
+            **invoice_values,
+            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
+        }
+        invoice.write(invoice_values)
+        logs += partner_logs + currency_logs + line_logs + allowance_charges_logs + rounding_logs
+        return logs
 
     def _import_ubl_invoice_post_processing(self, collected_values):
         self._import_invoice_post_processing(collected_values)
