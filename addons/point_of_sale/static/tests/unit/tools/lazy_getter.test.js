@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, proxy, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
     allowTranslations,
     assignTestEnv,
@@ -16,7 +16,6 @@ import {
 } from "@point_of_sale/lazy_getter";
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
-import { onWillRender } from "@web/owl2/utils";
 
 /**
  * @param {string} value
@@ -95,10 +94,11 @@ class WithStore extends Component {
 
     setup() {
         this.store = proxy(this.env.store);
-        onWillRender(() => this.onWillRender());
+        onMounted(() => this.trackRender());
+        onPatched(() => this.trackRender());
     }
 
-    onWillRender() {}
+    trackRender() {}
 }
 
 class A extends WithStore {
@@ -203,7 +203,7 @@ test("only dependent components rerender", async () => {
     clearRegistry(registry.category("services"));
 
     patchWithCleanup(WithStore.prototype, {
-        onWillRender() {
+        trackRender() {
             unorderedStep(this.property);
         },
     });
