@@ -245,8 +245,7 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id._get_stock_move_price_unit(self.date)
-        uom_quantity = self.uom_id._compute_quantity(quantity, self.product_id.uom_id)
-        quantity = min(quantity, uom_quantity)
+        quantity = min(quantity, self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id))
         cost_ratio = self._get_cost_ratio(quantity)
         value = price_unit * cost_ratio
         return {

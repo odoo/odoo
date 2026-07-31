@@ -688,7 +688,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
             self.assertEqual(len(message.attachment_ids), 2, "Should have 2 attachments when basic receipt is True")
 
-    @skip('Temporary to fast merge new valuation')
+    @skip('Temporary to fast merge new valuation: out-of-scope point-of-sale chrome tour, undeterministic since the inter-step macro delay was removed.')
     def test_02_pos_with_invoiced(self):
         self.pos_user.write({
             'group_ids': [
@@ -739,7 +739,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.show_product_images = False
         self.start_pos_tour('test_optional_product_image_not_display')
 
-    @skip('Temporary to fast merge new valuation')
+    @skip('Temporary to fast merge new valuation: out-of-scope point-of-sale ticket-screen tour that fails for a non-valuation reason.')
     def test_05_ticket_screen(self):
         self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y', 'time_format': '%I.%M.%S %p'})
         self.pos_user.write({
