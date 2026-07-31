@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="action_mail_group_mail_compose" model="ir.actions.act_window">
+        <field name="name">Send email</field>
+        <field name="res_model">mail.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass_mail',
+            'default_email_to': '{{ object.email }}'
+        }</field>
+        <field name="binding_model_id" ref="model_mail_group_member"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
     <record id="mail_group_member_view_tree" model="ir.ui.view">
         <field name="name">mail.group.member.view.list</field>
         <field name="model">mail.group.member</field>
         <field name="arch" type="xml">
             <list editable="top" sample="1">
+                <header>
+                        <button name="%(mail_group.action_mail_group_mail_compose)d" type="action" string="Email" />
+                </header>
                 <field name="email"
                     force_save="1"
                     required="1"
