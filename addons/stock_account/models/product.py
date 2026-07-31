@@ -450,6 +450,12 @@ class ProductProduct(models.Model):
 
         self.env['product.value'].invalidate_model()  # Avoid keeping too many records in cache
 
+        if not lot:
+            return self._run_average_batch_grouped(
+                moves_domain, at_date, std_price_by_product_id, value_by_product_id,
+                quantity_by_product_id, date_by_product_id,
+            )
+
         moves = self.env['stock.move'].search_fetch(
             moves_domain,
             field_names=['id'],
@@ -528,6 +534,101 @@ class ProductProduct(models.Model):
 
             self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
             self.env['stock.move.line'].invalidate_model()
+
+        self.env.cr.cache.pop('moves_with_manual_value', None)
+        return std_price_by_product_id, value_by_product_id
+
+    def _run_average_batch_grouped(self, moves_domain, at_date, std_price_by_product_id, value_by_product_id, quantity_by_product_id, date_by_product_id):
+        """ Process the valued moves matching `moves_domain` and accumulate the average cost per
+        product, aggregating the valued quantity per move with two grouped queries instead of
+        one `_get_valued_qty` call per move.
+        """
+        if self.env['stock.move'].search_count(moves_domain & Domain('is_dropship', '=', True), limit=1):
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
+        Move = self.env['stock.move']
+        MoveLine = self.env['stock.move.line']
+        # A location is valued when it is internal or transit and belongs to a company
+        # (see `stock.location._should_be_valued`)
+        src_valued = Domain([('location_id.company_id', '!=', False), ('location_id.usage', 'in', ('internal', 'transit'))])
+        dest_valued = Domain([('location_dest_id.company_id', '!=', False), ('location_dest_id.usage', 'in', ('internal', 'transit'))])
+        # Lines owned by another partner are not valued (see `_should_exclude_for_valuation`)
+        owner_partners = [False] + self.env['res.company'].sudo().search([]).partner_id.ids
+
+        # Batch by product to limit memory usage since it's possible to have millions of stock.move
+        batch_size = 5000
+        for product_ids in split_every(batch_size, self.ids):
+            chunk_domain = moves_domain & Domain('product_id', 'in', product_ids)
+            lines_base_domain = Domain([
+                ('move_id', 'in', Move._search(chunk_domain)),
+                ('picked', '=', True),
+                ('owner_id', 'in', owner_partners),
+            ])
+            in_qty_by_move_id = {
+                move.id: qty for move, qty in MoveLine._read_group(
+                    lines_base_domain & ~src_valued & dest_valued,
+                    ['move_id'], ['quantity_product_uom:sum'],
+                )
+            }
+            out_qty_by_move_id = {
+                move.id: qty for move, qty in MoveLine._read_group(
+                    lines_base_domain & src_valued & ~dest_valued,
+                    ['move_id'], ['quantity_product_uom:sum'],
+                )
+            }
+            moves = Move.search(chunk_domain, order='product_id, date, id')
+            for vals in moves.read(['product_id', 'date', 'is_in', 'is_out', 'is_dropship', 'value'], load=None):
+                product_id = vals['product_id']
+                valuation_from_date = date_by_product_id.get(product_id)
+                if valuation_from_date and vals['date'] <= valuation_from_date:
+                    continue
+                move_value = vals['value'] or 0.0
+                is_in, is_out, is_dropship = vals['is_in'], vals['is_out'], vals['is_dropship']
+                # A move is valued in (resp. out) when only its destination (resp. source)
+                # location is valued, checked in that order (see `_get_valued_qty`)
+                if is_in:
+                    valued_qty = in_qty_by_move_id.get(vals['id'], 0.0)
+                elif is_out:
+                    valued_qty = out_qty_by_move_id.get(vals['id'], 0.0)
+                elif is_dropship:
+                    move = Move.browse(vals['id'])
+                    valued_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                else:
+                    valued_qty = 0
+
+                quantity = quantity_by_product_id.get(product_id, 0.0)
+                average_cost = std_price_by_product_id.get(product_id, move_value / valued_qty if valued_qty else 0)
+                value = value_by_product_id.get(product_id, 0.0)
+                if is_in or is_dropship:
+                    in_qty = valued_qty
+                    in_value = move_value
+                    if is_dropship:
+                        move = Move.browse(vals['id'])
+                        ignore_manual_update = False
+                        if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
+                            ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
+                        in_value = move._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
+                    previous_qty = quantity
+                    quantity += in_qty
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        value += in_value
+                        average_cost = value / quantity
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        average_cost = in_value / in_qty if in_qty else average_cost
+                        value = average_cost * quantity
+                if is_out or is_dropship:
+                    out_qty = valued_qty
+                    value -= out_qty * average_cost
+                    quantity -= out_qty
+
+                quantity_by_product_id[product_id] = quantity
+                std_price_by_product_id[product_id] = average_cost
+                value_by_product_id[product_id] = value
+
+            Move.invalidate_model()  # Avoid keeping too many records in cache
+            MoveLine.invalidate_model()
 
         self.env.cr.cache.pop('moves_with_manual_value', None)
         return std_price_by_product_id, value_by_product_id
