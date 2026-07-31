@@ -500,6 +500,16 @@ class AccountMove(models.Model):
                     raise UserError(_(
                         "No se puede generar una nota de crédito sobre un Tiquete "
                         "Electrónico todavía — esta corrección no está soportada."))
+            if tipo_doc == L10N_CR_FE_TIPO_DOCUMENTO_ND:
+                original = self.debit_origin_id
+                if not original or original.l10n_cr_fe_state != 'aceptado':
+                    raise UserError(_(
+                        "No se puede generar la nota de débito: la factura original "
+                        "aún no ha sido aceptada por Hacienda."))
+                if original.l10n_cr_fe_es_tiquete:
+                    raise UserError(_(
+                        "No se puede generar una nota de débito sobre un Tiquete "
+                        "Electrónico todavía — esta corrección no está soportada."))
 
             config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
