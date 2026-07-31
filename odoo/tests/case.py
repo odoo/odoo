@@ -210,6 +210,8 @@ class TestCase(_TestCase):
         try:
             self._outcome = outcome
             with outcome.testPartExecutor(self):
+                if hasattr(self, '_preSetUp'):
+                    self._preSetUp()
                 self._callSetUp()
             if outcome.success:
                 with outcome.testPartExecutor(self, isTest=True):

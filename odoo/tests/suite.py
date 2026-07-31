@@ -97,6 +97,8 @@ class TestSuite(BaseTestSuite):
 
         try:
             currentClass.setUpClass()
+            if hasattr(currentClass, '_postSetUpClass'):
+                currentClass._postSetUpClass()
         except Exception as e:
             currentClass._classSetupFailed = True
             className = util.strclass(currentClass)
