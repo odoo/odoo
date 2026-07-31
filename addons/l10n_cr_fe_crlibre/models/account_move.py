@@ -311,6 +311,15 @@ class AccountMove(models.Model):
                 'codigo': self.l10n_cr_fe_codigo_referencia,
                 'razon': self.l10n_cr_fe_razon or '',
             }])
+        elif self.debit_origin_id:
+            original = self.debit_origin_id
+            params['informacion_referencia'] = json.dumps([{
+                'tipoDoc': '01',  # Factura electrónica (catálogo TipoDocReferenciaType)
+                'numero': original.l10n_cr_fe_clave,
+                'fechaEmision': original.l10n_cr_fe_fecha_emision,
+                'codigo': self.l10n_cr_fe_codigo_referencia,
+                'razon': self.l10n_cr_fe_razon or '',
+            }])
         return params
 
     def _l10n_cr_fe_xml_find_text(self, node, tag):
