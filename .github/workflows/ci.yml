@@ -61,8 +61,11 @@ jobs:
           POSTGRES_DB: odoo
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
+        # `--health-cmd pg_isready -U odoo` would be split by the runner and
+        # Docker would parse the bare `-U` as an unknown flag on the container
+        # create. Quote `pg_isready -U odoo` as a single command string.
         options: >-
-          --health-cmd pg_isready -U odoo
+          --health-cmd "pg_isready -U odoo"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
