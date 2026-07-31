@@ -168,7 +168,7 @@ export function computeProductPricelistCache(service, data = []) {
     // processServerData function when new products or pricelists are loaded into the PoS.
     // It caches the heavy pricelist calculation when there are many products and pricelists.
     const date = luxon.DateTime.now();
-    let pricelistItems = service.models["product.pricelist.item"].getAll();
+    const pricelistItems = service.models["product.pricelist.item"].getAll();
     let products = service.models["product.product"].getAll();
 
     if (data.length > 0) {
@@ -177,7 +177,6 @@ export function computeProductPricelistCache(service, data = []) {
         }
 
         if (data[0].model.modelName === "product.pricelist.item") {
-            pricelistItems = data;
             // it needs only to compute for the products that are affected by the pricelist items
             const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
             const productIds = new Set(data.map((item) => item.raw.product_id));
@@ -236,20 +235,7 @@ export function computeProductPricelistCache(service, data = []) {
     for (const product of products) {
         const applicableRules = product.getApplicablePricelistRules(pricelistRules);
         for (const pricelistId in applicableRules) {
-            if (product.cachedPricelistRules[pricelistId]) {
-                const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
-                    (rule) => rule.id
-                );
-                const newRules = applicableRules[pricelistId].filter(
-                    (rule) => !existingRuleIds.includes(rule.id)
-                );
-                product.cachedPricelistRules[pricelistId] = [
-                    ...newRules,
-                    ...product.cachedPricelistRules[pricelistId],
-                ];
-            } else {
-                product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
-            }
+            product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
         }
     }
     if (data.length > 0 && data[0].model.modelName === "product.product") {
