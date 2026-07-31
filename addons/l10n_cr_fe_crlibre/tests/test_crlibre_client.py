@@ -244,3 +244,14 @@ class TestCrlibreClient(TransactionCase):
                     receptor_tipo='02', receptor_num='3101123456',
                     consecutivo_receptor='0' * 20,
                     xml_firmado='<MensajeReceptor/>', environment='stag')
+
+    def test_gen_xml_nd_decodes_base64(self):
+        import base64
+        xml = '<NotaDebitoElectronica>ok</NotaDebitoElectronica>'
+        payload = {'status': 'ok',
+                   'resp': {'clave': '5' * 50, 'xml': base64.b64encode(xml.encode()).decode()}}
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.requests.post',
+                   return_value=self._mock_response(payload)) as m:
+            result = self.client.gen_xml_nd({'clave': '5' * 50})
+        self.assertEqual(result, xml)
+        self.assertEqual(m.call_args.kwargs['data']['r'], 'gen_xml_nd')
