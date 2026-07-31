@@ -38,6 +38,7 @@ class TestDevice(TestHttpBase):
         cls.DeviceLog = cls.env['res.device.log']
 
         cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.group_ids |= cls.env.ref('base.group_check_session_device')
         cls.user_internal = cls.env['res.users'].create({
             'login': 'internal',
             'password': 'internal',
