@@ -20,7 +20,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.bom_line_id.bom_id.type == "phantom":
             uom_quantity = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            if not self.uom_id.is_zero(uom_quantity):
+            if not self.product_id.uom_id.is_zero(uom_quantity):
                 unit_kit_purchase = 1
                 if self.purchase_line_id:
                     # A same component may be exploded by several bom lines: only the moves
@@ -32,9 +32,16 @@ class StockMove(models.Model):
                         and m.bom_line_id == self.bom_line_id
                         and float_compare(m.cost_share, self.cost_share, precision_digits=6) == 0,
                     )
-                    active_quantity = quantity + sum(active_moves.mapped('quantity'))
+                    active_quantity = quantity + sum(
+                        move.uom_id._compute_quantity(move.quantity, self.product_id.uom_id)
+                        for move in active_moves
+                    )
                     if active_quantity:
-                        unit_kit_purchase = (quantity / active_quantity) * self.purchase_line_id.product_qty
+                        purchase_qty = self.purchase_line_id.uom_id._compute_quantity(
+                            self.purchase_line_id.product_qty,
+                            self.purchase_line_id.product_id.uom_id,
+                        )
+                        unit_kit_purchase = (quantity / active_quantity) * purchase_qty
                 return (self.cost_share / 100) * (quantity / uom_quantity) * unit_kit_purchase
         return super()._get_cost_ratio(quantity)
 
