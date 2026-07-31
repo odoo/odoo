@@ -132,6 +132,36 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
             ],
         )
 
+    @freeze_time('2020-01-01')
+    def test_amount_tax_consistent_with_amount_untaxed(self):
+        """On round_globally (this test class's default company setting), a large enough
+        invoice can make Odoo's natural recomputation of amount_tax drift from the file's
+        declared TaxTotal by more than a few cents: amount_tax must still be reconciled
+        with it, not left at its natural, never-corrected value.
+        """
+        for move_type, journal in (
+            ('sale', self.company_data['default_journal_sale']),
+            ('purchase', self.company_data['default_journal_purchase']),
+        ):
+            with self.subTest(move_type=move_type):
+                self.percent_tax(21.0, type_tax_use=move_type)
+
+                move = self._import_invoice_as_attachment_on(
+                    test_name='test_amount_tax_consistent_with_amount_untaxed',
+                    journal=journal,
+                )
+
+                self.assertRecordValues(
+                    move,
+                    [
+                        {
+                            'amount_untaxed': 11202.00,
+                            'amount_tax': 2352.42,
+                            'amount_total': 13554.42,
+                        },
+                    ],
+                )
+
     def test_import_embedded_pdf(self):
         """
         Importing an xml with embedded pdf should correctly import the
