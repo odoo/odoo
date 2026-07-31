@@ -83,3 +83,41 @@ class TestAccountMoveFeFields(TransactionCase):
             'aceptado_parcial': {'clave': 'CPCE', 'consecutivo_codigo': '06', 'gen_xml_action': 'gen_xml_mr'},
             'rechazado': {'clave': 'RCE', 'consecutivo_codigo': '07', 'gen_xml_action': 'gen_xml_mr'},
         })
+
+    def test_motivo_nd_selection_maps_to_expected_codigo_referencia(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_MOTIVO_CODIGO_MAP_ND
+        self.assertEqual(L10N_CR_FE_MOTIVO_CODIGO_MAP_ND, {
+            'correccion_monto': '02',
+            'cargo_financiero': '10',
+            'referencia_otro_documento': '04',
+            'otros': '99',
+        })
+
+    def test_tipo_documento_nd_constant(self):
+        from odoo.addons.l10n_cr_fe_crlibre.models.account_move import L10N_CR_FE_TIPO_DOCUMENTO_ND
+        self.assertEqual(L10N_CR_FE_TIPO_DOCUMENTO_ND, {
+            'clave': 'ND', 'consecutivo_codigo': '02', 'gen_xml_action': 'gen_xml_nd',
+        })
+
+    def test_motivo_nd_field_exists_with_default(self):
+        partner = self.env['res.partner'].create({'name': 'Cliente ND Fields'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+        })
+        self.assertFalse(invoice.l10n_cr_fe_motivo_nd)
+
+    def test_get_tipo_documento_info_returns_nd_when_debit_origin_set(self):
+        partner = self.env['res.partner'].create({'name': 'Cliente ND Dispatch'})
+        original = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+        })
+        debit_note = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'debit_origin_id': original.id,
+        })
+        info = debit_note._l10n_cr_fe_get_tipo_documento_info()
+        self.assertEqual(info['clave'], 'ND')
+        self.assertEqual(info['consecutivo_codigo'], '02')

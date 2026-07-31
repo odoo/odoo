@@ -5,7 +5,7 @@
     'category': 'Accounting/Localizations/EDI',
     'summary': "PoC: genera clave y XML de FE v4.4 vía API_Hacienda de CRLibre",
     'author': "PoC Odoo x API_Hacienda (CRLibre)",
-    'depends': ['account', 'l10n_cr'],
+    'depends': ['account', 'l10n_cr', 'account_debit_note'],
     'data': [
         'data/system_params.xml',
         'security/l10n_cr_fe_security.xml',
