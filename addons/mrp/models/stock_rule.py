@@ -204,6 +204,46 @@ class StockRule(models.Model):
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
+    def _get_preproduction_rules_cache_key(self, product, warehouse):
+        """Return the key grouping equivalent pre-production rule lookups.
+
+        Modules whose warehouse route filtering depends on other product fields
+        should extend this key accordingly.
+        """
+        return (
+            # The lookup domain is built from this location and its parents.
+            product.property_stock_production.id,
+            # The warehouse's pre-production route is the explicit first choice.
+            warehouse.pbm_route_id.id,
+            # Direct product routes are tried before routes inherited from a category.
+            frozenset(product.route_ids.ids),
+            # Category routes are another fallback, but have lower priority than
+            # routes assigned directly to the product.
+            frozenset(product.categ_id.total_route_ids.ids),
+        )
+
+    def _get_preproduction_rules(self, product, warehouse):
+        """Return the rules supplying Production before manufacturing.
+
+        Reuse rule chains for products with equivalent routing configurations
+        when called from the batched orderpoint lead-time computation.
+        """
+        production_location = product.property_stock_production
+        rules_cache = self.env.context.get('orderpoint_preproduction_rules_cache')
+        if rules_cache is None:
+            return product._get_rules_from_location(
+                production_location,
+                route_ids=warehouse.pbm_route_id,
+            )
+
+        cache_key = self._get_preproduction_rules_cache_key(product, warehouse)
+        if cache_key not in rules_cache:
+            rules_cache[cache_key] = product._get_rules_from_location(
+                production_location,
+                route_ids=warehouse.pbm_route_id,
+            )
+        return rules_cache[cache_key]
+
     def _get_lead_days(self, product, **values):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
@@ -214,7 +254,13 @@ class StockRule(models.Model):
         if not manufacture_rule:
             return delays, delay_description
         manufacture_rule.ensure_one()
-        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
+        bom = values.get('bom')
+        if not bom and 'orderpoint_lead_days_boms' not in self.env.context:
+            bom = self.env['mrp.bom']._bom_find(
+                product,
+                picking_type=manufacture_rule.picking_type_id,
+                company_id=manufacture_rule.company_id.id,
+            )[product]
         if not bom:
             delays['total_delay'] += 365
             delays['no_bom_found_delay'] += 365
@@ -231,7 +277,7 @@ class StockRule(models.Model):
             warehouse = self.location_dest_id.warehouse_id
             for wh in warehouse:
                 if wh.manufacture_steps != 'mrp_one_step':
-                    wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
+                    wh_manufacture_rules = self._get_preproduction_rules(product, wh)
                     extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(global_horizon_days=0)._get_lead_days(product, **values)
                     for key, value in extra_delays.items():
                         delays[key] += value
