@@ -3,12 +3,20 @@
 import json
 import selectors
 import threading
+from unittest.mock import patch
 
 import odoo
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged
 from odoo.tools import config
 
-from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH, ODOO_NOTIFY_FUNCTION
+from ..models.bus import (
+    NOTIFY_PAYLOAD_MAX_LENGTH,
+    ODOO_NOTIFY_FUNCTION,
+    SKIP_NOTIFICATION,
+    BusBus,
+    get_notify_payloads,
+    json_dump,
+)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -107,3 +115,12 @@ class NotifyTests(TransactionCase):
         self.assertEqual(
             channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
         )
+
+    def test_postcommit_skipped_payload(self):
+        """Asserts a channel whose payloads are all skipped is not notified."""
+        bus = self.env["bus.bus"]
+        with patch.object(BusBus, "_prepare_payload", return_value=SKIP_NOTIFICATION):
+            bus._sendone("channel 1", "test 1", {})
+            self.env.cr.precommit.run()  # would create the bus.bus records
+        self.assertEqual(bus.search_count([("channel", "like", "channel 1")]), 0)
+        self.assertNotIn("bus.bus.channels", self.env.cr.postcommit.data)
