@@ -179,5 +179,5 @@ class L10nCnEdiDocument(models.Model):
                         summary=summary,
                         user_id=blue_move.create_uid.id,
                     )
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:  # ruff: ignore[blind-except]
                 _logger.error("Baiwang EDI: Error pulling inbound red forms for company %s: %s", company.name, e)

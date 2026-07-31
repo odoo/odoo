@@ -260,7 +260,7 @@ class AccountMove(models.Model):
             return error_msg
 
         if result.get('success'):
-            success_list = result.get('response', {}).get('success', [])
+            success_list = result.get('success', [])
             if success_list:
                 invoice_resp = success_list[0]
                 raw_date = invoice_resp.get('invoiceDate')
@@ -277,7 +277,7 @@ class AccountMove(models.Model):
                 ))
                 return None
             # Success response but no data
-            fail_list = result.get('response', {}).get('fail', [])
+            fail_list = result.get('fail', [])
             if fail_list:
                 error_msg = fail_list[0].get('failCause', 'Unknown error')
             else:
@@ -439,6 +439,8 @@ class AccountMove(models.Model):
         edi_doc = self._l10n_cn_baiwang_get_or_create_red_form_document()
         if edi_doc.state == 'red_form_pending':
             raise UserError(self.env._("A Red Form request is already pending for this Credit Note."))
+        if edi_doc.state == 'red_form_confirmed':
+            raise UserError(self.env._("A Red Form has already been confirmed for this Credit Note."))
         edi_doc.write({'state': 'draft', 'error_message': False})
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(original_move)
         try:
@@ -450,32 +452,36 @@ class AccountMove(models.Model):
             self.message_post(body=self.env._("Network or Proxy error: %s", error_msg))
             return
 
-        if result.get('success'):
+        if isinstance(result, list) and result:
+            resp_list = result
+        elif isinstance(result, dict) and result.get('success'):
             resp_list = result.get('response', [])
-            if resp_list:
-                resp = resp_list[0]
-                confirm_state = resp.get('confirmState')
+        else:
+            resp_list = []
+        if resp_list:
+            resp = resp_list[0]
+            confirm_state = resp.get('confirmState')
 
-                edi_doc.write({
-                    'baiwang_uuid': resp.get('redConfirmUuid'),
-                    'baiwang_red_form_number': resp.get('redConfirmNo'),
-                    'baiwang_confirm_state': confirm_state,
-                    'state': 'red_form_confirmed' if confirm_state in ('01', '04') else 'red_form_pending',
-                })
+            edi_doc.write({
+                'baiwang_uuid': resp.get('redConfirmUuid'),
+                'baiwang_red_form_number': resp.get('redConfirmNo'),
+                'baiwang_confirm_state': confirm_state,
+                'state': 'red_form_confirmed' if confirm_state in ('01', '04') else 'red_form_pending',
+            })
 
-                if confirm_state in ('01', '04'):
-                    vals = {'l10n_cn_baiwang_state': 'issued'}
-                    if resp.get('redInvoiceNo'):
-                        vals['l10n_cn_baiwang_invoice_no'] = resp['redInvoiceNo']
-                    vals['l10n_cn_baiwang_invoice_date'] = self._l10n_cn_baiwang_parse_red_invoice_datetime(
-                        resp.get('redInvoiceDate'),
-                    )
-                    self.write(vals)
-                    self.message_post(body=self.env._("Red Form confirmed (auto-approved). No: %s", resp.get('redConfirmNo')))
-                    self.activity_schedule(
-                        'mail.mail_activity_data_todo',
-                        summary=self.env._("Red Form has been approved and Red Fapiao has been issued, Please confirm Credit Note in Odoo accordingly"),
-                    )
+            if confirm_state in ('01', '04'):
+                vals = {'l10n_cn_baiwang_state': 'issued'}
+                if resp.get('redInvoiceNo'):
+                    vals['l10n_cn_baiwang_invoice_no'] = resp['redInvoiceNo']
+                vals['l10n_cn_baiwang_invoice_date'] = self._l10n_cn_baiwang_parse_red_invoice_datetime(
+                    resp.get('redInvoiceDate'),
+                )
+                self.write(vals)
+                self.message_post(body=self.env._("Red Form confirmed (auto-approved). No: %s", resp.get('redConfirmNo')))
+                self.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    summary=self.env._("Red Form has been approved and Red Fapiao has been issued, Please confirm Credit Note in Odoo accordingly"),
+                )
         else:
             err = result.get('errorResponse', {}) if result else {}
             sub_code = err.get('subCode', err.get('code', 'UnknownCode'))
@@ -498,7 +504,6 @@ class AccountMove(models.Model):
         return {
             'redConfirmSerialNo': self.l10n_cn_baiwang_serial_no or f"RED_{self.id}_{fields.Datetime.now():%Y%m%d%H%M%S}",
             'entryIdentity': '01',  # 01=seller side
-            'sellerTaxNo': self.company_id.vat,
             'sellerTaxName': self.company_id.name,
             'buyerTaxName': self.partner_id.name or '',
             'buyerTaxNo': self.partner_id.vat,  # since entryIdentity=01
