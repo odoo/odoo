@@ -54,7 +54,8 @@ export class CashMovePopup extends Component {
             true
         );
         await this.pos.logEmployeeMessage(
-            `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
+            `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount} - 
+            ${_t("Reason")}: ${reason}`,
             "CASH_DRAWER_ACTION"
         );
         await this.printer.print(CashMoveReceipt, {
