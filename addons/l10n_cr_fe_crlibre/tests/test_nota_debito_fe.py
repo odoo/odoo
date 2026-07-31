@@ -88,13 +88,30 @@ class TestNotaDebitoFe(TransactionCase):
     def test_action_post_blocks_debit_note_when_original_not_aceptado(self):
         self.original_invoice.l10n_cr_fe_state = 'enviado'
         debit_note = self._create_debit_note()
-        debit_note.action_post()
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_clave') as m_get_clave:
+            debit_note.action_post()
         self.assertEqual(debit_note.state, 'posted')
         self.assertEqual(debit_note.l10n_cr_fe_state, 'error')
+        # Proves the block happened in our validation (before any client/network call), not
+        # because of some unrelated failure (e.g. the sandbox's HTTP blocking) that happens to
+        # also land in the same `except` and set the same error state.
+        m_get_clave.assert_not_called()
+        self.assertIn(
+            'la factura original',
+            ' '.join(debit_note.message_ids.mapped('body')),
+        )
 
     def test_action_post_blocks_debit_note_on_tiquete_original(self):
         self.original_invoice.l10n_cr_fe_es_tiquete = True
         debit_note = self._create_debit_note()
-        debit_note.action_post()
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_clave') as m_get_clave:
+            debit_note.action_post()
         self.assertEqual(debit_note.state, 'posted')
         self.assertEqual(debit_note.l10n_cr_fe_state, 'error')
+        # Same rationale as above: pins down that this specific validation (Tiquete origin) fired,
+        # not a generic/unrelated exception reaching the same `except (CrlibreApiError, UserError)`.
+        m_get_clave.assert_not_called()
+        self.assertIn(
+            'Tiquete Electrónico',
+            ' '.join(debit_note.message_ids.mapped('body')),
+        )
