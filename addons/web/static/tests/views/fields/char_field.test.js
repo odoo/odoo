@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { CharField } from "@web/views/fields/char/char_field";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -7,6 +8,7 @@ import {
     defineModels,
     fieldInput,
     fields,
+    findComponent,
     models,
     mountView,
     onRpc,
@@ -1086,4 +1088,27 @@ test("translate button not clickable for an unsaved record inside a one2many", a
         "Save this record and its parent to translate"
     );
     await contains(".o_selected_row .btn.o_field_translate").click(); // nothing should happen
+});
+
+test("onChange does not throw when its input has already been detached", async () => {
+    const view = await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="int_field" />
+                <field name="name" />
+            </form>
+        `,
+    });
+    const charField = findComponent(view, (component) => component instanceof CharField);
+    const input = charField.input();
+    input.value = "typed value";
+    input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+
+    charField.input.set(null);
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    await animationFrame();
+    expect.verifyErrors([]);
 });
