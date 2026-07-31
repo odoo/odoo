@@ -538,6 +538,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'absence_management': True,
         })
         self.employee.contract_date_start = datetime(2026, 1, 1)
+        self.env.user.tz = 'UTC'
         self.employee.tz = 'UTC'
         self.employee.ruleset_id = self.ref('hr_attendance.hr_attendance_default_ruleset')
 
