@@ -26,7 +26,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
+
+      # NOTE: pip cache is intentionally NOT enabled here. This job installs
+      # no pip packages (ruff steps are commented out), so `cache: pip` would
+      # only write a nearly-empty cache entry and force a pre-create hack to
+      # stop setup-python's post-job cache-save from failing on a missing
+      # folder. If ruff gets re-enabled, add `cache: pip` back together with
+      # the ruff install step.
 
       # --- ruff is disabled for now ---
       # To re-enable, uncomment the three steps below. The linter and formatter
@@ -68,23 +74,25 @@ jobs:
         with:
           fetch-depth: 1
 
+      # setup-python caches pip with a key derived from the dependency files
+      # listed in `cache-dependency-path` (repo + module requirements).
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
+          cache-dependency-path: |
+            requirements.txt
+            custom_addons/invoice_agent/requirements.txt
+
+      # Guard against setup-python's post-job cache save:
+      # "Cache folder path is retrieved for pip but doesn't exist on disk".
+      - name: Pre-create pip cache directory
+        run: mkdir -p ~/.cache/pip
 
       - name: Install System C-Libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev
-
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'custom_addons/invoice_agent/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
 
       - name: Install Python Dependencies
         run: |
