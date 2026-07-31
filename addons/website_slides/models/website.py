@@ -14,6 +14,12 @@ class Website(models.Model):
         suggested_controllers.append((_('Courses'), self.env['ir.http']._url_for('/slides'), 'website_slides'))
         return suggested_controllers
 
+    def _get_search_scopes(self):
+        return {
+            **super()._get_search_scopes(),
+            'slides': {'label': self.env._("Courses"), 'url': '/slides'},
+        }
+
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['slides', 'slide_channel', 'all']:

@@ -48,7 +48,8 @@ export class SearchBar extends Interaction {
         const orderByEl = this.el.querySelector(".o_search_order_by");
         const form = orderByEl.closest("form");
         this.order = orderByEl.value;
-        this.limit = parseInt(this.inputEl.dataset.limit) || 6;
+        const limit = parseInt(this.inputEl.dataset.limit);
+        this.limit = Number.isNaN(limit) ? 6 : limit; // an explicit 0 disables the suggestions
         this.wasEmpty = !this.inputEl.value;
         this.linkHasFocus = false;
         if (this.limit) {

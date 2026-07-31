@@ -879,6 +879,12 @@ class Website(models.Model):
         ))
         return suggested_controllers
 
+    def _get_search_scopes(self):
+        return {
+            **super()._get_search_scopes(),
+            "products": {"label": self.env._("Products"), "url": const.SHOP_PATH},
+        }
+
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if not self.has_ecommerce_access():

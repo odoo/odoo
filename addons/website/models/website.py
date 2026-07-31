@@ -180,6 +180,24 @@ class Website(models.CachedModel):
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
     llms_txt = fields.Text('LLMs.txt', translate=False)
 
+    header_search_type = fields.Char(
+        string="Header Search Scope",
+        help="Type of records the header search bar searches within.",
+        default='all',
+        required=True,
+    )
+    header_search_order_by = fields.Char(
+        string="Header Search Sort",
+        help="Order in which the header search bar sorts its results.",
+        default='name asc',
+        required=True,
+    )
+    header_search_limit = fields.Integer(
+        string="Header Search Suggestions",
+        help="Number of autocomplete suggestions of the header search bar, 0 to disable them.",
+        default=30,
+    )
+
     def _default_favicon(self):
         with file_open('web/static/img/favicon.ico', 'rb') as f:
             return BinaryBytes(f.read(), filename='favicon.ico')
@@ -2185,6 +2203,72 @@ class Website(models.CachedModel):
         # lxml requires one single root element
         tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
         return ' '.join(tree.itertext())
+
+    def _get_search_scopes(self):
+        """
+        Returns the search scopes that can be selected in the search bar options.
+
+        A scope can set `allow_main_search` to False to be left out of the header search bar,
+        which searches what the website as a whole is dedicated to.
+
+        :return: dict, per search type, of the scope label, of the path of its results page and
+            of whether the header search bar can be scoped to it
+        """
+        return {
+            'all': {'label': self.env._("Everything"), 'url': '/website/search'},
+            'pages': {'label': self.env._("Pages"), 'url': '/pages'},
+        }
+
+    def get_search_scopes(self):
+        """
+        Returns the search scopes selectable in the search bar options.
+
+        :return: list of dicts of the search type, of the label and of the results page
+            path of each scope, and of whether the header search bar can be scoped to it
+        """
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            return []
+
+        return [
+            {
+                'search_type': search_type,
+                'label': scope['label'],
+                'url': scope['url'],
+                'allow_main_search': scope.get('allow_main_search', True),
+            }
+            for search_type, scope in self._get_search_scopes().items()
+        ]
+
+    def set_header_search(self, search_type=None, order_by=None, limit=None):
+        """
+        Stores the header search bar settings edited from the builder.
+
+        :param str search_type: search type to scope the header search bar to
+        :param str order_by: order in which the header search bar sorts its results
+        :param int limit: number of autocomplete suggestions, 0 to disable them
+        """
+        self.ensure_one()
+        values = {}
+        if search_type in self._get_search_scopes():
+            values['header_search_type'] = search_type
+        if order_by:
+            values['header_search_order_by'] = order_by
+        if isinstance(limit, int) and limit >= 0:
+            values['header_search_limit'] = limit
+        self.write(values)
+
+    def _get_header_search_scope(self):
+        """
+        Returns the search type of the header search bar and the path of its results page.
+
+        Falls back to the main search if the configured scope is gone, as the module that
+        declared it may have been uninstalled.
+
+        :return: dict of the search type and of the path of its results page
+        """
+        scopes = self._get_search_scopes()
+        search_type = self.header_search_type if self.header_search_type in scopes else 'all'
+        return {'search_type': search_type, 'url': scopes[search_type]['url']}
 
     def _search_get_details(self, search_type, order, options):
         """

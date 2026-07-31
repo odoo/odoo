@@ -16,6 +16,7 @@ from . import test_fonts
 from . import test_fuzzy
 from . import test_get_current_website
 from . import test_grid_layout
+from . import test_header_search
 from . import test_http_endpoint
 from . import test_iap
 from . import test_import_files
