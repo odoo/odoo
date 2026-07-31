@@ -1,6 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
+
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+
+# pos_reference looks like "{year}{device_identifier}-{config_id}-{number}" (see pos.config._get_next_order_refs).
+# The device/number split matters because the trailing number is a counter local to a single device: two orders
+# from different devices can carry the same or adjacent numbers without being visually consecutive receipts.
+MYINVOIS_POS_REFERENCE_RE = re.compile(r'^(?P<device>.+)-\d+-(?P<number>\d+)$')
 
 
 class PosOrder(models.Model):
@@ -117,3 +124,13 @@ class PosOrder(models.Model):
     def _get_active_consolidated_invoice(self, including_in_progress=False):
         """ Small helper to get the currently active consolidated invoice if more that one is linked to an order. """
         return self.env['myinvois.document'].union(*[order.consolidated_invoice_ids._get_active_myinvois_document(including_in_progress) for order in self])
+
+    def _get_myinvois_reference_key(self):
+        """
+        :return: A (device, number) tuple identifying this order's receipt number, used to tell whether two orders
+            are visually consecutive receipts (same device, number incrementing by one). False if `pos_reference`
+            doesn't match the expected format (e.g. no reference yet).
+        """
+        self.ensure_one()
+        match = MYINVOIS_POS_REFERENCE_RE.match(self.pos_reference or '')
+        return (match['device'], int(match['number'])) if match else False

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
+import itertools
 import re
 import time
 from collections import defaultdict
@@ -598,7 +599,7 @@ class MyInvoisDocument(models.Model):
                 discount_amount_currency = (total_amount_currency - total_amount_discounted_currency) if has_discount else 0.0
 
                 # for the line name, when consolidating, we want to show first sequence - last sequence
-                sequenced_records = records.sorted(key=lambda r: r.name)
+                sequenced_records = self._get_records_for_line_name(records).sorted(key=lambda r: r.name)
                 new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
                     {},
                     tax_ids=taxes,
@@ -611,7 +612,7 @@ class MyInvoisDocument(models.Model):
                         **new_tax_details,
                         "taxes_data": list(new_taxes_data_map.values()),
                     },
-                    line_name=f"{sequenced_records[0].name}-{sequenced_records[-1].name}" if len(sequenced_records) > 1 else sequenced_records[0].name,
+                    line_name=self._get_consolidated_line_name(sequenced_records),
                 )
                 consolidated_base_lines.append(new_base_line)
 
@@ -682,6 +683,49 @@ class MyInvoisDocument(models.Model):
         if record and record._name == 'account.move':
             base_lines, _tax_lines = record._get_rounded_base_and_tax_lines()
         return base_lines
+
+    def _get_records_for_line_name(self, records):
+        """
+        Helper returning the subset of records to use when building the line name (a range of document references).
+        It is extracted in order to allow extending the logic to support other business models.
+        In some business models, a line can be comprised of a mix of a document and things merged into its amount
+        (e.g. a refund reducing it) that shouldn't be part of the displayed reference range.
+
+        :param records: The records forming a single consolidated invoice line.
+        :return: The subset of records to use for the line name. Must not be empty.
+        """
+        return records
+
+    def _get_consolidated_line_name(self, sequenced_records):
+        """
+        Build the display name of a consolidated invoice line out of the (name-sorted) records it is made of.
+
+        A "first-last" range is only used when the records' trailing numbers truly increment by one from
+        one record to the next; showing such a range implies that every reference in between belongs to this
+        line, which would be misleading if that is not actually the case (e.g. a record with a reference
+        landing in the middle of the range was reported in another line instead). When that can't be
+        established, every reference is listed instead so nothing is misrepresented.
+
+        :param sequenced_records: The (name-sorted, non-empty) records to use for the line name.
+        :return: The name to use for the consolidated invoice line.
+        """
+        if len(sequenced_records) == 1:
+            return sequenced_records.name
+
+        numbers = []
+        for record in sequenced_records:
+            match = re.search(r'(\d+)$', record.name)
+            if not match:
+                numbers = None
+                break
+            numbers.append(int(match.group(1)))
+
+        is_truly_sequential = numbers and all(
+            current == previous + 1 for previous, current in itertools.pairwise(numbers)
+        )
+        if is_truly_sequential:
+            return f"{sequenced_records[0].name}-{sequenced_records[-1].name}"
+        return ", ".join(sequenced_records.mapped('name'))
 
     # Submission
 

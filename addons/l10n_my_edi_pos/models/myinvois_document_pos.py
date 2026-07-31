@@ -1,6 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import itertools
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -215,34 +213,80 @@ class MyInvoisDocumentPoS(models.Model):
         There is no requirement asking to split per sequence (and thus config), but we still do so to make it easier to
         submit per PoS if wanted.
 
+        Orders that end up fully refunded, together with the refund order(s) that refunded them, are excluded
+        entirely: they must not be reported. If a fully refunded order sits in the middle of an otherwise continuous
+        run, this naturally splits that run into two lines around it.
+        Orders that are only partially refunded are still reported at their full value, with their refund(s) merged
+        into the same line as the order they refund instead of being reported as their own line.
+
+        Two orders are only merged into the same line if they are continuous on *both* of the following:
+        - `sequence_number`, a gapless, never-reset counter local to a single PoS config (it covers every order of
+          that config, refunds included), assigned when the order reaches the database. This is what guarantees
+          nothing was skipped/hidden between two merged orders.
+        - Their receipt reference (same device, and the receipt number incrementing by one). An order can be
+          recorded (and so get its `sequence_number`) later than its ticket was opened - e.g. it was held while
+          later orders were served - so it is not guaranteed to land next to its `sequence_number` neighbour in
+          receipt-number terms. Requiring both keeps every merged line visually consecutive on the printed
+          receipts too, so it can always be read as a plain "n-m" range instead of risking an unreadable list of
+          references or, worse, a range that silently omits/misrepresents one of them.
+
         :param pos_order_ids: The orders to separate.
         :return: A dict of pos order per config, for each config having a list of recordset each representing a single line in the xml.
         """
-        lines_per_config = {}
-        # We start by gathering the sessions involved in this process, and loop on their orders.
-        sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
-        sorted_session_orders = (
-            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True)
-        )
-        # During the loop, we want to gather "lines".
-        # One line can be comprised of any number of orders as long as they are continuous.
-        continuous_orders = []
-        for config, orders in itertools.groupby(sorted_session_orders, key=lambda o: o["config_id"]):
-            config_lines = []
-            for order in orders:
-                if continuous_orders and order not in pos_order_ids:
-                    config_lines.append(self.env["pos.order"].browse(continuous_orders))
-                    continuous_orders = []
-                elif order in pos_order_ids:
-                    continuous_orders.append(order.id)
+        reportable_orders = pos_order_ids - self._get_fully_refunded_pos_orders(pos_order_ids)
 
-            # We don't mix orders from different configs in a single line as they have different sequences.
-            if continuous_orders:
-                config_lines.append(self.env["pos.order"].browse(continuous_orders))
-                continuous_orders = []
-            lines_per_config.setdefault(config, []).extend(config_lines)
+        # Partial refunds don't get their own line; they reduce the amount of the line of the order they refund.
+        partial_refunds = reportable_orders.filtered(
+            lambda order: order.refunded_order_id and order.refunded_order_id in reportable_orders
+        )
+        sequenced_orders = reportable_orders - partial_refunds
+
+        lines_per_config = {}
+        order_line_position = {}  # order.id -> (config, index in lines_per_config[config]) it landed in.
+        for config, orders in sequenced_orders.sorted(reverse=True).grouped('config_id').items():
+            config_lines = []
+            previous_order = self.env['pos.order']
+            previous_reference_key = False
+            for order in orders.sorted('sequence_number'):
+                reference_key = order._get_myinvois_reference_key()
+                is_continuous = (
+                    previous_order
+                    and order.sequence_number == previous_order.sequence_number + 1
+                    and reference_key and previous_reference_key
+                    and reference_key[0] == previous_reference_key[0]
+                    and reference_key[1] == previous_reference_key[1] + 1
+                )
+                if is_continuous:
+                    config_lines[-1] |= order
+                else:
+                    config_lines.append(order)
+                order_line_position[order.id] = (config, len(config_lines) - 1)
+                previous_order = order
+                previous_reference_key = reference_key
+            lines_per_config[config] = config_lines
+
+        # Now that every remaining order has a line, merge each partial refund into the line of the order it refunds.
+        for refund in partial_refunds:
+            config, index = order_line_position[refund.refunded_order_id.id]
+            lines_per_config[config][index] |= refund
 
         return lines_per_config
+
+    @api.model
+    def _get_fully_refunded_pos_orders(self, pos_order_ids):
+        """
+        :param pos_order_ids: The orders to check.
+        :return: The subset of pos_order_ids that must be excluded from the consolidated invoice reporting:
+            orders that have been fully refunded (through one or several refunds), together with the refund
+            order(s) that refunded them.
+        """
+        fully_refunded_originals = pos_order_ids.filtered(
+            lambda order: order.lines and not order.refunded_order_id and not order.has_refundable_lines
+        )
+        if not fully_refunded_originals:
+            return self.env['pos.order']
+        matching_refunds = pos_order_ids.filtered(lambda order: order.refunded_order_id in fully_refunded_originals)
+        return fully_refunded_originals | matching_refunds
 
     def _get_record_rounded_base_lines(self, record):
         """
@@ -258,3 +302,15 @@ class MyInvoisDocumentPoS(models.Model):
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
             return base_lines
         return super()._get_record_rounded_base_lines(record)
+
+    def _get_records_for_line_name(self, records):
+        """
+        A partial refund merged into an order's line shouldn't affect the displayed reference range: we only want
+        to show the range of the normal (non-refund) orders that make up the line.
+        If a line happens to be made up entirely of refund orders (e.g. an orphan refund whose original isn't part
+        of this batch), fall back to using all of them so the name isn't left empty.
+        """
+        if records and records[0]._name == 'pos.order':
+            normal_orders = records.filtered(lambda order: not order.refunded_order_id)
+            return normal_orders or records
+        return super()._get_records_for_line_name(records)

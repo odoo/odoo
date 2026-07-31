@@ -535,7 +535,7 @@ class TestMyInvoisPoS(TestPoSCommon):
             # Create the orders
             with self.with_pos_session():
                 first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 2.0)]})
-                self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+                second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
             with self.with_pos_session():
                 self._create_order({
                     'pos_order_lines_ui_args': [
@@ -558,6 +558,136 @@ class TestMyInvoisPoS(TestPoSCommon):
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
             # The refunded amount is removed from the line
             self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '600.00')
+            # The displayed reference range only covers the normal orders, the refund isn't part of it.
+            self._assert_node_values(xml_tree, "cac:InvoiceLine/cac:Item/cbc:Name", f'{first_order.name}-{second_order.name}')
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_refund_order_multiple_partial_refunds_completing_it(self):
+        """ Several partial refunds that cumulatively refund an order fully should behave like a single full refund. """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 2.0)]})
+                second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+            with self.with_pos_session():
+                self._create_order({
+                    'pos_order_lines_ui_args': [
+                        {'product': self.product_one, 'quantity': -1.0, 'refunded_orderline_id': first_order.lines[0].id},
+                    ],
+                })
+            with self.with_pos_session():
+                self._create_order({
+                    'pos_order_lines_ui_args': [
+                        {'product': self.product_one, 'quantity': -1.0, 'refunded_orderline_id': first_order.lines[0].id},
+                    ],
+                })
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = second_order.consolidated_invoice_ids
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
+            # The two refunds together fully refund first_order, so it and both refunds are excluded entirely.
+            self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '500.00')
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_refund_order_splits_continuous_group(self):
+        """ A fully refunded order in the middle of an otherwise continuous run must split it into two lines. """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                order_1 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                order_2 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                order_3 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+            with self.with_pos_session():
+                self._create_order({
+                    'pos_order_lines_ui_args': [
+                        {'product': self.product_one, 'quantity': -1.0, 'refunded_orderline_id': order_2.lines[0].id},
+                    ],
+                })
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = (order_1 | order_3).consolidated_invoice_ids
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
+            # order_2 (fully refunded) and its refund are excluded, splitting order_1 and order_3 into two lines.
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '100.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", order_1.name)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '100.00')
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", order_3.name)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_consolidate_invoices_out_of_order_confirmation(self):
+        """ An order can be held in the PoS UI and confirmed after later ones: it then keeps its (lower) ticket
+        number/reference but ends up with a higher `sequence_number` (assigned when it reaches the database) than
+        orders confirmed before it. `sequence_number` continuity alone would then group it with orders it isn't
+        visually consecutive with (e.g. it would land next to order_20's receipt number instead of order_16/order_18's).
+        Requiring the receipt reference to also be consecutive prevents that: every order that isn't visually
+        adjacent to its `sequence_number` neighbour gets its own line instead of being merged into a misleading
+        or unreadable one. """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                # Orders are confirmed in this order: 16, 18, 19, 20, then 17 (held back and confirmed last).
+                # Each keeps the reference/name matching its ticket number, regardless of confirmation order.
+                order_16 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '250-1-000016'}})
+                order_18 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '250-1-000018'}})
+                order_19 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '250-1-000019', 'state': 'draft'}})
+                order_20 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '250-1-000020'}})
+                order_17 = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '250-1-000017'}})
+                order_19.action_pos_order_cancel()
+
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = (order_16 | order_17 | order_18 | order_20).consolidated_invoice_ids
+            self.assertEqual(len(consolidated_invoice), 1)
+
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
+            # None of the sequence_number-adjacent pairs (16/18 and 20/17) are also reference-consecutive,
+            # so every order ends up on its own line instead of a misleading/unreadable merged one.
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 4)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", order_16.name)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", order_18.name)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[3]/cac:Item/cbc:Name", order_20.name)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[4]/cac:Item/cbc:Name", order_17.name)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_consolidate_invoices_different_devices_not_merged(self):
+        """ The receipt number is a counter local to a single device: two orders rung up on different devices can
+        carry numbers that look consecutive by coincidence without the receipts actually being adjacent. They must
+        not be merged into a single line just because `sequence_number` happens to be continuous too. """
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                order_a = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '2501-5-000005'}})
+                order_b = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)], 'pos_order_ui_args': {'pos_reference': '2502-5-000006'}})
+
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = (order_a | order_b).consolidated_invoice_ids
+            self.assertEqual(len(consolidated_invoice), 1)
+
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw)
+            # sequence_number is continuous (created back to back), and the receipt numbers look consecutive
+            # (5 then 6), but they come from different devices: they must not be merged into one line.
+            self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", order_a.name)
+            self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", order_b.name)
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order', 'odoo.addons.point_of_sale.models.pos_session')
     def test_refund_constrains_consolidated_invoice(self):
