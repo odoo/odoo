@@ -146,18 +146,31 @@ class CrmTeam(models.Model):
 
     def _inverse_member_ids(self):
         for team in self:
-            # pre-save value to avoid having _compute_member_ids interfering
-            # while building membership status
             memberships = team.crm_team_member_ids
             users_current = team.member_ids
             users_new = users_current - memberships.user_id
 
-            # add missing memberships
-            self.env['crm.team.member'].create([{'crm_team_id': team.id, 'user_id': user.id} for user in users_new])
+            # Add new members (reactivate or create)
+            for new_user in users_new:
+                existing_inactive = self.env['crm.team.member'].search([
+                    ('active', '=', False),
+                    ('user_id', '=', new_user.id),
+                    ('crm_team_id', '=', self.ids)
+                ])
+                if existing_inactive:
+                    existing_inactive[0].active = True
+                    # pass;
+                else:
+                    self.env['crm.team.member'].create({
+                        'crm_team_id': team.id,
+                        'user_id': new_user.id
+                    })
 
-            # activate or deactivate other memberships depending on members
+            # deactivate kicked memberships
             for membership in memberships:
-                membership.active = membership.user_id in users_current
+                if membership.user_id not in users_current:
+                    membership.active = False
+            pass
 
     @api.depends('is_membership_multi', 'member_ids')
     def _compute_member_warning(self):
