@@ -169,6 +169,9 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'name': 'Bank',
             'type': 'bank',
             'journal_id': self.bank_journal.id,
+            'outstanding_account_id': self.env['account.chart.template'].with_context(
+                allowed_company_ids=self.env.company.root_id.ids,
+            ).ref('account_journal_payment_debit_account_id', raise_if_not_found=False).id,
         })
 
         self.delivery_preset = self.env['pos.preset'].create({
