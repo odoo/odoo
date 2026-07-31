@@ -61,6 +61,10 @@ export const OPTION_POSITIONS = {
     ADVANCED: 90,
 };
 
+export const ICON_FONT_FAMILY_MAP = {
+    sharp: "'Material Symbols Sharp'",
+};
+
 const FONT_WEIGHT_OPTIONS = [
     { label: _t("Thin"), value: 100 },
     { label: _t("Extra Light"), value: 200 },
@@ -120,6 +124,7 @@ export class ThemeTabPlugin extends Plugin {
             CustomizeWebsiteFontWeightAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
+            CustomizeWebsiteIconFontFamilyAction,
         },
         theme_options: [
             withSequence(
@@ -425,6 +430,20 @@ export class ConfigureApiKeyAction extends BuilderAction {
     }
     apply() {
         this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    }
+}
+
+export class CustomizeWebsiteIconFontFamilyAction extends CustomizeWebsiteVariableAction {
+    static id = "customizeWebsiteIconFontFamily";
+    isApplied({ params: { mainParam: variable } = {}, value }) {
+        const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
+        const mappedValue = ICON_FONT_FAMILY_MAP[unquote(value)] || value;
+        return currentValue === mappedValue || `'${currentValue}'` === mappedValue;
+    }
+    async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        const mappedValue = ICON_FONT_FAMILY_MAP[unquote(value)] || value;
+        const variables = { [variable]: mappedValue };
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
     }
 }
 
