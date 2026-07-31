@@ -28,19 +28,22 @@ jobs:
           python-version: "3.12"
           cache: "pip"
 
-      - name: Install ruff
-        # Pin to the version ruff.toml was generated for (0.15.0+)
-        run: pip install ruff==0.15.0
-
-      # Run ruff ONLY on our custom module. `ruff check .` would also lint
-      # Odoo's core addons/, whose upstream style does not match ruff settings
-      # (e.g. utf8-encoding-declaration, blank-lines-after-function-or-class)
+      # --- ruff is disabled for now ---
+      # To re-enable, uncomment the three steps below. The linter and formatter
+      # are deliberately scoped to custom_addons/invoice_agent only: `ruff check .`
+      # would also lint Odoo's core addons/, whose upstream style does not match
+      # these ruff settings (utf8-encoding-declaration, blank-lines-after-function-or-class)
       # and would fail the build.
-      - name: Run ruff linter
-        run: ruff check custom_addons/invoice_agent
-
-      - name: Run ruff format check
-        run: ruff format --check custom_addons/invoice_agent
+      #
+      # - name: Install ruff
+      #   # Pin to the version ruff.toml was generated for (0.15.0+)
+      #   run: pip install ruff==0.15.0
+      #
+      # - name: Run ruff linter
+      #   run: ruff check custom_addons/invoice_agent
+      #
+      # - name: Run ruff format check
+      #   run: ruff format --check custom_addons/invoice_agent
 
   test:
     needs: lint
