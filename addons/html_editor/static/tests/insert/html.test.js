@@ -5,9 +5,9 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { cleanHints } from "../_helpers/dispatch";
-import { commit } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { waitFor } from "@odoo/hoot-dom";
+import { isTextNode } from "@html_editor/utils/dom_info";
 
 function span(text) {
     const span = document.createElement("span");
@@ -16,19 +16,29 @@ function span(text) {
     return span;
 }
 
-const insertHTML = (html) => (editor) => {
-    editor.shared.dom.insert(parseHTML(editor.document, html));
+const insertHTML = (content, expectedResult) => (editor) => {
+    const isHTML = typeof content === "string";
+    const domContent = isHTML ? parseHTML(editor.document, content) : content;
+    expectedResult ??= [isHTML ? content : domContent.outerHTML];
+    const insertedNodes = editor.shared.dom.insert(domContent);
+    expect(insertedNodes.length).toBe(expectedResult.length);
+    for (let i = 0; i < insertedNodes.length; i++) {
+        expect(
+            isTextNode(insertedNodes[i]) ? insertedNodes[i].textContent : insertedNodes[i].outerHTML
+        ).toBe(expectedResult[i]);
+    }
     editor.shared.history.commit();
 };
 
 describe("collapsed selection", () => {
+    const icon = '<i class="oi" data-icon="pastafarianism"></i>';
+    const iconEdit = '<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>';
     test("should insert html in an empty paragraph / empty editable", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
-            contentAfterEdit:
-                '<p>\ufeff<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
-            contentAfter: '<p><i class="oi" data-icon="pastafarianism"></i>[]</p>',
+            stepFunction: insertHTML(icon, [iconEdit]),
+            contentAfterEdit: `<p>\ufeff${iconEdit}\ufeff[]</p>`,
+            contentAfter: `<p>${icon}[]</p>`,
         });
     });
 
@@ -36,10 +46,9 @@ describe("collapsed selection", () => {
         await testEditor({
             // This scenario is only possible with the allowInlineAtRoot option.
             contentBefore: "<p><br></p>[]",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
-            contentAfterEdit:
-                '<p><br></p><i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>[]',
-            contentAfter: '<p><br></p><i class="oi" data-icon="pastafarianism"></i>[]',
+            stepFunction: insertHTML(icon, [iconEdit]),
+            contentAfterEdit: `<p><br></p>${iconEdit}[]`,
+            contentAfter: `<p><br></p>${icon}[]`,
             config: { allowInlineAtRoot: true },
         });
     });
@@ -47,27 +56,25 @@ describe("collapsed selection", () => {
     test("should insert html between two letters", async () => {
         await testEditor({
             contentBefore: "<p>a[]b</p>",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
-            contentAfterEdit:
-                '<p>a\ufeff<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
-            contentAfter: '<p>a<i class="oi" data-icon="pastafarianism"></i>[]b</p>',
+            stepFunction: insertHTML(icon, [iconEdit]),
+            contentAfterEdit: `<p>a\ufeff${iconEdit}\ufeff[]b</p>`,
+            contentAfter: `<p>a${icon}[]b</p>`,
         });
     });
 
     test("should insert html in between naked text in the editable", async () => {
         await testEditor({
             contentBefore: "<p>a[]b</p>",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
-            contentAfterEdit:
-                '<p>a\ufeff<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
-            contentAfter: '<p>a<i class="oi" data-icon="pastafarianism"></i>[]b</p>',
+            stepFunction: insertHTML(icon, [iconEdit]),
+            contentAfterEdit: `<p>a\ufeff${iconEdit}\ufeff[]b</p>`,
+            contentAfter: `<p>a${icon}[]b</p>`,
         });
     });
 
     test("should insert several html nodes in between naked text in the editable", async () => {
         await testEditor({
             contentBefore: "<p>a[]e<br></p>",
-            stepFunction: insertHTML("<p>b</p><p>c</p><p>d</p>"),
+            stepFunction: insertHTML("<p>b</p><p>c</p><p>d</p>", ["b", "<p>c</p>", "d"]),
             contentAfter: "<p>ab</p><p>c</p><p>d[]e</p>",
         });
     });
@@ -85,7 +92,7 @@ describe("collapsed selection", () => {
     test("should not split a pre to insert another pre but just insert the text", async () => {
         await testEditor({
             contentBefore: "<pre>abc[]<br>ghi</pre>",
-            stepFunction: insertHTML("<pre>def</pre>"),
+            stepFunction: insertHTML("<pre>def</pre>", ["def"]),
             contentAfter: "<pre>abcdef[]<br>ghi</pre>",
         });
     });
@@ -93,15 +100,15 @@ describe("collapsed selection", () => {
     test('should keep an "empty" block which contains fontawesome nodes when inserting multiple nodes', async () => {
         await testEditor({
             contentBefore: "<p>content[]</p>",
-            stepFunction: async (editor) => {
-                editor.shared.dom.insert(
-                    parseHTML(
-                        editor.document,
-                        '<p>unwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after</p>'
-                    )
-                );
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(
+                '<p>unwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after</p>',
+                [
+                    "unwrapped",
+                    '<div class="o-paragraph"><i class="oi" data-icon="autorenew" contenteditable="false">\u200B</i></div>',
+                    "<p>culprit</p>",
+                    "<p>after</p>",
+                ]
+            ),
             contentAfter:
                 '<p>contentunwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after[]</p>',
         });
@@ -126,7 +133,10 @@ describe("collapsed selection", () => {
                 editor.shared.selection.setCursorEnd(editor.editable);
                 editor.shared.selection.focusEditable();
                 await tick();
-                insertHTML("<div>abc</div><p>def</p>")(editor);
+                insertHTML("<div>abc</div><p>def</p>", [
+                    '<div class="o-paragraph">abc</div>',
+                    "<p>def</p>",
+                ])(editor);
             },
             contentAfter: "<p>content</p><div>abc</div><p>def[]</p>",
             config: { allowInlineAtRoot: true },
@@ -136,7 +146,7 @@ describe("collapsed selection", () => {
     test('should insert an "empty" block', async () => {
         await testEditor({
             contentBefore: "<p>abcd[]</p>",
-            stepFunction: insertHTML("<p>efgh</p><p></p>"),
+            stepFunction: insertHTML("<p>efgh</p><p></p>", ["efgh", "<p><br></p>"]),
             contentAfter: "<p>abcdefgh</p><p>[]<br></p>",
         });
     });
@@ -144,12 +154,10 @@ describe("collapsed selection", () => {
     test("should fill last empty list item", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
-            stepFunction: async (editor) => {
-                editor.shared.dom.insert(
-                    parseHTML(editor.document, "<p>abc</p><ul><li></li></ul>")
-                );
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML("<p>abc</p><ul><li></li></ul>", [
+                "<p>abc</p>", // We didn't just insert "abc", we replaced the paragraph.
+                "<ul><li><br></li></ul>",
+            ]),
             contentAfter: "<p>abc</p><ul><li>[]<br></li></ul>",
         });
     });
@@ -157,12 +165,10 @@ describe("collapsed selection", () => {
     test("should fill first empty list item", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
-            stepFunction: async (editor) => {
-                editor.shared.dom.insert(
-                    parseHTML(editor.document, "<ul><li></li></ul><p>abc</p>")
-                );
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML("<ul><li></li></ul><p>abc</p>", [
+                "<ul><li><br></li></ul>",
+                "<p>abc</p>", // We didn't just insert "abc", we replaced the paragraph.
+            ]),
             contentAfter: "<ul><li><br></li></ul><p>abc[]</p>",
         });
     });
@@ -170,16 +176,16 @@ describe("collapsed selection", () => {
     test("should fill first empty heading element", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
-            stepFunction: async (editor) => {
-                editor.shared.dom.insert(parseHTML(editor.document, "<h1></h1><p>abc</p>"));
-                editor.shared.history.commit();
-            },
+            // We didn't just insert "abc", we replaced the paragraph.
+            stepFunction: insertHTML("<h1></h1><p>abc</p>", ["<h1><br></h1>", "<p>abc</p>"]),
             contentAfter: "<h1><br></h1><p>abc[]</p>",
         });
     });
 
     // The following are edge cases where we try to insert in impossible places.
     describe("inserting in impossible places", () => {
+        const table = "<table><tbody><tr><td/></tr></tbody></table>";
+        const normalizedTable = "<table><tbody><tr><td><br></td></tr></tbody></table>";
         test("never unwrap tables in breakable paragraph", async () => {
             // P elements' content can only be "phrasing" content
             // Adding a table within p is not possible
@@ -187,7 +193,7 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
                 `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
             );
@@ -200,7 +206,7 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p>[]<br></p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
@@ -213,7 +219,7 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">cont[]ent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
@@ -222,7 +228,7 @@ describe("collapsed selection", () => {
 
         test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at start)", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">[]content</p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
@@ -234,16 +240,16 @@ describe("collapsed selection", () => {
                 `<p class="oe_unbreakable">\u200B[]content</p>`,
                 {}
             );
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p><p class="oe_unbreakable">\u200Bcontent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p><p class="oe_unbreakable">\u200bcontent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
         });
 
         test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at end)", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">content[]</p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -255,7 +261,7 @@ describe("collapsed selection", () => {
                 `<p class="oe_unbreakable">content[]\u200B</p>`,
                 {}
             );
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content\u200B</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -264,7 +270,7 @@ describe("collapsed selection", () => {
 
         test("should not unwrap table in unsplittable empty paragraph: replace the paragraph", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">[]<br></p>`, {});
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [normalizedTable])(editor);
             await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -280,7 +286,7 @@ describe("collapsed selection", () => {
                 {}
             );
 
-            insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
+            insertHTML(table, [])(editor);
             expect(getContent(editor.editable)).toBe(
                 '<p data-selection-placeholder=""><br></p>' +
                     `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>` +
@@ -308,13 +314,10 @@ describe("collapsed selection", () => {
 
     test("Should ensure a paragraph after inserting multiple unsplittables (add)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p>`, {});
-        editor.shared.dom.insert(
-            parseHTML(
-                editor.document,
-                `<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`
-            )
-        );
-        editor.shared.history.commit();
+        insertHTML(`<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`, [
+            `<p class="oe_unbreakable">1</p>`,
+            `<p class="oe_unbreakable">2</p>`,
+        ])(editor);
         expect(getContent(editor.editable)).toBe(
             `<p>cont</p><p class="oe_unbreakable">1</p>` +
                 `<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>` +
@@ -325,12 +328,15 @@ describe("collapsed selection", () => {
 
     test("Should ensure a paragraph after inserting multiple unsplittables (keep)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
-        editor.shared.dom.insert(
+        const insertedNodes = editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`
             )
         );
+        expect(insertedNodes.length).toBe(2);
+        expect(insertedNodes[0].outerHTML).toBe(`<p class="oe_unbreakable">1</p>`);
+        expect(insertedNodes[1].outerHTML).toBe(`<p class="oe_unbreakable">2</p>`);
         expect(getContent(editor.editable)).toBe(
             `<p>cont</p><p class="oe_unbreakable">1</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><p class="oe_unbreakable">2[]</p><p>+</p>`
         );
@@ -338,13 +344,13 @@ describe("collapsed selection", () => {
 
     test("should unwrap a paragraphRelated element inside another", async () => {
         const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
-        insertHTML(`<p>in</p>`)(editor);
+        insertHTML(`<p>in</p>`, ["in"])(editor);
         expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
     });
 
     test("should unwrap a contenteditable='true' ancestor which is not descendant of a contenteditable='false'", async () => {
         const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
-        insertHTML(`<p contenteditable="true">in</p>`)(editor);
+        insertHTML(`<p contenteditable="true">in</p>`, ["in"])(editor);
         expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
     });
 
@@ -366,8 +372,12 @@ describe("collapsed selection", () => {
 
     test("should normalize the parent when inserting a single element", async () => {
         const { editor } = await setupEditor(`<p>[]<br></p>`, {});
-        editor.shared.dom.insert(
+        const insertedNodes = editor.shared.dom.insert(
             parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
+        );
+        expect(insertedNodes.length).toBe(1);
+        expect(insertedNodes[0].outerHTML).toBe(
+            `<p data-oe-protected="true" contenteditable="false">in</p>`
         );
         editor.shared.history.commit();
         // Insertion triggers `selectionchange` and `commit` creates a selection
@@ -465,17 +475,18 @@ describe("collapsed selection", () => {
                 },
             }
         );
-        editor.shared.dom.insert("notasurprise");
-        commit(editor);
+        insertHTML("notasurprise", ["surprise"])(editor);
         expect(getContent(el)).toBe(`<p class="first">?</p><p class="second">surprise[]!</p>`);
     });
 });
 
 describe("not collapsed selection", () => {
+    const icon = '<i class="oi" data-icon="pastafarianism"></i>';
+    const iconEdit = '<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>';
     test("should delete selection and insert html in its place", async () => {
         await testEditor({
             contentBefore: "<p>[a]</p>",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
+            stepFunction: insertHTML(icon, [iconEdit]),
             contentAfterEdit:
                 '<p>\ufeff<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
             contentAfter: '<p><i class="oi" data-icon="pastafarianism"></i>[]</p>',
@@ -485,7 +496,7 @@ describe("not collapsed selection", () => {
     test("should delete selection and insert html in its place (2)", async () => {
         await testEditor({
             contentBefore: "<p>a[b]c</p>",
-            stepFunction: insertHTML('<i class="oi" data-icon="pastafarianism"></i>'),
+            stepFunction: insertHTML(icon, [iconEdit]),
             contentAfterEdit:
                 '<p>a\ufeff<i class="oi" data-icon="pastafarianism" contenteditable="false">\u200b</i>\ufeff[]c</p>',
             contentAfter: '<p>a<i class="oi" data-icon="pastafarianism"></i>[]c</p>',
@@ -498,7 +509,7 @@ describe("not collapsed selection", () => {
             stepFunction: async (editor) => {
                 // There's an empty text node after the paragraph:
                 editor.editable.lastChild.after(editor.document.createTextNode(""));
-                insertHTML("<p>ghi</p><p>jkl</p>")(editor);
+                insertHTML("<p>ghi</p><p>jkl</p>", ["<p>ghi</p>", "<p>jkl</p>"])(editor);
             },
             contentAfter: "<p>ghi</p><p>jkl[]</p>",
         });
@@ -514,10 +525,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>k]l</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: '<p>a<span class="a">TEST</span>[]l</p>',
         });
     });
@@ -531,10 +539,7 @@ describe("not collapsed selection", () => {
                         <tr><td>op</td><td>qr</td><td>st</td></tr>
                     </tbody></table>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: unformat(
                 `<table><tbody>
                         <tr><td>cd</td><td><p><span class="a">TEST</span>[]</p></td><td>gh</td></tr>
@@ -555,10 +560,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>kl</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: unformat(
                 `<p>a<span class="a">TEST</span>[]</p>
                     <p>kl</p>`
@@ -576,10 +578,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>k]l</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: unformat(
                 `<p>ab</p>
                     <p><span class="a">TEST</span>[]l</p>`
@@ -597,10 +596,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>k]l</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: `<p>a<span class="a">TEST</span>[]l</p>`,
         });
     });
@@ -625,8 +621,7 @@ describe("not collapsed selection", () => {
                 // Table selection happens on selectionchange event which is
                 // fired in the next tick.
                 await tick();
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
+                insertHTML(span("TEST"))(editor);
             },
             contentAfter: `<p><span class="a">TEST</span>[]</p>`,
         });
@@ -652,10 +647,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>67]</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: `<p>0<span class="a">TEST</span>[]</p>`,
         });
     });
@@ -680,10 +672,7 @@ describe("not collapsed selection", () => {
                     </tbody></table>
                     <p>67]</p>`
             ),
-            stepFunction: (editor) => {
-                editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(span("TEST")),
             contentAfter: `<p><span class="a">TEST</span>[]</p>`,
         });
     });
@@ -691,15 +680,13 @@ describe("not collapsed selection", () => {
     test("should insert html containing ZWNBSP", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
-            stepFunction: async (editor) => {
-                editor.shared.dom.insert(
-                    parseHTML(
-                        editor.document,
-                        '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>'
-                    )
-                );
-                editor.shared.history.commit();
-            },
+            stepFunction: insertHTML(
+                '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>',
+                [
+                    '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>',
+                    '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>',
+                ]
+            ),
             contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]</p>',
         });
     });
@@ -713,9 +700,13 @@ describe("not collapsed selection", () => {
             </p>`,
             {}
         );
-        editor.shared.dom.insert(
+        const insertedNodes = editor.shared.dom.insert(
             parseHTML(editor.document, "<div>123</div><div><br></div><div>456</div>")
         );
+        expect(insertedNodes.length).toBe(3);
+        expect(insertedNodes[0].outerHTML).toBe('<div class="o-paragraph">123</div>');
+        expect(insertedNodes[1].outerHTML).toBe('<div class="o-paragraph"><br></div>');
+        expect(insertedNodes[2].outerHTML).toBe('<div class="o-paragraph">456</div>');
         expect(getContent(el)).toBe(
             `<div class="o-paragraph">123</div><div class="o-paragraph"><br></div><div class="o-paragraph">456[]</div>`
         );
@@ -741,7 +732,11 @@ test("Should create a list element around `li`", async () => {
             </div>
         `),
         stepFunction: async (editor) => {
-            editor.shared.dom.insert(parseHTML(editor.document, "<ul><li>abc</li></ul>"));
+            const insertedNodes = editor.shared.dom.insert(
+                parseHTML(editor.document, "<ul><li>abc</li></ul>")
+            );
+            expect(insertedNodes.length).toBe(1);
+            expect(insertedNodes[0].outerHTML).toBe("<ul><li>abc</li></ul>");
         },
         contentAfter: unformat(`
             <div id="wrapwrap">
@@ -767,7 +762,11 @@ test("Should return converted elements", async () => {
     const insertedNodes = editor.shared.dom.insert(
         parseHTML(editor.document, "<span>first</span><p>second</p>")
     );
+    cleanHints(editor);
     expect(insertedNodes.length).toBe(2);
-    expect(insertedNodes[0].tagName).toBe("SPAN");
-    expect(insertedNodes[1].tagName).toBe("LI");
+    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedNodes[1].outerHTML).toBe("<li>second</li>");
+    expect(getContent(editor.editable)).toBe(
+        "<ul><li><span>first</span></li><li>second[]</li></ul>"
+    );
 });
