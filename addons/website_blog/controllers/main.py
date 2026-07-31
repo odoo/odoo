@@ -101,6 +101,7 @@ class WebsiteBlog(http.Controller):
             elif state == "unpublished":
                 domain += ['|', ("website_published", "=", False), ("post_date", ">", fields.Datetime.now())]
         else:
+            published_count, unpublished_count = 0, 0
             domain += [("post_date", "<=", fields.Datetime.now())]
 
         use_cover = request.website.is_view_active('website_blog.opt_blog_cover_post')
