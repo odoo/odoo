@@ -37,7 +37,7 @@
                 'name': 'Flag Low-Confidence Bill',
                 'model_id': ref('account.model_account_move'),
                 'state': 'code',
-                'code': """
+                'code': """\
 # This code runs for every low-confidence bill found by the automation.
 # The 'record' variable is the single account.move being processed.
 #
@@ -73,7 +73,7 @@ if record.ai_extraction_status == 'extracted':
     record.write({
         'ai_review_required': True,
     })
-                """,
+""",
             })]/>
         </record>
 

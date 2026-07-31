@@ -9,15 +9,14 @@ class InvoiceAgentBulkProcess(models.TransientModel):
     """Wizard to re-run AI extraction on selected bills in bulk.
 
     Triggered from the Action menu on list/kanban views of account.move.
-    Uses TransientModel so records are auto-cleaned up by _transient_vacuum.
+    Records are auto-cleaned up by the TransientModel vacuum, so this
+    wizard leaves no permanent rows in the database.
 
-    Lifecycle:
-    1. User selects records in list/kanban view
-    2. Odoo sets active_ids / active_model in context
-    3. default_get reads active_ids to pre-fill move_ids
-    4. User clicks the action button
-    5. action_process() resets extraction state on each bill
-    6. A notification is returned showing processed vs skipped counts
+    Flow: the user selects bills in the list or kanban view, Odoo passes
+    the selected ids through the context, default_get pre-fills the move
+    list, and action_process resets the AI extraction state on every bill.
+    A success or warning notification reports the processed and skipped
+    counts.
     """
 
     _name = "invoice.agent.bulk.process"

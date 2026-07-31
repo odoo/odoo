@@ -109,7 +109,11 @@ jobs:
       - name: Run Odoo tests for invoice_agent
         run: |
           python3 ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
-          grep -qE 'FAIL|ERROR|CRITICAL' odoo-test.log && exit 1 || exit 0
+          # Odoo renders Python docstrings via docutils on a fresh DB install,
+          # which emits benign diagnostic lines like "(ERROR/3) Undefined
+          # substitution referenced". Those must NOT fail the build, so filter
+          # out the "(LEVEL/N)" diagnostics before looking for real failures.
+          grep -E 'FAIL|ERROR|CRITICAL' odoo-test.log | grep -vE '\([A-Z]+/[0-9]+\)' | grep -q . && exit 1 || exit 0
 
       - name: Upload test log on failure
         if: failure()
