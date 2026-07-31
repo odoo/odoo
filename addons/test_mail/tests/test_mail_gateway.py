@@ -2752,6 +2752,43 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'subtype': 'mail.mt_comment',
             }],
         )
+        # second internal user reply (verifies that earlier OOO record with outgoing_email_to=False
+        # does not falsely suppress OOO notification for another internal partner)
+        self.user_employee_c2.notification_type = 'email'
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 14, 17, 00)):
+            with self.mock_mail_gateway(), self.mock_mail_app():
+                self.format_and_process(
+                    MAIL_TEMPLATE_EXTRA_HTML, self.user_employee_c2.email_formatted,
+                    self.alias.alias_full_name,
+                    extra=f'In-Reply-To:{initial_msg.message_id}\nReferences:{initial_msg.message_id}\n',
+                    extra_html='Employee C2  user reply',
+                    subject='Employee C2 user reply',
+                )
+        self.assertEqual(len(self._new_msgs), 2, 'Employee C2 reply + OOO message sent to employee C2 user')
+        ooo_message_2 = self._new_msgs[1]
+        self.assertMailNotifications(
+            ooo_message_2,
+            [{
+                'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
+                'email_values': {
+                    'subject': 'Auto: Employee C2 user reply',
+                },
+                'message_type': 'out_of_office',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'email_from': self.partner_employee.email_formatted,
+                    'model': record._name,
+                    'partner_ids': self.partner_employee_c2,
+                    'notified_partner_ids': self.partner_employee_c2,
+                    'res_id': record.id,
+                    'subject': 'Auto: Employee C2 user reply',
+                },
+                'notif': [
+                    {'partner': self.partner_employee_c2, 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_comment',
+            }],
+        )
 
 
 @tagged('mail_gateway', 'mail_thread')

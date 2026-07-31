@@ -4415,12 +4415,18 @@ class MailThread(models.AbstractModel):
             return ooo_messages
 
         # limit number of real author / recipient exchanges to 1 every 4 days
-        sent_su = self.env['mail.message'].sudo().search([
+        base_domain = Domain([
             ('author_id', 'in', ooo_users.partner_id.ids),
             ('message_type', '=', 'out_of_office'),
-            '|', ('partner_ids', 'in', recipient.ids), ('outgoing_email_to', '=', email_to),
             ('date', '>=', '-4d'),
         ])
+
+        partner_domain = Domain('partner_ids', 'in', recipient.ids) if recipient else Domain.FALSE
+        email_domain = Domain('outgoing_email_to', '=', email_to) if email_to else Domain.FALSE
+        recipient_domain = partner_domain | email_domain
+
+        final_domain = base_domain & recipient_domain
+        sent_su = self.env['mail.message'].sudo().search(final_domain)
         already_mailed = sent_su.author_id
 
         # finally send OOO messages
