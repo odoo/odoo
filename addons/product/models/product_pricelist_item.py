@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round, format_amount, format_datetime, formatLang
+from odoo.tools import float_round, format_amount, format_datetime, formatLang, get_lang
 
 
 class ProductPricelistItem(models.Model):
@@ -56,16 +56,9 @@ class ProductPricelistItem(models.Model):
             ('3_global', "All Products"),
         ],
         string="Apply On",
-        default='3_global',
-        required=True,
-        help="Pricelist Item applicable on selected option")
-
-    display_applied_on = fields.Selection(
-        selection=[
-            ('1_product', "Product"),
-            ('2_product_category', "Category"),
-        ],
-        default='1_product',
+        compute='_compute_applied_on',
+        store=True,
+        precompute=True,
         required=True,
         help="Pricelist Item applicable on selected option")
 
@@ -114,11 +107,15 @@ class ProductPricelistItem(models.Model):
         selection=[
             ('percentage', "Discount"),
             ('formula', "Formula"),
+            ('markup', "Surcharge"),
             ('fixed', "Fixed Price"),
         ],
         help="Use the discount rules and activate the discount settings"
              " in order to show discount to customer.",
-        index=True, default='fixed', required=True)
+        index=True,
+        default='fixed',
+        required=True,
+    )
 
     fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
     percent_price = fields.Float(
@@ -129,7 +126,7 @@ class ProductPricelistItem(models.Model):
         string="Price Discount",
         default=0,
         digits=(16, 2),
-        help="You can apply a mark-up by setting a negative discount.")
+    )
     price_round = fields.Float(
         string="Price Rounding",
         min_display_digits='Product Price',
@@ -142,12 +139,11 @@ class ProductPricelistItem(models.Model):
         help="Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount.")
 
     price_markup = fields.Float(
-        string="Markup",
+        string="Surcharge",
         digits=(16, 2),
         compute='_compute_price_markup',
         inverse='_inverse_price_markup',
-        store=True,
-        help="You can apply a mark-up on the cost")
+    )
 
     price_min_margin = fields.Float(
         string="Min. Price Margin",
@@ -193,6 +189,16 @@ class ProductPricelistItem(models.Model):
         for item in self:
             item.allowed_uom_ids = item.product_tmpl_id.uom_id | item.product_tmpl_id.uom_ids
 
+    @api.depends('categ_id', 'product_id', 'product_tmpl_id')
+    def _compute_applied_on(self):
+        for item in self:
+            if item.categ_id:
+                item.applied_on = '2_product_category'
+            elif item.product_tmpl_id:
+                item.applied_on = '0_product_variant' if item.product_id else '1_product'
+            else:
+                item.applied_on = '3_global'
+
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
         for item in self:
@@ -202,8 +208,6 @@ class ProductPricelistItem(models.Model):
                 item.name = item.product_tmpl_id.display_name
             elif item.product_id and item.applied_on == '0_product_variant':
                 item.name = item.product_id.display_name
-            elif item.display_applied_on == '2_product_category':
-                item.name = item.env._("All Categories")
             else:
                 item.name = item.env._("All Products")
 
@@ -288,44 +292,34 @@ class ProductPricelistItem(models.Model):
             item.price_discount = -item.price_markup
 
     @api.depends_context('lang')
-    @api.depends(
-        'base', 'compute_price', 'price_discount', 'price_markup', 'price_round', 'price_surcharge',
-    )
+    @api.depends('base', 'compute_price', 'price_discount', 'price_round', 'price_surcharge')
     def _compute_rule_tip(self):
-        base_selection_vals = dict(self._fields['base']._description_selection(self.env))
         self.rule_tip = False
+        lang = self.env['res.lang'].browse(get_lang(self.env).id)
         for item in self:
-            if item.compute_price != 'formula' or not item.base:
+            if item.compute_price not in ('formula', 'markup') or not item.base:
                 continue
             base_amount = 100
-            discount = item.price_discount if item.base != 'standard_price' else -item.price_markup
-            discount_factor = (100 - discount) / 100
+            discount_factor = (100 - item.price_discount) / 100
             discounted_price = base_amount * discount_factor
             if item.price_round:
                 discounted_price = float_round(discounted_price, precision_rounding=item.price_round)
-            surcharge = format_amount(item.env, item.price_surcharge, item.currency_id)
-            discount_type, discount = self._get_displayed_discount(item)
 
-            item.rule_tip = item.env._(
-                "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
-                "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s",
-                base=base_selection_vals[item.base],
-                discount=discount,
-                discount_type=discount_type,
-                surcharge=surcharge,
-                amount=format_amount(item.env, 100, item.currency_id),
-                discount_charge=discount_factor,
-                price_surcharge=surcharge,
-                total_amount=format_amount(
-                    item.env, discounted_price + item.price_surcharge, item.currency_id),
+            amount = format_amount(item.env, base_amount, item.currency_id)
+            # %g keeps only the decimals the factor uses and rounds the float noise off.
+            factor = lang.format('%g', discount_factor, grouping=True)
+            surcharge = format_amount(item.env, item.price_surcharge, item.currency_id)
+            total = format_amount(
+                item.env, discounted_price + item.price_surcharge, item.currency_id
             )
+            item.rule_tip = f"{amount} × {factor} + {surcharge} = {total}"
 
     def _get_integer(self, percentage):
         return int(percentage) if percentage == int(percentage) else percentage
 
     def _get_displayed_discount(self, item):
-        if item.base == 'standard_price':
-            return self.env._("markup"), self._get_integer(item.price_markup)
+        if item.compute_price == 'markup':
+            return self.env._("surcharge"), self._get_integer(item.price_markup)
         return self.env._("discount"), self._get_integer(item.price_discount)
 
     #=== CONSTRAINT METHODS ===#
@@ -397,19 +391,10 @@ class ProductPricelistItem(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
-    @api.onchange('base')
-    def _onchange_base(self):
-        for item in self:
-            item.update({
-                'price_discount': 0.0,
-                'price_markup': 0.0,
-            })
-
     @api.onchange('base_pricelist_id')
     def _onchange_base_pricelist_id(self):
-        for item in self:
-            if item.compute_price == 'percentage':
-                item.base = (bool(item.base_pricelist_id) and 'pricelist') or 'list_price'
+        if self.compute_price == 'percentage':
+            self.base = 'pricelist' if self.base_pricelist_id else 'list_price'
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
@@ -418,69 +403,38 @@ class ProductPricelistItem(models.Model):
             self.fixed_price = 0.0
         if self.compute_price != 'percentage':
             self.percent_price = 0.0
-        if self.compute_price != 'formula':
+        if self.compute_price not in ('formula', 'markup'):
             self.update({
                 'base': 'list_price',
-                'price_discount': 0.0,
                 'price_surcharge': 0.0,
-                'price_markup': 0.0,
                 'price_round': 0.0,
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
-
-    @api.onchange('display_applied_on')
-    def _onchange_display_applied_on(self):
-        for item in self:
-            if not (item.product_tmpl_id or item.categ_id):
-                item.update({'applied_on': '3_global'})
-            elif item.display_applied_on == '1_product':
-                item.update({
-                    'applied_on': '0_product_variant' if self.env.context.get('default_product_id') else '1_product',
-                    'categ_id': None,
-                })
-            elif item.display_applied_on == '2_product_category':
-                item.update({
-                    'product_id': None,
-                    'product_tmpl_id': None,
-                    'applied_on': '2_product_category',
-                    'product_uom_name': None,
-                })
+        self.price_discount = 0.0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        has_product_id = self.filtered('product_id')
-        for item in has_product_id:
+        for item in self.filtered('product_id'):
             item.product_tmpl_id = item.product_id.product_tmpl_id
-        if self.env.context.get('default_applied_on', False) == '1_product':
-            # If a product variant is specified, apply on variants instead
-            # Reset if product variant is removed
-            has_product_id.update({'applied_on': '0_product_variant'})
-            (self - has_product_id).update({'applied_on': '1_product'})
 
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
-        has_tmpl_id = self.filtered('product_tmpl_id')
-        for item in has_tmpl_id:
-            if item.product_id and item.product_id.product_tmpl_id != item.product_tmpl_id:
-                item.product_id = None
+        if self.product_id and self.product_id.product_tmpl_id != self.product_tmpl_id:
+            self.product_id = False
+        if self.product_tmpl_id:
+            self.categ_id = False
 
-    @api.onchange('product_id', 'product_tmpl_id', 'categ_id')
-    def _onchange_rule_content(self):
-        if not self.env.context.get('default_applied_on', False):
-            # If we aren't coming from a specific product template/variant.
-            variants_rules = self.filtered(
-                lambda r: bool(r.product_id) and bool(r.product_tmpl_id)
-            )
-            template_rules = (self-variants_rules).filtered('product_tmpl_id')
-            category_rules = self.filtered(
-                lambda cat: bool(cat.categ_id) and cat.categ_id.name != 'All'
-            )
-            variants_rules.update({'applied_on': '0_product_variant'})
-            template_rules.update({'applied_on': '1_product'})
-            category_rules.update({'applied_on': '2_product_category'})
-            global_rules = self - variants_rules - template_rules - category_rules
-            global_rules.update({'applied_on': '3_global'})
+    @api.onchange('categ_id')
+    def _onchange_categ_id(self):
+        if self.categ_id:
+            self.product_id = False
+            self.product_tmpl_id = False
+
+    @api.onchange('price_markup')
+    def _onchange_price_markup(self):
+        # The inverse only runs on write, and everything else reads the discount.
+        self.price_discount = -self.price_markup
 
     @api.onchange('price_round')
     def _onchange_price_round(self):
@@ -503,40 +457,7 @@ class ProductPricelistItem(models.Model):
                 values['product_tmpl_id'] = self.env['product.product'].browse(
                     values.get('product_id')
                 ).product_tmpl_id.id
-
-            if not values.get('applied_on'):
-                values['applied_on'] = (
-                    '0_product_variant' if values.get('product_id') else
-                    '1_product' if values.get('product_tmpl_id') else
-                    '2_product_category' if values.get('categ_id') else
-                    '3_global'
-                )
-
-            # Ensure item consistency for later searches.
-            applied_on = values['applied_on']
-            if applied_on == '3_global':
-                values.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
-            elif applied_on == '2_product_category':
-                values.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
-            elif applied_on == '1_product':
-                values.update({'product_id': None, 'categ_id': None})
-            elif applied_on == '0_product_variant':
-                values.update({'categ_id': None})
         return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.get('applied_on', False):
-            # Ensure item consistency for later searches.
-            applied_on = vals['applied_on']
-            if applied_on == '3_global':
-                vals.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
-            elif applied_on == '2_product_category':
-                vals.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
-            elif applied_on == '1_product':
-                vals.update({'product_id': None, 'categ_id': None})
-            elif applied_on == '0_product_variant':
-                vals.update({'categ_id': None})
-        return super().write(vals)
 
     #=== BUSINESS METHODS ===#
 
@@ -626,10 +547,9 @@ class ProductPricelistItem(models.Model):
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
         if self.compute_price == 'percentage':
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
-        elif self.compute_price == 'formula':
+        elif self.compute_price in ('formula', 'markup'):
             product_uom = product.uom_id
-            discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
-            price = base_price - (base_price * (discount / 100))
+            price = base_price - (base_price * (self.price_discount / 100))
             if self.price_round:
                 price = float_round(price, precision_rounding=self.price_round)
 
