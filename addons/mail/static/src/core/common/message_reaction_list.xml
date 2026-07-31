@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template xml:space="preserve">
     <t t-name="mail.MessageReactionList">
-        <Dropdown state="this.preview" position="'top-middle'" menuClass="'mt-1 overflow-visible ' + this.store.discussDropdownMenuClass(this)" manual="true" bottomSheet="false">
+        <Dropdown state="this.preview" position="'top-middle'" menuClass="'mt-1 overflow-visible ' + this.store.discussDropdownMenuClass(this)" menuRef="this.reactionPreviewRef" manual="true" bottomSheet="false">
             <t t-call="mail.MessageReactionList.button" />
             <t t-set-slot="content">
                 <t t-call="mail.MessageReactionList.preview"/>
@@ -26,7 +26,7 @@
 
     <t t-name="mail.MessageReactionList.preview">
         <t t-set="reactionAtRender" t-value="this.reaction()"/>
-        <div class="o-mail-MessageReactionList-preview px-0 py-1 cursor-pointer d-flex" t-on-click="(ev) => this.onClickReactionList(ev, { reactionAtRender })" t-ref="this.reactionListRef">
+        <div class="o-mail-MessageReactionList-preview px-0 py-1 cursor-pointer d-flex" t-on-click="(ev) => this.onClickReactionList(ev, { reactionAtRender })">
             <div class="d-flex align-items-center mx-2 gap-2">
                 <span class="fs-1" t-out="this.reaction().content"/>
                 <span class="o-mail-MessageReactionList-previewText small me-1" t-out="this.previewText(this.reaction())"/>
