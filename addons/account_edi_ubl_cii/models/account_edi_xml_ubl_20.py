@@ -1,28 +1,18 @@
 from collections import defaultdict
 from lxml import etree
 
-from odoo import _, models, Command
-from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_repr, float_round
+from odoo import _, models
+from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account_edi_ubl_cii.models.account_edi_ubl import UBL_NAMESPACES  # noqa: F401 (other modules still import it from ubl_20)
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
-
-
-UBL_NAMESPACES = {
-    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-}
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
     _name = "account.edi.xml.ubl_20"
     _inherit = 'account.edi.ubl'
     _description = "UBL 2.0"
-
-    def _find_value(self, xpath, tree, nsmap=False):
-        # EXTENDS account.edi.common
-        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # EXPORT
@@ -826,90 +816,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_retrieve_partner_vals(self, tree, role):
-        """ Returns a dict of values that will be used to retrieve the partner """
-        vat = self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
-        country_code = self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
-        if not vat and country_code:
-            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
-                if field == 'vat' and (vat := self._find_value(f".//cac:{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID='{scheme_id}']", tree)):
-                    break
-        return {
-            'vat': vat,
-            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
-            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree) or
-                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree),
-            'country_code': country_code,
-            'street': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:StreetName', tree),
-            'street2': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:AdditionalStreetName', tree),
-            'city': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CityName', tree),
-            'zip_code': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:PostalZone', tree),
-        }
-
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
-        logs = []
-        invoice_values = {}
-        if qty_factor == -1:
-            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
-        role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
-        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
-        # Need to set partner before to compute bank and lines properly
-        invoice.partner_id = partner.id
-        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
-        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
-        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
-        # ==== partner_bank_id ====
-        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
-        bank_details = [
-            bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
-            for bank_detail_node in bank_detail_nodes
-            if bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
-        ]
-        if bank_details:
-            self._import_partner_bank(invoice, bank_details)
-
-        # ==== ref, invoice_origin, narration, payment_reference ====
-        ref = tree.findtext('./{*}ID')
-        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
-            invoice_values['name'] = ref
-        elif ref:
-            invoice_values['ref'] = ref
-        invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
-        invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
-        invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
-
-        # ==== Delivery ====
-        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
-        invoice.delivery_date = delivery_date is not None and delivery_date.text
-
-        # ==== invoice_incoterm_id ====
-        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
-        if incoterm_code:
-            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
-            if incoterm:
-                invoice_values['invoice_incoterm_id'] = incoterm.id
-
-        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines, Payable Rounding Amount ====
-        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
-        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
-        line_tag = (
-            'InvoiceLine'
-            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
-            else 'CreditNoteLine'
-        )
-        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
-        rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', qty_factor)
-        line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
-
-        invoice_values = {
-            **invoice_values,
-            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
-        }
-        invoice.write(invoice_values)
-        logs += partner_logs + currency_logs + line_logs + allowance_charges_logs + rounding_logs
-        return logs
-
     def _get_tax_nodes(self, tree):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
@@ -995,25 +901,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         difference = currency.round(tax_total - tax_lines_total)
                         if not currency.is_zero(difference):
                             tax_lines[0].amount_currency += sign * difference
-
-    # -------------------------------------------------------------------------
-    # IMPORT : helpers
-    # -------------------------------------------------------------------------
-
-    def _get_import_document_amount_sign(self, tree):
-        """
-        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
-        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
-        of each quantity in the invoice.
-        """
-        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
-            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
-            if amount_node is not None and float(amount_node.text) < 0:
-                return 'refund', -1
-            return 'invoice', 1
-        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
-            return 'refund', 1
-        return None, None
 
     # -------------------------------------------------------------------------
     # EXPORT: New (dict_to_xml) helpers
