@@ -56,7 +56,7 @@
                     <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
                         <div class="o-mail-Message-content min-w-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': !this.showSubject and !this.message.bubbleColor, 'o-mail-Message-pollContent flex-grow-1': this.message.poll}">
                             <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': this.isEditing }">
-                                <t t-if="['notification', 'tracking'].includes(this.message.message_type) and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
+                                <t t-if="['notification', 'tracking'].includes(this.message.message_type) and this.message.richBody and !this.message.isEmpty" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                 <t t-if="this.message.isEmpty or (!['notification', 'tracking'].includes(this.message.message_type) and !this.message.is_transient and (this.message.hasTextContent or this.message.subtype_id?.description or this.isEditing or this.message.parent_id))">
                                     <MessageLinkPreviewList t-if="!this.isEditing and this.message.linkPreviewSquash and !this.message.parent_id" messageLinkPreviews="this.message.message_link_preview_ids"/>
                                     <t t-else="">
@@ -186,7 +186,7 @@
 </t>
 
 <t t-name="mail.Message.bodyAsNotification">
-    <div class="o-mail-Message-body text-break w-100" t-att-class="this.bodyAttClass">
+    <div class="o-mail-Message-body text-break w-100" t-att-class="this.bodyAttClass" t-ref="this.messageBody">
         <t t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
     </div>
 </t>
