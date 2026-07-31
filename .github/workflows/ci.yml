@@ -8,8 +8,12 @@ on:
   workflow_call:
 
 permissions:
+  # contents: read is all this workflow needs (checkout + tests).
+  # NOTE: do NOT request pull-requests/:id-token here. When this workflow is
+  # called from deploy.yml (workflow_call), GitHub only allows permissions
+  # that the caller grants — deploy.yml grants contents: read only, so any
+  # extra scope here would make the reusable-workflow call invalid.
   contents: read
-  pull-requests: read
 
 jobs:
   lint:
@@ -18,16 +22,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
+
       - name: Install ruff
-        run: pip install ruff
+        # Pin to the version ruff.toml was generated for (0.15.0+)
+        run: pip install ruff==0.15.0
+
+      # Run ruff ONLY on our custom module. `ruff check .` would also lint
+      # Odoo's core addons/, whose upstream style does not match ruff settings
+      # (e.g. utf8-encoding-declaration, blank-lines-after-function-or-class)
+      # and would fail the build.
       - name: Run ruff linter
-        run: ruff check .
+        run: ruff check custom_addons/invoice_agent
+
       - name: Run ruff format check
-        run: ruff format --check .
+        run: ruff format --check custom_addons/invoice_agent
 
   test:
     needs: lint
@@ -36,7 +49,7 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_DB: ci
+          POSTGRES_DB: odoo
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
         options: >-
@@ -46,14 +59,22 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
+
+      - name: Install System C-Libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev
+
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
@@ -61,17 +82,21 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'custom_addons/invoice_agent/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Install dependencies
+
+      - name: Install Python Dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r custom_addons/invoice_agent/requirements.txt
-      - name: Install Odoo in editable mode
-        run: pip install -e .
+
+      - name: Make odoo-bin executable
+        run: chmod +x ./odoo-bin
+
       - name: Run Odoo tests for invoice_agent
         run: |
-          ./odoo-bin -d ci -i invoice_agent --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
+          python3 ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
           grep -qE 'FAIL|ERROR|CRITICAL' odoo-test.log && exit 1 || exit 0
+
       - name: Upload test log on failure
         if: failure()
         uses: actions/upload-artifact@v4

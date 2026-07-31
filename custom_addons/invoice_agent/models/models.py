@@ -1,5 +1,3 @@
-
-
 # from odoo import models, fields, api
 
 # class invoice_agent(models.Model):
