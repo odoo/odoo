@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 from datetime import datetime, timedelta
-from unittest import skip
 
 from odoo import Command, fields
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -649,7 +648,6 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
 
-    @skip('Temporary to fast merge new valuation')
     def test_receive_qty_invoiced_but_no_posted(self):
         """
         Create a purchase order, confirm it, invoice it, but don't post the invoice.
@@ -671,10 +669,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(receipt01.state, 'done')
         self.assertEqual(po.order_line[0].qty_received, 5)
         self.assertEqual(po.order_line[0].price_unit, 500)
-        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product_id_1.id)])
-        self.assertEqual(len(layers), 1)
-        self.assertEqual(layers.quantity, 5)
-        self.assertEqual(layers.value, 2500)
+        move = receipt01.move_ids.filtered(lambda m: m.product_id == self.product_id_1)
+        self.assertEqual(move.quantity, 5)
+        self.assertEqual(move.value, 2500)
 
     def test_stock_picking_type_for_deliveries_generated_from_po(self):
         """

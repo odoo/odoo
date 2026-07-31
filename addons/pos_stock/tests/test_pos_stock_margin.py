@@ -1,11 +1,10 @@
-from unittest import skip
-
 import odoo
 from odoo.addons.point_of_sale.tests.test_pos_margin import TestPosMargin
+from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPosStockMargin(TestPosMargin):
+class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
     """
     Test the margin computation on orders with basic configuration
     The tests contain the base scenarios.
@@ -24,7 +23,6 @@ class TestPosStockMargin(TestPosMargin):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
-    @skip('Temporary to fast merge new valuation')
     def test_fifo_margin_real_time(self):
         """
         Test margin where there is product in FIFO with stock update in real time
@@ -37,9 +35,10 @@ class TestPosStockMargin(TestPosMargin):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
             'price_unit': 3,
+            'value_manual': 6,
         }).sudo()
         move1._action_confirm()
         move1._action_assign()
@@ -51,9 +50,10 @@ class TestPosStockMargin(TestPosMargin):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
             'price_unit': 7,
+            'value_manual': 7,
         }).sudo()
         move2._action_confirm()
         move2._action_assign()
@@ -82,7 +82,6 @@ class TestPosStockMargin(TestPosMargin):
         # close session
         self.pos_session.action_pos_session_validate()
 
-    @skip('Temporary to fast merge new valuation')
     def test_avco_margin_closing_time(self):
         """
         Test margin where there is product in AVCO with stock update in closing
@@ -97,9 +96,10 @@ class TestPosStockMargin(TestPosMargin):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
             'price_unit': 3,
+            'value_manual': 6,
         }).sudo()
         move1._action_confirm()
         move1._action_assign()
@@ -111,9 +111,10 @@ class TestPosStockMargin(TestPosMargin):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
             'price_unit': 6,
+            'value_manual': 6,
         }).sudo()
         move2._action_confirm()
         move2._action_assign()
