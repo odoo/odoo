@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account_edi_ubl_cii.tests.test_ubl_import_bis3_invoice_be import TestUblImportBis3InvoiceBE
 from odoo.tests import tagged
 
@@ -192,6 +193,53 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
         bill = self._import_invoice_as_attachment_on(test_name='test_partial_import_tax_manual_tax_amounts', journal=self.company_data["default_journal_sale"])
         partner = bill.partner_id
         self.assertEqual(bill.line_ids.tax_ids, tax_21)
+
+    def test_partial_import_tax_from_predicted_account_default_tax(self):
+        tax_21_1 = self.percent_tax(21.0)
+        tax_21_2 = self.percent_tax(21.0)
+
+        account_with_tax = self.env['account.account'].create({
+            'name': "Default Tax Account",
+            'code': "DEFTAX",
+            'account_type': 'income',
+            'tax_ids': [Command.set(tax_21_1.ids)],
+        })
+
+        # Use a different tax on the training invoice to ensure that, during import,
+        # the tax comes from the account's default tax rather than the predicted tax.
+        self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    name="turlututu",
+                    price_unit=500.0,
+                    account_id=account_with_tax.id,
+                    tax_ids=tax_21_2,
+                ),
+            ],
+            post=True,
+        )
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_manual_tax_amounts',
+            journal=self.company_data['default_journal_sale'],
+        )
+        # The predicted account's default tax should be selected
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 1.0,
+                    'price_unit': 500.0,
+                    'tax_ids': tax_21_1.ids,
+                },
+                {
+                    'quantity': 5.0,
+                    'price_unit': 100.0,
+                    'tax_ids': tax_21_1.ids,
+                },
+            ],
+        )
 
     def test_partial_import_tax_included_invoice(self):
         tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
