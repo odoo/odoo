@@ -177,6 +177,12 @@ class ProductTemplate(models.Model):
 
     #=== CRUD METHODS ===#
 
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'website_published' not in vals:
+                vals['website_published'] = bool(vals.get('public_categ_ids'))
+        return super().create(vals_list)
+
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
@@ -186,6 +192,10 @@ class ProductTemplate(models.Model):
             and 'media_iframe_video' not in description_ecommerce  # don't remove "empty" video div
         ):
             vals['description_ecommerce'] = ''
+
+        if 'public_categ_ids' in vals and 'website_published' not in vals:
+            vals['website_published'] = bool(vals.get('public_categ_ids'))
+
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#
