@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -117,7 +118,7 @@ const defaultAriaLabel = _t("Other social network");
 
 export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
-    static dependencies = ["animateOption"];
+    static dependencies = ["animateOption", "domObserver", "history", "savePlugin"];
     static shared = [
         "newLinkElement",
         "getAssociatedSocialMedia",
@@ -129,7 +130,6 @@ export class SocialMediaOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:
-        history_commit_data_properties: ["areSocialMediaLinksPrefilled"],
         so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,
@@ -152,12 +152,27 @@ export class SocialMediaOptionPlugin extends Plugin {
             { selector: ".s_share > a > *", target: ".s_share" },
         ],
         replace_media_dialog_params_processors: this.applyMediaDialogParams.bind(this),
-        is_history_commit_reversible_predicates: (commit) => {
-            if (commit.data.areSocialMediaLinksPrefilled) {
-                return false;
-            }
-        },
         immutable_link_selectors: [".s_share a"],
+        on_editor_started_handlers: withSequence(Infinity, () => {
+            const disabledEls = [];
+            this.dependencies.domObserver.ignore(() => {
+                for (const el of this.editable.querySelectorAll(".s_social_media")) {
+                    el.classList.add("o_we_no_overlay");
+                    disabledEls.push(el);
+                }
+            });
+            this.fetchCompanyLinks(this.editable).then((companyLinks) => {
+                if (companyLinks) {
+                    // Pre-fill company social media links if not already set in the dom
+                    this.dependencies.domObserver.ignore(() => {
+                        this.applyCompanyLinks(companyLinks);
+                        for (const el of disabledEls) {
+                            el.classList.remove("o_we_no_overlay");
+                        }
+                    });
+                }
+            });
+        }),
     };
 
     async onSnippetDropped({ snippetEl }) {
@@ -175,6 +190,16 @@ export class SocialMediaOptionPlugin extends Plugin {
      * corresponding links in the snippet, replacing internal empty entries.
      */
     async prefillSocialMediaLinks(snippetEl) {
+        const companyLinks = await this.fetchCompanyLinks(snippetEl);
+        if (companyLinks) {
+            // Pre-fill company social media links if not already set in the dom
+            this.applyCompanyLinks(companyLinks, snippetEl);
+            return true;
+        }
+        return false;
+    }
+
+    async fetchCompanyLinks(snippetEl) {
         const socialAnchors = selectElements(snippetEl, ".s_social_media > a[href='#']");
         if (!socialAnchors.length) {
             return false;
@@ -206,7 +231,13 @@ export class SocialMediaOptionPlugin extends Plugin {
             [this.services.website.currentWebsite.company_id],
             companySocialFields
         );
-        // Pre-fill company social media links if not already set in the dom
+        return {
+            rawSocialMediaLinks,
+            companySocialData,
+        };
+    }
+
+    applyCompanyLinks({ rawSocialMediaLinks, companySocialData }) {
         for (const [name, elements] of rawSocialMediaLinks.entries()) {
             const value = companySocialData[`social_${name}`];
             const link = value ? this.addHttpsIfNeeded(value) : `https://www.${name}.com/your-page`;
@@ -215,7 +246,6 @@ export class SocialMediaOptionPlugin extends Plugin {
                 el.setAttribute("href", link);
             }
         }
-        return true;
     }
 
     normalize(root) {
