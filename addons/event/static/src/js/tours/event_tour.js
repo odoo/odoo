@@ -8,6 +8,14 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('event_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["mobile"],
+    trigger: ".o_menu_toggle",
+    run: "click",
+}, {
+    isActive: ["mobile"],
+    trigger: ".o_sidebar_topbar a.btn-primary",
+    run: "click",
+}, {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
