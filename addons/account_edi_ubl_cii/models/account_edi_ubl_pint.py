@@ -1,5 +1,5 @@
 from odoo import _, models
-from odoo.tools import formatLang, html2plaintext
+from odoo.tools import formatLang
 from odoo.tools.misc import NON_BREAKING_SPACE
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -13,24 +13,7 @@ class AccountEdiUBLPint(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
-    def _ubl_add_invoice_type_code_node(self, vals):
-        super()._ubl_add_invoice_type_code_node(vals)
-
-        if self._is_document(vals, 'invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
-        elif self._is_document(vals, 'self_invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
-
-    def _ubl_add_credit_note_type_code_node(self, vals):
-        super()._ubl_add_credit_note_type_code_node(vals)
-
-        if self._is_document(vals, 'credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
-        elif self._is_document(vals, 'self_credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
-
     def _ubl_add_notes_nodes_all_invoices(self, vals):
-        invoice = vals['invoice']
         notes = []
 
         # WithholdingTaxTotal is not allowed.
@@ -64,10 +47,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                 formatLang(self.env, ubl_values['tax_withholding_amount'], currency_obj=currency).replace(NON_BREAKING_SPACE, ''),
             ))
 
-        terms_and_condition = html2plaintext(invoice.narration) if invoice.narration else None
-        if terms_and_condition:
-            notes.append(terms_and_condition)
-
         vals['document_node']['cbc:Note'] = {'_text': ' '.join(notes) if notes else None}
 
     def _ubl_add_notes_nodes(self, vals):
@@ -82,11 +61,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_invoice_delivery_nodes(vals)
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            document_node = vals['document_node']
-            if document_node['cac:Delivery']:
-                document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
-            else:
-                document_node['cac:Delivery'] = None
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_add_document_currency_code_node(self, vals):
         # The currency in which the invoice is issued and in which all monetary amounts are expressed.
@@ -226,34 +203,6 @@ class AccountEdiUBLPint(models.AbstractModel):
             node['cac:FinancialInstitution'] = None
         return node
 
-    def _ubl_add_payment_means_nodes_all_invoices(self, vals):
-        invoice = vals['invoice']
-        nodes = vals['document_node']['cac:PaymentMeans']
-
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
-            else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
-        else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
-
-        partner_bank = invoice.partner_bank_id
-        payment_means_node = {
-            'cbc:PaymentMeansCode': {
-                '_text': payment_means_code,
-                'name': payment_means_name,
-            },
-            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
-        }
-
-        if partner_bank:
-            payment_means_node['cac:PayeeFinancialAccount'] = self._ubl_get_payment_means_payee_financial_account_node_from_partner_bank(vals, partner_bank)
-        else:
-            payment_means_node['cac:PayeeFinancialAccount'] = None
-
-        nodes.append(payment_means_node)
-
     def _ubl_add_payment_means_nodes(self, vals):
         super()._ubl_add_payment_means_nodes(vals)
 
@@ -372,33 +321,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                 + vals['_ubl_values']['tax_withholding_amount'],
                 min_dp=currency.decimal_places,
             )
-
-    def _init_invoice_export_values(self, invoice):
-        vals = super()._init_invoice_export_values(invoice)
-        AccountTax = self.env['account.tax']
-        company = vals['company']
-
-        # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
-            base_lines=vals['base_lines'],
-            company=company,
-            vals=vals,
-        )
-
-        # Sub-dictionaries to store UBL-related values along the whole process.
-        vals['_ubl_values'] = {}
-        for base_line in vals['base_lines']:
-            base_line['_ubl_values'] = {}
-
-        # Global rounding of tax_details using 6 digits.
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-
-        return vals
 
     def _export_document_node_constraints(self, vals):
         """
