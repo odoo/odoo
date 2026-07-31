@@ -180,9 +180,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         myinvois_document = vals["myinvois_document"]
         if myinvois_document.invoice_ids:
             # Add the total amount paid.
+            # Genuine prepayments only; the base implementation would otherwise treat any reconciled payment,
+            # regardless of its date, as a deposit.
+            prepaid_amounts = {invoice: self._l10n_my_edi_get_prepaid_amount(invoice) for invoice in myinvois_document.invoice_ids}
             vals.update({
-                'total_paid_amount': sum((invoice.amount_total - invoice.amount_residual) * invoice.invoice_currency_rate for invoice in myinvois_document.invoice_ids),
-                'total_paid_amount_currency': sum(invoice.amount_total - invoice.amount_residual for invoice in myinvois_document.invoice_ids),
+                'total_paid_amount': sum(amount * invoice.invoice_currency_rate for invoice, amount in prepaid_amounts.items()),
+                'total_paid_amount_currency': sum(prepaid_amounts.values()),
             })
 
     # -------------------------------------------------------------------------
@@ -435,12 +438,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         currency_suffix = vals['currency_suffix']
 
         amount_paid = vals[f'total_paid_amount{currency_suffix}']
+        myinvois_document = vals["myinvois_document"]
+        if myinvois_document._is_consolidated_invoice():
+            amount_paid = 0
+        # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
+        amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
+        # Omit the node entirely rather than emitting it with a 0.00 amount when there is no genuine prepayment.
         if amount_paid:
-            myinvois_document = vals["myinvois_document"]
-            if myinvois_document._is_consolidated_invoice():
-                amount_paid = 0
-            # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
-            amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
             document_node['cac:PrepaidPayment'] = {
                 'cbc:PaidAmount': {
                     '_text': self.format_float(amount_paid, vals['currency_dp']),
@@ -766,6 +770,33 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         refunded_document = invoice.reversed_entry_id._get_active_myinvois_document()
         is_refund = is_paid and has_payments
         return is_refund, refunded_document
+
+    @api.model
+    def _l10n_my_edi_get_prepaid_amount(self, invoice):
+        """ Compute the amount of the invoice that was genuinely paid in advance.
+
+        LHDN only recognizes a reconciled payment as a deposit/prepayment if it was made strictly before the
+        invoice date; a payment made on or after the invoice date is a regular settlement, not a prepayment.
+        Additionally, LHDN never accepts a PayableAmount of 0, so a 100% advance payment must not be reported
+        as a prepayment either: in that case, the full invoice amount is reported as payable instead.
+        Credit/debit notes reconciled against the invoice are not prepayments.
+        """
+        if not invoice.invoice_date:
+            return 0.0
+
+        invoice_partials, exchange_diff_moves = invoice._get_reconciled_invoices_partials()
+        prepaid_amount = sum(
+            amount
+            for partial, amount, aml in invoice_partials
+            if (
+                aml.move_id.id not in exchange_diff_moves
+                and aml.move_id.move_type not in ('out_refund', 'in_refund')
+                and aml.date and aml.date < invoice.invoice_date
+            )
+        )
+        if invoice.currency_id.compare_amounts(prepaid_amount, invoice.amount_total) >= 0:
+            return 0.0
+        return prepaid_amount
 
     @api.model
     def _l10n_my_edi_get_formatted_phone_number(self, number):
