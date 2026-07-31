@@ -28,6 +28,23 @@ L10N_CR_FE_TIPO_DOCUMENTO = {
     'out_refund': {'clave': 'NC', 'consecutivo_codigo': '03', 'gen_xml_action': 'gen_xml_nc'},
 }
 
+# Tiquete Electronico (TE): comparte move_type 'out_invoice' con Factura, asi que
+# no puede tener su propia entrada en L10N_CR_FE_TIPO_DOCUMENTO (indexado por
+# move_type). Se resuelve aparte en _l10n_cr_fe_get_tipo_documento_info().
+L10N_CR_FE_TIPO_DOCUMENTO_TE = {'clave': 'TE', 'consecutivo_codigo': '04', 'gen_xml_action': 'gen_xml_te'}
+
+# Mensaje Receptor (MR): respuesta obligatoria de Hacienda cuando esta empresa
+# recibe una factura electronica de un proveedor. Cada decision (aceptar
+# total, aceptar parcial, rechazar) es su propio tipo de documento con su
+# propio consecutivo independiente (Anexo v4.4): 05=CCE (aceptacion total),
+# 06=CPCE (aceptacion parcial), 07=RCE (rechazo). Se resuelve por
+# l10n_cr_fe_mr_decision, no por move_type, en _l10n_cr_fe_get_tipo_documento_info().
+L10N_CR_FE_TIPO_DOCUMENTO_MR = {
+    'aceptado': {'clave': 'CCE', 'consecutivo_codigo': '05', 'gen_xml_action': 'gen_xml_mr'},
+    'aceptado_parcial': {'clave': 'CPCE', 'consecutivo_codigo': '06', 'gen_xml_action': 'gen_xml_mr'},
+    'rechazado': {'clave': 'RCE', 'consecutivo_codigo': '07', 'gen_xml_action': 'gen_xml_mr'},
+}
+
 # Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
 # de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
 L10N_CR_FE_MOTIVO_NC = [
@@ -79,6 +96,29 @@ class AccountMove(models.Model):
     l10n_cr_fe_codigo_referencia = fields.Selection(
         L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
     l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
+    l10n_cr_fe_es_tiquete = fields.Boolean(
+        string="Consumidor final (Tiquete Electrónico)", copy=False,
+        help="Si está marcado, este comprobante se emite ante Hacienda como Tiquete "
+             "Electrónico (sin identificar al receptor) en vez de Factura Electrónica.")
+    l10n_cr_fe_mr_decision = fields.Selection(
+        selection=[
+            ('aceptado', "Aceptado"),
+            ('aceptado_parcial', "Aceptado parcialmente"),
+            ('rechazado', "Rechazado"),
+        ],
+        string="Decisión sobre la factura del proveedor", copy=False)
+    l10n_cr_fe_mr_motivo = fields.Char(string="Motivo (Mensaje Receptor)", copy=False)
+    l10n_cr_fe_proveedor_clave = fields.Char(string="Clave de la factura del proveedor", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_fecha_emision = fields.Char(string="Fecha de emisión (proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_monto_impuesto = fields.Float(
+        string="Monto impuesto (XML original proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_total = fields.Float(
+        string="Total factura (XML original proveedor)", readonly=True, copy=False)
+    l10n_cr_fe_proveedor_subtotal = fields.Float(
+        string="Subtotal sin impuesto (XML original proveedor)", readonly=True, copy=False,
+        help="TotalVentaNeta del XML original — se usa para detectar si el usuario "
+             "realmente ajustó líneas/cantidades/precios, sin depender de si el "
+             "impuesto de compra se emparejó automáticamente.")
     l10n_cr_fe_state = fields.Selection(
         selection=[
             ('draft', "Borrador"),
@@ -93,6 +133,14 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_get_config(self):
         self.ensure_one()
         return self.env['l10n_cr.fe.config']._get_for_company(self.company_id)
+
+    def _l10n_cr_fe_get_tipo_documento_info(self):
+        self.ensure_one()
+        if self.move_type == 'out_invoice' and self.l10n_cr_fe_es_tiquete:
+            return L10N_CR_FE_TIPO_DOCUMENTO_TE
+        if self.move_type == 'in_invoice':
+            return L10N_CR_FE_TIPO_DOCUMENTO_MR.get(self.l10n_cr_fe_mr_decision)
+        return L10N_CR_FE_TIPO_DOCUMENTO.get(self.move_type)
 
     def _l10n_cr_fe_build_detalles(self):
         self.ensure_one()
@@ -138,7 +186,7 @@ class AccountMove(models.Model):
     def _l10n_cr_fe_build_clave_params(self):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
-        tipo_doc = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]
+        tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
         return {
             'tipoDocumento': tipo_doc['clave'],
             'tipoCedula': config.identification_type == '02' and 'juridico' or 'fisico',
@@ -189,7 +237,7 @@ class AccountMove(models.Model):
         config = self._l10n_cr_fe_get_config()
         fecha = fields.Datetime.context_timestamp(self, datetime.now())
 
-        if not self.partner_id.vat:
+        if self._l10n_cr_fe_get_tipo_documento_info() != L10N_CR_FE_TIPO_DOCUMENTO_TE and not self.partner_id.vat:
             raise UserError(
                 _("El cliente '%s' no tiene cédula/identificación configurada. Hacienda "
                   "rechaza los comprobantes si el receptor no tiene un número de "
@@ -211,9 +259,6 @@ class AccountMove(models.Model):
             'emisor_distrito': config.district,
             'emisor_otras_senas': config.address_detail,
             'emisor_email': config.email,
-            'receptor_nombre': self.partner_id.name or '',
-            'receptor_tipo_identif': self.partner_id.l10n_cr_fe_identification_type or '01',
-            'receptor_num_identif': self.partner_id.vat.replace('-', '').strip(),
             'condicion_venta': '01',
             'medios_pago': json.dumps(medios_pago),
             'cod_moneda': self.currency_id.name or 'CRC',
@@ -221,6 +266,12 @@ class AccountMove(models.Model):
             'detalles': json.dumps(detalles),
             **resumen,
         }
+        if self._l10n_cr_fe_get_tipo_documento_info() == L10N_CR_FE_TIPO_DOCUMENTO_TE:
+            params['omitir_receptor'] = 'true'
+        else:
+            params['receptor_nombre'] = self.partner_id.name or ''
+            params['receptor_tipo_identif'] = self.partner_id.l10n_cr_fe_identification_type or '01'
+            params['receptor_num_identif'] = self.partner_id.vat.replace('-', '').strip()
         if self.move_type == 'out_refund':
             original = self.reversed_entry_id
             params['informacion_referencia'] = json.dumps([{
@@ -232,12 +283,171 @@ class AccountMove(models.Model):
             }])
         return params
 
+    def _l10n_cr_fe_xml_find_text(self, node, tag):
+        el = node.find('.//{*}%s' % tag)
+        return el.text.strip() if el is not None and el.text else ''
+
+    def _l10n_cr_fe_xml_find_product(self, cabys):
+        if not cabys:
+            return self.env['product.product']
+        return self.env['product.product'].search([('l10n_cr_fe_cabys', '=', cabys)], limit=1)
+
+    def _l10n_cr_fe_xml_find_tax(self, tarifa_percent):
+        if not tarifa_percent:
+            return self.env['account.tax']
+        return self.env['account.tax'].search([
+            ('type_tax_use', '=', 'purchase'),
+            ('amount', '=', tarifa_percent),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+
+    def _l10n_cr_fe_xml_to_float(self, text):
+        """Convierte un texto de un nodo XML numérico a float, o 0.0 si el
+        nodo no existía / venía vacío. Levanta UserError (en vez del
+        ValueError crudo) si el texto no es numérico -- el XML no cumple con
+        el schema esperado."""
+        try:
+            return float(text) if text else 0.0
+        except ValueError:
+            raise UserError(_("El XML tiene un valor no numérico en uno de sus campos."))
+
+    def _l10n_cr_fe_build_vals_from_proveedor_xml(self, xml_bytes):
+        """Parsea un XML de factura de proveedor (schema Hacienda v4.4) y
+        devuelve el dict de creación para un account.move in_invoice. Usado
+        tanto por el asistente manual (l10n_cr.fe.proveedor.upload) como por
+        el flujo automático de lectura de correo — misma lógica, un solo
+        lugar. Levanta UserError si el XML no tiene los datos mínimos."""
+        try:
+            root = ET.fromstring(xml_bytes)
+        except ET.ParseError:
+            raise UserError(_("El archivo no es un XML válido."))
+
+        clave = self._l10n_cr_fe_xml_find_text(root, 'Clave')
+        fecha_emision = self._l10n_cr_fe_xml_find_text(root, 'FechaEmision')
+        emisor_el = root.find('.//{*}Emisor')
+        if emisor_el is None or not clave:
+            raise UserError(_(
+                "El XML no tiene los datos mínimos de un comprobante electrónico (Clave/Emisor)."))
+        emisor_nombre = self._l10n_cr_fe_xml_find_text(emisor_el, 'Nombre')
+        emisor_cedula = self._l10n_cr_fe_xml_find_text(emisor_el, 'Numero')
+        emisor_email = self._l10n_cr_fe_xml_find_text(emisor_el, 'CorreoElectronico')
+        if not emisor_cedula:
+            raise UserError(_("El XML no tiene la identificación del emisor."))
+
+        partner = self.env['res.partner'].search([
+            ('vat', '=', emisor_cedula),
+            ('company_id', 'in', (False, self.env.company.id)),
+        ], limit=1)
+        if not partner:
+            partner = self.env['res.partner'].create({
+                'name': emisor_nombre or emisor_cedula,
+                'vat': emisor_cedula,
+                'email': emisor_email or False,
+                'company_type': 'company',
+            })
+
+        invoice_lines = []
+        for linea in root.findall('.//{*}LineaDetalle'):
+            cabys = self._l10n_cr_fe_xml_find_text(linea, 'CodigoCABYS')
+            cantidad = self._l10n_cr_fe_xml_to_float(self._l10n_cr_fe_xml_find_text(linea, 'Cantidad'))
+            precio_unitario = self._l10n_cr_fe_xml_to_float(
+                self._l10n_cr_fe_xml_find_text(linea, 'PrecioUnitario'))
+            detalle = self._l10n_cr_fe_xml_find_text(linea, 'Detalle')
+            tarifa_text = self._l10n_cr_fe_xml_find_text(linea, 'Tarifa')
+            tarifa_percent = self._l10n_cr_fe_xml_to_float(tarifa_text)
+            product = self._l10n_cr_fe_xml_find_product(cabys)
+            tax = self._l10n_cr_fe_xml_find_tax(tarifa_percent)
+            invoice_lines.append((0, 0, {
+                'product_id': product.id or False,
+                'quantity': cantidad,
+                'price_unit': precio_unitario,
+                'name': detalle or (product.display_name if product else _("Completar producto")),
+                'tax_ids': [(6, 0, tax.ids)],
+            }))
+
+        if not invoice_lines:
+            raise UserError(_("El XML no tiene líneas de detalle."))
+
+        monto_impuesto_text = self._l10n_cr_fe_xml_find_text(root, 'TotalImpuesto')
+        total_factura_text = self._l10n_cr_fe_xml_find_text(root, 'TotalComprobante')
+        subtotal_text = self._l10n_cr_fe_xml_find_text(root, 'TotalVentaNeta')
+
+        return {
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+            'invoice_date': fecha_emision.split('T')[0] if fecha_emision else False,
+            'l10n_cr_fe_proveedor_clave': clave,
+            'l10n_cr_fe_proveedor_fecha_emision': fecha_emision,
+            'l10n_cr_fe_proveedor_monto_impuesto': self._l10n_cr_fe_xml_to_float(monto_impuesto_text),
+            'l10n_cr_fe_proveedor_total': self._l10n_cr_fe_xml_to_float(total_factura_text),
+            'l10n_cr_fe_proveedor_subtotal': self._l10n_cr_fe_xml_to_float(subtotal_text),
+            'invoice_line_ids': invoice_lines,
+        }
+
+    def _l10n_cr_fe_build_mr_params(self, consecutivo):
+        self.ensure_one()
+        config = self._l10n_cr_fe_get_config()
+        mensaje_codigo = {'aceptado': '1', 'aceptado_parcial': '2', 'rechazado': '3'}[self.l10n_cr_fe_mr_decision]
+        # Para aceptacion total, Hacienda espera los montos autenticos del XML
+        # original del proveedor -- no los recalculados por Odoo a partir de las
+        # lineas, que pueden quedar incompletos (p.ej. una linea sin impuesto de
+        # compra emparejado). Para parcial/rechazado, los montos SI deben salir
+        # de las lineas ajustadas por el usuario en Odoo (ver spec 2.5).
+        if self.l10n_cr_fe_mr_decision == 'aceptado' and self.l10n_cr_fe_proveedor_total:
+            monto_total_impuesto = self.l10n_cr_fe_proveedor_monto_impuesto
+            total_factura = self.l10n_cr_fe_proveedor_total
+        else:
+            monto_total_impuesto = self.amount_tax
+            total_factura = self.amount_total
+        return {
+            'clave': self.l10n_cr_fe_proveedor_clave,
+            'numero_cedula_emisor': (self.partner_id.vat or '').replace('-', '').strip(),
+            'fecha_emision_doc': self.l10n_cr_fe_proveedor_fecha_emision,
+            'mensaje': mensaje_codigo,
+            'detalle_mensaje': self.l10n_cr_fe_mr_motivo or '',
+            'monto_total_impuesto': monto_total_impuesto,
+            'codigo_actividad': config.economic_activity_code,
+            'total_factura': total_factura,
+            'numero_cedula_receptor': config.identification_number,
+            'numero_consecutivo_receptor': consecutivo,
+        }
+
+    def _l10n_cr_fe_mr_parcial_sin_cambios(self):
+        """True si la factura de proveedor sigue idéntica (en monto) al XML
+        original — usado para bloquear una "aceptación parcial" que en
+        realidad no ajustó nada, y que debería ser una aceptación total.
+
+        Compara el subtotal SIN impuesto (`amount_untaxed` vs. el
+        `TotalVentaNeta` original) en vez de los montos con impuesto: estos
+        últimos pueden diferir del XML original solo porque el impuesto de
+        compra no se emparejó automáticamente (ver fix de montos auténticos
+        en `_l10n_cr_fe_build_mr_params`), sin que el usuario haya editado
+        ninguna línea — lo que causaría falsos negativos en este check.
+        """
+        self.ensure_one()
+        if not self.l10n_cr_fe_proveedor_subtotal:
+            return False
+        return self.amount_untaxed == self.l10n_cr_fe_proveedor_subtotal
+
     def _l10n_cr_fe_generate_and_send(self):
         self.ensure_one()
-        if self.move_type not in L10N_CR_FE_TIPO_DOCUMENTO:
+        tipo_doc = self._l10n_cr_fe_get_tipo_documento_info()
+        if not tipo_doc:
+            return
+        if self.move_type == 'in_invoice' and self.l10n_cr_fe_state not in ('draft', 'error'):
             return
         if not self.partner_id:
             raise UserError(_("El comprobante no tiene cliente (receptor)."))
+        if self.move_type == 'in_invoice':
+            if not self.l10n_cr_fe_proveedor_clave or not self.l10n_cr_fe_proveedor_fecha_emision:
+                raise UserError(_(
+                    "La factura del proveedor no tiene clave/fecha de emisión del XML original."))
+            if self.l10n_cr_fe_mr_decision in ('aceptado_parcial', 'rechazado') and not self.l10n_cr_fe_mr_motivo:
+                raise UserError(_("Debes indicar el motivo del Mensaje Receptor."))
+            if self.l10n_cr_fe_mr_decision == 'aceptado_parcial' and self._l10n_cr_fe_mr_parcial_sin_cambios():
+                raise UserError(_(
+                    "La factura no tiene cambios respecto al XML original del proveedor. "
+                    "Si estás de acuerdo con todo, usa 'Aceptar total' en su lugar."))
 
         client = self.env['l10n_cr.fe.client']
         try:
@@ -247,25 +457,51 @@ class AccountMove(models.Model):
                     raise UserError(_(
                         "No se puede generar la nota de crédito: la factura original "
                         "aún no ha sido aceptada por Hacienda."))
+                if original.l10n_cr_fe_es_tiquete:
+                    raise UserError(_(
+                        "No se puede generar una nota de crédito sobre un Tiquete "
+                        "Electrónico todavía — esta corrección no está soportada."))
 
             config = self._l10n_cr_fe_get_config()
             download_code = config._l10n_cr_fe_ensure_certificate_uploaded()
             clave_params = self._l10n_cr_fe_build_clave_params()
             clave_res = client.get_clave(clave_params)
-            detalles = self._l10n_cr_fe_build_detalles()
-            genxml_params = self._l10n_cr_fe_build_genxml_params(
-                clave_res['clave'], clave_res['consecutivo'], detalles)
-            gen_xml_action = L10N_CR_FE_TIPO_DOCUMENTO[self.move_type]['gen_xml_action']
-            xml = getattr(client, gen_xml_action)(genxml_params)
-            token = client.get_hacienda_token(
-                config.hacienda_username, config.hacienda_password, config.environment)
-            xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
-            client.send_fe(
-                token=token, clave=clave_res['clave'], fecha_iso=genxml_params['fecha_emision'],
-                emisor_tipo=config.identification_type, emisor_num=config.identification_number,
-                receptor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
-                receptor_num=self.partner_id.vat.replace('-', '').strip(),
-                xml_firmado=xml_firmado, environment=config.environment)
+
+            if self.move_type == 'in_invoice':
+                mr_params = self._l10n_cr_fe_build_mr_params(clave_res['consecutivo'])
+                xml = client.gen_xml_mr(mr_params)
+                token = client.get_hacienda_token(
+                    config.hacienda_username, config.hacienda_password, config.environment)
+                xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+                client.send_mr(
+                    token=token, clave=self.l10n_cr_fe_proveedor_clave,
+                    fecha_iso=self.l10n_cr_fe_proveedor_fecha_emision,
+                    emisor_tipo=self.partner_id.l10n_cr_fe_identification_type or '01',
+                    emisor_num=(self.partner_id.vat or '').replace('-', '').strip(),
+                    receptor_tipo=config.identification_type, receptor_num=config.identification_number,
+                    consecutivo_receptor=clave_res['consecutivo'],
+                    xml_firmado=xml_firmado, environment=config.environment)
+                fecha_iso = fields.Datetime.context_timestamp(self, datetime.now()).strftime('%Y-%m-%dT%H:%M:%S-06:00')
+            else:
+                detalles = self._l10n_cr_fe_build_detalles()
+                genxml_params = self._l10n_cr_fe_build_genxml_params(
+                    clave_res['clave'], clave_res['consecutivo'], detalles)
+                gen_xml_action = tipo_doc['gen_xml_action']
+                xml = getattr(client, gen_xml_action)(genxml_params)
+                token = client.get_hacienda_token(
+                    config.hacienda_username, config.hacienda_password, config.environment)
+                xml_firmado = client.sign_xml(download_code, config.certificate_pin, xml)
+                if tipo_doc == L10N_CR_FE_TIPO_DOCUMENTO_TE:
+                    receptor_tipo, receptor_num = '', ''
+                else:
+                    receptor_tipo = self.partner_id.l10n_cr_fe_identification_type or '01'
+                    receptor_num = self.partner_id.vat.replace('-', '').strip()
+                fecha_iso = genxml_params['fecha_emision']
+                client.send_fe(
+                    token=token, clave=clave_res['clave'], fecha_iso=fecha_iso,
+                    emisor_tipo=config.identification_type, emisor_num=config.identification_number,
+                    receptor_tipo=receptor_tipo, receptor_num=receptor_num,
+                    xml_firmado=xml_firmado, environment=config.environment)
         except (CrlibreApiError, UserError) as exc:
             self.l10n_cr_fe_state = 'error'
             self.message_post(body=_("Error en el flujo de Factura Electrónica: %s") % exc)
@@ -274,7 +510,7 @@ class AccountMove(models.Model):
         self.write({
             'l10n_cr_fe_clave': clave_res['clave'],
             'l10n_cr_fe_consecutivo': clave_res['consecutivo'],
-            'l10n_cr_fe_fecha_emision': genxml_params['fecha_emision'],
+            'l10n_cr_fe_fecha_emision': fecha_iso,
             'l10n_cr_fe_xml': xml,
             'l10n_cr_fe_xml_firmado': xml_firmado,
             'l10n_cr_fe_state': 'enviado',
@@ -317,10 +553,15 @@ class AccountMove(models.Model):
         self.ensure_one()
         config = self._l10n_cr_fe_get_config()
         client = self.env['l10n_cr.fe.client']
+        # Para un Mensaje Receptor (in_invoice), Hacienda rastrea el envio por la
+        # clave de la factura original del proveedor (la que se manda en el sobre
+        # de sendMensaje), no por la clave propia que generamos para el
+        # consecutivo del Mensaje Receptor. Verificado contra el sandbox real.
+        clave = self.l10n_cr_fe_proveedor_clave if self.move_type == 'in_invoice' else self.l10n_cr_fe_clave
         try:
             token = client.get_hacienda_token(
                 config.hacienda_username, config.hacienda_password, config.environment)
-            result = client.consultar_estado(token, self.l10n_cr_fe_clave, config.environment)
+            result = client.consultar_estado(token, clave, config.environment)
         except CrlibreApiError as exc:
             self.message_post(body=_("Error al consultar el estado FE: %s") % exc)
             return
@@ -355,9 +596,57 @@ class AccountMove(models.Model):
         })
         self._l10n_cr_fe_generate_and_send()
 
+    def action_l10n_cr_fe_aceptar_total(self):
+        self.ensure_one()
+        self.l10n_cr_fe_mr_decision = 'aceptado'
+        self.action_post()
+
+    def action_l10n_cr_fe_aceptar_parcial(self):
+        self.ensure_one()
+        if not self.l10n_cr_fe_mr_motivo:
+            raise UserError(_("Debes indicar el motivo de la aceptación parcial."))
+        self.l10n_cr_fe_mr_decision = 'aceptado_parcial'
+        self.action_post()
+
+    def action_l10n_cr_fe_rechazar(self):
+        self.ensure_one()
+        if not self.l10n_cr_fe_mr_motivo:
+            raise UserError(_("Debes indicar el motivo del rechazo."))
+        self.l10n_cr_fe_mr_decision = 'rechazado'
+        self._l10n_cr_fe_generate_and_send()
+
+    def action_l10n_cr_fe_abrir_aceptar_parcial(self):
+        """Botón "Aceptar parcial" del formulario: si el usuario ya ajustó la
+        factura, abre un popup pidiendo el motivo (en vez de obligarlo a ir
+        hasta la pestaña "Factura Electrónica CR" a llenarlo a mano)."""
+        self.ensure_one()
+        if self._l10n_cr_fe_mr_parcial_sin_cambios():
+            raise UserError(_(
+                "La factura no tiene cambios respecto al XML original del proveedor. "
+                "Si estás de acuerdo con todo, usa 'Aceptar total' en su lugar."))
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'l10n_cr.fe.mr.motivo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_move_id': self.id, 'default_decision': 'aceptado_parcial'},
+        }
+
+    def action_l10n_cr_fe_abrir_rechazar(self):
+        """Botón "Rechazar" del formulario: abre un popup pidiendo el motivo,
+        mismo patrón que action_l10n_cr_fe_abrir_aceptar_parcial."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'l10n_cr.fe.mr.motivo.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_move_id': self.id, 'default_decision': 'rechazado'},
+        }
+
     def action_post(self):
         res = super().action_post()
         for move in self:
-            if move.move_type in L10N_CR_FE_TIPO_DOCUMENTO:
+            if move._l10n_cr_fe_get_tipo_documento_info():
                 move._l10n_cr_fe_generate_and_send()
         return res

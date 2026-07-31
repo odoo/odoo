@@ -196,3 +196,116 @@ class TestAccountMoveMapping(TransactionCase):
         detalles = self.invoice._l10n_cr_fe_build_detalles()
         params = self.invoice._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
         self.assertNotIn('informacion_referencia', params)
+
+    def test_build_clave_params_tiquete_uses_te(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_es_tiquete': True,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = invoice._l10n_cr_fe_build_clave_params()
+        self.assertEqual(params['tipoDocumento'], 'TE')
+        self.assertEqual(len(params['consecutivo']), 10)
+
+    def test_get_tipo_documento_info_returns_fe_when_not_tiquete(self):
+        info = self.invoice._l10n_cr_fe_get_tipo_documento_info()
+        self.assertEqual(info['clave'], 'FE')
+
+    def test_build_genxml_params_tiquete_without_vat_omits_receptor(self):
+        self.partner.vat = False
+        self.invoice.l10n_cr_fe_es_tiquete = True
+        detalles = self.invoice._l10n_cr_fe_build_detalles()
+        params = self.invoice._l10n_cr_fe_build_genxml_params('9' * 50, '0' * 20, detalles)
+        self.assertEqual(params['omitir_receptor'], 'true')
+        self.assertNotIn('receptor_nombre', params)
+        self.assertNotIn('receptor_tipo_identif', params)
+        self.assertNotIn('receptor_num_identif', params)
+
+    def test_get_tipo_documento_info_in_invoice_without_decision_returns_falsy(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+        })
+        self.assertFalse(bill._l10n_cr_fe_get_tipo_documento_info())
+
+    def test_get_tipo_documento_info_in_invoice_resolves_by_decision(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_mr_decision': 'aceptado_parcial',
+        })
+        info = bill._l10n_cr_fe_get_tipo_documento_info()
+        self.assertEqual(info['clave'], 'CPCE')
+        self.assertEqual(info['consecutivo_codigo'], '06')
+
+    def test_build_mr_params_uses_proveedor_and_own_config(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor X', 'vat': '3101987654'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado_parcial',
+            'l10n_cr_fe_mr_motivo': 'Cantidad distinta a lo facturado',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
+        self.assertEqual(params['clave'], '6' * 50)
+        self.assertEqual(params['numero_cedula_emisor'], '3101987654')
+        self.assertEqual(params['fecha_emision_doc'], '2026-07-20T08:00:00-06:00')
+        self.assertEqual(params['mensaje'], '2')
+        self.assertEqual(params['detalle_mensaje'], 'Cantidad distinta a lo facturado')
+        self.assertEqual(params['total_factura'], 1000.0)
+        self.assertEqual(params['numero_cedula_receptor'], '702320717')
+        self.assertEqual(params['numero_consecutivo_receptor'], '0' * 20)
+
+    def test_build_mr_params_aceptado_uses_proveedor_totals_when_present(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor Y', 'vat': '3101987655'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado',
+            'l10n_cr_fe_proveedor_monto_impuesto': 17724.0,
+            'l10n_cr_fe_proveedor_total': 170124.0,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
+        # Los totales autenticos del XML original se usan tal cual, no los
+        # recalculados por Odoo a partir de las lineas (que serian 0/1000 aqui).
+        self.assertEqual(params['monto_total_impuesto'], 17724.0)
+        self.assertEqual(params['total_factura'], 170124.0)
+
+    def test_build_mr_params_aceptado_falls_back_to_odoo_totals_without_proveedor_data(self):
+        proveedor = self.env['res.partner'].create({'name': 'Proveedor Z', 'vat': '3101987656'})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': self.company.id,
+            'partner_id': proveedor.id,
+            'l10n_cr_fe_proveedor_clave': '6' * 50,
+            'l10n_cr_fe_proveedor_fecha_emision': '2026-07-20T08:00:00-06:00',
+            'l10n_cr_fe_mr_decision': 'aceptado',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        params = bill._l10n_cr_fe_build_mr_params('0' * 20)
+        self.assertEqual(params['total_factura'], bill.amount_total)
+        self.assertEqual(params['total_factura'], 1000.0)
