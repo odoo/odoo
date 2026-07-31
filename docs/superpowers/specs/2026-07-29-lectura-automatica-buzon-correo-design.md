@@ -94,6 +94,8 @@ def _l10n_cr_fe_procesar_adjuntos(self, message):
     self.write({'state': 'sin_xml_valido', 'error_message': _("El correo no traía ningún adjunto XML de factura electrónica válido.")})
 ```
 
+**Corrección posterior (compañía), verificada contra un buzón real con más de una compañía activa:** el gateway de correo procesa cada mensaje bajo un usuario técnico interno de Odoo (OdooBot), cuya compañía activa por defecto puede no coincidir con la que tiene configurada la Factura Electrónica — causando un error de "cruce entre empresas" al crear la factura con un producto/impuesto que pertenece a otra compañía. `_l10n_cr_fe_procesar_adjuntos` ahora resuelve explícitamente la compañía de la (única) `l10n_cr.fe.config` existente y fuerza esa compañía (`with_company`) para todo el procesamiento del correo — clave/fecha, parseo, y creación del `account.move` — sin importar cuál esté activa en el contexto que llama al método. Si no hay ninguna `l10n_cr.fe.config` configurada, se usa la compañía por defecto del contexto (comportamiento anterior, sin cambios).
+
 `email_from`/`date` se llenan desde `message_new` (heredado de `mail.thread`, ya trae esos datos del correo entrante — solo hace falta mapearlos a estos dos campos con un pequeño override).
 
 ### 3.4 Vista y menú
