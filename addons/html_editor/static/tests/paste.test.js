@@ -1403,8 +1403,40 @@ describe("Unwrapping html element", () => {
 });
 
 describe("Complex html span", () => {
+    const spanStyle =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;" +
+        "Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;" +
+        "Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none;";
+    const bStyle =
+        "box-sizing: border-box; font-weight: bolder; font-family: -apple-system, " +
+        "BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, " +
+        "&quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, " +
+        "&quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; " +
+        "font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; " +
+        "orphans: 2; text-align: left; text-indent: 0px; text-transform: none; " +
+        "white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; " +
+        "text-decoration-thickness: initial; text-decoration-style: initial; " +
+        "text-decoration-color: initial";
+    const span2Style =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, " +
+        "&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, " +
+        "&quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none";
     const complexHtmlData =
-        '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
+        `<span style="${spanStyle}">1</span>` +
+        `<b style="${bStyle}">23</b>` +
+        `<span style="${span2Style}"><span>\u00A0</span>4</span>`;
 
     describe("range collapsed", () => {
         test("should paste a text at the beginning of a p", async () => {
@@ -4619,8 +4651,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p><br></p><p>ca
-            </p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+            `<p><br></p><p>ca</p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
                 <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
                 <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <p>Test</p>
