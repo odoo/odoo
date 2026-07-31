@@ -35,16 +35,19 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_what_is_peppol_alert(self, moves, moves_data, relevant_moves):
         any_moves_french = bool(relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()))
+        install_pdp_action = False  # Only set if we should install the PDP module
         if any_moves_french:
+            pdp_info = self.env['res.config.settings']._get_pdp_module_info()
             name = self.env._("Why should I use French E-Invoicing ?")
-            action_text = self.env._("France - E-Invoicing (Approved Platform)")
+            action_text = pdp_info['module_name']
+            if not pdp_info['is_installed']:
+                install_pdp_action = pdp_info['action']
         else:
             name = self.env._("Why should I use PEPPOL ?")
             action_text = self.env._("Why should you use it ?")
 
-        pdp_module = self.env['ir.module.module'].sudo()._get('l10n_fr_pdp')
-        if any_moves_french and pdp_module and pdp_module.state != 'installed':
-            action = pdp_module._get_records_action()
+        if install_pdp_action:
+            action = install_pdp_action
         else:
             action = {
                 'name': name,
