@@ -530,7 +530,7 @@
         </record>
         <record id="item_christmas" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_christmas"/>
-            <field name="compute_price">formula</field>
+            <field name="compute_price">discount</field>
             <field name="base">list_price</field>
             <field name="price_discount">20</field>
         </record>
@@ -544,9 +544,9 @@
         </record>
         <record id="item_benelux" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_benelux"/>
-            <field name="compute_price">percentage</field>
+            <field name="compute_price">discount</field>
             <field name="base">list_price</field>
-            <field name="percent_price">10</field>
+            <field name="price_discount">10</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -561,7 +561,7 @@
         </record>
         <record id="item_europe" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_europe"/>
-            <field name="compute_price">formula</field>
+            <field name="compute_price">discount</field>
             <field name="base">list_price</field>
         </record>
 

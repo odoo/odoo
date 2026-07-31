@@ -79,9 +79,9 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             Command.clear(),
             Command.create({
                 "categ_id": self.product_category.id,
-                "compute_price": "percentage",
+                "compute_price": "discount",
                 "min_quantity": 5.0,
-                "percent_price": 50.0,
+                "price_discount": 50.0,
             }),
         ]
         self.start_tour(self.product.website_url, "website_sale.product_pricelist_qty_change")

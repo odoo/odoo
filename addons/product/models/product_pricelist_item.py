@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tools import float_round, format_amount, format_datetime, formatLang, get_lang
 
 
@@ -105,22 +106,21 @@ class ProductPricelistItem(models.Model):
 
     compute_price = fields.Selection(
         selection=[
-            ('percentage', "Discount"),
-            ('formula', "Formula"),
+            ('discount', "Discount"),
             ('markup', "Surcharge"),
             ('fixed', "Fixed Price"),
         ],
-        help="Use the discount rules and activate the discount settings"
-             " in order to show discount to customer.",
+        help="How the price is derived from the base price.\n"
+             "Discount: a percentage taken off it.\n"
+             "Surcharge: a percentage added on top of it.\n"
+             "Fixed Price: a set amount, ignoring the base price entirely.\n"
+             "Activate the discount settings to show the discount to the customer.",
         index=True,
         default='fixed',
         required=True,
     )
 
     fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
-    percent_price = fields.Float(
-        string="Percentage Price",
-        help="You can apply a mark-up by setting a negative discount.")
 
     price_discount = fields.Float(
         string="Price Discount",
@@ -164,6 +164,11 @@ class ProductPricelistItem(models.Model):
         compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
+    is_plain_discount = fields.Boolean(
+        string="Plain Discount",
+        compute='_compute_is_plain_discount',
+        search='_search_is_plain_discount',
+        help="Whether the rule lowers the price by exactly its discount percentage.")
 
     #=== COMPUTE METHODS ===#
 
@@ -231,7 +236,7 @@ class ProductPricelistItem(models.Model):
         return base_str
 
     @api.depends(
-        'compute_price', 'fixed_price', 'pricelist_id', 'percent_price', 'price_discount',
+        'compute_price', 'fixed_price', 'pricelist_id', 'price_discount',
         'price_markup', 'price_surcharge', 'base', 'base_pricelist_id',
     )
     def _compute_price_label(self):
@@ -239,19 +244,6 @@ class ProductPricelistItem(models.Model):
             if item.compute_price == 'fixed':
                 item.price = formatLang(
                     item.env, item.fixed_price, dp="Product Price", currency_obj=item.currency_id)
-            elif item.compute_price == 'percentage':
-                percentage = self._get_integer(item.percent_price)
-                if item.base_pricelist_id:
-                    item.price = item.env._(
-                        "%(percentage)s %% discount on %(pricelist)s",
-                        percentage=percentage,
-                        pricelist=item.base_pricelist_id.display_name
-                    )
-                else:
-                    item.price = item.env._(
-                        "%(percentage)s %% discount on sales price",
-                        percentage=percentage
-                    )
             else:
                 base_str = item._get_price_label_base_str()
 
@@ -297,7 +289,7 @@ class ProductPricelistItem(models.Model):
         self.rule_tip = False
         lang = self.env['res.lang'].browse(get_lang(self.env).id)
         for item in self:
-            if item.compute_price not in ('formula', 'markup') or not item.base:
+            if item.compute_price == 'fixed' or not item.base:
                 continue
             base_amount = 100
             discount_factor = (100 - item.price_discount) / 100
@@ -313,6 +305,31 @@ class ProductPricelistItem(models.Model):
                 item.env, discounted_price + item.price_surcharge, item.currency_id
             )
             item.rule_tip = f"{amount} × {factor} + {surcharge} = {total}"
+
+    @api.depends(
+        'compute_price', 'price_discount', 'price_round', 'price_surcharge',
+        'price_min_margin', 'price_max_margin',
+    )
+    def _compute_is_plain_discount(self):
+        for item in self:
+            item.is_plain_discount = item._is_discount_rule() and not (
+                item.price_round
+                or item.price_surcharge
+                or item.price_min_margin
+                or item.price_max_margin
+            )
+
+    def _search_is_plain_discount(self, operator, value):  # noqa: ARG002
+        # Mirrors `_compute_is_plain_discount`, keep both in sync.
+        plain_discount = Domain.AND([
+            Domain('compute_price', '=', 'discount'),
+            Domain('price_discount', '>', 0),
+            Domain('price_round', '=', 0),
+            Domain('price_surcharge', '=', 0),
+            Domain('price_min_margin', '=', 0),
+            Domain('price_max_margin', '=', 0),
+        ])
+        return plain_discount if operator == 'in' else ~plain_discount
 
     def _get_integer(self, percentage):
         return int(percentage) if percentage == int(percentage) else percentage
@@ -393,24 +410,26 @@ class ProductPricelistItem(models.Model):
 
     @api.onchange('base_pricelist_id')
     def _onchange_base_pricelist_id(self):
-        if self.compute_price == 'percentage':
+        if self.compute_price == 'discount':
             self.base = 'pricelist' if self.base_pricelist_id else 'list_price'
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
-        self.base_pricelist_id = False
         if self.compute_price != 'fixed':
             self.fixed_price = 0.0
-        if self.compute_price != 'percentage':
-            self.percent_price = 0.0
-        if self.compute_price not in ('formula', 'markup'):
+        if self.compute_price == 'fixed':
             self.update({
                 'base': 'list_price',
+                'base_pricelist_id': False,
                 'price_surcharge': 0.0,
                 'price_round': 0.0,
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
+        elif self.compute_price == 'discount' and self.base == 'standard_price':
+            # A discount offers no base selector, only the pricelist it is taken from.
+            # A cost carried over from a surcharge would be neither visible nor editable.
+            self.base = 'list_price'
         self.price_discount = 0.0
 
     @api.onchange('product_id')
@@ -460,6 +479,11 @@ class ProductPricelistItem(models.Model):
         return super().create(vals_list)
 
     #=== BUSINESS METHODS ===#
+
+    def _is_discount_rule(self):
+        """Whether the rule lowers the price it is based on."""
+        self.ensure_one()
+        return self.compute_price == 'discount' and self.price_discount > 0
 
     def _is_applicable_for(self, product, quantity, *, uom=None, **kwargs):
         """Check whether the current rule is valid for the given product, qty and uom.
@@ -545,9 +569,7 @@ class ProductPricelistItem(models.Model):
             return product.uom_id._compute_price(self.fixed_price, uom)
 
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
-        if self.compute_price == 'percentage':
-            price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
-        elif self.compute_price in ('formula', 'markup'):
+        if self.compute_price in ('discount', 'markup'):
             product_uom = product.uom_id
             price = base_price - (base_price * (self.price_discount / 100))
             if self.price_round:
@@ -632,7 +654,7 @@ class ProductPricelistItem(models.Model):
         while pricelist_item.base == 'pricelist':
             rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
             rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-            if rule_pricelist_item and rule_pricelist_item.compute_price == 'percentage':
+            if rule_pricelist_item.is_plain_discount:
                 pricelist_item = rule_pricelist_item
             else:
                 break

@@ -161,9 +161,9 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             "name": "First pricelist",
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "list_price",
-                    "percent_price": 10,
+                    "price_discount": 10,
                     "applied_on": "3_global",
                     "name": "First discount",
                 })

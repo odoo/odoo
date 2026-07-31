@@ -13,4 +13,4 @@ class ProductPricelistItem(models.Model):
             return False
 
         self.ensure_one()
-        return self._is_discount_feature_enabled() and self.compute_price == "percentage"
+        return self._is_discount_feature_enabled() and self.is_plain_discount

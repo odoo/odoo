@@ -414,8 +414,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'name': 'Test Pricelist',
             'item_ids': [
                 Command.create({
-                    'compute_price': 'percentage',
-                    'percent_price': '5.0',
+                    'compute_price': 'discount',
+                    'price_discount': '5.0',
                     'min_quantity': 0,
                     'applied_on': '3_global',
                 })

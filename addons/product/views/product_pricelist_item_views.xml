@@ -156,15 +156,6 @@
                                 <span class="d-flex gap-2 p-0" invisible="not product_uom_name">per<field
                                         name="product_uom_name"/></span>
                             </div>
-                            <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
-                            <div class="o_row gap-3" invisible="compute_price != 'percentage'">
-                                <field name="percent_price"/>
-                                <span>%</span>
-                                <t groups="product.group_product_pricelist">
-                                    <span>on</span>
-                                    <field name="base_pricelist_id" placeholder="sales price" domain="[('id', '!=', pricelist_id)]"/>
-                                </t>
-                            </div>
                         </group>
                         <div name="pricelist_rule_limits">
                             <group name="pricelist_rule_target">
@@ -209,28 +200,35 @@
                             </group>
                         </div>
                     </group>
-                    <group name="pricelist_rule_base" invisible="compute_price not in ('formula', 'markup')">
+                    <group name="pricelist_rule_base" invisible="compute_price == 'fixed'">
                         <group>
                             <label for="price_discount" string="Discount"
                                 invisible="compute_price == 'markup'"/>
                             <label for="price_markup" string="Surcharge"
                                 invisible="compute_price != 'markup'"/>
-                            <div class="d-flex flex-wrap align-items-baseline gap-2">
+                            <div class="d-flex flex-wrap align-items-baseline gap-2"
+                                invisible="compute_price == 'markup'">
                                 <field name="price_discount"
-                                    class="oe_inline w-auto o_input_8ch"
-                                    invisible="compute_price == 'markup'"/>
+                                    class="oe_inline w-auto o_input_6ch"/>
+                                <span class="text-nowrap">% on</span>
+                                <field name="base_pricelist_id"
+                                    class="oe_inline"
+                                    placeholder="sales price"
+                                    domain="[('id', '!=', pricelist_id)]"
+                                    groups="product.group_product_pricelist"/>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-baseline gap-2"
+                                invisible="compute_price != 'markup'">
                                 <field name="price_markup"
-                                    class="oe_inline w-auto o_input_8ch"
-                                    invisible="compute_price != 'markup'"/>
+                                    class="oe_inline w-auto o_input_6ch"/>
                                 <span class="text-nowrap">% on</span>
                                 <field name="base"
                                     nolabel="1"
                                     class="oe_inline text-nowrap"/>
                             </div>
                             <field name="base_pricelist_id"
-                                invisible="base != 'pricelist'"
-                                readonly="base != 'pricelist'"
-                                required="compute_price in ('formula', 'markup') and base == 'pricelist'"
+                                invisible="compute_price != 'markup' or base != 'pricelist'"
+                                required="compute_price == 'markup' and base == 'pricelist'"
                                 string="Other Pricelist"/>
                             <field name="price_round" string="Round off to"/>
                             <field name="price_surcharge"

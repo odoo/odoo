@@ -39,8 +39,8 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
             'name': 'Test Pricelist',
             'item_ids': [
                 Command.create({
-                    'compute_price': 'percentage',
-                    'percent_price': '10.0',
+                    'compute_price': 'discount',
+                    'price_discount': '10.0',
                 })
             ],
         })

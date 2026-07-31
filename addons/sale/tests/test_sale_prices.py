@@ -48,8 +48,8 @@ class TestSalePrices(SaleCommon):
     def _create_discount_pricelist_rule(self, **additional_values):
         return self.env["product.pricelist.item"].create({
             "pricelist_id": self.pricelist.id,
-            "compute_price": "percentage",
-            "percent_price": self.discount,
+            "compute_price": "discount",
+            "price_discount": self.discount,
             **additional_values,
         })
 
@@ -264,9 +264,9 @@ class TestSalePrices(SaleCommon):
             "name": "First pricelist",
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "list_price",
-                    "percent_price": 10,
+                    "price_discount": 10,
                     "applied_on": "3_global",
                     "name": "First discount",
                 })
@@ -276,10 +276,10 @@ class TestSalePrices(SaleCommon):
         self.pricelist.sudo().write({
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "pricelist",
                     "base_pricelist_id": base_pricelist.id,
-                    "percent_price": 10,
+                    "price_discount": 10,
                     "applied_on": "3_global",
                     "name": "Second discount",
                 })
@@ -322,9 +322,9 @@ class TestSalePrices(SaleCommon):
             "currency_id": currency_eur.id,
             "item_ids": [
                 Command.create({
-                    "compute_price": "percentage",
+                    "compute_price": "discount",
                     "base": "list_price",
-                    "percent_price": 10,
+                    "price_discount": 10,
                     "applied_on": "3_global",
                     "name": "First discount",
                 })
@@ -367,8 +367,8 @@ class TestSalePrices(SaleCommon):
             "item_ids": [
                 Command.create({
                     "applied_on": "3_global",
-                    "compute_price": "percentage",
-                    "percent_price": -10,
+                    "compute_price": "discount",
+                    "price_discount": -10,
                     "base": "pricelist",
                     "base_pricelist_id": pricelist_a.id,
                 })
@@ -461,14 +461,14 @@ class TestSalePrices(SaleCommon):
                 Command.create({
                     "base": "list_price",
                     "product_id": product_1.id,
-                    "compute_price": "percentage",
-                    "percent_price": 20,
+                    "compute_price": "discount",
+                    "price_discount": 20,
                 }),
                 Command.create({
                     "base": "standard_price",
                     "product_id": product_2.id,
-                    "compute_price": "percentage",
-                    "percent_price": 10,
+                    "compute_price": "discount",
+                    "price_discount": 10,
                 }),
             ],
         })
@@ -537,7 +537,7 @@ class TestSalePrices(SaleCommon):
 
         self.assertTrue(self.sale_order.pricelist_id)
         pricelist = sale_order.pricelist_id
-        pricelist.item_ids = [Command.create({"percent_price": 5.0, "compute_price": "percentage"})]
+        pricelist.item_ids = [Command.create({"price_discount": 5.0, "compute_price": "discount"})]
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
@@ -546,7 +546,15 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(advantage_tax_excl, sale_order.amount_untaxed - so_amount)
         self.assertEqual(sale_order.amount_total, 0.95 * so_amount)
 
-        pricelist.item_ids = [Command.create({"price_discount": 5, "compute_price": "formula"})]
+        # A margin makes this more than a plain discount, so the reduction stays folded
+        # into the unit price.
+        pricelist.item_ids = [
+            Command.create({
+                "price_discount": 5,
+                "price_max_margin": 1000,
+                "compute_price": "discount",
+            })
+        ]
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
@@ -637,8 +645,8 @@ class TestSalePrices(SaleCommon):
             "item_ids": [
                 Command.create({
                     "applied_on": "3_global",
-                    "compute_price": "percentage",
-                    "percent_price": 54,
+                    "compute_price": "discount",
+                    "price_discount": 54,
                 })
             ]
         })
@@ -1131,8 +1139,9 @@ class TestSalePrices(SaleCommon):
 
     def test_show_discount(self):
         """
-        Test that discount is shown only when compute_price is percentage
-        If compute_price is formula, discount should be included in price.
+        Test that the discount is split out of the unit price only for a plain discount.
+        With rounding, a surcharge or margins on top, the reduction is no longer a round
+        percentage of the base price, so it stays folded into the unit price.
         """
         test_product_discount = self.env["product.product"].create({
             "name": "Test Product",
@@ -1160,15 +1169,16 @@ class TestSalePrices(SaleCommon):
                     "name": "Discount",
                     "applied_on": "1_product",
                     "product_tmpl_id": test_product_discount.product_tmpl_id.id,
-                    "compute_price": "percentage",
-                    "percent_price": 10,
+                    "compute_price": "discount",
+                    "price_discount": 10,
                 }),
                 Command.create({
-                    "name": "Formula",
+                    "name": "Discount with a surcharge",
                     "applied_on": "1_product",
                     "product_tmpl_id": test_product_incl_discount.product_tmpl_id.id,
-                    "compute_price": "formula",
+                    "compute_price": "discount",
                     "price_discount": 10,
+                    "price_surcharge": 5,
                 }),
             ],
         })
@@ -1181,6 +1191,8 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(show_discount_line.price_unit, 100)
         self.assertEqual(show_discount_line.price_subtotal, show_discount_line.price_unit * 0.9)
         self.assertEqual(show_discount_line.discount, 10)
+        # 100 - 10% = 90, + 5.00 surcharge = 95, kept whole in the unit price.
+        self.assertEqual(included_discount_line.price_unit, 95)
         self.assertEqual(included_discount_line.price_unit, included_discount_line.price_subtotal)
         self.assertEqual(included_discount_line.discount, 0)
 
@@ -1192,8 +1204,8 @@ class TestSalePrices(SaleCommon):
                     "name": "Discount based on pricelist",
                     "applied_on": "1_product",
                     "product_tmpl_id": test_product_discount.product_tmpl_id.id,
-                    "compute_price": "percentage",
-                    "percent_price": 10,
+                    "compute_price": "discount",
+                    "price_discount": 10,
                     "base": "pricelist",
                     "base_pricelist_id": base_discount_pricelist.id,
                 })

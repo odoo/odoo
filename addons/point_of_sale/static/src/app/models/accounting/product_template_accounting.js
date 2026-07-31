@@ -148,8 +148,6 @@ export class ProductTemplateAccounting extends Base {
 
         if (rule.compute_price === "fixed") {
             price = rule.fixed_price;
-        } else if (rule.compute_price === "percentage") {
-            price = price - price * ((rule.percent_price || 0) / 100);
         } else {
             var price_limit = price;
             price -= price * ((rule.price_discount || 0) / 100);

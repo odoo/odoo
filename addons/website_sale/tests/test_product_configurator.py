@@ -422,8 +422,8 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.pricelist.item_ids = [
             Command.create({
                 "applied_on": "1_product",
-                "percent_price": 50,
-                "compute_price": "percentage",
+                "price_discount": 50,
+                "compute_price": "discount",
                 "product_tmpl_id": main_product.id,
             })
         ]

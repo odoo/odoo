@@ -81,7 +81,7 @@ class TestProductPricelist(ProductCommon):
             'item_ids': [
                 Command.create({
                     'name': 'Default pricelist',
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'pricelist',
                     'base_pricelist_id': cls.pricelist.id,
                 }),
@@ -89,7 +89,7 @@ class TestProductPricelist(ProductCommon):
                     'name': '10% Discount on Assemble Computer',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.ipad_retina_display.product_tmpl_id.id,
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'list_price',
                     'price_discount': 10,
                 }),
@@ -97,7 +97,7 @@ class TestProductPricelist(ProductCommon):
                     'name': '1 surchange on Laptop',
                     'applied_on': '1_product',
                     'product_tmpl_id': cls.laptop_E5023.product_tmpl_id.id,
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'list_price',
                     'price_surcharge': 1,
                 }),
@@ -105,7 +105,7 @@ class TestProductPricelist(ProductCommon):
                     'name': '5% Discount on all Computer related products',
                     'applied_on': '2_product_category',
                     'min_quantity': 2,
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'list_price',
                     'categ_id': cls.product_category.id,
                     'price_discount': 5,
@@ -115,7 +115,7 @@ class TestProductPricelist(ProductCommon):
                     'applied_on': '3_global',
                     'date_start': '2011-12-27',
                     'date_end': '2011-12-31',
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'price_discount': 30,
                     'base': 'list_price',
                 }),
@@ -125,7 +125,7 @@ class TestProductPricelist(ProductCommon):
                     'product_tmpl_id': cls.monitor.product_tmpl_id.id,
                     'date_start': '2020-04-06 09:00:00',
                     'date_end': '2020-04-09 12:00:00',
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'price_discount': 50,
                     'base': 'list_price',
                 }),
@@ -221,7 +221,7 @@ class TestProductPricelist(ProductCommon):
             'name': 'Currency Pricelist',
             'currency_id': self.new_currency.id,
             'item_ids': [(0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'list_price',
                 'price_surcharge': 100
             })]
@@ -235,7 +235,7 @@ class TestProductPricelist(ProductCommon):
             'name': 'Currency with Margin Pricelist',
             'currency_id': self.new_currency.id,
             'item_ids': [(0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'list_price',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
@@ -250,7 +250,7 @@ class TestProductPricelist(ProductCommon):
             'name': 'Currency with Margin Pricelist',
             'currency_id': self.new_currency.id,
             'item_ids': [(0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'list_price',
                 'price_surcharge': 100,
                 'price_max_margin': 90
@@ -299,7 +299,7 @@ class TestProductPricelist(ProductCommon):
             'name': 'Customer Pricelist',
             'item_ids': [
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                 }),
             ] * 101,
         })
