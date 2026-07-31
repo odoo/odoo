@@ -45,6 +45,13 @@ L10N_CR_FE_TIPO_DOCUMENTO_MR = {
     'rechazado': {'clave': 'RCE', 'consecutivo_codigo': '07', 'gen_xml_action': 'gen_xml_mr'},
 }
 
+# Nota de Debito (ND): igual que Tiquete Electronico, comparte move_type
+# 'out_invoice' con Factura, asi que no puede tener su propia entrada en
+# L10N_CR_FE_TIPO_DOCUMENTO (indexado por move_type). Se distingue por el
+# campo nativo debit_origin_id (modulo account_debit_note), no por move_type.
+# Se resuelve en _l10n_cr_fe_get_tipo_documento_info().
+L10N_CR_FE_TIPO_DOCUMENTO_ND = {'clave': 'ND', 'consecutivo_codigo': '02', 'gen_xml_action': 'gen_xml_nd'}
+
 # Motivos de negocio para una nota de crédito, mostrados al usuario en el asistente
 # de reversión. Cada uno mapea a un código oficial de Hacienda (ver L10N_CR_FE_MOTIVO_CODIGO_MAP).
 L10N_CR_FE_MOTIVO_NC = [
@@ -59,6 +66,25 @@ L10N_CR_FE_MOTIVO_CODIGO_MAP = {
     'anulacion_total': '01',
     'correccion_monto': '02',
     'devolucion_mercancia': '06',
+    'referencia_otro_documento': '04',
+    'otros': '99',
+}
+
+# Motivos de negocio para una nota de debito, mostrados al usuario en el
+# wizard nativo de Nota de Debito (account.debit.note). Cada uno mapea a un
+# codigo oficial de Hacienda -- reutiliza el mismo catalogo completo que NC
+# (L10N_CR_FE_CODIGO_REFERENCIA, mas abajo), pero con opciones de negocio
+# distintas porque una ND aumenta el monto en vez de reducirlo.
+L10N_CR_FE_MOTIVO_ND = [
+    ('correccion_monto', "Corrección de monto, precio, cantidad o descuento"),
+    ('cargo_financiero', "Cargo financiero (intereses, cargos por mora)"),
+    ('referencia_otro_documento', "Referencia a otro documento"),
+    ('otros', "Otros"),
+]
+
+L10N_CR_FE_MOTIVO_CODIGO_MAP_ND = {
+    'correccion_monto': '02',
+    'cargo_financiero': '10',
     'referencia_otro_documento': '04',
     'otros': '99',
 }
@@ -96,6 +122,8 @@ class AccountMove(models.Model):
     l10n_cr_fe_codigo_referencia = fields.Selection(
         L10N_CR_FE_CODIGO_REFERENCIA, string="Código de referencia Hacienda", copy=False)
     l10n_cr_fe_razon = fields.Char(string="Razón (Hacienda)", copy=False)
+    l10n_cr_fe_motivo_nd = fields.Selection(
+        L10N_CR_FE_MOTIVO_ND, string="Motivo de la nota de débito", copy=False)
     l10n_cr_fe_es_tiquete = fields.Boolean(
         string="Consumidor final (Tiquete Electrónico)", copy=False,
         help="Si está marcado, este comprobante se emite ante Hacienda como Tiquete "
@@ -136,6 +164,8 @@ class AccountMove(models.Model):
 
     def _l10n_cr_fe_get_tipo_documento_info(self):
         self.ensure_one()
+        if self.move_type == 'out_invoice' and self.debit_origin_id:
+            return L10N_CR_FE_TIPO_DOCUMENTO_ND
         if self.move_type == 'out_invoice' and self.l10n_cr_fe_es_tiquete:
             return L10N_CR_FE_TIPO_DOCUMENTO_TE
         if self.move_type == 'in_invoice':
