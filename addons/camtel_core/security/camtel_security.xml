@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        CAMTEL Warehouse Access Control Security
+
+        This file defines:
+        1. Security groups for warehouse access
+        2. Record rules for filtering warehouse-related records
+
+        Strategy:
+        - Create restrictive rules for warehouse_user group
+        - Create permissive rules for warehouse_manager group
+        - Since managers have both groups (via implied_ids), Odoo ORs the rules
+        - Result: Managers see everything, regular users see only assigned warehouses
+    -->
+
+    <!-- ========================================== -->
+    <!-- SECURITY GROUPS                            -->
+    <!-- ========================================== -->
+
+    <data noupdate="0">
+        <!-- CAMTEL Warehouse User -->
+        <record id="group_warehouse_user" model="res.groups">
+            <field name="name">CAMTEL Warehouse User</field>
+            <field name="comment">Basic warehouse access - sees only assigned warehouses</field>
+        </record>
+
+        <!-- CAMTEL Warehouse Manager -->
+        <record id="group_warehouse_manager" model="res.groups">
+            <field name="name">CAMTEL Warehouse Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="comment">Warehouse manager - sees ALL warehouses regardless of assignment</field>
+        </record>
+    </data>
+
+    <!-- ========================================== -->
+    <!-- RECORD RULES - Warehouse Filtering         -->
+    <!-- ========================================== -->
+
+    <data noupdate="1">
+        <!-- ========== WAREHOUSE ACCESS ========== -->
+
+        <!-- Users: See only assigned warehouses -->
+        <record id="warehouse_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Warehouse Access</field>
+            <field name="model_id" ref="stock.model_stock_warehouse"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all warehouses -->
+        <record id="warehouse_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Warehouse Access</field>
+            <field name="model_id" ref="stock.model_stock_warehouse"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== LOCATION ACCESS ========== -->
+
+        <!-- Users: See only locations in assigned warehouses -->
+        <record id="location_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Location Access</field>
+            <field name="model_id" ref="stock.model_stock_location"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all locations -->
+        <record id="location_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Location Access</field>
+            <field name="model_id" ref="stock.model_stock_location"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== PICKING TYPE ACCESS (Operation Types) ========== -->
+
+        <!-- Users: See only operation types in assigned warehouses -->
+        <record id="picking_type_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Picking Type Access</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all operation types -->
+        <record id="picking_type_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Picking Type Access</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== PICKING ACCESS ========== -->
+
+        <!-- Users: See only pickings in assigned warehouses -->
+        <record id="picking_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Picking Access</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('location_id.warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all pickings -->
+        <record id="picking_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Picking Access</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== STOCK MOVE ACCESS ========== -->
+
+        <!-- Users: See moves in assigned warehouses (source or destination) -->
+        <record id="move_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Move Access</field>
+            <field name="model_id" ref="stock.model_stock_move"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[
+                '|',
+                    ('location_id.warehouse_id', 'in', user.warehouse_ids.ids),
+                    ('location_dest_id.warehouse_id', 'in', user.warehouse_ids.ids)
+            ]</field>
+        </record>
+
+        <!-- Managers: See all moves -->
+        <record id="move_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Move Access</field>
+            <field name="model_id" ref="stock.model_stock_move"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== STOCK QUANT ACCESS ========== -->
+
+        <!-- Users: See inventory in assigned warehouses -->
+        <record id="quant_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Quant Access</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('location_id.warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all inventory -->
+        <record id="quant_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Quant Access</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- ========== PRODUCT ACCESS ========== -->
+
+        <!-- Users: See products with stock in assigned warehouses -->
+        <record id="product_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Product Visibility</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('stock_quant_ids.location_id.warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all products -->
+        <record id="product_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Product Visibility</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

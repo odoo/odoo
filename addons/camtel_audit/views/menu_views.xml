@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_camtel_audit_root"
+              name="Audit"
+              sequence="100"
+              web_icon="camtel_audit,static/description/icon.png"
+              groups="base.group_system"/>
+
+    <!-- Audit Logs Menu -->
+    <menuitem id="menu_camtel_audit_logs"
+              name="Audit Logs"
+              parent="menu_camtel_audit_root"
+              action="action_camtel_audit_log"
+              sequence="10"/>
+
+    <!-- Sub-category Menus -->
+    <menuitem id="menu_camtel_audit_reports"
+              name="Reports"
+              parent="menu_camtel_audit_root"
+              sequence="20"/>
+
+    <!-- Authentication Events -->
+    <record id="action_camtel_audit_log_authentication" model="ir.actions.act_window">
+        <field name="name">Authentication Events</field>
+        <field name="res_model">camtel.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_category', '=', 'authentication')]</field>
+        <field name="context">{'search_default_week': 1}</field>
+    </record>
+
+    <menuitem id="menu_camtel_audit_authentication"
+              name="Authentication Events"
+              parent="menu_camtel_audit_reports"
+              action="action_camtel_audit_log_authentication"
+              sequence="10"/>
+
+    <!-- Inventory Events -->
+    <record id="action_camtel_audit_log_inventory" model="ir.actions.act_window">
+        <field name="name">Inventory Events</field>
+        <field name="res_model">camtel.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_category', '=', 'inventory')]</field>
+        <field name="context">{'search_default_week': 1}</field>
+    </record>
+
+    <menuitem id="menu_camtel_audit_inventory"
+              name="Inventory Events"
+              parent="menu_camtel_audit_reports"
+              action="action_camtel_audit_log_inventory"
+              sequence="20"/>
+
+    <!-- Purchase Events -->
+    <record id="action_camtel_audit_log_purchase" model="ir.actions.act_window">
+        <field name="name">Purchase Events</field>
+        <field name="res_model">camtel.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_category', '=', 'purchase')]</field>
+        <field name="context">{'search_default_week': 1}</field>
+    </record>
+
+    <menuitem id="menu_camtel_audit_purchase"
+              name="Purchase Events"
+              parent="menu_camtel_audit_reports"
+              action="action_camtel_audit_log_purchase"
+              sequence="30"/>
+
+    <!-- Security Events -->
+    <record id="action_camtel_audit_log_security" model="ir.actions.act_window">
+        <field name="name">Security &amp; Permission Events</field>
+        <field name="res_model">camtel.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_category', '=', 'security')]</field>
+        <field name="context">{'search_default_week': 1}</field>
+    </record>
+
+    <menuitem id="menu_camtel_audit_security"
+              name="Security Events"
+              parent="menu_camtel_audit_reports"
+              action="action_camtel_audit_log_security"
+              sequence="40"/>
+
+</odoo>
