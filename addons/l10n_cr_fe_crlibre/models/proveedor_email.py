@@ -34,24 +34,33 @@ class L10nCrFeProveedorEmail(models.Model):
         return res
 
     def _l10n_cr_fe_procesar_adjuntos(self, message):
+        """Procesa los adjuntos con la compañía que tiene configurada la
+        Factura Electrónica (l10n_cr.fe.config), no con la que resulte
+        activa en el contexto que llama a este método -- el gateway de
+        correo corre bajo un usuario técnico interno (OdooBot) cuya
+        compañía por defecto puede no ser la real, lo que causa un error
+        de "cruce entre empresas" al crear la factura con un producto/
+        impuesto que pertenece a otra compañía."""
         self.ensure_one()
+        config = self.env['l10n_cr.fe.config'].sudo().search([], limit=1)
+        env = self.with_company(config.company_id).env if config else self.env
         ultimo_error = False
         for attachment in message.attachment_ids.filtered(
                 lambda a: a.name and a.name.lower().endswith('.xml')):
             try:
-                vals = self.env['account.move']._l10n_cr_fe_build_vals_from_proveedor_xml(
+                vals = env['account.move']._l10n_cr_fe_build_vals_from_proveedor_xml(
                     base64.b64decode(attachment.datas))
             except UserError as exc:
                 ultimo_error = str(exc)
                 continue
             clave = vals['l10n_cr_fe_proveedor_clave']
-            existing = self.env['account.move'].search(
+            existing = env['account.move'].search(
                 [('l10n_cr_fe_proveedor_clave', '=', clave)], limit=1)
             if existing:
                 self.write({'state': 'duplicado', 'move_id': existing.id})
             else:
                 try:
-                    move = self.env['account.move'].create(vals)
+                    move = env['account.move'].create(vals)
                 except Exception as exc:  # noqa: BLE001 -- nunca debe escapar del gateway de correo
                     self.write({'state': 'sin_xml_valido', 'error_message': str(exc)})
                     return

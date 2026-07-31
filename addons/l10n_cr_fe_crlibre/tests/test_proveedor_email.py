@@ -98,6 +98,42 @@ class TestProveedorEmail(TransactionCase):
         self.assertIn('no numérico', record.error_message)
         self.assertNotIn('no traía ningún adjunto', record.error_message)
 
+    def test_procesar_adjuntos_usa_la_compania_del_config_fe_no_la_activa_del_contexto(self):
+        """Si el contexto que procesa el correo (ej. el usuario técnico del
+        gateway de correo, OdooBot) tiene otra compañía activa por defecto,
+        la factura debe crearse en la compañía que tiene configurada la
+        Factura Electrónica -- no en la que resulte activa en ese momento.
+        Reproduce el error real de "cruce entre empresas" encontrado en
+        pruebas manuales contra un buzón real con más de una compañía.
+
+        Usa la l10n_cr.fe.config que ya exista en la base (la misma que
+        resolverá _l10n_cr_fe_procesar_adjuntos en producción) en vez de
+        crear una nueva, porque la búsqueda sin dominio (search([], limit=1))
+        no es determinística si se crea una segunda config dentro del test."""
+        fe_config = self.env['l10n_cr.fe.config'].sudo().search([], limit=1)
+        if not fe_config:
+            self.skipTest("No hay ninguna l10n_cr.fe.config en esta base de datos.")
+        fe_company = fe_config.company_id
+
+        product = self.env['product.product'].create({
+            'name': 'Producto con match para test de compañía',
+            'company_id': fe_company.id,
+            'l10n_cr_fe_cabys': '9876543210123'})
+        self.assertEqual(product.company_id, fe_company)
+
+        other_company = self.env['res.company'].create({'name': 'Otra compañía activa'})
+        record = self.env['l10n_cr.fe.proveedor.email'].create({'email_from': 'proveedor@x.cr'})
+        xml_con_ese_cabys = SAMPLE_XML.replace('0111101000000', '9876543210123')
+        message = self._make_message_with_attachment(record, xml_con_ese_cabys, 'factura.xml')
+
+        record.with_company(other_company)._l10n_cr_fe_procesar_adjuntos(message)
+
+        self.assertEqual(record.state, 'procesado')
+        self.assertEqual(record.move_id.company_id, fe_company)
+        lineas_producto = record.move_id.invoice_line_ids.filtered(
+            lambda l: l.display_type == 'product')
+        self.assertEqual(lineas_producto.product_id, product)
+
     def test_message_post_no_reprocesa_registro_ya_resuelto(self):
         """Un mensaje posterior sin XML (respuesta, nota) sobre un registro
         que ya llegó a 'procesado' no debe volver a correr
