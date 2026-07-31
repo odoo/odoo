@@ -5,6 +5,7 @@ from datetime import timedelta
 import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 PY_OPERATORS = {
@@ -53,6 +54,19 @@ class ProductTemplate(models.Model):
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('active', '=', True)])
         return [('id', 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
+
+    def _get_product_document_domain(self):
+        domain = super()._get_product_document_domain()
+
+        if not self.env['mrp.bom'].has_access('read'):
+            return domain
+        boms = self.env['mrp.bom'].search([('product_tmpl_id', 'in', self.ids)])
+
+        if boms:
+            bom_domain = [('res_model', '=', 'mrp.bom'), ('res_id', 'in', boms.ids)]
+            return Domain.OR([domain, bom_domain])
+
+        return domain
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -182,6 +196,44 @@ class ProductProduct(models.Model):
             '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
             ('id', 'in', bom_product_query.subselect('product_id'))
         ]
+
+    def action_open_documents(self):
+        action = super().action_open_documents()
+
+        if not self.env['mrp.bom'].has_access('read'):
+            return action
+
+        boms = self.env['mrp.bom'].search([
+            '|',
+            ('product_id', 'in', self.ids),
+            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_tmpl_id.ids)
+        ])
+
+        if boms:
+            bom_domain = ['&', ('res_model', '=', 'mrp.bom'), ('res_id', 'in', boms.ids)]
+            action['domain'] = ['|'] + action.get('domain', []) + bom_domain
+
+        return action
+
+    def _compute_product_document_count(self):
+        super()._compute_product_document_count()
+
+        if not self.env['mrp.bom'].has_access('read'):
+            return
+
+        for variant in self:
+            boms = self.env['mrp.bom'].search([
+                '|',
+                ('product_id', 'in', [variant.id]),
+                '&', ('product_id', '=', False), ('product_tmpl_id', 'in', [variant.product_tmpl_id.id])
+            ])
+
+            if boms:
+                bom_doc_count = self.env['product.document'].search_count([
+                    ('res_model', '=', 'mrp.bom'),
+                    ('res_id', 'in', boms.ids)
+                ])
+                variant.product_document_count += bom_doc_count
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
