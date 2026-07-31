@@ -44,3 +44,44 @@ registry.category("web_tour.tours").add("ZATCA_invoice_mandatory_if_regular_orde
             PaymentScreen.clickInvoiceButton(),
         ].flat(),
 });
+<<<<<<< d8942f5037f77c51c10f4182fff436ed1bb5de30
+||||||| 8aeeada82f3e23f56e716906caf58969b4fb067d
+
+registry.category("web_tour.tours").add("ZATCA_blocks_settle_due_and_sale_on_same_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.settleCustomerAccount(
+                "AAAA Generic Partner",
+                "23.0",
+                "TSJ/2026/",
+                "",
+                false,
+                false
+            ),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.is({ title: "Settlement Error" }),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("ZATCA_blocks_settle_due_and_sale_on_same_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.settleCustomerAccount("AAAA Generic Partner", "23.0", "TSJ/"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.is({ title: "Settlement Error" }),
+        ].flat(),
+});
+>>>>>>> 70a8b1a1a4a098f7241915f95a09a06122681acb
