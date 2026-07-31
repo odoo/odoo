@@ -2,13 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { downloadFile } from "@web/core/network/download";
-import { downloadReport } from "@web/webclient/actions/reports/utils";
+import { downloadReport, getReportUrl } from "@web/webclient/actions/reports/utils";
 import { isIOS, isIosApp } from "@web/core/browser/feature_detection";
 import { browser } from "@web/core/browser/browser";
 
 export const reportService = {
     dependencies: ["rpc", "user", "ui", "orm", "pos"],
-    start(env, { rpc, user, ui, orm, pos }) {
+    start(env, { http, rpc, user, ui, orm, pos }) {
         const reportActionsCache = {};
         return {
             async doAction(reportXmlId, active_ids) {
@@ -37,6 +37,21 @@ export const reportService = {
                             action_id: reportXmlId,
                         });
                         const reportAction = await reportActionsCache[reportXmlId];
+                        if (isIOS() || isIosApp()) {
+                            const url = getReportUrl(reportAction, "pdf", user.context);
+                            const response = await http.post(
+                                "/report/download",
+                                {
+                                    data: JSON.stringify([url, reportAction.report_type]),
+                                    context: JSON.stringify(user.context),
+                                    csrf_token: odoo.csrf_token,
+                                },
+                                "blob"
+                            );
+                            if (response) {
+                                return browser.open(window.URL.createObjectURL(response), "_blank");
+                            }
+                        }
                         // await instead of return because we want the ui to stay blocked
                         await downloadReport(
                             rpc,
