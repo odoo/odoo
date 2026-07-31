@@ -181,3 +181,25 @@ class ResConfigSettings(models.TransientModel):
         else:
             self.company_id._reset_peppol_configuration()
         return self.action_open_peppol_form()
+
+    @api.model
+    def _get_pdp_module_info(self):
+        pdp_module = self.env['ir.module.module'].sudo()._get('l10n_fr_pdp')  # avoid returning it since it is sudoed
+        module_name = self.env._("France - E-Invoicing (Approved Platform)")
+        if pdp_module:
+            action = pdp_module._get_records_action()
+            action_name = self.env._("Go to module")
+            warning = self.env._("To use the Approved Platform for French E-Invoicing install the module '%s'.", module_name)
+        else:
+            action = self.env.ref('base.action_view_base_module_update').id
+            action_name = self.env._("Update App List")
+            warning = self.env._("To use the Approved Platform for French E-Invoicing install the module '%s'.\n"
+                                 "The module was not found. Please update the app list first.",
+                                 module_name)
+        return {
+            'is_installed': pdp_module and pdp_module.state == 'installed',
+            'module_name': module_name,
+            'action': action,
+            'action_name': action_name,
+            'warning_message': warning,
+        }
