@@ -12,7 +12,7 @@ declare module "plugins" {
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, dirty_trackers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
@@ -146,6 +146,7 @@ declare module "plugins" {
         container_title: container_title;
         content_editable_selectors: content_editable_selectors;
         content_not_editable_selectors: content_not_editable_selectors;
+        dirty_trackers: dirty_trackers;
         dropzone_selectors: dropzone_selectors;
         elements_to_options_title_components: elements_to_options_title_components;
         fontCssVariables: fontCssVariables;
