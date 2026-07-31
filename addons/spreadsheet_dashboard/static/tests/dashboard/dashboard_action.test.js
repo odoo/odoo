@@ -19,6 +19,7 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { routerBus, startRouter } from "@web/core/browser/router";
 import { RPCError } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
@@ -109,9 +110,10 @@ test("Fold button invisible in the search panel without any dashboard", async fu
 test("load action with specific dashboard", async () => {
     await createSpreadsheetDashboard({ spreadsheetId: 3 });
     expect(".o_search_panel li.active").toHaveText("Dashboard Accounting 1");
+    expect(browser.location.search).toBe("?dashboard_id=3");
 });
 
-test("can switch spreadsheet", async () => {
+test("can switch spreadsheet and keep it after two reloads", async () => {
     await createSpreadsheetDashboard();
     const spreadsheets = queryAll(".o_search_panel li");
 
@@ -124,6 +126,24 @@ test("can switch spreadsheet", async () => {
     expect(spreadsheets[0]).not.toHaveClass("active");
     expect(spreadsheets[1]).toHaveClass("active");
     expect(spreadsheets[2]).not.toHaveClass("active");
+    expect(browser.location.search).toBe("?dashboard_id=2");
+
+    // Emulate a full reload by rebuilding the router state from the current URL.
+    startRouter();
+    routerBus.trigger("ROUTE_CHANGE");
+    await animationFrame();
+    await animationFrame();
+
+    expect(".o_search_panel li.active").toHaveText("Dashboard CRM 2");
+    expect(browser.location.search).toBe("?dashboard_id=2");
+
+    startRouter();
+    routerBus.trigger("ROUTE_CHANGE");
+    await animationFrame();
+    await animationFrame();
+
+    expect(".o_search_panel li.active").toHaveText("Dashboard CRM 2");
+    expect(browser.location.search).toBe("?dashboard_id=2");
 });
 
 test("display no dashboard message", async () => {
@@ -211,6 +231,7 @@ test("Last selected spreadsheet is kept when go back from breadcrumb", async fun
     expect(".o_list_view").toHaveCount(1);
     await contains(".o_back_button").click();
     expect(".o_search_panel li:last-child").toHaveClass("active");
+    expect(browser.location.search).toBe("?dashboard_id=790");
 });
 
 test("Can clear filter date filter value that defaults to current period", async function () {

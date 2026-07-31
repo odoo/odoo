@@ -2,7 +2,6 @@ import { Registry } from "@odoo/o-spreadsheet";
 import { Component, computed, onWillStart, proxy, useEffect, useListener } from "@odoo/owl";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
-import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -57,7 +56,6 @@ export class SpreadsheetDashboardAction extends Component {
                 this.openDashboard(activeDashboardId);
             }
         });
-        useEffect(() => router.pushState({ dashboard_id: this.activeDashboardId() }));
         useEffect(() => {
             const dashboard = this.dashboard();
             if (dashboard && dashboard.status === Status.Loaded) {
@@ -110,6 +108,7 @@ export class SpreadsheetDashboardAction extends Component {
      */
     openDashboard(dashboardId) {
         this.loader.activateDashboard(dashboardId);
+        this.props.updateActionState({ dashboard_id: dashboardId });
     }
 
     /**
