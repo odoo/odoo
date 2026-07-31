@@ -43,20 +43,28 @@
                                     <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
                                         <td>
                                             <div class="flex">
-                                                <div class="cash-sign" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
                                                 <t t-esc="move.name"/>
                                             </div>
                                         </td>
-                                        <td t-esc="env.pos.format_currency(Math.abs(move.amount))"/>
+                                        <td>
+                                            <div style="width: 100%; text-align: right; padding-right: 5%;">
+                                                <div class="cash-sign" style="display: inline;" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
+                                                <t t-esc="env.pos.format_currency(Math.abs(move.amount))"/>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr t-if="defaultCashDetails.payment_amount">
                                         <td>
                                             <div class="flex">
-                                                <div class="cash-sign" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
                                                 Payments in <t t-esc="defaultCashDetails.name"/>
                                             </div>
                                         </td>
-                                        <td t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                        <td>
+                                            <div style="width: 100%; text-align: right; padding-right: 5%;">
+                                                <div class="cash-sign" style="display: inline;" t-esc="defaultCashDetails.payment_amount &lt; 0 ? '-' : '+'"/>
+                                                <t t-esc="env.pos.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </t>
