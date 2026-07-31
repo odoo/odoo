@@ -999,6 +999,47 @@ class TestEventTicketData(TestEventInternalsCommon):
             reg_draft.write({'state': 'open'})
 
 
+@tagged('event_event', 'post_install', '-at_install')
+class TestEventTicketTranslations(EventCase):
+
+    @users('user_eventmanager')
+    def test_event_configuration_ticket_translations_from_type(self):
+        """ Ensure translations are copied from Event Type on Event creation """
+        self.env['res.lang'].sudo()._activate_lang('nl_NL')
+
+        event_type = self.env['event.type'].create({
+            'name': 'Event Type',
+            'ticket_instructions': '<p>Show your ticket at the entrance</p>',
+            'event_type_ticket_ids': [Command.create({
+                'name': 'VIP Ticket',
+                'seats_max': 10,
+            })],
+        })
+        event_type.update_field_translations('ticket_instructions', {
+            'nl_NL': {'Show your ticket at the entrance': 'Toon je ticket bij de ingang'},
+        })
+        event_type.event_type_ticket_ids.with_context(lang='nl_NL').name = 'VIP Kaartje'
+
+        event = self.env['event.event'].with_context(lang='nl_NL').create({
+            'name': 'Event Update Type',
+            'event_type_id': event_type.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+
+        event_ticket = event.event_ticket_ids[0]
+        self.assertEqual(event_ticket.with_context(lang='en_US').name, 'VIP Ticket')
+        self.assertEqual(event_ticket.with_context(lang='nl_NL').name, 'VIP Kaartje')
+        self.assertEqual(
+            event.with_context(lang='en_US').ticket_instructions,
+            '<p>Show your ticket at the entrance</p>',
+        )
+        self.assertEqual(
+            event.with_context(lang='nl_NL').ticket_instructions,
+            '<p>Toon je ticket bij de ingang</p>',
+        )
+
+
 @tagged('event_event')
 class TestEventTypeData(TestEventInternalsCommon):
 
