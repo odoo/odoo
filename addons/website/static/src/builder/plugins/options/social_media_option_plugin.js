@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -117,7 +118,7 @@ const defaultAriaLabel = _t("Other social network");
 
 export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
-    static dependencies = ["animateOption"];
+    static dependencies = ["animateOption", "history", "savePlugin"];
     static shared = [
         "newLinkElement",
         "getAssociatedSocialMedia",
@@ -125,11 +126,11 @@ export class SocialMediaOptionPlugin extends Plugin {
         "removeIconClasses",
         "reorderSocialMediaLink",
         "prefillSocialMediaLinks",
+        "isInitialized",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:
-        history_commit_data_properties: ["areSocialMediaLinksPrefilled"],
         so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,
@@ -152,13 +153,26 @@ export class SocialMediaOptionPlugin extends Plugin {
             { selector: ".s_share > a > *", target: ".s_share" },
         ],
         replace_media_dialog_params_processors: this.applyMediaDialogParams.bind(this),
-        is_history_commit_reversible_predicates: (commit) => {
-            if (commit.data.areSocialMediaLinksPrefilled) {
-                return false;
-            }
-        },
         immutable_link_selectors: [".s_share a"],
+        on_editor_started_handlers: withSequence(Infinity, (deferReady) => {
+            // Preferably last to avoid ignoreDirty getting reset by another callback,
+            // given that this handler does not support async.
+            const deferredReady = deferReady();
+            const restoreDirty = this.dependencies.savePlugin.ignoreDirty();
+            this.prefillSocialMediaLinks(this.editable).then((prefilled) => {
+                if (prefilled) {
+                    this.dependencies.history.reset();
+                }
+                restoreDirty();
+                this.isInitializedDeferred.resolve();
+                deferredReady.resolve();
+            });
+        }),
     };
+
+    setup() {
+        this.isInitializedDeferred = Promise.withResolvers();
+    }
 
     async onSnippetDropped({ snippetEl }) {
         await this.prefillSocialMediaLinks(snippetEl);
@@ -168,6 +182,10 @@ export class SocialMediaOptionPlugin extends Plugin {
         return [...el.classList]
             .find((c) => c.startsWith("s_social_media_"))
             ?.replace("s_social_media_", "");
+    }
+
+    async isInitialized() {
+        await this.isInitializedDeferred.promise;
     }
 
     /**
