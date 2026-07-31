@@ -250,6 +250,9 @@ class AccountEdiCommon(models.AbstractModel):
                 return note or COCONTRACTANT_DEFAULT_NOTE
         return ''
 
+    def _get_document_type_code_vals(self, invoice, invoice_data):
+        return {'attrs': {}, 'value': None}
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------

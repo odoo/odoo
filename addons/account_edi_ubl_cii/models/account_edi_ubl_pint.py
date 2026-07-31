@@ -82,11 +82,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_invoice_delivery_nodes(vals)
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            document_node = vals['document_node']
-            if document_node['cac:Delivery']:
-                document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
-            else:
-                document_node['cac:Delivery'] = None
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_add_document_currency_code_node(self, vals):
         # The currency in which the invoice is issued and in which all monetary amounts are expressed.
@@ -171,7 +169,7 @@ class AccountEdiUBLPint(models.AbstractModel):
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         super()._ubl_add_party_tax_scheme_nodes(vals)
-        if vals['no_party_tax_scheme']:
+        if not self._need_party_tax_scheme_nodes(vals):
             return
 
         super()._ubl_add_party_tax_scheme_nodes_vat_gst(vals)
@@ -226,38 +224,8 @@ class AccountEdiUBLPint(models.AbstractModel):
         return node
 
     def _ubl_add_payment_means_nodes_all_invoices(self, vals):
-        invoice = vals['invoice']
-        nodes = vals['document_node']['cac:PaymentMeans']
-
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
-            else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
-        else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
-
-        partner_bank = invoice.partner_bank_id
-        payment_means_node = {
-            'cbc:PaymentMeansCode': {
-                '_text': payment_means_code,
-                'name': payment_means_name,
-            },
-            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
-        }
-
-        if partner_bank:
-            payment_means_node['cac:PayeeFinancialAccount'] = self._ubl_get_payment_means_payee_financial_account_node_from_partner_bank(vals, partner_bank)
-        else:
-            payment_means_node['cac:PayeeFinancialAccount'] = None
-
-        nodes.append(payment_means_node)
-
-    def _ubl_add_payment_means_nodes(self, vals):
-        super()._ubl_add_payment_means_nodes(vals)
-
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            self._ubl_add_payment_means_nodes_all_invoices(vals)
+        # DEPRECATED, to be removed in master
+        pass
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # This override is a fix for the taxes engine.
@@ -371,30 +339,3 @@ class AccountEdiUBLPint(models.AbstractModel):
                 + vals['_ubl_values']['tax_withholding_amount'],
                 min_dp=currency.decimal_places,
             )
-
-    def _init_invoice_export_values(self, invoice):
-        vals = super()._init_invoice_export_values(invoice)
-        AccountTax = self.env['account.tax']
-        company = vals['company']
-
-        # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
-            base_lines=vals['base_lines'],
-            company=company,
-            vals=vals,
-        )
-
-        # Sub-dictionaries to store UBL-related values along the whole process.
-        vals['_ubl_values'] = {}
-        for base_line in vals['base_lines']:
-            base_line['_ubl_values'] = {}
-
-        # Global rounding of tax_details using 6 digits.
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-
-        return vals
