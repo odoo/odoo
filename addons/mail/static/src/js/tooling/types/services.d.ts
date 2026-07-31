@@ -1,10 +1,12 @@
 /* add this file in jsconfig.json, in typeRoots array */
 declare module "services" {
     import { attachmentUploadService } from "@mail/core/common/attachment_upload_service";
+    import { callPipService } from "@mail/discuss/call/common/pip_service";
     import { discussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
     import { discussCorePublic } from "@mail/discuss/core/public/discuss_core_public_service";
     import { discussCorePublicWeb } from "@mail/discuss/core/public_web/discuss_core_public_web_service";
     import { discussCoreWeb } from "@mail/discuss/core/web/discuss_core_web_service";
+    import { fullscreenService } from "@mail/core/common/mail_fullscreen";
     import { im_status } from "@mail/core/common/im_status_service";
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
@@ -25,12 +27,14 @@ declare module "services" {
         "discuss.core.public.web": typeof discussCorePublicWeb;
         "discuss.core.web": typeof discussCoreWeb;
         "discuss.p2p": typeof discussP2P;
+        "discuss.pip_service": typeof callPipService;
         "discuss.ptt_extension": typeof pttExtensionHookService;
         "discuss.rtc": typeof rtcService;
         "discuss.voice_message": typeof voiceMessageService;
         "mail.attachment_upload": typeof attachmentUploadService;
         "mail.core.common": typeof mailCoreCommon;
         "mail.core.web": typeof mailCoreWeb;
+        "mail.fullscreen": typeof fullscreenService;
         "mail.notification.permission": typeof notificationPermissionService;
         "mail.out_of_focus": typeof outOfFocusService;
         "mail.popout": typeof mailPopoutService;

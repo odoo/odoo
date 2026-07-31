@@ -26,6 +26,14 @@ let sequence = 1;
 const getSequence = () => sequence++;
 
 /**
+ * @typedef {import("services").ServiceFactories} Services
+ */
+
+/**
+ * @typedef {import("@mail/../lib/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE} SfuClientState
+ */
+
+/**
  * @typedef {'camera' | 'screen' } VideoType
  */
 
@@ -66,7 +74,7 @@ const getSequence = () => sequence++;
  */
 
 /**
- * @return {Promise<{ SfuClient: import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/../lib/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
+ * @return {Promise<{ SfuClient: import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: SfuClientState }>}
  */
 const loadSfuAssets = memoize(async () => await loadBundle("mail.assets_odoo_sfu"));
 
@@ -531,6 +539,26 @@ export class Rtc extends Record {
     });
 
     setup() {
+        // the services and the dialog the record holds, assigned when the service starts or
+        // when a call runs
+        /** @type {SfuClientState} */
+        this.SFU_CLIENT_STATE = undefined;
+        /** @type {() => Promise<void>} */
+        this.closeCallPermissionDialog = undefined;
+        /** @type {Services["dialog"]} */
+        this.dialog = undefined;
+        /** @type {Services["mail.fullscreen"]} */
+        this.fullscreen = undefined;
+        /** @type {Services["notification"]} */
+        this.notification = undefined;
+        /** @type {Services["discuss.p2p"]} */
+        this.p2pService = undefined;
+        /** @type {Services["discuss.pip_service"]} */
+        this.pipService = undefined;
+        /** @type {Services["discuss.ptt_extension"]} */
+        this.pttExtService = undefined;
+        /** @type {Services["mail.sound_effects"]} */
+        this.soundEffectsService = undefined;
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
         this.blurManager = undefined;
@@ -546,9 +574,6 @@ export class Rtc extends Record {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
-        /**
-         * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
-         */
         this.p2pService = services["discuss.p2p"];
         this.registerOnChange(this.store.settings, "useBlur", () => {
             if (this.isSendingCamera) {
