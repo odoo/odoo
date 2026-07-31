@@ -28,7 +28,7 @@
             <field name="name">Experienced Developer</field>
             <field name="department_id" ref="hr.dep_rd"/>
             <field name="no_of_recruitment">5</field>
-            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="contract_type_id" eval="ref('hr.contract_type_permanent', raise_if_not_found=False)"/>
             <field name="description">We are currently looking for someone like that to join our Web team.
                 Someone who can snap out of coding and perform analysis or meet clients to explain the technical
                 possibilities that can meet their needs.</field>
@@ -58,7 +58,7 @@
                 Result driven.
                 Excellent analytical skills, ability to think logically and "out of the box"
             </field>
-            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="contract_type_id" eval="ref('hr.contract_type_permanent', raise_if_not_found=False)"/>
         </record>
 
         <!-- Employee category -->
@@ -127,7 +127,7 @@
             <field name="private_country_id" ref="base.us"/>
             <field name="private_phone">+1 555-555-5757</field>
             <field name="work_email">williams@mycompany.example.com</field>
-            <field name="department_id" ref="hr.dep_administration"/>
+            <field name="department_id" eval="ref('hr.dep_administration', raise_if_not_found=False)"/>
             <field name="job_id" ref="job_ceo"/>
             <field name="job_title">Chief Executive Officer</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
