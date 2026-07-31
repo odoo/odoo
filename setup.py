@@ -18,7 +18,11 @@ setup(
     author_email=author_email,
     classifiers=[c for c in classifiers.split('\n') if c],
     license=license,
-    scripts=['setup/odoo'],
+    entry_points={
+        'console_scripts': [
+            'odoo = odoo.cli:main',
+        ],
+    },
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
