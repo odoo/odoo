@@ -585,7 +585,7 @@ export class ColorPlugin extends Plugin {
         } else {
             delete parts.gradient;
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
-                removeStyle(element, "background-image");
+                // removeStyle(element, "background-image");
             }
             if (color.startsWith("text") || color.startsWith("bg-")) {
                 removeStyle(element, mode);
