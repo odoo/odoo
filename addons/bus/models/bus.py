@@ -154,7 +154,6 @@ class BusBus(models.Model):
                 " So please send on the expected res.users instead.",
             )
         self.env.cr.precommit.data["bus.bus.values"].append((channel, notification_type, message))
-        self.env.cr.postcommit.data["bus.bus.channels"].add(channel)
 
     def _prepare_payload(self, payload):
         """Compute and return the final payload for a bus notification. This method is
@@ -169,18 +168,29 @@ class BusBus(models.Model):
 
             @self.env.cr.precommit.add
             def create_bus():
-                if values := [
-                    {
+                values = []
+                channels = OrderedSet()
+                for channel, type_, payload in self.env.cr.precommit.data.pop("bus.bus.values"):
+                    formatted_payload = self._prepare_payload(payload)
+                    if formatted_payload is SKIP_NOTIFICATION:
+                        continue
+                    values.append({
                         "channel": json_dump(channel),
                         "message": json_dump({"type": type_, "payload": formatted_payload}),
-                    }
-                    for channel, type_, payload in self.env.cr.precommit.data.pop("bus.bus.values")
-                    if (formatted_payload := self._prepare_payload(payload)) is not SKIP_NOTIFICATION
-                ]:
+                    })
+                    channels.add(channel)
+                if values:
                     self.sudo().create(values)
+                    self._ensure_notify_hook(channels)
 
-        if "bus.bus.channels" not in self.env.cr.postcommit.data:
-            self.env.cr.postcommit.data["bus.bus.channels"] = OrderedSet()
+    def _ensure_notify_hook(self, channels):
+        """Notify the given channels once the rows are committed. Called from the precommit
+        hook, so that a payload skipped at that point does not notify a channel that has
+        nothing to fetch."""
+        if "bus.bus.channels" in self.env.cr.postcommit.data:
+            self.env.cr.postcommit.data["bus.bus.channels"].update(channels)
+        else:
+            self.env.cr.postcommit.data["bus.bus.channels"] = OrderedSet(channels)
 
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, notifications will be fetched in the
